@@ -22,12 +22,12 @@ This is a regular editor plugin. Copy the contents of addons/Anima into the same
 
 ## Documentation & Demo
 
-To check out [live examples](https://anima.ceceppa.me) and docs, please visit [here](https://anima.ceceppa.me/demo)
+Check out [documentation](https://anima.ceceppa.me) and [live examples](https://anima.ceceppa.me/demo).
 
 ## Differences between Anima and Godot Tween
 
 |                                    | Anima                                                      | Tween                                 |
-|------------------------------------+------------------------------------------------------------+---------------------------------------|
+|---|---|---|
 | Chaining                           | support for sequential, parallel and concurrent animations | possible but need to be done manually |
 | Animate relative property          | yes                                                        | no                                    |
 | Easing                             | 33 built-in, (it will be extended in 0.2)            | 10 and no support for custom ones     |
