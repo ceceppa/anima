@@ -1,0 +1,7392 @@
+{
+  "name": "Anima",
+  "description": "",
+  "version": null,
+  "classes": [
+    {
+      "name": "",
+      "path": "res://addons/anima/core/old_anima.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class old_anima.gd",
+      "description": "extends Node\n\nconst BASE_PATH := 'res://addons/anima/animations/'\nconst DEFAULT_DURATION := 0.7\n\n\nenum Visibility {\n\tIGNORE,\n\tHIDDEN_ONLY,\n\tTRANSPARENT_ONLY,\n\tHIDDEN_AND_TRANSPARENT\n}\n\nvar _animations_list := []\n\nfunc get_available_animations() -> Array:\n\tif _animations_list.size() == 0 or true:\n\t\t_animations_list = _get_animations_list()\n\n\treturn _animations_list\n\n#\n# Animates a single node\n#\n# @param array sequence_data array of animation data:\n#\t\t{\n#\t\t\tnode = the node to animate\n#\t\t\tanimation = the animation to play\n#\t\t\tduration = duration in seconds\n#\t\t\tdelay = delay in seconds,\n#\t\t\tloop = loop animation?\n#\t\t\thide = tells if the node needs to be hidden before the animation starts (Default false)\n#\t\t\tcompleted = callback\n#\t\t}\nfunc create_animation(animation_name: String, data: Dictionary) -> AnimationPlayer:\n\tvar duration: float = _get_value(data, 'duration', DEFAULT_DURATION)\n\tvar delay: float = _get_value(data, 'delay', 0.0)\n\tvar animation_player := _get_anima_animation_player(data.node)\n\n\tif animation_player.has_animation(animation_name):\n\t\tvar existing_animation := animation_player.get_animation(animation_name)\n\n\t\tif existing_animation.length == data.duration:\n\t\t\treturn animation_player\n\n\tvar animation = Animation.new()\n\n\tanimation_player.remove_animation(animation_name)\n\tanimation_player.stop()\n\n\tanimation.set_length(data.duration + delay)\n\tanimation_player.add_animation(animation_name, animation)\n\n\t_add_animation_to_animation_resource(\n\t\tanimation,\n\t\t{\n\t\t\tanimation = data.animation,\n\t\t\tnode = data.node,\n\t\t\tduration = data.duration,\n\t\t\tdelay = delay,\n\t\t\tloop = _get_value(data, 'loop', false),\n\t\t\tloop_delay = _get_value(data, 'loop_delay', 0.0),\n\t\t\thide_strategy = _get_value(data, 'hide_strategy', Visibility.IGNORE),\n\t\t\tcallback = _get_value(data, 'callback', null)\n\t\t}\n\t)\n\n\treturn animation_player\n\nfunc create(data: Dictionary) -> AnimaTweens:\n\tvar animation := AnimaTweens.new()\n\n\tadd_child(animation)\n\n\tanimation.set_data(data)\n\n\treturn animation\n\nfunc animate(data: Dictionary) -> AnimaTweens:\n\tvar animation := create(data)\n\n\tanimation.play()\n\n\treturn animation\n\n#\tvar animation_name = data.node.name + \".\" + data.animation\n#\n#\tvar animation_player := create_animation(animation_name, data)\n#\n#\tanimation_player.play(animation_name)\n#\n#\treturn animation_player\n\n#\n# Allows to specify the animations to be played in sequence.\n#\n# @param array sequence_data array of animation data:\n#\t\t{\n#\t\t\tnode = the node to animate\n#\t\t\tanimation = the animation to play\n#\t\t\tduration = duration in seconds\n#\t\t\tdelay = delay in seconds,\n#\t\t\tloop = loop animation?\n#\t\t\tcompleted = callback\n#\t\t}\n# @param hide_nodes_strategy set if the nodes needs to be hidden, make transparent or leave as they are\n#\nfunc create_sequence_animation(sequence_name: String, sequence_data: Array, hide_nodes_strategy: int = Visibility.IGNORE) -> AnimationPlayer:\n\tvar animation_player := _add_multiple_animations(sequence_name, sequence_data, hide_nodes_strategy, 1)\n\n\tanimation_player.connect(\"animation_started\", self, '_on_animation_started', [ sequence_data ])\n\n\treturn animation_player\n\nfunc sequence(sequence_data: Array, hide_nodes_strategy: int = Visibility.IGNORE) -> AnimationPlayer:\n\tif sequence_data.size() == 0:\n\t\tprinterr(\"no sequence animation defined\")\n\n\t\treturn null\n\n\tvar first_sequance = sequence_data[0]\n\tvar sequence_name = first_sequance.node.name + first_sequance.animation + '.sequence'\n\tvar animation_player := create_sequence_animation(sequence_name, sequence_data, hide_nodes_strategy)\n\n\tanimation_player.play(sequence_name)\n\n\treturn animation_player\n\n#\n# Allows to specify the animations to be played in parallel.\n#\n# @param array sequence_data array of animation data:\n#\t\t{\n#\t\t\tnode = the node to animate\n#\t\t\tanimation = the animation to play\n#\t\t\tduration = duration in seconds\n#\t\t\tdelay = delay in seconds,\n#\t\t\tloop = loop animation?\n#\t\t\tcompleted = callback\n#\t\t}\n# @param hide_nodes if true the node is automatically when its animation is not \"playing\"\n#\nfunc create_parallel_animation(sequence_name: String, sequence_data: Array, hide_nodes_strategy: int = Visibility.IGNORE) -> AnimationPlayer:\n\treturn _add_multiple_animations(sequence_name, sequence_data, hide_nodes_strategy, 0)\n\nfunc parallel(sequence_data: Array, hide_nodes_strategy: int = Visibility.IGNORE) -> AnimationPlayer:\n\tif sequence_data.size() == 0:\n\t\tprinterr(\"no sequence animation defined\")\n\n\t\treturn null\n\n\tvar first_sequance = sequence_data[0]\n\tvar sequence_name = first_sequance.node.name + first_sequance.animation + '.sequence'\n\tvar animation_player := create_parallel_animation(sequence_name, sequence_data, hide_nodes_strategy)\n\n\tanimation_player.play(sequence_name)\n\n\treturn animation_player\n\n#\n# Allows to easily animate a specific attribute\n#\n# @param data = {\n#\tnode = node to animate\n# attribute = attribute to animate, i.g.: modulate, offset,\n#\tfrom = initial value,\n#\tto = final value,\n#\teasing = not used yet,\n#\tduration = animation duration,\n#\tdelay = animation delay,\n#\tpivot = the node pivot,\n#\treset: bool = reset initial position\n# }\nfunc create_attribute_animation(animation_name: String, data: Dictionary) -> AnimationPlayer:\n\tvar animation_player := _get_anima_animation_player(data.node)\n\tvar animation := generate_attribute_animation(animation_name, data)\n\n\tanimation_player.add_animation(animation_name, animation)\n\tanimation_player.set_assigned_animation(animation_name)\n\n\treturn animation_player\n\nfunc generate_attribute_animation(animation_name: String, data: Dictionary) -> Animation:\n\tvar animation := Animation.new()\n\tvar track_index = animation.add_track(Animation.TYPE_VALUE)\n\n\tvar node: CanvasItem = data.node\n\tvar node_path := str(node.get_path())\n\tvar duration: float = _get_value(data, 'duration', DEFAULT_DURATION)\n\tvar delay: float = _get_value(data, 'delay', 0.0)\n\tvar hide_strategy: int = _get_value(data, 'hide_strategy', Visibility.IGNORE)\n\tvar reset_original_value: bool = _get_value(data, 'reset', false)\n\tvar track_path: String = node_path + \":\" + data.attribute\n\n\tanimation.track_set_path(track_index, track_path)\n\n\tif data.has('pivot'):\n\t\tAnimaNodesProperties.set_pivot(node, data.pivot)\n\n\tanimation.track_insert_key(track_index, delay + 0.0, data.from)\n\n\tif reset_original_value:\n\t\tanimation.track_insert_key(track_index, (delay + duration) * 0.5, data.to)\n\t\tanimation.track_insert_key(track_index, delay + duration, data.from)\n\telse:\n\t\tanimation.track_insert_key(track_index, delay + duration, data.to)\n\n\t_set_hide_strategy(node, animation, delay, hide_strategy)\n\t_setup_animation_params(animation, track_index, duration + delay, data)\n\tanimation.set_meta('_anima_animation_name', animation_name)\n\n\treturn animation\n\nfunc animate_attribute(data: Dictionary) -> AnimationPlayer:\n\tvar animation_name = data.node.name + \".\" + data.attribute\n\tvar animation_player := create_attribute_animation(animation_name, data)\n\n\tanimation_player.play(animation_name)\n\n\treturn animation_player\n\n#\n# Animate the Control/Sprite position\n#\n# @param data = {\n#\tnode = node to animate\n#\tfrom: Vector2 = (optional) the starting position. If not set the current position will be used\n#\tto: Vector2 = final position. If relative is set to true, this will indicates the difference in px from the current position\n#\trelative: bool = true means that the \"to\" param indicates the difference in px from the current position. Default false\n#\treset_position: bool = if true will also animate the position back to the original one. Default false\n#\thide_strategy: Visibility = the hide strategy to use. Default Visibility.IGNORE,\n#\tloop: bool = should the animation be looped\n#\tease: Easing = the easing to apply\n# }\n#\n#\nfunc create_position_animation(animation_name, data: Dictionary) -> AnimationPlayer:\n\treturn create_attribute_animation(animation_name, data)\n\nfunc generate_position_animation(animation_name: String, data: Dictionary) -> Animation:\n\tvar node = data.node\n\tif not data.has('from'):\n\t\tdata.from = AnimaNodesProperties.get_position(node)\n\n\tif data.has('relative') and data.relative:\n\t\tdata.to = data.from + data.to\n\n\tdata.attribute = AnimaNodesProperties.get_offset_property(node)\n\tdata.reset = _get_value(data, 'reset_position', false)\n\n\treturn generate_attribute_animation(animation_name, data)\n\nfunc _get_value(data: Dictionary, key: String, default):\n\treturn data[key] if data.has(key) else default\n\nfunc _get_anima_animation_player(node: CanvasItem) -> AnimationPlayer:\n\tfor child in node.get_children():\n\t\tif child is AnimationPlayer and child.name.find(\"Anima\") >= 0:\n\t\t\treturn child\n\n\tvar animation_player: AnimationPlayer = AnimationPlayer.new()\n\tanimation_player.name = \"AnimaTweenPlayer\"\n\n\tnode.add_child(animation_player)\n\n\treturn animation_player\n\nfunc _setup_animation_params(animation: Animation, track_id: int, length: float, data: Dictionary) -> void:\n\tvar loop: bool = _get_value(data, 'loop', false)\n\tvar loop_delay: float = _get_value(data, 'loop', 0.0)\n\tvar clamp_animation: bool = _get_value(data, '_clamp_animation', false)\n\n\tanimation.set_loop(loop)\n\n\tif loop and loop_delay > 0 or clamp_animation:\n\t\tanimation.track_set_interpolation_loop_wrap(track_id, false)\n\t\tlength += loop_delay\n\telse:\n\t\tanimation.track_set_interpolation_loop_wrap(track_id, true)\n\n\tanimation.length = length\n\n#\n# Creates/Update Animation\n#\n# @param animation_data = {\n#\tgroup = the animation group name.\n#\tnode = the node to animate\n#\tanimation = the Anima animation to use\n#\tduration = the duration in seconds (default = 0.7s)\n#\tdelay = the animation delay (default = 0.s)\n# }\n#\n# animation_name: String, node: CanvasItem, animation: String, duration_in_seconds: float = 0.7, delay_in_seconds: float = 0, loop: bool = false\n# \nfunc _add_animation_to_animation_resource(animation_resource: Animation, animation_data: Dictionary) -> void:\n\tvar node_path = animation_data.node.get_path()\n\n\tvar script_file = _get_full_script_path(animation_data.animation)\n\n\tif script_file == '':\n\t\tprinterr('No animation found with name %s' % [animation_data.animation])\n\n\t\treturn\n\n\tvar hide_strategy: int = _get_value(animation_data, 'hide_strategy', Visibility.IGNORE)\n\n\t_generate_animation({\n\t\tanimation_resource = animation_resource,\n\t\tscript = script_file, \n\t\tnode = animation_data.node,\n\t\tduration = animation_data.duration,\n\t\tdelay = animation_data.delay,\n\t\thide_strategy = hide_strategy,\n\t\tcompleted = _get_value(animation_data, 'completed', null)\n\t})\n\n#\n# Invoke the script tha generates the animation and return the Animation node\n#\n# @param data {\n# \tscript = the full script path to load\n#\tnode = the node to animate\n#\tduration = duration in seconds\n#\tdelay = delay in seconds\n#\thide = should the element be hidden before starting the animation? Default is true if delay time is bigger than 0\n#\nfunc _generate_animation(data: Dictionary) -> Animation:\n\tvar animation_script = load(data.script).new()\n\tvar animation: Animation = data.animation_resource\n\tvar node: CanvasItem = data.node\n\tvar duration: float = data.duration\n\tvar delay: float = _get_value(data, 'delay', 0.0)\n\tvar hide_strategy: int = _get_value(data, 'hide_strategy', Visibility.IGNORE)\n\n\tvar real_duration = animation_script.generate_animation(animation, data.node, duration, delay)\n\tvar node_path = str(node.get_path())\n\n\t_set_hide_strategy(node, animation, delay, hide_strategy)\n\n\tif real_duration is float and real_duration > 0:\n\t\tduration = real_duration\n\n\tif data.has('completed') and data.completed != null:\n\t\tvar timer := _get_anima_timer(node)\n\t\ttimer.one_shot = true\n\t\ttimer.wait_time = delay + duration\n\n\t\tvar is_already_connected := timer.is_connected(\"timeout\", self, '_on_timer_timeout')\n\t\tif is_already_connected:\n\t\t\ttimer.disconnect(\"timeout\", self, '_on_timer_timeout')\n\n\t\ttimer.connect(\"timeout\", self, '_on_timer_timeout', data.completed)\n\n\tanimation.set_length(duration + delay)\n\n\treturn animation\n\nfunc _set_hide_strategy(node: CanvasItem, animation: Animation, delay: float, hide_strategy: int) -> void:\n\tvar node_path = str(node.get_path())\n\n\t# Animating the \"visible\" property causes a glitch, were you can see, for a fraction,\n\t# the node to be rendered in is original state before carrying on with the animation.\n\t# To avoid this we hide it makeing it transparent\n\tif hide_strategy == Visibility.TRANSPARENT_ONLY or hide_strategy == Visibility.HIDDEN_AND_TRANSPARENT:\n\t\tvar can_set_modulate = not _is_node_animation_opacity(node, animation)\n\n\t\tvar modulate = node.modulate\n\t\tvar transparent = modulate\n\t\ttransparent.a = 0\n\n\t\tvar modulate_track_index = animation.add_track(Animation.TYPE_VALUE)\n\n\t\tanimation.track_set_path(modulate_track_index, node_path + \":modulate\")\n\t\tif can_set_modulate:\n\t\t\tanimation.track_insert_key(modulate_track_index, 0, transparent)\n\t\t\tanimation.track_insert_key(modulate_track_index, delay, transparent)\n\t\t\tanimation.track_insert_key(modulate_track_index, delay + 0.01, modulate)\n\n\t\t_make_node_transparent(node)\n\n\tif hide_strategy == Visibility.HIDDEN_ONLY or hide_strategy == Visibility.HIDDEN_AND_TRANSPARENT:\n\t\tvar visibility_track_index = animation.add_track(Animation.TYPE_VALUE)\n\n\t\tanimation.track_set_path(visibility_track_index, node_path + \":visible\")\n\t\tanimation.track_insert_key(visibility_track_index, 0, false)\n\t\tanimation.track_insert_key(visibility_track_index, delay - 0.01, true)\n\n\t\tnode.hide()\n\n#\n# If any of the animation is changing the :modulate property\n# we don't have to make the component visibile inside the modulate_track_index\nfunc _is_node_animation_opacity(node: CanvasItem, animation: Animation) -> bool:\n\tvar track_count = animation.get_track_count()\n\tvar path = str(node.get_path())\n\n\tfor track_index in track_count:\n\t\tvar track_path: String = str(animation.track_get_path(track_index))\n\n\t\tif track_path.begins_with(path) and track_path.ends_with(':modulate'):\n\t\t\treturn true\n\n\treturn false\n\nfunc _make_node_transparent(node) -> void:\n\tvar modulate = node.modulate\n\tvar transparent = modulate\n\n\ttransparent.a = 0\n\n\tnode.modulate = transparent\n\nfunc _get_anima_timer(node: CanvasItem) -> Timer:\n\tvar children = node.get_children()\n\n\tfor child in children:\n\t\tif child is Timer and child.name.begins_with('AnimaTimer'):\n\t\t\treturn child\n\n\tvar timer = Timer.new()\n\ttimer.name = 'AnimaTimer'\n\n\tnode.add_child(timer)\n\n\treturn timer\n\nfunc _add_multiple_animations(sequence_name: String, animations: Array, hide_nodes_strategy: int, delay_multiplier: int = 1) -> AnimationPlayer:\n\tvar next_delay := 0.0\n\tvar total_duration := 0.0\n\tvar first_node: CanvasItem\n\tvar first_player: AnimationPlayer\n\tvar should_copy_animation := false\n\n\tvar animation = Animation.new()\n\tvar index := 0\n\tfor data in animations:\n\t\tif data is Animation:\n\t\t\tvar node_path = str(data.track_get_path(0)).split(':')[0]\n\t\t\tvar node = get_node(node_path)\n\n\t\t\tif not first_player:\n\t\t\t\tfirst_player = _get_anima_animation_player(node)\n\n\t\t\t_copy_and_transpose_animation_track(data, animation, total_duration * delay_multiplier)\n\t\telse:\n\t\t\tif not first_player:\n\t\t\t\tfirst_node = animations[0].node\n\t\t\t\tfirst_player = _get_anima_animation_player(first_node)\n\n\t\t\t\tif first_player.has_animation(sequence_name):\n\t\t\t\t\tfirst_player.remove_animation(sequence_name)\n\n\t\t\tvar duration = _get_value(data, 'duration', DEFAULT_DURATION)\n\t\t\tvar delay = _get_value(data, 'delay', 0.0)\n\t\t\tvar hide_strategy = _get_value(data, 'hide_strategy', Visibility.IGNORE)\n\t\t\tvar completed = _get_value(data, 'completed', null)\n\n\t\t\t_add_animation_to_animation_resource(\n\t\t\t\tanimation,\n\t\t\t\t{\n\t\t\t\t\tnode = data.node,\n\t\t\t\t\tanimation = data.animation,\n\t\t\t\t\tduration = duration,\n\t\t\t\t\tdelay = delay + next_delay,\n\t\t\t\t\thide_strategy = hide_nodes_strategy,\n\t\t\t\t\tcompleted = completed\n\t\t\t\t}\n\t\t\t)\n\n\t\tnext_delay = animation.length * delay_multiplier\n\t\ttotal_duration += animation.length\n\t\tindex += 1\n\n\tanimation.length = total_duration\n\n\tif first_player:\n\t\tfirst_player.add_animation(sequence_name, animation)\n\t\tfirst_player.set_assigned_animation(sequence_name)\n\n\t\treturn first_player\n\n\tprinterr('The animations data contains no node!')\n\n\treturn AnimationPlayer.new()\n\nfunc _get_animations_list() -> Array:\n\tvar files = _get_scripts_in_dir(BASE_PATH)\n\n\tfiles.sort()\n\treturn files\n\nfunc _copy_and_transpose_animation_track(source: Animation, dest: Animation, offset: float) -> void:\n\tvar animation_name: String = source.get_meta('_anima_animation_name')\n\n\tfor track_index in range(0, source.get_track_count()):\n\t\tsource.copy_track(track_index, dest)\n\n\t\tvar new_track_index = dest.get_track_count() - 1\n\t\tvar track_type := source.track_get_type(new_track_index)\n\n\t\tfor key_index in range(0, dest.track_get_key_count(new_track_index)):\n\t\t\tvar original_key_time := dest.track_get_key_time(track_index, key_index)\n\t\t\tvar new_key_time := original_key_time + offset\n\n\t\t\tif original_key_time != new_key_time:\n\t\t\t\tdest.track_set_key_time(track_index, key_index, new_key_time)\n\nfunc _get_scripts_in_dir(path: String, files: Array = []) -> Array:\n\tvar dir = Directory.new()\n\tif dir.open(path) != OK:\n\t\treturn files\n\n\tdir.list_dir_begin()\n\tvar file_name = dir.get_next()\n\n\twhile file_name != \"\":\n\t\tif file_name != \".\" and file_name != \"..\":\n\t\t\tif dir.current_is_dir():\n\t\t\t\t_get_scripts_in_dir(path + file_name + '/', files)\n\t\t\telse:\n\t\t\t\tfiles.push_back(path + file_name)\n\n\t\tfile_name = dir.get_next()\n\n\treturn files\n\nfunc _get_full_script_path(animation_name: String) -> String:\n\tif not animation_name.ends_with('.gd'):\n\t\tanimation_name += '.gd'\n\n\tanimation_name = AnimaStrings.from_camel_to_snack_case(animation_name)\n\n\tfor file_name in get_available_animations():\n\t\tif file_name.ends_with(animation_name):\n\t\t\treturn file_name\n\n\treturn ''\n\nfunc _on_animation_started(name: String, data) -> void:\n\tfor item in data:\n\t\tif item is Dictionary and item.has('completed') and item.completed:\n\t\t\tvar timer := _get_anima_timer(item.node)\n\n\t\t\ttimer.stop()\n\t\t\ttimer.start()\n\nfunc _on_timer_timeout(func_ref: FuncRef, parameter) -> void:\n\tfunc_ref.call_funcv(parameter)\n",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/core/anima.gd",
+      "extends_class": [
+        "Node"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class anima.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+        {
+          "name": "Grid",
+          "value": {
+            "SEQUENCE_TOP_LEFT": 0
+          },
+          "data_type": "Dictionary",
+          "signature": "const Grid: Dictionary = {\"SEQUENCE_TOP_LEFT\":0}",
+          "description": ""
+        },
+        {
+          "name": "EASING",
+          "value": {
+            "LINEAR": 0,
+            "EASE": 1,
+            "EASE_IN_OUT": 2,
+            "EASE_IN": 3,
+            "EASE_OUT": 4,
+            "EASE_IN_SINE": 5,
+            "EASE_OUT_SINE": 6,
+            "EASE_IN_OUT_SINE": 7,
+            "EASE_IN_QUAD": 8,
+            "EASE_OUT_QUAD": 9,
+            "EASE_IN_OUT_QUAD": 10,
+            "EASE_IN_CUBIC": 11,
+            "EASE_OUT_CUBIC": 12,
+            "EASE_IN_OUT_CUBIC": 13,
+            "EASE_IN_QUART": 14,
+            "EASE_OUT_QUART": 15,
+            "EASE_IN_OUT_QUART": 16,
+            "EASE_IN_QUINT": 17,
+            "EASE_OUT_QUINT": 18,
+            "EASE_IN_OUT_QUINT": 19,
+            "EASE_IN_EXPO": 20,
+            "EASE_OUT_EXPO": 21,
+            "EASE_IN_OUT_EXPO": 22,
+            "EASE_IN_CIRC": 23,
+            "EASE_OUT_CIRC": 24,
+            "EASE_IN_OUT_CIRC": 25,
+            "EASE_IN_BACK": 26,
+            "EASE_OUT_BACK": 27,
+            "EASE_IN_OUT_BACK": 28,
+            "EASE_IN_ELASTIC": 29,
+            "EASE_OUT_ELASTIC": 30,
+            "EASE_IN_OUT_ELASTIC": 31,
+            "EASE_IN_BOUNCE": 32,
+            "EASE_OUT_BOUNCE": 33,
+            "EASE_IN_OUT_BOUNCE": 34
+          },
+          "data_type": "Dictionary",
+          "signature": "const EASING: Dictionary = {\"EASE\":1,\"EASE_IN\":3,\"EASE_IN_BACK\":26,\"EASE_IN_BOUNCE\":32,\"EASE_IN_CIRC\":23,\"EASE_IN_CUBIC\":11,\"EASE_IN_ELASTIC\":29,\"EASE_IN_EXPO\":20,\"EASE_IN_OUT\":2,\"EASE_IN_OUT_BACK\":28,\"EASE_IN_OUT_BOUNCE\":34,\"EASE_IN_OUT_CIRC\":25,\"EASE_IN_OUT_CUBIC\":13,\"EASE_IN_OUT_ELASTIC\":31,\"EASE_IN_OUT_EXPO\":22,\"EASE_IN_OUT_QUAD\":10,\"EASE_IN_OUT_QUART\":16,\"EASE_IN_OUT_QUINT\":19,\"EASE_IN_OUT_SINE\":7,\"EASE_IN_QUAD\":8,\"EASE_IN_QUART\":14,\"EASE_IN_QUINT\":17,\"EASE_IN_SINE\":5,\"EASE_OUT\":4,\"EASE_OUT_BACK\":27,\"EASE_OUT_BOUNCE\":33,\"EASE_OUT_CIRC\":24,\"EASE_OUT_CUBIC\":12,\"EASE_OUT_ELASTIC\":30,\"EASE_OUT_EXPO\":21,\"EASE_OUT_QUAD\":9,\"EASE_OUT_QUART\":15,\"EASE_OUT_QUINT\":18,\"EASE_OUT_SINE\":6,\"LINEAR\":0}",
+          "description": ""
+        },
+        {
+          "name": "Visibility",
+          "value": {
+            "IGNORE": 0,
+            "HIDDEN_ONLY": 1,
+            "TRANSPARENT_ONLY": 2,
+            "HIDDEN_AND_TRANSPARENT": 3
+          },
+          "data_type": "Dictionary",
+          "signature": "const Visibility: Dictionary = {\"HIDDEN_AND_TRANSPARENT\":3,\"HIDDEN_ONLY\":1,\"IGNORE\":0,\"TRANSPARENT_ONLY\":2}",
+          "description": ""
+        },
+        {
+          "name": "PIVOT",
+          "value": {
+            "CENTER": 0,
+            "CENTER_BOTTOM": 1,
+            "TOP_CENTER": 2,
+            "TOP_LEFT": 3,
+            "LEFT_BOTTOM": 4,
+            "RIGHT_BOTTOM": 5
+          },
+          "data_type": "Dictionary",
+          "signature": "const PIVOT: Dictionary = {\"CENTER\":0,\"CENTER_BOTTOM\":1,\"LEFT_BOTTOM\":4,\"RIGHT_BOTTOM\":5,\"TOP_CENTER\":2,\"TOP_LEFT\":3}",
+          "description": ""
+        },
+        {
+          "name": "BASE_PATH",
+          "value": "res://addons/anima/animations/",
+          "data_type": "String",
+          "signature": "const BASE_PATH: String = \"res://addons/anima/animations/\"",
+          "description": ""
+        }
+      ],
+      "members": [
+        {
+          "name": "_animations_list",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _animations_list: Array",
+          "description": ""
+        },
+        {
+          "name": "_custom_animations",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _custom_animations: Array",
+          "description": ""
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "begin",
+          "return_type": "AnimaNode",
+          "rpc_mode": 0,
+          "signature": "func begin(node, name: String = \"anima\") -> AnimaNode",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "var"
+            },
+            {
+              "name": "name",
+              "type": "String",
+              "default_value": "anima"
+            }
+          ]
+        },
+        {
+          "name": "group",
+          "return_type": "AnimaGrid",
+          "rpc_mode": 0,
+          "signature": "func group(group_node: Node) -> AnimaGrid",
+          "description": "",
+          "arguments": [
+            {
+              "name": "group_node",
+              "type": "Node"
+            }
+          ]
+        },
+        {
+          "name": "register_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func register_animation(script, animation_name: String) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "script",
+              "type": "var"
+            },
+            {
+              "name": "animation_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "_deregiter_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _deregiter_animation(animation_name: String) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "get_available_animations",
+          "return_type": "Array",
+          "rpc_mode": 0,
+          "signature": "func get_available_animations() -> Array",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "get_animation_script",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func get_animation_script(animation_name: String)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "is_built_in_animation",
+          "return_type": "bool",
+          "rpc_mode": 0,
+          "signature": "func is_built_in_animation(animation_name: String) -> bool",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "get_animation_script_with_path",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func get_animation_script_with_path(animation_name: String) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "_get_animations_list",
+          "return_type": "Array",
+          "rpc_mode": 0,
+          "signature": "func _get_animations_list() -> Array",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_get_scripts_in_dir",
+          "return_type": "Array",
+          "rpc_mode": 0,
+          "signature": "func _get_scripts_in_dir(path: String, files: Array) -> Array",
+          "description": "",
+          "arguments": [
+            {
+              "name": "path",
+              "type": "String"
+            },
+            {
+              "name": "files",
+              "type": "Array"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "AnimaEasing",
+      "path": "res://addons/anima/core/easings.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaEasing",
+      "description": "\n Easing functions and code has been inspired from:\n https://easings.net/\n\n",
+      "sub_classes": [
+
+      ],
+      "constants": [
+        {
+          "name": "EASING",
+          "value": {
+            "LINEAR": 0,
+            "EASE": 1,
+            "EASE_IN_OUT": 2,
+            "EASE_IN": 3,
+            "EASE_OUT": 4,
+            "EASE_IN_SINE": 5,
+            "EASE_OUT_SINE": 6,
+            "EASE_IN_OUT_SINE": 7,
+            "EASE_IN_QUAD": 8,
+            "EASE_OUT_QUAD": 9,
+            "EASE_IN_OUT_QUAD": 10,
+            "EASE_IN_CUBIC": 11,
+            "EASE_OUT_CUBIC": 12,
+            "EASE_IN_OUT_CUBIC": 13,
+            "EASE_IN_QUART": 14,
+            "EASE_OUT_QUART": 15,
+            "EASE_IN_OUT_QUART": 16,
+            "EASE_IN_QUINT": 17,
+            "EASE_OUT_QUINT": 18,
+            "EASE_IN_OUT_QUINT": 19,
+            "EASE_IN_EXPO": 20,
+            "EASE_OUT_EXPO": 21,
+            "EASE_IN_OUT_EXPO": 22,
+            "EASE_IN_CIRC": 23,
+            "EASE_OUT_CIRC": 24,
+            "EASE_IN_OUT_CIRC": 25,
+            "EASE_IN_BACK": 26,
+            "EASE_OUT_BACK": 27,
+            "EASE_IN_OUT_BACK": 28,
+            "EASE_IN_ELASTIC": 29,
+            "EASE_OUT_ELASTIC": 30,
+            "EASE_IN_OUT_ELASTIC": 31,
+            "EASE_IN_BOUNCE": 32,
+            "EASE_OUT_BOUNCE": 33,
+            "EASE_IN_OUT_BOUNCE": 34
+          },
+          "data_type": "Dictionary",
+          "signature": "const EASING: Dictionary = {\"EASE\":1,\"EASE_IN\":3,\"EASE_IN_BACK\":26,\"EASE_IN_BOUNCE\":32,\"EASE_IN_CIRC\":23,\"EASE_IN_CUBIC\":11,\"EASE_IN_ELASTIC\":29,\"EASE_IN_EXPO\":20,\"EASE_IN_OUT\":2,\"EASE_IN_OUT_BACK\":28,\"EASE_IN_OUT_BOUNCE\":34,\"EASE_IN_OUT_CIRC\":25,\"EASE_IN_OUT_CUBIC\":13,\"EASE_IN_OUT_ELASTIC\":31,\"EASE_IN_OUT_EXPO\":22,\"EASE_IN_OUT_QUAD\":10,\"EASE_IN_OUT_QUART\":16,\"EASE_IN_OUT_QUINT\":19,\"EASE_IN_OUT_SINE\":7,\"EASE_IN_QUAD\":8,\"EASE_IN_QUART\":14,\"EASE_IN_QUINT\":17,\"EASE_IN_SINE\":5,\"EASE_OUT\":4,\"EASE_OUT_BACK\":27,\"EASE_OUT_BOUNCE\":33,\"EASE_OUT_CIRC\":24,\"EASE_OUT_CUBIC\":12,\"EASE_OUT_ELASTIC\":30,\"EASE_OUT_EXPO\":21,\"EASE_OUT_QUAD\":9,\"EASE_OUT_QUART\":15,\"EASE_OUT_QUINT\":18,\"EASE_OUT_SINE\":6,\"LINEAR\":0}",
+          "description": ""
+        },
+        {
+          "name": "_easing_mapping",
+          "value": {
+            "0": null,
+            "1": [
+              0.25,
+              0.1,
+              0.25,
+              1
+            ],
+            "2": [
+              0.42,
+              0,
+              0.58,
+              1
+            ],
+            "3": [
+              0.42,
+              0,
+              1,
+              1
+            ],
+            "4": [
+              0,
+              0,
+              0.58,
+              1
+            ],
+            "5": [
+              0,
+              0,
+              1,
+              0.5
+            ],
+            "6": [
+              0.61,
+              1,
+              0.88,
+              1
+            ],
+            "7": [
+              0.37,
+              0,
+              0.63,
+              1
+            ],
+            "8": [
+              0.11,
+              0,
+              0.5,
+              0
+            ],
+            "9": [
+              0.5,
+              1,
+              0.89,
+              1
+            ],
+            "10": [
+              0.45,
+              0,
+              0.55,
+              1
+            ],
+            "11": [
+              0.32,
+              0,
+              0.67,
+              0
+            ],
+            "12": [
+              0.33,
+              1,
+              0.68,
+              1
+            ],
+            "13": [
+              0.65,
+              0,
+              0.35,
+              1
+            ],
+            "14": [
+              0.5,
+              0,
+              0.75,
+              0
+            ],
+            "15": [
+              0.25,
+              1,
+              0.5,
+              1
+            ],
+            "16": [
+              0.76,
+              0,
+              0.24,
+              1
+            ],
+            "17": [
+              0.64,
+              0,
+              0.78,
+              0
+            ],
+            "18": [
+              0.22,
+              1,
+              0.36,
+              1
+            ],
+            "19": [
+              0.83,
+              0,
+              0.17,
+              1
+            ],
+            "20": [
+              0.7,
+              0,
+              0.84,
+              0
+            ],
+            "21": [
+              0.16,
+              1,
+              0.3,
+              1
+            ],
+            "22": [
+              0.87,
+              0,
+              0.13,
+              1
+            ],
+            "23": [
+              0.55,
+              0,
+              0.1,
+              0.45
+            ],
+            "24": [
+              0,
+              0.55,
+              0.45,
+              1
+            ],
+            "25": [
+              0.85,
+              0,
+              0.15,
+              1
+            ],
+            "26": [
+              0.36,
+              0,
+              0.66,
+              -0.56
+            ],
+            "27": [
+              0.36,
+              1.56,
+              0.64,
+              1
+            ],
+            "28": [
+              0.68,
+              -0.6,
+              0.32,
+              1.6
+            ],
+            "29": "ease_in_elastic",
+            "30": "ease_out_elastic",
+            "31": "ease_in_out_elastic",
+            "32": "ease_in_bounce",
+            "33": "ease_out_bounce",
+            "34": "ease_in_out_bounce"
+          },
+          "data_type": "Dictionary",
+          "signature": "const _easing_mapping: Dictionary = {\"0\":null,\"1\":[0.25,0.1,0.25,1],\"2\":[0.42,0,0.58,1],\"3\":[0.42,0,1,1],\"4\":[0,0,0.58,1],\"5\":[0,0,1,0.5],\"6\":[0.61,1,0.88,1],\"7\":[0.37,0,0.63,1],\"8\":[0.11,0,0.5,0],\"9\":[0.5,1,0.89,1],\"10\":[0.45,0,0.55,1],\"11\":[0.32,0,0.67,0],\"12\":[0.33,1,0.68,1],\"13\":[0.65,0,0.35,1],\"14\":[0.5,0,0.75,0],\"15\":[0.25,1,0.5,1],\"16\":[0.76,0,0.24,1],\"17\":[0.64,0,0.78,0],\"18\":[0.22,1,0.36,1],\"19\":[0.83,0,0.17,1],\"20\":[0.7,0,0.84,0],\"21\":[0.16,1,0.3,1],\"22\":[0.87,0,0.13,1],\"23\":[0.55,0,0.1,0.45],\"24\":[0,0.55,0.45,1],\"25\":[0.85,0,0.15,1],\"26\":[0.36,0,0.66,-0.56],\"27\":[0.36,1.56,0.64,1],\"28\":[0.68,-0.6,0.32,1.6],\"29\":\"ease_in_elastic\",\"30\":\"ease_out_elastic\",\"31\":\"ease_in_out_elastic\",\"32\":\"ease_in_bounce\",\"33\":\"ease_out_bounce\",\"34\":\"ease_in_out_bounce\"}",
+          "description": ""
+        },
+        {
+          "name": "_ELASTIC_C4",
+          "value": 2.094395,
+          "data_type": "float",
+          "signature": "const _ELASTIC_C4: float = 2.094395",
+          "description": ""
+        },
+        {
+          "name": "_ELASTIC_C5",
+          "value": 1.396263,
+          "data_type": "float",
+          "signature": "const _ELASTIC_C5: float = 1.396263",
+          "description": ""
+        },
+        {
+          "name": "n1",
+          "value": 7.5625,
+          "data_type": "float",
+          "signature": "const n1: float = 7.5625",
+          "description": ""
+        },
+        {
+          "name": "d1",
+          "value": 2.75,
+          "data_type": "float",
+          "signature": "const d1: float = 2.75",
+          "description": ""
+        }
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+
+      ],
+      "static_functions": [
+        {
+          "name": "get_easing_points",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func get_easing_points(easing_name)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "easing_name",
+              "type": "var"
+            }
+          ]
+        },
+        {
+          "name": "ease_in_elastic",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func ease_in_elastic(elapsed: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "ease_out_elastic",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func ease_out_elastic(elapsed: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "ease_in_out_elastic",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func ease_in_out_elastic(elapsed: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "ease_in_bounce",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func ease_in_bounce(elapsed: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "ease_out_bounce",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func ease_out_bounce(elapsed: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "ease_in_out_bounce",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func ease_in_out_bounce(elapsed: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AnimaNode",
+      "path": "res://addons/anima/core/node.gd",
+      "extends_class": [
+        "Node"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaNode",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "_anima_tween",
+          "data_type": "AnimaTween",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _anima_tween: AnimaTween",
+          "description": ""
+        },
+        {
+          "name": "_total_animation",
+          "data_type": "float",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _total_animation: float",
+          "description": ""
+        },
+        {
+          "name": "_last_animation_duration",
+          "data_type": "float",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _last_animation_duration: float",
+          "description": ""
+        },
+        {
+          "name": "_timer",
+          "data_type": "Timer",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _timer: Timer",
+          "description": ""
+        },
+        {
+          "name": "_loop_times",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _loop_times: int",
+          "description": ""
+        },
+        {
+          "name": "_tweens_left",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _tweens_left: int",
+          "description": ""
+        },
+        {
+          "name": "_ignore",
+          "data_type": "var",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _ignore",
+          "description": ""
+        }
+      ],
+      "signals": [
+        {
+          "name": "animation_completed",
+          "arguments": [
+
+          ],
+          "signature": "signal animation_completed()",
+          "description": ""
+        }
+      ],
+      "methods": [
+        {
+          "name": "_exit_tree",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _exit_tree()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "init",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func init(node: Node)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "Node"
+            }
+          ]
+        },
+        {
+          "name": "then",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func then(data: Dictionary)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        },
+        {
+          "name": "with",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func with(data: Dictionary) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        },
+        {
+          "name": "also",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func also(data: Dictionary) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        },
+        {
+          "name": "set_visibility_strategy",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_visibility_strategy(strategy: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "strategy",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "clear",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func clear() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "play",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func play() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "stop",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func stop() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "play_with_delay",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func play_with_delay(delay: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "delay",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "get_length",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func get_length() -> float",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_do_play",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _do_play() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_setup_animation",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func _setup_animation(data: Dictionary) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        },
+        {
+          "name": "_on_tween_completed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_tween_completed(_ignore, _ignore2) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "_ignore",
+              "type": "var"
+            },
+            {
+              "name": "_ignore2",
+              "type": "var"
+            }
+          ]
+        },
+        {
+          "name": "_on_timer_timeout",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_timer_timeout() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_all_tween_completed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_all_tween_completed() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "AnimaTween",
+      "path": "res://addons/anima/core/tween.gd",
+      "extends_class": [
+        "Tween"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaTween",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "_animation_data",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _animation_data: Array",
+          "description": ""
+        },
+        {
+          "name": "_loops_count",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _loops_count: int",
+          "description": ""
+        },
+        {
+          "name": "_loop_times",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _loop_times: int",
+          "description": ""
+        },
+        {
+          "name": "_loop_delay",
+          "data_type": "float",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _loop_delay: float",
+          "description": ""
+        },
+        {
+          "name": "_fake_property",
+          "data_type": "Dictionary",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _fake_property: Dictionary",
+          "description": " Needed to use interpolate_property\n"
+        },
+        {
+          "name": "_visibility_strategy",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _visibility_strategy: int",
+          "description": ""
+        },
+        {
+          "name": "_callbacks",
+          "data_type": "Dictionary",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _callbacks: Dictionary",
+          "description": ""
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "play",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func play()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "add_animation_data",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func add_animation_data(animation_data: Dictionary) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_data",
+              "type": "Dictionary"
+            }
+          ]
+        },
+        {
+          "name": "add_relative_frames",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func add_relative_frames(data: Dictionary, property: String, frames: Array) -> float",
+          "description": "\n Given an array of frames generates the animation data using relative end value\n\n frames = [{\n\tpercentage = the percentage of the animation\n\tto = the relative end value\n\teasing_points = the easing points for the bezier curver (optional)\n }]\n\n",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            },
+            {
+              "name": "property",
+              "type": "String"
+            },
+            {
+              "name": "frames",
+              "type": "Array"
+            }
+          ]
+        },
+        {
+          "name": "add_frames",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func add_frames(data: Dictionary, property: String, frames: Array) -> float",
+          "description": "\n Given an array of frames generates the animation data using absolute end value\n\n frames = [{\n\tpercentage = the percentage of the animation\n\tto = the relative end value\n\teasing_points = the easing points for the bezier curver (optional)\n }]\n\n",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            },
+            {
+              "name": "property",
+              "type": "String"
+            },
+            {
+              "name": "frames",
+              "type": "Array"
+            }
+          ]
+        },
+        {
+          "name": "_add_frames",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func _add_frames(data: Dictionary, property: String, frames: Array, relative: bool = false) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "data",
+              "type": "Dictionary"
+            },
+            {
+              "name": "property",
+              "type": "String"
+            },
+            {
+              "name": "frames",
+              "type": "Array"
+            },
+            {
+              "name": "relative",
+              "type": "bool",
+              "default_value": false
+            }
+          ]
+        },
+        {
+          "name": "get_animation_data",
+          "return_type": "Array",
+          "rpc_mode": 0,
+          "signature": "func get_animation_data() -> Array",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "get_data_hash",
+          "return_type": "int",
+          "rpc_mode": 0,
+          "signature": "func get_data_hash() -> int",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "get_wait_time",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func get_wait_time() -> float",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "get_animations_count",
+          "return_type": "int",
+          "rpc_mode": 0,
+          "signature": "func get_animations_count() -> int",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "clear_animations",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func clear_animations() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "set_visibility_strategy",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_visibility_strategy(strategy: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "strategy",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "_apply_visibility_strategy",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _apply_visibility_strategy(animation_data: Dictionary, strategy: int)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_data",
+              "type": "Dictionary"
+            },
+            {
+              "name": "strategy",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "_on_tween_step_with_easing",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, elapsed: float)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "object",
+              "type": "Object"
+            },
+            {
+              "name": "key",
+              "type": "NodePath"
+            },
+            {
+              "name": "_time",
+              "type": "float"
+            },
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_on_tween_step_with_easing_callback",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_tween_step_with_easing_callback(object: Object, key: NodePath, _time: float, elapsed: float)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "object",
+              "type": "Object"
+            },
+            {
+              "name": "key",
+              "type": "NodePath"
+            },
+            {
+              "name": "_time",
+              "type": "float"
+            },
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_on_tween_step_without_easing",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_tween_step_without_easing(object: Object, key: NodePath, _time: float, elapsed: float)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "object",
+              "type": "Object"
+            },
+            {
+              "name": "key",
+              "type": "NodePath"
+            },
+            {
+              "name": "_time",
+              "type": "float"
+            },
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_get_animation_data_index",
+          "return_type": "int",
+          "rpc_mode": 0,
+          "signature": "func _get_animation_data_index(key: NodePath) -> int",
+          "description": "",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "NodePath"
+            }
+          ]
+        },
+        {
+          "name": "_cubic_bezier",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "p0",
+              "type": "Vector2"
+            },
+            {
+              "name": "p1",
+              "type": "Vector2"
+            },
+            {
+              "name": "p2",
+              "type": "Vector2"
+            },
+            {
+              "name": "p3",
+              "type": "Vector2"
+            },
+            {
+              "name": "t",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_calculate_from_and_to",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _calculate_from_and_to(index: int, value: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_maybe_calculate_relative_value",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _maybe_calculate_relative_value(relative, value, current_node_value)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "relative",
+              "type": "var"
+            },
+            {
+              "name": "value",
+              "type": "var"
+            },
+            {
+              "name": "current_node_value",
+              "type": "var"
+            }
+          ]
+        },
+        {
+          "name": "_on_animation_with_key",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_animation_with_key(index: int, elapsed: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_on_animation_with_subkey",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_animation_with_subkey(index: int, elapsed: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_on_animation_without_key",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_animation_without_key(index: int, elapsed: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "elapsed",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "_maybe_adjust_modulate_value",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _maybe_adjust_modulate_value(animation_data: Dictionary, value)",
+          "description": "\n We don't want the user to specify the from/to value as color\n we animate opacity.\n So this function converts the \"from = #\" -> Color(.., .., .., #)\n same for the to value\n\n",
+          "arguments": [
+            {
+              "name": "animation_data",
+              "type": "Dictionary"
+            },
+            {
+              "name": "value",
+              "type": "var"
+            }
+          ]
+        },
+        {
+          "name": "_on_tween_completed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_tween_completed(_ignore, property_name: String) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "_ignore",
+              "type": "var"
+            },
+            {
+              "name": "property_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "_on_tween_started",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_tween_started(_ignore, key) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "_ignore",
+              "type": "var"
+            },
+            {
+              "name": "key",
+              "type": "var"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "AnimaGrid",
+      "path": "res://addons/anima/core/grid.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaGrid",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "_children",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _children: Array",
+          "description": ""
+        },
+        {
+          "name": "_initil_delay",
+          "data_type": "float",
+          "default_value": 0,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _initil_delay: float = 0",
+          "description": ""
+        },
+        {
+          "name": "_children_delay",
+          "data_type": "float",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _children_delay: float",
+          "description": ""
+        },
+        {
+          "name": "_animation",
+          "data_type": "AnimaNode",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _animation: AnimaNode",
+          "description": ""
+        },
+        {
+          "name": "_animation_name",
+          "data_type": "String",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _animation_name: String",
+          "description": ""
+        },
+        {
+          "name": "_animation_type",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _animation_type: int",
+          "description": ""
+        },
+        {
+          "name": "_visibility_strategy",
+          "data_type": "int",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _visibility_strategy: int",
+          "description": ""
+        },
+        {
+          "name": "_duration",
+          "data_type": "float",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _duration: float",
+          "description": ""
+        }
+      ],
+      "signals": [
+        {
+          "name": "animation_completed",
+          "arguments": [
+
+          ],
+          "signature": "signal animation_completed()",
+          "description": ""
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func init(grid_node: Node, grid_size: Vector2) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "grid_node",
+              "type": "Node"
+            },
+            {
+              "name": "grid_size",
+              "type": "Vector2"
+            }
+          ]
+        },
+        {
+          "name": "play",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func play() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "set_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_animation(animation_name: String) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_name",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "set_start_delay",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_start_delay(initial_delay: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "initial_delay",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "set_items_delay",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_items_delay(item_delay: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "item_delay",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "set_animation_type",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_animation_type(animation_type: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_type",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "set_visibility_strategy",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_visibility_strategy(strategy: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "strategy",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "set_item_duration",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_item_duration(duration: float) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "duration",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "end",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func end() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_generate_animation_sequence_top_left",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _generate_animation_sequence_top_left() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_anima_animation_completed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_anima_animation_completed() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "AnimaPropertyGenerator",
+      "path": "res://addons/anima/utils/property_generator.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaPropertyGenerator",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+
+      ],
+      "static_functions": [
+        {
+          "name": "generate_base",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func generate_base(name: String, default, type, conditions = null, animatable: bool = false) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            },
+            {
+              "name": "default",
+              "type": "var"
+            },
+            {
+              "name": "type",
+              "type": "var"
+            },
+            {
+              "name": "conditions",
+              "type": "var",
+              "default_value": null
+            },
+            {
+              "name": "animatable",
+              "type": "bool",
+              "default_value": false
+            }
+          ]
+        },
+        {
+          "name": "generate_int",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func generate_int(name: String, default, conditions = null) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            },
+            {
+              "name": "default",
+              "type": "var"
+            },
+            {
+              "name": "conditions",
+              "type": "var",
+              "default_value": null
+            }
+          ]
+        },
+        {
+          "name": "generate_float",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func generate_float(name: String, default, conditions = null) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            },
+            {
+              "name": "default",
+              "type": "var"
+            },
+            {
+              "name": "conditions",
+              "type": "var",
+              "default_value": null
+            }
+          ]
+        },
+        {
+          "name": "generate_color",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func generate_color(name: String, default, conditions = null) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            },
+            {
+              "name": "default",
+              "type": "var"
+            },
+            {
+              "name": "conditions",
+              "type": "var",
+              "default_value": null
+            }
+          ]
+        },
+        {
+          "name": "generate_enum",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func generate_enum(name: String, values: PoolStringArray, default, conditions = null) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            },
+            {
+              "name": "values",
+              "type": "PoolStringArray"
+            },
+            {
+              "name": "default",
+              "type": "var"
+            },
+            {
+              "name": "conditions",
+              "type": "var",
+              "default_value": null
+            }
+          ]
+        },
+        {
+          "name": "generate_condition",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func generate_condition(field: String, compare: String, value: String) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "field",
+              "type": "String"
+            },
+            {
+              "name": "compare",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "String"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AnimaKeyNames",
+      "path": "res://addons/anima/utils/key_names.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaKeyNames",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+        {
+          "name": "ANIMA_EVENTS",
+          "value": "anima_events",
+          "data_type": "String",
+          "signature": "const ANIMA_EVENTS: String = \"anima_events\"",
+          "description": ""
+        },
+        {
+          "name": "PROPERTIES",
+          "value": "anima_properties",
+          "data_type": "String",
+          "signature": "const PROPERTIES: String = \"anima_properties\"",
+          "description": ""
+        },
+        {
+          "name": "BASE_KEY",
+          "value": "anima_interactions",
+          "data_type": "String",
+          "signature": "const BASE_KEY: String = \"anima_interactions\"",
+          "description": ""
+        },
+        {
+          "name": "ACTION_ADD",
+          "value": "ADD",
+          "data_type": "String",
+          "signature": "const ACTION_ADD: String = \"ADD\"",
+          "description": " Actions\n"
+        },
+        {
+          "name": "ACTION_UPDATE",
+          "value": "UPDATE",
+          "data_type": "String",
+          "signature": "const ACTION_UPDATE: String = \"UPDATE\"",
+          "description": ""
+        },
+        {
+          "name": "INTERACTION_ID",
+          "value": "anima_interactions/selected",
+          "data_type": "String",
+          "signature": "const INTERACTION_ID: String = \"anima_interactions/selected\"",
+          "description": " Interactions\n"
+        },
+        {
+          "name": "INTERACTIONS_LIST",
+          "value": "anima_interactions/list",
+          "data_type": "String",
+          "signature": "const INTERACTIONS_LIST: String = \"anima_interactions/list\"",
+          "description": ""
+        },
+        {
+          "name": "EVENTS_LIST",
+          "value": "anima_events/list",
+          "data_type": "String",
+          "signature": "const EVENTS_LIST: String = \"anima_events/list\"",
+          "description": " Events\n"
+        },
+        {
+          "name": "EVENTS_CUSTOM_LIST",
+          "value": "anima_interactions/custom_events",
+          "data_type": "String",
+          "signature": "const EVENTS_CUSTOM_LIST: String = \"anima_interactions/custom_events\"",
+          "description": ""
+        },
+        {
+          "name": "EVENTS_SELECTED",
+          "value": "anima_interactions/{INTERACTION_ID}/custom_events",
+          "data_type": "String",
+          "signature": "const EVENTS_SELECTED: String = \"anima_interactions/{INTERACTION_ID}/custom_events\"",
+          "description": ""
+        },
+        {
+          "name": "INTERACTION_INTERPOLATED_KEY",
+          "value": "{INTERACTION_ID}",
+          "data_type": "String",
+          "signature": "const INTERACTION_INTERPOLATED_KEY: String = \"{INTERACTION_ID}\"",
+          "description": " Interpolated keys\n"
+        }
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "AnimaStrings",
+      "path": "res://addons/anima/utils/strings.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaStrings",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+
+      ],
+      "static_functions": [
+        {
+          "name": "from_camel_to_snack_case",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func from_camel_to_snack_case(string: String) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "string",
+              "type": "String"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AnimaNodesProperties",
+      "path": "res://addons/anima/utils/node_properties.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimaNodesProperties",
+      "description": "\n Different node types have different property names\n\n Example:\n   Control: position is \"rect_position\"\n   Node2D : position is \"offset\"\n\n So, this utility class helps the animations to figure out which\n property to animate :)\n\n",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+
+      ],
+      "static_functions": [
+        {
+          "name": "get_offset_property",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func get_offset_property(node: CanvasItem) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "get_scale_property",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func get_scale_property(node: CanvasItem) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "get_rotation_property",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func get_rotation_property(node: CanvasItem) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "get_position",
+          "return_type": "Vector2",
+          "rpc_mode": 0,
+          "signature": "func get_position(node: CanvasItem) -> Vector2",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "get_size",
+          "return_type": "Vector2",
+          "rpc_mode": 0,
+          "signature": "func get_size(node: CanvasItem) -> Vector2",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "get_scale",
+          "return_type": "Vector2",
+          "rpc_mode": 0,
+          "signature": "func get_scale(node: CanvasItem) -> Vector2",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "get_rotation",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "func get_rotation(node: CanvasItem) -> float",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            }
+          ]
+        },
+        {
+          "name": "set_pivot",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func set_pivot(node: CanvasItem, pivot: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            },
+            {
+              "name": "pivot",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "get_property_initial_value",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func get_property_initial_value(node: CanvasItem, property: String)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            },
+            {
+              "name": "property",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "map_property_to_godot_property",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func map_property_to_godot_property(node: CanvasItem, property: String) -> Dictionary",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "CanvasItem"
+            },
+            {
+              "name": "property",
+              "type": "String"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/shake_x.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class shake_x.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class shake_x.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/shake_y.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class shake_y.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class shake_y.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/bounce.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bounce.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bounce.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/flash.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class flash.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class flash.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/heartbeat.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class heartbeat.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class heartbeat.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/jello.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class jello.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class jello.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/pulse.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class pulse.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class pulse.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/headshake.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class headshake.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class headshake.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/swing.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class swing.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class swing.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/tada.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class tada.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class tada.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/wobble.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class wobble.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class wobble.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/attention_seeker/rubber_band.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rubber_band.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rubber_band.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_bottom_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_bottom_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_bottom_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_bottom_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_bottom_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_bottom_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_down_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_down_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_down_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_left_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_left_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_left_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_right_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_right_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_right_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_top_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_top_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_top_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_top_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_top_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_top_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_entrances/fade_in_up_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_in_up_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_in_up_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/text/typewrite.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class typewrite.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "float",
+          "rpc_mode": 0,
+          "signature": "class typewrite.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/slide_exits/slide_out_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class slide_out_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class slide_out_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/slide_exits/slide_out_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class slide_out_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class slide_out_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/slide_exits/slide_out_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class slide_out_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class slide_out_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/slide_exits/slide_out_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class slide_out_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class slide_out_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_bottom_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_bottom_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_bottom_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_up_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_up_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_up_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_top_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_top_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_top_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_top_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_top_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_top_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_right_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_right_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_right_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_left_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_left_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_left_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_down_big.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_down_big.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_down_big.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/fading_exits/fade_out_bottom_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class fade_out_bottom_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class fade_out_bottom_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/special/roll_out.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class roll_out.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class roll_out.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/special/jack_in_the_box.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class jack_in_the_box.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class jack_in_the_box.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/special/hinge.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class hinge.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class hinge.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/special/roll_in.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class roll_in.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class roll_in.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_entrances/back_in_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_in_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_in_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_entrances/back_in_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_in_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_in_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_entrances/back_in_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_in_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_in_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_entrances/back_in_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_in_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_in_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_exits/back_out_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_out_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_out_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_exits/back_out_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_out_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_out_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_exits/back_out_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_out_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_out_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/back_exits/back_out_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class back_out_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class back_out_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_entrances/bouncing_in.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bouncing_in.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bouncing_in.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_entrances/bouncing_in_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bouncing_in_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bouncing_in_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_entrances/bouncing_in_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bouncing_in_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bouncing_in_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_entrances/bouncing_in_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bouncing_in_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bouncing_in_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_entrances/bouncing_in_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bouncing_in_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bouncing_in_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_exits/bounce_out.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bounce_out.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bounce_out.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_exits/bounce_out_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bounce_out_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bounce_out_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_exits/bounce_out_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bounce_out_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bounce_out_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_exits/bounce_out_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bounce_out_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bounce_out_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/bouncing_exits/bounce_out_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class bounce_out_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class bounce_out_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/lightspeed/light_speed_in_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class light_speed_in_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class light_speed_in_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/lightspeed/light_speed_in_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class light_speed_in_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class light_speed_in_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/lightspeed/light_speed_out_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class light_speed_out_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class light_speed_out_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/lightspeed/light_speed_out_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class light_speed_out_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class light_speed_out_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_entrances/rotate_in.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_in.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_in.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_entrances/rotate_in_down_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_in_down_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_in_down_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_entrances/rotate_in_down_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_in_down_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_in_down_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_entrances/rotate_in_up_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_in_up_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_in_up_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_entrances/rotate_in_up_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_in_up_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_in_up_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_exits/rotate_out.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_out.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_out.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_exits/rotate_out_down_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_out_down_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_out_down_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_exits/rotate_out_up_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_out_up_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_out_up_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_exits/rotate_out_up_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_out_up_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_out_up_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/rotating_exits/rotate_out_down_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class rotate_out_down_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class rotate_out_down_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_entrances/zoom_in.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_entrances/zoom_in_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_entrances/zoom_in_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_entrances/zoom_in_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_entrances/zoom_in_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_exits/zoom_in_down.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in_down.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in_down.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_exits/zoom_in_left.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_in_left.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_in_left.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_exits/zoom_out.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_out.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_out.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_exits/zoom_out_up.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_out_up.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_out_up.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/animations/zooming_exits/zoom_out_right.gd",
+      "extends_class": [
+
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class zoom_out_right.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "class zoom_out_right.gd",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://addons/anima/plugin.gd",
+      "extends_class": [
+        "EditorPlugin"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class plugin.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "plugin",
+          "data_type": "var",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var plugin",
+          "description": ""
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "get_name",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func get_name()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_enter_tree",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _enter_tree()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_exit_tree",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _exit_tree()",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/AnimationsPreview.gd",
+      "extends_class": [
+        "Control"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimationsPreview.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_setup_list",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _setup_list() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "create_new_header",
+          "return_type": "PanelContainer",
+          "rpc_mode": 0,
+          "signature": "func create_new_header(text: String) -> PanelContainer",
+          "description": "",
+          "arguments": [
+            {
+              "name": "text",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "_on_animation_button_pressed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_animation_button_pressed(button: Button) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "button",
+              "type": "Button"
+            }
+          ]
+        },
+        {
+          "name": "_play_animation",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _play_animation(node: Node, button: Button)",
+          "description": "",
+          "arguments": [
+            {
+              "name": "node",
+              "type": "Node"
+            },
+            {
+              "name": "button",
+              "type": "Button"
+            }
+          ]
+        },
+        {
+          "name": "_remove_duplicate",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _remove_duplicate(parent: Node, node_to_ignore: Node) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "parent",
+              "type": "Node"
+            },
+            {
+              "name": "node_to_ignore",
+              "type": "Node"
+            }
+          ]
+        },
+        {
+          "name": "_on_control_animation_completed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_control_animation_completed(animation_player: AnimationPlayer) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "animation_player",
+              "type": "AnimationPlayer"
+            }
+          ]
+        },
+        {
+          "name": "_on_ControlCheckbox_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ControlCheckbox_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_SpriteCheckbox_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_SpriteCheckbox_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        },
+        {
+          "name": "_on_Timer_timeout",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_Timer_timeout()",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/AnimateGroup.gd",
+      "extends_class": [
+        "Control"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class AnimateGroup.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "_tile_size",
+          "data_type": "Vector2",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _tile_size: Vector2",
+          "description": ""
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/SequenceAndParallel.gd",
+      "extends_class": [
+        "CenterContainer"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class SequenceAndParallel.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_init",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _init()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_Button_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_Button_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "generate_animation",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "anima_tween",
+              "type": "AnimaTween"
+            },
+            {
+              "name": "data",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/SequenceCallback.gd",
+      "extends_class": [
+        "HBoxContainer"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class SequenceCallback.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "_animation",
+          "data_type": "AnimaNode",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _animation: AnimaNode",
+          "description": ""
+        },
+        {
+          "name": "_check_sprites",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var _check_sprites: Array",
+          "description": ""
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_Start_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_Start_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_button_completed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_button_completed(index: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/Easings.gd",
+      "extends_class": [
+        "PanelContainer"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class Easings.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_easing_button_pressed",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _on_easing_button_pressed(easing_value: int) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "easing_value",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/components/ShowAllDemos.gd",
+      "extends_class": [
+        "Button"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class ShowAllDemos.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_on_ShowAllDemos_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ShowAllDemos_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/DemosSelector.gd",
+      "extends_class": [
+        "VBoxContainer"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class DemosSelector.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_change_scene",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _change_scene(path: String) -> null",
+          "description": "",
+          "arguments": [
+            {
+              "name": "path",
+              "type": "String"
+            }
+          ]
+        },
+        {
+          "name": "_on_ButtonAnimations_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ButtonAnimations_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_ButtonEasings_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ButtonEasings_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_Button1_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_Button1_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_ButtonSequence_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ButtonSequence_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_ButtonCallbacks_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ButtonCallbacks_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        },
+        {
+          "name": "_on_ButtonSequence2_pressed",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _on_ButtonSequence2_pressed()",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://demos/SequenceWithParallel.gd",
+      "extends_class": [
+        "Node2D"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class SequenceWithParallel.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_ready",
+          "return_type": "var",
+          "rpc_mode": 0,
+          "signature": "func _ready()",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://ReferenceCollectorCLI.gd",
+      "extends_class": [
+        "SceneTree"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class ReferenceCollectorCLI.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "Collector",
+          "data_type": "SceneTree",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var Collector: SceneTree",
+          "description": ""
+        },
+        {
+          "name": "directories",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var directories: Array",
+          "description": " A list of directories to collect files from.\r\n"
+        },
+        {
+          "name": "is_recursive",
+          "data_type": "bool",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var is_recursive: bool",
+          "description": " If true, explore each directory recursively\r\n"
+        },
+        {
+          "name": "patterns",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var patterns: Array",
+          "description": " A list of patterns to filter files.\r\n"
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_init",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _init() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://godot-scripts/Collector.gd",
+      "extends_class": [
+        "SceneTree"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class Collector.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "find_files",
+          "return_type": "PoolStringArray",
+          "rpc_mode": 0,
+          "signature": "func find_files(dirpath: String = \"\", patterns: PoolStringArray = [], is_recursive: bool = false, do_skip_hidden: bool = true) -> PoolStringArray",
+          "description": "",
+          "arguments": [
+            {
+              "name": "dirpath",
+              "type": "String",
+              "default_value": ""
+            },
+            {
+              "name": "patterns",
+              "type": "PoolStringArray",
+              "default_value": [
+
+              ]
+            },
+            {
+              "name": "is_recursive",
+              "type": "bool",
+              "default_value": false
+            },
+            {
+              "name": "do_skip_hidden",
+              "type": "bool",
+              "default_value": true
+            }
+          ]
+        },
+        {
+          "name": "save_text",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func save_text(path: String = \"\", content: String = \"\") -> null",
+          "description": " Saves text to a file.\r\n",
+          "arguments": [
+            {
+              "name": "path",
+              "type": "String",
+              "default_value": ""
+            },
+            {
+              "name": "content",
+              "type": "String",
+              "default_value": ""
+            }
+          ]
+        },
+        {
+          "name": "get_reference",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func get_reference(files: PoolStringArray = [], refresh_cache: bool = false) -> Dictionary",
+          "description": " Parses a list of GDScript files and returns a list of dictionaries with the\r\n code reference data.\r\n\r\n If `refresh_cache` is true, will refresh Godot's cache and get fresh symbols.\r\n",
+          "arguments": [
+            {
+              "name": "files",
+              "type": "PoolStringArray",
+              "default_value": [
+
+              ]
+            },
+            {
+              "name": "refresh_cache",
+              "type": "bool",
+              "default_value": false
+            }
+          ]
+        },
+        {
+          "name": "print_pretty_json",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func print_pretty_json(reference: Dictionary) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "reference",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "ReferenceCollector",
+      "path": "res://godot-scripts/ReferenceCollector.gd",
+      "extends_class": [
+        "EditorScript"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class ReferenceCollector",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "Collector",
+          "data_type": "SceneTree",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var Collector: SceneTree",
+          "description": ""
+        },
+        {
+          "name": "directories",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var directories: Array",
+          "description": " A list of directories to collect files from.\n"
+        },
+        {
+          "name": "is_recursive",
+          "data_type": "bool",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var is_recursive: bool",
+          "description": " If true, explore each directory recursively\n"
+        },
+        {
+          "name": "patterns",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var patterns: Array",
+          "description": " A list of patterns to filter files.\n"
+        },
+        {
+          "name": "save_path",
+          "data_type": "String",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var save_path: String",
+          "description": " Output path to save the class reference.\n"
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_run",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _run() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://godot-scripts/ReferenceCollectorCLI.gd",
+      "extends_class": [
+        "SceneTree"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class ReferenceCollectorCLI.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+        {
+          "name": "Collector",
+          "data_type": "SceneTree",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var Collector: SceneTree",
+          "description": ""
+        },
+        {
+          "name": "directories",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var directories: Array",
+          "description": " A list of directories to collect files from.\r\n"
+        },
+        {
+          "name": "is_recursive",
+          "data_type": "bool",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var is_recursive: bool",
+          "description": " If true, explore each directory recursively\r\n"
+        },
+        {
+          "name": "patterns",
+          "data_type": "Array",
+          "default_value": null,
+          "setter": "",
+          "getter": "",
+          "export": false,
+          "signature": "var patterns: Array",
+          "description": " A list of patterns to filter files.\r\n"
+        }
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "_init",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func _init() -> null",
+          "description": "",
+          "arguments": [
+
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    },
+    {
+      "name": "",
+      "path": "res://Collector.gd",
+      "extends_class": [
+        "SceneTree"
+      ],
+      "extends_file": "",
+      "icon": "",
+      "signature": "class Collector.gd",
+      "description": "",
+      "sub_classes": [
+
+      ],
+      "constants": [
+
+      ],
+      "members": [
+
+      ],
+      "signals": [
+
+      ],
+      "methods": [
+        {
+          "name": "find_files",
+          "return_type": "PoolStringArray",
+          "rpc_mode": 0,
+          "signature": "func find_files(dirpath: String = \"\", patterns: PoolStringArray = [], is_recursive: bool = false, do_skip_hidden: bool = true) -> PoolStringArray",
+          "description": "",
+          "arguments": [
+            {
+              "name": "dirpath",
+              "type": "String",
+              "default_value": ""
+            },
+            {
+              "name": "patterns",
+              "type": "PoolStringArray",
+              "default_value": [
+
+              ]
+            },
+            {
+              "name": "is_recursive",
+              "type": "bool",
+              "default_value": false
+            },
+            {
+              "name": "do_skip_hidden",
+              "type": "bool",
+              "default_value": true
+            }
+          ]
+        },
+        {
+          "name": "save_text",
+          "return_type": "null",
+          "rpc_mode": 0,
+          "signature": "func save_text(path: String = \"\", content: String = \"\") -> null",
+          "description": " Saves text to a file.\r\n",
+          "arguments": [
+            {
+              "name": "path",
+              "type": "String",
+              "default_value": ""
+            },
+            {
+              "name": "content",
+              "type": "String",
+              "default_value": ""
+            }
+          ]
+        },
+        {
+          "name": "get_reference",
+          "return_type": "Dictionary",
+          "rpc_mode": 0,
+          "signature": "func get_reference(files: PoolStringArray = [], refresh_cache: bool = false) -> Dictionary",
+          "description": " Parses a list of GDScript files and returns a list of dictionaries with the\r\n code reference data.\r\n\r\n If `refresh_cache` is true, will refresh Godot's cache and get fresh symbols.\r\n",
+          "arguments": [
+            {
+              "name": "files",
+              "type": "PoolStringArray",
+              "default_value": [
+
+              ]
+            },
+            {
+              "name": "refresh_cache",
+              "type": "bool",
+              "default_value": false
+            }
+          ]
+        },
+        {
+          "name": "print_pretty_json",
+          "return_type": "String",
+          "rpc_mode": 0,
+          "signature": "func print_pretty_json(reference: Dictionary) -> String",
+          "description": "",
+          "arguments": [
+            {
+              "name": "reference",
+              "type": "Dictionary"
+            }
+          ]
+        }
+      ],
+      "static_functions": [
+
+      ]
+    }
+  ]
+}

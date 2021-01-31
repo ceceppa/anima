@@ -1,0 +1,62 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "AnimaEasing",
+"language": "GDScript",
+"path": "res://addons/anima/core/easings.gd"
+}, {
+"base": "Reference",
+"class": "AnimaGrid",
+"language": "GDScript",
+"path": "res://addons/anima/core/grid.gd"
+}, {
+"base": "Node",
+"class": "AnimaNode",
+"language": "GDScript",
+"path": "res://addons/anima/core/node.gd"
+}, {
+"base": "Reference",
+"class": "AnimaNodesProperties",
+"language": "GDScript",
+"path": "res://addons/anima/utils/node_properties.gd"
+}, {
+"base": "Reference",
+"class": "AnimaStrings",
+"language": "GDScript",
+"path": "res://addons/anima/utils/strings.gd"
+}, {
+"base": "Tween",
+"class": "AnimaTween",
+"language": "GDScript",
+"path": "res://addons/anima/core/tween.gd"
+} ]
+_global_script_class_icons={
+"AnimaEasing": "",
+"AnimaGrid": "",
+"AnimaNode": "",
+"AnimaNodesProperties": "",
+"AnimaStrings": "",
+"AnimaTween": ""
+}
+
+[application]
+
+config/name="Anima"
+run/main_scene="res://demos/DemosSelector.tscn"
+
+[autoload]
+
+Anima="*res://addons/anima/core/anima.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "anima" )

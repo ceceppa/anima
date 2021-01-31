@@ -1,0 +1,228 @@
+#
+# Different node types have different property names
+#
+# Example:
+#   Control: position is "rect_position"
+#   Node2D : position is "offset"
+#
+# So, this utility class helps the animations to figure out which
+# property to animate :)
+#
+class_name AnimaNodesProperties
+
+static func get_position(node: CanvasItem) -> Vector2:
+	if node is Control:
+		return node.rect_position
+
+	return node.global_position
+
+static func get_size(node: CanvasItem) -> Vector2:
+	if node is Control:
+		return node.get_size()
+	
+	return node.texture.get_size() * node.scale
+
+static func get_scale(node: CanvasItem) -> Vector2:
+	if node is Control:
+		return node.rect_scale
+	
+	return node.scale
+
+static func get_rotation(node: CanvasItem) -> float:
+	if node is Control:
+		return node.rect_rotation
+	
+	return node.rotation_degrees
+
+static func set_pivot(node: CanvasItem, pivot: int) -> void:
+	var size: Vector2 = get_size(node)
+
+	match pivot:
+		Anima.PIVOT.TOP_CENTER:
+			if node is Control:
+				node.set_pivot_offset(Vector2(size.x / 2, 0))
+			else:
+				var position = node.global_position
+
+				node.offset = Vector2(0, size.y / 2)
+				node.global_position = position - node.offset
+		Anima.PIVOT.TOP_LEFT:
+			if node is Control:
+				node.set_pivot_offset(Vector2(0, 0))
+			else:
+				var position = node.global_position
+
+				node.offset = Vector2(size.x / 2, 0)
+				node.global_position = position - node.offset
+		Anima.PIVOT.CENTER:
+			if node is Control:
+				node.set_pivot_offset(size / 2)
+		Anima.PIVOT.CENTER_BOTTOM:
+			if node is Control:
+				node.set_pivot_offset(Vector2(size.x / 2, size.y / 2))
+			else:
+				var position = node.global_position
+
+				node.offset = Vector2(0, -size.y / 2)
+				node.global_position = position - node.offset
+		Anima.PIVOT.LEFT_BOTTOM:
+			if node is Control:
+				node.set_pivot_offset(Vector2(0, size.y))
+			else:
+				var position = node.global_position
+
+				node.offset = Vector2(size.x / 2, size.y)
+				node.global_position = position - node.offset
+		Anima.PIVOT.RIGHT_BOTTOM:
+			if node is Control:
+				node.set_pivot_offset(Vector2(size.x, size.y / 2))
+			else:
+				var position = node.global_position
+
+				node.offset = Vector2(-size.x / 2, size.y / 2)
+				node.global_position = position - node.offset
+		_:
+			printerr('Pivot point not handled yet')
+
+static func get_property_initial_value(node: CanvasItem, property: String):
+	property = property.to_lower()
+
+	match property:
+		"x", "position:x":
+			var position = get_position(node)
+
+			return position.x
+		"y", "position:y":
+			var position = get_position(node)
+
+			return position.y
+		"position":
+			return get_position(node)
+		"rotation":
+			return get_rotation(node)
+		"opacity":
+			return node.modulate.a
+		"skew:x":
+			return node.get_global_transform().y.x
+		"skew:y":
+			return node.get_global_transform().x.y
+
+	var p = property.split(':')
+
+	var property_name: String = p[0]
+	var rect_property_name: String = 'rect_' + property_name
+	var node_property_name: String
+
+	var key = p[1] if p.size() > 1 else null
+
+	if node.get(property_name):
+		node_property_name = property_name
+
+	if node.get(rect_property_name):
+		node_property_name = rect_property_name
+
+	if node_property_name:
+		if key:
+			return node[node_property_name][key]
+
+		return node[node_property_name]
+
+	print('get_property_initial_value: property %s not handled yet :(' % [property_name])
+
+static func map_property_to_godot_property(node: CanvasItem, property: String) -> Dictionary:
+	property = property.to_lower()
+
+	match property:
+		"x", "position:x":
+			if node is Control:
+				return {
+					property_name = "rect_position",
+					key = "x",
+				}
+
+			return {
+				property_name = "global_transform",
+				key = "origin",
+				subkey = "x"
+			}
+		"y", "position:y":
+			if node is Control:
+				return {
+					property_name = "rect_position",
+					key = "y",
+				}
+
+			return {
+				property_name = "global_transform",
+				key = "origin",
+				subkey = "y"
+			}
+		"position":
+			if node is Control:
+				return {
+					property_name = "rect_position"
+				}
+			
+			return {
+				property_name = "global_transform",
+				key = "origin"
+			}
+		"opacity":
+			return {
+				property_name = "modulate"
+			}
+		"rotation":
+			var property_name = "rect_rotation" if node is Control else "rotation_degrees"
+
+			return {
+				property_name = property_name
+			}
+		"skew:x":
+			return {
+				property_name = "transform",
+				key = "y",
+				subkey = "x"
+			}
+		"skew:y":
+			return {
+				property_name = "transform",
+				key = "x",
+				subkey = "y"
+			}
+
+	var p = property.split(':')
+
+	var property_name: String = p[0]
+	var rect_property_name: String = 'rect_' + property_name
+	var node_property_name: String
+
+	var key = p[1] if p.size() > 1 else null
+	var subkey = p[2] if p.size() > 2 else null
+
+	if node.get(property_name):
+		node_property_name = property_name
+
+	if node.get(rect_property_name):
+		node_property_name = rect_property_name
+
+	if node_property_name:
+		if key:
+			return {
+				property_name = node_property_name,
+				key = key
+			}
+
+		if subkey:
+			return {
+				property_name = node_property_name,
+				key = key,
+				subkey = subkey
+			}
+
+		return {
+			property_name = node_property_name
+		}
+
+	print('map_property_to_godot_property: property %s not handled yet :(' % [property])
+
+	return {}

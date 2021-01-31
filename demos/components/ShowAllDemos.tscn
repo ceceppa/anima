@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://demos/components/ShowAllDemos.gd" type="Script" id=1]
+
+
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.768627, 0.768627, 0.768627, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.219608, 0.219608, 0.219608, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="ShowAllDemos" type="Button"]
+margin_right = 119.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 142, 32 )
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+custom_colors/font_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+custom_colors/font_color_hover = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+text = "< Show all demos"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+[connection signal="pressed" from="." to="." method="_on_ShowAllDemos_pressed"]

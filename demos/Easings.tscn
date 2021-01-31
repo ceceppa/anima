@@ -1,0 +1,222 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://demos/Easings.gd" type="Script" id=1]
+[ext_resource path="res://resources/anima-preview.png" type="Texture" id=2]
+[ext_resource path="res://resources/Lato-Bold.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=4]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0666667, 0.0666667, 0.101961, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color( 1, 1, 1, 0 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color( 0.980392, 0.984314, 0.988235, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.768627, 0.768627, 0.768627, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.219608, 0.219608, 0.219608, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="DynamicFont" id=8]
+use_filter = true
+font_data = ExtResource( 3 )
+
+[node name="Easings" type="PanelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Container" type="VBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[node name="SpriteContainer" type="PanelContainer" parent="Container"]
+margin_right = 1024.0
+margin_bottom = 238.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_styles/panel = SubResource( 2 )
+
+[node name="Anima" type="Sprite" parent="Container/SpriteContainer"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="PanelContainer" type="PanelContainer" parent="Container"]
+margin_top = 242.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.6
+custom_styles/panel = SubResource( 3 )
+
+[node name="PanelContainer" type="PanelContainer" parent="Container/PanelContainer"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 1012.0
+margin_bottom = 346.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 4 )
+
+[node name="BaseButton" type="Button" parent="Container/PanelContainer/PanelContainer"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 992.0
+margin_bottom = 326.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/hover = SubResource( 5 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/normal = SubResource( 7 )
+custom_colors/font_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+custom_colors/font_color_hover = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+text = "Linear"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/PanelContainer/PanelContainer"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 992.0
+margin_bottom = 326.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="In" type="VBoxContainer" parent="Container/PanelContainer/PanelContainer/HBoxContainer"]
+margin_right = 320.0
+margin_bottom = 318.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Container/PanelContainer/PanelContainer/HBoxContainer/In"]
+margin_right = 320.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Ease In"
+align = 1
+
+[node name="GridIn" type="GridContainer" parent="Container/PanelContainer/PanelContainer/HBoxContainer/In"]
+margin_top = 24.0
+margin_right = 320.0
+margin_bottom = 318.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="VSeparator" type="VSeparator" parent="Container/PanelContainer/PanelContainer/HBoxContainer"]
+margin_left = 324.0
+margin_right = 328.0
+margin_bottom = 318.0
+
+[node name="Out" type="VBoxContainer" parent="Container/PanelContainer/PanelContainer/HBoxContainer"]
+margin_left = 332.0
+margin_right = 652.0
+margin_bottom = 318.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Container/PanelContainer/PanelContainer/HBoxContainer/Out"]
+margin_right = 320.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Ease Out"
+align = 1
+
+[node name="GridOut" type="GridContainer" parent="Container/PanelContainer/PanelContainer/HBoxContainer/Out"]
+margin_top = 24.0
+margin_right = 320.0
+margin_bottom = 318.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="VSeparator2" type="VSeparator" parent="Container/PanelContainer/PanelContainer/HBoxContainer"]
+margin_left = 656.0
+margin_right = 660.0
+margin_bottom = 318.0
+
+[node name="InOut" type="VBoxContainer" parent="Container/PanelContainer/PanelContainer/HBoxContainer"]
+margin_left = 664.0
+margin_right = 984.0
+margin_bottom = 318.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Container/PanelContainer/PanelContainer/HBoxContainer/InOut"]
+margin_right = 320.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Ease In Out"
+align = 1
+
+[node name="GridInOut" type="GridContainer" parent="Container/PanelContainer/PanelContainer/HBoxContainer/InOut"]
+margin_top = 24.0
+margin_right = 320.0
+margin_bottom = 318.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="ShowAllDemos" parent="." instance=ExtResource( 4 )]
+margin_right = 142.0
+margin_bottom = 32.0
