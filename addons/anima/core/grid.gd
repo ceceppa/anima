@@ -7,9 +7,9 @@ var _initil_delay: float = 0.0
 var _children_delay := 0.1
 var _animation: AnimaNode
 var _animation_name: String
-var _animation_type: int
+var _animation_type: int = Anima.Grid.SEQUENCE_TOP_LEFT
 var _visibility_strategy: int
-var _duration: float
+var _duration: float = 0.7
 var _end_called: bool = false
 
 func init(grid_node: Node, grid_size: Vector2) -> void:

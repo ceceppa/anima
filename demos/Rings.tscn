@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://resources/ring.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://demos/Rings.gd" type="Script" id=2]
 [ext_resource path="res://resources/box.dae" type="PackedScene" id=3]
 [ext_resource path="res://resources/triangle.dae" type="PackedScene" id=4]
+[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=5]
 
 [sub_resource type="SpatialMaterial" id=1]
 vertex_color_use_as_albedo = true
@@ -48,6 +49,10 @@ glow_intensity = 0.69
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 2 )
+
+[node name="ShowAllDemos" parent="." instance=ExtResource( 5 )]
+margin_right = 142.0
+margin_bottom = 32.0
 
 [node name="Group1" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.851104, -0.524996, 0, 0.524996, 0.851104, 2.86848, -1.54898, -5.01402 )

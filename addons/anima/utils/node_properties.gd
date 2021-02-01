@@ -186,7 +186,8 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			}
 		"opacity":
 			return {
-				property_name = "modulate"
+				property_name = "modulate",
+				key = "a"
 			}
 		"rotation":
 			var property_name = "rotation"
