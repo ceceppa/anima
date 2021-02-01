@@ -10,31 +10,35 @@
 #
 class_name AnimaNodesProperties
 
-static func get_position(node: CanvasItem) -> Vector2:
+static func get_position(node: Node) -> Vector2:
 	if node is Control:
 		return node.rect_position
+	if node is Node2D:
+		return node.global_position
 
-	return node.global_position
+	return node.global_transform.origin
 
-static func get_size(node: CanvasItem) -> Vector2:
+static func get_size(node: Node) -> Vector2:
 	if node is Control:
 		return node.get_size()
 	
 	return node.texture.get_size() * node.scale
 
-static func get_scale(node: CanvasItem) -> Vector2:
+static func get_scale(node: Node) -> Vector2:
 	if node is Control:
 		return node.rect_scale
 	
 	return node.scale
 
-static func get_rotation(node: CanvasItem) -> float:
+static func get_rotation(node: Node) -> float:
 	if node is Control:
 		return node.rect_rotation
-	
-	return node.rotation_degrees
+	elif node is Node2D:
+		return node.rotation_degrees
 
-static func set_pivot(node: CanvasItem, pivot: int) -> void:
+	return node.rotation
+
+static func set_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
 
 	match pivot:
@@ -84,7 +88,7 @@ static func set_pivot(node: CanvasItem, pivot: int) -> void:
 		_:
 			printerr('Pivot point not handled yet')
 
-static func get_property_initial_value(node: CanvasItem, property: String):
+static func get_property_initial_value(node: Node, property: String):
 	property = property.to_lower()
 
 	match property:
@@ -93,6 +97,10 @@ static func get_property_initial_value(node: CanvasItem, property: String):
 
 			return position.x
 		"y", "position:y":
+			var position = get_position(node)
+
+			return position.y
+		"z", "position:z":
 			var position = get_position(node)
 
 			return position.y
@@ -129,7 +137,7 @@ static func get_property_initial_value(node: CanvasItem, property: String):
 
 	print('get_property_initial_value: property %s not handled yet :(' % [property_name])
 
-static func map_property_to_godot_property(node: CanvasItem, property: String) -> Dictionary:
+static func map_property_to_godot_property(node: Node, property: String) -> Dictionary:
 	property = property.to_lower()
 
 	match property:
@@ -157,6 +165,15 @@ static func map_property_to_godot_property(node: CanvasItem, property: String) -
 				key = "origin",
 				subkey = "y"
 			}
+		"z", "position:z":
+			if node is Control:
+				printerr('position:z is not supported by Control nodes')
+
+			return {
+				property_name = "global_transform",
+				key = "origin",
+				subkey = "z"
+			}
 		"position":
 			if node is Control:
 				return {
@@ -172,7 +189,12 @@ static func map_property_to_godot_property(node: CanvasItem, property: String) -
 				property_name = "modulate"
 			}
 		"rotation":
-			var property_name = "rect_rotation" if node is Control else "rotation_degrees"
+			var property_name = "rotation"
+
+			if node is Control:
+				property_name = "rect_rotation"
+			elif node is Node2D:
+				property_name = "rotation_degrees"
 
 			return {
 				property_name = property_name

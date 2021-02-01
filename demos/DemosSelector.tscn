@@ -93,7 +93,7 @@ __meta__ = {
 
 [node name="ButtonAnimations" type="Button" parent="Control"]
 margin_right = 510.0
-margin_bottom = 180.0
+margin_bottom = 134.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -109,7 +109,7 @@ text = "Built-in animations"
 [node name="ButtonEasings" type="Button" parent="Control"]
 margin_left = 514.0
 margin_right = 1024.0
-margin_bottom = 180.0
+margin_bottom = 134.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -123,9 +123,9 @@ custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Built-in easings"
 
 [node name="ButtonGroup" type="Button" parent="Control"]
-margin_top = 184.0
+margin_top = 138.0
 margin_right = 510.0
-margin_bottom = 364.0
+margin_bottom = 272.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -140,9 +140,9 @@ text = "Animate Group"
 
 [node name="ButtonSequence" type="Button" parent="Control"]
 margin_left = 514.0
-margin_top = 184.0
+margin_top = 138.0
 margin_right = 1024.0
-margin_bottom = 364.0
+margin_bottom = 272.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -156,9 +156,9 @@ custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Sequential and parallel animation"
 
 [node name="ButtonSequence2" type="Button" parent="Control"]
-margin_top = 368.0
+margin_top = 276.0
 margin_right = 510.0
-margin_bottom = 548.0
+margin_bottom = 410.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -173,9 +173,9 @@ text = "Sequential with paralel animation"
 
 [node name="ButtonCallbacks" type="Button" parent="Control"]
 margin_left = 514.0
-margin_top = 368.0
+margin_top = 276.0
 margin_right = 1024.0
-margin_bottom = 548.0
+margin_bottom = 410.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -190,9 +190,29 @@ text = "Sequence animation and callbacks"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button3DRings" type="Button" parent="Control"]
+margin_top = 414.0
+margin_right = 510.0
+margin_bottom = 548.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+text = "3D Rings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Control/ButtonAnimations" to="." method="_on_ButtonAnimations_pressed"]
 [connection signal="pressed" from="Control/ButtonEasings" to="." method="_on_ButtonEasings_pressed"]
 [connection signal="pressed" from="Control/ButtonGroup" to="." method="_on_Button1_pressed"]
 [connection signal="pressed" from="Control/ButtonSequence" to="." method="_on_ButtonSequence_pressed"]
 [connection signal="pressed" from="Control/ButtonSequence2" to="." method="_on_ButtonSequence2_pressed"]
 [connection signal="pressed" from="Control/ButtonCallbacks" to="." method="_on_ButtonCallbacks_pressed"]
+[connection signal="pressed" from="Control/Button3DRings" to="." method="_on_Button3DRings_pressed"]

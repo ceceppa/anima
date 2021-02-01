@@ -60,3 +60,7 @@ Anima="*res://addons/anima/core/anima.gd"
 [editor_plugins]
 
 enabled=PoolStringArray( "anima" )
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

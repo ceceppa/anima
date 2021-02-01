@@ -83,11 +83,14 @@ func stop() -> void:
 	_timer.stop()
 	_anima_tween.stop_all()
 
-#func loop(times: int = -1) -> void:
-#	_loop_times = times
-#	_timer.wait_time = 0.00001
-#
-#	_do_play()
+func loop(times: int = -1) -> void:
+	_loop_times = times
+	_timer.wait_time = 0.00001
+
+	if times == -1:
+		_anima_tween.set_repeat(true)
+
+	_do_play()
 
 func play_with_delay(delay: float) -> void:
 	_loop_times = 1
@@ -99,9 +102,9 @@ func get_length() -> float:
 	return _total_animation
 
 func _do_play() -> void:
-#		stop()
-
 	_tweens_left = _anima_tween.get_animations_count()
+
+	_anima_tween.reset_all()
 	_anima_tween.play()
 
 func _setup_animation(data: Dictionary) -> float:
@@ -138,7 +141,7 @@ func _on_tween_completed(_ignore, _ignore2) -> void:
 
 	if _tweens_left == 0: 
 		_loop_times -= 1
-		
+
 		if _loop_times > 0:
 			_timer.start()
 
@@ -148,7 +151,9 @@ func _on_timer_timeout() -> void:
 	_loop_times -= 1
 
 	if _loop_times > 0:
-		_timer.start()
+		_anima_tween.reset_all()
+
+		_do_play()
 
 func _on_all_tween_completed() -> void:
 	emit_signal("animation_completed")

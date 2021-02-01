@@ -21,3 +21,6 @@ func _on_ButtonCallbacks_pressed():
 
 func _on_ButtonSequence2_pressed():
 	_change_scene("res://demos/SequenceWithParallel.tscn")
+
+func _on_Button3DRings_pressed():
+	_change_scene("res://demos/Rings.tscn")

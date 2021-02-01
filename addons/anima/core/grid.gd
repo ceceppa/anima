@@ -10,6 +10,7 @@ var _animation_name: String
 var _animation_type: int
 var _visibility_strategy: int
 var _duration: float
+var _end_called: bool = false
 
 func init(grid_node: Node, grid_size: Vector2) -> void:
 	var rows = grid_size.x
@@ -34,7 +35,15 @@ func init(grid_node: Node, grid_size: Vector2) -> void:
 	_animation.connect("animation_completed", self, '_on_anima_animation_completed')
 
 func play() -> void:
+	if not _end_called:
+		printerr('AnimaGrid.end() not called')
+
+		return
+
 	_animation.play()
+
+func loop() -> void:
+	_animation.loop()
 
 func set_animation(animation_name: String) -> void:
 	_animation_name = animation_name
@@ -55,6 +64,8 @@ func set_item_duration(duration: float) -> void:
 	_duration = duration
 
 func end() -> void:
+	_end_called = true
+
 	if _animation_type == Anima.Grid.SEQUENCE_TOP_LEFT:
 		_generate_animation_sequence_top_left()
 

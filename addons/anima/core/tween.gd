@@ -264,17 +264,16 @@ func _calculate_from_and_to(index: int, value: float) -> void:
 	var node_from = AnimaNodesProperties.get_property_initial_value(node, animation_data.property)
 
 	if animation_data.has('from'):
-		from = _maybe_calculate_relative_value(relative, animation_data.from, node_from)
+		from = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.from)
+		from = _maybe_calculate_relative_value(relative, from, node_from)
 	else:
 		from = node_from
-		
+
 	if animation_data.has('to'):
-		to = _maybe_calculate_relative_value(relative, animation_data.to, from)
+		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
+		to = _maybe_calculate_relative_value(relative, to, from)
 	else:
 		to = from
-
-	from = _maybe_adjust_modulate_value(animation_data, from)
-	to = _maybe_adjust_modulate_value(animation_data, to)
 
 	animation_data._property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
 
@@ -295,6 +294,15 @@ func _maybe_calculate_relative_value(relative, value, current_node_value):
 		return value
 
 	return value + current_node_value
+
+func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionary, value):
+	if not node is Spatial or animation_data.property.find('rotation') < 0:
+		return value
+
+	if value is Vector3:
+		return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
+
+	return deg2rad(value)
 
 func _on_animation_with_key(index: int, elapsed: float) -> void:
 	var animation_data = _animation_data[index]
