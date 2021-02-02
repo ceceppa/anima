@@ -60,7 +60,7 @@ func set_animation_type(animation_type: int) -> void:
 func set_visibility_strategy(strategy: int) -> void:
 	_visibility_strategy = strategy
 
-func set_item_duration(duration: float) -> void:
+func set_duration(duration: float) -> void:
 	_duration = duration
 
 func end() -> void:

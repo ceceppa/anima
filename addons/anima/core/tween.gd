@@ -326,6 +326,11 @@ func _on_animation_without_key(index: int, elapsed: float) -> void:
 	var node = animation_data.node
 	var value = property_data.from + (property_data.diff * elapsed)
 
+	if property_data.has('callback'):
+		property_data.callback.call_func(property_data.param, value)
+
+		return
+
 	node[property_data.property_name] = value
 
 #

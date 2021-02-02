@@ -21,7 +21,7 @@ func _setup_animation(group: Spatial, animation_name: String) -> void:
 	var anima := Anima.group(group)
 	anima.set_animation(animation_name)
 	anima.set_start_delay(0.5)
-	anima.set_item_duration(5.0)
+	anima.set_duration(5.0)
 	anima.set_items_delay(0.05)
 	anima.end()
 

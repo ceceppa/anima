@@ -28,7 +28,7 @@ func _ready():
 	anima.set_animation('gridAnimation')
 	anima.set_start_delay(0.5)
 	anima.set_items_delay(0.05)
-	anima.set_item_duration(1.0)
+	anima.set_duration(1.0)
 	anima.set_animation_type(Anima.Grid.SEQUENCE_TOP_LEFT)
 	anima.end()
 

@@ -6,7 +6,6 @@ func _change_scene(path: String) -> void:
 func _on_ButtonAnimations_pressed():
 	_change_scene('res://demos/AnimationsPreview.tscn')
 
-
 func _on_ButtonEasings_pressed():
 	_change_scene("res://demos/Easings.tscn")
 
@@ -24,3 +23,6 @@ func _on_ButtonSequence2_pressed():
 
 func _on_Button3DRings_pressed():
 	_change_scene("res://demos/Rings.tscn")
+
+func _on_Button3DBoxes_pressed():
+	_change_scene("res://demos/3DBoxes.tscn")
