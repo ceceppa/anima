@@ -4,15 +4,15 @@
 [ext_resource path="res://resources/ring.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=1]
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0.717647, 0.72549, 0.733333, 1 )
 
-[sub_resource type="PlaneMesh" id=1]
-material = SubResource( 3 )
+[sub_resource type="PlaneMesh" id=2]
+material = SubResource( 1 )
 size = Vector2( 400, 400 )
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=3]
 ambient_light_color = Color( 1, 1, 1, 1 )
 fog_enabled = true
 fog_depth_begin = 0.0
@@ -68,12 +68,12 @@ script = ExtResource( 1 )
 
 [node name="Base" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.78114, 0, -88.8639 )
-mesh = SubResource( 1 )
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011 )
-environment = SubResource( 2 )
+environment = SubResource( 3 )
 far = 8192.0
 
 [node name="Node" type="Node" parent="."]
@@ -93,7 +93,6 @@ extents = Vector3( 50, 7.26065, 28 )
 
 [node name="ring" type="MeshInstance" parent="."]
 transform = Transform( 0.2, 0, 0, 0, 0.176658, -0.0937648, 0, 0.0937648, 0.176658, -7.69054, 0.118654, 3.32684 )
-visible = false
 mesh = ExtResource( 2 )
 material/0 = null
 

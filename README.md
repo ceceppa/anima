@@ -1,6 +1,6 @@
 # Anima
 
-Anima is an addon for Godot that allows you to create rich interactive UI easily.
+Anima is an addon for Godot that allows you to create rich animation easily.
 
 ## Introduction
 
