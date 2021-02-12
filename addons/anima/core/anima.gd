@@ -11,18 +11,32 @@ enum PIVOT {
 	RIGHT_BOTTOM
 }
 
-enum Visibility {
+enum VISIBILITY {
 	IGNORE,
 	HIDDEN_ONLY,
 	TRANSPARENT_ONLY,
 	HIDDEN_AND_TRANSPARENT
 }
 
-enum Grid {
+enum GRID {
+	TOGETHER,
 	SEQUENCE_TOP_LEFT
+	COLUMNS_ODD,
+	COLUMNS_EVEN,
+	ROWS_ODD,
+	ROWS_EVEN,
+	ODD,
+	EVEN
+}
+
+enum LOOP {
+	USE_EXISTING_RELATIVE_DATA,
+	RECALCULATE_RELATIVE_DATA,
 }
 
 const EASING = AnimaEasing.EASING
+
+const DEFAULT_DURATION := 0.7
 
 var _animations_list := []
 var _custom_animations := []
@@ -62,6 +76,24 @@ func group(group_node: Node) -> AnimaGrid:
 		anima_node = AnimaGrid.new()
 
 		anima_node.init(group_node, Vector2(1, group_node.get_child_count()))
+
+	return anima_node
+
+func grid(group_node: Node, grid_size: Vector2) -> AnimaGrid:
+	var node_name = 'AnimaGrid'
+	var anima_node: AnimaGrid
+
+	for child in group_node.get_children():
+		if child.name.find(node_name) >= 0:
+			anima_node = child
+			anima_node.clear()
+
+			return anima_node
+
+	if anima_node == null:
+		anima_node = AnimaGrid.new()
+
+		anima_node.init(group_node, grid_size)
 
 	return anima_node
 

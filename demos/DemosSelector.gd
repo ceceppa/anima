@@ -26,3 +26,6 @@ func _on_Button3DRings_pressed():
 
 func _on_Button3DBoxes_pressed():
 	_change_scene("res://demos/3DBoxes.tscn")
+
+func _on_Button3DGrid_pressed():
+	_change_scene("res://demos/Grid.tscn")

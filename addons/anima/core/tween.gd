@@ -3,41 +3,45 @@ extends Tween
 
 var _animation_data := []
 
-var _loops_count := 0
-var _loop_times := 0
-var _loop_delay := 0.0
-
 # Needed to use interpolate_property
 var _fake_property: Dictionary = {}
 
-var _visibility_strategy: int = Anima.Visibility.IGNORE
+var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
 
 func _ready():
 	connect("tween_started", self, '_on_tween_started')
 	connect("tween_step", self, '_on_tween_step_with_easing')
 	connect("tween_step", self, '_on_tween_step_with_easing_callback')
+	connect("tween_step", self, '_on_tween_step_with_easing_funcref')
 	connect("tween_step", self, '_on_tween_step_without_easing')
 	connect("tween_completed", self, '_on_tween_completed')
 
 func play():
 	var index := 0
+	
 	for animation_data in _animation_data:
 		var easing_points
 
 		if animation_data.has('easing'):
-			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
+			if animation_data.easing is FuncRef:
+				easing_points = animation_data.easing
+			else:
+				easing_points = AnimaEasing.get_easing_points(animation_data.easing)
 
 		if animation_data.has('easing_points'):
 			easing_points = animation_data.easing_points
 
 		animation_data._easing_points = easing_points
+
 		animation_data._animation_callback = funcref(self, '_calculate_from_and_to')
 
 		if easing_points is Array:
 			animation_data._use_step_callback = '_on_tween_step_with_easing'
 		elif easing_points is String:
 			animation_data._use_step_callback = '_on_tween_step_with_easing_callback'
+		elif easing_points is FuncRef:
+			animation_data._use_step_callback = '_on_tween_step_with_easing_funcref'
 		else:
 			animation_data._use_step_callback = '_on_tween_step_without_easing'
 
@@ -52,13 +56,10 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	_animation_data.push_back(animation_data)
 
 	var index = str(_animation_data.size())
-	var duration = animation_data.duration if animation_data.has('duration') else 0.7
+	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
 	var property_key = 'p' + index
 
 	_fake_property[property_key] = 0.0
-
-	if animation_data.has('pivot'):
-		AnimaNodesProperties.set_pivot(animation_data.node, animation_data.pivot)
 
 	if animation_data.has('on_completed') and animation_data.has('_is_last_frame'):
 		_callbacks[property_key] = animation_data.on_completed
@@ -123,7 +124,7 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 			_wait_time = _wait_time
 		}
 
-		# We need to restore the animation jest before the node is animated
+		# We need to restore the animation just before the node is animated
 		# but we also need to consider that a node can have multiple
 		# properties animated, so we need to restore it only before the first
 		# animation starts
@@ -170,7 +171,16 @@ func set_visibility_strategy(strategy: int) -> void:
 
 	_visibility_strategy = strategy
 
-func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.Visibility.IGNORE):
+func reset_data(strategy: int):
+	var data = _animation_data.duplicate()
+
+	clear_animations()
+	for animation_data in data:
+		animation_data._recalculate_from_to = strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
+
+		add_animation_data(animation_data)
+
+func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame'):
 		return
 
@@ -180,12 +190,12 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 	if animation_data.has('hide_strategy'):
 		strategy = animation_data.hide_strategy
 
-	if strategy == Anima.Visibility.HIDDEN_ONLY:
+	if strategy == Anima.VISIBILITY.HIDDEN_ONLY:
 		should_hide_nodes = true
-	elif strategy == Anima.Visibility.HIDDEN_AND_TRANSPARENT:
+	elif strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
 		should_hide_nodes = true
 		should_make_nodes_transparent = true
-	elif strategy == Anima.Visibility.TRANSPARENT_ONLY:
+	elif strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
 		should_make_nodes_transparent = true
 
 	var node = animation_data.node
@@ -230,6 +240,17 @@ func _on_tween_step_with_easing_callback(object: Object, key: NodePath, _time: f
 
 	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
 
+func _on_tween_step_with_easing_funcref(object: Object, key: NodePath, _time: float, elapsed: float):
+	var index := _get_animation_data_index(key)
+
+	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing_funcref':
+		return
+
+	var easing_callback = _animation_data[index]._easing_points
+	var easing_elapsed = easing_callback.call_func(elapsed)
+
+	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
+
 func _on_tween_step_without_easing(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
 
@@ -258,6 +279,25 @@ func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float)
 func _calculate_from_and_to(index: int, value: float) -> void:
 	var animation_data = _animation_data[index]
 	var node = animation_data.node
+
+	var do_calculate = true
+
+	if animation_data.has('_recalculate_from_to') and not animation_data._recalculate_from_to:
+		do_calculate = false
+
+	if do_calculate:
+		_do_calculate_from_to(node, animation_data)
+
+	if animation_data._property_data.has('subkey'):
+		animation_data._animation_callback = funcref(self, '_on_animation_with_subkey')
+	elif animation_data._property_data.has('key'):
+		animation_data._animation_callback = funcref(self, '_on_animation_with_key')
+	else:
+		animation_data._animation_callback = funcref(self, '_on_animation_without_key')
+
+	_animation_data[index]._animation_callback.call_func(index, value)
+
+func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 	var from
 	var to
 	var relative = animation_data.relative if animation_data.has('relative') else false
@@ -268,26 +308,26 @@ func _calculate_from_and_to(index: int, value: float) -> void:
 		from = _maybe_calculate_relative_value(relative, from, node_from)
 	else:
 		from = node_from
+		animation_data.__from = from
 
 	if animation_data.has('to'):
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
 		to = _maybe_calculate_relative_value(relative, to, from)
 	else:
 		to = from
+		animation_data.__to = to
+
+	if animation_data.has('pivot'):
+		if node is Spatial:
+			printerr('3D Pivot not supported yet')
+		else:
+			AnimaNodesProperties.set_2D_pivot(animation_data.node, animation_data.pivot)
 
 	animation_data._property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
 
 	animation_data._property_data.diff = to - from
 	animation_data._property_data.from = from
 
-	if animation_data._property_data.has('subkey'):
-		animation_data._animation_callback = funcref(self, '_on_animation_with_subkey')
-	elif animation_data._property_data.has('key'):
-		animation_data._animation_callback = funcref(self, '_on_animation_with_key')
-	else:
-		animation_data._animation_callback = funcref(self, '_on_animation_without_key')
-
-	_animation_data[index]._animation_callback.call_func(index, value)
 
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:
@@ -361,7 +401,10 @@ func _on_tween_completed(_ignore, property_name: String) -> void:
 	if _callbacks.has(property_key):
 		var callback = _callbacks[property_key]
 
-		callback[0].call_funcv(callback[1])
+		if not callback is Array or callback.size() == 1:
+			callback[0].call_func()
+		else:
+			callback[0].call_funcv(callback[1])
 
 func _on_tween_started(_ignore, key) -> void:
 	var index := _get_animation_data_index(key)
@@ -375,12 +418,12 @@ func _on_tween_started(_ignore, key) -> void:
 	var should_restore_visibility := false
 	var should_restore_modulate := false
 
-	if hide_strategy == Anima.Visibility.HIDDEN_ONLY:
+	if hide_strategy == Anima.VISIBILITY.HIDDEN_ONLY:
 		should_restore_visibility = true
-	elif hide_strategy == Anima.Visibility.HIDDEN_AND_TRANSPARENT:
+	elif hide_strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
 		should_restore_modulate = true
 		should_restore_visibility = true
-	elif hide_strategy == Anima.Visibility.TRANSPARENT_ONLY:
+	elif hide_strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
 		should_restore_modulate = true
 
 	if should_restore_modulate:
@@ -391,3 +434,9 @@ func _on_tween_started(_ignore, key) -> void:
 
 	if should_restore_visibility:
 		node.show()
+
+	if animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started'):
+		var f: FuncRef = animation_data.on_started[0]
+		var value = animation_data.on_started[1]
+
+		f.call_funcv([value])

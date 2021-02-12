@@ -4,8 +4,6 @@
 [ext_resource path="res://demos/SequenceAndParallel.gd" type="Script" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
-
-
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.235294, 0.235294, 0.235294, 1 )
 border_width_left = 8

@@ -29,7 +29,7 @@ func _ready():
 	anima.set_start_delay(0.5)
 	anima.set_items_delay(0.05)
 	anima.set_duration(1.0)
-	anima.set_animation_type(Anima.Grid.SEQUENCE_TOP_LEFT)
+	anima.set_animation_type(Anima.GRID.SEQUENCE_TOP_LEFT)
 	anima.end()
 
 	anima.play()
@@ -53,7 +53,6 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 		{ from = 1, to = 0 }
 	]
 
-#	anima_tween.add_frames(data, "opacity", opacity)
 	anima_tween.add_frames(data, "scale", zooom_frames)
 	anima_tween.add_frames(data, "position", position_frames)
 

@@ -9,7 +9,7 @@ func _ready():
 	anima.then({ node = $Panel/MarginContainer/Label, animation = 'typewrite', duration = 0.05 })
 	anima.then({ node = $Panel/CenterContainer/Button, animation = 'tada', duration = 0.5, delay = -0.5 })
 
-	anima.set_visibility_strategy(Anima.Visibility.TRANSPARENT_ONLY)
+	anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
 
 	anima.play_with_delay(0.5)
 

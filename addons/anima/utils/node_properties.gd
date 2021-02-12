@@ -38,7 +38,7 @@ static func get_rotation(node: Node):
 
 	return node.rotation
 
-static func set_pivot(node: Node, pivot: int) -> void:
+static func set_2D_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
 
 	match pivot:
@@ -103,7 +103,7 @@ static func get_property_initial_value(node: Node, property: String):
 		"z", "position:z":
 			var position = get_position(node)
 
-			return position.y
+			return position.z
 		"position":
 			return get_position(node)
 		"rotation":
@@ -145,6 +145,9 @@ static func get_property_initial_value(node: Node, property: String):
 			return node[node_property_name][key]
 
 		return node[node_property_name]
+
+	if property.find('__') == 0:
+		return 0
 
 	print('get_property_initial_value: property %s not handled yet :(' % [property])
 
@@ -278,6 +281,11 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 		return {
 			property_name = node_property_name
+		}
+
+	if property.find('__') == 0:
+		return {
+			property_name = property
 		}
 
 	print('map_property_to_godot_property: property %s not handled yet :(' % [property])

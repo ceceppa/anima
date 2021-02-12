@@ -34,11 +34,18 @@ Check out [documentation](https://anima.ceceppa.me) and [live examples](https://
 | Chaining                           | support for sequential, parallel and concurrent animations | possible but need to be done manually |
 | Animate relative property          | yes                                                        | no                                    |
 | Easing                             | 33 built-in, (it will be extended in 0.2)            | 10 and no support for custom ones     |
-| Reverse animation                  | 0.2                                                        | no                                    |
-| Change speed on fly                | 0.2                                                        | no                                    |
-| Animation path (position only)     | 0.3                                                        | no                                    |
 | Create and reuse custom animations | 89 built-in, more can be added programmatically            | possible but not as easy              |
 | Animate elements in group          | yes (it will be extended in 0.2)                           | possible but need to manually animate each individual element|
+| Loop                  | Infinite, Times, and delayed loops                                                        | Infinite                                    |
+| Reverse animation                  | 0.3                                                        | no                                    |
+| Change speed on fly                | 0.3                                                        | no                                    |
+| Animation path (position only)     | 0.4                                                        | no                                    |
+
+What does it mean in terms of code? Here an overview of Anima vs Godot Tween code for simple animation:
+
+![Anima vs Godot](https://anima.ceceppa.me/code-difference.png)
+
+For more info about the differences have a look [here](https://anima.ceceppa.me/doc/#anima-vs-tween)
 
 ## Stay in Touch
 

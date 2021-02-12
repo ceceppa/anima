@@ -8,5 +8,5 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 		{ percentage = 100, to = 0 },
 	]
 
-	AnimaNodesProperties.set_pivot(data.node, Anima.PIVOT.TOP_CENTER)
+	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.TOP_CENTER)
 	anima_tween.add_frames(data, "rotation", frames)

@@ -8,7 +8,7 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 		{ from = 1, to = 0 },
 	]
 
-	AnimaNodesProperties.set_pivot(data.node, Anima.PIVOT.CENTER)
+	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.CENTER)
 
 	anima_tween.add_frames(data, "opacity", opacity_frames)
 	anima_tween.add_frames(data, "scale", zoom_frames)

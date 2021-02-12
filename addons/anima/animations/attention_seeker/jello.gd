@@ -22,7 +22,7 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 		skew_x.push_back({ percentage = value.percentage, to = start_x + value.add })
 		skew_y.push_back({ percentage = value.percentage, to = start_y + value.add })
 
-	AnimaNodesProperties.set_pivot(data.node, Anima.PIVOT.CENTER)
+	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.CENTER)
 
 	# Skew works only with Node2D
 	if not data.node is Node2D:
