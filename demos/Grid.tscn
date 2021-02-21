@@ -183,7 +183,6 @@ script = ExtResource( 2 )
 
 [node name="Base" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.13543, -0.213983, -88.9201 )
-visible = false
 mesh = SubResource( 2 )
 material/0 = null
 
@@ -215,19 +214,16 @@ custom_styles/normal = SubResource( 6 )
 
 [node name="Dark" type="MeshInstance" parent="Main"]
 transform = Transform( 1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0 )
-visible = false
 mesh = SubResource( 9 )
 material/0 = null
 
 [node name="Light" type="MeshInstance" parent="Main"]
 transform = Transform( 1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0 )
-visible = false
 mesh = SubResource( 9 )
 material/0 = SubResource( 10 )
 
 [node name="Cube" type="MeshInstance" parent="Main"]
 transform = Transform( 1, 0, 0, 0, 1, 4.61853e-14, 0, -4.61853e-14, 1, -4.975, 0.269245, -3 )
-visible = false
 mesh = SubResource( 11 )
 material/0 = SubResource( 13 )
 __meta__ = {

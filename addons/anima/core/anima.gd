@@ -34,9 +34,16 @@ enum LOOP {
 	RECALCULATE_RELATIVE_DATA,
 }
 
+enum TYPE {
+	NODE,
+	GROUP,
+	GRID
+}
+
 const EASING = AnimaEasing.EASING
 
 const DEFAULT_DURATION := 0.7
+const DEFAULT_ITEMS_DELAY := 0.05
 
 var _animations_list := []
 var _custom_animations := []
@@ -58,42 +65,6 @@ func begin(node, name: String = 'anima') -> AnimaNode:
 		anima_node.name = node_name
 
 		anima_node._init_node(node)
-
-	return anima_node
-
-func group(group_node: Node) -> AnimaGrid:
-	var node_name = 'AnimaGrid'
-	var anima_node: AnimaGrid
-
-	for child in group_node.get_children():
-		if child.name.find(node_name) >= 0:
-			anima_node = child
-			anima_node.clear()
-
-			return anima_node
-
-	if anima_node == null:
-		anima_node = AnimaGrid.new()
-
-		anima_node.init(group_node, Vector2(1, group_node.get_child_count()))
-
-	return anima_node
-
-func grid(group_node: Node, grid_size: Vector2) -> AnimaGrid:
-	var node_name = 'AnimaGrid'
-	var anima_node: AnimaGrid
-
-	for child in group_node.get_children():
-		if child.name.find(node_name) >= 0:
-			anima_node = child
-			anima_node.clear()
-
-			return anima_node
-
-	if anima_node == null:
-		anima_node = AnimaGrid.new()
-
-		anima_node.init(group_node, grid_size)
 
 	return anima_node
 

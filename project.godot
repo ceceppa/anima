@@ -14,11 +14,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/core/easings.gd"
 }, {
-"base": "Reference",
-"class": "AnimaGrid",
-"language": "GDScript",
-"path": "res://addons/anima/core/grid.gd"
-}, {
 "base": "Node",
 "class": "AnimaNode",
 "language": "GDScript",
@@ -41,7 +36,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "AnimaEasing": "",
-"AnimaGrid": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
 "AnimaStrings": "",
@@ -60,6 +54,10 @@ Anima="*res://addons/anima/core/anima.gd"
 [editor_plugins]
 
 enabled=PoolStringArray( "anima" )
+
+[network]
+
+limits/debugger_stdout/max_chars_per_second=52048
 
 [rendering]
 

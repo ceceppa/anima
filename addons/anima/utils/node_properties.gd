@@ -136,7 +136,11 @@ static func get_property_initial_value(node: Node, property: String):
 		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
-		var material: ShaderMaterial = node.get_surface_material(0)
+		var material: ShaderMaterial
+		if node is MeshInstance:
+			material = node.get_surface_material(0)
+		else:
+			material = node.material
 
 		return material.get_shader_param(p[1])
 
@@ -258,7 +262,11 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
-		var material: ShaderMaterial = node.get_surface_material(0)
+		var material: ShaderMaterial
+		if node is MeshInstance:
+			material = node.get_surface_material(0)
+		else:
+			material = node.material
 
 		return {
 			callback = funcref(material, 'set_shader_param'),

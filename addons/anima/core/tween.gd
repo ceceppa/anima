@@ -19,7 +19,7 @@ func _ready():
 
 func play():
 	var index := 0
-	
+
 	for animation_data in _animation_data:
 		var easing_points
 
@@ -162,7 +162,11 @@ func get_animations_count() -> int:
 	return _animation_data.size()
 
 func clear_animations() -> void:
+	remove_all()
+	reset_all()
+
 	_fake_property = {}
+	_callbacks = {}
 	_animation_data.clear()
 
 func set_visibility_strategy(strategy: int) -> void:
@@ -175,6 +179,7 @@ func reset_data(strategy: int):
 	var data = _animation_data.duplicate()
 
 	clear_animations()
+
 	for animation_data in data:
 		animation_data._recalculate_from_to = strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
 
@@ -282,7 +287,7 @@ func _calculate_from_and_to(index: int, value: float) -> void:
 
 	var do_calculate = true
 
-	if animation_data.has('_recalculate_from_to') and not animation_data._recalculate_from_to:
+	if animation_data.has('_recalculate_from_to') and not animation_data._recalculate_from_to and animation_data.has('_property_data'):
 		do_calculate = false
 
 	if do_calculate:
@@ -435,8 +440,12 @@ func _on_tween_started(_ignore, key) -> void:
 	if should_restore_visibility:
 		node.show()
 
-	if animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started'):
+	var should_trigger_on_started: bool = animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started')
+	if should_trigger_on_started:
 		var f: FuncRef = animation_data.on_started[0]
-		var value = animation_data.on_started[1]
+		var value = animation_data.on_started[1] if animation_data.on_started.size() > 1 else null
 
-		f.call_funcv([value])
+		if value:
+			f.call_funcv([value])
+		else:
+			f.call_func()
