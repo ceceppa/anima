@@ -1,6 +1,6 @@
 # Anima
 
-Anima is an addon for Godot that allows you to create rich animations easily.
+Anima is an addon for Godot that allows you to create sequential and parallel animations with less code compared to Tween.
 
 ## Introduction
 
