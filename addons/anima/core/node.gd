@@ -169,7 +169,7 @@ func _setup_animation(data: Dictionary) -> float:
 		return _setup_grid_animation(data)
 	elif data.has('group'):
 		if not data.has('grid_size'):
-			data.grid_size = Vector2(1, data.group.get_children_count())
+			data.grid_size = Vector2(1, data.group.get_children().size())
 
 		return _setup_grid_animation(data)
 	elif not data.has('node'):
