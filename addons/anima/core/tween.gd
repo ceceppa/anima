@@ -2,12 +2,19 @@ class_name AnimaTween
 extends Tween
 
 var _animation_data := []
+var _normal_animation_data := []
+var _reversed_animation_data := []
 
 # Needed to use interpolate_property
 var _fake_property: Dictionary = {}
 
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
+
+enum PLAY_MODE {
+	NORMAL,
+	REVERSE
+}
 
 func _ready():
 	connect("tween_started", self, '_on_tween_started')
@@ -52,7 +59,7 @@ func play():
 	if not started:
 		printerr('something went wrong while trying to start the tween')
 
-func add_animation_data(animation_data: Dictionary) -> void:
+func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
 	_animation_data.push_back(animation_data)
 
 	var index = str(_animation_data.size())
@@ -67,11 +74,14 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	if animation_data.has('hide_strategy'):
 		_apply_visibility_strategy(animation_data)
 
+	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
+	var to := 1.0 - from
+
 	interpolate_property(
 		self,
 		'_fake_property:' + property_key,
-		0.0,
-		1.0,
+		from,
+		to,
 		duration,
 		Tween.TRANS_LINEAR,
 		Tween.EASE_IN_OUT,
@@ -175,15 +185,34 @@ func set_visibility_strategy(strategy: int) -> void:
 
 	_visibility_strategy = strategy
 
-func reset_data(strategy: int):
-	var data = _animation_data.duplicate()
+func reset_data(strategy: int, play_mode: int, animation_length: float):
+	var data: Array
+
+	if _normal_animation_data.size() < _animation_data.size():
+		_normal_animation_data = _animation_data.duplicate()
+
+	if play_mode == PLAY_MODE.NORMAL:
+		data = _normal_animation_data.duplicate()
+	else:
+		if _reversed_animation_data.size() < _animation_data.size():
+			_reversed_animation_data = _flip_animations(_animation_data.duplicate(), animation_length)
+
+		data = _reversed_animation_data.duplicate()
 
 	clear_animations()
 
 	for animation_data in data:
 		animation_data._recalculate_from_to = strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
 
-		add_animation_data(animation_data)
+		add_animation_data(animation_data, play_mode)
+
+func _flip_animations(data: Array, animation_length) -> Array:
+	for animation in data:
+		var new_wait_time: float = animation_length - animation.duration - animation._wait_time
+
+		animation._wait_time = new_wait_time
+
+	return data
 
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame'):
@@ -332,7 +361,6 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 
 	animation_data._property_data.diff = to - from
 	animation_data._property_data.from = from
-
 
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:

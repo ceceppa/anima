@@ -45,7 +45,6 @@ _global_script_class_icons={
 [application]
 
 config/name="Anima"
-run/main_scene="res://demos/DemosSelector.tscn"
 
 [autoload]
 

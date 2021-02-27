@@ -21,7 +21,7 @@ static func get_position(node: Node) -> Vector2:
 static func get_size(node: Node) -> Vector2:
 	if node is Control:
 		return node.get_size()
-	
+
 	return node.texture.get_size() * node.scale
 
 static func get_scale(node: Node) -> Vector2:
@@ -153,7 +153,7 @@ static func get_property_initial_value(node: Node, property: String):
 	if property.find('__') == 0:
 		return 0
 
-	print('get_property_initial_value: property %s not handled yet :(' % [property])
+	return property_name
 
 static func map_property_to_godot_property(node: Node, property: String) -> Dictionary:
 	property = property.to_lower()
@@ -296,6 +296,6 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			property_name = property
 		}
 
-	print('map_property_to_godot_property: property %s not handled yet :(' % [property])
-
-	return {}
+	return {
+		property_name = property
+	}

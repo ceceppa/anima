@@ -16,6 +16,7 @@ var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
 var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 
 var __do_nothing := 0.0
 
@@ -89,11 +90,21 @@ func clear() -> void:
 
 	_total_animation = 0.0
 	_last_animation_duration = 0.0
+	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
 func play() -> void:
 	_loop_times = 1
 	_timer.wait_time = 0.00001
 	_timer.one_shot = true
+	_play_mode = AnimaTween.PLAY_MODE.NORMAL
+
+	_timer.start()
+
+func play_reverse() -> void:
+	_loop_times = 1
+	_timer.wait_time = 0.00001
+	_timer.one_shot = true
+	_play_mode = AnimaTween.PLAY_MODE.REVERSE
 
 	_timer.start()
 
@@ -105,6 +116,7 @@ func loop(times: int = -1) -> void:
 	_loop_times = times
 	_timer.wait_time = 0.00001
 	_should_loop = times == -1
+	_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 	# Can't use _anima_tween.repeat
 	# as the tween_all_completed is never called :(
@@ -115,6 +127,7 @@ func loop_with_delay(delay: float, times: int = -1) -> void:
 	_loop_times = times
 	_timer.wait_time = 0.00001
 	_should_loop = true
+	_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 	# Can't use _anima_tween.repeat
 	# as the tween_all_completed is never called :(
@@ -127,6 +140,7 @@ func loop_times_with_delay(times: float, delay: float) -> void:
 	_loop_times = times
 	_timer.wait_time = 0.00001
 	_should_loop = times == -1
+	_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 	# Can't use _anima_tween.repeat
 	# as the tween_all_completed is never called :(
@@ -137,6 +151,7 @@ func loop_times_with_delay(times: float, delay: float) -> void:
 
 func play_with_delay(delay: float) -> void:
 	_loop_times = 1
+	_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 	_timer.set_wait_time(delay)
 	_timer.start()
@@ -147,7 +162,7 @@ func get_length() -> float:
 func _do_play() -> void:
 	# Allows to reset the "relative" properties to the value of the 1st loop
 	# before doing another loop
-	_anima_tween.reset_data(_loop_strategy)
+	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation)
 
 	_loop_count += 1
 
@@ -182,7 +197,6 @@ func _setup_node_animation(data: Dictionary) -> float:
 	var delay = data.delay if data.has('delay') else 0.0
 	var duration = data.duration if data.has('duration') else Anima.DEFAULT_DURATION
 
-	node.set_meta('__pivot_applied', null)
 	data._wait_time = max(0.0, data._wait_time + delay)
 
 	if data.has('property') and not data.has('animation'):
