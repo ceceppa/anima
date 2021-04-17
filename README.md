@@ -38,8 +38,8 @@ Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.
 | Animate elements in group          | yes (it will be extended in 0.2)                           | possible but need to manually animate each individual element|
 | Loop                               | Infinite, Times, and delayed loops                         | Infinite only               |
 | Play/Loop backwards                | yes                                                        | no                                    |
-| Change speed on fly                | 0.3                                                        | no                                    |
-| Animation path (position only)     | 0.4                                                        | no                                    |
+| Change speed on fly                | 0.4                                                        | no                                    |
+| Animation path (position only)     | 0.5                                                        | no                                    |
 
 What does it mean in terms of code? Here an overview of Anima vs Godot Tween code for simple animation:
 
