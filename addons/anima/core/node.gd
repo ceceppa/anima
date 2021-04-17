@@ -93,68 +93,56 @@ func clear() -> void:
 	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
 func play() -> void:
-	_loop_times = 1
-	_timer.wait_time = 0.00001
-	_timer.one_shot = true
-	_play_mode = AnimaTween.PLAY_MODE.NORMAL
+	_play(AnimaTween.PLAY_MODE.NORMAL)
 
+func play_with_delay(delay: float) -> void:
+	_play(AnimaTween.PLAY_MODE.NORMAL, delay)
+
+func play_backwards() -> void:
+	_play(AnimaTween.PLAY_MODE.BACKWARDS)
+
+func play_backwards_with_delay(delay: float) -> void:
+	_play(AnimaTween.PLAY_MODE.BACKWARDS, delay)
+
+func _play(mode: int, delay: float = 0) -> void:
+	_loop_times = 1
+	_play_mode = mode
+
+	_timer.one_shot = true
+	_timer.wait_time = max(0.00001, delay)
 	_timer.start()
 
-func play_reverse() -> void:
-	_loop_times = 1
-	_timer.wait_time = 0.00001
-	_timer.one_shot = true
-	_play_mode = AnimaTween.PLAY_MODE.REVERSE
-
-	_timer.start()
 
 func stop() -> void:
 	_timer.stop()
 	_anima_tween.stop_all()
 
 func loop(times: int = -1) -> void:
-	_loop_times = times
-	_timer.wait_time = 0.00001
-	_should_loop = times == -1
-	_play_mode = AnimaTween.PLAY_MODE.NORMAL
+	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS)
 
-	# Can't use _anima_tween.repeat
-	# as the tween_all_completed is never called :(
-	# But we need it to reset some stuff
-	_do_play()
+func loop_backwards(times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
+
+func loop_backwards_with_delay(delay: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
 func loop_with_delay(delay: float, times: int = -1) -> void:
-	_loop_times = times
-	_timer.wait_time = 0.00001
-	_should_loop = true
-	_play_mode = AnimaTween.PLAY_MODE.NORMAL
-
-	# Can't use _anima_tween.repeat
-	# as the tween_all_completed is never called :(
-	# But we need it to reset some stuff
-	_do_play()
-	
-	_timer.wait_time = max(0.00001, delay)
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
 func loop_times_with_delay(times: float, delay: float) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
+
+func _do_loop(times: int, mode: int, delay: float = 0.00001) -> void:
 	_loop_times = times
-	_timer.wait_time = 0.00001
 	_should_loop = times == -1
-	_play_mode = AnimaTween.PLAY_MODE.NORMAL
+	_play_mode = mode
+
+	_timer.wait_time = max(0.00001, delay)
 
 	# Can't use _anima_tween.repeat
 	# as the tween_all_completed is never called :(
 	# But we need it to reset some stuff
 	_do_play()
-	
-	_timer.wait_time = max(0.00001, delay)
-
-func play_with_delay(delay: float) -> void:
-	_loop_times = 1
-	_play_mode = AnimaTween.PLAY_MODE.NORMAL
-
-	_timer.set_wait_time(delay)
-	_timer.start()
 
 func get_length() -> float:
 	return _total_animation

@@ -18,7 +18,7 @@ You can also add your own with a CSS inspired syntax.
 - Stay in Touch
 - Contribution
 - License
-  
+
 ## Installation
 
 This is a regular editor plugin. Copy the contents of addons/Anima into the same folder in your project, and activate it in your project settings.
@@ -36,8 +36,8 @@ Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.
 | Easing                             | 33 built-in, (it will be extended in 0.2)            | 10 and no support for custom ones     |
 | Create and reuse custom animations | 89 built-in, more can be added programmatically            | possible but not as easy              |
 | Animate elements in group          | yes (it will be extended in 0.2)                           | possible but need to manually animate each individual element|
-| Loop                  | Infinite, Times, and delayed loops                                                        | Infinite                                    |
-| Reverse animation                  | 0.3                                                        | no                                    |
+| Loop                               | Infinite, Times, and delayed loops                         | Infinite only               |
+| Play/Loop backwards                | yes                                                        | no                                    |
 | Change speed on fly                | 0.3                                                        | no                                    |
 | Animation path (position only)     | 0.4                                                        | no                                    |
 

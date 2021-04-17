@@ -21,8 +21,10 @@ static func get_position(node: Node) -> Vector2:
 static func get_size(node: Node) -> Vector2:
 	if node is Control:
 		return node.get_size()
+	elif node is Node2D:
+		return node.texture.get_size() * node.scale
 
-	return node.texture.get_size() * node.scale
+	return Vector2.ZERO
 
 static func get_scale(node: Node) -> Vector2:
 	if node is Control:

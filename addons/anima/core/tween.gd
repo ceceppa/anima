@@ -3,7 +3,7 @@ extends Tween
 
 var _animation_data := []
 var _normal_animation_data := []
-var _reversed_animation_data := []
+var _backwards_animation_data := []
 
 # Needed to use interpolate_property
 var _fake_property: Dictionary = {}
@@ -13,7 +13,7 @@ var _callbacks := {}
 
 enum PLAY_MODE {
 	NORMAL,
-	REVERSE
+	BACKWARDS
 }
 
 func _ready():
@@ -178,6 +178,8 @@ func clear_animations() -> void:
 	_fake_property = {}
 	_callbacks = {}
 	_animation_data.clear()
+	_backwards_animation_data.clear()
+	_normal_animation_data.clear()
 
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
@@ -194,10 +196,10 @@ func reset_data(strategy: int, play_mode: int, animation_length: float):
 	if play_mode == PLAY_MODE.NORMAL:
 		data = _normal_animation_data.duplicate()
 	else:
-		if _reversed_animation_data.size() < _animation_data.size():
-			_reversed_animation_data = _flip_animations(_animation_data.duplicate(), animation_length)
+		if _backwards_animation_data.size() < _animation_data.size():
+			_backwards_animation_data = _flip_animations(_animation_data, animation_length)
 
-		data = _reversed_animation_data.duplicate()
+		data = _backwards_animation_data.duplicate()
 
 	clear_animations()
 
@@ -206,13 +208,52 @@ func reset_data(strategy: int, play_mode: int, animation_length: float):
 
 		add_animation_data(animation_data, play_mode)
 
+#
+# In order to flip "nested relative" animations we need to calculate what all the
+# property as it would be if the animation is played normally. Only then we can calculate
+# the correct relative positions, by also looking at the previous frames.
+# Otherwise we would end up with broken animations when animating the same property more than
+# once 
 func _flip_animations(data: Array, animation_length) -> Array:
-	for animation in data:
-		var new_wait_time: float = animation_length - animation.duration - animation._wait_time
+	var new_data := []
+	var previous_frames := {}
 
-		animation._wait_time = new_wait_time
+	for animation_data in data:
+		animation_data = animation_data.duplicate()
 
-	return data
+		var node = animation_data.node
+		var new_wait_time: float = animation_length - animation_data.duration - animation_data._wait_time
+		var property = animation_data.property
+		var is_relative = animation_data.has('relative') and animation_data.relative
+
+		if not animation_data.has('from'):
+			var node_from = AnimaNodesProperties.get_property_initial_value(node, property)
+
+			if previous_frames.has(node) and previous_frames[node].has(property):
+				node_from = previous_frames[node][property]
+
+			animation_data.from = node_from
+
+		if animation_data.has('to') and is_relative:
+			animation_data.to += animation_data.from
+		elif not animation_data.has('to'):
+			animation_data.to = animation_data.from
+
+		animation_data.relative = false
+
+		if not previous_frames.has(node):
+			previous_frames[node] = {}
+
+		if animation_data.has('to'):
+			previous_frames[node][property] = animation_data.to
+		else:
+			previous_frames[node][property] = animation_data.from
+
+		animation_data._wait_time = max(0.0000001, new_wait_time)
+
+		new_data.push_back(animation_data)
+
+	return new_data
 
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame'):
