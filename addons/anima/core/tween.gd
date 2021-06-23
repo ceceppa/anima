@@ -511,10 +511,12 @@ func _on_tween_started(_ignore, key) -> void:
 
 	var should_trigger_on_started: bool = animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started')
 	if should_trigger_on_started:
-		var f: FuncRef = animation_data.on_started[0]
-		var value = animation_data.on_started[1] if animation_data.on_started.size() > 1 else null
-
-		if value:
-			f.call_funcv([value])
+		var fn: FuncRef
+		var args: Array = []
+		if animation_data.on_started is Array:
+			fn = animation_data.on_started[0]
+			args = animation_data.on_started.slice(1, -1)
 		else:
-			f.call_func()
+			fn = animation_data.on_started
+			
+		fn.call_funcv(args)
