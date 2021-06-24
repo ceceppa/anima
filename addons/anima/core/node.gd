@@ -112,16 +112,15 @@ func _play(mode: int, delay: float = 0) -> void:
 	_timer.wait_time = max(0.00001, delay)
 	_timer.start()
 
-
 func stop() -> void:
 	_timer.stop()
 	_anima_tween.stop_all()
 
 func loop(times: int = -1) -> void:
-	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS)
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
 
 func loop_backwards(times: int = -1) -> void:
-	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
+	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS)
 
 func loop_backwards_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
@@ -227,8 +226,6 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var duration: float
 
 	match animation_type:
-		Anima.GRID.SEQUENCE_TOP_LEFT:
-			duration = _generate_animation_sequence_top_left(animation_data)
 		Anima.GRID.TOGETHER:
 			duration = _generate_animation_all_together(animation_data)
 		Anima.GRID.COLUMNS_EVEN:
@@ -243,8 +240,10 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 			duration = _generate_animation_for_odd_items(animation_data)
 		Anima.GRID.EVEN:
 			duration = _generate_animation_for_even_items(animation_data)
+		_:
+			duration = _generate_animation_sequence(animation_data, animation_type)
 
-	return duration
+	return animation_data.duration
 
 func _get_children(animation_data: Dictionary) -> Array:
 	var grid_node = animation_data._grid_node
@@ -275,11 +274,57 @@ func _get_children(animation_data: Dictionary) -> Array:
 
 	return children
 
-func _generate_animation_sequence_top_left(animation_data: Dictionary) -> float:
+func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -> float:
 	var nodes := []
+	var children := _get_children(animation_data)
+	var is_grid: bool = animation_data.grid_size.x > 1
+	var grid_size: Vector2 = animation_data.grid_size
+	var from_x: int
+	var from_y: int
+
+	from_y = grid_size.y / 2
+	from_x = grid_size.x / 2
+
+	if start_from == Anima.GRID.FROM_POINT and not animation_data.has('point'):
+		start_from = Anima.GRID.FROM_CENTER
+
+	for row_index in children.size():
+		var row: Array = children[row_index]
+		var from_index = 0
+
+		if start_from == Anima.GRID.SEQUENCE_BOTTOM_RIGHT:
+			from_index = row.size() - 1
+		elif start_from == Anima.GRID.FROM_CENTER:
+			from_index = (row.size() - 1) / 2
+		elif start_from == Anima.GRID.FROM_POINT:
+			if is_grid:
+				from_y = animation_data.point.y
+				from_x = animation_data.point.x
+			else:
+				from_index = animation_data.point.x
+
+		for index in row.size():
+			var current_index = index
+			var distance: int = abs(from_index - current_index)
+			
+			if is_grid:
+				var distance_x = index - from_y
+				var distance_y = row_index - from_x
+
+				distance = sqrt(distance_x * distance_x + distance_y * distance_y)
+
+			var node = row[index]
+
+			nodes.push_back({ node = node, delay_index = distance })
+
+	return _create_grid_animation_with(nodes, animation_data)
+
+func _generate_animation_sequence_bottom_right(animation_data: Dictionary) -> float:
+	var nodes := []
+
 	for row in _get_children(animation_data):
 		for child in row:
-			nodes.push_back(child)
+			nodes.push_front(child)
 
 	return _create_grid_animation_with(nodes, animation_data)
 
@@ -386,19 +431,23 @@ func _generate_animation_for_even_items(animation_data: Dictionary) -> float:
 	return _create_grid_animation_with(nodes, animation_data)
 
 func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> float:
-	var index = 0
-	for node in nodes:
+	for index in nodes.size():
+		var node = nodes[index]
+		var delay_index = index
+
+		if node is Dictionary:
+			delay_index = node.delay_index
+			node = node.node
+
 		var data = animation_data.duplicate()
 
 		data.node = node
 		if not data.has('delay'):
 			data.delay = 0
 
-		data.delay += data.items_delay * index
+		data.delay += data.items_delay * delay_index
 
 		with(data)
-
-		index += 1
 
 	return animation_data.duration + (animation_data.items_delay * nodes.size())
 
