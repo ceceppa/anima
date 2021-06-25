@@ -32,11 +32,11 @@ Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.
 |                                    | Anima                                                      | Tween                                 |
 |---|---|---|
 | Chaining                           | support for sequential, parallel and concurrent animations | possible but need to be done manually |
-| Animate relative property          | yes                                                        | no                                    |
 | Easing                             | 33 built-in, (it will be extended in 0.2)            | 10 and no support for custom ones     |
 | Create and reuse custom animations | 89 built-in, more can be added programmatically            | possible but not as easy              |
 | Animate elements in group          | yes (it will be extended in 0.2)                           | possible but need to manually animate each individual element|
 | Loop                               | Infinite, Times, and delayed loops                         | Infinite only               |
+| Animate relative values            | yes                                                        | possible but need to be done manually                                    |
 | Play/Loop backwards                | yes                                                        | no                                    |
 | Change speed on fly                | 0.4                                                        | no                                    |
 | Animation path (position only)     | 0.5                                                        | no                                    |
