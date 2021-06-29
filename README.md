@@ -6,7 +6,7 @@ Anima is an addon for Godot that allows you to create sequential and parallel an
 
 ![Anima](https://anima.ceceppa.me/anima.gif)
 
-Creating create sequential and parallel animations using Tween can be a bit tedious, and Anima allows you doing that with few lines of code and a simple syntax.
+Creating sequential and parallel animations using Tween can be a bit tedious, and Anima allows you doing that with few lines of code and a simple syntax.
 It has built-in about 89 animations and 33 easings, with the ability to easily add your own.
 You can also add your own with a CSS inspired syntax.
 
