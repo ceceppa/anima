@@ -50,6 +50,7 @@ For more info about the differences have a look [here](https://anima.ceceppa.me/
 ## Stay in Touch
 
 [Twitter](https://twitter.com/ceceppa)
+[Discord](https://discord.gg/zgtF3us5yN)
 
 ## Contribution
 
