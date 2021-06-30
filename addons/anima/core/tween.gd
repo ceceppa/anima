@@ -1,3 +1,5 @@
+tool
+
 class_name AnimaTween
 extends Tween
 
@@ -278,7 +280,7 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 	if should_hide_nodes:
 		node.show()
 
-	if should_make_nodes_transparent:
+	if should_make_nodes_transparent and 'modulate' in node:
 		var modulate = node.modulate
 		var transparent = modulate
 
@@ -402,7 +404,7 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 
 	animation_data._property_data.diff = to - from
 	animation_data._property_data.from = from
-
+	
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:
 		return value

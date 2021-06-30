@@ -1,3 +1,5 @@
+tool
+
 extends Node
 
 const BASE_PATH := 'res://addons/anima/animations/'
@@ -70,6 +72,13 @@ func begin(node, name: String = 'anima') -> AnimaNode:
 		anima_node._init_node(node)
 
 	return anima_node
+
+func player(node: Node) -> AnimaPlayer:
+	var player = AnimaPlayer.new()
+
+	node.add_child(player)
+
+	return player
 
 func register_animation(script, animation_name: String) -> void:
 	_deregiter_animation(animation_name)
