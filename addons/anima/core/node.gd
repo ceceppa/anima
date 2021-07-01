@@ -200,7 +200,12 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 			return duration
 
-		var real_duration = script.generate_animation(_anima_tween, data)
+		var callback: FuncRef = funcref(script, 'generate_animation')
+
+		if script.has_method(data.animation):
+			callback = funcref(script, data.animation)
+
+		var real_duration = callback.call_func(_anima_tween, data)
 		if real_duration is float:
 			duration = real_duration
 	else:
@@ -261,6 +266,8 @@ func _get_children(animation_data: Dictionary) -> Array:
 	for child in grid_node.get_children():
 		# Skip current node :)
 		if '__do_nothing' in child:
+			continue
+		elif animation_data.has('skip_hidden') and not child.is_visible():
 			continue
 
 		row_items.push_back(child)

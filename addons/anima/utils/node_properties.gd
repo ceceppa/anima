@@ -133,9 +133,10 @@ static func get_property_initial_value(node: Node, property: String):
 
 	if node.get(property_name):
 		node_property_name = property_name
-
-	if node.get(rect_property_name):
+	elif node.get(rect_property_name):
 		node_property_name = rect_property_name
+	elif property_name in node:
+		node_property_name = property_name
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial
@@ -259,9 +260,10 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 	if node.get(property_name):
 		node_property_name = property_name
-
-	if node.get(rect_property_name):
+	elif node.get(rect_property_name):
 		node_property_name = rect_property_name
+	elif property_name in node:
+		node_property_name = property_name
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial

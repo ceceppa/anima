@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/anima/components/AnimaLabel.gd" type="Script" id=2]
+
+[node name="AnimaLabel" type="Control"]
+anchor_right = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1024, 14 )
+transparent_bg = true
+usage = 1
+render_target_v_flip = true
+
+[node name="Label" type="Label" parent="Viewport"]
+margin_right = 1024.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "AnimaLabel"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
