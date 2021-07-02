@@ -31,7 +31,8 @@ enum GRID {
 	ODD,
 	EVEN,
 	FROM_CENTER,
-	FROM_POINT
+	FROM_POINT,
+	RANDOM
 }
 
 enum LOOP {

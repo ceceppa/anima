@@ -88,14 +88,15 @@ func _update_font_and_size() -> void:
 		child.set_font_color(_font_color)
 
 		var width = 0
-		
+
 		for letter in child._label:
 			var size = _font.get_char_size(letter.to_ascii()[0])
 
 			width += size.x + _letter_spacing
 
-		child.rect_min_size.x = width
-		child.rect_size.x = width
+		var child_size = Vector2(width, rect_min_size.y)
+
+		child.set_size(child_size)
 
 func _get_anima_label() -> AnimaLabel:
 	if _anima_label:
@@ -106,3 +107,6 @@ func _get_anima_label() -> AnimaLabel:
 	_anima_label.size_flags_vertical = SIZE_FILL
 
 	return _anima_label
+
+func _on_AnimaChars_item_rect_changed():
+	update()

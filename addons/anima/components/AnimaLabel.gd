@@ -20,6 +20,8 @@ export (Align) var _align = Align.CENTER setget set_align
 export (VAlign) var _valign = VAlign.CENTER setget set_valign
 export (Color) var _font_color = Color.white setget set_font_color
 export (Vector2) var _text_offset = Vector2.ZERO setget set_text_offset_px
+export (Vector2) var _text_scale = Vector2(1, 1) setget set_text_scale
+export (Vector2) var _container_scale = Vector2(1, 1) setget set_container_scale
 
 func _ready():
 	if not is_connected("item_rect_changed", self, '_on_AnimaLabel_item_rect_changed'):
@@ -32,12 +34,19 @@ func _process(_delta):
 		update()
 
 func _draw() -> void:
+	$Viewport/Label.rect_size = rect_size
+	$Viewport/Label.rect_position = Vector2.ZERO
+
 	var size = $Viewport/Label.rect_size
 	$Viewport.size = size
 
-	var pos = - _text_offset
-	pos.y -= (rect_size.y - size.y) / 2
-	draw_texture_rect_region($Viewport.get_texture(), Rect2(Vector2.ZERO, rect_size), Rect2(pos, rect_size))
+	var source_position = - _text_offset
+	var source_size = rect_size * Vector2(1, _text_scale.y)
+	var final_position = Vector2.ZERO
+
+	source_position.y -= (rect_size.y - size.y) / 2
+
+	draw_texture_rect_region($Viewport.get_texture(), Rect2(final_position, rect_size), Rect2(source_position, source_size))
 
 func set_label(label: String) -> void:
 	_label = label
@@ -87,10 +96,26 @@ func set_text_offset_px(offset: Vector2) -> void:
 
 	update()
 
+func set_text_scale(scale: Vector2) -> void:
+	_text_scale = scale
+
+	update()
+
+func set_container_scale(scale: Vector2) -> void:
+	_container_scale = scale
+
+	set_size(rect_size)
+	
+	update()
+
+func set_size(size: Vector2, _keep_margin := false) -> void:
+	var new_size: Vector2 = size * _container_scale
+
+	rect_size = new_size
+	rect_min_size = new_size
+
 func _update_font() -> void:
 	update()
 
 func _on_AnimaLabel_item_rect_changed():
-	if get_child_count():
-		$Viewport/Label.rect_size = rect_size
-		$Viewport/Label.rect_position = Vector2.ZERO
+	update()

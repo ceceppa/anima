@@ -252,18 +252,23 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 
 	return animation_data.duration
 
-func _get_children(animation_data: Dictionary) -> Array:
+func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 	var grid_node = animation_data._grid_node
 	var grid_size = animation_data.grid_size
 
-	var children := []
+	var nodes := []
 	var rows: int = grid_size.x
 	var columns: int = grid_size.y
 
 	var row_items := []
 	var index := 0
 
-	for child in grid_node.get_children():
+	var children: Array = grid_node.get_children()
+	
+	if shuffle:
+		children.shuffle()
+
+	for child in children:
 		# Skip current node :)
 		if '__do_nothing' in child:
 			continue
@@ -274,18 +279,18 @@ func _get_children(animation_data: Dictionary) -> Array:
 
 		index += 1
 		if index >= columns:
-			children.push_back(row_items)
+			nodes.push_back(row_items)
 			row_items = []
 			index = 0
 
 	if row_items.size() > 0:
-		children.push_back(row_items)
+		nodes.push_back(row_items)
 
-	return children
+	return nodes
 
 func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -> float:
 	var nodes := []
-	var children := _get_children(animation_data)
+	var children := _get_children(animation_data, start_from == Anima.GRID.RANDOM)
 	var is_grid: bool = animation_data.grid_size.x > 1
 	var grid_size: Vector2 = animation_data.grid_size
 	var from_x: int
