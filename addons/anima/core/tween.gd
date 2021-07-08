@@ -402,7 +402,11 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 
 	animation_data._property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
 
-	animation_data._property_data.diff = to - from
+	if to is Rect2:
+		animation_data._property_data.diff = { position = to.position - from.position, size = to.size - from.size }
+	else:
+		animation_data._property_data.diff = to - from
+
 	animation_data._property_data.from = from
 	
 func _maybe_calculate_relative_value(relative, value, current_node_value):
@@ -440,7 +444,16 @@ func _on_animation_without_key(index: int, elapsed: float) -> void:
 	var animation_data = _animation_data[index]
 	var property_data = _animation_data[index]._property_data
 	var node = animation_data.node
-	var value = property_data.from + (property_data.diff * elapsed)
+	var is_rect2 = property_data.from is Rect2
+	var value
+	
+	if is_rect2:
+		value = Rect2(
+					property_data.from.position + (property_data.diff.position * elapsed),
+					property_data.from.size + (property_data.diff.size * elapsed)
+				)
+	else:
+		value = property_data.from + (property_data.diff * elapsed)
 
 	if property_data.has('callback'):
 		property_data.callback.call_func(property_data.param, value)

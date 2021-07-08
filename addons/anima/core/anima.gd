@@ -46,6 +46,18 @@ enum TYPE {
 	GRID
 }
 
+const Align = {
+	LEFT = HALIGN_LEFT,
+	CENTER = HALIGN_CENTER,
+	RIGHT = HALIGN_RIGHT,
+}
+
+const VAlign = {
+	TOP = VALIGN_TOP,
+	CENTER = VALIGN_CENTER,
+	BOTTOM = VALIGN_BOTTOM,
+}
+
 const EASING = AnimaEasing.EASING
 
 const DEFAULT_DURATION := 0.7

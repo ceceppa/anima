@@ -2,120 +2,88 @@ tool
 class_name AnimaLabel
 extends Control
 
-const Align = {
-	LEFT = HALIGN_LEFT,
-	CENTER = HALIGN_CENTER,
-	RIGHT = HALIGN_RIGHT,
-}
+const SpriteLabel = preload('./helpers/SpriteLabel.gd')
 
-const VAlign = {
-	TOP = VALIGN_TOP,
-	CENTER = VALIGN_CENTER,
-	BOTTOM = VALIGN_BOTTOM,
-}
+export (String) var label = 'AnimaLabel' setget set_label
+export (Font) var font setget set_font
+export (Anima.Align) var align = Anima.Align.CENTER setget set_align
+export (Anima.VAlign) var valign = Anima.VAlign.CENTER setget set_valign
+export (Color) var font_color = Color.white setget set_font_color
+export (Vector2) var text_offset = Vector2.ZERO setget set_text_offset_px
+export (Vector2) var text_scale = Vector2(1, 1) setget set_text_scale
 
-export (String) var _label = 'AnimaLabel' setget set_label
-export (Font) var _font setget set_font
-export (Align) var _align = Align.CENTER setget set_align
-export (VAlign) var _valign = VAlign.CENTER setget set_valign
-export (Color) var _font_color = Color.white setget set_font_color
-export (Vector2) var _text_offset = Vector2.ZERO setget set_text_offset_px
-export (Vector2) var _text_scale = Vector2(1, 1) setget set_text_scale
-export (Vector2) var _container_scale = Vector2(1, 1) setget set_container_scale
+onready var _label := SpriteLabel.new()
 
 func _ready():
-	if not is_connected("item_rect_changed", self, '_on_AnimaLabel_item_rect_changed'):
-		connect("item_rect_changed", self, '_on_AnimaLabel_item_rect_changed')
+	connect("resized", self, '_on_resized')
 
-	set_font(_font)
+	set_clip_contents(true)
+
+	_safe_set('label', label)
+	_safe_set('font', font)
+	_safe_set('align', align)
+	_safe_set('valign', valign)
+	_safe_set('font_color', font_color)
+	_safe_set('text_offset', text_offset)
+	_safe_set('scale', text_scale)
+
+	_on_resized()
+
+	add_child(_label)
 
 func _process(_delta):
 	if Engine.editor_hint:
 		update()
 
-func _draw() -> void:
-	$Viewport/Label.rect_size = rect_size
-	$Viewport/Label.rect_position = Vector2.ZERO
+func _safe_set(property: String, value, should_update := false) -> void:
+	if not _label:
+		return
 
-	var size = $Viewport/Label.rect_size
-	$Viewport.size = size
-
-	var source_position = - _text_offset
-	var source_size = rect_size * Vector2(1, _text_scale.y)
-	var final_position = Vector2.ZERO
-
-	source_position.y -= (rect_size.y - size.y) / 2
-
-	draw_texture_rect_region($Viewport.get_texture(), Rect2(final_position, rect_size), Rect2(source_position, source_size))
-
-func set_label(label: String) -> void:
-	_label = label
-
-	if get_child_count():
-		$Viewport/Label.text = label
-
-	update()
-
-func get_children() -> Array:
-	return []
-
-func set_font(font: Font) -> void:
-	_font = font
-
-	if get_child_count():
-		$Viewport/Label.add_font_override("font", _font)
-
-	if _font and not _font.is_connected("changed", self, '_update_font'):
-		_font.connect("changed", self, '_update_font')
-
-func set_align(align: int) -> void:
-	_align = align
-
-	if get_child_count():
-		$Viewport/Label.align = align
-	update()
-
-func set_valign(valign: int) -> void:
-	_valign = valign
-
-	if get_child_count():
-		$Viewport/Label.valign = valign
-
-	update()
-
-func set_font_color(color: Color) -> void:
-	_font_color = color
-
-	if get_child_count():
-		$Viewport/Label.add_color_override("font_color", color)
-
-	update()
-
-func set_text_offset_px(offset: Vector2) -> void:
-	_text_offset = offset
-
-	update()
-
-func set_text_scale(scale: Vector2) -> void:
-	_text_scale = scale
-
-	update()
-
-func set_container_scale(scale: Vector2) -> void:
-	_container_scale = scale
-
-	set_size(rect_size)
+	_label.set(property, value)
 	
-	update()
+	if should_update:
+		_label.update()
 
-func set_size(size: Vector2, _keep_margin := false) -> void:
-	var new_size: Vector2 = size * _container_scale
+func set_label(new_label: String) -> void:
+	label = new_label
 
-	rect_size = new_size
-	rect_min_size = new_size
+	_safe_set('label', label)
+
+func set_font(new_font: Font) -> void:
+	font = new_font
+
+	_safe_set('font', font)
+
+	if font and not font.is_connected("changed", self, '_update_font'):
+		font.connect("changed", self, '_update_font')
+
+func set_align(new_align: int) -> void:
+	align = new_align
+
+	_safe_set('align', align)
+
+func set_valign(new_valign: int) -> void:
+	valign = new_valign
+
+	_safe_set('valign', valign)
+
+func set_font_color(new_color: Color) -> void:
+	font_color = new_color
+
+	_safe_set('font_color', font_color)
+
+func set_text_offset_px(new_offset: Vector2) -> void:
+	text_offset = new_offset
+
+	_safe_set('text_offset', new_offset)
+
+func set_text_scale(new_scale: Vector2) -> void:
+	text_scale = new_scale
+
+	_safe_set('scale', text_scale, true)
 
 func _update_font() -> void:
 	update()
 
-func _on_AnimaLabel_item_rect_changed():
-	update()
+func _on_resized():
+	_safe_set('size', rect_size)

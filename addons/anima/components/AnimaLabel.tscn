@@ -4,20 +4,25 @@
 
 [node name="AnimaLabel" type="Control"]
 anchor_right = 1.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 1920, 100 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Viewport" type="Viewport" parent="."]
-size = Vector2( 1024, 14 )
+size = Vector2( 1920, 100 )
+size_override_stretch = true
 transparent_bg = true
-usage = 1
+handle_input_locally = false
+usage = 0
 render_target_v_flip = true
+shadow_atlas_size = 12
 
 [node name="Label" type="Label" parent="Viewport"]
-margin_right = 1024.0
-margin_bottom = 14.0
+margin_right = 1920.0
+margin_bottom = 100.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "AnimaLabel"
 align = 1
