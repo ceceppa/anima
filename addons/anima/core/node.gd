@@ -92,6 +92,9 @@ func clear() -> void:
 	_last_animation_duration = 0.0
 	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
+func clear_loop() -> void:
+	_should_loop = false
+
 func play() -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL)
 
