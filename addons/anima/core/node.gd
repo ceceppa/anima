@@ -86,14 +86,12 @@ func set_visibility_strategy(strategy: int) -> void:
 func clear() -> void:
 	stop()
 
+    _should_loop = false
 	_anima_tween.clear_animations()
 
 	_total_animation = 0.0
 	_last_animation_duration = 0.0
 	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
-
-func clear_loop() -> void:
-	_should_loop = false
 
 func play() -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL)
