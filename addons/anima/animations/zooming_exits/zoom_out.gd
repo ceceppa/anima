@@ -1,11 +1,11 @@
 func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	var zoom_frames = [
-		{ percentage = 0, from = Vector2(0.3, 0.3) },
-		{ percentage = 100, to = Vector2(1, 1) },
+		{ percentage = 0, from = Vector2(1, 1) },
+		{ percentage = 100, to = Vector2(1.3, 1.3) },
 	]
 
 	var opacity_frames = [
-		{ from = 1, to = 0 },
+		{ from = 0, to = 1 },
 	]
 
 	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.CENTER)

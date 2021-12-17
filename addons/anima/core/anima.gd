@@ -1,14 +1,18 @@
+tool
 extends Node
 
 const BASE_PATH := 'res://addons/anima/animations/'
 
 enum PIVOT {
-	CENTER,
-	CENTER_BOTTOM,
-	TOP_CENTER,
 	TOP_LEFT,
-	LEFT_BOTTOM,
-	RIGHT_BOTTOM
+	TOP_CENTER,
+	TOP_RIGHT,
+	CENTER_LEFT,
+	CENTER,
+	CENTER_RIGHT,
+	BOTTOM_LEFT,
+	BOTTOM_CENTER,
+	BOTTOM_RIGHT
 }
 
 enum VISIBILITY {
@@ -29,7 +33,8 @@ enum GRID {
 	ODD,
 	EVEN,
 	FROM_CENTER,
-	FROM_POINT
+	FROM_POINT,
+	RANDOM
 }
 
 enum LOOP {
@@ -43,17 +48,35 @@ enum TYPE {
 	GRID
 }
 
+enum VALUES_IN {
+	PIXELS,
+	PERCENTAGE
+}
+
+const Align = {
+	LEFT = HALIGN_LEFT,
+	CENTER = HALIGN_CENTER,
+	RIGHT = HALIGN_RIGHT,
+}
+
+const VAlign = {
+	TOP = VALIGN_TOP,
+	CENTER = VALIGN_CENTER,
+	BOTTOM = VALIGN_BOTTOM,
+}
+
 const EASING = AnimaEasing.EASING
 
 const DEFAULT_DURATION := 0.7
 const DEFAULT_ITEMS_DELAY := 0.05
+const MINIMUM_DURATION := 0.000001
 
 var _animations_list := []
 var _custom_animations := []
 
-func begin(node, name: String = 'anima') -> AnimaNode:
+func begin(node: Node, name: String = 'anima', single_shot := false):
 	var node_name = 'AnimaNode_' + name
-	var anima_node: AnimaNode
+	var anima_node: Node
 
 	for child in node.get_children():
 		if child.name.find(node_name) >= 0:
@@ -64,19 +87,34 @@ func begin(node, name: String = 'anima') -> AnimaNode:
 			return anima_node
 
 	if anima_node == null:
-		anima_node = AnimaNode.new()
+		anima_node = load('res://addons/anima/core/node.gd').new()
 		anima_node.name = node_name
 
 		anima_node._init_node(node)
 
+	anima_node.set_single_shot(single_shot)
+
 	return anima_node
 
+func begin_single_shot(node: Node, name: String = "anima"):
+	return begin(node, name, true)
+
+func player(node: Node):
+	var player = load('./player.gd').new()
+
+	node.add_child(player)
+
+	return player
+
+func get_animation_path() -> String:
+	return BASE_PATH
+
 func register_animation(script, animation_name: String) -> void:
-	_deregiter_animation(animation_name)
+	_deregister_animation(animation_name)
 
 	_custom_animations.push_back({ name = animation_name, script = script })
 
-func _deregiter_animation(animation_name: String) -> void:
+func _deregister_animation(animation_name: String) -> void:
 	for animation in _custom_animations:
 		if animation.name == animation_name:
 			_custom_animations.erase(animation)

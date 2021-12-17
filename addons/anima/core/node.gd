@@ -1,3 +1,5 @@
+tool
+
 class_name AnimaNode
 extends Node
 
@@ -7,50 +9,50 @@ signal loop_started
 signal loop_completed
 
 var _anima_tween := AnimaTween.new()
+var _anima_backwards_tween := AnimaTween.new()
 
-var _total_animation := 0.0
+var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
 
-var _timer := Timer.new()
 var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
-var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
+var _default_duration = Anima.DEFAULT_DURATION
+var _apply_visibility_strategy_on_play := true
+var _play_speed := 1.0
+var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
+var _is_single_shot := false
 
 var __do_nothing := 0.0
 
-func _ready():
-	if _timer.get_parent() != self:
-		_init_node(self)
-
 func _exit_tree():
-	_timer.stop()
-	_anima_tween.stop_all()
+	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
+		return
 
-	_timer.queue_free()
+	_anima_tween.stop_all()
+	_anima_backwards_tween.stop_all()
+
 	_anima_tween.queue_free()
+	_anima_backwards_tween.queue_free()
 
 func _init_node(node: Node):
-	_timer.one_shot = true
-	_timer.autostart = false
-	_timer.connect("timeout", self, '_on_timer_timeout')
+	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
+	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 
-	_anima_tween.connect("tween_all_completed", self, '_on_all_tween_completed')
-
-	add_child(_timer)
 	add_child(_anima_tween)
+	add_child(_anima_backwards_tween)
 
 	if node != self:
 		node.add_child(self)
 
 func then(data: Dictionary) -> float:
-	data._wait_time = _total_animation
+	data._wait_time = _total_animation_length
 
 	_last_animation_duration = _setup_animation(data)
 
 	var delay = data.delay if data.has('delay') else 0.0
-	_total_animation += _last_animation_duration + delay
+	_total_animation_length += _last_animation_duration + delay
 
 	return _last_animation_duration
 
@@ -58,18 +60,88 @@ func with(data: Dictionary) -> float:
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
 
-	start_time = max(0, _total_animation - _last_animation_duration)
+	start_time = max(0, _total_animation_length - _last_animation_duration)
 
 	if not data.has('duration'):
 		if _last_animation_duration > 0:
 			data.duration = _last_animation_duration
 		else:
-			data.duration = Anima.DEFAULT_DURATION
+			data.duration = _default_duration
 
 	if not data.has('_wait_time'):
 		data._wait_time = start_time
 
 	return _setup_animation(data)
+
+func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
+	if _anima_tween.get_animations_count() == 0:
+		printerr('.also can be only used in after a .then or .with!')
+
+		return _last_animation_duration
+
+	var animation_data: Array = _anima_tween.get_animation_data()
+	var previous_data = animation_data[animation_data.size() - 1]
+
+	var keys_to_ignore = [
+		'_is_first_frame',
+		'_is_last_frame',
+		'_wait_time',
+		'delay',
+		'relative',
+		'_grid_node'
+	]
+
+	if previous_data.has('_grid_node'):
+		previous_data.grid = previous_data._grid_node
+
+	for key in previous_data:
+		if keys_to_ignore.find(key) >= 0 or extra_keys_to_ignore.find(key) >= 0:
+			continue
+
+		if not data.has(key):
+			data[key] = previous_data[key]
+
+	return with(data)
+
+func group(group_data: Array, animation_data: Dictionary) -> void:
+	var delay_index := 0
+
+	_total_animation_length += animation_data.duration
+
+	if not animation_data.has('items_delay'):
+		printerr('Please specify the `items_delay` value')
+
+		return
+
+	var items = group_data.size() - 1
+	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
+	var on_started = animation_data.on_started if animation_data.has('on_started') else null
+
+	animation_data.erase('on_completed')
+	animation_data.erase('on_started')
+
+	for index in group_data.size():
+		var group_item: Dictionary = group_data[index]
+		var data = animation_data.duplicate()
+
+		data._wait_time = animation_data.items_delay * delay_index
+
+		if group_item.has('node'):
+			data.node = group_item.node
+			delay_index += 1
+		else:
+			data.group = group_item.group
+			delay_index += data.group.get_child_count()
+
+		if index == 0 and on_started:
+			data.on_started = on_started
+
+		if index == items and on_completed:
+			data.on_completed = on_completed
+
+		with(data)
+
+	_total_animation_length += animation_data.items_delay * (delay_index - 1)
 
 func wait(seconds: float) -> void:
 	then({
@@ -80,17 +152,28 @@ func wait(seconds: float) -> void:
 		duration = seconds,
 	})
 
-func set_visibility_strategy(strategy: int) -> void:
+func set_single_shot(single_shot: bool) -> void:
+	_is_single_shot = single_shot
+
+	if _is_single_shot:
+		_anima_tween.set_repeat(false)
+
+func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
 	_anima_tween.set_visibility_strategy(strategy)
-	
+	_anima_backwards_tween.set_visibility_strategy(strategy)
+
+	if always_apply_on_play:
+		_apply_visibility_strategy_on_play = true
+
 func clear() -> void:
 	stop()
-	
-	_should_loop = false
-	_anima_tween.clear_animations()
 
-	_total_animation = 0.0
+	_anima_tween.clear_animations()
+	_anima_backwards_tween.clear_animations()
+
+	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
+
 	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
 func play() -> void:
@@ -99,70 +182,145 @@ func play() -> void:
 func play_with_delay(delay: float) -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL, delay)
 
+func play_with_speed(speed: float) -> void:
+	_play(AnimaTween.PLAY_MODE.NORMAL, 0.0, speed)
+
 func play_backwards() -> void:
 	_play(AnimaTween.PLAY_MODE.BACKWARDS)
 
 func play_backwards_with_delay(delay: float) -> void:
 	_play(AnimaTween.PLAY_MODE.BACKWARDS, delay)
 
-func _play(mode: int, delay: float = 0) -> void:
+func play_backwards_with_speed(speed: float) -> void:
+	_play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
+
+func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	_loop_times = 1
 	_play_mode = mode
+	_current_play_mode = mode
+	_play_speed = speed
 
-	_timer.one_shot = true
-	_timer.wait_time = max(0.00001, delay)
-	_timer.start()
+	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
+		set_visibility_strategy(_anima_tween._visibility_strategy)
+
+	var wait_time = max(Anima.MINIMUM_DURATION, delay)
+	yield(get_tree().create_timer(wait_time), "timeout")
+
+	_do_play()
+	_maybe_play()
 
 func stop() -> void:
-	_timer.stop()
 	_anima_tween.stop_all()
+	_anima_backwards_tween.stop_all()
 
 func loop(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
 
+func loop_in_circle(times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE)
+
+func loop_in_circle_with_delay(delay: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, delay)
+
+func loop_in_circle_with_speed(speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, Anima.MINIMUM_DURATION, speed)
+
+func loop_in_circle_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, delay, speed)
+
 func loop_backwards(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS)
+
+func loop_backwards_with_speed(speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS, Anima.MINIMUM_DURATION, speed)
 
 func loop_backwards_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
+func loop_backwards_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay, speed)
+
 func loop_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
+
+func loop_with_speed(speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, Anima.MINIMUM_DURATION, speed)
 
 func loop_times_with_delay(times: float, delay: float) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
-func _do_loop(times: int, mode: int, delay: float = 0.00001) -> void:
+func loop_times_with_delay_and_speed(times: int, delay: float, speed: float) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay, speed)
+
+func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, speed := 1.0) -> void:
 	_loop_times = times
 	_should_loop = times == -1
 	_play_mode = mode
 
-	_timer.wait_time = max(0.00001, delay)
+	if mode != AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE:
+		_current_play_mode = mode
+	else:
+		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
-	# Can't use _anima_tween.repeat
-	# as the tween_all_completed is never called :(
-	# But we need it to reset some stuff
+	_play_speed = speed
+
+	var wait_time = max(Anima.MINIMUM_DURATION, delay)
+	yield(get_tree().create_timer(wait_time), "timeout")
+
 	_do_play()
+	_maybe_play()
 
 func get_length() -> float:
-	return _total_animation
+	return _total_animation_length
+
+func set_root_node(node) -> void:
+	_anima_tween.set_root_node(node)
 
 func _do_play() -> void:
-	# Allows to reset the "relative" properties to the value of the 1st loop
-	# before doing another loop
-	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation)
+	var play_mode: int = _play_mode
+	var is_loop_in_circle = _play_mode == AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE
+
+	if is_loop_in_circle:
+		play_mode = _current_play_mode
 
 	_loop_count += 1
 
-	_anima_tween.play()
-	
+	var tween: AnimaTween = _anima_tween
+	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
+		if not _anima_backwards_tween.has_data():
+			_anima_backwards_tween.reverse_animation(_anima_tween.get_animation_data(), _total_animation_length, _default_duration)
+
+		tween = _anima_backwards_tween
+
+	tween.play(_play_speed)
+
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
 
+	if not is_loop_in_circle:
+		return
+
+	if _current_play_mode == AnimaTween.PLAY_MODE.NORMAL:
+		_current_play_mode = AnimaTween.PLAY_MODE.BACKWARDS
+	else:
+		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
+
 func set_loop_strategy(strategy: int):
-	_loop_strategy = strategy
+	_anima_tween.set_loop_strategy(strategy)
+	_anima_backwards_tween.set_loop_strategy(strategy)
+
+func set_default_duration(duration: float) -> void:
+	_default_duration = duration
 
 func _setup_animation(data: Dictionary) -> float:
+	if not data.has('duration'):
+		 data.duration = _default_duration
+
+	if not data.has('property') and not data.has('animation'):
+		printerr('Please specify the property to animate or the animation to use!', data)
+
+		return 0.0
+
 	if data.has('grid'):
 		if not data.has('grid_size'):
 			printerr('Please specify the grid size, or use `group` instead')
@@ -170,7 +328,7 @@ func _setup_animation(data: Dictionary) -> float:
 			return 0.0
 
 		return _setup_grid_animation(data)
-	elif data.has('group'):
+	elif data.has("group"):
 		if not data.has('grid_size'):
 			data.grid_size = Vector2(1, data.group.get_children().size())
 
@@ -183,7 +341,7 @@ func _setup_animation(data: Dictionary) -> float:
 func _setup_node_animation(data: Dictionary) -> float:
 	var node = data.node
 	var delay = data.delay if data.has('delay') else 0.0
-	var duration = data.duration if data.has('duration') else Anima.DEFAULT_DURATION
+	var duration = data.duration
 
 	data._wait_time = max(0.0, data._wait_time + delay)
 
@@ -199,9 +357,16 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 			return duration
 
-		var real_duration = script.generate_animation(_anima_tween, data)
-		if real_duration is float:
-			duration = real_duration
+		var callback: FuncRef = funcref(script, 'generate_animation')
+
+		if script.has_method(data.animation):
+			callback = funcref(script, data.animation)
+
+		_anima_tween.add_frames(data, callback.call_func(data.node))
+
+#		var real_duration = 
+#		if real_duration is float:
+#			duration = real_duration
 	else:
 		_anima_tween.add_animation_data(data)
 
@@ -210,19 +375,19 @@ func _setup_node_animation(data: Dictionary) -> float:
 func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var animation_type = Anima.GRID.SEQUENCE_TOP_LEFT
 	
-	if animation_data.has('animation_type'):
+	if animation_data.has("animation_type"):
 		animation_type = animation_data.animation_type
 
-	if not animation_data.has('items_delay'):
+	if not animation_data.has("items_delay"):
 		animation_data.items_delay = Anima.DEFAULT_ITEMS_DELAY
 
-	if animation_data.has('grid'):
+	if animation_data.has("grid"):
 		animation_data._grid_node = animation_data.grid
 	else:
 		animation_data._grid_node = animation_data.group
 
-	animation_data.erase('grid')
-	animation_data.erase('group')
+	animation_data.erase("grid")
+	animation_data.erase("group")
 
 	var duration: float
 
@@ -246,38 +411,49 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 
 	return animation_data.duration
 
-func _get_children(animation_data: Dictionary) -> Array:
+func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 	var grid_node = animation_data._grid_node
 	var grid_size = animation_data.grid_size
 
-	var children := []
+	var nodes := []
 	var rows: int = grid_size.x
 	var columns: int = grid_size.y
 
 	var row_items := []
 	var index := 0
 
-	for child in grid_node.get_children():
+	var children: Array = grid_node.get_children()
+	
+	if shuffle:
+		randomize()
+
+		children.shuffle()
+
+	for child in children:
 		# Skip current node :)
 		if '__do_nothing' in child:
+			continue
+		elif animation_data.has('skip_hidden') and not child.is_visible():
+			continue
+		elif animation_data.has("of") and child.get_class() != animation_data.of:
 			continue
 
 		row_items.push_back(child)
 
 		index += 1
 		if index >= columns:
-			children.push_back(row_items)
+			nodes.push_back(row_items)
 			row_items = []
 			index = 0
 
 	if row_items.size() > 0:
-		children.push_back(row_items)
+		nodes.push_back(row_items)
 
-	return children
+	return nodes
 
 func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -> float:
 	var nodes := []
-	var children := _get_children(animation_data)
+	var children := _get_children(animation_data, start_from == Anima.GRID.RANDOM)
 	var is_grid: bool = animation_data.grid_size.x > 1
 	var grid_size: Vector2 = animation_data.grid_size
 	var from_x: int
@@ -432,6 +608,13 @@ func _generate_animation_for_even_items(animation_data: Dictionary) -> float:
 	return _create_grid_animation_with(nodes, animation_data)
 
 func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> float:
+	var total_nodes = nodes.size() - 1
+	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
+	var on_started = animation_data.on_started if animation_data.has('on_started') else null
+
+	animation_data.erase('on_completed')
+	animation_data.erase('on_started')
+
 	for index in nodes.size():
 		var node = nodes[index]
 		var delay_index = index
@@ -443,18 +626,23 @@ func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> fl
 		var data = animation_data.duplicate()
 
 		data.node = node
+
 		if not data.has('delay'):
 			data.delay = 0
 
 		data.delay += data.items_delay * delay_index
 
+		if index == 0 and on_started:
+			data.on_started = on_started
+
+		if index == total_nodes and on_completed:
+			data.on_completed = on_completed
+
 		with(data)
 
 	return animation_data.duration + (animation_data.items_delay * nodes.size())
 
-func _on_timer_timeout() -> void:
-	_do_play()
-
+func _maybe_play() -> void:
 	_loop_times -= 1
 
 	if _loop_times > 0 or _should_loop:
@@ -464,5 +652,10 @@ func _on_all_tween_completed() -> void:
 	emit_signal("animation_completed")
 	emit_signal("loop_completed", _loop_count)
 
+	if _is_single_shot:
+		queue_free()
+
+		return
+
 	if _should_loop:
-		_timer.start()
+		_maybe_play()

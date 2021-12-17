@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://addons/anima/shaders/fillLabelFromSide.shader" type="Shader" id=1]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/range = 0.0
+shader_param/uv_multiplier = 1.0
+shader_param/initial_color = Color( 1, 1, 1, 1 )
+shader_param/final_color = Color( 0, 0, 0, 1 )

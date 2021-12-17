@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/anima/components/Carousel.gd" type="Script" id=1]
+
+[node name="Carousel" type="VBoxContainer"]
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Controls" type="HBoxContainer" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Wrapper" type="Control" parent="."]
+margin_top = 4.0
+margin_bottom = 4.0
+
+[node name="Container" type="HBoxContainer" parent="Wrapper"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false,
+"_item_size": 0.0
+}
+
+[connection signal="item_rect_changed" from="Wrapper/Container" to="." method="_on_Container_item_rect_changed"]

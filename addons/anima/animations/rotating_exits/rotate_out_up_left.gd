@@ -5,7 +5,7 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	]
 
 	var rotate_frames = [
-		{ percentage = 0, from = 0, pivot = Anima.PIVOT.LEFT_BOTTOM },
+		{ percentage = 0, from = 0, pivot = Anima.PIVOT.BOTTOM_LEFT },
 		{ percentage = 100, to = 45 },
 	]
 

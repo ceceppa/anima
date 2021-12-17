@@ -1,16 +1,19 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var frames = [
-		{ percentage = 0, to = 0 },
-		{ percentage = 10, to = -10 },
-		{ percentage = 20, to = +20 },
-		{ percentage = 30, to = -20 },
-		{ percentage = 40, to = +20 },
-		{ percentage = 50, to = -20 },
-		{ percentage = 60, to = +20 },
-		{ percentage = 70, to = -20 },
-		{ percentage = 80, to = +20 },
-		{ percentage = 90, to = -20 },
-		{ percentage = 100, to = +10 },
-	]
+func generate_animation(node: Node) -> Dictionary:
+	var shake := {
+		0: {
+			y = 0
+		},
+		100: {
+			y = 0
+		},
+		relative = ['x']
+	}
 
-	anima_tween.add_relative_frames(data, "y", frames)
+	for p in range(10, 90, 20):
+		shake[p] = { y = -10 }
+
+	for p in range(20, 80, 20):
+		shake[p] = { y = 10 }
+
+	print(shake)
+	return shake

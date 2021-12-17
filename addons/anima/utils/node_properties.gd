@@ -63,7 +63,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		Anima.PIVOT.CENTER:
 			if node is Control:
 				node.set_pivot_offset(size / 2)
-		Anima.PIVOT.CENTER_BOTTOM:
+		Anima.PIVOT.BOTTOM_CENTER:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x / 2, size.y / 2))
 			else:
@@ -71,7 +71,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(0, -size.y / 2)
 				node.global_position = position - node.offset
-		Anima.PIVOT.LEFT_BOTTOM:
+		Anima.PIVOT.BOTTOM_LEFT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(0, size.y))
 			else:
@@ -79,7 +79,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(size.x / 2, size.y)
 				node.global_position = position - node.offset
-		Anima.PIVOT.RIGHT_BOTTOM:
+		Anima.PIVOT.BOTTOM_RIGHT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x, size.y / 2))
 			else:
@@ -90,7 +90,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		_:
 			printerr('Pivot point not handled yet')
 
-static func get_property_initial_value(node: Node, property: String):
+static func get_property_value(node: Node, property: String):
 	property = property.to_lower()
 
 	match property:
@@ -108,13 +108,13 @@ static func get_property_initial_value(node: Node, property: String):
 			return position.z
 		"position":
 			return get_position(node)
-		"rotation":
+		"rotation","rotate":
 			return get_rotation(node)
-		"rotation:x":
+		"rotation:x", "rotate:x":
 			return get_rotation(node).x
-		"rotation:y":
+		"rotation:y", "rotate:y":
 			return get_rotation(node).y
-		"rotation:z":
+		"rotation:z", "rotate:z":
 			return get_rotation(node).z
 		"opacity":
 			return node.modulate.a
@@ -122,6 +122,12 @@ static func get_property_initial_value(node: Node, property: String):
 			return node.get_global_transform().y.x
 		"skew:y":
 			return node.get_global_transform().x.y
+		"size":
+			return get_size(node)
+		"size:x":
+			return get_size(node).x
+		"size:y":
+			return get_size(node).y
 
 	var p = property.split(':')
 
@@ -130,11 +136,15 @@ static func get_property_initial_value(node: Node, property: String):
 	var node_property_name: String
 
 	var key = p[1] if p.size() > 1 else null
+	var subkey = p[2] if p.size() > 2 else null
 
 	if node.get(property_name):
 		node_property_name = property_name
-
-	if node.get(rect_property_name):
+	elif node.get(rect_property_name):
+		node_property_name = rect_property_name
+	elif property_name in node:
+		node_property_name = property_name
+	elif rect_property_name in node:
 		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
@@ -147,8 +157,22 @@ static func get_property_initial_value(node: Node, property: String):
 		return material.get_shader_param(p[1])
 
 	if node_property_name:
+		if subkey:
+			return node[property_name][key][subkey]
+
 		if key:
-			return node[node_property_name][key]
+			var prop = node[node_property_name]
+
+			if typeof(prop) == TYPE_RECT2:
+				if ['x', 'y'].find(key) >= 0:
+					return prop.position[key]
+
+				if key == "w":
+					return prop.size.x
+				
+				return prop.size.y
+
+			return prop[key]
 
 		return node[node_property_name]
 
@@ -209,7 +233,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				property_name = "modulate",
 				key = "a"
 			}
-		"rotation":
+		"rotation", "rotate":
 			var property_name = "rotation"
 
 			if node is Control:
@@ -220,17 +244,17 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			return {
 				property_name = property_name
 			}
-		"rotation:x":
+		"rotation:x", "rotate:x":
 			return {
 				property_name = "rotation",
 				key = "x"
 			}
-		"rotation:y":
+		"rotation:y", "rotate:y":
 			return {
 				property_name = "rotation",
 				key = "y"
 			}
-		"rotation:z":
+		"rotation:z", "rotate:z":
 			return {
 				property_name = "rotation",
 				key = "z"
@@ -259,8 +283,11 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 	if node.get(property_name):
 		node_property_name = property_name
-
-	if node.get(rect_property_name):
+	elif node.get(rect_property_name):
+		node_property_name = rect_property_name
+	elif property_name in node:
+		node_property_name = property_name
+	elif rect_property_name in node:
 		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
@@ -276,21 +303,35 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		}
 
 	if node_property_name:
-		if key:
-			return {
-				property_name = node_property_name,
-				key = key
-			}
+		var is_rect2 = node[node_property_name] is Rect2
+		if is_rect2 and p.size() > 1:
+			var k: String = p[1]
+
+			if k == "x" or k == "y":
+				key = "position"
+				subkey = k
+			else:
+				key = "size"
+				subkey = "x" if k == "w" else "y"
 
 		if subkey:
 			return {
 				property_name = node_property_name,
 				key = key,
-				subkey = subkey
+				subkey = subkey,
+				is_rect2 = false
+			}
+
+		if key:
+			return {
+				property_name = node_property_name,
+				key = key,
+				is_rect2 = is_rect2
 			}
 
 		return {
-			property_name = node_property_name
+			property_name = node_property_name,
+			is_rect2 = is_rect2
 		}
 
 	if property.find('__') == 0:
