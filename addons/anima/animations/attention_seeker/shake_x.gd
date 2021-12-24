@@ -12,5 +12,4 @@ func generate_animation(node: Node) -> Dictionary:
 		100: {
 			x = 0
 		},
-		relative = ['x']
 	}

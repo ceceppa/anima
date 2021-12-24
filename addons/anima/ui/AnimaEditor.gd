@@ -20,9 +20,11 @@ onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
 func _ready():
 	$NodesPopup.rect_min_size = Vector2(260, 320) * AnimaUI.get_dpi_scale()
 
+func init(base_control: Control) -> void:
+		AnimaUI.set_godot_gui(base_control)
+
 func edit(node: AnimaVisualNode) -> void:
 	_is_restoring_data = true
-
 	_anima_visual_node = node
 	AnimaUI.set_selected_anima_visual_node(node)
 
@@ -32,7 +34,7 @@ func edit(node: AnimaVisualNode) -> void:
 	AnimaUI.debug(self, 'restoring visual editor data', data)
 
 	if data == null || not data.has('nodes') || data.nodes.size() == 0:
-		_start_node = _graph_edit.get_anima_start_node(node, [], [], [])
+		_start_node = _graph_edit.get_anima_start_node(node, [], [])
 
 		_graph_edit.add_child(_start_node)
 	else:

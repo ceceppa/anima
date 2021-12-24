@@ -9,7 +9,6 @@
 [ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
-size = 32
 use_filter = true
 font_data = ExtResource( 4 )
 __meta__ = {
@@ -41,7 +40,7 @@ __meta__ = {
 
 [node name="TimeData" type="VBoxContainer" parent="Container"]
 margin_right = 1008.0
-margin_bottom = 139.0
+margin_bottom = 120.0
 size_flags_horizontal = 3
 
 [node name="HSeparator" type="HSeparator" parent="Container/TimeData"]
@@ -51,30 +50,31 @@ margin_bottom = 4.0
 [node name="Label3" type="Label" parent="Container/TimeData"]
 margin_top = 8.0
 margin_right = 1008.0
-margin_bottom = 47.0
+margin_bottom = 28.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Time:"
 align = 1
 
 [node name="GridContainer2" type="GridContainer" parent="Container/TimeData"]
-margin_top = 51.0
+margin_top = 32.0
 margin_right = 1008.0
-margin_bottom = 139.0
+margin_bottom = 120.0
 custom_constants/vseparation = 8
 custom_constants/hseparation = 12
 columns = 2
 
 [node name="Label" type="Label" parent="Container/TimeData/GridContainer2"]
-margin_right = 169.0
-margin_bottom = 39.0
+margin_top = 10.0
+margin_right = 120.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "duration (s):"
 
 [node name="Duration" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
 anchor_right = 0.0
-margin_left = 181.0
+margin_left = 132.0
 margin_right = 1008.0
 margin_bottom = 40.0
 label = "parent value"
@@ -83,16 +83,16 @@ can_clear_custom_value = false
 show_relative_selector = false
 
 [node name="Label2" type="Label" parent="Container/TimeData/GridContainer2"]
-margin_top = 48.0
-margin_right = 169.0
-margin_bottom = 87.0
+margin_top = 58.0
+margin_right = 120.0
+margin_bottom = 78.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "delay (s):"
 
 [node name="Delay" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
 anchor_right = 0.0
-margin_left = 181.0
+margin_left = 132.0
 margin_top = 48.0
 margin_right = 1008.0
 margin_bottom = 88.0
@@ -103,20 +103,18 @@ show_relative_selector = false
 
 [node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
 anchor_right = 0.0
-margin_top = 143.0
+margin_top = 124.0
 margin_right = 1008.0
-margin_bottom = 400.0
+margin_bottom = 308.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
-margin_right = 1839.2
-margin_bottom = 1068.93
-rect_min_size = Vector2( 1831.2, 1060.93 )
+margin_bottom = 853.0
+rect_min_size = Vector2( 512, 300 )
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
 modulate = Color( 1, 1, 1, 0 )
-margin_right = 1839.2
-margin_bottom = 1068.93
-rect_min_size = Vector2( 1831.2, 1060.93 )
+margin_bottom = 853.0
+rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
@@ -124,9 +122,9 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1839.2
-margin_bottom = 1068.93
-rect_min_size = Vector2( 1831.2, 1060.93 )
+margin_right = 1016.0
+margin_bottom = 853.0
+rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 
 [connection signal="vale_updated" from="Container/TimeData/GridContainer2/Duration" to="." method="_on_Duration_vale_updated"]

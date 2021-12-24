@@ -13,5 +13,4 @@ func generate_animation(node: Node) -> Dictionary:
 			opacity = 0
 		},
 		pivot = Anima.PIVOT.CENTER,
-		relative = ['x']
 	}

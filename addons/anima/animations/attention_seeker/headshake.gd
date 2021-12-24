@@ -23,5 +23,4 @@ func generate_animation(node: Node) -> Dictionary:
 			x = 0,
 			rotate = 0
 		},
-		relative = ['x']
 	}

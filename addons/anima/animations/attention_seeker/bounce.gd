@@ -24,6 +24,5 @@ func generate_animation(node: Node) -> Dictionary:
 			y = -4,
 			"scale:y": 1.02,
 		},
-		relative = ['y'],
 	}
 

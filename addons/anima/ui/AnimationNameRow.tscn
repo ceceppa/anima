@@ -28,7 +28,7 @@ __meta__ = {
 }
 
 [sub_resource type="DynamicFont" id=4]
-size = 32
+size = 18
 use_filter = true
 font_data = ExtResource( 1 )
 __meta__ = {
@@ -80,13 +80,13 @@ custom_fonts/font = SubResource( 3 )
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 margin_top = 69.0
 margin_right = 1000.0
-margin_bottom = 114.0
+margin_bottom = 97.0
 custom_constants/separation = 12
 
 [node name="Label" type="Label" parent="HBoxContainer2"]
 margin_top = 3.0
-margin_right = 122.0
-margin_bottom = 42.0
+margin_right = 120.0
+margin_bottom = 25.0
 rect_min_size = Vector2( 120, 0 )
 hint_tooltip = "Sets the visibility strategy"
 mouse_filter = 1
@@ -94,9 +94,9 @@ custom_fonts/font = SubResource( 4 )
 text = "Visibility"
 
 [node name="VisibilityStrategy" type="OptionButton" parent="HBoxContainer2"]
-margin_left = 134.0
+margin_left = 132.0
 margin_right = 1000.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 4 )
 text = "Ignore"
@@ -104,14 +104,14 @@ items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Tranp
 selected = 0
 
 [node name="HSeparator" type="HSeparator" parent="."]
-margin_top = 126.0
+margin_top = 109.0
 margin_right = 1000.0
-margin_bottom = 130.0
+margin_bottom = 113.0
 
 [node name="Control" type="Control" parent="."]
-margin_top = 142.0
+margin_top = 125.0
 margin_right = 1000.0
-margin_bottom = 154.0
+margin_bottom = 137.0
 rect_min_size = Vector2( 0, 12 )
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/DeleteButton" to="." method="_on_DeleteButton_pressed"]

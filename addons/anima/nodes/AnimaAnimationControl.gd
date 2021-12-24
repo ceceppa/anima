@@ -15,7 +15,8 @@ var _source_node: Node
 
 func _ready():
 	for window in [$PropertiesWindow, $AnimationsWindow, $AnimaEasingsWindow]:
-		window.rect_min_size = Vector2(1008, 584) * AnimaUI.get_dpi_scale()
+		window.rect_min_size = Vector2(512, 300) * AnimaUI.get_dpi_scale()
+		window.rect_size = Vector2(512, 300) * AnimaUI.get_dpi_scale()
 
 func set_source_node(node: Node) -> void:
 	_source_node = node

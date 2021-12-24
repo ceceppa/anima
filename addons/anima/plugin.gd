@@ -7,21 +7,20 @@ enum EditorPosition {
 }
 
 var _anima_editor: Control
-var _anima_visual_node: AnimaVisualNode
+var _anima_visual_node: Node
 var _current_position = EditorPosition.BOTTOM
 
 func get_name():
 	return 'Anima'
 
 func _enter_tree():
-	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
 	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/AnimaUI.gd')
+	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
 
 	_anima_editor = preload("res://addons/anima/ui/AnimaEditor.tscn").instance()
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("connections_updated", self, '_on_connections_updated')
-
-	AnimaUI.set_godot_gui(get_editor_interface().get_base_control())
+	_anima_editor.init(get_editor_interface().get_base_control())
 
 	add_control_to_bottom_panel(_anima_editor, "Anima")
 
@@ -33,7 +32,7 @@ func _exit_tree():
 		_anima_editor.queue_free()
 
 func handles(object):
-	var is_anima_node = object is AnimaVisualNode
+	var is_anima_node = "__anima_visual_editor_data" in object
 
 	if is_anima_node:
 		_anima_editor.set_anima_node(object)
@@ -71,4 +70,3 @@ func _on_connections_updated(data: Dictionary) -> void:
 	undo_redo.add_do_property(_anima_visual_node, "__anima_visual_editor_data", data)
 	undo_redo.add_undo_property(_anima_visual_node, "__anima_visual_editor_data", current_data)
 	undo_redo.commit_action()
-

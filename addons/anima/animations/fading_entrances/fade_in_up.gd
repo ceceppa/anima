@@ -6,8 +6,7 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	var size = AnimaNodesProperties.get_size(data.node)
 
 	var position_frames = [
-		{ percentage = 0, from = size.y },
-		{ percentage = 100, to = -size.y },
+		{ from = size.y },
 	]
 
 	anima_tween.add_relative_frames(data, "y", position_frames)

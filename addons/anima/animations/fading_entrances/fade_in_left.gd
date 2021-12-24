@@ -8,5 +8,4 @@ func generate_animation(node: Node) -> Dictionary:
 			opacity = 1,
 			x = 0
 		},
-		relative = ["x"]
 	}

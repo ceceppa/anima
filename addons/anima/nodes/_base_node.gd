@@ -51,6 +51,9 @@ func _after_render() -> void:
 # TODO: Is this the right way to handle different screen DPI?
 #
 func _adjust_font_size(start_node: Node) -> void:
+	if DPI_SCALE == 1.0:
+		return
+
 	for child in start_node.get_children():
 		if child.has_meta("_font_changed"):
 			continue
@@ -70,7 +73,7 @@ func _adjust_font_size(start_node: Node) -> void:
 			_adjust_font_size(child)
 
 func register_node(node_data: Dictionary) -> void:
-	var dpi_scale = OS.get_screen_dpi() / 60.0
+	var dpi_scale = AnimaUI.get_dpi_scale()
 	
 	if node_data.has('category'):
 		set_category(node_data.category)

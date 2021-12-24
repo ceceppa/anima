@@ -138,9 +138,11 @@ func set_root_node(node: Node) -> void:
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
 	var last_duration := 0.0
 	var is_first_frame = true
-	var relative_properties: Array = full_keyframes_data.relative if full_keyframes_data.has("relative") else []
+	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
 
+	if full_keyframes_data.has("relative"):
+		relative_properties = full_keyframes_data.relative
 
 	# Flattens the keyframe_data
 	var keyframes_data = _flatten_keyframes_data(full_keyframes_data)

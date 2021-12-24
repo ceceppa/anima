@@ -2,7 +2,7 @@
 
 [ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://resources/anima-preview.png" type="Texture" id=3]
+[ext_resource path="res://addons/anima/resources/anima-preview.png" type="Texture" id=3]
 [ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.gd" type="Script" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
