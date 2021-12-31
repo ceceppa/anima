@@ -125,12 +125,31 @@ func get_available_animations() -> Array:
 		var filtered := []
 
 		for file in list:
-			if file.find('.gd.') < 0:
+			if file.find('.gd.') < 0 and file.find(".gd") > 0:
 				filtered.push_back(file.replace('.gdc', '.gd'))
 
 		_animations_list = filtered
 
 	return _animations_list + _custom_animations
+
+func get_available_animation_by_category() -> Dictionary:
+	var animations = get_available_animations()
+	var base = Anima.get_animation_path()
+	var old_category := ''
+	var result := {}
+
+	for item in animations:
+		var category_and_file = item.replace(base, '').split('/')
+		var category = category_and_file[0]
+		var file_and_extension = category_and_file[1].split('.')
+		var file = file_and_extension[0]
+
+		if not result.has(category):
+			result[category] = []
+
+		result[category].push_back(file)
+
+	return result
 
 func get_animation_script(animation_name: String):
 	for custom_animation in _custom_animations:

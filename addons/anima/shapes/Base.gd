@@ -2,6 +2,7 @@ tool
 extends Control
 class_name AnimaShape
 
+# TODO: Hover, Click animation
 var _anima: AnimaNode
 
 func _ready():

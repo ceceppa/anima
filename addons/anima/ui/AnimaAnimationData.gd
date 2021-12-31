@@ -144,8 +144,8 @@ func set_animation_data(label: String, name: String) -> void:
 	_animation_button.text = label
 	_animation_name = name
 
-func set_property_to_animate(source_node: Node, property_name: String, type: int) -> void:
-	_property_button.text = property_name
+func set_property_to_animate(source_node: Node, property: String, type: int) -> void:
+	_property_button.text = property
 	_property_type = type
 	
 	_previous_animation_type = -1
@@ -161,7 +161,7 @@ func set_property_to_animate(source_node: Node, property_name: String, type: int
 		_from_value.set_type(TYPE_STRING)
 		_to_value.set_type(TYPE_STRING)
 
-	var current_value = AnimaNodesProperties.get_property_value(source_node, property_name)
+	var current_value = AnimaNodesProperties.get_property_value(source_node, property)
 
 	_from_value.set_placeholder(current_value)
 	_to_value.set_placeholder(current_value)

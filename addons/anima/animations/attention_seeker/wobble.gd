@@ -1,28 +1,27 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var node = data.node
-	var start_position = AnimaNodesProperties.get_position(node)
-	var size = AnimaNodesProperties.get_size(node)
-
-	var x_frames = [
-		{ percentage = 0, from = start_position.x },
-		{ percentage = 15, to = start_position.x + size.x * -0.25 },
-		{ percentage = 30, to = start_position.x + size.x * 0.2 },
-		{ percentage = 45, to = start_position.x + size.x * -0.15 },
-		{ percentage = 60, to = start_position.x + size.x * 0.1 },
-		{ percentage = 75, to = start_position.x + size.x * -0.05 },
-		{ percentage = 100, to = start_position.x },
-	]
-
-	var rotation_frames = [
-		{ percentage = 0, from = 0 },
-		{ percentage = 15, to = -5 },
-		{ percentage = 30, to = 3 },
-		{ percentage = 45, to = -3 },
-		{ percentage = 60, to = 2 },
-		{ percentage = 75, to = -1 },
-		{ percentage = 100, to = 0 },
-	]
-
-	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.TOP_CENTER)
-	anima_tween.add_frames(data, "x", x_frames)
-	anima_tween.add_frames(data, "rotation", rotation_frames)
+var KEYFRAMES := {
+	[0, 100]: {
+		x = 0,
+		"rotate:y": 0
+	},
+	15: {
+		x = ":size:x * -0.25",
+		"rotate:y": -5
+	},
+	30: {
+		x = ":size:x * 0.2",
+		"rotate:y": 3
+	},
+	45: {
+		x = ":size:x * -0.15",
+		"rotate:y": -3
+	},
+	60: {
+		x = ":size:x * 0.1",
+		"rotate:y": 2
+	},
+	75: {
+		x = ":size:x * -0.05",
+		"rotate:y": -1
+	},
+	pivot = Anima.PIVOT.CENTER
+}

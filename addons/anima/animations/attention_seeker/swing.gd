@@ -1,12 +1,21 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var frames = [
-		{ percentage = 0, from = 0 },
-		{ percentage = 20, to = 15 },
-		{ percentage = 40, to = -10 },
-		{ percentage = 60, to = 5 },
-		{ percentage = 80, to = -5 },
-		{ percentage = 100, to = 0 },
-	]
-
-	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.TOP_CENTER)
-	anima_tween.add_frames(data, "rotation", frames)
+var KEYFRAMES := {
+	0: {
+		"rotate:y": 0,
+	},
+	20: {
+		"rotate:y": 15,
+	},
+	40: {
+		"rotate:y": -10,
+	},
+	60: {
+		"rotate:y": 5,
+	},
+	80: {
+		"rotate:y": -5,
+	},
+	100: {
+		"rotate:y": 0,
+	},
+	pivot = Anima.PIVOT.CENTER
+}

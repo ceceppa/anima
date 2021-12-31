@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://addons/anima/fonts//Lato-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/anima/resources/anima-preview.png" type="Texture" id=2]
+[ext_resource path="res://resources/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://resources/anima-preview.png" type="Texture" id=2]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.gd" type="Script" id=4]
 
@@ -58,10 +58,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ControlTest" type="Label" parent="HBoxContainer/VBoxContainer/ControlContainer"]
-margin_left = 196.0
-margin_top = 84.0
-margin_right = 487.0
-margin_bottom = 205.0
+margin_left = 339.0
+margin_top = 144.0
+margin_right = 344.0
+margin_bottom = 146.0
 custom_fonts/font = SubResource( 1 )
 text = "Anima"
 

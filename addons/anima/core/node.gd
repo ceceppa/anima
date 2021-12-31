@@ -25,6 +25,7 @@ var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _is_single_shot := false
 
 var __do_nothing := 0.0
+var _last_tween_data: Dictionary
 
 func _exit_tree():
 	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
@@ -49,6 +50,7 @@ func _init_node(node: Node):
 func then(data: Dictionary) -> float:
 	data._wait_time = _total_animation_length
 
+	_last_tween_data = data.duplicate()
 	_last_animation_duration = _setup_animation(data)
 
 	var delay = data.delay if data.has('delay') else 0.0
@@ -62,7 +64,7 @@ func with(data: Dictionary) -> float:
 
 	start_time = max(0, _total_animation_length - _last_animation_duration)
 
-	if not data.has('duration'):
+	if not data.has("duration"):
 		if _last_animation_duration > 0:
 			data.duration = _last_animation_duration
 		else:
@@ -71,16 +73,19 @@ func with(data: Dictionary) -> float:
 	if not data.has('_wait_time'):
 		data._wait_time = start_time
 
+	if not data.has("__do_not_update_last_tween_data"):
+		_last_tween_data = data
+
 	return _setup_animation(data)
 
 func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
-	if _anima_tween.get_animations_count() == 0:
+	if _last_tween_data == null:
 		printerr('.also can be only used in after a .then or .with!')
 
 		return _last_animation_duration
 
 	var animation_data: Array = _anima_tween.get_animation_data()
-	var previous_data = animation_data[animation_data.size() - 1]
+	var previous_data = _last_tween_data
 
 	var keys_to_ignore = [
 		'_is_first_frame',
@@ -88,11 +93,15 @@ func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
 		'_wait_time',
 		'delay',
 		'relative',
-		'_grid_node'
+		'_grid_node',
 	]
 
 	if previous_data.has('_grid_node'):
 		previous_data.grid = previous_data._grid_node
+
+	if data.has("animation"):
+		keys_to_ignore.push_back("from")
+		keys_to_ignore.push_back("to")
 
 	for key in previous_data:
 		if keys_to_ignore.find(key) >= 0 or extra_keys_to_ignore.find(key) >= 0:
@@ -101,6 +110,7 @@ func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
 		if not data.has(key):
 			data[key] = previous_data[key]
 
+	data.__do_not_update_last_tween_data = true
 	return with(data)
 
 func group(group_data: Array, animation_data: Dictionary) -> void:
@@ -357,12 +367,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 			return duration
 
-		var callback: FuncRef = funcref(script, 'generate_animation')
-
-		if script.has_method(data.animation):
-			callback = funcref(script, data.animation)
-
-		_anima_tween.add_frames(data, callback.call_func(data.node))
+		_anima_tween.add_frames(data, script.KEYFRAMES)
 
 #		var real_duration = 
 #		if real_duration is float:

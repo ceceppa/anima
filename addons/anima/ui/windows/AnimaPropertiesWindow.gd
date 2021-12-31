@@ -1,7 +1,7 @@
 tool
 extends "./AnimaBaseWindow.gd"
 
-signal property_selected(property_name, property_type, node, node_name)
+signal property_selected(property, property_type, node, node_name)
 
 onready var _property_search: LineEdit = find_node('PropertySearch')
 onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')

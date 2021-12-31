@@ -78,18 +78,18 @@ func _on_AnimationsWindow_animation_selected(label: String, name: String):
 
 	emit_signal("animation_updated")
 
-func _on_PropertiesWindow_property_selected(property_name: String, property_type: int, node_name: String):
-	AnimaUI.debug(self, 'property selected', property_name, property_type, node_name)
+func _on_PropertiesWindow_property_selected(property: String, property_type: int, node_name: String):
+	AnimaUI.debug(self, 'property selected', property, property_type, node_name)
 
 	if _relative_control:
-		var property: String = ":" + property_name
+		var property: String = ":" + property
 
 		if _source_node.name != node_name:
 			property = node_name + property
 
 		_relative_control.set_relative_value(property)
 	else:
-		_animation_data.set_property_to_animate(_source_node, property_name, property_type)
+		_animation_data.set_property_to_animate(_source_node, property, property_type)
 
 	emit_signal("animation_updated")
 

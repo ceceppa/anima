@@ -5,7 +5,7 @@ extends Tween
 
 signal animation_completed
 
-const POSITION_PROPERTIES := ['position', 'x', 'y', 'z', 'position:x', 'position:y', 'position:z']
+var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "y", "position:y", "x"]
 
 var _animation_data := []
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
@@ -68,7 +68,18 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
 
 	animation_data._easing_points = easing_points
-	var property_data = 	AnimaNodesProperties.map_property_to_godot_property(animation_data.node, animation_data.property)
+	var property_data: Dictionary = {}
+	if animation_data.property is Object:
+		property_data = {
+			property = animation_data.property,
+			key = animation_data.key
+		}
+	else:
+		property_data = AnimaNodesProperties.map_property_to_godot_property(animation_data.node, animation_data.property)
+
+	if not property_data.has("property"):
+		return
+
 	var relative = animation_data.has("relative") and animation_data.relative
 
 	var object: Node = _get_animated_object_item(property_data, relative)
@@ -100,9 +111,15 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 func _get_animated_object_item(property_data: Dictionary, is_relative: bool) -> Node:
 	var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
+	var is_object = typeof(property_data.property) == TYPE_OBJECT
 
 	if is_rect2:
 		return AnimateRect2.new()
+	elif is_object:
+		if property_data.has("subkey"):
+			return AnimateObjectWithSubKey.new()
+
+		return AnimateObjectWithKey.new()
 	elif property_data.has('subkey'):
 		return AnimatedPropertyWithSubKeyItem.new()
 	elif property_data.has('key'):
@@ -178,6 +195,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 				var data = animation_data.duplicate()
 				var to_value = keyframe_data[property_to_animate]
 
+				to_value = _maybe_attenuate_y_value(animation_data.node, property_to_animate, to_value)
+
 				data.property = property_to_animate
 				data.relative = relative_properties.find(property_to_animate) >= 0
 				data.duration = Anima.MINIMUM_DURATION
@@ -221,7 +240,24 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 	previous_frame.erase("easing")
 	previous_frame.erase("pivot")
 
-	for property_to_animate in frame_data.keys():
+	var node: Node = animation_data.node
+	var is_mesh = node is MeshInstance
+	var properties_to_flip_values = ["y", "position:y"]
+	var keys := []
+
+	for key in frame_data.keys():
+		if key == "skew":
+			var skew: Vector2 = frame_data[key]
+
+			frame_data["skew:x"] = skew.x / 32.0
+			frame_data["skew:y"] = skew.y / 32.0
+
+			keys.push_back("skew:x")
+			key = "skew:y"
+
+		keys.push_back(key)
+
+	for property_to_animate in keys:
 		var data = animation_data.duplicate()
 
 		if not previous_frame.has(property_to_animate):
@@ -231,66 +267,63 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		var to_value = frame_data[property_to_animate]
 		var relative = relative_properties.find(property_to_animate) >= 0
 
+		#
+		# To have generic animations that works with 2D and 3D Nodes
+		# we always define scale as Vector3. But for 2D Nodes we can
+		# only use Vector2, so in this case we have to "convert" the property
+		# internally
+		var node_property = AnimaNodesProperties.map_property_to_godot_property(node, property_to_animate)
+
+		var should_convert_to_vector2: bool = not node_property.has("key") and node_property.has("property") and node_property.property in node and node[node_property.property] is Vector2
+		if should_convert_to_vector2:
+			if from_value is Vector3:
+				from_value = Vector2(from_value.x, from_value.y)
+
+			if to_value is Vector3:
+				to_value = Vector2(to_value.x, to_value.y)
+
+		from_value = _maybe_attenuate_y_value(node, property_to_animate, from_value)
+		to_value = _maybe_attenuate_y_value(node, property_to_animate, to_value)
+
+		data.to = to_value
 		data.property = property_to_animate
 		data.relative = relative
 		data.duration = frame_duration
 		data._wait_time = wait_time
-		data.to = to_value
 		data.easing = easing
 
 		if not relative:
 			data.from = from_value
 		else:
-			data.to -= from_value
+			data.to = AnimaTweenUtils.maybe_calculate_value(data.to, data)
+			data.to -= AnimaTweenUtils.maybe_calculate_value(from_value, data)
 
-#		printt(current_frame_key, percentage, frame_duration, data)
 		add_animation_data(data)
-		
-#		var diff = frame_duration - last_duration
-#		var is_last_frame = percentage == 1
-#		var properties_to_animate: Array = keyframe_data.keys()
-#
-#		for property_to_animate in properties_to_animate:
-#			var animation_data = data.duplicate()
-#			var value = keyframes_data[frame_key][property_to_animate]
-#			var is_relative = relative and POSITION_PROPERTIES.find(property_to_animate) >= 0
-#
-#			animation_data.property = property_to_animate
-#			animation_data.relative = is_relative
-#			animation_data.duration = diff
-#			animation_data._wait_time = _wait_time
-#			animation_data.to = value
-#
-##			# We need to restore the animation just before the node is animated
-##			# but we also need to consider that a node can have multiple
-##			# properties animated, so we need to restore it only before the first
-##			# animation starts
-##			for animation in _animation_data:
-##				if animation.node == data.node:
-##					is_first_frame = false
-##
-##					if animation.has('_is_last_frame'):
-##						is_last_frame = false
-##
-##			if is_first_frame:
-##				animation_data._is_first_frame = true
-##
-##			if is_last_frame:
-##				animation_data._is_last_frame = true
-#
-##			for key in data:
-##				if key == 'callback' and percentage < 1:
-##					animation_data.erase(key)
-##				elif keys_to_ignore.find(key) < 0:
-##					animation_data[key] = data[key]
-#
-#			print(animation_data)
-#			add_animation_data(animation_data)
-#
-#			last_duration = frame_duration
-#
 
 	return frame_duration
+
+func _maybe_attenuate_y_value(node: Node, property_to_animate: String, value):
+	var is_mesh := node is MeshInstance
+	var should_flip_value = is_mesh and property_to_animate == "y"
+
+	if not is_mesh or PROPERTIES_TO_ATTENUATE.find(property_to_animate) < 0:
+		return value
+
+	var att_sign = -1 if should_flip_value else 1
+
+	if not value is String:
+		return value * 0.05 * att_sign
+	else:
+		return value + "* 0.05 * " + str(att_sign)
+
+func _maybe_flip_y(node: Node, property_to_animate: String) -> int:
+	var is_mesh := node is MeshInstance
+
+	var should_flip_value = is_mesh and property_to_animate == "y"
+	if should_flip_value:
+		return -1
+
+	return 1
 
 func get_animation_data() -> Array:
 	return _animation_data
@@ -448,7 +481,7 @@ func _on_tween_started(node, _ignore) -> void:
 
 class AnimatedItem extends Node:
 	var _node: Node
-	var _property: String
+	var _property
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
@@ -512,7 +545,7 @@ class AnimatedItem extends Node:
 		_is_backwards_animation = is_backwards_animation
 		_visibility_strategy = visibility_strategy
 
-		_property = property_data.property_name
+		_property = property_data.property
 		_key = property_data.key if property_data.has("key") else null
 		_subKey = property_data.subkey if property_data.has("subkey") else null
 
@@ -598,6 +631,14 @@ class AnimatedPropertyWithKeyItem extends AnimatedItem:
 class AnimatedPropertyWithSubKeyItem extends AnimatedItem:
 	func apply_value(value) -> void:
 		_node[_property][_key][_subKey] = value
+
+class AnimateObjectWithKey extends AnimatedItem:
+	func apply_value(value) -> void:
+		_property[_key] = value
+
+class AnimateObjectWithSubKey extends AnimatedItem:
+	func apply_value(value) -> void:
+		_property[_key][_subKey] = value
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:

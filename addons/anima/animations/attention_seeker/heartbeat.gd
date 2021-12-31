@@ -1,13 +1,18 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var frames = [
-		{ percentage = 0, from = Vector2(1, 1) },
-		{ percentage = 14, to = Vector2(1.3, 1.3) },
-		{ percentage = 28, to = Vector2(1, 1) },
-		{ percentage = 42, to = Vector2(1.3, 1.3) },
-		{ percentage = 70, to = Vector2(1, 1) },
-		{ percentage = 100, to = Vector2(1, 1) },
-	]
-
-	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.CENTER)
-
-	anima_tween.add_frames(data, "scale", frames)
+var KEYFRAMES := {
+	0: {
+		scale = Vector3.ONE,
+	},
+	14: {
+		scale = Vector3(1.3, 1.3, 1.3),
+	},
+	28: {
+		scale = Vector3(1, 1, 1)
+	},
+	42: {
+		scale = Vector3(1.3, 1.3, 1.3)
+	},
+	[70, 100]: {
+		scale = Vector3.ONE
+	},
+	pivot = Anima.PIVOT.CENTER
+}

@@ -142,7 +142,7 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 		anima_data.animation = animation_data.animation.name
 	else:
 		var node_name: String = node.name
-		var property_name: String = animation_data.property.name
+		var property: String = animation_data.property.name
 
 		properties_to_reset.clear()
 		properties_to_reset.push_back(animation_data.property.name)
@@ -182,19 +182,19 @@ func _reset_initial_values() -> void:
 	for node in _initial_values:
 		var initial_values: Dictionary = _initial_values[node]
 
-		for property_name in initial_values:
-			var initial_value = initial_values[property_name]
+		for property in initial_values:
+			var initial_value = initial_values[property]
 
-			var mapped_property = AnimaNodesProperties.map_property_to_godot_property(node, property_name)
+			var mapped_property = AnimaNodesProperties.map_property_to_godot_property(node, property)
 
 			if mapped_property.has('callback'):
 				mapped_property.callback.call_func(mapped_property.param, initial_value)
 			elif mapped_property.has('subkey'):
-				node[mapped_property.property_name][mapped_property.key][mapped_property.subkey] = initial_value
+				node[mapped_property.property][mapped_property.key][mapped_property.subkey] = initial_value
 			elif mapped_property.has('key'):
-				node[mapped_property.property_name][mapped_property.key] = initial_value
+				node[mapped_property.property][mapped_property.key] = initial_value
 			else:
-				node[mapped_property.property_name] = initial_value
+				node[mapped_property.property] = initial_value
 
 			printt("Resetting initial values", node.name, mapped_property, initial_value)
 
