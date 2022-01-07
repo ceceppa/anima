@@ -74,9 +74,9 @@ const MINIMUM_DURATION := 0.000001
 var _animations_list := []
 var _custom_animations := []
 
-func begin(node: Node, name: String = 'anima', single_shot := false):
+func begin(node: Node, name: String = 'anima', single_shot := false) -> AnimaNode:
 	var node_name = 'AnimaNode_' + name
-	var anima_node: Node
+	var anima_node: AnimaNode
 
 	for child in node.get_children():
 		if child.name.find(node_name) >= 0:
