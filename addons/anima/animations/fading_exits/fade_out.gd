@@ -1,6 +1,8 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var opacity_frames = [
-		{ from = 1, to = 0 },
-	]
-
-	anima_tween.add_frames(data, "opacity", opacity_frames)
+var KEYFRAMES := {
+	0: {
+		opacity = 1,
+	},
+	100: {
+		opacity = 0,
+	}
+}

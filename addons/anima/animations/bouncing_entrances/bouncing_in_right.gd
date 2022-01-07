@@ -1,27 +1,27 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var x_frames = [
-		{ percentage = 0, to = 3000, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 60, to = -3025, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 75, to = 35, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 90, to = -15, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 100, to = 5, easing_points = [0.215, 0.61, 0.355, 1] },
-	]
-
-	var scale_frames = [
-		{ percentage = 0, from = 3, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 60, to = 0.9, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 75, to = 0.95, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 90, to = 0.985, easing_points = [0.215, 0.61, 0.355, 1] },
-		{ percentage = 100, to = 1, easing_points = [0.215, 0.61, 0.355, 1] },
-	]
-
-	var opacity_frames = [
-		{ percentage = 0, from = 0 },
-		{ percentage = 60, to = 1 }
-	]
-
-	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.CENTER)
-
-	anima_tween.add_relative_frames(data, "x", x_frames)
-	anima_tween.add_frames(data, "scale:y", scale_frames)
-	anima_tween.add_frames(data, "opacity", opacity_frames)
+var KEYFRAMES := {
+  [0, 60, 75, 90, 100]: {
+	easing = [0.215, 0.61, 0.355, 1],
+  },
+  0: {
+	opacity = 0,
+	x = ":size:x + :position:x",
+	"scale:x": 3,
+  },
+  60: {
+	opacity = 1,
+	x = -25,
+	"scale:x": 0.9
+  },
+  75: {
+	x = 10,
+	"scale:x": 0.95
+  },
+  90: {
+	x = -5,
+	"scale:x": 0.985,
+  },
+  100: {
+	x = 0,
+	"scale:x": 1.0
+  }
+}

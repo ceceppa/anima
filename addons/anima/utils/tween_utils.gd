@@ -28,6 +28,9 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 
 	var s = -1.0 if is_backwards_animation and relative else 1.0
 
+	if from is Vector2 and to is Vector3:
+		to = Vector2(to.x, to.y)
+
 	if typeof(to) == TYPE_RECT2:
 		return {
 			from = from,
@@ -122,6 +125,12 @@ static func _maybe_calculate_relative_value(relative, value, current_node_value)
 	if value is Rect2:
 		value.position += current_node_value.position
 		value.size += current_node_value.size
+
+		return value
+
+	if current_node_value is Vector2 and value is Vector3:
+		value.x += current_node_value.x
+		value.y += current_node_value.y
 
 		return value
 

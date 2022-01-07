@@ -217,13 +217,17 @@ func _flatten_keyframes_data(data: Dictionary) -> Dictionary:
 	var result := {}
 
 	for key in data:
+		var value: Dictionary = data[key].duplicate()
+
 		if not key is Array:
-			result[key] = data[key]
-			
-			continue
+			key = [key]
 
 		for percentage in key:
-			result[percentage] = data[key]
+			if not result.has(percentage):
+				result[percentage] = {}
+
+			for k in value:
+				result[percentage][k] = value[k]
 
 	return result
 

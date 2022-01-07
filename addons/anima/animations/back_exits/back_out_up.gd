@@ -9,7 +9,7 @@ var KEYFRAMES := {
 		opacity = 0.7
 	},
 	100: {
-		y = -700,
+		y = "-:size:y * 2",
 		scale = Vector2(0.7, 0.7),
 		opacity = 0.7
 	}

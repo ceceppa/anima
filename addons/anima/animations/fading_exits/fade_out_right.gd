@@ -1,10 +1,10 @@
 var KEYFRAMES := {
+	100: {
+		opacity = 0,
+		x = ":size:x",
+	}, 
 	0: {
 		opacity = 1,
-		x = 0,
+		x = 0
 	},
-	100: {
-		x = ":size:x",
-		opacity = 0
-	}
 }
