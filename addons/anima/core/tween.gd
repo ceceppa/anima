@@ -217,7 +217,8 @@ func _flatten_keyframes_data(data: Dictionary) -> Dictionary:
 	var result := {}
 
 	for key in data:
-		var value: Dictionary = data[key].duplicate()
+		var is_dictionary = data.has(key) and data[key] is Dictionary
+		var value: Dictionary = data[key].duplicate() if is_dictionary else {}
 
 		if not key is Array:
 			key = [key]
