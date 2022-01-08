@@ -7,6 +7,12 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	var relative = animation_data.relative if animation_data.has('relative') else false
 	var current_value = AnimaNodesProperties.get_property_value(node, animation_data)
 
+	if animation_data["from"] == null:
+		animation_data.erase('from')
+
+	if animation_data["to"] == null:
+		animation_data.erase('to')
+
 	if animation_data.has('from'):
 		from = maybe_calculate_value(animation_data.from, animation_data)
 		from = _maybe_convert_from_deg_to_rad(node, animation_data, from)
@@ -36,6 +42,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 			from = from,
 			diff = { position = to.position - from.position, size = to.size - from.size }
 		}
+
 
 	return {
 		from = from,
