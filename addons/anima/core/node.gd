@@ -51,7 +51,6 @@ func then(data) -> float:
 	if data is Dictionary:
 		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
 	else:
-		print(data)
 		data = data.get_data()
 
 	data._wait_time = _total_animation_length
@@ -67,6 +66,8 @@ func then(data) -> float:
 func with(data) -> float:
 	if data is Dictionary:
 		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
+	else:
+		data = data.get_data()
 
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
@@ -87,7 +88,12 @@ func with(data) -> float:
 
 	return _setup_animation(data)
 
-func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
+func also(data, extra_keys_to_ignore := []) -> float:
+	if data is Dictionary:
+		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
+	else:
+		data = data.get_data()
+		
 	if _last_tween_data == null:
 		printerr('.also can be only used in after a .then or .with!')
 
