@@ -47,7 +47,13 @@ func _init_node(node: Node):
 	if node != self:
 		node.add_child(self)
 
-func then(data: Dictionary) -> float:
+func then(data) -> float:
+	if data is Dictionary:
+		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
+	else:
+		print(data)
+		data = data.get_data()
+
 	data._wait_time = _total_animation_length
 
 	_last_tween_data = data.duplicate()
@@ -58,7 +64,10 @@ func then(data: Dictionary) -> float:
 
 	return _last_animation_duration
 
-func with(data: Dictionary) -> float:
+func with(data) -> float:
+	if data is Dictionary:
+		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
+
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
 
