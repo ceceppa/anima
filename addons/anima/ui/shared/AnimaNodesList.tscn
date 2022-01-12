@@ -1,9 +1,17 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/anima/ui/shared/AnimaNodesList.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=3]
 
-[sub_resource type="Image" id=3]
+[sub_resource type="DynamicFont" id=18]
+use_filter = true
+font_data = ExtResource( 3 )
+__meta__ = {
+"_original_size": 18
+}
+
+[sub_resource type="Image" id=19]
 data = {
 "data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
 "format": "LumAlpha8",
@@ -12,10 +20,10 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id=2]
+[sub_resource type="ImageTexture" id=20]
 flags = 4
 flags = 4
-image = SubResource( 3 )
+image = SubResource( 19 )
 size = Vector2( 16, 16 )
 
 [node name="AnimaNodesList" type="VBoxContainer"]
@@ -32,30 +40,32 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1016.0
-margin_bottom = 24.0
+margin_bottom = 30.0
 
 [node name="SearchField" type="LineEdit" parent="HBoxContainer"]
 margin_right = 1016.0
-margin_bottom = 24.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
+custom_fonts/font = SubResource( 18 )
 
 [node name="NodesList" type="Tree" parent="."]
-margin_top = 28.0
+margin_top = 34.0
 margin_right = 1016.0
-margin_bottom = 543.0
+margin_bottom = 562.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/font = SubResource( 18 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
-margin_top = 547.0
+margin_top = 566.0
 margin_right = 1016.0
 margin_bottom = 592.0
 
 [node name="GodotUIButton" parent="HBoxContainer2" instance=ExtResource( 2 )]
-margin_right = 215.0
-margin_bottom = 45.0
+margin_right = 121.0
+margin_bottom = 26.0
 text = "Use property"
-icon = SubResource( 2 )
+icon = SubResource( 20 )
 icon_name = "Ok"
 
 [connection signal="text_changed" from="HBoxContainer/SearchField" to="." method="_on_SearchField_text_changed"]

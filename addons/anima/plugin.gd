@@ -42,6 +42,9 @@ func handles(object):
 	return is_anima_node
 
 func edit(object):
+	if _anima_visual_node == object:
+		return
+
 	_anima_visual_node = object
 	_anima_editor.edit(object)
 

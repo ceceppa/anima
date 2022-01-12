@@ -227,7 +227,7 @@ class AnimaDeclarationBase:
 
 		return self
 
-	func anima_duration(duration: float):
+	func anima_duration(duration: float) -> AnimaDeclarationBase:
 		_data.duration = max(Anima.MINIMUM_DURATION, duration)
 
 		return self
@@ -274,6 +274,19 @@ class AnimaDeclarationBase:
 
 	func anima_visibility_strategy(strategy: int):
 		_data.visibility_strategy = strategy
+
+		return self
+
+	func anima_initial_value(initial_value):
+		var values := {}
+		values[_data.property] = initial_value
+
+		_data.initial_values = values
+
+		return self
+
+	func anima_initial_values(initial_values: Dictionary):
+		_data.initial_values = initial_values
 
 		return self
 

@@ -59,6 +59,9 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if animation_data.has('visibility_strategy'):
 		_apply_visibility_strategy(animation_data)
 
+	if animation_data.has("initial_values"):
+		_apply_initial_values(animation_data)
+
 	var easing_points
 
 	if animation_data.has('easing') and not animation_data.easing == null:
@@ -109,6 +112,29 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data._wait_time
 	)
 
+func _apply_initial_values(animation_data: Dictionary) -> void:
+	var node: Node = animation_data.node
+
+	for property in animation_data.initial_values:
+		var value = animation_data.initial_values[property]
+		var property_data = AnimaNodesProperties.map_property_to_godot_property(node, property)
+		var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
+		var is_object = typeof(property_data.property) == TYPE_OBJECT
+
+		printt(property, value, property_data)
+		if is_rect2:
+			printraw("not yet implemented")
+			pass
+		elif is_object:
+			printraw("not yet implemented")
+			pass
+		elif property_data.has('subkey'):
+			node[property_data.property][property_data.key][property_data.subkey] = value
+		elif property_data.has('key'):
+			node[property_data.property][property_data.key] = value
+		else:
+			node[property] = value
+
 func _get_animated_object_item(property_data: Dictionary, is_relative: bool) -> Node:
 	var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
 	var is_object = typeof(property_data.property) == TYPE_OBJECT
@@ -138,14 +164,13 @@ func set_root_node(node: Node) -> void:
 #		opacity = 0,
 #		scale = Vector2(0.3, 0.3),
 #		y = 100,
-#		easing_points = [0.55, 0.055, 0.675, 0.19],
-#		pivot = Anima.PIVOT.CENTER
+#		easing = [0.55, 0.055, 0.675, 0.19],
 #	},
 #	60: {
 #		opacity = 1,
 #		scale = Vector2(0.475, 0.475),
 #		y = 100,
-#		easing_points = [0.55, 0.055, 0.675, 0.19]
+#		easing = [0.55, 0.055, 0.675, 0.19]
 #	},
 #	100: {
 #		scale = Vector2(1, 1),
@@ -163,8 +188,6 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	# Flattens the keyframe_data
 	var keyframes_data = _flatten_keyframes_data(full_keyframes_data)
-	var frame_keys: Array = keyframes_data.keys()
-	frame_keys.sort_custom(self, "_sort_frame_index")
 
 	animation_data.erase("animation")
 	keyframes_data.erase("pivot")
@@ -176,6 +199,14 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	if pivot:
 		animation_data.pivot = pivot
 
+	if keyframes_data.has("initial_values"):
+		animation_data.initial_values = keyframes_data.initial_values
+
+	keyframes_data.erase("initial_values")
+
+	var frame_keys: Array = keyframes_data.keys()
+	frame_keys.sort_custom(self, "_sort_frame_index")
+
 	for frame_key in frame_keys:
 		if (not frame_key is int and not frame_key is float) or frame_key > 100:
 			continue
@@ -184,10 +215,13 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 		if previous_frame.size() > 0:
 			wait_time += _calculate_frame_data(wait_time, animation_data, relative_properties, frame_key, keyframes_data[frame_key], previous_frame_key, previous_frame)
+
+			animation_data.erase("initial_values")
 		else:
 			#
 			# For relative-only values we need to create a fake frame
-			# used to set the from property to the expected value.
+			# used to set the from property at the expected value.
+			#
 			for property_to_animate in keyframe_data.keys():
 				if relative_properties.find(property_to_animate) < 0:
 					continue
@@ -206,6 +240,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 				add_animation_data(data)
 
+				animation_data.erase("initial_values")
+	
 			wait_time += Anima.MINIMUM_DURATION
 
 		previous_frame_key = frame_key

@@ -9,10 +9,45 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Control",
+"class": "AnimaArc",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Arc.gd"
+}, {
+"base": "VBoxContainer",
+"class": "AnimaCarousel",
+"language": "GDScript",
+"path": "res://addons/anima/components/Carousel.gd"
+}, {
+"base": "HBoxContainer",
+"class": "AnimaChars",
+"language": "GDScript",
+"path": "res://addons/anima/components/AnimaChars.gd"
+}, {
+"base": "Control",
+"class": "AnimaCircle",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Circle.gd"
+}, {
+"base": "Control",
+"class": "AnimaCubicBezier",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/CubicBezier.gd"
+}, {
 "base": "Reference",
 "class": "AnimaEasing",
 "language": "GDScript",
 "path": "res://addons/anima/core/easings.gd"
+}, {
+"base": "Control",
+"class": "AnimaLabel",
+"language": "GDScript",
+"path": "res://addons/anima/components/AnimaLabel.gd"
+}, {
+"base": "Control",
+"class": "AnimaLine",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Line.gd"
 }, {
 "base": "Node",
 "class": "AnimaNode",
@@ -24,22 +59,71 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/utils/node_properties.gd"
 }, {
+"base": "Node",
+"class": "AnimaPlayer",
+"language": "GDScript",
+"path": "res://addons/anima/core/player.gd"
+}, {
+"base": "Control",
+"class": "AnimaRectangle",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Rectangle.gd"
+}, {
+"base": "Control",
+"class": "AnimaShape",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Base.gd"
+}, {
+"base": "Control",
+"class": "AnimaSquare",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Square.gd"
+}, {
 "base": "Reference",
 "class": "AnimaStrings",
 "language": "GDScript",
 "path": "res://addons/anima/utils/strings.gd"
 }, {
+"base": "Control",
+"class": "AnimaTriangle",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Triangle.gd"
+}, {
 "base": "Tween",
 "class": "AnimaTween",
 "language": "GDScript",
 "path": "res://addons/anima/core/tween.gd"
+}, {
+"base": "Reference",
+"class": "AnimaTweenUtils",
+"language": "GDScript",
+"path": "res://addons/anima/utils/tween_utils.gd"
+}, {
+"base": "Node",
+"class": "AnimaVisualNode",
+"language": "GDScript",
+"path": "res://addons/anima/core/visual_node.gd"
 } ]
 _global_script_class_icons={
+"AnimaArc": "",
+"AnimaCarousel": "",
+"AnimaChars": "",
+"AnimaCircle": "",
+"AnimaCubicBezier": "",
 "AnimaEasing": "",
+"AnimaLabel": "",
+"AnimaLine": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
+"AnimaPlayer": "",
+"AnimaRectangle": "",
+"AnimaShape": "",
+"AnimaSquare": "",
 "AnimaStrings": "",
-"AnimaTween": ""
+"AnimaTriangle": "",
+"AnimaTween": "",
+"AnimaTweenUtils": "",
+"AnimaVisualNode": ""
 }
 
 [application]
@@ -48,11 +132,13 @@ config/name="Anima"
 
 [autoload]
 
+AnimaUi="*res://addons/anima/ui/AnimaUI.gd"
+AnimaUI="*res://addons/anima/ui/AnimaUI.gd"
 Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "anima" )
+enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
 
 [network]
 

@@ -161,7 +161,7 @@ func set_property_to_animate(source_node: Node, property: String, type: int) -> 
 		_from_value.set_type(TYPE_STRING)
 		_to_value.set_type(TYPE_STRING)
 
-	var current_value = AnimaNodesProperties.get_property_value(source_node, property)
+	var current_value = AnimaNodesProperties.get_property_value(source_node, { property = property })
 
 	_from_value.set_placeholder(current_value)
 	_to_value.set_placeholder(current_value)

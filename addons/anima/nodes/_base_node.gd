@@ -42,9 +42,6 @@ func _ready():
 	_after_render()
 
 func _after_render() -> void:
-	var position = get_position_in_parent() - 3
-
-	_adjust_font_size(self)
 	_anima.play()
 
 #

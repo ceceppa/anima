@@ -4,10 +4,12 @@
 [ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=3]
 
-[sub_resource type="DynamicFont" id=1]
-size = 18
+[sub_resource type="DynamicFont" id=18]
 use_filter = true
 font_data = ExtResource( 3 )
+__meta__ = {
+"_original_size": 18
+}
 
 [sub_resource type="ButtonGroup" id=2]
 
@@ -35,7 +37,7 @@ margin_right = 106.0
 margin_bottom = 28.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 toggle_mode = true
 pressed = true
 group = SubResource( 2 )
@@ -47,7 +49,7 @@ margin_right = 216.0
 margin_bottom = 28.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 toggle_mode = true
 group = SubResource( 2 )
 text = "Point"
@@ -68,17 +70,18 @@ margin_right = 216.0
 margin_right = 216.0
 
 [node name="Container" parent="Carousel/Wrapper" index="0"]
+margin_right = 432.0
 margin_bottom = 98.0
 rect_min_size = Vector2( 432, 0 )
 
 [node name="Empty" type="Control" parent="Carousel/Wrapper/Container" index="0"]
-margin_right = 510.0
+margin_right = 214.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="GridContainer" type="GridContainer" parent="Carousel/Wrapper/Container" index="1"]
-margin_left = 514.0
-margin_right = 1024.0
+margin_left = 218.0
+margin_right = 432.0
 margin_bottom = 98.0
 rect_min_size = Vector2( 0, 98 )
 size_flags_horizontal = 3
@@ -88,13 +91,13 @@ custom_constants/hseparation = 0
 columns = 3
 
 [node name="Button" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_right = 170.0
+margin_right = 71.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Top Left"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -104,13 +107,13 @@ group = SubResource( 4 )
 align = 2
 
 [node name="Button2" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_left = 170.0
-margin_right = 340.0
+margin_left = 71.0
+margin_right = 142.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 24, 32 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -121,14 +124,14 @@ __meta__ = {
 }
 
 [node name="Button3" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_left = 340.0
-margin_right = 510.0
+margin_left = 142.0
+margin_right = 213.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Top Right"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -137,13 +140,13 @@ group = SubResource( 4 )
 
 [node name="Button4" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
 margin_top = 32.0
-margin_right = 170.0
+margin_right = 71.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Center Left"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -151,15 +154,15 @@ toggle_mode = true
 group = SubResource( 4 )
 
 [node name="Button5" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_left = 170.0
+margin_left = 71.0
 margin_top = 32.0
-margin_right = 340.0
+margin_right = 142.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Center"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -167,15 +170,15 @@ toggle_mode = true
 group = SubResource( 4 )
 
 [node name="Button6" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_left = 340.0
+margin_left = 142.0
 margin_top = 32.0
-margin_right = 510.0
+margin_right = 213.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Center Right"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -184,13 +187,13 @@ group = SubResource( 4 )
 
 [node name="Button7" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
 margin_top = 64.0
-margin_right = 170.0
+margin_right = 71.0
 margin_bottom = 96.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Bottom Left"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -198,15 +201,15 @@ toggle_mode = true
 group = SubResource( 4 )
 
 [node name="Button8" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_left = 170.0
+margin_left = 71.0
 margin_top = 64.0
-margin_right = 340.0
+margin_right = 142.0
 margin_bottom = 96.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Bottom Center"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -214,15 +217,15 @@ toggle_mode = true
 group = SubResource( 4 )
 
 [node name="Button9" type="Button" parent="Carousel/Wrapper/Container/GridContainer"]
-margin_left = 340.0
+margin_left = 142.0
 margin_top = 64.0
-margin_right = 510.0
+margin_right = 213.0
 margin_bottom = 96.0
 rect_min_size = Vector2( 24, 32 )
 hint_tooltip = "Bottom Right"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )

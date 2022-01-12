@@ -3,8 +3,7 @@
 [ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 
-[sub_resource type="DynamicFont" id=1]
-size = 32
+[sub_resource type="DynamicFont" id=18]
 use_filter = true
 font_data = ExtResource( 2 )
 __meta__ = {
@@ -14,7 +13,7 @@ __meta__ = {
 [node name="NumberEdit" type="LineEdit"]
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 18 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

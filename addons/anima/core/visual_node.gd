@@ -4,7 +4,7 @@ extends Node
 
 signal animation_completed
 
-export (Dictionary) var __anima_visual_editor_data
+export (Dictionary) var __anima_visual_editor_data = {}
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode

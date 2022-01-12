@@ -38,7 +38,12 @@ func edit(node: AnimaVisualNode) -> void:
 
 		_graph_edit.add_child(_start_node)
 	else:
-		_add_nodes(data.nodes, data.animations, data.events_slots)
+		var animations := []
+
+		if data.has("animations"):
+			animations = data.animations
+
+		_add_nodes(data.nodes, animations, data.events_slots)
 		_connect_nodes(data.connection_list)
 
 		_graph_edit.set_scroll_ofs(data.scroll_offset)

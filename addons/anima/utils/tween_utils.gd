@@ -7,10 +7,10 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	var relative = animation_data.relative if animation_data.has('relative') else false
 	var current_value = AnimaNodesProperties.get_property_value(node, animation_data)
 
-	if animation_data["from"] == null:
+	if animation_data.has("from") and animation_data.from == null:
 		animation_data.erase('from')
 
-	if animation_data["to"] == null:
+	if animation_data.has("to") and animation_data.to == null:
 		animation_data.erase('to')
 
 	if animation_data.has('from'):
@@ -91,11 +91,8 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 				source_node = root.get_node(source)
 
 			var property: String = PoolStringArray(info).join(":")
-#			animation_data.property = property
 
 			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data, property)
-
-			AnimaUI.debug("AnimatedItem", "maybe_calculate_value: search", source_node, rm.get_string(), property, property_value)
 
 			var variable := char(65 + index)
 
@@ -111,7 +108,6 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 		var result = expression.execute(values)
 
 		all_results.push_back(result)
-		AnimaUI.debug("AnimatedItem", "-->", value, result)
 
 	if value is String:
 		return all_results[0]

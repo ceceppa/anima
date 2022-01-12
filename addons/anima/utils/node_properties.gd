@@ -191,6 +191,11 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 				
 				return prop.size.y
 
+			if prop is String and key == "length":
+				return prop.length()
+			elif prop is Object and prop.has_method(key):
+				prop.call(key)
+
 			return prop[key]
 
 		return node[node_property_name]

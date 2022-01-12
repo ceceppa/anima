@@ -2,7 +2,7 @@ var KEYFRAMES := {
 	0: {
 		opacity = 0,
 		scale = Vector3(0.1, 0.1, 0.1),
-		x = "- :size:x",
+		x = "- :size:x - ..:size:x",
 		easing = [0.55, 0.055, 0.675, 0.19]
 	},
 	60: {

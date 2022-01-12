@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://resources/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://resources/anima-preview.png" type="Texture" id=2]
+[ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/anima/resources/anima-preview.png" type="Texture" id=2]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.gd" type="Script" id=4]
 

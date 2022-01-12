@@ -1,18 +1,30 @@
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> float:
-	var node = data.node
-	var l = node.text.length()
-	var duration_per_char = data.duration / l
+var KEYFRAMES := {
+	0: {
+		visible_characters = 0,
+	},
+	100: {
+		visible_characters = ":text:length",
+	},
+	initial_values = {
+		visible_characters = 0,
+	}
+}
 
-	if not node.has_method('set_visible_characters'):
-		printerr('This animation works only with nodes that have the "visible_characters" property. Example: Label, RichText ')
-
-		return duration_per_char
-
-	var real_duration = duration_per_char * l
-
-	anima_tween.add_frames(data, 'visible_characters', [{ from = 0, to = l, duration = real_duration }])
-
-	return real_duration
+#func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> float:
+#	var node = data.node
+#	var l = node.text.length()
+#	var duration_per_char = data.duration / l
+#
+#	if not node.has_method('set_visible_characters'):
+#		printerr('This animation works only with nodes that have the "visible_characters" property. Example: Label, RichText ')
+#
+#		return duration_per_char
+#
+#	var real_duration = duration_per_char * l
+#
+#	anima_tween.add_frames(data, 'visible_characters', [{ from = 0, to = l, duration = real_duration }])
+#
+#	return real_duration
 
 #func generate_animation(animation: Animation, node: CanvasItem, duration_per_char: float, delay: float) -> float:
 #	if not node.has_method('set_visible_characters'):

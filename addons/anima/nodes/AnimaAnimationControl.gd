@@ -82,12 +82,12 @@ func _on_PropertiesWindow_property_selected(property: String, property_type: int
 	AnimaUI.debug(self, 'property selected', property, property_type, node_name)
 
 	if _relative_control:
-		var property: String = ":" + property
+		var relative_property: String = ":" + property
 
 		if _source_node.name != node_name:
-			property = node_name + property
+			relative_property = node_name + property
 
-		_relative_control.set_relative_value(property)
+		_relative_control.set_relative_value(relative_property)
 	else:
 		_animation_data.set_property_to_animate(_source_node, property, property_type)
 
