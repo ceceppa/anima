@@ -196,8 +196,6 @@ func _reset_initial_values() -> void:
 			else:
 				node[mapped_property.property] = initial_value
 
-			printt("Resetting initial values", node.name, mapped_property, initial_value)
-
 		if node.has_meta("_old_modulate"):
 			node.remove_meta("_old_modulate")
 

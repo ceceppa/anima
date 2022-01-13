@@ -49,7 +49,11 @@ func _on_pivot_button_pressed() -> void:
 			var anima: AnimaNode = Anima.begin(button)
 			anima.set_single_shot(true)
 
-			anima.then({ animation = "pulse", duration = 0.5 })
+			anima.then(
+				Anima.Node(self) \
+					.anima_animation("pulse") \
+					.anima_duration(0.5)
+			)
 			anima.play()
 
 			_pivot_point = button.get_index()

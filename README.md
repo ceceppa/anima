@@ -27,7 +27,11 @@ This is a regular editor plugin. Copy the contents of addons/Anima into the same
 
 Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
 
-## The Visual Animation Editor
+## The Visual Animation Builder
+
+## Built-in animations
+
+Original source: https://github.com/animate-css/animate.css
 
 ## Stay in Touch
 

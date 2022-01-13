@@ -24,11 +24,6 @@ func _init():
 		deletable = false
 	})
 	
-	connect("tree_exiting", self, "_test")
-
-func _test() -> void:
-	print("wut")
-
 func set_source_node(node: Node) -> void:
 	_source_node = node
 
@@ -102,9 +97,6 @@ func _create_event_name_row(label: String, index: int) -> Node:
 func _init_add_buttons():
 	_add_animation_button = Button.new()
 	_add_animation_button.text = "Add new animation"
-
-	var font: DynamicFont = _custom_title.find_node("Title").get_font("font")
-	_add_animation_button.add_font_override("font", font)
 
 	_add_animation_button.connect("pressed", self, "_on_add_new_animation_pressed")
 

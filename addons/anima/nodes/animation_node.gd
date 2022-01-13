@@ -132,7 +132,13 @@ func _animate_height(to: float) -> void:
 	var anima: AnimaNode = Anima.begin(self, 'resizeMe')
 	anima.set_single_shot(true)
 
-	anima.then({ property = "size:y", to = to, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK })
+	anima.then(
+		Anima.Node(self) \
+			.anima_property("size:y") \
+			.anima_to(to) \
+			.anima_duration(0.3) \
+			.anima_easing(Anima.EASING.EASE_OUT_BACK)
+	)
 
 	anima.play()
 

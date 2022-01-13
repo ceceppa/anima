@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
@@ -25,6 +25,13 @@ __meta__ = {
 
 [sub_resource type="ButtonGroup" id=3]
 
+[sub_resource type="DynamicFont" id=18]
+use_filter = true
+font_data = ExtResource( 2 )
+__meta__ = {
+"_original_size": 18
+}
+
 [sub_resource type="ButtonGroup" id=4]
 
 [node name="AnimaData" type="VBoxContainer"]
@@ -41,8 +48,8 @@ __meta__ = {
 [node name="Label" type="Label" parent="."]
 margin_right = 1024.0
 margin_bottom = 4.0
-custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 1 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -68,8 +75,8 @@ hint_tooltip = "Choose if the selected node needs to be animated as single node 
 Single node: only the node itself will be animated
 Group: The direct child of the node will be animated"
 mouse_filter = 1
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 2 )
 text = "Animate as:"
 align = 1
 
@@ -78,6 +85,7 @@ margin_top = 43.0
 margin_right = 1024.0
 margin_bottom = 92.0
 rect_min_size = Vector2( 0, 45 )
+rect_pivot_offset = Vector2( 512, 24.5 )
 scroll_easing = 6
 height_easing = 27
 
@@ -128,11 +136,13 @@ text = "Grid"
 margin_top = 49.0
 margin_right = 1024.0
 margin_bottom = 49.0
+rect_pivot_offset = Vector2( 512, 0 )
 
 [node name="Container" parent="NodeOrGroup/Carousel/Wrapper" index="0"]
 margin_right = 3072.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 3072, 0 )
+rect_pivot_offset = Vector2( 1536, 80 )
 
 [node name="Empty" type="Control" parent="NodeOrGroup/Carousel/Wrapper/Container" index="0"]
 margin_right = 1405.0
@@ -147,7 +157,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="GridContainer2" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer"]
-margin_right = 295.0
+margin_right = 270.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 0, 160 )
 size_flags_horizontal = 3
@@ -224,25 +234,25 @@ min_value = 0.0
 [node name="Label3" type="Label" parent="."]
 margin_top = 32.0
 margin_right = 1024.0
-margin_bottom = 71.0
-custom_fonts/font = SubResource( 2 )
+margin_bottom = 52.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 18 )
 text = "Animation:"
 align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 83.0
+margin_top = 64.0
 margin_right = 1024.0
-margin_bottom = 128.0
+margin_bottom = 92.0
 size_flags_horizontal = 3
 
 [node name="AnimationTypeButton" type="Button" parent="HBoxContainer"]
 margin_right = 510.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 18 )
 toggle_mode = true
 pressed = true
 group = SubResource( 4 )
@@ -251,19 +261,19 @@ text = "Animation"
 [node name="PropertyTypeButton" type="Button" parent="HBoxContainer"]
 margin_left = 514.0
 margin_right = 1024.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 18 )
 toggle_mode = true
 group = SubResource( 4 )
 text = "Property"
 
 [node name="AnimationType" type="Control" parent="."]
-margin_top = 140.0
+margin_top = 104.0
 margin_right = 1024.0
-margin_bottom = 172.0
+margin_bottom = 136.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="AnimationContainer" type="GridContainer" parent="AnimationType"]
@@ -275,10 +285,10 @@ __meta__ = {
 
 [node name="AnimationLabel" type="Label" parent="AnimationType/AnimationContainer"]
 margin_top = 3.0
-margin_right = 154.0
-margin_bottom = 42.0
+margin_right = 120.0
+margin_bottom = 23.0
 rect_min_size = Vector2( 120, 0 )
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 18 )
 text = "Animation:"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -286,12 +296,12 @@ __meta__ = {
 }
 
 [node name="AnimationButton" type="Button" parent="AnimationType/AnimationContainer"]
-margin_left = 158.0
+margin_left = 124.0
 margin_right = 1024.0
-margin_bottom = 45.0
+margin_bottom = 26.0
 hint_tooltip = "Click here to select/change animation"
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 18 )
 text = "Select animation..."
 __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
@@ -330,9 +340,9 @@ __meta__ = {
 }
 
 [node name="Wrapper" type="Control" parent="."]
-margin_top = 184.0
+margin_top = 148.0
 margin_right = 1024.0
-margin_bottom = 184.0
+margin_bottom = 148.0
 size_flags_horizontal = 3
 
 [node name="PropertyValues" type="VBoxContainer" parent="Wrapper"]
@@ -349,8 +359,8 @@ modulate = Color( 1, 1, 1, 0 )
 margin_right = 1024.0
 margin_bottom = 39.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 2 )
 text = "Animate property:"
 align = 1
 __meta__ = {
@@ -360,7 +370,7 @@ __meta__ = {
 [node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 43.0
 margin_right = 1024.0
-margin_bottom = 235.0
+margin_bottom = 219.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -384,14 +394,14 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_right = 1024.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 type = 4
 
 [node name="To" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 44.0
+margin_top = 43.0
 margin_right = 120.0
-margin_bottom = 83.0
+margin_bottom = 82.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 2 )
 text = "To:"
@@ -404,16 +414,16 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
-margin_top = 44.0
+margin_top = 43.0
 margin_right = 1024.0
-margin_bottom = 84.0
+margin_bottom = 82.0
 type = 4
 
 [node name="Relative" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 92.0
+margin_top = 90.0
 margin_right = 120.0
-margin_bottom = 131.0
+margin_bottom = 129.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 2 )
 text = "Relative"
@@ -425,9 +435,9 @@ __meta__ = {
 [node name="RelativeCheck" type="CheckBox" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 124.0
-margin_top = 88.0
+margin_top = 86.0
 margin_right = 1024.0
-margin_bottom = 135.0
+margin_bottom = 133.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 custom_fonts/font = SubResource( 2 )
 text = "Relative value"
@@ -437,9 +447,9 @@ __meta__ = {
 
 [node name="Pivot" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 146.0
+margin_top = 137.0
 margin_right = 120.0
-margin_bottom = 185.0
+margin_bottom = 176.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 2 )
 text = "Pivot"
@@ -452,18 +462,18 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
-margin_top = 139.0
+margin_top = 137.0
 margin_right = 1024.0
-margin_bottom = 192.0
+margin_bottom = 176.0
 
 [node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 239.0
+margin_top = 223.0
 margin_right = 1024.0
-margin_bottom = 278.0
+margin_bottom = 262.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 2 )
 text = "Easing:"
 align = 1
 __meta__ = {
@@ -471,9 +481,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
-margin_top = 282.0
+margin_top = 266.0
 margin_right = 1024.0
-margin_bottom = 327.0
+margin_bottom = 311.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {

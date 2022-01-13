@@ -121,7 +121,6 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
 		var is_object = typeof(property_data.property) == TYPE_OBJECT
 
-		printt(property, value, property_data)
 		if is_rect2:
 			printraw("not yet implemented")
 			pass

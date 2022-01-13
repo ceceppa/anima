@@ -14,6 +14,9 @@ var _search_text: String
 func populate():
 	var anima_visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
 
+	if _search_filed == null:
+		_search_filed = find_node("SearchField")
+
 	_retrieves_list_of_nodes()
 
 	_search_filed.clear()
@@ -125,3 +128,6 @@ func _on_SearchField_gui_input(event):
 func _on_NodesList_item_selected():
 	if trigger_selected:
 		_on_NodesList_item_activated()
+
+func _on_GodotUIButton_pressed():
+	_on_NodesList_item_activated()

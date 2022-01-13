@@ -11,5 +11,8 @@ var KEYFRAMES := {
 	100: {
 		scale = Vector3.ONE,
 		opacity = 1
+	},
+	initial_values = {
+		opacity = 0
 	}
 }

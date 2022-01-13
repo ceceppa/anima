@@ -8,5 +8,9 @@ var KEYFRAMES := {
 		opacity = 1,
 		x = 0,
 		y = 0
+	},
+	initial_values = {
+		opacity = 0,
 	}
 }
+

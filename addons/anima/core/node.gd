@@ -49,7 +49,7 @@ func _init_node(node: Node):
 
 func then(data) -> float:
 	if data is Dictionary:
-		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
+		push_warning("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
 	else:
 		data = data.get_data()
 
@@ -65,7 +65,7 @@ func then(data) -> float:
 
 func with(data) -> float:
 	if data is Dictionary:
-		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
+		push_warning("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
 	else:
 		data = data.get_data()
 
@@ -89,9 +89,7 @@ func with(data) -> float:
 	return _setup_animation(data)
 
 func also(data, extra_keys_to_ignore := []) -> float:
-	if data is Dictionary:
-		printraw("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
-	else:
+	if not data is Dictionary:
 		data = data.get_data()
 		
 	if _last_tween_data == null:

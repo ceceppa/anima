@@ -113,31 +113,52 @@ func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node is AnimaVisualNode
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
-	anima.then({ node = _graph_edit, property = "opacity", from = 0.0, to = 1.0, duration = 0.3 })
-	anima.also({ node = _warning_label, property = "opacity", from = 1.0, to = 0.0 })
-	anima.also({ node = _warning_label, property = "scale", pivot = Anima.PIVOT.CENTER, from = Vector2(1, 1), to = Vector2(1.6, 1.6) })
-	anima.also({ node = $PlayerBox, property = "y", from = "-:size:y - 20", to = 0.0 })
-	anima.also({ 
-		group = $PlayerBox/Controls/MarginContainer/PlayerControls,
-		property = "opacity",
-		delay = 0.3,
-		from = 0.0,
-		to = 1.0,
-		animation_type = Anima.GRID.FROM_CENTER,
-		items_delay = 0.01,
-		visibility_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY
-	})
-	anima.also({ 
-		group = $PlayerBox/Controls/MarginContainer/PlayerControls,
-		delay = 0.3,
-		property = "scale",
-		from = Vector2(0.2, 0.2),
-		to = Vector2(1, 1), 
-		easing = Anima.EASING.EASE_OUT_BACK,
-		pivot = Anima.PIVOT.CENTER,
-		items_delay = 0.01,
-		animation_type = Anima.GRID.FROM_CENTER
-	})
+	anima.then(
+		Anima.Node(_graph_edit) \
+			.anima_property("opacity") \
+			.anima_from(0.0) \
+			.anima_to(1.0) \
+			.anima_duration(0.3)
+	)
+	anima.also(
+		Anima.Node(_warning_label) \
+			.anima_property("opacity") \
+			.anima_from(1.0) \
+			.anima_to(0.0)
+	)
+	anima.also(
+		Anima.Node(_warning_label) \
+			.anima_property("scale") \
+			.anima_from(Vector2.ONE) \
+			.anima_to(Vector2(1.6, 1.6))
+	)
+	anima.also(
+		Anima.Node($PlayerBox) \
+			.anima_property("y") \
+			.anima_from("-:size:y - 20") \
+			.anima_to(0.0)
+	)
+	anima.also(
+		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls) \
+			.anima_items_delay(0.01) \
+			.anima_property("opacity") \
+			.anima_delay(0.3) \
+			.anima_from(0.0) \
+			.anima_to(1.0) \
+			.anima_animation_type(Anima.GRID.FROM_CENTER) \
+			.anima_initial_value(0)
+	)
+	anima.also(
+		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls) \
+			.anima_items_delay(0.01) \
+			.anima_property("scale") \
+			.anima_delay(0.3) \
+			.anima_from(Vector2(0.2, 0.2)) \
+			.anima_to(Vector2.ONE) \
+			.anima_animation_type(Anima.GRID.FROM_CENTER) \
+			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK) \
+			.anima_pivot(Anima.PIVOT.CENTER)
+	)
 
 	if is_graph_edit_visible:
 		_graph_edit.visible = true

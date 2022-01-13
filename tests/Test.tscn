@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -14,3 +15,56 @@ __meta__ = {
 margin_right = 703.0
 margin_bottom = 366.0
 text = "Testing typewriter"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_left = 316.0
+margin_top = 221.0
+margin_right = 706.0
+margin_bottom = 358.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimaVisualNode" type="Node" parent="."]
+script = ExtResource( 2 )
+__anima_visual_editor_data = {
+"animations": [ {
+"name": "default",
+"visibility_strategy": 0
+} ],
+"connection_list": [  ],
+"data_by_animation": {
+},
+"events_slots": [  ],
+"nodes": [ {
+"data": {
+},
+"id": "AnimaNode",
+"name": "AnimaNode347955",
+"node_path": null,
+"position": Vector2( 1309, 20 ),
+"title": "AnimaNode"
+}, {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Select animation...",
+"name": ""
+},
+"type": 0
+},
+"delay": null,
+"duration": null
+},
+"id": "Animation",
+"name": "Animation463016",
+"node_path": NodePath("Button"),
+"position": Vector2( 1713, -117 ),
+"title": "./Button"
+} ],
+"scroll_offset": Vector2( 1217, -274 ),
+"zoom": 1.0
+}

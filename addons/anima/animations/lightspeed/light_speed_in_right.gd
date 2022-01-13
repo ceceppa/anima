@@ -15,5 +15,9 @@ var KEYFRAMES := {
 		x = 0,
 		"skew:x": 0
 	},
-	easing = Anima.EASING.EASE_OUT
+	easing = Anima.EASING.EASE_OUT,
+	initial_values = {
+		opacity = 0,
+	}
 }
+

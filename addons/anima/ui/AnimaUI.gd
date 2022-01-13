@@ -70,7 +70,7 @@ const CONNECTED_LABEL_COLOR = Color.white
 var _godot_base_control: Control
 var _anima_visual_node: Node
 
-const _is_debug_enabled := true
+const _is_debug_enabled := false
 
 const MAPPED_ICONS := {
 	TYPE_REAL: 'float',

@@ -18,7 +18,13 @@ onready var DPI_SCALE = AnimaUI.get_dpi_scale()
 
 func _init():
 	_anima = Anima.begin(self)
-	_anima.then({ property = "scale", from = Vector2.ZERO, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, pivot = Anima.PIVOT.CENTER })
+	_anima.then(
+		Anima.Node(self) \
+			.anima_property("scale") \
+			.anima_from(Vector2.ZERO) \
+			.anima_duration(0.3) \
+			.anima_easing(Anima.EASING.EASE_OUT_BACK)
+	)
 	_anima.also({ property = "opacity", from = 0, to = 1 })
 	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
 

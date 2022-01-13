@@ -402,6 +402,3 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 	return {
 		property = property
 	}
-
-static func apply_skew(v):
-	print(v)

@@ -98,27 +98,25 @@ func _animate_custom_value(mode: int) -> void:
 	anima.set_single_shot(true)
 	anima.set_default_duration(0.3)
 
-	anima.then({
-		node = _current_value_button,
-		property = "scale",
-		from = Vector2(1, 1),
-		to = Vector2(0.5, 0.5),
-		pivot = Anima.PIVOT.CENTER,
-	})
+	anima.then(
+		Anima.Node(_current_value_button) \
+			.anima_property("scale") \
+			.anima_from(Vector2.ONE) \
+			.anima_to(Vector2(0.5, 0.5)) \
+	)
 	anima.also({
 		property = "opacity",
 		from = 1.0,
 		to = 0.0
 	})
-	anima.also({
-		node = _custom_value,
-		property = "scale",
-		from = Vector2(1.5, 1.5),
-		to = Vector2(1, 1),
-		pivot = Anima.PIVOT.CENTER,
-		easing = Anima.EASING.EASE_OUT_BACK,
-		on_started = [funcref(self, '_handle_custom_value_visibility'), [true], [false]]
-	})
+	anima.also(
+		Anima.Node(_custom_value) \
+			.anima_property("scale") \
+			.anima_from(Vector2(1.5, 1.5)) \
+			.anima_to(Vector2.ONE) \
+			.anima_easing(Anima.EASING.EASE_OUT_BACK) \
+			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false)
+	)
 	anima.also({
 		property = "opacity",
 		from = 0.0,

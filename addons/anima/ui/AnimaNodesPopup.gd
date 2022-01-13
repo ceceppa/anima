@@ -7,9 +7,15 @@ onready var _anima_nodes_list: VBoxContainer = find_node('AnimaNodesList')
 
 func show() -> void:
 	var anima: AnimaNode = Anima.begin(self)
-	anima.then({ property = "scale", from = Vector2.ZERO, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK })
-	anima.also({ property = "opacity", from = 0, to = 1 })
-	anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+	anima.then(
+		Anima.Node(self) \
+			.anima_property("scale") \
+			.anima_from(Vector2.ZERO) \
+			.anima_to(Vector2.ONE) \
+			.anima_duration(0.3) \
+			.anima_easing(Anima.EASING.EASE_IN_BACK)
+	)
+	anima.also({ property = "opacity", from = 0, to = 1, initial_value = 0 })
 
 	.show()
 

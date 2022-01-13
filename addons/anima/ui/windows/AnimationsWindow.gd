@@ -98,7 +98,11 @@ func _play_animation(node: Node, button: Button):
 	node.hide()
 
 	var anima = Anima.begin(clone, 'control_test')
-	anima.then({ node = clone, animation = script_name, duration = duration })
+	anima.then(
+		Anima.Node(clone) \
+			.anima_animation(script_name) \
+			.anima_duration(duration)
+	)
 	anima.play()
 	
 	yield(anima, "animation_completed")
