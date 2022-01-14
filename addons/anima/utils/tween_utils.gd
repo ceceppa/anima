@@ -43,8 +43,9 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 			diff = { position = to.position - from.position, size = to.size - from.size }
 		}
 
-	if to is float and from is Vector2:
-		printt(from, to, animation_data)
+	if animation_data.has("__debug"):
+		printt(animation_data.node.name, from, to, current_value, animation_data)
+
 	return {
 		from = from,
 		diff = (to - from) * s

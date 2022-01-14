@@ -19,4 +19,4 @@ func _draw():
 	draw_rect(rect, Color.white)
 
 func _on_mouse_entered() -> void:
-	print('ciao')
+	pass

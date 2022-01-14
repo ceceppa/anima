@@ -1,7 +1,7 @@
 extends AnimaDeclarationBase
 class_name AnimaDeclarationNode
 
-func node(node) -> AnimaDeclarationNode:
+func _node(node) -> AnimaDeclarationNode:
 	self._data.node = node
 
 	return self
@@ -32,7 +32,7 @@ func anima_animation(animation_name: String) -> AnimaDeclarationNode:
 	return self
 
 func anima_property(property_name) -> AnimaDeclarationNode:
-	.anima_animation(property_name)
+	.anima_property(property_name)
 
 	return self
 

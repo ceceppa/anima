@@ -116,7 +116,7 @@ func _remove_duplicate(parent: Node, node_to_ignore: Node) -> void:
 			child.queue_free()
 
 func _on_control_animation_completed(animation_player: AnimationPlayer) -> void:
-	print(animation_player)
+	pass
 
 func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	anima_tween.add_animation_data(data)

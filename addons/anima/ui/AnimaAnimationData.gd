@@ -206,46 +206,46 @@ func _maybe_init_anima_node() -> void:
 	_anima_content_type = Anima.begin(self)
 	_anima_property_values = Anima.begin(_property_values)
 
-	_anima_content_type.then({ 
-		node = _animation_container,
-		property = "y",
-		from = 0,
-		to = -20,
-		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_BACK 
-	})
+	_anima_content_type.then(
+		Anima.Node(_animation_container) \
+			.anima_property("y") \
+			.anima_from(0) \
+			.anima_to(-20) \
+			.anima_duration(0.3) \
+			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK)
+	)
 	_anima_content_type.also({
 		property = "opacity",
 		from = 1,
 		to = 0
 	})
-	_anima_content_type.with({
-		node = _property_container,
-		property = "y",
-		from = 20,
-		to = 0,
-		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_BACK,
-		on_started = [funcref(self, '_adjust_height'), [true], [false]],
-	})
+	_anima_content_type.with(
+		Anima.Node(_property_container) \
+			.anima_property("y") \
+			.anima_from(20) \
+			.anima_to(0) \
+			.anima_duration(0.3) \
+			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK) \
+			.anima_on_started(funcref(self, '_adjust_height'), [true], [false])
+	)
 	_anima_content_type.also({
 		property = "opacity",
 		from = 0,
 		to = 1
 	})
 
-	_anima_property_values.group(
-		[
-			{ node = _property_values.find_node('Label1') },
-			{ group = _property_values.find_node('AnimateGrid') },
-			{ node = _property_values.find_node('Label2') },
-			{ group = _property_values.find_node('Easing') },
-		],
-		{
-			duration = 0.15,
-			items_delay = 0.015,
-			animation = "fadeInLeft",
-		}
+	_anima_property_values.then(
+		Anima.Group(
+			[
+				{ node = _property_values.find_node('Label1') },
+				{ group = _property_values.find_node('AnimateGrid') },
+				{ node = _property_values.find_node('Label2') },
+				{ group = _property_values.find_node('Easing') },
+			]
+		) \
+			.anima_duration(0.15) \
+			.anima_items_delay(0.015) \
+			.anima_animation("fadeInLeft")
 	)
 
 	_anima_property_values.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)

@@ -43,28 +43,32 @@ __anima_visual_editor_data = {
 "data": {
 },
 "id": "AnimaNode",
-"name": "AnimaNode347955",
+"name": "AnimaNode26175",
 "node_path": null,
-"position": Vector2( 1309, 20 ),
+"position": Vector2( 1540, 20 ),
 "title": "AnimaNode"
 }, {
 "data": {
 "animation_data": {
-"animation": {
-"label": "Select animation...",
-"name": ""
+"property": {
+"animate_as": 0,
+"easing": null,
+"name": "position:x",
+"pivot": [ 0, -1 ],
+"relative": false,
+"type": 3
 },
-"type": 0
+"type": 1
 },
 "delay": null,
 "duration": null
 },
 "id": "Animation",
-"name": "Animation463016",
+"name": "Animation286080",
 "node_path": NodePath("Button"),
-"position": Vector2( 1713, -117 ),
+"position": Vector2( 1880, -140 ),
 "title": "./Button"
 } ],
-"scroll_offset": Vector2( 1217, -274 ),
+"scroll_offset": Vector2( 1344, -246 ),
 "zoom": 1.0
 }

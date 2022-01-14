@@ -43,14 +43,25 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 
 	var anima1 = Anima.begin(self, 'button')
 	anima1.set_single_shot(true)
-	anima1.then({node = button, animation = "pulse", duration = 0.5 })
+	anima1.then(
+		Anima.Node(button) \
+			.anima_animation("pulse") \
+			.anima_duration(0.5)
+	)
 	anima1.play()
 
 	var anima2 = Anima.begin(self, 'easings')
 	var to: Vector2 = Vector2(rect_position.x + size.x - logo_size.x - 50, _logo_origin.y)
 
 	anima2.set_single_shot(true)
-	anima2.then({node = _anima_logo, property = "position", from = _logo_origin, to = to, easing = easing_value, duration = 1})
+	anima2.then(
+		Anima.Node(_anima_logo) \
+		.anima_property("position") \
+		.anima_from(_logo_origin) \
+		.anima_to(to) \
+		.anima_easing(easing_value) \
+		.anima_duration(1)
+	)
 	anima2.play()
 
 	_easing = easing_value

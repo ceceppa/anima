@@ -1,7 +1,7 @@
 extends AnimaDeclarationBase
 class_name AnimaDeclarationGrid
 
-func grid(grid: Node) -> AnimaDeclarationGrid:
+func _grid(grid: Node) -> AnimaDeclarationGrid:
 	self._data.grid = grid
 
 	return self
@@ -53,7 +53,7 @@ func anima_animation(animation_name: String) -> AnimaDeclarationGrid:
 	return self
 
 func anima_property(property_name) -> AnimaDeclarationGrid:
-	.anima_animation(property_name)
+	.anima_property(property_name)
 
 	return self
 

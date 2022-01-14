@@ -69,9 +69,26 @@ func set_index(new_index: int) -> void:
 	var anima: AnimaNode = Anima.begin(self)
 	anima.set_single_shot(true)
 
-	anima.then({ property = "min_size:y", to = height, easing = height_easing, duration = duration })
-	anima.also({ node = _container, property = "position:x", to = -x, easing = scroll_easing })
-	anima.also({ node = $Wrapper, property = "size:y", to = wrapper_height, easing = height_easing })
+	anima.then(
+		Anima.Node(self) \
+			.anima_property("min_size:y") \
+			.anima_to(height) \
+			.anima_easing(height_easing) \
+			.anima_duration(duration)
+	)
+
+	anima.also(
+		Anima.Node(_container) \
+			.anima_property("position:x") \
+			.anima_to(-x) \
+			.anima_easing(scroll_easing)
+	)
+	anima.also(
+		Anima.Node($Wrapper) \
+			.anima_property("size:y") \
+			.anima_to(wrapper_height) \
+			.anima_easing(height_easing)
+	)
 	anima.play()
 
 	emit_signal("carousel_height_changed", height)

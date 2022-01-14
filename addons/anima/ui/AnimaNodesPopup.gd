@@ -13,9 +13,14 @@ func show() -> void:
 			.anima_from(Vector2.ZERO) \
 			.anima_to(Vector2.ONE) \
 			.anima_duration(0.3) \
-			.anima_easing(Anima.EASING.EASE_IN_BACK)
+			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK)
 	)
-	anima.also({ property = "opacity", from = 0, to = 1, initial_value = 0 })
+	anima.also({ 
+		property = "opacity",
+		from = 0,
+		to = 1,
+		initial_value = 0,
+	})
 
 	.show()
 

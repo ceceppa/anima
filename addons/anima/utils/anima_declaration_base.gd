@@ -61,7 +61,13 @@ func anima_initial_values(initial_values: Dictionary):
 	_data.initial_values = initial_values
 
 func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_completed_value):
-	_data.on_started = [on_started, [on_started_value], [on_backwards_completed_value]]
+	if typeof(on_started_value) != TYPE_ARRAY:
+		on_started_value = [on_started_value]
+
+	if typeof(on_backwards_completed_value) != TYPE_ARRAY:
+		on_backwards_completed_value = [on_backwards_completed_value]
+
+	_data.on_started = [on_started, on_started_value, on_backwards_completed_value]
 
 func anima_on_completed(on_completed: FuncRef):
 	_data.on_completed = on_completed

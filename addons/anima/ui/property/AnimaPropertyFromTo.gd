@@ -94,8 +94,7 @@ func _animate_custom_value(mode: int) -> void:
 	if _input_visible == null:
 		return
 
-	var anima: AnimaNode = Anima.begin(self)
-	anima.set_single_shot(true)
+	var anima: AnimaNode = Anima.begin_single_shot(self)
 	anima.set_default_duration(0.3)
 
 	anima.then(
@@ -125,15 +124,16 @@ func _animate_custom_value(mode: int) -> void:
 	
 	var height: float = _input_visible.rect_size.y
 
-	anima.also({
-		node = self,
-		property = "size:y",
-		to = height
-	})
-	anima.also({
-		property = "min_size:y",
-		to = height
-	})
+	anima.also(
+		Anima.Node(self) \
+			.anima_property("size:y") \
+			.anima_to(height)
+	)
+	anima.also(
+		Anima.Node(self) \
+			.anima_property("min_size:y") \
+			.anima_to(height)
+	)
 
 	_custom_value.show()
 	_custom_value.rect_size.y = height

@@ -8,7 +8,7 @@
 [ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=7]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=19]
 use_filter = true
 font_data = ExtResource( 4 )
 __meta__ = {
@@ -40,7 +40,7 @@ __meta__ = {
 
 [node name="TimeData" type="VBoxContainer" parent="Container"]
 margin_right = 1008.0
-margin_bottom = 120.0
+margin_bottom = 104.0
 size_flags_horizontal = 3
 
 [node name="HSeparator" type="HSeparator" parent="Container/TimeData"]
@@ -51,51 +51,50 @@ margin_bottom = 4.0
 margin_top = 8.0
 margin_right = 1008.0
 margin_bottom = 28.0
-custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 19 )
 text = "Time:"
 align = 1
 
 [node name="GridContainer2" type="GridContainer" parent="Container/TimeData"]
 margin_top = 32.0
 margin_right = 1008.0
-margin_bottom = 120.0
+margin_bottom = 104.0
 custom_constants/vseparation = 8
 custom_constants/hseparation = 12
 columns = 2
 
 [node name="Label" type="Label" parent="Container/TimeData/GridContainer2"]
-margin_top = 10.0
+margin_top = 6.0
 margin_right = 120.0
-margin_bottom = 30.0
+margin_bottom = 26.0
 rect_min_size = Vector2( 120, 0 )
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 19 )
 text = "duration (s):"
 
 [node name="Duration" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
 anchor_right = 0.0
 margin_left = 132.0
 margin_right = 1008.0
-margin_bottom = 40.0
 label = "parent value"
 type = 3
 can_clear_custom_value = false
 show_relative_selector = false
 
 [node name="Label2" type="Label" parent="Container/TimeData/GridContainer2"]
-margin_top = 58.0
+margin_top = 46.0
 margin_right = 120.0
-margin_bottom = 78.0
+margin_bottom = 66.0
 rect_min_size = Vector2( 120, 0 )
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 19 )
 text = "delay (s):"
 
 [node name="Delay" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
 anchor_right = 0.0
 margin_left = 132.0
-margin_top = 48.0
+margin_top = 40.0
 margin_right = 1008.0
-margin_bottom = 88.0
+margin_bottom = 72.0
 label = "parent value"
 type = 3
 can_clear_custom_value = false
@@ -103,11 +102,14 @@ show_relative_selector = false
 
 [node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
 anchor_right = 0.0
-margin_top = 124.0
+margin_top = 108.0
 margin_right = 1008.0
-margin_bottom = 308.0
+margin_bottom = 256.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 1016.0
 margin_bottom = 853.0
 rect_min_size = Vector2( 512, 300 )
 

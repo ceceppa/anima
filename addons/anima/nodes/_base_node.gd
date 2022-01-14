@@ -25,8 +25,7 @@ func _init():
 			.anima_duration(0.3) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
-	_anima.also({ property = "opacity", from = 0, to = 1 })
-	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+	_anima.also({ property = "opacity", from = 0, to = 1, initial_value = 0 })
 
 	_custom_title = load('res://addons/anima/ui/AnimaCustomNodeTitle.tscn').instance()
 	add_child(_custom_title)

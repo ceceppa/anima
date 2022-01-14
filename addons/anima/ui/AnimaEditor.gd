@@ -347,8 +347,17 @@ func _on_animation_started(node: Node) -> void:
 		printerr("_on_animation_started: Node not found")
 
 	var anima: AnimaNode = Anima.begin_single_shot(node)
-	anima.then({ node = node, property = "opacity", to = 1.0, duration = VISUAL_EDITOR_FADE_DURATION })
-	anima.also({ node = node, property = "scale", to = Vector2(1, 1) })
+	anima.then(
+		Anima.Node(node) \
+			.anima_property("opacity") \
+			.anima_to(1.0) \
+			.anima_duration(VISUAL_EDITOR_FADE_DURATION)
+	)
+	anima.also(
+		Anima.Node(node) \
+			.anima_property("scale") \
+			.anima_to(Vector2.ONE)
+	)
 
 	anima.play()
 
@@ -357,8 +366,17 @@ func _on_node_animation_completed(node: Node) -> void:
 		printerr("_on_node_animation_completed: Node not found")
 
 	var anima: AnimaNode = Anima.begin_single_shot(node)
-	anima.then({ node = node, property = "opacity", to = 0.3, duration = VISUAL_EDITOR_FADE_DURATION })
-	anima.also({ node = node, property = "scale", to = Vector2(0.8, 0.8) })
+	anima.then(
+		Anima.Node(node) \
+			.anima_property("opacity") \
+			.anima_to(0.3) \
+			.anima_duration(VISUAL_EDITOR_FADE_DURATION)
+	)
+	anima.also(
+		Anima.Node(node) \
+			.anima_property("scale") \
+			.anima_to(Vector2(0.8, 0.8))
+	)
 
 	anima.play()
 

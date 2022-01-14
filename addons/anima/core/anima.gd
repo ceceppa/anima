@@ -134,7 +134,7 @@ func get_available_animations() -> Array:
 
 func get_available_animation_by_category() -> Dictionary:
 	var animations = get_available_animations()
-	var base = Anima.get_animation_path()
+	var base = get_animation_path()
 	var old_category := ''
 	var result := {}
 
@@ -208,15 +208,15 @@ func _get_scripts_in_dir(path: String, files: Array = []) -> Array:
 static func Node(node: Node) -> AnimaDeclarationNode:
 	var c := AnimaDeclarationNode.new()
 
-	return c.node(node)
+	return c._node(node)
 
-static func Group(group: Node) -> AnimaDeclarationGroup:
+static func Group(group) -> AnimaDeclarationGroup:
 	var c := AnimaDeclarationGroup.new()
 
-	return c.group(group)
+	return c._group(group)
 
 static func Grid(grid: Node) -> AnimaDeclarationGrid:
 	var c := AnimaDeclarationGrid.new()
 
-	return c.group(grid)
+	return c._grid(grid)
 

@@ -48,10 +48,11 @@ func _init_node(node: Node):
 		node.add_child(self)
 
 func then(data) -> float:
-	if data is Dictionary:
-		push_warning("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
-	else:
+	if not data is Dictionary:
 		data = data.get_data()
+
+	if data.has("group") and data.group is Array:
+		return _group(data.group, data)
 
 	data._wait_time = _total_animation_length
 
@@ -64,9 +65,7 @@ func then(data) -> float:
 	return _last_animation_duration
 
 func with(data) -> float:
-	if data is Dictionary:
-		push_warning("passing a Dictionary has been deprecated. Please use Anima.Node / Anima.Group / Anima.Grid instead")
-	else:
+	if not data is Dictionary:
 		data = data.get_data()
 
 	var start_time := 0.0
@@ -107,6 +106,8 @@ func also(data, extra_keys_to_ignore := []) -> float:
 		'delay',
 		'relative',
 		'_grid_node',
+		'from',
+		'to'
 	]
 
 	if previous_data.has('_grid_node'):
@@ -124,9 +125,10 @@ func also(data, extra_keys_to_ignore := []) -> float:
 			data[key] = previous_data[key]
 
 	data.__do_not_update_last_tween_data = true
+
 	return with(data)
 
-func group(group_data: Array, animation_data: Dictionary) -> void:
+func _group(group_data: Array, animation_data: Dictionary) -> float:
 	var delay_index := 0
 
 	_total_animation_length += animation_data.duration
@@ -134,12 +136,13 @@ func group(group_data: Array, animation_data: Dictionary) -> void:
 	if not animation_data.has('items_delay'):
 		printerr('Please specify the `items_delay` value')
 
-		return
+		return 0.0
 
 	var items = group_data.size() - 1
 	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
 	var on_started = animation_data.on_started if animation_data.has('on_started') else null
 
+	animation_data.erase("group")
 	animation_data.erase('on_completed')
 	animation_data.erase('on_started')
 
@@ -165,6 +168,8 @@ func group(group_data: Array, animation_data: Dictionary) -> void:
 		with(data)
 
 	_total_animation_length += animation_data.items_delay * (delay_index - 1)
+
+	return 0.0
 
 func wait(seconds: float) -> void:
 	then({

@@ -59,6 +59,10 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if animation_data.has('visibility_strategy'):
 		_apply_visibility_strategy(animation_data)
 
+	if animation_data.has("initial_value"):
+		animation_data.initial_values = {}
+		animation_data.initial_values[animation_data.property] = animation_data.initial_value
+
 	if animation_data.has("initial_values"):
 		_apply_initial_values(animation_data)
 
@@ -122,10 +126,10 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		var is_object = typeof(property_data.property) == TYPE_OBJECT
 
 		if is_rect2:
-			printraw("not yet implemented")
+			push_warning("not yet implemented")
 			pass
 		elif is_object:
-			printraw("not yet implemented")
+			push_warning("not yet implemented")
 			pass
 		elif property_data.has('subkey'):
 			node[property_data.property][property_data.key][property_data.subkey] = value

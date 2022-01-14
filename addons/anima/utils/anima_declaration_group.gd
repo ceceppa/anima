@@ -1,7 +1,7 @@
 extends AnimaDeclarationBase
 class_name AnimaDeclarationGroup
 
-func group(group: Node) -> AnimaDeclarationGroup:
+func _group(group) -> AnimaDeclarationGroup:
 	self._data.group = group
 
 	return self
@@ -48,7 +48,7 @@ func anima_animation(animation_name: String) -> AnimaDeclarationGroup:
 	return self
 
 func anima_property(property_name) -> AnimaDeclarationGroup:
-	.anima_animation(property_name)
+	.anima_property(property_name)
 
 	return self
 
