@@ -7,10 +7,10 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	var relative = animation_data.relative if animation_data.has('relative') else false
 	var current_value = AnimaNodesProperties.get_property_value(node, animation_data)
 
-	if animation_data["from"] == null:
+	if animation_data.has('from') and animation_data['from'] == null:
 		animation_data.erase('from')
 
-	if animation_data["to"] == null:
+	if animation_data.has('to') and animation_data['to'] == null:
 		animation_data.erase('to')
 
 	if animation_data.has('from'):
