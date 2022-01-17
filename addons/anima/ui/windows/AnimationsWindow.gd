@@ -22,6 +22,8 @@ func show_demo_by_type(node: Node) -> void:
 		_source_node = node
 
 func _ready():
+	._ready()
+
 	_setup_list()
 
 	if _source_node:

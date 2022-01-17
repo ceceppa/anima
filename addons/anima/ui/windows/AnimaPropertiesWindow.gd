@@ -10,12 +10,17 @@ var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
 var _source_node: Node
 
 func _ready():
+	._ready()
+
 	_nodes_list.hide()
 
 func _on_popup_visible() -> void:
 	var list: VBoxContainer = find_node('AnimaNodesList')
 	list.populate()
 	list.select_node(_source_node)
+
+	if _property_search == null:
+		_property_search = find_node("PropertySearch")
 
 	_property_search.clear()
 	_property_search.grab_focus()

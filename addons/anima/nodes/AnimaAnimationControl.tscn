@@ -17,7 +17,8 @@ __meta__ = {
 
 [node name="AnimationControl" type="MarginContainer"]
 anchor_right = 1.0
-margin_bottom = 861.0
+margin_right = -496.0
+margin_bottom = 316.0
 mouse_filter = 1
 size_flags_horizontal = 3
 custom_constants/margin_right = 8
@@ -32,24 +33,24 @@ __meta__ = {
 [node name="Container" type="VBoxContainer" parent="."]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
-margin_bottom = 853.0
+margin_right = 520.0
+margin_bottom = 308.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TimeData" type="VBoxContainer" parent="Container"]
-margin_right = 1008.0
+margin_right = 512.0
 margin_bottom = 104.0
 size_flags_horizontal = 3
 
 [node name="HSeparator" type="HSeparator" parent="Container/TimeData"]
-margin_right = 1008.0
+margin_right = 512.0
 margin_bottom = 4.0
 
 [node name="Label3" type="Label" parent="Container/TimeData"]
 margin_top = 8.0
-margin_right = 1008.0
+margin_right = 512.0
 margin_bottom = 28.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 19 )
@@ -58,7 +59,7 @@ align = 1
 
 [node name="GridContainer2" type="GridContainer" parent="Container/TimeData"]
 margin_top = 32.0
-margin_right = 1008.0
+margin_right = 512.0
 margin_bottom = 104.0
 custom_constants/vseparation = 8
 custom_constants/hseparation = 12
@@ -75,7 +76,7 @@ text = "duration (s):"
 [node name="Duration" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
 anchor_right = 0.0
 margin_left = 132.0
-margin_right = 1008.0
+margin_right = 512.0
 label = "parent value"
 type = 3
 can_clear_custom_value = false
@@ -93,7 +94,7 @@ text = "delay (s):"
 anchor_right = 0.0
 margin_left = 132.0
 margin_top = 40.0
-margin_right = 1008.0
+margin_right = 512.0
 margin_bottom = 72.0
 label = "parent value"
 type = 3
@@ -103,19 +104,25 @@ show_relative_selector = false
 [node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
 anchor_right = 0.0
 margin_top = 108.0
-margin_right = 1008.0
+margin_right = 512.0
 margin_bottom = 256.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
-margin_bottom = 853.0
+margin_right = 520.0
+margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
-modulate = Color( 1, 1, 1, 0 )
-margin_bottom = 853.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 520.0
+margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 
@@ -124,8 +131,8 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
-margin_bottom = 853.0
+margin_right = 520.0
+margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 

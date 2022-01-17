@@ -11,6 +11,8 @@ __meta__ = {
 }
 
 [node name="NumberEdit" type="LineEdit"]
+margin_right = 46.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 18 )

@@ -22,7 +22,7 @@ __meta__ = {
 "_original_size": 18
 }
 
-[sub_resource type="Image" id=20]
+[sub_resource type="Image" id=24]
 data = {
 "data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
 "format": "RGBA8",
@@ -34,10 +34,10 @@ data = {
 [sub_resource type="ImageTexture" id=21]
 flags = 0
 flags = 0
-image = SubResource( 20 )
+image = SubResource( 24 )
 size = Vector2( 16, 16 )
 
-[sub_resource type="Image" id=22]
+[sub_resource type="Image" id=25]
 data = {
 "data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 179, 223, 223, 223, 179, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 220, 220, 220, 59, 223, 223, 223, 201, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 200, 220, 220, 220, 59, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 222, 222, 222, 198, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 203, 223, 223, 223, 203, 223, 223, 223, 152, 223, 223, 223, 152, 222, 222, 222, 101, 222, 222, 222, 101, 219, 219, 219, 50, 219, 219, 219, 50, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 222, 222, 222, 0, 222, 222, 222, 0, 219, 219, 219, 0, 219, 219, 219, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
 "format": "RGBA8",
@@ -49,7 +49,7 @@ data = {
 [sub_resource type="ImageTexture" id=23]
 flags = 0
 flags = 0
-image = SubResource( 22 )
+image = SubResource( 25 )
 size = Vector2( 16, 16 )
 
 [node name="PropertyFromTo" type="Control"]
@@ -78,7 +78,6 @@ __meta__ = {
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 margin_bottom = 30.0
 rect_scale = Vector2( 1.5, 1.5 )
@@ -91,20 +90,20 @@ __meta__ = {
 
 [node name="Rect2" type="VBoxContainer" parent="CustomValue"]
 visible = false
-margin_right = 462.0
-margin_bottom = 155.0
+margin_right = 478.0
+margin_bottom = 132.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_right = 151.0
-margin_bottom = 49.0
+margin_right = 478.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/X"]
 margin_right = 24.0
-margin_bottom = 49.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -123,33 +122,32 @@ __meta__ = {
 }
 
 [node name="x" parent="CustomValue/Rect2/X" instance=ExtResource( 5 )]
-margin_left = 24.0
-margin_right = 151.0
-margin_bottom = 49.0
+margin_left = 36.0
+margin_right = 438.0
 custom_fonts/font = SubResource( 19 )
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="RelativeRect2X" parent="CustomValue/Rect2/X" instance=ExtResource( 1 )]
-margin_left = 932.0
-margin_right = 976.0
-margin_bottom = 49.0
+margin_left = 450.0
+margin_right = 478.0
+margin_bottom = 30.0
 custom_fonts/font = SubResource( 19 )
 icon = SubResource( 21 )
 icon_name = "GuiTabMenuHl"
 linked_field = NodePath("../x")
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_left = 155.0
-margin_right = 306.0
-margin_bottom = 49.0
+margin_top = 34.0
+margin_right = 478.0
+margin_bottom = 64.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/Y"]
 margin_right = 24.0
-margin_bottom = 49.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -168,33 +166,32 @@ __meta__ = {
 }
 
 [node name="y" parent="CustomValue/Rect2/Y" instance=ExtResource( 5 )]
-margin_left = 24.0
-margin_right = 151.0
-margin_bottom = 49.0
+margin_left = 36.0
+margin_right = 438.0
 custom_fonts/font = SubResource( 19 )
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="RelativeRect2Y" parent="CustomValue/Rect2/Y" instance=ExtResource( 1 )]
-margin_left = 777.0
-margin_right = 821.0
-margin_bottom = 49.0
+margin_left = 450.0
+margin_right = 478.0
+margin_bottom = 30.0
 custom_fonts/font = SubResource( 19 )
 icon = SubResource( 21 )
 icon_name = "GuiTabMenuHl"
 linked_field = NodePath("../y")
 
 [node name="W" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_left = 310.0
-margin_right = 462.0
-margin_bottom = 49.0
+margin_top = 68.0
+margin_right = 478.0
+margin_bottom = 98.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/W"]
 margin_right = 24.0
-margin_bottom = 49.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -213,33 +210,32 @@ __meta__ = {
 }
 
 [node name="w" parent="CustomValue/Rect2/W" instance=ExtResource( 5 )]
-margin_left = 24.0
-margin_right = 152.0
-margin_bottom = 49.0
+margin_left = 36.0
+margin_right = 438.0
 custom_fonts/font = SubResource( 19 )
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="RelativeRect2W" parent="CustomValue/Rect2/W" instance=ExtResource( 1 )]
-margin_left = 622.0
-margin_right = 666.0
-margin_bottom = 49.0
+margin_left = 450.0
+margin_right = 478.0
+margin_bottom = 30.0
 custom_fonts/font = SubResource( 19 )
 icon = SubResource( 21 )
 icon_name = "GuiTabMenuHl"
 linked_field = NodePath("../w")
 
 [node name="H" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_left = 310.0
-margin_right = 462.0
-margin_bottom = 49.0
+margin_top = 102.0
+margin_right = 478.0
+margin_bottom = 132.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/H"]
 margin_right = 24.0
-margin_bottom = 49.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -258,18 +254,17 @@ __meta__ = {
 }
 
 [node name="h" parent="CustomValue/Rect2/H" instance=ExtResource( 5 )]
-margin_left = 24.0
-margin_right = 152.0
-margin_bottom = 49.0
+margin_left = 36.0
+margin_right = 438.0
 custom_fonts/font = SubResource( 19 )
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="RelativeRect2H" parent="CustomValue/Rect2/H" instance=ExtResource( 1 )]
-margin_left = 622.0
-margin_right = 666.0
-margin_bottom = 49.0
+margin_left = 450.0
+margin_right = 478.0
+margin_bottom = 30.0
 custom_fonts/font = SubResource( 19 )
 icon = SubResource( 21 )
 icon_name = "GuiTabMenuHl"
@@ -484,9 +479,7 @@ icon_name = "GuiTabMenuHl"
 linked_field = NodePath("../y")
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
-margin_right = 928.0
-margin_bottom = 49.0
-custom_fonts/font = SubResource( 19 )
+margin_right = 960.0
 align = 2
 caret_blink = true
 caret_blink_speed = 0.5
@@ -494,10 +487,8 @@ type = 0
 
 [node name="Real" parent="CustomValue" instance=ExtResource( 5 )]
 visible = false
-margin_left = 609.0
-margin_right = 798.0
-margin_bottom = 32.0
-custom_fonts/font = SubResource( 19 )
+margin_left = 321.0
+margin_right = 638.0
 text = "0"
 align = 2
 caret_blink = true
@@ -505,8 +496,9 @@ caret_blink_speed = 0.5
 
 [node name="FreeText" type="LineEdit" parent="CustomValue"]
 visible = false
-margin_right = 928.0
-margin_bottom = 49.0
+margin_left = 642.0
+margin_right = 960.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 19 )
@@ -514,18 +506,20 @@ caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource( 1 )]
-margin_left = 932.0
-margin_right = 976.0
-margin_bottom = 49.0
+margin_left = 964.0
+margin_top = 2.0
+margin_right = 992.0
+margin_bottom = 28.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
 icon = SubResource( 21 )
 icon_name = "GuiTabMenuHl"
 
 [node name="ClearButton" parent="CustomValue" instance=ExtResource( 1 )]
-margin_left = 980.0
+margin_left = 996.0
+margin_top = 2.0
 margin_right = 1024.0
-margin_bottom = 49.0
+margin_bottom = 28.0
 hint_tooltip = "Clear custom value"
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )

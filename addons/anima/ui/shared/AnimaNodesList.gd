@@ -47,6 +47,9 @@ func get_selected() -> String:
 func select_node(node: Node) -> void:
 	var root: TreeItem = _nodes_list.get_root()
 	
+	if node == null:
+		return
+
 	_select_node(root, node.name)
 
 func _select_node(tree_item: TreeItem, name: String) -> void:

@@ -35,8 +35,37 @@ __anima_visual_editor_data = {
 "name": "default",
 "visibility_strategy": 0
 } ],
-"connection_list": [  ],
+"connection_list": [ {
+"from": "AnimaNode26175",
+"from_port": 0,
+"to": "Animation41344",
+"to_port": 0
+}, {
+"from": "Animation41344",
+"from_port": 1,
+"to": "Animation48178",
+"to_port": 0
+} ],
 "data_by_animation": {
+0: [ {
+"data": {
+"animation_data": {
+"property": {
+"animate_as": 0,
+"easing": null,
+"name": "position:x",
+"pivot": [ 0, -1 ],
+"relative": false,
+"type": 3
+},
+"type": 1
+},
+"delay": null,
+"duration": null
+},
+"node_path": "Button",
+"start_time": 0.0
+} ]
 },
 "events_slots": [  ],
 "nodes": [ {
@@ -64,11 +93,28 @@ __anima_visual_editor_data = {
 "duration": null
 },
 "id": "Animation",
-"name": "Animation286080",
+"name": "Animation41344",
 "node_path": NodePath("Button"),
-"position": Vector2( 1880, -140 ),
+"position": Vector2( 1953, -180 ),
 "title": "./Button"
+}, {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Headshake",
+"name": "headshake"
+},
+"type": 0
+},
+"delay": null,
+"duration": null
+},
+"id": "Animation",
+"name": "Animation48178",
+"node_path": NodePath("RichTextLabel/VScrollBar"),
+"position": Vector2( 2480, -160 ),
+"title": "./RichTextLabel/VScrollBar"
 } ],
-"scroll_offset": Vector2( 1344, -246 ),
+"scroll_offset": Vector2( 712, 59 ),
 "zoom": 1.0
 }

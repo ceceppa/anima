@@ -19,6 +19,7 @@ onready var _animation_type: Control = find_node('AnimationType')
 
 onready var _from_value: Control = find_node('FromValue')
 onready var _to_value: Control = find_node('ToValue')
+onready var _initial_value: Control = find_node('InitialValue')
 onready var _relative_check: CheckBox = find_node('RelativeCheck')
 onready var _property_values: VBoxContainer = find_node('PropertyValues')
 onready var _pivot_button: Control = find_node('PivotButton')
@@ -67,16 +68,21 @@ func get_animation_data() -> Dictionary:
 			relative = _relative_check.pressed,
 			pivot = _pivot_button.get_value(),
 			easing = _easing_button.get_meta('_value') if _easing_button.has_meta('_value') else null,
-			animate_as = as_group.get_pressed_button().get_index()
+			animate_as = as_group.get_pressed_button().get_index(),
 		}
 
 		var from = _from_value.get_value()
 		var to = _to_value.get_value()
+		var initial_value = _initial_value.get_value()
 
 		if from != null:
 			data.property.from = from
+
 		if to != null:
 			data.property.to = to
+
+		if initial_value != null:
+			data.initial_value = _initial_value.get_value()
 
 	AnimaUI.debug(self, "get_animation_data", data)
 	return data
@@ -106,9 +112,11 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 	if data.property.type == TYPE_VECTOR2 or data.property.type == TYPE_VECTOR3 or data.property.type == TYPE_RECT2:
 		_from_value.set_type(data.property.type)
 		_to_value.set_type(data.property.type)
+		_initial_value.set_type(data.property.type)
 	else:
 		_from_value.set_type(TYPE_STRING)
 		_to_value.set_type(TYPE_STRING)
+		_initial_value.set_type(TYPE_STRING)
 
 	if data.property.has('from'):
 		_from_value.set_value(data.property.from)
@@ -116,7 +124,10 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 	if data.property.has('to'):
 		_to_value.set_value(data.property.to)
 
-	var current_value = AnimaNodesProperties.get_property_value(source_node, data.property.name)
+	if data.property.has('initial_value'):
+		_to_value.set_value(data.property.initial_value)
+
+	var current_value = AnimaNodesProperties.get_property_value(source_node, { property = data.property.name })
 
 	_from_value.set_placeholder(current_value)
 	_to_value.set_placeholder(current_value)
@@ -186,6 +197,7 @@ func _maybe_find_fields() -> void:
 	_property_button = find_node('PropertyButton')
 	_from_value = find_node('FromValue')
 	_to_value = find_node('ToValue')
+	_initial_value = find_node('InitialValue')
 	_property_values = find_node('PropertyValues')
 	_animation_type = find_node('AnimationType')
 	_pivot_button = find_node('PivotButton')
@@ -245,7 +257,7 @@ func _maybe_init_anima_node() -> void:
 		) \
 			.anima_duration(0.15) \
 			.anima_items_delay(0.015) \
-			.anima_animation("fadeInLeft")
+			.anima_animation("fadeInLeftSmall")
 	)
 
 	_anima_property_values.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
@@ -359,3 +371,9 @@ func _on_PropertyValues_item_rect_changed():
 
 func _on_Timer_timeout():
 	_adjust_height()
+
+func _on_InitialValue_select_relative_property():
+	emit_signal("select_relative_property", _initial_value)
+
+func _on_vale_updated():
+	emit_signal("value_updated")

@@ -190,7 +190,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 		relative_properties = full_keyframes_data.relative
 
 	# Flattens the keyframe_data
-	var keyframes_data = _flatten_keyframes_data(full_keyframes_data)
+	var keyframes_data = AnimaTweenUtils.flatten_keyframes_data(full_keyframes_data)
 
 	animation_data.erase("animation")
 	keyframes_data.erase("pivot")
@@ -252,25 +252,6 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	return 0.0
 
-func _flatten_keyframes_data(data: Dictionary) -> Dictionary:
-	var result := {}
-
-	for key in data:
-		var is_dictionary = data.has(key) and data[key] is Dictionary
-		var value: Dictionary = data[key].duplicate() if is_dictionary else {}
-
-		if not key is Array:
-			key = [key]
-
-		for percentage in key:
-			if not result.has(percentage):
-				result[percentage] = {}
-
-			for k in value:
-				result[percentage][k] = value[k]
-
-	return result
-
 func _sort_frame_index(a, b) -> bool:
 	return int(a) < int(b)
 
@@ -303,9 +284,6 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 	for property_to_animate in keys:
 		var data = animation_data.duplicate()
-
-		if not previous_frame.has(property_to_animate):
-			continue
 
 		var from_value = previous_frame[property_to_animate]
 		var to_value = frame_data[property_to_animate]

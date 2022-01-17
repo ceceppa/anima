@@ -7,6 +7,11 @@ func _ready():
 			.anima_animation("typewrite") \
 			.anima_duration(1)
 	)
+	anima.also({
+		property = "opacity",
+		from = 0.0,
+		to = 1.0,
+	})
 	anima.then(
 		Anima.Node($Button) \
 		.anima_duration(0.3) \

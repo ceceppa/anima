@@ -222,7 +222,6 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 534.0
 margin_right = 580.0
-margin_bottom = 30.0
 rect_pivot_offset = Vector2( 41, 26 )
 size_flags_horizontal = 1
 custom_fonts/font = SubResource( 18 )

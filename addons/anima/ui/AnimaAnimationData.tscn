@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
@@ -26,17 +26,9 @@ __meta__ = {
 
 [sub_resource type="ButtonGroup" id=4]
 
-[sub_resource type="DynamicFont" id=2]
-size = 32
-use_filter = true
-font_data = ExtResource( 2 )
-__meta__ = {
-"_original_size": 18
-}
-
 [node name="AnimaData" type="VBoxContainer"]
 anchor_right = 1.0
-margin_bottom = 257.0
+margin_bottom = 148.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_constants/separation = 12
@@ -64,12 +56,12 @@ margin_bottom = 20.0
 visible = false
 margin_top = 32.0
 margin_right = 1024.0
-margin_bottom = 124.0
+margin_bottom = 101.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="NodeOrGroup"]
 margin_right = 1024.0
-margin_bottom = 39.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 120, 0 )
 hint_tooltip = "Choose if the selected node needs to be animated as single node or group.
 Single node: only the node itself will be animated
@@ -81,9 +73,9 @@ text = "Animate as:"
 align = 1
 
 [node name="Carousel" parent="NodeOrGroup" instance=ExtResource( 5 )]
-margin_top = 43.0
+margin_top = 24.0
 margin_right = 1024.0
-margin_bottom = 92.0
+margin_bottom = 69.0
 rect_min_size = Vector2( 0, 45 )
 rect_pivot_offset = Vector2( 512, 24.5 )
 scroll_easing = 6
@@ -91,11 +83,11 @@ height_easing = 27
 
 [node name="Controls" parent="NodeOrGroup/Carousel" index="0"]
 margin_right = 1024.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 
 [node name="AsNode" type="Button" parent="NodeOrGroup/Carousel/Controls" index="0"]
 margin_right = 338.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate the single node only"
 size_flags_horizontal = 3
@@ -109,7 +101,7 @@ text = "Node"
 [node name="AsGroup" type="Button" parent="NodeOrGroup/Carousel/Controls" index="1"]
 margin_left = 342.0
 margin_right = 681.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
 size_flags_horizontal = 3
@@ -122,7 +114,7 @@ text = "Group"
 [node name="AsGrid" type="Button" parent="NodeOrGroup/Carousel/Controls" index="2"]
 margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 45.0
+margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
 size_flags_horizontal = 3
@@ -133,9 +125,9 @@ group = SubResource( 3 )
 text = "Grid"
 
 [node name="Wrapper" parent="NodeOrGroup/Carousel" index="1"]
-margin_top = 49.0
+margin_top = 32.0
 margin_right = 1024.0
-margin_bottom = 49.0
+margin_bottom = 32.0
 rect_pivot_offset = Vector2( 512, 0 )
 
 [node name="Container" parent="NodeOrGroup/Carousel/Wrapper" index="0"]
@@ -145,19 +137,19 @@ rect_min_size = Vector2( 3072, 0 )
 rect_pivot_offset = Vector2( 1536, 80 )
 
 [node name="Empty" type="Control" parent="NodeOrGroup/Carousel/Wrapper/Container" index="0"]
-margin_right = 1405.0
+margin_right = 1021.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="1"]
-margin_left = 1409.0
-margin_right = 1663.0
-margin_bottom = 64.0
+margin_left = 1025.0
+margin_right = 2046.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="GridContainer2" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer"]
-margin_right = 270.0
+margin_right = 1021.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 0, 160 )
 size_flags_horizontal = 3
@@ -167,9 +159,9 @@ custom_constants/hseparation = 12
 columns = 2
 
 [node name="Label2" type="Label" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
-margin_top = 12.0
-margin_right = 160.0
-margin_bottom = 51.0
+margin_top = 5.0
+margin_right = 120.0
+margin_bottom = 25.0
 rect_min_size = Vector2( 120, 0 )
 hint_tooltip = "The delay to apply to each children"
 mouse_filter = 1
@@ -177,9 +169,8 @@ custom_fonts/font = SubResource( 19 )
 text = "Items delay"
 
 [node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2" instance=ExtResource( 6 )]
-margin_left = 172.0
-margin_right = 254.0
-margin_bottom = 64.0
+margin_left = 132.0
+margin_right = 1021.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
 text = "0.01"
@@ -187,9 +178,9 @@ align = 2
 min_value = 0.0
 
 [node name="Label3" type="Label" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
-margin_top = 12.0
-margin_right = 160.0
-margin_bottom = 51.0
+margin_top = 45.0
+margin_right = 120.0
+margin_bottom = 65.0
 rect_min_size = Vector2( 120, 0 )
 hint_tooltip = "The delay of each child item"
 mouse_filter = 1
@@ -197,8 +188,10 @@ custom_fonts/font = SubResource( 19 )
 text = "Animate from:"
 
 [node name="OptionButton" type="OptionButton" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
-margin_right = 29.0
-margin_bottom = 20.0
+margin_left = 132.0
+margin_top = 42.0
+margin_right = 1021.0
+margin_bottom = 68.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
 text = "First"
@@ -206,9 +199,9 @@ items = [ "First", null, false, 0, null, "Center", null, false, 1, null, "Last",
 selected = 0
 
 [node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="2"]
-margin_left = 1667.0
+margin_left = 2050.0
 margin_right = 3072.0
-margin_bottom = 49.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_constants/vseparation = 12
@@ -217,8 +210,8 @@ columns = 2
 
 [node name="Label2" type="Label" parent="NodeOrGroup/Carousel/Wrapper/Container/GridContainer"]
 margin_top = 5.0
-margin_right = 160.0
-margin_bottom = 44.0
+margin_right = 120.0
+margin_bottom = 25.0
 rect_min_size = Vector2( 120, 0 )
 hint_tooltip = "The delay of each child item"
 mouse_filter = 1
@@ -226,9 +219,8 @@ custom_fonts/font = SubResource( 19 )
 text = "Items delay"
 
 [node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/GridContainer" instance=ExtResource( 6 )]
-margin_left = 172.0
-margin_right = 1405.0
-margin_bottom = 49.0
+margin_left = 132.0
+margin_right = 1022.0
 custom_fonts/font = SubResource( 19 )
 text = "0.01"
 align = 2
@@ -373,7 +365,7 @@ __meta__ = {
 [node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 24.0
 margin_right = 1024.0
-margin_bottom = 183.0
+margin_bottom = 164.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -422,11 +414,34 @@ margin_right = 1024.0
 margin_bottom = 68.0
 type = 4
 
+[node name="Initial" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 78.0
+margin_right = 120.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 120, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "To:"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="InitialValue" parent="Wrapper/PropertyValues/AnimateGrid" instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 0.0
+margin_left = 124.0
+margin_top = 72.0
+margin_right = 1024.0
+margin_bottom = 104.0
+label = "ignore"
+type = 4
+
 [node name="Relative" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 85.0
+margin_top = 112.0
 margin_right = 120.0
-margin_bottom = 105.0
+margin_bottom = 132.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 19 )
 text = "Relative"
@@ -438,11 +453,11 @@ __meta__ = {
 [node name="RelativeCheck" type="CheckBox" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 124.0
-margin_top = 72.0
+margin_top = 108.0
 margin_right = 1024.0
-margin_bottom = 119.0
+margin_bottom = 136.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 19 )
 text = "Relative value"
 __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
@@ -450,9 +465,9 @@ __meta__ = {
 
 [node name="Pivot" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 131.0
+margin_top = 148.0
 margin_right = 120.0
-margin_bottom = 151.0
+margin_bottom = 168.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 19 )
 text = "Pivot"
@@ -465,15 +480,15 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
-margin_top = 123.0
+margin_top = 140.0
 margin_right = 1024.0
-margin_bottom = 159.0
+margin_bottom = 176.0
 
 [node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 187.0
+margin_top = 168.0
 margin_right = 1024.0
-margin_bottom = 207.0
+margin_bottom = 188.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 19 )
@@ -484,9 +499,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
-margin_top = 211.0
+margin_top = 192.0
 margin_right = 1024.0
-margin_bottom = 237.0
+margin_bottom = 218.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -537,6 +552,9 @@ one_shot = true
 [connection signal="resized" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_PropertyValues_item_rect_changed"]
 [connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
 [connection signal="vale_updated" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_vale_updated"]
+[connection signal="resized" from="Wrapper/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_PropertyValues_item_rect_changed"]
+[connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
+[connection signal="vale_updated" from="Wrapper/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_vale_updated"]
 [connection signal="pressed" from="Wrapper/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_CheckBox_pressed"]
 [connection signal="pivot_height_changed" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_height_changed"]
 [connection signal="pivot_point_selected" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_point_selected"]

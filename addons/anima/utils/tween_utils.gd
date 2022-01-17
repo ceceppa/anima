@@ -149,3 +149,68 @@ static func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionar
 		return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
 
 	return deg2rad(value)
+
+static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
+	var result := {}
+
+	for key in data:
+		var is_dictionary = data.has(key) and data[key] is Dictionary
+		var value: Dictionary = data[key].duplicate() if is_dictionary else {}
+
+		if not key is Array:
+			key = [key]
+
+		for percentage in key:
+			if not result.has(percentage):
+				result[percentage] = {}
+
+			for k in value:
+				result[percentage][k] = value[k]
+
+	#
+	# Interpolates the "missing" keys, for example:
+	#
+	#	0: {
+	#		opacity = 0,
+	#		scale = Vector3(0.3, 0.3, 0.3),
+	#	},
+	#	50: {
+	#		opacity = 1,
+	#	},
+	#	100: {
+	#		scale = Vector3.ONE
+	#	},
+	#
+	# At step 50% scale property is missing, so we need to interplate the value to Vector3(0.3) + (Vector3(1) - Vector3(0.3)) * 0.5 
+	var frame_keys := []
+	
+	for key in result.keys():
+		if key is String:
+			continue
+
+		frame_keys.push_back(key)
+
+	frame_keys.sort()
+
+	var first_key = frame_keys.pop_front()
+	var previous_data: Dictionary = result[first_key]
+	var total_keys: int = frame_keys.size() - 1
+
+	for index in frame_keys.size():
+		var frame_key = frame_keys[index]
+		var current_data: Dictionary = result[frame_key]
+		var is_last_frame: bool = index == total_keys
+
+		for key in previous_data.keys():
+			if current_data.has(key) or is_last_frame:
+				continue
+
+			var percentage = float(frame_keys[index]) / float(frame_keys[index + 1])
+			var next_frame_value = result[frame_keys[index + 1]][key]
+			var previous_frame_value = previous_data[key]
+
+			result[frame_key][key] = previous_frame_value + (next_frame_value - previous_frame_value) * percentage
+
+		previous_data = result[frame_key]
+
+	return result

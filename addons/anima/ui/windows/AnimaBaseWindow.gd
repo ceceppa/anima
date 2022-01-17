@@ -13,13 +13,14 @@ func _init() -> void:
 	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
 func _ready():
-	connect("popup_hide", self, "_on_hide")
+	if not is_connected("popup_hide", self, "_on_hide"):
+		connect("popup_hide", self, "_on_hide")
 
-func popup_centered(size: Vector2 = Vector2.ZERO) -> void:
+func popup_centered(size := Vector2.ZERO) -> void:
 	# We need to reset the scale otherwise the window position will be wrong!
 	rect_scale = Vector2(1, 1)
-	
-	.popup_centered(size)
+
+	.popup_centered(rect_size)
 	_anima.play()
 
 	_on_popup_visible()

@@ -37,6 +37,9 @@ func _ready():
 	for button in relative_buttons:
 		button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
 
+	set_type(type)
+	set_show_relative_selector(show_relative_selector)
+
 func set_type(the_type: int) -> void:
 	type = the_type
 
