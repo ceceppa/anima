@@ -15,7 +15,7 @@ func _ready():
 	anima.then(
 		Anima.Node($Button) \
 		.anima_duration(0.3) \
-		.anima_animation("zoomIn")
+		.anima_animation("zoomInUp")
 	)
 	
 	anima.play_with_delay(0.5)

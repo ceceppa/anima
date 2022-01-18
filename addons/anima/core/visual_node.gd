@@ -116,6 +116,9 @@ func preview_animation(node: Node, duration: float, delay: float, animation_data
 	AnimaUI.debug(self, 'playing node animation with data', anima_data)
 
 	anima_data._root_node = get_source_node()
+	
+	print(animation_data)
+	
 	anima.then(anima_data)
 
 	anima.play()
@@ -136,6 +139,8 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 		duration = duration,
 		delay = delay
 	}
+	
+	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
 	if animation_data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
@@ -166,7 +171,7 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 			if not _initial_values.has(node):
 				_initial_values[node] = {}
 
-			_initial_values[node][property] = AnimaNodesProperties.get_property_value(node, property)
+			_initial_values[node][property] = AnimaNodesProperties.get_property_value(node, { property = property })
 
 	return anima_data
 

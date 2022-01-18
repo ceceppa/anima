@@ -105,34 +105,39 @@ func _animate_custom_value(mode: int) -> void:
 			.anima_property("scale") \
 			.anima_from(Vector2.ONE) \
 			.anima_to(Vector2(0.5, 0.5)) \
+			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
-	anima.also({
-		property = "opacity",
-		from = 1.0,
-		to = 0.0
-	})
 	anima.also(
+		Anima.Node(_current_value_button) \
+			.anima_property("opacity") \
+			.anima_from(1.0) \
+			.anima_to(0.0)
+	)
+	anima.with(
 		Anima.Node(_custom_value) \
 			.anima_property("scale") \
 			.anima_from(Vector2(1.5, 1.5)) \
 			.anima_to(Vector2.ONE) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK) \
-			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false)
+			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
+			.anima_initial_value(Vector2(1.5, 1.5))
 	)
-	anima.also({
-		property = "opacity",
-		from = 0.0,
-		to = 1.0
-	})
+	anima.also(
+		Anima.Node(_custom_value) \
+			.anima_property("opacity") \
+			.anima_from(0.0) \
+			.anima_to(1.0) \
+			.anima_initial_value(0.0)
+	)
 	
 	var height: float = _input_visible.rect_size.y
 
-	anima.also(
+	anima.with(
 		Anima.Node(self) \
 			.anima_property("size:y") \
 			.anima_to(height)
 	)
-	anima.also(
+	anima.with(
 		Anima.Node(self) \
 			.anima_property("min_size:y") \
 			.anima_to(height)

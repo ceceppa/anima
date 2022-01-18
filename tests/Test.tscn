@@ -22,10 +22,12 @@ __meta__ = {
 [node name="Button" type="Button" parent="."]
 margin_left = 316.0
 margin_top = 221.0
-margin_right = 706.0
+margin_right = 706.002
 margin_bottom = 358.0
+rect_pivot_offset = Vector2( 195.001, 68.5 )
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
@@ -53,6 +55,8 @@ __anima_visual_editor_data = {
 "property": {
 "animate_as": 0,
 "easing": null,
+"from": -100.0,
+"initial_value": 900.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -60,10 +64,24 @@ __anima_visual_editor_data = {
 },
 "type": 1
 },
-"delay": null,
-"duration": null
+"delay": 0.0,
+"duration": 0.7
 },
 "node_path": "Button",
+"start_time": 0.0
+}, {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Headshake",
+"name": "headshake"
+},
+"type": 0
+},
+"delay": 0.0,
+"duration": 0.7
+},
+"node_path": "RichTextLabel/VScrollBar",
 "start_time": 0.0
 } ]
 },
@@ -82,6 +100,8 @@ __anima_visual_editor_data = {
 "property": {
 "animate_as": 0,
 "easing": null,
+"from": -100.0,
+"initial_value": 900.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -89,8 +109,8 @@ __anima_visual_editor_data = {
 },
 "type": 1
 },
-"delay": null,
-"duration": null
+"delay": 0.0,
+"duration": 0.7
 },
 "id": "Animation",
 "name": "Animation41344",
@@ -106,8 +126,8 @@ __anima_visual_editor_data = {
 },
 "type": 0
 },
-"delay": null,
-"duration": null
+"delay": 0.0,
+"duration": 0.7
 },
 "id": "Animation",
 "name": "Animation48178",
@@ -115,6 +135,6 @@ __anima_visual_editor_data = {
 "position": Vector2( 2480, -160 ),
 "title": "./RichTextLabel/VScrollBar"
 } ],
-"scroll_offset": Vector2( 712, 59 ),
+"scroll_offset": Vector2( 1643, 29 ),
 "zoom": 1.0
 }

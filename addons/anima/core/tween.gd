@@ -64,7 +64,10 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
 
 	if animation_data.has("initial_values"):
-		_apply_initial_values(animation_data)
+		if not animation_data.has("to"):
+			printerr("When using '_initial_value' the 'to' cannot be empty!")
+		else:
+			_apply_initial_values(animation_data)
 
 	var easing_points
 
@@ -136,7 +139,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		elif property_data.has('key'):
 			node[property_data.property][property_data.key] = value
 		else:
-			node[property] = value
+			node[property_data.property] = value
 
 func _get_animated_object_item(property_data: Dictionary, is_relative: bool) -> Node:
 	var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
@@ -285,6 +288,9 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 	for property_to_animate in keys:
 		var data = animation_data.duplicate()
 
+		if not previous_frame.has(property_to_animate):
+			continue
+
 		var from_value = previous_frame[property_to_animate]
 		var to_value = frame_data[property_to_animate]
 		var relative = relative_properties.find(property_to_animate) >= 0
@@ -407,7 +413,9 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 		if not is_relative:
 			var temp = animation_data.to
 
-			animation_data.to = animation_data.from
+			if animation_data.has("from"):
+				animation_data.to = animation_data.from
+
 			animation_data.from = temp
 
 		animation_data._wait_time = max(Anima.MINIMUM_DURATION, new_wait_time)

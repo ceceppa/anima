@@ -82,7 +82,7 @@ func get_animation_data() -> Dictionary:
 			data.property.to = to
 
 		if initial_value != null:
-			data.initial_value = _initial_value.get_value()
+			data.property.initial_value = _initial_value.get_value()
 
 	AnimaUI.debug(self, "get_animation_data", data)
 	return data
@@ -125,12 +125,18 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 		_to_value.set_value(data.property.to)
 
 	if data.property.has('initial_value'):
-		_to_value.set_value(data.property.initial_value)
+		_initial_value.set_value(data.property.initial_value)
 
 	var current_value = AnimaNodesProperties.get_property_value(source_node, { property = data.property.name })
 
 	_from_value.set_placeholder(current_value)
+	_from_value.get_parent().get_child(_from_value.get_position_in_parent() - 1).hint_tooltip = "Current value: " + str(current_value)
+
 	_to_value.set_placeholder(current_value)
+	_to_value.get_parent().get_child(_to_value.get_position_in_parent() - 1).hint_tooltip = "Current value: " + str(current_value)
+
+	_initial_value.set_placeholder(current_value)
+	_initial_value.get_parent().get_child(_initial_value.get_position_in_parent() - 1).hint_tooltip = "Current value: " + str(current_value)
 
 	if data.property.has("animate_as_node"):
 		var as_group: ButtonGroup = _node_or_group_controls.get_child(0).group

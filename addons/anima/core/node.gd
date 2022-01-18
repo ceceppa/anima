@@ -106,16 +106,14 @@ func also(data, extra_keys_to_ignore := []) -> float:
 		'delay',
 		'relative',
 		'_grid_node',
+		'animation',
+		'property',
 		'from',
-		'to'
+		'to',
 	]
 
 	if previous_data.has('_grid_node'):
 		previous_data.grid = previous_data._grid_node
-
-	if data.has("animation"):
-		keys_to_ignore.push_back("from")
-		keys_to_ignore.push_back("to")
 
 	for key in previous_data:
 		if keys_to_ignore.find(key) >= 0 or extra_keys_to_ignore.find(key) >= 0:

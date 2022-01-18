@@ -76,8 +76,8 @@ align = 1
 margin_top = 24.0
 margin_right = 1024.0
 margin_bottom = 69.0
-rect_min_size = Vector2( 0, 45 )
-rect_pivot_offset = Vector2( 512, 24.5 )
+rect_min_size = Vector2( 0, 28 )
+rect_pivot_offset = Vector2( 512, 22.5 )
 scroll_easing = 6
 height_easing = 27
 
@@ -365,7 +365,7 @@ __meta__ = {
 [node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 24.0
 margin_right = 1024.0
-margin_bottom = 164.0
+margin_bottom = 200.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -378,6 +378,7 @@ margin_top = 6.0
 margin_right = 120.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 120, 0 )
+mouse_filter = 1
 custom_fonts/font = SubResource( 19 )
 text = "From:"
 __meta__ = {
@@ -398,6 +399,7 @@ margin_top = 42.0
 margin_right = 120.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 120, 0 )
+mouse_filter = 1
 custom_fonts/font = SubResource( 19 )
 text = "To:"
 __meta__ = {
@@ -420,8 +422,9 @@ margin_top = 78.0
 margin_right = 120.0
 margin_bottom = 98.0
 rect_min_size = Vector2( 120, 0 )
+mouse_filter = 1
 custom_fonts/font = SubResource( 19 )
-text = "To:"
+text = "Initial Value"
 __meta__ = {
 "_edit_use_anchors_": false,
 "_old_modulate": Color( 1, 1, 1, 0 )
@@ -486,9 +489,9 @@ margin_bottom = 176.0
 
 [node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 168.0
+margin_top = 204.0
 margin_right = 1024.0
-margin_bottom = 188.0
+margin_bottom = 224.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 19 )
@@ -499,9 +502,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
-margin_top = 192.0
+margin_top = 228.0
 margin_right = 1024.0
-margin_bottom = 218.0
+margin_bottom = 254.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {

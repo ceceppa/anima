@@ -10,7 +10,7 @@ func _init() -> void:
 			.anima_animation("zoomInUp") \
 			.anima_duration(0.3)
 	)
-	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
+#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
 func _ready():
 	if not is_connected("popup_hide", self, "_on_hide"):
