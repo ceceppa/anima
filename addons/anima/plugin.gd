@@ -20,11 +20,13 @@ func _enter_tree():
 	_anima_editor = preload("res://addons/anima/ui/AnimaEditor.tscn").instance()
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("connections_updated", self, '_on_connections_updated')
+
 	_anima_editor.init(get_editor_interface().get_base_control())
 
 	add_control_to_bottom_panel(_anima_editor, "Anima")
 
 func _exit_tree():
+	remove_autoload_singleton('AnimaUI')
 	remove_autoload_singleton('Anima')
 	remove_control_from_bottom_panel(_anima_editor)
 

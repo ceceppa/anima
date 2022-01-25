@@ -7,7 +7,7 @@ signal connections_updated(new_list)
 const VISUAL_EDITOR_FADE_DURATION := 0.1
 
 var _start_node: Node
-var _anima_visual_node: AnimaVisualNode
+var _anima_visual_node: Node
 var _node_offset: Vector2
 var _is_restoring_data := false
 
@@ -23,7 +23,7 @@ func _ready():
 func init(base_control: Control) -> void:
 		AnimaUI.set_godot_gui(base_control)
 
-func edit(node: AnimaVisualNode) -> void:
+func edit(node: Node) -> void:
 	_is_restoring_data = true
 	_anima_visual_node = node
 	AnimaUI.set_selected_anima_visual_node(node)
@@ -99,7 +99,7 @@ func _connect_nodes(connection_list: Array) -> void:
 		AnimaUI.debug(self, "connecting node", connection)
 		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
 
-func set_anima_node(node) -> void:
+func set_anima_node(node: Node) -> void:
 	var should_animate = _anima_visual_node != node
 	_anima_visual_node = node
 
@@ -110,7 +110,10 @@ func show() -> void:
 	.show()
 
 func _maybe_show_graph_edit() -> bool:
-	var is_graph_edit_visible = _anima_visual_node is AnimaVisualNode
+	if _anima_visual_node == null:
+		return
+
+	var is_graph_edit_visible = _anima_visual_node.has_meta("__anima_visual_node")
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.then(
@@ -315,7 +318,7 @@ func _on_AnimaNodeEditor_node_updated():
 	_update_animations_list()
 
 func _on_PlayAnimation_pressed():
-	var visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
+	var visual_node: Node = AnimaUI.get_selected_anima_visual_node()
 	var animation_id: int = _animation_selector.get_selected_id()
 	var name: String = _animation_selector.get_item_text(animation_id)
 	var speed = float(_animation_speed.text)

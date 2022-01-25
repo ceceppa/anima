@@ -9,6 +9,9 @@ export (Dictionary) var __anima_visual_editor_data = {}
 var _initial_values := {}
 var _active_anima_node: AnimaNode
 
+func _init():
+	set_meta("__anima_visual_node", true)
+
 #
 # Returns the node that Anima will use when handling the animations
 # done via visual editor
