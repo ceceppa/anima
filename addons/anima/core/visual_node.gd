@@ -119,9 +119,7 @@ func preview_animation(node: Node, duration: float, delay: float, animation_data
 	AnimaUI.debug(self, 'playing node animation with data', anima_data)
 
 	anima_data._root_node = get_source_node()
-	
-	print(animation_data)
-	
+
 	anima.then(anima_data)
 
 	anima.play()

@@ -49,7 +49,7 @@ func restore_data(data: Dictionary) -> void:
 	AnimaUI.debug(self, 'restoring data', data)
 	_animation_data.restore_data(_source_node, animation_data)
 
-#	_maybe_show_node_or_group_option()
+	_maybe_show_node_or_group_option()
 	
 	if animation_data.has("property") and animation_data.property.has("animate_as_node"):
 		_populate_animatable_properties_list(animation_data.property.animate_as_node)

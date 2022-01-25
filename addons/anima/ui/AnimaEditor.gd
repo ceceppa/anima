@@ -110,10 +110,7 @@ func show() -> void:
 	.show()
 
 func _maybe_show_graph_edit() -> bool:
-	if _anima_visual_node == null:
-		return
-
-	var is_graph_edit_visible = _anima_visual_node.has_meta("__anima_visual_node")
+	var is_graph_edit_visible = _anima_visual_node != null
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.then(
@@ -264,8 +261,6 @@ func _get_data_from_connections(node: Node, animation_id: int = -1, data := {}, 
 
 		if to == null:
 			continue
-
-		print(to)
 
 		var output_port: int = output[0]
 		var to_data: Dictionary = to.get_data()

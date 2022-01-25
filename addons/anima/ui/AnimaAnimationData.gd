@@ -55,6 +55,7 @@ func get_animation_data() -> Dictionary:
 	}
 
 	var as_group: ButtonGroup = _node_or_group_controls.get_child(0).group
+	data.animate_as = as_group.get_pressed_button().get_index()
 
 	if type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		data.animation = {
@@ -68,7 +69,6 @@ func get_animation_data() -> Dictionary:
 			relative = _relative_check.pressed,
 			pivot = _pivot_button.get_value(),
 			easing = _easing_button.get_meta('_value') if _easing_button.has_meta('_value') else null,
-			animate_as = as_group.get_pressed_button().get_index(),
 		}
 
 		var from = _from_value.get_value()
@@ -97,6 +97,13 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 		_property_type_button.pressed = true
 
 	AnimaUI.debug(self, 'restoring animation data', data, data.type)
+
+	if data.has("animate_as"):
+		var button_index: int = data.animate_as
+		var button: Button = _node_or_group_controls.get_child(button_index)
+
+		button.set_pressed(true)
+		button.emit_signal("pressed")
 
 	if data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		_animation_button.text = data.animation.label

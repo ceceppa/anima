@@ -38,7 +38,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 4.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 1 )
@@ -49,18 +49,17 @@ __meta__ = {
 
 [node name="HSeparator" type="HSeparator" parent="."]
 margin_top = 16.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 20.0
 
 [node name="NodeOrGroup" type="VBoxContainer" parent="."]
-visible = false
 margin_top = 32.0
-margin_right = 1024.0
-margin_bottom = 101.0
+margin_right = 600.0
+margin_bottom = 88.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="NodeOrGroup"]
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 120, 0 )
 hint_tooltip = "Choose if the selected node needs to be animated as single node or group.
@@ -74,19 +73,19 @@ align = 1
 
 [node name="Carousel" parent="NodeOrGroup" instance=ExtResource( 5 )]
 margin_top = 24.0
-margin_right = 1024.0
-margin_bottom = 69.0
+margin_right = 600.0
+margin_bottom = 56.0
 rect_min_size = Vector2( 0, 28 )
 rect_pivot_offset = Vector2( 512, 22.5 )
 scroll_easing = 6
 height_easing = 27
 
 [node name="Controls" parent="NodeOrGroup/Carousel" index="0"]
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 28.0
 
 [node name="AsNode" type="Button" parent="NodeOrGroup/Carousel/Controls" index="0"]
-margin_right = 338.0
+margin_right = 197.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate the single node only"
@@ -99,8 +98,8 @@ group = SubResource( 3 )
 text = "Node"
 
 [node name="AsGroup" type="Button" parent="NodeOrGroup/Carousel/Controls" index="1"]
-margin_left = 342.0
-margin_right = 681.0
+margin_left = 201.0
+margin_right = 398.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
@@ -112,8 +111,8 @@ group = SubResource( 3 )
 text = "Group"
 
 [node name="AsGrid" type="Button" parent="NodeOrGroup/Carousel/Controls" index="2"]
-margin_left = 685.0
-margin_right = 1024.0
+margin_left = 402.0
+margin_right = 600.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
@@ -126,7 +125,7 @@ text = "Grid"
 
 [node name="Wrapper" parent="NodeOrGroup/Carousel" index="1"]
 margin_top = 32.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 32.0
 rect_pivot_offset = Vector2( 512, 0 )
 
@@ -144,14 +143,14 @@ size_flags_vertical = 0
 [node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="1"]
 margin_left = 1025.0
 margin_right = 2046.0
-margin_bottom = 160.0
+margin_bottom = 80.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="GridContainer2" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer"]
 margin_right = 1021.0
-margin_bottom = 160.0
-rect_min_size = Vector2( 0, 160 )
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 12
@@ -194,8 +193,8 @@ margin_right = 1021.0
 margin_bottom = 68.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
-text = "First"
-items = [ "First", null, false, 0, null, "Center", null, false, 1, null, "Last", null, false, 2, null, "Even items only", null, false, 4, null, "Odd items only", null, false, 5, null, "Random", null, false, 5, null, "Custom index", null, false, 6, null ]
+text = "Top to bottotm"
+items = [ "Top to bottotm", null, false, 0, null, "Center", null, false, 1, null, "Bottom to top", null, false, 2, null, "Even items only", null, false, 4, null, "Odd items only", null, false, 5, null, "Random", null, false, 5, null ]
 selected = 0
 
 [node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="2"]
@@ -227,22 +226,22 @@ align = 2
 min_value = 0.0
 
 [node name="Label3" type="Label" parent="."]
-margin_top = 32.0
-margin_right = 1024.0
-margin_bottom = 52.0
+margin_top = 100.0
+margin_right = 600.0
+margin_bottom = 120.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 19 )
 text = "Animation:"
 align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 64.0
-margin_right = 1024.0
-margin_bottom = 92.0
+margin_top = 132.0
+margin_right = 600.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 
 [node name="AnimationTypeButton" type="Button" parent="HBoxContainer"]
-margin_right = 510.0
+margin_right = 298.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 size_flags_horizontal = 3
@@ -254,8 +253,8 @@ group = SubResource( 4 )
 text = "Animation"
 
 [node name="PropertyTypeButton" type="Button" parent="HBoxContainer"]
-margin_left = 514.0
-margin_right = 1024.0
+margin_left = 302.0
+margin_right = 600.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 size_flags_horizontal = 3
@@ -266,9 +265,9 @@ group = SubResource( 4 )
 text = "Property"
 
 [node name="AnimationType" type="Control" parent="."]
-margin_top = 104.0
-margin_right = 1024.0
-margin_bottom = 136.0
+margin_top = 172.0
+margin_right = 600.0
+margin_bottom = 204.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="AnimationContainer" type="GridContainer" parent="AnimationType"]
@@ -292,7 +291,7 @@ __meta__ = {
 
 [node name="AnimationButton" type="Button" parent="AnimationType/AnimationContainer"]
 margin_left = 124.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 26.0
 hint_tooltip = "Click here to select/change animation"
 size_flags_horizontal = 3
@@ -335,9 +334,9 @@ __meta__ = {
 }
 
 [node name="Wrapper" type="Control" parent="."]
-margin_top = 148.0
-margin_right = 1024.0
-margin_bottom = 148.0
+margin_top = 216.0
+margin_right = 600.0
+margin_bottom = 216.0
 size_flags_horizontal = 3
 
 [node name="PropertyValues" type="VBoxContainer" parent="Wrapper"]
@@ -351,7 +350,7 @@ __meta__ = {
 
 [node name="Label1" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
@@ -364,7 +363,7 @@ __meta__ = {
 
 [node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 24.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
 columns = 2
@@ -390,7 +389,7 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
-margin_right = 1024.0
+margin_right = 600.0
 type = 4
 
 [node name="To" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
@@ -412,7 +411,7 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_top = 36.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 68.0
 type = 4
 
@@ -435,7 +434,7 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_top = 72.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 104.0
 label = "ignore"
 type = 4
@@ -457,7 +456,7 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 124.0
 margin_top = 108.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 136.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 custom_fonts/font = SubResource( 19 )
@@ -484,13 +483,13 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_top = 140.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 176.0
 
 [node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 204.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 224.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
@@ -503,7 +502,7 @@ __meta__ = {
 
 [node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 228.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 254.0
 size_flags_horizontal = 3
 columns = 2
@@ -527,7 +526,7 @@ __meta__ = {
 [node name="EasingButton" type="Button" parent="Wrapper/PropertyValues/Easing"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 164.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 19 )

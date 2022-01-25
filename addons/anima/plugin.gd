@@ -34,7 +34,7 @@ func _exit_tree():
 		_anima_editor.queue_free()
 
 func handles(object):
-	var is_anima_node = "__anima_visual_editor_data" in object
+	var is_anima_node = object.has_meta("__anima_visual_node")
 
 	if is_anima_node:
 		_anima_editor.set_anima_node(object)
