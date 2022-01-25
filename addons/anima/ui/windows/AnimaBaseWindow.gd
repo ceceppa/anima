@@ -3,22 +3,53 @@ extends WindowDialog
 
 var _anima: AnimaNode
 
-func _init() -> void:
+func _ready() -> void:
+	_register_animations()
+
 	_anima = Anima.begin(self)
 	_anima.then(
 		Anima.Node(self) \
-			.anima_animation("zoomInUp") \
-			.anima_duration(0.3)
+			.anima_animation({
+				0: {
+					size = Vector2(1024, 0),
+					opacity = 0,
+					y = 0,
+				},
+				100: {
+					size = Vector2(1024, 600),
+					opacity = 1,
+					y = - 300,
+				},
+				initial_values = {
+					opacity = 0,
+				},
+			}) \
+			.anima_duration(0.15)
 	)
-#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
-func _ready():
+	rect_clip_content = true
+
 	if not is_connected("popup_hide", self, "_on_hide"):
 		connect("popup_hide", self, "_on_hide")
 
+func _register_animations() -> void:
+	Anima.register_animation("AnimaUISlideIn", {
+		0: {
+			y = 20,
+			opacity = 0,
+		},
+		100: {
+			y = 0,
+			opacity = 1,
+			easing = Anima.EASING.EASE_IN_OUT_BACK
+		},
+		initial_values = {
+			opacity = 0,
+		}
+	})
+
 func popup_centered(size := Vector2.ZERO) -> void:
-	# We need to reset the scale otherwise the window position will be wrong!
-	rect_scale = Vector2(1, 1)
+#	rect_size = Vector2(1024, 0)
 
 	.popup_centered(rect_size)
 	_anima.play()

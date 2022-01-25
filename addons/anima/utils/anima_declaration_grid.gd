@@ -11,7 +11,7 @@ func anima_grid_size(size: Vector2) -> AnimaDeclarationGrid:
 
 	return self
 
-func anima_animation_type(type: int) -> AnimaDeclarationGrid:
+func anima_sequence_type(type: int) -> AnimaDeclarationGrid:
 	self._data.animation_type = type
 
 	return self
@@ -47,8 +47,8 @@ func anima_delay(delay: float) -> AnimaDeclarationGrid:
 
 	return self
 
-func anima_animation(animation_name: String) -> AnimaDeclarationGrid:
-	.anima_animation(animation_name)
+func anima_animation(animation) -> AnimaDeclarationGrid:
+	.anima_animation(animation)
 
 	return self
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/core/node.gd" type="Script" id=3]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -42,11 +43,6 @@ __anima_visual_editor_data = {
 "from_port": 0,
 "to": "Animation41344",
 "to_port": 0
-}, {
-"from": "Animation41344",
-"from_port": 1,
-"to": "Animation48178",
-"to_port": 0
 } ],
 "data_by_animation": {
 0: [ {
@@ -54,9 +50,8 @@ __anima_visual_editor_data = {
 "animation_data": {
 "property": {
 "animate_as": 0,
-"easing": null,
-"from": -100.0,
-"initial_value": 900.0,
+"easing": 27,
+"from": 0.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -65,23 +60,9 @@ __anima_visual_editor_data = {
 "type": 1
 },
 "delay": 0.0,
-"duration": 0.7
+"duration": 0.3
 },
 "node_path": "Button",
-"start_time": 0.0
-}, {
-"data": {
-"animation_data": {
-"animation": {
-"label": "Headshake",
-"name": "headshake"
-},
-"type": 0
-},
-"delay": 0.0,
-"duration": 0.7
-},
-"node_path": "RichTextLabel/VScrollBar",
 "start_time": 0.0
 } ]
 },
@@ -99,9 +80,8 @@ __anima_visual_editor_data = {
 "animation_data": {
 "property": {
 "animate_as": 0,
-"easing": null,
-"from": -100.0,
-"initial_value": 900.0,
+"easing": 27,
+"from": 0.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -110,31 +90,41 @@ __anima_visual_editor_data = {
 "type": 1
 },
 "delay": 0.0,
-"duration": 0.7
+"duration": 0.3
 },
 "id": "Animation",
 "name": "Animation41344",
 "node_path": NodePath("Button"),
 "position": Vector2( 1953, -180 ),
 "title": "./Button"
-}, {
-"data": {
-"animation_data": {
-"animation": {
-"label": "Headshake",
-"name": "headshake"
-},
-"type": 0
-},
-"delay": 0.0,
-"duration": 0.7
-},
-"id": "Animation",
-"name": "Animation48178",
-"node_path": NodePath("RichTextLabel/VScrollBar"),
-"position": Vector2( 2480, -160 ),
-"title": "./RichTextLabel/VScrollBar"
 } ],
-"scroll_offset": Vector2( 1643, 29 ),
+"scroll_offset": Vector2( 1607, 48 ),
 "zoom": 1.0
 }
+
+[node name="Control" type="Control" parent="."]
+margin_left = 183.0
+margin_top = 374.0
+margin_right = 223.0
+margin_bottom = 414.0
+
+[node name="Button2" type="Button" parent="Control"]
+anchor_right = 2.869
+anchor_bottom = 1.828
+margin_right = -102.76
+margin_bottom = -53.12
+
+[node name="Button3" type="Button" parent="Control"]
+margin_left = -1.0
+margin_top = 54.0
+margin_right = 11.0
+margin_bottom = 74.0
+
+[node name="Button4" type="Button" parent="Control"]
+margin_left = -4.0
+margin_top = 126.0
+margin_right = 9.0
+margin_bottom = 146.0
+
+[node name="AnimaNode" type="Node" parent="."]
+script = ExtResource( 3 )

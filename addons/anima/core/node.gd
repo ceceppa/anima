@@ -37,6 +37,10 @@ func _exit_tree():
 	_anima_tween.queue_free()
 	_anima_backwards_tween.queue_free()
 
+func _ready():
+	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
+		_init_node(self)
+
 func _init_node(node: Node):
 	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
 	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
@@ -106,7 +110,7 @@ func also(data, extra_keys_to_ignore := []) -> float:
 		'delay',
 		'relative',
 		'_grid_node',
-		'animation',
+		"animation",
 		'property',
 		'from',
 		'to',
@@ -342,7 +346,7 @@ func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
 		 data.duration = _default_duration
 
-	if not data.has('property') and not data.has('animation'):
+	if not data.has('property') and not data.has("animation"):
 		printerr('Please specify the property to animate or the animation to use!', data)
 
 		return 0.0
@@ -371,19 +375,22 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 	data._wait_time = max(0.0, data._wait_time + delay)
 
-	if data.has('property') and not data.has('animation'):
+	if data.has("property") and not data.has("animation"):
 		data._is_first_frame = true
 		data._is_last_frame = true
 
-	if data.has('animation'):
-		var script = Anima.get_animation_script(data.animation)
+	if data.has("animation"):
+		var keyframes = data.animation
 
-		if not script:
-			printerr('animation not found: %s' % data.animation)
+		if keyframes is String:
+			keyframes = Anima.get_animation_keyframes(data.animation)
 
-			return duration
+			if keyframes.size() == 0:
+				printerr('animation not found: %s' % data.animation)
 
-		_anima_tween.add_frames(data, script.KEYFRAMES)
+				return duration
+
+		_anima_tween.add_frames(data, keyframes)
 
 #		var real_duration = 
 #		if real_duration is float:

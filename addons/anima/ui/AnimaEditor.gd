@@ -145,7 +145,7 @@ func _maybe_show_graph_edit() -> bool:
 			.anima_delay(0.3) \
 			.anima_from(0.0) \
 			.anima_to(1.0) \
-			.anima_animation_type(Anima.GRID.FROM_CENTER) \
+			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_initial_value(0)
 	)
 	anima.also(
@@ -155,7 +155,7 @@ func _maybe_show_graph_edit() -> bool:
 			.anima_delay(0.3) \
 			.anima_from(Vector2(0.2, 0.2)) \
 			.anima_to(Vector2.ONE) \
-			.anima_animation_type(Anima.GRID.FROM_CENTER) \
+			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK) \
 			.anima_pivot(Anima.PIVOT.CENTER)
 	)
@@ -261,6 +261,8 @@ func _get_data_from_connections(node: Node, animation_id: int = -1, data := {}, 
 
 		if to == null:
 			continue
+
+		print(to)
 
 		var output_port: int = output[0]
 		var to_data: Dictionary = to.get_data()

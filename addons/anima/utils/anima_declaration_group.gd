@@ -6,7 +6,7 @@ func _group(group) -> AnimaDeclarationGroup:
 
 	return self
 
-func anima_animation_type(type: int) -> AnimaDeclarationGroup:
+func anima_sequence_type(type: int) -> AnimaDeclarationGroup:
 	self._data.animation_type = type
 
 	return self
@@ -42,8 +42,8 @@ func anima_delay(delay: float) -> AnimaDeclarationGroup:
 
 	return self
 
-func anima_animation(animation_name: String) -> AnimaDeclarationGroup:
-	.anima_animation(animation_name)
+func anima_animation(animation) -> AnimaDeclarationGroup:
+	.anima_animation(animation)
 
 	return self
 

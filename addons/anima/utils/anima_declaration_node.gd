@@ -26,8 +26,8 @@ func anima_delay(delay: float) -> AnimaDeclarationNode:
 
 	return self
 
-func anima_animation(animation_name: String) -> AnimaDeclarationNode:
-	.anima_animation(animation_name)
+func anima_animation(animation) -> AnimaDeclarationNode:
+	.anima_animation(animation)
 
 	return self
 

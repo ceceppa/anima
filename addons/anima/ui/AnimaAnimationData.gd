@@ -346,6 +346,8 @@ func _animate_content_type(direction: int, animation_container_visible) -> void:
 	_property_container.visible = not _animation_container.visible
 
 func _on_PivotButton_pivot_height_changed(new_size):
+	emit_signal("value_updated")
+
 	_adjust_height(new_size)
 
 func _on_PivotButton_pivot_point_selected():

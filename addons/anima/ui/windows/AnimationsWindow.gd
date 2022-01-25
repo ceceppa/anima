@@ -36,7 +36,10 @@ func _setup_list() -> void:
 	var group = ButtonGroup.new()
 
 	for item in animations:
-		var category_and_file = item.replace(base, '').split('/')
+		var category_and_file: PoolStringArray = item.replace(base, '').split('/')
+		if category_and_file.size() < 2:
+			continue
+
 		var category = category_and_file[0]
 		var file_and_extension = category_and_file[1].split('.')
 		var file = file_and_extension[0]

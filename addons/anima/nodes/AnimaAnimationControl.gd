@@ -39,7 +39,7 @@ func get_animation_data() -> Dictionary:
 	return data
 
 func restore_data(data: Dictionary) -> void:
-	var animation_data: Dictionary = data.animation_data if data.has('animation_data') else {}
+	var animation_data: Dictionary = data.animation_data if data.has("animation_data") else {}
 	var duration = data.duration if data.has('duration') and data.duration else Anima.DEFAULT_DURATION
 	var delay = data.delay if data.has('delay') and data.delay else 0.0
 

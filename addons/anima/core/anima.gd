@@ -72,7 +72,7 @@ const DEFAULT_ITEMS_DELAY := 0.05
 const MINIMUM_DURATION := 0.000001
 
 var _animations_list := []
-var _custom_animations := []
+var _custom_animations := {}
 
 func begin(node: Node, name: String = 'anima', single_shot := false):
 	var node_name = 'AnimaNode_' + name
@@ -109,15 +109,13 @@ func player(node: Node):
 func get_animation_path() -> String:
 	return BASE_PATH
 
-func register_animation(script, animation_name: String) -> void:
+func register_animation(animation_name: String, keyframes: Dictionary) -> void:
 	_deregister_animation(animation_name)
 
-	_custom_animations.push_back({ name = animation_name, script = script })
+	_custom_animations[animation_name] = keyframes
 
 func _deregister_animation(animation_name: String) -> void:
-	for animation in _custom_animations:
-		if animation.name == animation_name:
-			_custom_animations.erase(animation)
+	_custom_animations.erase(animation_name)
 
 func get_available_animations() -> Array:
 	if _animations_list.size() == 0:
@@ -130,7 +128,7 @@ func get_available_animations() -> Array:
 
 		_animations_list = filtered
 
-	return _animations_list + _custom_animations
+	return _animations_list + _custom_animations.keys()
 
 func get_available_animation_by_category() -> Dictionary:
 	var animations = get_available_animations()
@@ -151,23 +149,21 @@ func get_available_animation_by_category() -> Dictionary:
 
 	return result
 
-func get_animation_script(animation_name: String):
-	for custom_animation in _custom_animations:
-		if custom_animation.name == animation_name:
-			return custom_animation.script
+func get_animation_keyframes(animation_name: String) -> Dictionary:
+	if _custom_animations.has(animation_name):
+		return _custom_animations[animation_name]
 
-	var resource_file = get_animation_script_with_path(animation_name)
+	var resource_file = _get_animation_script_with_path(animation_name)
 	if resource_file:
-		return load(resource_file).new()
+		var script = load(resource_file).new()
+		
+		return script.KEYFRAMES
 
 	printerr('No animation found with name: ', animation_name)
 
-	return null
+	return {}
 
-func is_built_in_animation(animation_name: String) -> bool:
-	return _animations_list.find(animation_name) >= 0
-
-func get_animation_script_with_path(animation_name: String) -> String:
+func _get_animation_script_with_path(animation_name: String) -> String:
 	if not animation_name.ends_with('.gd'):
 		animation_name += '.gd'
 
@@ -178,6 +174,9 @@ func get_animation_script_with_path(animation_name: String) -> String:
 			return file_name
 
 	return ''
+
+func is_built_in_animation(animation_name: String) -> bool:
+	return _animations_list.find(animation_name) >= 0
 
 func _get_animations_list() -> Array:
 	var files = _get_scripts_in_dir(BASE_PATH)

@@ -23,13 +23,13 @@ func anima_duration(duration: float):
 func anima_delay(delay: float):
 	_data.delay = delay
 
-func anima_animation(animation_name: String):
+func anima_animation(animation):
 	if _data.has("property"):
 		printerr("The property parameter have already been specified, so the animation one will be ignored.")
 
 		return 
 
-	_data.animation = animation_name
+	_data.animation = animation
 
 func anima_property(property_name):
 	if _data.has("animation"):
