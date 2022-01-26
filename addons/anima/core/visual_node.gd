@@ -140,7 +140,15 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 		duration = duration,
 		delay = delay
 	}
-	
+
+	if animation_data.has("animate_as"):
+		if animation_data.animate_as == 1:
+			anima_data.erase("node")
+			anima_data.group = node
+		elif animation_data.animate_as == 2:
+			anima_data.erase("node")
+			anima_data.grid = node
+		
 	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
@@ -173,6 +181,8 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 				_initial_values[node] = {}
 
 			_initial_values[node][property] = AnimaNodesProperties.get_property_value(node, { property = property })
+
+	print(anima_data)
 
 	return anima_data
 

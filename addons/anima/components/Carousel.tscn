@@ -28,4 +28,5 @@ __meta__ = {
 "_item_size": 0.0
 }
 
+[connection signal="item_rect_changed" from="." to="." method="_on_Carousel_item_rect_changed"]
 [connection signal="item_rect_changed" from="Wrapper/Container" to="." method="_on_Container_item_rect_changed"]

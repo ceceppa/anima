@@ -76,7 +76,7 @@ margin_top = 24.0
 margin_right = 600.0
 margin_bottom = 56.0
 rect_min_size = Vector2( 0, 28 )
-rect_pivot_offset = Vector2( 512, 22.5 )
+rect_pivot_offset = Vector2( 300, 16 )
 scroll_easing = 6
 height_easing = 27
 
@@ -127,28 +127,29 @@ text = "Grid"
 margin_top = 32.0
 margin_right = 600.0
 margin_bottom = 32.0
-rect_pivot_offset = Vector2( 512, 0 )
+rect_pivot_offset = Vector2( 300, 0 )
+mouse_filter = 2
 
 [node name="Container" parent="NodeOrGroup/Carousel/Wrapper" index="0"]
-margin_right = 3072.0
+margin_right = 1800.0
 margin_bottom = 160.0
-rect_min_size = Vector2( 3072, 0 )
-rect_pivot_offset = Vector2( 1536, 80 )
+rect_min_size = Vector2( 1800, 0 )
+rect_pivot_offset = Vector2( 900, 80 )
 
 [node name="Empty" type="Control" parent="NodeOrGroup/Carousel/Wrapper/Container" index="0"]
-margin_right = 1021.0
+margin_right = 597.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="1"]
-margin_left = 1025.0
-margin_right = 2046.0
+margin_left = 601.0
+margin_right = 1198.0
 margin_bottom = 80.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="GridContainer2" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer"]
-margin_right = 1021.0
+margin_right = 597.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
@@ -167,9 +168,9 @@ mouse_filter = 1
 custom_fonts/font = SubResource( 19 )
 text = "Items delay"
 
-[node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2" instance=ExtResource( 6 )]
+[node name="GroupItemsDelay" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2" instance=ExtResource( 6 )]
 margin_left = 132.0
-margin_right = 1021.0
+margin_right = 597.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
 text = "0.01"
@@ -186,20 +187,20 @@ mouse_filter = 1
 custom_fonts/font = SubResource( 19 )
 text = "Animate from:"
 
-[node name="OptionButton" type="OptionButton" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
+[node name="GroupAnimationType" type="OptionButton" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
 margin_left = 132.0
 margin_top = 42.0
-margin_right = 1021.0
+margin_right = 597.0
 margin_bottom = 68.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
 text = "Top to bottotm"
-items = [ "Top to bottotm", null, false, 0, null, "Center", null, false, 1, null, "Bottom to top", null, false, 2, null, "Even items only", null, false, 4, null, "Odd items only", null, false, 5, null, "Random", null, false, 5, null ]
+items = [ "Top to bottotm", null, false, 1, null, "Center", null, false, 9, null, "Bottom to top", null, false, 2, null, "Even items only", null, false, 6, null, "Odd items only", null, false, 5, null, "Random", null, false, 11, null ]
 selected = 0
 
 [node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="2"]
-margin_left = 2050.0
-margin_right = 3072.0
+margin_left = 1202.0
+margin_right = 1800.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -219,7 +220,7 @@ text = "Items delay"
 
 [node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/GridContainer" instance=ExtResource( 6 )]
 margin_left = 132.0
-margin_right = 1022.0
+margin_right = 598.0
 custom_fonts/font = SubResource( 19 )
 text = "0.01"
 align = 2
@@ -333,15 +334,17 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
 [node name="Wrapper" type="Control" parent="."]
 margin_top = 216.0
 margin_right = 600.0
 margin_bottom = 216.0
-size_flags_horizontal = 3
 
 [node name="PropertyValues" type="VBoxContainer" parent="Wrapper"]
-anchor_right = 1.0
-margin_bottom = 336.0
+margin_bottom = 472.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -350,7 +353,7 @@ __meta__ = {
 
 [node name="Label1" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_right = 600.0
+margin_right = 340.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
@@ -363,8 +366,8 @@ __meta__ = {
 
 [node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 24.0
-margin_right = 600.0
-margin_bottom = 200.0
+margin_right = 340.0
+margin_bottom = 204.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -389,7 +392,7 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
-margin_right = 600.0
+margin_right = 340.0
 type = 4
 
 [node name="To" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
@@ -411,7 +414,7 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_top = 36.0
-margin_right = 600.0
+margin_right = 340.0
 margin_bottom = 68.0
 type = 4
 
@@ -434,7 +437,7 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_top = 72.0
-margin_right = 600.0
+margin_right = 340.0
 margin_bottom = 104.0
 label = "ignore"
 type = 4
@@ -456,7 +459,7 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 124.0
 margin_top = 108.0
-margin_right = 600.0
+margin_right = 340.0
 margin_bottom = 136.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 custom_fonts/font = SubResource( 19 )
@@ -467,9 +470,9 @@ __meta__ = {
 
 [node name="Pivot" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 148.0
+margin_top = 150.0
 margin_right = 120.0
-margin_bottom = 168.0
+margin_bottom = 170.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 19 )
 text = "Pivot"
@@ -483,14 +486,15 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 124.0
 margin_top = 140.0
-margin_right = 600.0
-margin_bottom = 176.0
+margin_right = 340.0
+margin_bottom = 180.0
+rect_min_size = Vector2( 0, 40 )
 
 [node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 204.0
-margin_right = 600.0
-margin_bottom = 224.0
+margin_top = 208.0
+margin_right = 340.0
+margin_bottom = 228.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 19 )
@@ -501,9 +505,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
-margin_top = 228.0
-margin_right = 600.0
-margin_bottom = 254.0
+margin_top = 232.0
+margin_right = 340.0
+margin_bottom = 258.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -526,7 +530,7 @@ __meta__ = {
 [node name="EasingButton" type="Button" parent="Wrapper/PropertyValues/Easing"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 164.0
-margin_right = 600.0
+margin_right = 340.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 19 )
@@ -535,18 +539,17 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true
-
 [connection signal="carousel_height_changed" from="NodeOrGroup/Carousel" to="." method="_on_Carousel_carousel_height_changed"]
 [connection signal="pressed" from="NodeOrGroup/Carousel/Controls/AsNode" to="." method="_on_AsNode_pressed"]
 [connection signal="pressed" from="NodeOrGroup/Carousel/Controls/AsGroup" to="." method="_on_AsGroup_pressed"]
 [connection signal="pressed" from="NodeOrGroup/Carousel/Controls/AsGrid" to="." method="_on_AsGroup_pressed"]
+[connection signal="changed" from="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2/GroupItemsDelay" to="." method="_on_vale_updated"]
+[connection signal="item_selected" from="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2/GroupAnimationType" to="." method="_on_GroupAnimationType_item_selected"]
 [connection signal="pressed" from="HBoxContainer/AnimationTypeButton" to="." method="_on_AnimationTypeButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/PropertyTypeButton" to="." method="_on_PropertyTypeButton_pressed"]
 [connection signal="pressed" from="AnimationType/AnimationContainer/AnimationButton" to="." method="_on_AnimationButton_pressed"]
 [connection signal="pressed" from="AnimationType/PropertyContainer/PropertyButton" to="." method="_on_PropertyButton_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="item_rect_changed" from="Wrapper/PropertyValues" to="." method="_on_PropertyValues_item_rect_changed"]
 [connection signal="resized" from="Wrapper/PropertyValues/AnimateGrid/FromValue" to="." method="_on_PropertyValues_item_rect_changed"]
 [connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
@@ -561,6 +564,5 @@ one_shot = true
 [connection signal="pivot_height_changed" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_height_changed"]
 [connection signal="pivot_point_selected" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_point_selected"]
 [connection signal="pressed" from="Wrapper/PropertyValues/Easing/EasingButton" to="." method="_on_EasingButton_pressed"]
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 
 [editable path="NodeOrGroup/Carousel"]

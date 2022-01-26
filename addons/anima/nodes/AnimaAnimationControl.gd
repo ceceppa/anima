@@ -85,7 +85,7 @@ func _on_PropertiesWindow_property_selected(property: String, property_type: int
 		var relative_property: String = ":" + property
 
 		if _source_node.name != node_name:
-			relative_property = node_name + property
+			relative_property = node_name + ":" + property
 
 		_relative_control.set_relative_value(relative_property)
 	else:

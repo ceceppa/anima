@@ -261,9 +261,19 @@ func _sort_frame_index(a, b) -> bool:
 func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relative_properties: Array, current_frame_key: float, frame_data: Dictionary, previous_frame_key: float, previous_frame: Dictionary) -> float:
 	var percentage = (current_frame_key - previous_frame_key) / 100.0
 	var duration: float = animation_data.duration if animation_data.has('duration') else 0.0
-	var easing = previous_frame.easing if previous_frame.has("easing") else null
-	var pivot = previous_frame.pivot if previous_frame.has("pivot") else null
+	var easing = null
+	var pivot = null
 	var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
+
+	if previous_frame.has("easing"):
+		easing = previous_frame.easing
+	elif frame_data.has("easing"):
+		easing = frame_data.easing
+
+	if previous_frame.has("pivot"):
+		easing = previous_frame.easing
+	elif frame_data.has("pivot"):
+		easing = frame_data.easing
 
 	previous_frame.erase("easing")
 	previous_frame.erase("pivot")

@@ -95,10 +95,10 @@ corner_radius_bottom_left = 6
 [node name="AnimaEasingsWindow" type="WindowDialog"]
 modulate = Color( 1, 1, 1, 0 )
 rect_min_size = Vector2( 1024, 600 )
+rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
 window_title = "Anima Easings"
-resizable = true
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false,

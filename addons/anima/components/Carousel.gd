@@ -26,10 +26,10 @@ func _ready():
 
 	$Wrapper.anchor_right = 0
 
-	_update_size()
+	update_size()
 	set_index(index)
 
-func _update_size() -> void:
+func update_size() -> void:
 	var size: float = rect_size.x  * _container.get_child_count()
 
 	_container.rect_min_size.x = size
@@ -51,7 +51,7 @@ func get_active_index() -> int:
 	return index
 
 func set_index(new_index: int) -> void:
-	_update_size()
+	update_size()
 
 	if not is_inside_tree():
 		return
@@ -61,6 +61,18 @@ func set_index(new_index: int) -> void:
 
 	if _heights.size() == 0:
 		return
+
+	#
+	# Need to set the mouse filter to ignore for the children that are
+	# not "visible", otherwise they stop interaction of the mouse in the
+	# AnimaEditor
+	#
+	for child_index in get_child_count():
+		var filter = MOUSE_FILTER_PASS if child_index == index else MOUSE_FILTER_IGNORE
+		var node: Node = get_child(child_index)
+
+		if node is Control:
+			node.mouse_filter = filter
 
 	var x = rect_size.x * index
 	var wrapper_height = get_expected_wrapper_height()
@@ -106,4 +118,7 @@ func _on_Container_item_rect_changed() -> void:
 	emit_signal("carousel_size_changed", rect_size)
 
 func _on_control_pressed(index: int) -> void:
+	set_index(index)
+
+func _on_Carousel_item_rect_changed():
 	set_index(index)

@@ -19,15 +19,16 @@ func _ready() -> void:
 					size = Vector2(1024, 600),
 					opacity = 1,
 					y = - 300,
+					easing = Anima.EASING.EASE_IN_OUT_BACK
 				},
 				initial_values = {
 					opacity = 0,
 				},
 			}) \
-			.anima_duration(0.15)
+			.anima_duration(0.3)
 	)
 
-	rect_clip_content = true
+	rect_clip_content = false
 
 	if not is_connected("popup_hide", self, "_on_hide"):
 		connect("popup_hide", self, "_on_hide")
@@ -49,7 +50,8 @@ func _register_animations() -> void:
 	})
 
 func popup_centered(size := Vector2.ZERO) -> void:
-#	rect_size = Vector2(1024, 0)
+	rect_scale = Vector2.ONE
+	rect_size = Vector2(1024, 0)
 
 	.popup_centered(rect_size)
 	_anima.play()

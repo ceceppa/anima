@@ -33,6 +33,7 @@ var _property_type: int
 var _anima_content_type: AnimaNode
 var _anima_property_values: AnimaNode
 var _previous_animation_type: int
+var _is_restoring_values := false
 
 func _ready():
 	_property_container.hide()
@@ -84,12 +85,20 @@ func get_animation_data() -> Dictionary:
 		if initial_value != null:
 			data.property.initial_value = _initial_value.get_value()
 
+		if data.animate_as == 1:
+			data.property.items_delay = _node_or_group.find_node("GroupItemsDelay").get_value()
+
+			var animation_type: OptionButton = _node_or_group.find_node("GroupAnimationType")
+			data.property.animation_type = animation_type.get_selected_id()
+
 	AnimaUI.debug(self, "get_animation_data", data)
 	return data
 
 func restore_data(source_node: Node, data: Dictionary) -> void:
 	if not data.has('type'):
 		return
+
+	_is_restoring_values = true
 
 	if data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		_animation_type_button.pressed = true
@@ -110,6 +119,8 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 		_animation_name = data.animation.name
 
 		AnimaUI.debug(self, "it's an animation")
+
+		_is_restoring_values = false
 
 		return
 
@@ -133,6 +144,19 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 
 	if data.property.has('initial_value'):
 		_initial_value.set_value(data.property.initial_value)
+
+	if data.property.has("items_delay"):
+		_node_or_group.find_node("GroupItemsDelay").set_value(str(data.property.items_delay))
+
+	if data.property.has("animation_type"):
+		var animation_type: OptionButton = _node_or_group.find_node("GroupAnimationType")
+		var animation_type_index: int = data.property.animation_type
+
+		for option_index in animation_type.get_item_count():
+			if animation_type_index == animation_type.get_item_id(option_index):
+				animation_type.select(option_index)
+
+				break
 
 	var current_value = AnimaNodesProperties.get_property_value(source_node, { property = data.property.name })
 
@@ -163,6 +187,8 @@ func restore_data(source_node: Node, data: Dictionary) -> void:
 		_on_PropertyTypeButton_pressed()
 
 	AnimaUI.debug(self, 'restoring animation completed')
+
+	_is_restoring_values = false
 
 func set_animation_data(label: String, name: String) -> void:
 	_animation_button.text = label
@@ -270,10 +296,20 @@ func _maybe_init_anima_node() -> void:
 		) \
 			.anima_duration(0.15) \
 			.anima_items_delay(0.015) \
-			.anima_animation("fadeInLeftSmall")
+			.anima_animation({
+				0: {
+					opacity = 0,
+					x = -20,
+				}, 
+				100: {
+					opacity = 1,
+					x = 0
+				},
+				initial_values = {
+					opacity = 0,
+				}
+			})
 	)
-
-	_anima_property_values.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
 func _adjust_height(pivot_size: float = -1.0) -> void:
 	if _property_values == null:
@@ -303,13 +339,13 @@ func _adjust_height(pivot_size: float = -1.0) -> void:
 	emit_signal("content_size_changed", new_size + pivot_size)
 
 func _on_FromValue_vale_updated():
-	emit_signal("value_updated")
+	_on_vale_updated()
 
 func _on_ToValue_vale_updated():
-	emit_signal("value_updated")
+	_on_vale_updated()
 
 func _on_CheckBox_pressed():
-	emit_signal("value_updated")
+	_on_vale_updated()
 
 func _on_AnimationTypeButton_pressed():
 	if _previous_animation_type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
@@ -353,12 +389,12 @@ func _animate_content_type(direction: int, animation_container_visible) -> void:
 	_property_container.visible = not _animation_container.visible
 
 func _on_PivotButton_pivot_height_changed(new_size):
-	emit_signal("value_updated")
+	_on_vale_updated()
 
 	_adjust_height(new_size)
 
 func _on_PivotButton_pivot_point_selected():
-	emit_signal("value_updated")
+	_on_vale_updated()
 
 func _on_EasingButton_pressed():
 	emit_signal("select_easing")
@@ -371,11 +407,13 @@ func _on_ToValue_select_relative_property():
 
 func _on_AsNode_pressed():
 	emit_signal("animate_as_changed", true)
-	emit_signal("value_updated")
+
+	_on_vale_updated()
 
 func _on_AsGroup_pressed():
 	emit_signal("animate_as_changed", false)
-	emit_signal("value_updated")
+
+	_on_vale_updated()
 
 func _on_Carousel_carousel_height_changed(final_height):
 	_adjust_height()
@@ -391,4 +429,8 @@ func _on_InitialValue_select_relative_property():
 	emit_signal("select_relative_property", _initial_value)
 
 func _on_vale_updated():
-	emit_signal("value_updated")
+	if not _is_restoring_values:
+		emit_signal("value_updated")
+
+func _on_GroupAnimationType_item_selected(index):
+	_on_vale_updated()

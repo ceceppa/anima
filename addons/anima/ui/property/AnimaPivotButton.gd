@@ -10,9 +10,6 @@ onready var _carousel = find_node('Carousel')
 var _pivot_point: int
 
 func _ready():
-	$Carousel.rect_size.x = 216
-	$Carousel._update_size()
-
 	for child in _grid_container.get_children():
 		var button: Button = child
 

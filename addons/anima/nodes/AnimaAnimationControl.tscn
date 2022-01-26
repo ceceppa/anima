@@ -17,7 +17,6 @@ __meta__ = {
 
 [node name="AnimationControl" type="MarginContainer"]
 anchor_right = 1.0
-margin_bottom = 316.0
 mouse_filter = 1
 size_flags_horizontal = 3
 custom_constants/margin_right = 8
@@ -33,7 +32,7 @@ __meta__ = {
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 308.0
+margin_bottom = 320.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -104,14 +103,14 @@ show_relative_selector = false
 anchor_right = 0.0
 margin_top = 108.0
 margin_right = 584.0
-margin_bottom = 256.0
+margin_bottom = 312.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 308.0
+margin_bottom = 320.0
 rect_min_size = Vector2( 512, 300 )
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
@@ -120,7 +119,7 @@ anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 308.0
+margin_bottom = 320.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 
@@ -128,7 +127,7 @@ rect_pivot_offset = Vector2( 504, 292 )
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 308.0
+margin_bottom = 320.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 rect_clip_content = true
