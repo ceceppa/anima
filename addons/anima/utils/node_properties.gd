@@ -20,6 +20,7 @@ static func get_position(node: Node) -> Vector2:
 
 static func get_size(node: Node) -> Vector2:
 	if node is Control:
+		node.get_size()
 		return node.get_size()
 	elif node is Node2D:
 		return node.texture.get_size() * node.scale
@@ -143,9 +144,9 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 			return node.get_global_transform().x.y
 		"size":
 			return get_size(node)
-		"size:x":
+		"size:x", "width":
 			return get_size(node).x
-		"size:y":
+		"size:y", "height":
 			return get_size(node).y
 
 	var p = property.split(':')
@@ -232,6 +233,28 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				property = "global_transform",
 				key = "origin",
 				subkey = "y"
+			}
+		"width":
+			if node is Control:
+				return {
+					property = "rect_size",
+					key = "x",
+				}
+
+			return {
+				property = "size",
+				key = "x",
+			}
+		"height":
+			if node is Control:
+				return {
+					property = "rect_size",
+					key = "y",
+				}
+
+			return {
+				property = "size",
+				key = "y",
 			}
 		"z", "position:z":
 			if node is Control:

@@ -39,9 +39,9 @@ func _exit_tree():
 
 func _ready():
 	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
-		_init_node(self)
+		init_node(self)
 
-func _init_node(node: Node):
+func init_node(node: Node):
 	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
 	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 

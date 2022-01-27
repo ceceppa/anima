@@ -44,7 +44,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		}
 
 	if animation_data.has("__debug"):
-		printt(animation_data.node.name, from, to, current_value, animation_data)
+		printt("Name", animation_data.node.name, "from", from, "to", to, "current_value", current_value, animation_data)
 
 	return {
 		from = from,
@@ -87,10 +87,16 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 			var source = info.pop_front()
 			var source_node: Node
 
-			if source == '':
+
+			if source == '' or source == '.':
 				source_node = animation_data.node
 			else:
 				source_node = root.get_node(source)
+
+			if source_node == null:
+				printerr("Node not found: ", source)
+
+				return value
 
 			var property: String = PoolStringArray(info).join(":")
 

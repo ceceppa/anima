@@ -71,3 +71,8 @@ func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_comple
 
 func anima_on_completed(on_completed: FuncRef):
 	_data.on_completed = on_completed
+
+func debug():
+	_data.__debug = true
+
+	return self

@@ -2,6 +2,7 @@ tool
 extends Node
 
 const BASE_PATH := 'res://addons/anima/animations/'
+const ANIMA_NODE = preload('res://addons/anima/core/node.gd')
 
 enum PIVOT {
 	TOP_LEFT,
@@ -76,21 +77,16 @@ var _custom_animations := {}
 
 func begin(node: Node, name: String = 'anima', single_shot := false):
 	var node_name = 'AnimaNode_' + name
-	var anima_node: Node
+#	var anima_node: Node
 
 	for child in node.get_children():
 		if child.name.find(node_name) >= 0:
-			anima_node = child
-			anima_node.clear()
-			anima_node.stop()
+			child.queue_free()
 
-			return anima_node
+	var anima_node = ANIMA_NODE.new()
 
-	if anima_node == null:
-		anima_node = load('res://addons/anima/core/node.gd').new()
-		anima_node.name = node_name
-
-		anima_node._init_node(node)
+	anima_node.name = node_name
+	anima_node.init_node(node)
 
 	anima_node.set_single_shot(single_shot)
 

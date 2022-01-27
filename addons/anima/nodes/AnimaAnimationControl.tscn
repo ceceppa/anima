@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/anima/nodes/AnimaAnimationControl.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=7]
+[ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=19]
 use_filter = true
@@ -32,38 +33,39 @@ __meta__ = {
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 320.0
+margin_bottom = 252.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeData" type="VBoxContainer" parent="Container"]
+[node name="AnimaAccordion" parent="Container" instance=ExtResource( 8 )]
+anchor_right = 0.0
 margin_right = 584.0
-margin_bottom = 104.0
-size_flags_horizontal = 3
+rect_pivot_offset = Vector2( 292, 26 )
+label = "Time:"
 
-[node name="HSeparator" type="HSeparator" parent="Container/TimeData"]
+[node name="TitleContainer" parent="Container/AnimaAccordion" index="0"]
 margin_right = 584.0
-margin_bottom = 4.0
 
-[node name="Label3" type="Label" parent="Container/TimeData"]
-margin_top = 8.0
-margin_right = 584.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
-custom_fonts/font = SubResource( 19 )
+[node name="Label" parent="Container/AnimaAccordion/TitleContainer" index="0"]
+margin_right = 564.0
 text = "Time:"
-align = 1
 
-[node name="GridContainer2" type="GridContainer" parent="Container/TimeData"]
-margin_top = 32.0
+[node name="ExpandCollapse" parent="Container/AnimaAccordion/TitleContainer" index="1"]
+margin_left = 568.0
 margin_right = 584.0
-margin_bottom = 104.0
-custom_constants/vseparation = 8
-custom_constants/hseparation = 12
-columns = 2
 
-[node name="Label" type="Label" parent="Container/TimeData/GridContainer2"]
+[node name="ContentWrapper" parent="Container/AnimaAccordion" index="1"]
+margin_right = 584.0
+
+[node name="Content" parent="Container/AnimaAccordion/ContentWrapper" index="0"]
+rect_pivot_offset = Vector2( 292, 16 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/AnimaAccordion/ContentWrapper/Content" index="0"]
+margin_right = 584.0
+margin_bottom = 32.0
+
+[node name="Label" type="Label" parent="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer"]
 margin_top = 6.0
 margin_right = 120.0
 margin_bottom = 26.0
@@ -71,29 +73,34 @@ rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 19 )
 text = "duration (s):"
 
-[node name="Duration" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
+[node name="Duration" parent="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer" instance=ExtResource( 7 )]
 anchor_right = 0.0
-margin_left = 132.0
-margin_right = 584.0
+margin_left = 124.0
+margin_right = 276.0
 label = "parent value"
 type = 3
 can_clear_custom_value = false
 show_relative_selector = false
 
-[node name="Label2" type="Label" parent="Container/TimeData/GridContainer2"]
-margin_top = 46.0
-margin_right = 120.0
-margin_bottom = 66.0
+[node name="VSeparator" type="VSeparator" parent="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer"]
+margin_left = 280.0
+margin_right = 304.0
+margin_bottom = 32.0
+custom_constants/separation = 24
+
+[node name="Label2" type="Label" parent="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer"]
+margin_left = 308.0
+margin_top = 6.0
+margin_right = 428.0
+margin_bottom = 26.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 19 )
 text = "delay (s):"
 
-[node name="Delay" parent="Container/TimeData/GridContainer2" instance=ExtResource( 7 )]
+[node name="Delay" parent="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer" instance=ExtResource( 7 )]
 anchor_right = 0.0
-margin_left = 132.0
-margin_top = 40.0
+margin_left = 432.0
 margin_right = 584.0
-margin_bottom = 72.0
 label = "parent value"
 type = 3
 can_clear_custom_value = false
@@ -101,16 +108,16 @@ show_relative_selector = false
 
 [node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
 anchor_right = 0.0
-margin_top = 108.0
+margin_top = 28.0
 margin_right = 584.0
-margin_bottom = 312.0
+margin_bottom = 244.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 320.0
+margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
@@ -119,21 +126,22 @@ anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 320.0
+margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
+rect_clip_content = false
 
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 592.0
-margin_bottom = 320.0
+margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
-rect_clip_content = true
+rect_clip_content = false
 
-[connection signal="vale_updated" from="Container/TimeData/GridContainer2/Duration" to="." method="_on_Duration_vale_updated"]
-[connection signal="vale_updated" from="Container/TimeData/GridContainer2/Delay" to="." method="_on_Delay_vale_updated"]
+[connection signal="vale_updated" from="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer/Duration" to="." method="_on_Duration_vale_updated"]
+[connection signal="vale_updated" from="Container/AnimaAccordion/ContentWrapper/Content/HBoxContainer/Delay" to="." method="_on_Delay_vale_updated"]
 [connection signal="animate_as_changed" from="Container/AnimationData" to="." method="_on_AnimationData_animate_as_changed"]
 [connection signal="content_size_changed" from="Container/AnimationData" to="." method="_on_AnimationData_content_size_changed"]
 [connection signal="select_animation" from="Container/AnimationData" to="." method="_on_AnimationData_select_animation"]
@@ -144,3 +152,5 @@ rect_clip_content = true
 [connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
 [connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]
 [connection signal="easing_selected" from="AnimaEasingsWindow" to="." method="_on_AnimaEasingsWindow_easing_selected"]
+
+[editable path="Container/AnimaAccordion"]

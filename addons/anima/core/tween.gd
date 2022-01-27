@@ -63,7 +63,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data.initial_values = {}
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
 
-	if animation_data.has("initial_values"):
+	if animation_data.has("initial_values") and not is_backwards_animation:
 		if not animation_data.has("to"):
 			printerr("When using '_initial_value' the 'to' cannot be empty!")
 		else:
@@ -445,6 +445,9 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 			if erase_on_completed:
 				animation_data.erase('on_completed')
 
+		animation_data.erase("initial_values")
+		animation_data.erase("initial_value")
+
 		new_data.push_back(animation_data)
 
 	return new_data
@@ -535,7 +538,7 @@ class AnimatedItem extends Node:
 	func on_started() -> void:
 		var visibility_strategy = _visibility_strategy
 
-		if _node.has_meta("_visibility_strategy_reverted"):
+		if _node.has_meta("_visibility_strategy_reverted") or not _animation_data.has('on_started'):
 			return
 
 		_node.set_meta("_visibility_strategy_reverted", true)
@@ -567,7 +570,8 @@ class AnimatedItem extends Node:
 		if should_restore_visibility:
 			_node.show()
 
-		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and _animation_data._is_first_frame and _animation_data.has('on_started')
+		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and _animation_data._is_first_frame
+
 		if should_trigger_on_started:
 			_execute_callback(_animation_data.on_started)
 
@@ -591,6 +595,12 @@ class AnimatedItem extends Node:
 
 		_node = data.node
 		_node.remove_meta("_visibility_strategy_reverted")
+
+		if _animation_data.has("__debug"):
+			print("Using:")
+			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
+			printt("", "AnimatedPropertyWithKeyItem:", self is AnimatedPropertyWithKeyItem)
+			printt("", "AnimatedPropertyWithSubKeyItem:", self is AnimatedPropertyWithSubKeyItem)
 
 	func animate(elapsed: float) -> void:
 		if _property_data.size() == 0:
