@@ -30,6 +30,9 @@ func _ready():
 	set_index(index)
 
 func update_size() -> void:
+	if _container == null:
+		return
+
 	var size: float = rect_size.x  * _container.get_child_count()
 
 	_container.rect_min_size.x = size
@@ -53,7 +56,7 @@ func get_active_index() -> int:
 func set_index(new_index: int) -> void:
 	update_size()
 
-	if not is_inside_tree():
+	if not is_inside_tree() or get_child_count() == 0:
 		return
 
 	var count: int = max(0, _container.get_child_count() - 1)

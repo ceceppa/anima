@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/core/node.gd" type="Script" id=3]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -33,6 +32,9 @@ __meta__ = {
 
 [node name="AnimaVisualNode" type="Node" parent="."]
 script = ExtResource( 2 )
+__meta__ = {
+"__anima_visual_node": true
+}
 __anima_visual_editor_data = {
 "animations": [ {
 "name": "default",
@@ -126,5 +128,11 @@ margin_top = 126.0
 margin_right = 9.0
 margin_bottom = 146.0
 
-[node name="AnimaNode" type="Node" parent="."]
-script = ExtResource( 3 )
+[node name="Button2" type="Button" parent="."]
+margin_left = 835.0
+margin_top = 34.0
+margin_right = 967.0
+margin_bottom = 54.0
+text = "Do it"
+
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

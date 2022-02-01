@@ -28,14 +28,13 @@ var __do_nothing := 0.0
 var _last_tween_data: Dictionary
 
 func _exit_tree():
+	print("exiting the free")
+
 	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
 		return
 
-	_anima_tween.stop_all()
-	_anima_backwards_tween.stop_all()
-
-	_anima_tween.queue_free()
-	_anima_backwards_tween.queue_free()
+	for child in get_children():
+		child.free()
 
 func _ready():
 	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
@@ -187,6 +186,9 @@ func set_single_shot(single_shot: bool) -> void:
 
 	if _is_single_shot:
 		_anima_tween.set_repeat(false)
+
+func is_single_shot() -> bool:
+	return _is_single_shot
 
 func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
 	_anima_tween.set_visibility_strategy(strategy)

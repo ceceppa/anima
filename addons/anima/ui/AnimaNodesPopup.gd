@@ -7,6 +7,7 @@ onready var _anima_nodes_list: VBoxContainer = find_node('AnimaNodesList')
 
 func show() -> void:
 	var anima: AnimaNode = Anima.begin(self)
+
 	anima.then(
 		Anima.Node(self) \
 			.anima_property("scale") \

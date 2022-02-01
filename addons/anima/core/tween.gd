@@ -13,7 +13,7 @@ var _callbacks := {}
 var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
-var _root_node
+var _root_node: Node
 
 enum PLAY_MODE {
 	NORMAL,
@@ -118,6 +118,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		Tween.EASE_IN_OUT,
 		animation_data._wait_time
 	)
+	
+	add_child(object)
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
 	var node: Node = animation_data.node

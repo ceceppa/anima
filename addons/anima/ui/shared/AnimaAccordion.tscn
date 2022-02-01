@@ -1,20 +1,12 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.gd" type="Script" id=3]
 
-[sub_resource type="DynamicFont" id=1]
-use_filter = true
-font_data = ExtResource( 2 )
-__meta__ = {
-"_original_size": 18
-}
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.917647, 0.917647, 0.917647, 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-
-[sub_resource type="Image" id=22]
+[sub_resource type="Image" id=8]
 data = {
 "data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 223, 223, 223, 0, 218, 218, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 218, 218, 0, 223, 223, 223, 0, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 118, 223, 223, 223, 188, 218, 218, 218, 35, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 218, 218, 218, 35, 223, 223, 223, 188, 222, 222, 222, 118, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 158, 224, 224, 224, 255, 223, 223, 223, 238, 222, 222, 222, 70, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 70, 223, 223, 223, 238, 224, 224, 224, 255, 222, 222, 222, 158, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 208, 208, 0, 208, 208, 208, 11, 223, 223, 223, 172, 224, 224, 224, 255, 223, 223, 223, 253, 222, 222, 222, 119, 222, 222, 222, 0, 222, 222, 222, 0, 222, 222, 222, 119, 223, 223, 223, 253, 224, 224, 224, 255, 223, 223, 223, 172, 208, 208, 208, 11, 208, 208, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 208, 208, 0, 223, 223, 223, 0, 223, 223, 223, 121, 223, 223, 223, 253, 224, 224, 224, 255, 223, 223, 223, 168, 223, 223, 223, 168, 224, 224, 224, 255, 223, 223, 223, 253, 223, 223, 223, 121, 223, 223, 223, 0, 208, 208, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 72, 222, 222, 222, 239, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 239, 223, 223, 223, 72, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 218, 218, 218, 35, 223, 223, 223, 188, 223, 223, 223, 188, 218, 218, 218, 35, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 218, 218, 0, 223, 223, 223, 0, 223, 223, 223, 0, 218, 218, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
 "format": "RGBA8",
@@ -23,10 +15,10 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id=21]
+[sub_resource type="ImageTexture" id=6]
 flags = 0
 flags = 0
-image = SubResource( 22 )
+image = SubResource( 8 )
 size = Vector2( 16, 16 )
 
 [node name="AnimaAccordion" type="VBoxContainer"]
@@ -34,60 +26,27 @@ anchor_right = 1.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 0, 32 )
 rect_pivot_offset = Vector2( 300, 18 )
+rect_clip_content = true
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 expanded = false
 
-[node name="TitleContainer" type="Button" parent="."]
+[node name="Title" parent="." instance=ExtResource( 1 )]
 margin_right = 600.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TitleContainer"]
-margin_right = 600.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 0, 32 )
-custom_constants/separation = 12
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="TitleContainer/HBoxContainer"]
-margin_top = 6.0
-margin_right = 572.0
-margin_bottom = 26.0
-rect_min_size = Vector2( 120, 0 )
-hint_tooltip = "Choose if the selected node needs to be animated as single node or group.
-Single node: only the node itself will be animated
-Group: The direct child of the node will be animated"
-mouse_filter = 1
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
-custom_fonts/font = SubResource( 1 )
+custom_colors/font_color_disabled = Color( 0, 0, 0, 1 )
+custom_colors/font_color_focus = Color( 0, 0, 0, 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
+custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/normal = SubResource( 7 )
 text = "Accordion"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ExpandCollapse" parent="TitleContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 584.0
-margin_right = 600.0
-margin_bottom = 32.0
-rect_pivot_offset = Vector2( 8, 16 )
-hint_tooltip = "Expand"
-mouse_default_cursor_shape = 2
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/focus = SubResource( 4 )
-custom_styles/disabled = SubResource( 4 )
-custom_styles/normal = SubResource( 4 )
-icon = SubResource( 21 )
-flat = true
+icon = SubResource( 6 )
 icon_name = "Collapse"
 
 [node name="ContentWrapper" type="Control" parent="."]
@@ -107,9 +66,10 @@ rect_scale = Vector2( 0.8, 0.8 )
 rect_pivot_offset = Vector2( 300, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
+alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [connection signal="tree_entered" from="." to="." method="_on_AnimaAccordion_tree_entered"]
-[connection signal="pressed" from="TitleContainer/HBoxContainer/ExpandCollapse" to="." method="_on_ExpandCollapse_pressed"]
+[connection signal="pressed" from="Title" to="." method="_on_Title_pressed"]

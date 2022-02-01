@@ -87,7 +87,6 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 			var source = info.pop_front()
 			var source_node: Node
 
-
 			if source == '' or source == '.':
 				source_node = animation_data.node
 			else:

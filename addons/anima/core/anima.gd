@@ -77,11 +77,12 @@ var _custom_animations := {}
 
 func begin(node: Node, name: String = 'anima', single_shot := false):
 	var node_name = 'AnimaNode_' + name
-#	var anima_node: Node
 
 	for child in node.get_children():
 		if child.name.find(node_name) >= 0:
-			child.queue_free()
+			child.free()
+
+			break
 
 	var anima_node = ANIMA_NODE.new()
 
@@ -151,9 +152,14 @@ func get_animation_keyframes(animation_name: String) -> Dictionary:
 
 	var resource_file = _get_animation_script_with_path(animation_name)
 	if resource_file:
-		var script = load(resource_file).new()
-		
-		return script.KEYFRAMES
+		var script: Reference = load(resource_file).new()
+		var keyframes: Dictionary = script.KEYFRAMES
+
+		_custom_animations[animation_name] = keyframes
+
+		script.unreference()
+
+		return keyframes
 
 	printerr('No animation found with name: ', animation_name)
 

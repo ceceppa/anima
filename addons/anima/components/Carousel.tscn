@@ -3,6 +3,7 @@
 [ext_resource path="res://addons/anima/components/Carousel.gd" type="Script" id=1]
 
 [node name="Carousel" type="VBoxContainer"]
+anchor_right = 1.0
 rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -12,15 +13,18 @@ __meta__ = {
 }
 
 [node name="Controls" type="HBoxContainer" parent="."]
+margin_right = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Wrapper" type="Control" parent="."]
 margin_top = 4.0
+margin_right = 600.0
 margin_bottom = 4.0
 
 [node name="Container" type="HBoxContainer" parent="Wrapper"]
+anchor_right = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {

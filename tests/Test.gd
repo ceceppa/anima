@@ -41,15 +41,36 @@ func _ready():
 #	)
 
 	anima.play_with_delay(0.5)
-	
-	$AnimaNode.then({
-		node = $Control/Button2,
-		property = "opacity",
-		from = 0,
-		to = 1,
-		duration = 0.6
-	})
-	
-	$AnimaNode.play_with_delay(0.5)
 
+	yield(anima, "animation_completed")
+
+	yield(get_tree().create_timer(1), "timeout")
+
+#
+
+#	$AnimaNode.then({
+#		node = $Control/Button2,
+#		property = "opacity",
+#		from = 0,
+#		to = 1,
+#		duration = 0.6
+#	})
+#
+#	$AnimaNode.play_with_delay(0.5)
+
+var _temp
+
+func _on_Button2_pressed():
+	_ready()
+	
+	return
+	print(_temp)
+
+	if _temp == null:
+		_temp = Button.new()
+
+		add_child(_temp)
+	else:
+		_temp.free()
+		_temp = null
 
