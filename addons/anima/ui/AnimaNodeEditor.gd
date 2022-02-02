@@ -85,8 +85,6 @@ func get_connections() -> Array:
 func add_node(node_id: String, node_to_animate: Node, node_path: String, add_node := true) -> GraphNode:
 	var node = ANIMATION_NODE.new()
 
-	AnimaUI.debug(self, "add_node", node_to_animate)
-
 	node.set_node_to_animate(node_to_animate, node_path)
 	node.connect("node_updated", self, "_on_node_updated")
 	node.connect("close_request", self, "_on_node_close_request", [node])

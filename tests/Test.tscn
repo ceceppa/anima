@@ -50,10 +50,9 @@ __anima_visual_editor_data = {
 0: [ {
 "data": {
 "animation_data": {
-"property": {
 "animate_as": 0,
+"property": {
 "easing": 27,
-"from": 0.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -62,7 +61,7 @@ __anima_visual_editor_data = {
 "type": 1
 },
 "delay": 0.0,
-"duration": 0.3
+"duration": 0.7
 },
 "node_path": "Button",
 "start_time": 0.0
@@ -80,10 +79,9 @@ __anima_visual_editor_data = {
 }, {
 "data": {
 "animation_data": {
-"property": {
 "animate_as": 0,
+"property": {
 "easing": 27,
-"from": 0.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -92,7 +90,7 @@ __anima_visual_editor_data = {
 "type": 1
 },
 "delay": 0.0,
-"duration": 0.3
+"duration": 0.7
 },
 "id": "Animation",
 "name": "Animation41344",
@@ -100,7 +98,7 @@ __anima_visual_editor_data = {
 "position": Vector2( 1953, -180 ),
 "title": "./Button"
 } ],
-"scroll_offset": Vector2( 1607, 48 ),
+"scroll_offset": Vector2( 0, 0 ),
 "zoom": 1.0
 }
 
@@ -134,5 +132,7 @@ margin_top = 34.0
 margin_right = 967.0
 margin_bottom = 54.0
 text = "Do it"
+
+[node name="Timer" type="Timer" parent="."]
 
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

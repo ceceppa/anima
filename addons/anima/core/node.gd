@@ -10,6 +10,7 @@ signal loop_completed
 
 var _anima_tween := AnimaTween.new()
 var _anima_backwards_tween := AnimaTween.new()
+var _timer := Timer.new()
 
 var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
@@ -23,13 +24,12 @@ var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
 var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _is_single_shot := false
+var _all_data := []
 
 var __do_nothing := 0.0
 var _last_tween_data: Dictionary
 
 func _exit_tree():
-	print("exiting the free")
-
 	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
 		return
 
@@ -39,6 +39,11 @@ func _exit_tree():
 func _ready():
 	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
 		init_node(self)
+
+	_timer.one_shot = true
+	_timer.connect("timeout", self, "_on_timer_completed")
+
+	add_child(_timer)
 
 func init_node(node: Node):
 	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
@@ -235,9 +240,10 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_anima_tween._visibility_strategy)
 
-	var wait_time = max(Anima.MINIMUM_DURATION, delay)
-	yield(get_tree().create_timer(wait_time), "timeout")
+	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
+	_timer.start()
 
+func _on_timer_completed() -> void:
 	_do_play()
 	_maybe_play()
 
@@ -296,11 +302,8 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, spee
 
 	_play_speed = speed
 
-	var wait_time = max(Anima.MINIMUM_DURATION, delay)
-	yield(get_tree().create_timer(wait_time), "timeout")
-
-	_do_play()
-	_maybe_play()
+	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
+	_timer.start()
 
 func get_length() -> float:
 	return _total_animation_length
@@ -368,6 +371,7 @@ func _setup_animation(data: Dictionary) -> float:
 	elif not data.has('node'):
 		 data.node = self.get_parent()
 
+	_all_data.push_back(data)
 	return _setup_node_animation(data)
 
 func _setup_node_animation(data: Dictionary) -> float:

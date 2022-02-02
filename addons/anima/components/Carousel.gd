@@ -59,6 +59,9 @@ func set_index(new_index: int) -> void:
 	if not is_inside_tree() or get_child_count() == 0:
 		return
 
+	if _container == null:
+		_container = find_node('Container')
+
 	var count: int = max(0, _container.get_child_count() - 1)
 	index = clamp(new_index, 0, count)
 

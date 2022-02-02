@@ -17,13 +17,10 @@ onready var _warning_label = find_node("WarningLabel")
 onready var _animation_selector: OptionButton = find_node("AnimationSelector")
 onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
 
-func _enter_tree():
-	print("entring the tree")
-
 func _ready():
 	$NodesPopup.rect_min_size = Vector2(260, 320) * AnimaUI.get_dpi_scale()
 
-func init(base_control: Control) -> void:
+func set_base_control(base_control: Control) -> void:
 		AnimaUI.set_godot_gui(base_control)
 
 func edit(node: Node) -> void:

@@ -74,14 +74,12 @@ func _animate_height_change() -> void:
 			}) \
 			.anima_pivot(Anima.PIVOT.CENTER)
 	)
-#	anima.also(
-#		Anima.Node(_expand_collapse) \
-#			.anima_property("rotate") \
-#			.anima_from(0) \
-#			.anima_to(180) \
-#			.anima_duration(0.3) \
-#			.anima_pivot(Anima.PIVOT.CENTER)
-#	)
+	anima.also(
+		Anima.Node($Title/Icon) \
+			.anima_property("rotate") \
+			.anima_from(-90) \
+			.anima_to(0)
+	)
 
 	if expanded:
 		anima.play()

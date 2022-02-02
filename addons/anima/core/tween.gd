@@ -378,6 +378,9 @@ func clear_animations() -> void:
 	remove_all()
 	reset_all()
 
+	for child in get_children():
+		child.queue_free()
+
 	_callbacks = {}
 	_animation_data.clear()
 
