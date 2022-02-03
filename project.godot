@@ -34,7 +34,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/shapes/CubicBezier.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "AnimaDeclarationBase",
 "language": "GDScript",
 "path": "res://addons/anima/utils/anima_declaration_base.gd"

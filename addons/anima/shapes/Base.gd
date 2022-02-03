@@ -2,14 +2,29 @@ tool
 extends Control
 class_name AnimaShape
 
-# TODO: Hover, Click animation
-var _anima: AnimaNode
+const PropertyList = preload("res://addons/anima/utils/anima_properties_list.gd")
 
-func _ready():
-	_anima = Anima.begin(self)
+var property_list
 
-func animate(anima_data: Dictionary, auto_play := true) -> AnimaNode:
-	var anima: AnimaNode = Anima.begin(self)
+func _get(property: String):
+	return property_list.get(property)
+
+func _set(property: String, value):
+	property_list.set(property, value)
+
+	update()
+
+func _get_property_list() -> Array:
+	if property_list:
+		return property_list.get_property_list()
+
+	return []
+
+func get_property(name: String):
+	return _get(name)
+
+func animate(anima_data: AnimaDeclarationBase, auto_play := true) -> AnimaNode:
+	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.then(anima_data)
 
@@ -17,6 +32,3 @@ func animate(anima_data: Dictionary, auto_play := true) -> AnimaNode:
 		anima.play()
 
 	return anima
-
-func get_anima_node() -> AnimaNode:
-	return _anima

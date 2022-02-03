@@ -1,0 +1,78 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=22]
+use_filter = true
+font_data = ExtResource( 2 )
+__meta__ = {
+"_original_size": 18
+}
+
+[sub_resource type="StyleBoxFlat" id=23]
+
+[node name="AnimaButton" type="Control"]
+margin_right = 100.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 95, 32 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer"]
+margin_left = 1.0
+margin_top = 6.0
+margin_right = 98.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 5
+custom_fonts/font = SubResource( 22 )
+text = "Anima Button"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimaRectangle" type="Control" parent="."]
+margin_right = 293.0
+margin_bottom = 94.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Rectangle/Size = Rect2( 0, 0, 50, 100 )
+Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Rectangle/BorderWidh/Left = 0
+Rectangle/BorderWidh/Top = 0
+Rectangle/BorderWidh/Right = 0
+Rectangle/BorderWidh/Bottom = 0
+Rectangle/Border/Color = Color( 0, 0, 0, 1 )
+Rectangle/Border/Blend = false
+Rectangle/Border/Offset = Vector2( 0, 0 )
+Rectangle/CornerRadius/TopLeft = 0
+Rectangle/CornerRadius/TopRight = 0
+Rectangle/CornerRadius/BottomRight = 0
+Rectangle/CornerRadius/BottomLeft = 0
+Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
+Rectangle/Shadow/Size = 0
+Rectangle/Shadow/Offset = Vector2( 0, 0 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_styles/panel = SubResource( 23 )
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

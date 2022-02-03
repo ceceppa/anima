@@ -312,6 +312,8 @@ func _maybe_init_anima_node() -> void:
 	)
 
 func _adjust_height(pivot_size: float = -1.0) -> void:
+	return
+
 	if _property_values == null:
 		_property_values = find_node("PropertyValues")
 

@@ -206,10 +206,13 @@ func _get_scripts_in_dir(path: String, files: Array = []) -> Array:
 
 	return files
 
-static func Node(node: Node) -> AnimaDeclarationNode:
+static func Node(node: Node = null) -> AnimaDeclarationNode:
 	var c := AnimaDeclarationNode.new()
 
-	return c._node(node)
+	if node:
+		return c._node(node)
+
+	return c
 
 static func Group(group) -> AnimaDeclarationGroup:
 	var c := AnimaDeclarationGroup.new()

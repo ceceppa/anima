@@ -24,7 +24,6 @@ var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
 var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _is_single_shot := false
-var _all_data := []
 
 var __do_nothing := 0.0
 var _last_tween_data: Dictionary
@@ -368,10 +367,16 @@ func _setup_animation(data: Dictionary) -> float:
 			data.grid_size = Vector2(1, data.group.get_children().size())
 
 		return _setup_grid_animation(data)
-	elif not data.has('node'):
+	elif not data.has("node"):
 		 data.node = self.get_parent()
 
-	_all_data.push_back(data)
+	if data.node == null:
+		print(self.get_parent())
+		print_stray_nodes()
+		printerr("Invalid node!")
+
+		return 0.0
+
 	return _setup_node_animation(data)
 
 func _setup_node_animation(data: Dictionary) -> float:
