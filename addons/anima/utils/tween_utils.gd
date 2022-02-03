@@ -37,14 +37,14 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if from is Vector2 and to is Vector3:
 		to = Vector2(to.x, to.y)
 
+	if animation_data.has("__debug"):
+		printt("Name", animation_data.node.name, "from", from, "to", to, "current_value", current_value, animation_data)
+
 	if typeof(to) == TYPE_RECT2:
 		return {
 			from = from,
 			diff = { position = to.position - from.position, size = to.size - from.size }
 		}
-
-	if animation_data.has("__debug"):
-		printt("Name", animation_data.node.name, "from", from, "to", to, "current_value", current_value, animation_data)
 
 	return {
 		from = from,

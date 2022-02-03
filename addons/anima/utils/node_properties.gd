@@ -98,8 +98,6 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 	if property is Object:
 		return property[animation_data.key]
 
-	property = property.to_lower()
-
 	match property:
 		"x", "position:x":
 			var position = get_position(node)
@@ -207,8 +205,6 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 	return property_name
 
 static func map_property_to_godot_property(node: Node, property: String) -> Dictionary:
-	property = property.to_lower()
-
 	match property:
 		"x", "position:x":
 			if node is Control:
@@ -364,12 +360,10 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 	var key = p[1] if p.size() > 1 else null
 	var subkey = p[2] if p.size() > 2 else null
 
-	if node.get(property_name):
+	if node.get(property_name) or property_name in node:
 		node_property_name = property_name
 	elif node.get(rect_property_name):
 		node_property_name = rect_property_name
-	elif property_name in node:
-		node_property_name = property_name
 	elif rect_property_name in node:
 		node_property_name = rect_property_name
 

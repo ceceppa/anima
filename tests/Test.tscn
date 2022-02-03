@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=3]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -12,6 +13,7 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
+visible = false
 margin_right = 703.0
 margin_bottom = 366.0
 text = "Testing typewriter"
@@ -20,6 +22,7 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="."]
+visible = false
 margin_left = 316.0
 margin_top = 221.0
 margin_right = 706.002
@@ -103,6 +106,7 @@ __anima_visual_editor_data = {
 }
 
 [node name="Control" type="Control" parent="."]
+visible = false
 margin_left = 183.0
 margin_top = 374.0
 margin_right = 223.0
@@ -127,6 +131,7 @@ margin_right = 9.0
 margin_bottom = 146.0
 
 [node name="Button2" type="Button" parent="."]
+visible = false
 margin_left = 835.0
 margin_top = 34.0
 margin_right = 967.0
@@ -134,5 +139,31 @@ margin_bottom = 54.0
 text = "Do it"
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="AnimaRectangle" type="Control" parent="."]
+margin_right = 764.0
+margin_bottom = 397.0
+rect_pivot_offset = Vector2( 382, 198.5 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+easing = 27
+draw_from_center = true
+Rectangle/Size = Rect2( 0, 0, 100, 100 )
+Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Rectangle/BorderWidh/Left = -1
+Rectangle/BorderWidh/Top = -1
+Rectangle/BorderWidh/Right = -1
+Rectangle/BorderWidh/Bottom = -1
+Rectangle/Border/Color = Color( 1, 1, 1, 0 )
+Rectangle/Border/Offset = Vector2( -1, -1 )
+Rectangle/CornerRadius/TopLeft = -1
+Rectangle/CornerRadius/TopRight = -1
+Rectangle/CornerRadius/BottomRight = -1
+Rectangle/CornerRadius/BottomLeft = -1
+Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
+Rectangle/Shadow/Size = -1
+Rectangle/Shadow/Offset = Vector2( -1, -1 )
 
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

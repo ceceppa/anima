@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Control",
+"class": "AnimaAnimatable",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Animatable.gd"
+}, {
+"base": "Control",
 "class": "AnimaArc",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Arc.gd"
@@ -84,15 +89,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/core/player.gd"
 }, {
-"base": "Control",
+"base": "Object",
+"class": "AnimaPropertyList",
+"language": "GDScript",
+"path": "res://addons/anima/utils/anima_properties_list.gd"
+}, {
+"base": "AnimaShape",
 "class": "AnimaRectangle",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Rectangle.gd"
 }, {
-"base": "Control",
+"base": "AnimaAnimatable",
 "class": "AnimaShape",
 "language": "GDScript",
-"path": "res://addons/anima/shapes/Base.gd"
+"path": "res://addons/anima/shapes/Shape.gd"
 }, {
 "base": "Control",
 "class": "AnimaSquare",
@@ -125,6 +135,7 @@ _global_script_classes=[ {
 "path": "res://addons/anima/core/visual_node.gd"
 } ]
 _global_script_class_icons={
+"AnimaAnimatable": "",
 "AnimaArc": "",
 "AnimaCarousel": "",
 "AnimaChars": "",
@@ -140,6 +151,7 @@ _global_script_class_icons={
 "AnimaNode": "",
 "AnimaNodesProperties": "",
 "AnimaPlayer": "",
+"AnimaPropertyList": "",
 "AnimaRectangle": "",
 "AnimaShape": "",
 "AnimaSquare": "",
@@ -165,7 +177,7 @@ settings/stdout/verbose_stdout=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/anima/plugin.cfg", "res://addons/gut/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
 
 [network]
 

@@ -4,23 +4,70 @@
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
 
-[sub_resource type="DynamicFont" id=22]
+[sub_resource type="DynamicFont" id=1]
 use_filter = true
 font_data = ExtResource( 2 )
 __meta__ = {
 "_original_size": 18
 }
 
-[sub_resource type="StyleBoxFlat" id=23]
+[sub_resource type="StyleBoxFlat" id=2]
 
 [node name="AnimaButton" type="Control"]
 margin_right = 100.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 95, 32 )
+rect_pivot_offset = Vector2( 50, 16 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+Rectangle/Size = Rect2( 0, 0, 100, 100 )
+Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Rectangle/BorderWidh/Left = 0
+Rectangle/BorderWidh/Top = 0
+Rectangle/BorderWidh/Right = 0
+Rectangle/BorderWidh/Bottom = 0
+Rectangle/Border/Color = Color( 1, 1, 1, 0 )
+Rectangle/Border/Offset = Vector2( 0, 0 )
+Rectangle/CornerRadius/TopLeft = 0
+Rectangle/CornerRadius/TopRight = 0
+Rectangle/CornerRadius/BottomRight = 0
+Rectangle/CornerRadius/BottomLeft = 0
+Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
+Rectangle/Shadow/Size = 0
+Rectangle/Shadow/Offset = Vector2( 0, 0 )
+Button/FontColor = Color( 1, 1, 1, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 1 )
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Hovered/BorderWidh/Left = -1
+Hovered/BorderWidh/Top = -1
+Hovered/BorderWidh/Right = -1
+Hovered/BorderWidh/Bottom = -1
+Hovered/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Hovered/CornerRadius/TopLeft = -1
+Hovered/CornerRadius/TopRight = -1
+Hovered/CornerRadius/BottomRight = -1
+Hovered/CornerRadius/BottomLeft = -1
+Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
+Hovered/Shadow/Size = -1
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Pressed/FontColor = Color( 1, 1, 1, 1 )
+Pressed/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Pressed/BorderWidh/Left = -1
+Pressed/BorderWidh/Top = -1
+Pressed/BorderWidh/Right = -1
+Pressed/BorderWidh/Bottom = -1
+Pressed/Border/Color = Color( 1, 1, 1, 0 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Pressed/CornerRadius/TopLeft = -1
+Pressed/CornerRadius/TopRight = -1
+Pressed/CornerRadius/BottomRight = -1
+Pressed/CornerRadius/BottomLeft = -1
+Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
+Pressed/Shadow/Size = -1
+Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -39,7 +86,7 @@ margin_right = 98.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
-custom_fonts/font = SubResource( 22 )
+custom_fonts/font = SubResource( 1 )
 text = "Anima Button"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -48,18 +95,18 @@ __meta__ = {
 [node name="AnimaRectangle" type="Control" parent="."]
 margin_right = 293.0
 margin_bottom = 94.0
+rect_pivot_offset = Vector2( 146.5, 47 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-Rectangle/Size = Rect2( 0, 0, 50, 100 )
+Rectangle/Size = Rect2( 0, 0, 100, 100 )
 Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Rectangle/BorderWidh/Left = 0
 Rectangle/BorderWidh/Top = 0
 Rectangle/BorderWidh/Right = 0
 Rectangle/BorderWidh/Bottom = 0
-Rectangle/Border/Color = Color( 0, 0, 0, 1 )
-Rectangle/Border/Blend = false
+Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Offset = Vector2( 0, 0 )
 Rectangle/CornerRadius/TopLeft = 0
 Rectangle/CornerRadius/TopRight = 0
@@ -72,7 +119,7 @@ Rectangle/Shadow/Offset = Vector2( 0, 0 )
 [node name="Panel" type="Panel" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
-custom_styles/panel = SubResource( 23 )
+custom_styles/panel = SubResource( 2 )
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

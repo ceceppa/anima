@@ -602,10 +602,15 @@ class AnimatedItem extends Node:
 		_node.remove_meta("_visibility_strategy_reverted")
 
 		if _animation_data.has("__debug"):
+			print(data)
+
 			print("Using:")
 			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
 			printt("", "AnimatedPropertyWithKeyItem:", self is AnimatedPropertyWithKeyItem)
 			printt("", "AnimatedPropertyWithSubKeyItem:", self is AnimatedPropertyWithSubKeyItem)
+			printt("", "AnimateObjectWithKey:", self is AnimateObjectWithKey)
+			printt("", "AnimateObjectWithSubKey:", self is AnimateObjectWithSubKey)
+			printt("", "AnimateRect2:", self is AnimateRect2)
 
 	func animate(elapsed: float) -> void:
 		if _property_data.size() == 0:
@@ -677,7 +682,7 @@ class AnimatedItem extends Node:
 
 class AnimatedPropertyItem extends AnimatedItem:
 	func apply_value(value) -> void:
-		_node[_property] = value
+		_node.set(_property, value)
 
 class AnimatedPropertyWithKeyItem extends AnimatedItem:
 	func apply_value(value) -> void:
@@ -706,4 +711,4 @@ class AnimateRect2 extends AnimatedItem:
 		))
 
 	func apply_value(value: Rect2) -> void:
-		_node[_property] = value
+		_node.set(_property, value)
