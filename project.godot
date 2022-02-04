@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "AnimaAnimatable",
 "language": "GDScript",
-"path": "res://addons/anima/shapes/Animatable.gd"
+"path": "res://addons/anima/components/Animatable.gd"
 }, {
 "base": "Control",
 "class": "AnimaArc",

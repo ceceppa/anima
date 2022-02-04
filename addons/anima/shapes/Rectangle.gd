@@ -46,6 +46,11 @@ const PROPERTIES := {
 		type = TYPE_COLOR,
 		default = Color.transparent,
 	},
+	RECTANGLE_BORDER_BLEND = {
+		name = "Rectangle/Border/Blend",
+		type = TYPE_BOOL,
+		default = false,
+	},
 	RECTANGLE_BORDER_OFFSET = {
 		name = "Rectangle/Border/Offset",
 		type = TYPE_VECTOR2,
@@ -89,25 +94,9 @@ const PROPERTIES := {
 }
 
 func _init():
+	._init()
 	_add_properties(PROPERTIES)
 
-#	_add_properties([
-#		["Rectangle/BorderWidh/Left", TYPE_INT, 0],
-#		["Rectangle/BorderWidh/Top", TYPE_INT, 0],
-#		["Rectangle/BorderWidh/Right", TYPE_INT, 0],
-#		["Rectangle/BorderWidh/Bottom", TYPE_INT, 0],
-#		["Rectangle/Border/Color", TYPE_COLOR, Color.black],
-#		["Rectangle/Border/Blend", TYPE_BOOL, false],
-#		["Rectangle/Border/Offset", TYPE_VECTOR2, Vector2.ZERO],
-#		["Rectangle/CornerRadius/TopLeft", TYPE_INT, 0],
-#		["Rectangle/CornerRadius/TopRight", TYPE_INT, 0],
-#		["Rectangle/CornerRadius/BottomRight", TYPE_INT, 0],
-#		["Rectangle/CornerRadius/BottomLeft", TYPE_INT, 0],
-#		["Rectangle/Shadow/Color", TYPE_COLOR, Color.transparent],
-#		["Rectangle/Shadow/Size", TYPE_INT, 0],
-#		["Rectangle/Shadow/Offset", TYPE_VECTOR2, Vector2.ZERO],
-#	])
-#
 func _ready():
 	connect("gui_input", self, "_on_gui_input")
 
@@ -125,21 +114,21 @@ func _on_gui_input(event):
 		_is_mouse_down = not _is_mouse_down
 
 func _draw() -> void:
-	var rect_to_draw: Rect2 = get_property(PROPERTIES.RECTANGLE_SIZE)
-	var border_offset: Vector2 = get_property(PROPERTIES.RECTANGLE_BORDER_OFFSET)
+	var rect_to_draw: Rect2 = get_property(PROPERTIES.RECTANGLE_SIZE.name)
+	var border_offset: Vector2 = get_property(PROPERTIES.RECTANGLE_BORDER_OFFSET.name)
 
-	var has_border_offset = border_offset.x != 0 or border_offset.y != 0
+	var has_border_offset = border_offset.x > 0 or border_offset.y > 0
 	var stylebox: StyleBoxFlat = StyleBoxFlat.new()
 	
 	stylebox.set_corner_radius_individual(
-		get_property("Rectangle/CornerRadius/TopLeft"),
-		get_property("Rectangle/CornerRadius/TopRight"),
-		get_property("Rectangle/CornerRadius/BottomRight"),
-		get_property("Rectangle/CornerRadius/BottomLeft")
+		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_TOP_LEFT.name),
+		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_TOP_RIGHT.name),
+		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_BOTTOM_RIGHT.name),
+		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_BOTTOM_LEFT.name)
 	)
 
-	stylebox.border_color = get_property("Rectangle/Border/Color")
-	stylebox.border_blend = get_property("Rectangle/Border/Blend")
+	stylebox.border_color = get_property(PROPERTIES.RECTANGLE_BORDER_COLOR.name)
+	stylebox.border_blend = get_property(PROPERTIES.RECTANGLE_BORDER_BLEND.name)
 
 	if size_values_in == Anima.VALUES_IN.PERCENTAGE:
 		rect_to_draw.size.x = rect_size.x * (rect_to_draw.size.x / 100)
@@ -154,14 +143,14 @@ func _draw() -> void:
 	stylebox.bg_color = get_property("Rectangle/FillColor")
 
 	if not has_border_offset:
-		stylebox.border_width_bottom = get_property("Rectangle/BorderWidh/Bottom")
-		stylebox.border_width_left = get_property("Rectangle/BorderWidh/Left")
-		stylebox.border_width_right = get_property("Rectangle/BorderWidh/Right")
-		stylebox.border_width_top = get_property("Rectangle/BorderWidh/Top")
+		stylebox.border_width_bottom = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_BOTTOM.name)
+		stylebox.border_width_left = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_LEFT.name)
+		stylebox.border_width_right = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_RIGHT.name)
+		stylebox.border_width_top = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_TOP.name)
 
-		stylebox.shadow_color = get_property("Rectangle/Shadow/Color")
-		stylebox.shadow_size = get_property("Rectangle/Shadow/Size")
-		stylebox.shadow_offset = get_property("Rectangle/Shadow/Offset")
+		stylebox.shadow_color = get_property(PROPERTIES.RECTANGLE_SHADOW_COLOR.name)
+		stylebox.shadow_size = get_property(PROPERTIES.RECTANGLE_SHADOW_SIZE.name)
+		stylebox.shadow_offset = get_property(PROPERTIES.RECTANGLE_SHADOW_OFFSET.name)
 
 	draw_style_box(stylebox, rect_to_draw)
 
@@ -172,15 +161,15 @@ func _draw() -> void:
 	var stylebox_border: StyleBoxFlat = stylebox.duplicate()
 	
 	stylebox_border.bg_color = Color.transparent
-	stylebox_border.border_color = get_property("Rectangle/Border/Color")
-	stylebox_border.border_width_bottom = get_property("Rectangle/BorderWidh/Bottom")
-	stylebox_border.border_width_left = get_property("Rectangle/BorderWidh/Left")
-	stylebox_border.border_width_right = get_property("Rectangle/BorderWidh/Right")
-	stylebox_border.border_width_top = get_property("Rectangle/BorderWidh/Top")
 
-	stylebox_border.shadow_color = get_property("Rectangle/Shadow/Color")
-	stylebox_border.shadow_size = get_property("Rectangle/Shadow/Size")
-	stylebox_border.shadow_offset = get_property("Rectangle/Shadow/Offset")
+	stylebox_border.border_width_bottom = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_BOTTOM.name)
+	stylebox_border.border_width_left = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_LEFT.name)
+	stylebox_border.border_width_right = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_RIGHT.name)
+	stylebox_border.border_width_top = get_property(PROPERTIES.RECTANGLE_BORDER_WIDTH_TOP.name)
+
+	stylebox_border.shadow_color = get_property(PROPERTIES.RECTANGLE_SHADOW_COLOR.name)
+	stylebox_border.shadow_size = get_property(PROPERTIES.RECTANGLE_SHADOW_SIZE.name)
+	stylebox_border.shadow_offset = get_property(PROPERTIES.RECTANGLE_SHADOW_OFFSET.name)
 
 	draw_style_box(stylebox_border, border_rect)
 

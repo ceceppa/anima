@@ -4,29 +4,41 @@ class_name AnimaPropertyList
 var _properties := {}
 var _initial_valus := {}
 
-func add(name, type, default_value) -> void:
-	_properties[name] = {
-		"hint": PROPERTY_HINT_NONE,
+func add(property: Dictionary) -> void:
+	_properties[property.name] = {
+		"hint": property.hint if property.has("hint") else PROPERTY_HINT_NONE,
+		"hint_string": property.hint_string if property.has("hint_string") else null,
 		"usage": PROPERTY_USAGE_DEFAULT,
-		"name": name,
-		"type": type,
-		"value": default_value,
-		"initialValue": null
+		"name": property.name,
+		"type": property.type,
+		"value": property.default,
+		"initialValue": property.default,
+		"visible": true
 	}
 
-func get(name: String):
-	return _properties[name].value
+func hide(name: String) -> void:
+	_properties[name].visible = false
 
+func get(name: String):
+	if _properties.has(name):
+		return _properties[name].value
+
+	return null
+	
 func set(name: String, value) -> void:
-	if exists(name):
-		_properties[name].value = value
-		_properties[name].initialValue = value
-		
+	_properties[name].value = value
+
 func exists(name: String) -> bool:
 	return _properties.has(name)
 
 func get_property_list() -> Array:
-	return _properties.values()
+	var list: Array
+	
+	for property in _properties.values():
+		if property.has("type") and property.visible:
+			list.push_back(property)
+	
+	return list
 
-func is_initial_value(name: String, value) -> bool:
-	return _properties[name].initialValue == null
+func get_initial_value(name: String):
+	return _properties[name].initialValue
