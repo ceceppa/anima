@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/components/AnimaButton.tscn" type="PackedScene" id=3]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -139,19 +138,5 @@ margin_bottom = 54.0
 text = "Do it"
 
 [node name="Timer" type="Timer" parent="."]
-
-[node name="AnimaButton" parent="." instance=ExtResource( 3 )]
-
-[node name="AnimaButton2" parent="." instance=ExtResource( 3 )]
-margin_left = 128.979
-margin_top = 5.86267
-margin_right = 228.979
-margin_bottom = 37.8627
-
-[node name="AnimaButton3" parent="." instance=ExtResource( 3 )]
-margin_left = 246.766
-margin_top = 9.06049
-margin_right = 346.766
-margin_bottom = 41.0605
 
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

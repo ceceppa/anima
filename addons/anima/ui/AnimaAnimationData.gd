@@ -37,8 +37,8 @@ var _is_restoring_values := false
 
 func _ready():
 	_property_container.hide()
-	$Wrapper.rect_position.y *= AnimaUI.get_dpi_scale()
-	$AnimationType.rect_min_size.y *= AnimaUI.get_dpi_scale()
+#	$Wrapper.rect_position.y *= AnimaUI.get_dpi_scale()
+#	$AnimationType.rect_min_size.y *= AnimaUI.get_dpi_scale()
 
 	_maybe_init_anima_node()
 

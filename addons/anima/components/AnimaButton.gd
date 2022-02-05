@@ -1,7 +1,12 @@
 tool
 extends AnimaRectangle
 
+enum Align {LEFT, CENTER, RIGHT, FILL}
+enum Valign {TOP, CENTER, BOTTOM, FILL}
+
 export var label := "Anima Button" setget set_label
+export (Align) var align := Align.LEFT setget set_align
+export (Valign) var valign := Valign.TOP setget set_valign
 
 var _is_focused := false
 
@@ -89,7 +94,7 @@ func _init():
 	_hide_properties(PROPERTIES)
 
 	_add_properties(_all_properties)
-	
+
 	_copy_properties("Normal")
 
 func _copy_properties(from: String) -> void:
@@ -119,7 +124,7 @@ func _animate_state(root_key: String) -> void:
 			var current_value = get_property(rectangle_property_name)
 			var final_value = get_property(property_name)
 
-			if final_value is String or final_value is bool:
+			if final_value is String or final_value is bool or str(final_value).find("-1") >= 0:
 				continue
 
 			if current_value != final_value:
@@ -128,8 +133,17 @@ func _animate_state(root_key: String) -> void:
 	if params_to_animate.size() > 0:
 		animate_params(params_to_animate)
 
-func set_label(label: String) -> void:
-	find_node("Label").text = label
+func set_label(new_label: String) -> void:
+	label = new_label
+	get_node("Label").text = label
+
+func set_align(new_align: int) -> void:
+	align = new_align
+	get_node("Label").align = align
+
+func set_valign(new_valign: int) -> void:
+	valign = new_valign
+	get_node("Label").valign = valign
 
 func _on_mouse_entered():
 	if not _is_focused:

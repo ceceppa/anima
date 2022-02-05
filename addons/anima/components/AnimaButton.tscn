@@ -11,8 +11,8 @@ __meta__ = {
 }
 
 [node name="AnimaButton" type="Control"]
-margin_right = 100.0
-margin_bottom = 32.0
+margin_right = 0.399994
+margin_bottom = -0.200012
 rect_min_size = Vector2( 95, 32 )
 rect_pivot_offset = Vector2( 50, 16 )
 focus_mode = 2
@@ -91,21 +91,9 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Label" type="Label" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="CenterContainer"]
-margin_left = 1.0
-margin_top = 6.0
-margin_right = 98.0
-margin_bottom = 26.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
 custom_fonts/font = SubResource( 1 )

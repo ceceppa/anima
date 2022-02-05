@@ -177,7 +177,7 @@ settings/stdout/verbose_stdout=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/anima/plugin.cfg", "res://addons/gut/plugin.cfg" )
 
 [network]
 

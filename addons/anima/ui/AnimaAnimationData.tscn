@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/ui/AnimaAnimation.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/anima/components/AnimaButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.tscn" type="PackedScene" id=7]
@@ -69,9 +70,8 @@ margin_bottom = 20.0
 visible = false
 margin_top = 32.0
 margin_right = 1024.0
-margin_bottom = 64.0
-rect_min_size = Vector2( 0, 88 )
-rect_pivot_offset = Vector2( 512, 18 )
+margin_bottom = 68.0
+rect_pivot_offset = Vector2( 512, 42 )
 label = "Animate as:"
 
 [node name="Title" parent="NodeOrGroup" index="0"]
@@ -85,10 +85,9 @@ margin_right = 1024.0
 margin_bottom = 88.0
 
 [node name="Content" parent="NodeOrGroup/ContentWrapper/MarginContainer" index="0"]
-modulate = Color( 1, 1, 1, 0 )
 margin_right = 1012.0
-margin_bottom = 44.0
-rect_pivot_offset = Vector2( 500, 16 )
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 500, 14 )
 
 [node name="NodeOrGroupOLD" type="VBoxContainer" parent="."]
 visible = false
@@ -174,7 +173,7 @@ mouse_filter = 2
 margin_right = 2048.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 3072, 0 )
-rect_pivot_offset = Vector2( 1748, 80 )
+rect_pivot_offset = Vector2( 1536, 80 )
 
 [node name="Empty" type="Control" parent="NodeOrGroupOLD/Carousel/Wrapper/Container" index="0"]
 margin_right = 1021.0
@@ -269,17 +268,30 @@ min_value = 0.0
 [node name="Label3" type="Label" parent="."]
 margin_top = 32.0
 margin_right = 1024.0
-margin_bottom = 52.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 48 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 19 )
 text = "Animations:"
 align = 1
+valign = 1
+
+[node name="AnimaButton" parent="Label3" instance=ExtResource( 4 )]
+anchor_left = 0.897
+anchor_right = 0.897
+margin_top = 8.0
+margin_right = 95.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 47.5, 16 )
+label = "Add"
+align = 1
+valign = 1
 
 [node name="AnimaAccordion" parent="." instance=ExtResource( 7 )]
-margin_top = 64.0
+margin_top = 92.0
 margin_right = 1024.0
-margin_bottom = 96.0
-rect_pivot_offset = Vector2( 512, 24 )
+margin_bottom = 128.0
+rect_pivot_offset = Vector2( 512, 62 )
 label = "Animation"
 
 [node name="Title" parent="AnimaAccordion" index="0"]
@@ -292,10 +304,9 @@ icon = SubResource( 25 )
 margin_right = 1024.0
 
 [node name="Content" parent="AnimaAccordion/ContentWrapper/MarginContainer" index="0"]
-modulate = Color( 1, 1, 1, 0 )
 margin_right = 1012.0
 margin_bottom = 80.0
-rect_pivot_offset = Vector2( 500, 0 )
+rect_pivot_offset = Vector2( 500, 34 )
 
 [node name="AnimaAnimation" parent="AnimaAccordion/ContentWrapper/MarginContainer/Content" index="0" instance=ExtResource( 3 )]
 margin_top = 0.0
@@ -305,6 +316,11 @@ margin_bottom = 68.0
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 140.0
+margin_right = 1024.0
+margin_bottom = 140.0
 
 [connection signal="carousel_height_changed" from="NodeOrGroupOLD/Carousel" to="." method="_on_Carousel_carousel_height_changed"]
 [connection signal="pressed" from="NodeOrGroupOLD/Carousel/Controls/AsNode" to="." method="_on_AsNode_pressed"]

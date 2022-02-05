@@ -48,18 +48,15 @@ __meta__ = {
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 1016.0
-margin_bottom = 324.0
+margin_bottom = 148.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TimeDelay" parent="Container" instance=ExtResource( 8 )]
 margin_right = 1008.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 124 )
 rect_pivot_offset = Vector2( 504, 62 )
 label = "Time:"
-content_background_color = Color( 0.133333, 0.164706, 0.227451, 1 )
 
 [node name="Title" parent="Container/TimeDelay" index="0"]
 margin_right = 1008.0
@@ -69,10 +66,8 @@ icon = SubResource( 25 )
 
 [node name="ContentWrapper" parent="Container/TimeDelay" index="1"]
 margin_right = 1008.0
-margin_bottom = 124.0
 
 [node name="Content" parent="Container/TimeDelay/ContentWrapper/MarginContainer" index="0"]
-modulate = Color( 1, 1, 1, 0 )
 margin_right = 996.0
 margin_bottom = 80.0
 rect_pivot_offset = Vector2( 492, 34 )
@@ -121,15 +116,15 @@ show_relative_selector = false
 
 [node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
 anchor_right = 0.0
-margin_top = 128.0
+margin_top = 40.0
 margin_right = 1008.0
-margin_bottom = 316.0
+margin_bottom = 140.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 8.0
-margin_right = 520.0
+margin_right = 1016.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 
@@ -138,7 +133,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 520.0
+margin_right = 1016.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
@@ -147,7 +142,7 @@ rect_clip_content = false
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 520.0
+margin_right = 1016.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )

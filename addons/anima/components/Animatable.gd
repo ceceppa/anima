@@ -78,6 +78,19 @@ func set(name: String, value) -> void:
 
 	_property_list.set(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name, old_value)
 
+
+func _get_property_list() -> Array:
+	if _property_list:
+		return _property_list.get_property_list()
+
+	return []
+
+func get_property(name: String):
+	return _get(name)
+
+func get_property_initial_value(key: String):
+	return _property_list.get_initial_value(key)
+
 func animate_param(property: String, value, from = null) -> void:
 	var animation := Anima.Node(self)
 
@@ -116,18 +129,6 @@ func animate_params(params: Array) -> void:
 
 	animate(animations)
 
-func _get_property_list() -> Array:
-	if _property_list:
-		return _property_list.get_property_list()
-
-	return []
-
-func get_property(name: String):
-	return _get(name)
-
-func get_property_initial_value(key: String):
-	return _property_list.get_initial_value(key)
-
 func animate(anima_data: Array) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
@@ -138,7 +139,7 @@ func animate(anima_data: Array) -> AnimaNode:
 
 	anima.play()
 	yield(anima, "animation_completed")
-	
+
 	_is_animating_property_change = false
 
 	return anima
