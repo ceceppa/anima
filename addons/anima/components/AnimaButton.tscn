@@ -13,7 +13,6 @@ __meta__ = {
 [node name="AnimaButton" type="Control"]
 margin_right = 0.399994
 margin_bottom = -0.200012
-rect_min_size = Vector2( 95, 32 )
 rect_pivot_offset = Vector2( 50, 16 )
 focus_mode = 2
 script = ExtResource( 3 )

@@ -19,6 +19,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Arc.gd"
 }, {
+"base": "AnimaRectangle",
+"class": "AnimaButton",
+"language": "GDScript",
+"path": "res://addons/anima/components/AnimaButton.gd"
+}, {
 "base": "VBoxContainer",
 "class": "AnimaCarousel",
 "language": "GDScript",
@@ -29,7 +34,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/components/AnimaChars.gd"
 }, {
-"base": "Control",
+"base": "AnimaShape",
 "class": "AnimaCircle",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Circle.gd"
@@ -114,7 +119,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/utils/strings.gd"
 }, {
-"base": "Control",
+"base": "AnimaShape",
 "class": "AnimaTriangle",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Triangle.gd"
@@ -137,6 +142,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "AnimaAnimatable": "",
 "AnimaArc": "",
+"AnimaButton": "res://addons/anima/icons/button.svg",
 "AnimaCarousel": "",
 "AnimaChars": "",
 "AnimaCircle": "",

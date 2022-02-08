@@ -1,16 +1,178 @@
 tool
-extends VBoxContainer
+extends AnimaAnimatable
 
-const COLLAPSED_VALUE := "./Title:size:y" 
-const EXPANDED_VALUE := "./Title:size:y + ./ContentWrapper/MarginContainer:size:y"
+const COLLAPSED_VALUE := "./Wrapper/Title:size:y" 
+const EXPANDED_VALUE := "./Wrapper/Title:size:y + ./Wrapper/ContentWrapper/MarginContainer:size:y"
 
 export var label := "Accordion" setget set_label
 export var expanded := false setget set_expanded
-export (Anima.EASING) var expand_easing = Anima.EASING.LINEAR
-export var speed := 0.15
 
-onready var _label: Label = find_node("Label")
-onready var _expand_collapse: Button = find_node("ExpandCollapse")
+onready var _title: AnimaButton = find_node("Title")
+
+const RECTANGLE_PROPERTIES := {
+	RECTANGLE_SIZE = {
+		name = "Rectangle/Size",
+		type = TYPE_RECT2,
+		default = Rect2(Vector2.ZERO, Vector2(100, 100))
+	},
+	RECTANGLE_FILL_COLOR = {
+		name = "Rectangle/FillColor",
+		type = TYPE_COLOR,
+		default = Color("314569"),
+	},
+	RECTANGLE_BORDER_WIDTH_LEFT = {
+		name = "Rectangle/BorderWidh/Left",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_BORDER_WIDTH_TOP = {
+		name = "Rectangle/BorderWidh/Top",
+		type = TYPE_INT, 
+		default = 0
+	},
+	RECTANGLE_BORDER_WIDTH_RIGHT = {
+		name = "Rectangle/BorderWidh/Right",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_BORDER_WIDTH_BOTTOM = {
+		name = "Rectangle/BorderWidh/Bottom",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_BORDER_COLOR = {
+		name = "Rectangle/Border/Color",
+		type = TYPE_COLOR,
+		default = Color.transparent,
+	},
+	RECTANGLE_BORDER_BLEND = {
+		name = "Rectangle/Border/Blend",
+		type = TYPE_BOOL,
+		default = false,
+	},
+	RECTANGLE_BORDER_OFFSET = {
+		name = "Rectangle/Border/Offset",
+		type = TYPE_VECTOR2,
+		default = Vector2(0, 0)
+	},
+	RECTANGLE_CORNER_RADIUS_TOP_LEFT = {
+		name = "Rectangle/CornerRadius/TopLeft",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_CORNER_RADIUS_TOP_RIGHT = {
+		name ="Rectangle/CornerRadius/TopRight",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_CORNER_RADIUS_BOTTOM_RIGHT = {
+		name = "Rectangle/CornerRadius/BottomRight",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_CORNER_RADIUS_BOTTOM_LEFT = {
+		name = "Rectangle/CornerRadius/BottomLeft",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_SHADOW_COLOR = {
+		name = "Rectangle/Shadow/Color",
+		type = TYPE_COLOR,
+		default = Color.transparent,
+	},
+	RECTANGLE_SHADOW_SIZE = {
+		name = "Rectangle/Shadow/Size",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_SHADOW_OFFSET = {
+		name = "Rectangle/Shadow/Offset",
+		type = TYPE_VECTOR2,
+		default = Vector2(0, 0),
+	}
+}
+
+const BUTTON_BASE_PROPERTIES := {
+	# Normal
+	NORMAL_FILL_COLOR = {
+		name = "Normal/FillColor",
+		type = TYPE_COLOR,
+		default = Color("314569")
+	},
+
+	# Hovered
+	HOVERED_USE_STYLE = {
+		name = "Hovered/UseSameStyleOf",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = ",Normal,Pressed,Focused",
+		default = ""
+	},
+	HOVERED_FILL_COLOR = {
+		name = "Hovered/FillColor",
+		type = TYPE_COLOR,
+		default = Color("628ad1")
+	},
+
+	# Pressed
+	PRESSED_USE_STYLE = {
+		name = "Pressed/UseSameStyleOf",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = ",Normal,Pressed,Focused",
+		default = ""
+	},
+	PRESSED_FILL_COLOR = {
+		name = "Pressed/FillColor",
+		type = TYPE_COLOR,
+		default = Color("428ad1")
+	},
+
+	# Focused
+	FOCUSED_USE_STYLE = {
+		name = "Focused/UseSameStyleOf",
+		type = TYPE_STRING,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = ",Normal,Pressed,Focused",
+		default = ""
+	},
+	FOCUSED_FILL_COLOR = {
+		name = "Focused/FillColor",
+		type = TYPE_COLOR,
+		default = Color("428ad1")
+	},
+}
+
+var _all_properties := BUTTON_BASE_PROPERTIES
+
+func _init():
+	._init()
+
+	var extra_keys = ["Normal", "Hovered", "Focused", "Pressed"]
+
+	for key in RECTANGLE_PROPERTIES:
+		for extra_key_index in extra_keys.size():
+			var extra_key: String = extra_keys[extra_key_index]
+			var new_key = key.replace("RECTANGLE", extra_key.to_upper())
+
+			if BUTTON_BASE_PROPERTIES.has(new_key):
+				continue
+
+			var new_value = RECTANGLE_PROPERTIES[key].duplicate()
+
+			if extra_key_index > 0:
+				if new_value.default is float:
+					new_value.default = -1
+				elif new_value.default is Vector2:
+					new_value.default = Vector2(-1, -1)
+				elif new_value.default is Rect2:
+					new_value.default = Rect2(-1, -1, -1, -1)
+
+			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
+
+			_all_properties[new_key] = new_value
+
+	_add_properties(_all_properties)
 
 func _ready():
 	set_expanded(expanded)
@@ -19,13 +181,10 @@ func _ready():
 func set_expanded(is_expanded: bool, animate := true) -> void:
 	expanded = is_expanded
 
-	if get_child_count() == 0:
+	if get_child_count() == 0 or not is_inside_tree():
 		return
 
-	if _expand_collapse == null:
-		_expand_collapse = find_node("ExpandCollapse")
-
-	if animate:
+	if animate and should_animate_property_change():
 		_animate_height_change()
 
 		return
@@ -33,49 +192,59 @@ func set_expanded(is_expanded: bool, animate := true) -> void:
 	var value: String = EXPANDED_VALUE if is_expanded else COLLAPSED_VALUE
 	var y: float = AnimaTweenUtils.maybe_calculate_value(value, { node = self, property = "min_size:y" })
 
+	rect_min_size.y = y
 	rect_size.y = y
+
+func _set(property, value):
+	._set(property, value)
+
+	if _title and property == "label":
+		_title.set(property, value)
+		_title._on_mouse_exited()
 
 func _animate_height_change() -> void:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
-	anima.set_default_duration(speed)
+	anima.set_default_duration(get_duration())
 
 	anima.then(
-		Anima.Node() \
+		Anima.Node(self) \
 			.anima_property("min_size:y") \
 			.anima_from(COLLAPSED_VALUE) \
-			.anima_to(EXPANDED_VALUE + "")
+			.anima_to(EXPANDED_VALUE + "") \
+			.anima_easing(get_easing())
 	)
 	anima.with(
-		Anima.Node() \
+		Anima.Node(self) \
 			.anima_property("size:y") \
 			.anima_from(COLLAPSED_VALUE) \
-			.anima_to(EXPANDED_VALUE)
+			.anima_to(EXPANDED_VALUE) \
+			.anima_easing(get_easing())
 	)
-	
+
 	var initial_values := {}
-	
+
 	if expanded:
 		initial_values = { opacity = 0 }
 
 	anima.with(
-		Anima.Node($ContentWrapper/MarginContainer/Content) \
+		Anima.Node($Wrapper/ContentWrapper/MarginContainer/Content) \
 			.anima_animation({
-				0: {
+				from = {
 					scale = Vector2(0.8, 0.8),
 					opacity = 0,
 				},
-				100: {
+				to = {
 					scale = Vector2.ONE,
 					opacity = 1,
-					easing = Anima.EASING.EASE_IN_OUT_BACK
+					easing = get_easing()
 				},
 				initial_values = initial_values
 			}) \
 			.anima_pivot(Anima.PIVOT.CENTER)
 	)
 	anima.also(
-		Anima.Node($Title/Icon) \
+		Anima.Node($Wrapper/Title/Icon) \
 			.anima_property("rotate") \
 			.anima_from(-90) \
 			.anima_to(0) \
@@ -93,16 +262,13 @@ func set_label(new_label: String) -> void:
 	if get_child_count() == 0:
 		return
 
-	if _label == null:
-		_label = $Title.find_node("Label")
+	if _title == null:
+		_title = find_node("Title")
 
-	_label.text = new_label
+	_title.set_label(new_label)
 
 func _on_AnimaAccordion_tree_entered():
 	set_expanded(expanded, false)
-
-func _on_Content_item_rect_changed():
-	$ContentWrapper.rect_size = $ContentWrapper/MarginContainer/Content.rect_size
 
 func _on_Title_pressed():
 	set_expanded(!expanded)

@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/shapes/Circle.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/shapes/Triangle.gd" type="Script" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -138,5 +140,40 @@ margin_bottom = 54.0
 text = "Do it"
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="AnimaCircle" type="Control" parent="."]
+margin_right = 158.0
+margin_bottom = 84.0
+rect_pivot_offset = Vector2( 79, 42 )
+script = ExtResource( 3 )
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.15
+Animation/Easing = 28.0
+Circle/Radius = 50.0
+Circle/FillColor = Color( 0, 1, 1, 1 )
+Circle/Border/Width = 5.0
+Circle/Border/Color = Color( 0, 0, 0, 1 )
+Circle/Border/Offset = 20.0
+
+[node name="AnimaTriangle" type="Control" parent="."]
+margin_left = -50.0
+margin_top = 117.0
+margin_right = 195.0
+margin_bottom = 263.0
+rect_pivot_offset = Vector2( 122.5, 73 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.15
+Animation/Easing = 0
+Triangle/Point1 = Vector2( 0, 0 )
+Triangle/Point2 = Vector2( 100, 100 )
+Triangle/Point3 = Vector2( 0, 100 )
+Triangle/FillColor = Color( 0, 1, 1, 1 )
+Triangle/Border/Width = 0.0
+Triangle/Border/Color = Color( 0, 0, 0, 1 )
+Triangle/Border/Type = 1
 
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

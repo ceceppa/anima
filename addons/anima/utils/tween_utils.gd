@@ -166,11 +166,17 @@ static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
 			key = [key]
 
 		for percentage in key:
+			if percentage == "from":
+				percentage = 0
+			elif percentage == "to":
+				percentage = 100
+
 			if not result.has(percentage):
 				result[percentage] = {}
 
 			for k in value:
 				result[percentage][k] = value[k]
+
 
 	#
 	# Interpolates the "missing" keys, for example:

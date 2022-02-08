@@ -1,12 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/anima/nodes/AnimaAnimationControl.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
-[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Image" id=26]
@@ -23,13 +21,6 @@ flags = 0
 flags = 0
 image = SubResource( 26 )
 size = Vector2( 16, 16 )
-
-[sub_resource type="DynamicFont" id=19]
-use_filter = true
-font_data = ExtResource( 4 )
-__meta__ = {
-"_original_size": 18
-}
 
 [node name="AnimationControl" type="MarginContainer"]
 anchor_right = 1.0
@@ -48,83 +39,44 @@ __meta__ = {
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 1016.0
-margin_bottom = 148.0
+margin_bottom = 272.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TimeDelay" parent="Container" instance=ExtResource( 8 )]
 margin_right = 1008.0
-rect_pivot_offset = Vector2( 504, 62 )
+rect_pivot_offset = Vector2( 504, 23.6236 )
 label = "Time:"
 
-[node name="Title" parent="Container/TimeDelay" index="0"]
+[node name="Title" parent="Container/TimeDelay/Wrapper" index="0"]
 margin_right = 1008.0
+rect_min_size = Vector2( 0, 0 )
+rect_pivot_offset = Vector2( 504, 16 )
+label = "Time:"
 
-[node name="Icon" parent="Container/TimeDelay/Title" index="1"]
+[node name="Icon" parent="Container/TimeDelay/Wrapper/Title" index="2"]
 icon = SubResource( 25 )
 
-[node name="ContentWrapper" parent="Container/TimeDelay" index="1"]
+[node name="ContentWrapper" parent="Container/TimeDelay/Wrapper" index="1"]
 margin_right = 1008.0
 
-[node name="Content" parent="Container/TimeDelay/ContentWrapper/MarginContainer" index="0"]
+[node name="Content" parent="Container/TimeDelay/Wrapper/ContentWrapper/MarginContainer" index="0"]
 margin_right = 996.0
-margin_bottom = 80.0
-rect_pivot_offset = Vector2( 492, 34 )
-
-[node name="Grid" type="GridContainer" parent="Container/TimeDelay/ContentWrapper/MarginContainer/Content" index="0"]
-margin_right = 984.0
-margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 2
-
-[node name="Label" type="Label" parent="Container/TimeDelay/ContentWrapper/MarginContainer/Content/Grid"]
-margin_top = 6.0
-margin_right = 120.0
-margin_bottom = 26.0
-rect_min_size = Vector2( 120, 0 )
-custom_fonts/font = SubResource( 19 )
-text = "Time:"
-
-[node name="Duration" parent="Container/TimeDelay/ContentWrapper/MarginContainer/Content/Grid" instance=ExtResource( 7 )]
-anchor_right = 0.0
-margin_left = 124.0
-margin_right = 984.0
-type = 3
-can_clear_custom_value = false
-show_relative_selector = false
-
-[node name="Label2" type="Label" parent="Container/TimeDelay/ContentWrapper/MarginContainer/Content/Grid"]
-margin_top = 42.0
-margin_right = 120.0
-margin_bottom = 62.0
-rect_min_size = Vector2( 120, 0 )
-custom_fonts/font = SubResource( 19 )
-text = "delay (s):"
-
-[node name="Delay" parent="Container/TimeDelay/ContentWrapper/MarginContainer/Content/Grid" instance=ExtResource( 7 )]
-anchor_right = 0.0
-margin_left = 124.0
-margin_top = 36.0
-margin_right = 984.0
-margin_bottom = 68.0
-label = "parent value"
-type = 3
-can_clear_custom_value = false
-show_relative_selector = false
+rect_scale = Vector2( 0.8, 0.8 )
+rect_pivot_offset = Vector2( 492, 0 )
 
 [node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
 anchor_right = 0.0
-margin_top = 40.0
+margin_top = 36.0
 margin_right = 1008.0
-margin_bottom = 140.0
+margin_bottom = 264.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 8.0
-margin_right = 1016.0
+margin_right = 520.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 
@@ -133,7 +85,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
+margin_right = 520.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
@@ -142,7 +94,7 @@ rect_clip_content = false
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
+margin_right = 520.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )

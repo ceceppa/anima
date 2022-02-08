@@ -16,6 +16,10 @@ func add(property: Dictionary) -> void:
 		"visible": true
 	}
 
+func add_properties(properties: Dictionary) -> void:
+	for property in properties:
+		add(property)
+
 func hide(name: String) -> void:
 	_properties[name].visible = false
 

@@ -1,5 +1,6 @@
 tool
 extends AnimaRectangle
+class_name AnimaButton, "res://addons/anima/icons/button.svg"
 
 enum Align {LEFT, CENTER, RIGHT, FILL}
 enum Valign {TOP, CENTER, BOTTOM, FILL}
@@ -8,7 +9,16 @@ export var label := "Anima Button" setget set_label
 export (Align) var align := Align.LEFT setget set_align
 export (Valign) var valign := Valign.TOP setget set_valign
 
+var _label := Label.new()
+
 var _is_focused := false
+
+const STATE := {
+	NORMAL = "Normal",
+	HOVERED = "Hovered",
+	FOCUSED = "Focused",
+	PRESSED = "Pressed"
+}
 
 const BUTTON_BASE_PROPERTIES := {
 	# Normal
@@ -97,6 +107,19 @@ func _init():
 
 	_copy_properties("Normal")
 
+	_label.size_flags_horizontal = SIZE_EXPAND_FILL
+	_label.size_flags_vertical = SIZE_EXPAND_FILL
+	_label.anchor_right = 1
+	_label.anchor_bottom = 1
+
+	connect("focus_entered", self, "_on_focus_entered")
+	connect("focus_exited", self, "_on_focus_exited")
+	connect("mouse_entered", self, "_on_mouse_entered")
+	connect("mouse_exited", self, "_on_mouse_exited")
+	connect("mouse_down", self, "_on_mouse_down")
+
+	add_child(_label)
+
 func _copy_properties(from: String) -> void:
 	var copy_from_key = from.to_upper()
 
@@ -133,35 +156,41 @@ func _animate_state(root_key: String) -> void:
 	if params_to_animate.size() > 0:
 		animate_params(params_to_animate)
 
+func refresh(state: String, ignore_if_focused := true) -> void:
+	if _is_focused and ignore_if_focused:
+		state = STATE.FOCUSED
+
+	_animate_state(state)
+
 func set_label(new_label: String) -> void:
 	label = new_label
-	get_node("Label").text = label
+	_label.text = label
+
+	if _label.rect_size > rect_min_size:
+		rect_min_size = _label.rect_size
 
 func set_align(new_align: int) -> void:
 	align = new_align
-	get_node("Label").align = align
+	_label.align = align
 
 func set_valign(new_valign: int) -> void:
 	valign = new_valign
-	get_node("Label").valign = valign
+	_label.valign = valign
 
 func _on_mouse_entered():
-	if not _is_focused:
-		_animate_state("Hovered")
+	refresh(STATE.HOVERED)
 
 func _on_mouse_exited():
-	if not _is_focused:
-		_animate_state("Normal")
+	refresh(STATE.NORMAL)
 
 func _on_mouse_down():
-	if not _is_focused:
-		_animate_state("Pressed")
+	refresh(STATE.PRESSED, false)
 
-func _on_AnimaButton_focus_entered():
-	_animate_state("Focused")
+func _on_focus_entered():
+	refresh(STATE.FOCUSED)
 	_is_focused = true
 
-func _on_AnimaButton_focus_exited():
-	_animate_state("Normal")
-
+func _on_focus_exited():
 	_is_focused = false
+	
+	refresh(STATE.NORMAL)

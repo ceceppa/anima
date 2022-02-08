@@ -84,6 +84,9 @@ const _ELASTIC_C4: float = (2.0 * PI) / 3.0
 const _ELASTIC_C5: float = (2.0 * PI) / 4.5
 
 static func get_easing_points(easing_name):
+	if typeof(easing_name) == TYPE_REAL:
+		easing_name = int(easing_name)
+
 	if _easing_mapping.has(easing_name):
 		return _easing_mapping[easing_name]
 

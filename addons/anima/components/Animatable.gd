@@ -146,3 +146,12 @@ func animate(anima_data: Array) -> AnimaNode:
 
 func set_position(position: Vector2, default := false):
 	animate_param("position", position)
+
+func should_animate_property_change() -> bool:
+	return get_property(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name)
+
+func get_easing() -> int:
+	return get_property(BASE_PROPERTIES.ANIMATION_EASING.name)
+
+func get_duration() -> int:
+	return get_property(BASE_PROPERTIES.ANIMATION_SPEED.name)
