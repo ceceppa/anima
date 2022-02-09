@@ -5,7 +5,7 @@ const COLLAPSED_VALUE := "./Wrapper/Title:size:y"
 const EXPANDED_VALUE := "./Wrapper/Title:size:y + ./Wrapper/ContentWrapper/MarginContainer:size:y"
 
 export var label := "Accordion" setget set_label
-export var expanded := false setget set_expanded
+export var expanded := true setget set_expanded
 
 onready var _title: AnimaButton = find_node("Title")
 
@@ -143,7 +143,20 @@ const BUTTON_BASE_PROPERTIES := {
 	},
 }
 
+const CUSTOM_PROPERTIES := {
+		# Animation
+	ANIMATION_NAME = {
+		name = "Animation/Name",
+		type = TYPE_STRING,
+		default = "fadeIn"
+	},
+}
+
 var _all_properties := BUTTON_BASE_PROPERTIES
+var _is_ready := false
+
+func _enter_tree():
+	set_expanded(expanded, false)
 
 func _init():
 	._init()
@@ -172,11 +185,14 @@ func _init():
 
 			_all_properties[new_key] = new_value
 
+	_add_properties(CUSTOM_PROPERTIES)
 	_add_properties(_all_properties)
 
 func _ready():
 	set_expanded(expanded)
 	set_label(label)
+
+	_is_ready = true
 
 func set_expanded(is_expanded: bool, animate := true) -> void:
 	expanded = is_expanded
@@ -184,7 +200,7 @@ func set_expanded(is_expanded: bool, animate := true) -> void:
 	if get_child_count() == 0 or not is_inside_tree():
 		return
 
-	if animate and should_animate_property_change():
+	if _is_ready and animate and should_animate_property_change():
 		_animate_height_change()
 
 		return
@@ -204,51 +220,38 @@ func _set(property, value):
 
 func _animate_height_change() -> void:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
+	var easing: int = get_easing()
 
 	anima.set_default_duration(get_duration())
 
 	anima.then(
-		Anima.Node(self) \
+		Anima.Node() \
 			.anima_property("min_size:y") \
 			.anima_from(COLLAPSED_VALUE) \
 			.anima_to(EXPANDED_VALUE + "") \
-			.anima_easing(get_easing())
+			.anima_easing(easing)
 	)
 	anima.with(
-		Anima.Node(self) \
+		Anima.Node() \
 			.anima_property("size:y") \
 			.anima_from(COLLAPSED_VALUE) \
 			.anima_to(EXPANDED_VALUE) \
-			.anima_easing(get_easing())
+			.anima_easing(easing)
 	)
-
-	var initial_values := {}
-
-	if expanded:
-		initial_values = { opacity = 0 }
 
 	anima.with(
 		Anima.Node($Wrapper/ContentWrapper/MarginContainer/Content) \
-			.anima_animation({
-				from = {
-					scale = Vector2(0.8, 0.8),
-					opacity = 0,
-				},
-				to = {
-					scale = Vector2.ONE,
-					opacity = 1,
-					easing = get_easing()
-				},
-				initial_values = initial_values
-			}) \
-			.anima_pivot(Anima.PIVOT.CENTER)
+			.anima_animation(get_property(CUSTOM_PROPERTIES.ANIMATION_NAME.name), true) \
+			.anima_easing(easing) \
+			.anima_pivot(Anima.PIVOT.CENTER) \
 	)
 	anima.also(
 		Anima.Node($Wrapper/Title/Icon) \
 			.anima_property("rotate") \
 			.anima_from(-90) \
 			.anima_to(0) \
-			.anima_pivot(Anima.PIVOT.CENTER)
+			.anima_pivot(Anima.PIVOT.CENTER) \
+			.anima_easing(easing)
 	)
 
 	if expanded:
@@ -266,9 +269,6 @@ func set_label(new_label: String) -> void:
 		_title = find_node("Title")
 
 	_title.set_label(new_label)
-
-func _on_AnimaAccordion_tree_entered():
-	set_expanded(expanded, false)
 
 func _on_Title_pressed():
 	set_expanded(!expanded)

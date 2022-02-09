@@ -1,50 +1,26 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/icons/collapse.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
 
-[sub_resource type="DynamicFont" id=22]
-use_filter = true
-font_data = ExtResource( 4 )
-__meta__ = {
-"_original_size": 18
-}
-
-[sub_resource type="StyleBoxFlat" id=23]
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-
-[sub_resource type="Image" id=28]
-data = {
-"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 223, 223, 223, 0, 218, 218, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 218, 218, 0, 223, 223, 223, 0, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 118, 223, 223, 223, 188, 218, 218, 218, 35, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 218, 218, 218, 35, 223, 223, 223, 188, 222, 222, 222, 118, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 158, 224, 224, 224, 255, 223, 223, 223, 238, 222, 222, 222, 70, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 70, 223, 223, 223, 238, 224, 224, 224, 255, 222, 222, 222, 158, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 208, 208, 0, 208, 208, 208, 11, 223, 223, 223, 172, 224, 224, 224, 255, 223, 223, 223, 253, 222, 222, 222, 119, 222, 222, 222, 0, 222, 222, 222, 0, 222, 222, 222, 119, 223, 223, 223, 253, 224, 224, 224, 255, 223, 223, 223, 172, 208, 208, 208, 11, 208, 208, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 208, 208, 0, 223, 223, 223, 0, 223, 223, 223, 121, 223, 223, 223, 253, 224, 224, 224, 255, 223, 223, 223, 168, 223, 223, 223, 168, 224, 224, 224, 255, 223, 223, 223, 253, 223, 223, 223, 121, 223, 223, 223, 0, 208, 208, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 72, 222, 222, 222, 239, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 239, 223, 223, 223, 72, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 218, 218, 218, 35, 223, 223, 223, 188, 223, 223, 223, 188, 218, 218, 218, 35, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 218, 218, 0, 223, 223, 223, 0, 223, 223, 223, 0, 218, 218, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
-"format": "RGBA8",
-"height": 16,
-"mipmaps": false,
-"width": 16
-}
-
-[sub_resource type="ImageTexture" id=27]
-flags = 0
-flags = 0
-image = SubResource( 28 )
-size = Vector2( 16, 16 )
-
-[sub_resource type="StyleBoxFlat" id=25]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.105882, 0.129412, 0.180392, 1 )
 
 [node name="AnimaAccordion" type="Control"]
 margin_right = 153.0
-margin_bottom = 33.483
-rect_min_size = Vector2( 153, 32 )
-rect_pivot_offset = Vector2( 76.5, 28 )
+margin_bottom = 56.0
+rect_min_size = Vector2( 153, 56 )
+rect_pivot_offset = Vector2( 76.5, 16.4149 )
+rect_clip_content = true
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 Animation/AnimatePropertyChange = true
-Animation/Speed = 0.15
+Animation/Speed = 0.3
 Animation/Easing = 0
+Animation/Name = "fadeInUp"
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Hovered/UseSameStyleOf = ""
 Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
@@ -128,8 +104,7 @@ margin_right = 153.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 153, 32 )
 rect_pivot_offset = Vector2( 76.5, 55 )
-size_flags_horizontal = 0
-size_flags_vertical = 0
+size_flags_horizontal = 3
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -208,38 +183,25 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" parent="Wrapper/Title" instance=ExtResource( 2 )]
-margin_left = 3.0
-margin_top = -5.0
-margin_right = 19.0
-margin_bottom = 27.0
-rect_min_size = Vector2( 0, 32 )
-rect_rotation = -90.0
-rect_pivot_offset = Vector2( 8, 16 )
-mouse_filter = 2
-size_flags_vertical = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_fonts/font = SubResource( 22 )
-custom_styles/normal = SubResource( 23 )
-icon = SubResource( 27 )
-flat = true
-icon_name = "Collapse"
+[node name="Icon" type="Sprite" parent="Wrapper/Title"]
+position = Vector2( 16, 15 )
+texture = ExtResource( 2 )
 
 [node name="ContentWrapper" type="Panel" parent="Wrapper"]
 margin_top = 32.0
 margin_right = 153.0
-margin_bottom = 33.0
+margin_bottom = 56.0
 rect_pivot_offset = Vector2( 300, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_styles/panel = SubResource( 25 )
+custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="Wrapper/ContentWrapper"]
 anchor_right = 1.0
-anchor_bottom = 1.0
+margin_right = -12.0
 rect_pivot_offset = Vector2( 47.5, 12 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -252,13 +214,10 @@ __meta__ = {
 }
 
 [node name="Content" type="VBoxContainer" parent="Wrapper/ContentWrapper/MarginContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 141.0
+margin_right = 129.0
 margin_bottom = 12.0
-rect_scale = Vector2( 0.8, 0.8 )
-rect_pivot_offset = Vector2( 64.5, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
@@ -266,4 +225,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="tree_entered" from="." to="." method="_on_AnimaAccordion_tree_entered"]
+[connection signal="pressed" from="Wrapper/Title" to="." method="_on_Title_pressed"]

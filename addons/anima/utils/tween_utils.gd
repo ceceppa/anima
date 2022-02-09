@@ -28,7 +28,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	else:
 		to = current_value
 
-	var pivot = animation_data.pivot if animation_data.has("pivot") else Anima.PIVOT.CENTER 
+	var pivot = animation_data.pivot if animation_data.has("pivot") else Anima.PIVOT.CENTER
 	if not node is Spatial:
 		AnimaNodesProperties.set_2D_pivot(animation_data.node, pivot)
 
@@ -166,10 +166,11 @@ static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
 			key = [key]
 
 		for percentage in key:
-			if percentage == "from":
-				percentage = 0
-			elif percentage == "to":
-				percentage = 100
+			if percentage is String:
+				if percentage == "from":
+					percentage = 0
+				elif percentage == "to":
+					percentage = 100
 
 			if not result.has(percentage):
 				result[percentage] = {}

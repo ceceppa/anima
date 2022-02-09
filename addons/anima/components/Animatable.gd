@@ -11,7 +11,7 @@ const BASE_PROPERTIES := {
 	ANIMATION_SPEED = {
 		name = "Animation/Speed",
 		type = TYPE_REAL,
-		default = 0.15
+		default = 0.3
 	},
 	ANIMATION_EASING = {
 		name = "Animation/Easing",

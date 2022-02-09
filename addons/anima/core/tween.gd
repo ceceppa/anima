@@ -63,7 +63,9 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data.initial_values = {}
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
 
-	if animation_data.has("initial_values") and not is_backwards_animation:
+	var ignore_initial_values = animation_data.has("_ignore_initial_values") and animation_data._ignore_initial_values
+
+	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
 		if not animation_data.has("to"):
 			printerr("When using '_initial_value' the 'to' cannot be empty!")
 		else:
@@ -71,7 +73,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	var easing_points
 
-	if animation_data.has('easing') and not animation_data.easing == null:
+	if animation_data.has("easing") and not animation_data.easing == null:
 		if animation_data.easing is FuncRef or animation_data.easing is Array:
 			easing_points = animation_data.easing
 		else:
@@ -191,6 +193,9 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
 
+	if animation_data.has("_ignore_relative") and animation_data._ignore_relative:
+		relative_properties = []
+
 	if full_keyframes_data.has("relative"):
 		relative_properties = full_keyframes_data.relative
 
@@ -266,6 +271,9 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 	var easing = null
 	var pivot = null
 	var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
+
+	if animation_data.has("easing"):
+		easing = animation_data.easing
 
 	if previous_frame.has("easing"):
 		easing = previous_frame.easing
@@ -418,12 +426,20 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 			continue
 
 		var animation_data = animation.duplicate(true)
+
 		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
 		var wait_time: float = animation_data._wait_time
 		var node = animation_data.node
 		var new_wait_time: float = length - duration - wait_time
 		var property = animation_data.property
 		var is_relative = animation_data.has("relative") and animation_data.relative
+
+		if animation_data.has("initial_value"):
+			animation_data.erase("initial_value")
+			
+		if animation_data.has("initial_values"):
+			animation_data.erase("initial_values")
+
 
 		if not is_relative:
 			var temp = animation_data.to

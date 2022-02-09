@@ -21,6 +21,33 @@ const STATE := {
 }
 
 const BUTTON_BASE_PROPERTIES := {
+	# Button
+	BUTTON_LABEL = {
+		name = "Button/Label",
+		type = TYPE_STRING,
+		default = "Anima Button"
+	},
+	BUTTON_ALIGN = {
+		name = "Button/Align",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Left,Center,Right,Fill",
+		default = ""
+	},
+	BUTTON_VALIGN = {
+		name = "Button/VAlign",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_ENUM,
+		hint_string = "Left,Center,Right,Fill",
+		default = 0
+	},
+	BUTTON_FONT = {
+		name = "Button/Font",
+		type = TYPE_OBJECT,
+		hint = PROPERTY_HINT_RESOURCE_TYPE,
+		hint_tooltip = "Font",
+		default = 0
+	},
 	# Normal
 	NORMAL_FILL_COLOR = {
 		name = "Normal/FillColor",
@@ -165,9 +192,6 @@ func refresh(state: String, ignore_if_focused := true) -> void:
 func set_label(new_label: String) -> void:
 	label = new_label
 	_label.text = label
-
-	if _label.rect_size > rect_min_size:
-		rect_min_size = _label.rect_size
 
 func set_align(new_align: int) -> void:
 	align = new_align

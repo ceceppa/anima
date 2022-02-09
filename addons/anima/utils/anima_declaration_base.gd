@@ -24,12 +24,13 @@ func anima_duration(duration: float):
 func anima_delay(delay: float):
 	_data.delay = delay
 
-func anima_animation(animation):
+func anima_animation(animation, ignore_initial_values := false):
 	if _data.has("property"):
 		printerr("The property parameter have already been specified, so the animation one will be ignored.")
 
 		return 
 
+	_data._ignore_initial_values = ignore_initial_values
 	_data.animation = animation
 
 func anima_property(property_name):

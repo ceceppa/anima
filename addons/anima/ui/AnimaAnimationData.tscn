@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
@@ -12,35 +13,22 @@ __meta__ = {
 "_original_size": 2
 }
 
-[sub_resource type="Image" id=25]
-data = {
-"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 223, 223, 223, 0, 218, 218, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 218, 218, 0, 223, 223, 223, 0, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 118, 223, 223, 223, 188, 218, 218, 218, 35, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 218, 218, 218, 35, 223, 223, 223, 188, 222, 222, 222, 118, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 158, 224, 224, 224, 255, 223, 223, 223, 238, 222, 222, 222, 70, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 70, 223, 223, 223, 238, 224, 224, 224, 255, 222, 222, 222, 158, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 208, 208, 0, 208, 208, 208, 11, 223, 223, 223, 172, 224, 224, 224, 255, 223, 223, 223, 253, 222, 222, 222, 119, 222, 222, 222, 0, 222, 222, 222, 0, 222, 222, 222, 119, 223, 223, 223, 253, 224, 224, 224, 255, 223, 223, 223, 172, 208, 208, 208, 11, 208, 208, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 208, 208, 0, 223, 223, 223, 0, 223, 223, 223, 121, 223, 223, 223, 253, 224, 224, 224, 255, 223, 223, 223, 168, 223, 223, 223, 168, 224, 224, 224, 255, 223, 223, 223, 253, 223, 223, 223, 121, 223, 223, 223, 0, 208, 208, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 72, 222, 222, 222, 239, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 239, 223, 223, 223, 72, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 218, 218, 218, 35, 223, 223, 223, 188, 223, 223, 223, 188, 218, 218, 218, 35, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 218, 218, 0, 223, 223, 223, 0, 223, 223, 223, 0, 218, 218, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
-"format": "RGBA8",
-"height": 16,
-"mipmaps": false,
-"width": 16
-}
-
-[sub_resource type="ImageTexture" id=21]
-flags = 0
-flags = 0
-image = SubResource( 25 )
-size = Vector2( 16, 16 )
-
-[sub_resource type="DynamicFont" id=23]
+[sub_resource type="DynamicFont" id=2]
 use_filter = true
 font_data = ExtResource( 2 )
 __meta__ = {
 "_original_size": 18
 }
 
-[sub_resource type="ButtonGroup" id=24]
+[sub_resource type="ButtonGroup" id=3]
 
 [node name="AnimaData" type="VBoxContainer"]
-anchor_right = 1.0
-margin_bottom = 148.0
+anchor_right = 0.582
+anchor_bottom = 0.247
+margin_right = 0.0319824
+margin_bottom = -0.200012
 size_flags_horizontal = 3
-size_flags_vertical = 0
+size_flags_vertical = 3
 custom_constants/separation = 12
 script = ExtResource( 1 )
 __meta__ = {
@@ -48,10 +36,10 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-margin_right = 1024.0
+margin_right = 596.0
 margin_bottom = 4.0
-custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -59,87 +47,169 @@ __meta__ = {
 
 [node name="HSeparator" type="HSeparator" parent="."]
 margin_top = 16.0
-margin_right = 1024.0
+margin_right = 596.0
 margin_bottom = 20.0
 
 [node name="NodeOrGroup" parent="." instance=ExtResource( 7 )]
 margin_top = 32.0
-margin_right = 1024.0
-margin_bottom = 64.0
-rect_min_size = Vector2( 0, 32 )
+margin_right = 596.0
+margin_bottom = 148.0
+rect_min_size = Vector2( 0, 116 )
 rect_pivot_offset = Vector2( 512, 42 )
+size_flags_horizontal = 3
 label = "Animate as:"
 Animation/Easing = 27.0
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Animation/Name = "fadeIn"
+
+[node name="Wrapper" parent="NodeOrGroup" index="0"]
+rect_min_size = Vector2( 100, 0 )
 
 [node name="Title" parent="NodeOrGroup/Wrapper" index="0"]
-margin_right = 1024.0
-rect_min_size = Vector2( 1024, 32 )
-rect_pivot_offset = Vector2( 512, 12 )
+margin_right = 596.0
+rect_pivot_offset = Vector2( 298, 16 )
 label = "Animate as:"
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-
-[node name="Icon" parent="NodeOrGroup/Wrapper/Title" index="1"]
-icon = SubResource( 21 )
+Animation/Speed = 0.3
+Button/Label = "Anima Button"
+Button/Align = ""
+Button/VAlign = 0
+Button/Font = 0
 
 [node name="ContentWrapper" parent="NodeOrGroup/Wrapper" index="1"]
-margin_right = 1024.0
-margin_bottom = 32.0
+margin_right = 596.0
+margin_bottom = 116.0
 
 [node name="Content" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer" index="0"]
-margin_right = 1012.0
-margin_bottom = 40.0
+margin_right = 572.0
+margin_bottom = 72.0
 rect_pivot_offset = Vector2( 500, 14 )
 
 [node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content" index="0"]
-margin_right = 1000.0
-margin_bottom = 28.0
-rect_pivot_offset = Vector2( -236.375, -60 )
+margin_right = 560.0
+margin_bottom = 60.0
+rect_pivot_offset = Vector2( 500, 14 )
 columns = 3
 
+[node name="AnimaButton" type="Control" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
+margin_right = 184.0
+margin_bottom = 28.0
+rect_pivot_offset = Vector2( 92, 14 )
+script = ExtResource( 3 )
+label = "Node"
+align = 1
+valign = 1
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
+Button/Label = "Anima Button"
+Button/Align = ""
+Button/VAlign = 0
+Button/Font = 0
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, -1, -1 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/BorderWidh/Left = 0
+Hovered/BorderWidh/Left = 0
+Focused/BorderWidh/Left = 0
+Pressed/BorderWidh/Left = 0
+Normal/BorderWidh/Top = 0
+Hovered/BorderWidh/Top = 0
+Focused/BorderWidh/Top = 0
+Pressed/BorderWidh/Top = 0
+Normal/BorderWidh/Right = 0
+Hovered/BorderWidh/Right = 0
+Focused/BorderWidh/Right = 0
+Pressed/BorderWidh/Right = 0
+Normal/BorderWidh/Bottom = 0
+Hovered/BorderWidh/Bottom = 0
+Focused/BorderWidh/Bottom = 0
+Pressed/BorderWidh/Bottom = 0
+Normal/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0 )
+Focused/Border/Color = Color( 1, 1, 1, 0 )
+Pressed/Border/Color = Color( 1, 1, 1, 0 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/CornerRadius/TopLeft = 0
+Hovered/CornerRadius/TopLeft = 0
+Focused/CornerRadius/TopLeft = 0
+Pressed/CornerRadius/TopLeft = 0
+Normal/CornerRadius/TopRight = 0
+Hovered/CornerRadius/TopRight = 0
+Focused/CornerRadius/TopRight = 0
+Pressed/CornerRadius/TopRight = 0
+Normal/CornerRadius/BottomRight = 0
+Hovered/CornerRadius/BottomRight = 0
+Focused/CornerRadius/BottomRight = 0
+Pressed/CornerRadius/BottomRight = 0
+Normal/CornerRadius/BottomLeft = 0
+Hovered/CornerRadius/BottomLeft = 0
+Focused/CornerRadius/BottomLeft = 0
+Pressed/CornerRadius/BottomLeft = 0
+Normal/Shadow/Color = Color( 1, 1, 1, 0 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
+Normal/Shadow/Size = 0
+Hovered/Shadow/Size = 0
+Focused/Shadow/Size = 0
+Pressed/Shadow/Size = 0
+Normal/Shadow/Offset = Vector2( 0, 0 )
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
 [node name="AsNode" type="Button" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
-margin_right = 330.0
+margin_left = 188.0
+margin_right = 372.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate the single node only"
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 23 )
+custom_fonts/font = SubResource( 2 )
 toggle_mode = true
 pressed = true
-group = SubResource( 24 )
+group = SubResource( 3 )
 text = "Node"
 
 [node name="AsGroup" type="Button" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
-margin_left = 334.0
-margin_right = 664.0
+margin_left = 376.0
+margin_right = 560.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 23 )
+custom_fonts/font = SubResource( 2 )
 toggle_mode = true
-group = SubResource( 24 )
+group = SubResource( 3 )
 text = "Group"
 
 [node name="AsGrid" type="Button" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
-margin_left = 668.0
-margin_right = 998.0
-margin_bottom = 28.0
+margin_top = 32.0
+margin_right = 184.0
+margin_bottom = 60.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 23 )
+custom_fonts/font = SubResource( 2 )
 toggle_mode = true
-group = SubResource( 24 )
+group = SubResource( 3 )
 text = "Grid"
 
 [editable path="NodeOrGroup"]

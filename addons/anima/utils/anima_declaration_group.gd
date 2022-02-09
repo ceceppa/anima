@@ -42,8 +42,8 @@ func anima_delay(delay: float) -> AnimaDeclarationGroup:
 
 	return self
 
-func anima_animation(animation) -> AnimaDeclarationGroup:
-	.anima_animation(animation)
+func anima_animation(animation, ignore_relative := false) -> AnimaDeclarationGroup:
+	.anima_animation(animation, ignore_relative)
 
 	return self
 
