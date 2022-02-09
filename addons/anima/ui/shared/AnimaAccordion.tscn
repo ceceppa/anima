@@ -109,19 +109,24 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-label = "Accordion"
-align = 1
-valign = 1
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.15
 Animation/Easing = 0
+Button/Label = "Accordion"
+Button/Align = 1
+Button/VAlign = 1
+Button/Font = null
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
 Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 1 )
 Pressed/UseSameStyleOf = ""
 Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 1 )
 Focused/UseSameStyleOf = ""
 Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 1 )
 Normal/Size = Rect2( 0, 0, 100, 100 )
 Hovered/Size = Rect2( -1, -1, -1, -1 )
 Focused/Size = Rect2( -1, -1, -1, -1 )

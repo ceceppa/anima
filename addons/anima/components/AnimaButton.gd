@@ -2,13 +2,6 @@ tool
 extends AnimaRectangle
 class_name AnimaButton, "res://addons/anima/icons/button.svg"
 
-enum Align {LEFT, CENTER, RIGHT, FILL}
-enum Valign {TOP, CENTER, BOTTOM, FILL}
-
-export var label := "Anima Button" setget set_label
-export (Align) var align := Align.LEFT setget set_align
-export (Valign) var valign := Valign.TOP setget set_valign
-
 var _label := Label.new()
 
 var _is_focused := false
@@ -20,39 +13,49 @@ const STATE := {
 	PRESSED = "Pressed"
 }
 
+const LABEL_PROPERTIES = ["Button/Label", "Button/Align", "Button/VAlign", "Button/Font",]
 const BUTTON_BASE_PROPERTIES := {
 	# Button
 	BUTTON_LABEL = {
 		name = "Button/Label",
 		type = TYPE_STRING,
-		default = "Anima Button"
+		default = "Anima Button",
+		animatable = false
 	},
 	BUTTON_ALIGN = {
 		name = "Button/Align",
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
 		hint_string = "Left,Center,Right,Fill",
-		default = ""
+		default = 0,
+		animatable = false
 	},
 	BUTTON_VALIGN = {
 		name = "Button/VAlign",
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
 		hint_string = "Left,Center,Right,Fill",
-		default = 0
+		default = 0,
+		animatable = false
 	},
 	BUTTON_FONT = {
 		name = "Button/Font",
 		type = TYPE_OBJECT,
 		hint = PROPERTY_HINT_RESOURCE_TYPE,
-		hint_tooltip = "Font",
-		default = 0
+		hint_string = "Font",
+		default = null,
+		animatable = false
 	},
 	# Normal
 	NORMAL_FILL_COLOR = {
 		name = "Normal/FillColor",
 		type = TYPE_COLOR,
 		default = Color("314569")
+	},
+	NORMAL_FONT_COLOR = {
+		name = "Normal/FontColor",
+		type = TYPE_COLOR,
+		default = Color("fff")
 	},
 
 	# Hovered
@@ -68,6 +71,11 @@ const BUTTON_BASE_PROPERTIES := {
 		type = TYPE_COLOR,
 		default = Color("628ad1")
 	},
+	HOVERED_FONT_COLOR = {
+		name = "Hovered/FontColor",
+		type = TYPE_COLOR,
+		default = Color("fff")
+	},
 
 	# Pressed
 	PRESSED_USE_STYLE = {
@@ -82,6 +90,11 @@ const BUTTON_BASE_PROPERTIES := {
 		type = TYPE_COLOR,
 		default = Color("428ad1")
 	},
+	PRESSED_FONT_COLOR = {
+		name = "Pressed/FontColor",
+		type = TYPE_COLOR,
+		default = Color("fff")
+	},
 
 	# Focused
 	FOCUSED_USE_STYLE = {
@@ -95,6 +108,11 @@ const BUTTON_BASE_PROPERTIES := {
 		name = "Focused/FillColor",
 		type = TYPE_COLOR,
 		default = Color("428ad1")
+	},
+	FOCUSED_FONT_COLOR = {
+		name = "Focused/FontColor",
+		type = TYPE_COLOR,
+		default = Color("fff")
 	},
 }
 
@@ -147,6 +165,14 @@ func _init():
 
 	add_child(_label)
 
+func _ready():
+	_set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name))
+	_set(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name))
+	_set(BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name))
+	_set(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name))
+
+	update()
+
 func _copy_properties(from: String) -> void:
 	var copy_from_key = from.to_upper()
 
@@ -156,7 +182,10 @@ func _copy_properties(from: String) -> void:
 			var rectangle_property_name: String = property_name.replace(from + "/", "Rectangle/")
 			var value = get_property(property_name)
 
-			_property_list.set(rectangle_property_name, value)
+			if _property_exists(rectangle_property_name):
+				_property_list.set(rectangle_property_name, value)
+			elif property_name.find("/FontColor") > 0:
+				_label.add_color_override("font_color", value)
 
 func _animate_state(root_key: String) -> void:
 	var override_key = get_property(root_key + "/UseSameStyleOf")
@@ -189,17 +218,27 @@ func refresh(state: String, ignore_if_focused := true) -> void:
 
 	_animate_state(state)
 
-func set_label(new_label: String) -> void:
-	label = new_label
-	_label.text = label
+func _set(property: String, value) -> void:
+	._set(property, value)
 
-func set_align(new_align: int) -> void:
-	align = new_align
-	_label.align = align
+	if LABEL_PROPERTIES.find(property) >= 0:
+		if property == BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name:
+			property = "text"
+		elif property == BUTTON_BASE_PROPERTIES.BUTTON_FONT.name:
+			if value:
+				_label.add_font_override("font", value)
 
-func set_valign(new_valign: int) -> void:
-	valign = new_valign
-	_label.valign = valign
+			return
+
+		_label.set(property.replace("Button/", "").to_lower(), value)
+	elif property.find("Normal/") == 0:
+		_copy_properties("Normal")
+
+func get(property):
+	if property.find("FontColor") < 0 or Engine.editor_hint:
+		return .get(property)
+
+	return _label.get_color("font_color")
 
 func _on_mouse_entered():
 	refresh(STATE.HOVERED)

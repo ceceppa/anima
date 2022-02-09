@@ -13,7 +13,8 @@ func add(property: Dictionary) -> void:
 		"type": property.type,
 		"value": property.default,
 		"initialValue": property.default,
-		"visible": true
+		"visible": true,
+		"animatable": property.animatable if property.has("animatable") else true
 	}
 
 func add_properties(properties: Dictionary) -> void:
@@ -34,6 +35,9 @@ func set(name: String, value) -> void:
 
 func exists(name: String) -> bool:
 	return _properties.has(name)
+
+func is_animatable(name: String) -> bool:
+	return _properties[name].animatable
 
 func get_property_list() -> Array:
 	var list: Array

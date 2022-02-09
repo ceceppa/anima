@@ -197,7 +197,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 
 			return prop[key]
 
-		return node[node_property_name]
+		return node.get(node_property_name)
 
 	if property.find('__') == 0:
 		return 0
@@ -380,7 +380,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		}
 
 	if node_property_name:
-		var is_rect2 = node[node_property_name] is Rect2
+		var is_rect2 = node_property_name in node and node[node_property_name] is Rect2
 		if is_rect2 and p.size() > 1:
 			var k: String = p[1]
 

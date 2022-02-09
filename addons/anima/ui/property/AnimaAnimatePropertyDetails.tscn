@@ -64,8 +64,8 @@ margin_top = 30.0
 margin_right = 1024.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 1 )
 text = "Animate property:"
 align = 1
 __meta__ = {
@@ -75,7 +75,7 @@ __meta__ = {
 [node name="AnimateGrid" type="GridContainer" parent="."]
 margin_top = 54.0
 margin_right = 1024.0
-margin_bottom = 234.0
+margin_bottom = 232.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -169,9 +169,9 @@ __meta__ = {
 }
 
 [node name="Pivot" type="Label" parent="AnimateGrid"]
-margin_top = 150.0
+margin_top = 149.0
 margin_right = 120.0
-margin_bottom = 170.0
+margin_bottom = 169.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "Pivot"
@@ -189,12 +189,12 @@ margin_bottom = 180.0
 rect_min_size = Vector2( 0, 40 )
 
 [node name="Label2" type="Label" parent="."]
-margin_top = 238.0
+margin_top = 236.0
 margin_right = 1024.0
-margin_bottom = 258.0
+margin_bottom = 256.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 1 )
 text = "Easing:"
 align = 1
 __meta__ = {
@@ -202,9 +202,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="."]
-margin_top = 262.0
+margin_top = 260.0
 margin_right = 1024.0
-margin_bottom = 288.0
+margin_bottom = 286.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {

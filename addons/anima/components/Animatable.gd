@@ -37,6 +37,9 @@ func _add_property(name: String, value: Dictionary) -> void:
 
 	_property_list.add(value)
 
+func _property_exists(name: String) -> bool:
+	return _property_list.exists(name)
+
 func _hide_properties(properties: Dictionary) -> void:
 	for key in properties:
 		_property_list.hide(properties[key].name)
@@ -49,13 +52,14 @@ func _set(property: String, value):
 		return
 
 	var old_value = _property_list.get(property)
+	var is_animatable = _property_list.is_animatable(property)
 
 	_property_list.set(property, value)
 
-	var has_value_changed = old_value != value
-
-	if value is bool or value is String:
+	if value is bool or value is String or value is Resource or not is_animatable:
 		return update()
+
+	var has_value_changed = old_value != value
 
 	if not is_inside_tree() or \
 		not has_value_changed:

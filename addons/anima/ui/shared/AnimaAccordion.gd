@@ -268,7 +268,7 @@ func set_label(new_label: String) -> void:
 	if _title == null:
 		_title = find_node("Title")
 
-	_title.set_label(new_label)
+	_title.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, new_label)
 
 func _on_Title_pressed():
 	set_expanded(!expanded)
