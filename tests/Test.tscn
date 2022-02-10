@@ -8,7 +8,6 @@
 [ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
-size = 30
 use_filter = true
 font_data = ExtResource( 4 )
 __meta__ = {
@@ -254,12 +253,16 @@ Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="AnimaAccordion" type="Control" parent="."]
-margin_right = 159.0
-margin_bottom = 70.0
+margin_left = 53.1129
+margin_top = -42.8597
+margin_right = 264.113
+margin_bottom = 0.140251
+rect_pivot_offset = Vector2( 105.5, 21.5 )
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+font = SubResource( 1 )
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -331,5 +334,12 @@ Normal/Shadow/Offset = Vector2( 0, 0 )
 Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="Label" type="Label" parent="AnimaAccordion"]
+margin_right = 40.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

@@ -6,9 +6,10 @@ const COLLAPSED_VALUE := "./Wrapper/Title:size:y"
 const EXPANDED_VALUE := "./Wrapper/Title:size:y + ./Wrapper/ContentWrapper/MarginContainer:size:y"
 
 export var label := "Accordion" setget set_label
+export (Font) var font setget set_font
 export var expanded := true setget set_expanded
 
-onready var _title: AnimaButton = find_node("Title")
+onready var _title: AnimaButton
 
 const RECTANGLE_PROPERTIES := {
 	RECTANGLE_SIZE = {
@@ -191,23 +192,35 @@ func _init():
 	_add_properties(CUSTOM_PROPERTIES)
 	_add_properties(_all_properties)
 
+func _notification(what):
+	if what == NOTIFICATION_PARENTED:
+		prints("Now I am a child of", get_parent().get_name())
+	elif what == NOTIFICATION_UNPARENTED:
+		print("I have been orphaned")
+	else:
+		print(what)
+
 func _init_layout() -> void:
 	var wrapper := VBoxContainer.new()
-	var title := AnimaButton.new()
 	var icon := Sprite.new()
+	var panel := Panel.new()
+	
+	_title = AnimaButton.new()
 
 	icon.texture = load("res://addons/anima/icons/collapse.svg")
 	icon.position = Vector2(16, 16)
 
-	title.anchor_right = 1
-	title.anchor_bottom = 1
-	title.set(title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
-	title.set(title.BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, 1)
+	_title.anchor_right = 1
+	_title.anchor_bottom = 1
+	_title.rect_min_size.y = 32
+	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
+	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, 1)
 
-	title.add_child(icon)
+	_title.add_child(icon)
 
 	wrapper.anchor_right = 1
-	wrapper.add_child(title)
+	wrapper.add_child(_title)
+	wrapper.add_child(panel)
 	
 	add_child(wrapper)
 
@@ -280,13 +293,12 @@ func _animate_height_change() -> void:
 func set_label(new_label: String) -> void:
 	label = new_label
 
-	if get_child_count() == 0:
-		return
+	_title.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, label)
 
-	if _title == null:
-		_title = find_node("Title")
+func set_font(new_font: Font) -> void:
+	font = new_font
 
-	_title.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, new_label)
+	_title.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_FONT.name, font)
 
 func _on_Title_pressed():
 	set_expanded(!expanded)
