@@ -38,6 +38,17 @@ enum GRID {
 	RANDOM
 }
 
+const GROUP := {
+	TOGETHER = GRID.TOGETHER,
+	FROM_TOP = GRID.SEQUENCE_TOP_LEFT,
+	FROM_BOTTOM = GRID.SEQUENCE_BOTTOM_RIGHT,
+	FROM_CENTER = GRID.FROM_CENTER,
+	ODDS_ONLY = GRID.COLUMNS_ODD,
+	EVEN_ONLY = GRID.COLUMNS_EVEN,
+	RANDOME = GRID.RANDOM,
+	FROM_INDEX = GRID.FROM_POINT
+}
+
 enum LOOP {
 	USE_EXISTING_RELATIVE_DATA,
 	RECALCULATE_RELATIVE_DATA,
@@ -206,21 +217,16 @@ func _get_scripts_in_dir(path: String, files: Array = []) -> Array:
 
 	return files
 
-static func Node(node: Node = null) -> AnimaDeclarationNode:
-	var c := AnimaDeclarationNode.new()
+static func Node(node: Node) -> AnimaDeclarationNode:
+	return AnimaDeclarationNode.new(node)
 
-	if node:
-		return c._node(node)
-
-	return c
-
-static func Group(group) -> AnimaDeclarationGroup:
+static func Group(group: Node, items_delay: float, animation_type: int = Anima.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:
 	var c := AnimaDeclarationGroup.new()
 
-	return c._group(group)
+	return c._init_me(group, items_delay, animation_type, point)
 
-static func Grid(grid: Node) -> AnimaDeclarationGrid:
+static func Grid(grid: Node, grid_size: Vector2, items_delay: float, animation_type: int = Anima.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGrid:
 	var c := AnimaDeclarationGrid.new()
 
-	return c._grid(grid)
+	return c._init_me(grid, grid_size, items_delay, animation_type, point)
 

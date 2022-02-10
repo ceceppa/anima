@@ -225,17 +225,15 @@ func _animate_height_change() -> void:
 	anima.set_default_duration(get_duration())
 
 	anima.then(
-		Anima.Node() \
-			.anima_property("min_size:y") \
+		Anima.Node(self) \
+			.anima_property("min_size:y", EXPANDED_VALUE) \
 			.anima_from(COLLAPSED_VALUE) \
-			.anima_to(EXPANDED_VALUE + "") \
 			.anima_easing(easing)
 	)
 	anima.with(
-		Anima.Node() \
-			.anima_property("size:y") \
+		Anima.Node(self) \
+			.anima_property("size:y", EXPANDED_VALUE) \
 			.anima_from(COLLAPSED_VALUE) \
-			.anima_to(EXPANDED_VALUE) \
 			.anima_easing(easing)
 	)
 
@@ -247,9 +245,8 @@ func _animate_height_change() -> void:
 	)
 	anima.also(
 		Anima.Node($Wrapper/Title/Icon) \
-			.anima_property("rotate") \
+			.anima_property("rotate", 0) \
 			.anima_from(-90) \
-			.anima_to(0) \
 			.anima_pivot(Anima.PIVOT.CENTER) \
 			.anima_easing(easing)
 	)

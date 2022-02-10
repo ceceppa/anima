@@ -1,7 +1,10 @@
 extends Control
 
+const Test := {}
+
 func _ready():
 	var anima: AnimaNode = Anima.begin_single_shot(self)
+
 #	anima.then(
 #		Anima.Node($RichTextLabel) \
 #			.anima_animation("typewrite") \
@@ -40,13 +43,13 @@ func _ready():
 #			.anima_items_delay(1)
 #	)
 #
-	anima.then(
-		Anima.Node($AnimaRectangle) \
-			.anima_property("Rectangle/FillColor") \
-			.anima_from(Color.transparent) \
-			.anima_to(Color.yellow) \
-			.anima_duration(1)
-	)
+#	anima.then(
+#		Anima.Node($AnimaRectangle) \
+#			.anima_property("Rectangle/FillColor") \
+#			.anima_from(Color.transparent) \
+#			.anima_to(Color.yellow) \
+#			.anima_duration(1)
+#	)
 #	$AnimaRectangle.set("Rectangle/FillColor", Color.yellow)
 	anima.play_with_delay(0.5)
 #
@@ -67,6 +70,9 @@ func _ready():
 #	})
 #
 #	$AnimaNode.play_with_delay(0.5)
+
+func ciao():
+	print("hello")
 
 var _temp
 

@@ -20,12 +20,15 @@ func _init():
 	_anima = Anima.begin(self)
 	_anima.then(
 		Anima.Node(self) \
-			.anima_property("scale") \
+			.anima_scale(Vector2.ONE, 0.3) \
 			.anima_from(Vector2.ZERO) \
-			.anima_duration(0.3) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
-	_anima.also({ property = "opacity", from = 0, to = 1, initial_value = 0 })
+	_anima.with(
+		Anima.Node(self) \
+			.anima_fade_in() \
+			.anima_initial_value(0)
+	)
 
 	_custom_title = load('res://addons/anima/ui/AnimaCustomNodeTitle.tscn').instance()
 	add_child(_custom_title)

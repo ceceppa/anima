@@ -113,48 +113,34 @@ func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
+	anima.set_default_duration(0.3)
+
 	anima.then(
-		Anima.Node(_graph_edit) \
-			.anima_property("opacity") \
-			.anima_from(0.0) \
-			.anima_to(1.0) \
-			.anima_duration(0.3)
+		Anima.Node(_graph_edit).anima_fade_in()
 	)
-	anima.also(
-		Anima.Node(_warning_label) \
-			.anima_property("opacity") \
-			.anima_from(1.0) \
-			.anima_to(0.0)
+	anima.with(
+		Anima.Node(_warning_label).anima_fade_out()
 	)
-	anima.also(
-		Anima.Node(_warning_label) \
-			.anima_property("scale") \
-			.anima_from(Vector2.ONE) \
-			.anima_to(Vector2(1.6, 1.6))
+	anima.with(
+		Anima.Node(_warning_label).anima_scale(Vector2(1.6, 1.6))
 	)
-	anima.also(
+	anima.with(
 		Anima.Node($PlayerBox) \
-			.anima_property("y") \
-			.anima_from("-:size:y - 20") \
-			.anima_to(0.0)
+			.anima_position_y(0.0) \
+			.anima_from("-:size:y - 20")
 	)
-	anima.also(
-		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls) \
-			.anima_items_delay(0.01) \
-			.anima_property("opacity") \
+	anima.with(
+		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
+			.anima_fade_in() \
 			.anima_delay(0.3) \
-			.anima_from(0.0) \
-			.anima_to(1.0) \
 			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_initial_value(0)
 	)
 	anima.also(
-		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls) \
-			.anima_items_delay(0.01) \
-			.anima_property("scale") \
+		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
+			.anima_scale(Vector2.ONE) \
 			.anima_delay(0.3) \
 			.anima_from(Vector2(0.2, 0.2)) \
-			.anima_to(Vector2.ONE) \
 			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK) \
 			.anima_pivot(Anima.PIVOT.CENTER)
@@ -348,15 +334,10 @@ func _on_animation_started(node: Node) -> void:
 
 	var anima: AnimaNode = Anima.begin_single_shot(node)
 	anima.then(
-		Anima.Node(node) \
-			.anima_property("opacity") \
-			.anima_to(1.0) \
-			.anima_duration(VISUAL_EDITOR_FADE_DURATION)
+		Anima.Node(node).anima_fade_in(VISUAL_EDITOR_FADE_DURATION)
 	)
-	anima.also(
-		Anima.Node(node) \
-			.anima_property("scale") \
-			.anima_to(Vector2.ONE)
+	anima.with(
+		Anima.Node(node).anima_scale(Vector2.ONE)
 	)
 
 	anima.play()
@@ -367,15 +348,10 @@ func _on_node_animation_completed(node: Node) -> void:
 
 	var anima: AnimaNode = Anima.begin_single_shot(node)
 	anima.then(
-		Anima.Node(node) \
-			.anima_property("opacity") \
-			.anima_to(0.3) \
-			.anima_duration(VISUAL_EDITOR_FADE_DURATION)
+		Anima.Node(node).anima_property("opacity", 0.3, VISUAL_EDITOR_FADE_DURATION)
 	)
-	anima.also(
-		Anima.Node(node) \
-			.anima_property("scale") \
-			.anima_to(Vector2(0.8, 0.8))
+	anima.with(
+		Anima.Node(node).anima_scale(Vector2(0.8, 0.8), VISUAL_EDITOR_FADE_DURATION)
 	)
 
 	anima.play()

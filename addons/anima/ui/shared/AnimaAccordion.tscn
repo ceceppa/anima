@@ -20,7 +20,7 @@ __meta__ = {
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
-Animation/Name = "fadeInUp"
+Animation/Name = "fadeIn"
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Hovered/UseSameStyleOf = ""
 Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
@@ -229,5 +229,3 @@ alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[connection signal="pressed" from="Wrapper/Title" to="." method="_on_Title_pressed"]

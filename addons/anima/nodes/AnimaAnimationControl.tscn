@@ -56,11 +56,6 @@ Animation/Speed = 0.3
 Button/Label = "Time:"
 Button/Align = 0
 Button/VAlign = 0
-Button/Font = null
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 1 )
-Focused/FontColor = Color( 1, 1, 1, 1 )
 
 [node name="ContentWrapper" parent="Container/TimeDelay/Wrapper" index="1"]
 margin_right = 1008.0

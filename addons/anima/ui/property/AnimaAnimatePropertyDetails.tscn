@@ -185,8 +185,7 @@ anchor_right = 0.0
 margin_left = 124.0
 margin_top = 140.0
 margin_right = 1024.0
-margin_bottom = 180.0
-rect_min_size = Vector2( 0, 40 )
+margin_bottom = 176.0
 
 [node name="Label2" type="Label" parent="."]
 margin_top = 236.0

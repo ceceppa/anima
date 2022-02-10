@@ -96,21 +96,7 @@ func get_property_initial_value(key: String):
 	return _property_list.get_initial_value(key)
 
 func animate_param(property: String, value, from = null) -> void:
-	var animation := Anima.Node(self)
-
-	animation.anima_property(property)
-
-	if from != null:
-		animation.anima_from(from)
-
-	var easing: int = get_property(BASE_PROPERTIES.ANIMATION_EASING.name)
-	var duration: float = get_property(BASE_PROPERTIES.ANIMATION_SPEED.name)
-
-	animation.anima_to(value)
-	animation.anima_duration(duration)
-	animation.anima_easing(easing)
-
-	animate([animation])
+	animate_params([{ property = property, to = value, from = from }])
 
 func animate_params(params: Array) -> void:
 	var animations := []
@@ -120,13 +106,11 @@ func animate_params(params: Array) -> void:
 	for param in params:
 		var animation := Anima.Node(self)
 
-		animation.anima_property(param.property)
+		animation.anima_property(param.property, param.to, duration)
 
 		if param.has("from"):
 			animation.anima_from(param.from)
 
-		animation.anima_to(param.to)
-		animation.anima_duration(duration)
 		animation.anima_easing(easing)
 
 		animations.push_back(animation)
