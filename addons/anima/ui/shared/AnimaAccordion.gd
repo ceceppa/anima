@@ -243,7 +243,7 @@ func _animate_height_change() -> void:
 			.anima_easing(easing) \
 			.anima_pivot(Anima.PIVOT.CENTER) \
 	)
-	anima.also(
+	anima.with(
 		Anima.Node($Wrapper/Title/Icon) \
 			.anima_property("rotate", 0) \
 			.anima_from(-90) \

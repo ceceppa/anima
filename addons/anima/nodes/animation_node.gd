@@ -134,9 +134,7 @@ func _animate_height(to: float) -> void:
 
 	anima.then(
 		Anima.Node(self) \
-			.anima_property("size:y") \
-			.anima_to(to) \
-			.anima_duration(0.3) \
+			.anima_property("size:y", to, 0.3) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
 

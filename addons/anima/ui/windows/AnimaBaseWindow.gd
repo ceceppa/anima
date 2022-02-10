@@ -9,7 +9,7 @@ func _ready() -> void:
 	_anima = Anima.begin(self)
 	_anima.then(
 		Anima.Node(self) \
-			.anima_animation({
+			.anima_animation_frames({
 				0: {
 					size = Vector2(1024, 0),
 					opacity = 0,
@@ -24,8 +24,7 @@ func _ready() -> void:
 				initial_values = {
 					opacity = 0,
 				},
-			}) \
-			.anima_duration(0.3)
+			}, 0.3)
 	)
 
 	rect_clip_content = false

@@ -111,7 +111,7 @@ func show() -> void:
 
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
-	var anima: AnimaNode = Anima.begin_single_shot(self)
+	var anima = Anima.begin_single_shot(self)
 
 	anima.set_default_duration(0.3)
 
@@ -136,7 +136,7 @@ func _maybe_show_graph_edit() -> bool:
 			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_initial_value(0)
 	)
-	anima.also(
+	anima.with(
 		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
 			.anima_scale(Vector2.ONE) \
 			.anima_delay(0.3) \
@@ -332,7 +332,7 @@ func _on_animation_started(node: Node) -> void:
 	if node == null:
 		printerr("_on_animation_started: Node not found")
 
-	var anima: AnimaNode = Anima.begin_single_shot(node)
+	var anima = Anima.begin_single_shot(node)
 	anima.then(
 		Anima.Node(node).anima_fade_in(VISUAL_EDITOR_FADE_DURATION)
 	)
@@ -346,7 +346,7 @@ func _on_node_animation_completed(node: Node) -> void:
 	if node == null:
 		printerr("_on_node_animation_completed: Node not found")
 
-	var anima: AnimaNode = Anima.begin_single_shot(node)
+	var anima = Anima.begin_single_shot(node)
 	anima.then(
 		Anima.Node(node).anima_property("opacity", 0.3, VISUAL_EDITOR_FADE_DURATION)
 	)
@@ -357,6 +357,6 @@ func _on_node_animation_completed(node: Node) -> void:
 	anima.play()
 
 func _on_StopAnimation_pressed():
-	var visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
+	var visual_node = AnimaUI.get_selected_anima_visual_node()
 
 	visual_node.stop()

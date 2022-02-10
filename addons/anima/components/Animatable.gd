@@ -18,7 +18,7 @@ const BASE_PROPERTIES := {
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
 		hint_string = AnimaEasing.EASING,
-		default = Anima.EASING.LINEAR
+		default = AnimaEasing.EASING.LINEAR
 	},
 }
 

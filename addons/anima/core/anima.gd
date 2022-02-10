@@ -2,7 +2,6 @@ tool
 extends Node
 
 const BASE_PATH := 'res://addons/anima/animations/'
-const ANIMA_NODE = preload('res://addons/anima/core/node.gd')
 
 enum PIVOT {
 	TOP_LEFT,
@@ -95,7 +94,7 @@ func begin(node: Node, name: String = 'anima', single_shot := false):
 
 			break
 
-	var anima_node = ANIMA_NODE.new()
+	var anima_node = AnimaNode.new()
 
 	anima_node.name = node_name
 	anima_node.init_node(node)
@@ -220,13 +219,12 @@ func _get_scripts_in_dir(path: String, files: Array = []) -> Array:
 static func Node(node: Node) -> AnimaDeclarationNode:
 	return AnimaDeclarationNode.new(node)
 
-static func Group(group: Node, items_delay: float, animation_type: int = Anima.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:
+static func Group(group: Node, items_delay: float, animation_type: int = GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:
 	var c := AnimaDeclarationGroup.new()
 
 	return c._init_me(group, items_delay, animation_type, point)
 
-static func Grid(grid: Node, grid_size: Vector2, items_delay: float, animation_type: int = Anima.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGrid:
+static func Grid(grid: Node, grid_size: Vector2, items_delay: float, animation_type: int = GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGrid:
 	var c := AnimaDeclarationGrid.new()
 
 	return c._init_me(grid, grid_size, items_delay, animation_type, point)
-

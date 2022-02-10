@@ -105,8 +105,7 @@ func _play_animation(node: Node, button: Button):
 	var anima = Anima.begin(clone, 'control_test')
 	anima.then(
 		Anima.Node(clone) \
-			.anima_animation(script_name) \
-			.anima_duration(duration)
+			.anima_animation(script_name, duration)
 	)
 	anima.play()
 	

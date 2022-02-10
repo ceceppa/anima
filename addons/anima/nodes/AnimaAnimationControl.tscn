@@ -46,7 +46,6 @@ margin_bottom = 124.0
 rect_min_size = Vector2( 153, 124 )
 rect_pivot_offset = Vector2( 504, 62 )
 label = "Time:"
-Animation/Name = "fadeIn"
 
 [node name="Title" parent="Container/TimeDelay/Wrapper" index="0"]
 margin_right = 1008.0
@@ -204,9 +203,6 @@ rect_clip_content = false
 [connection signal="select_property" from="Container/AnimationData" to="." method="_on_AnimationData_select_property"]
 [connection signal="select_relative_property" from="Container/AnimationData" to="." method="_on_AnimationData_select_relative_property"]
 [connection signal="value_updated" from="Container/AnimationData" to="." method="_on_AnimationData_value_updated"]
-[connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
-[connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]
-[connection signal="easing_selected" from="AnimaEasingsWindow" to="." method="_on_AnimaEasingsWindow_easing_selected"]
 
 [editable path="Container/TimeDelay"]
 [editable path="Container/AnimationData"]

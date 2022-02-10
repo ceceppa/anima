@@ -85,26 +85,23 @@ func set_index(new_index: int) -> void:
 	var height = get_expected_height()
 
 	var anima: AnimaNode = Anima.begin(self)
+	anima.set_default_duration(duration)
 	anima.set_single_shot(true)
 
 	anima.then(
 		Anima.Node(self) \
-			.anima_property("min_size:y") \
-			.anima_to(height) \
-			.anima_easing(height_easing) \
-			.anima_duration(duration)
+			.anima_property("min_size:y", height, duration) \
+			.anima_easing(height_easing)
 	)
 
-	anima.also(
+	anima.with(
 		Anima.Node(_container) \
-			.anima_property("position:x") \
-			.anima_to(-x) \
+			.anima_property("position:x", -x) \
 			.anima_easing(scroll_easing)
 	)
-	anima.also(
+	anima.with(
 		Anima.Node($Wrapper) \
-			.anima_property("size:y") \
-			.anima_to(wrapper_height) \
+			.anima_property("size:y", wrapper_height) \
 			.anima_easing(height_easing)
 	)
 	anima.play()

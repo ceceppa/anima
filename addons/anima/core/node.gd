@@ -93,45 +93,9 @@ func with(data) -> float:
 		_last_tween_data = data
 
 	return _setup_animation(data)
-#
-#func also(data, extra_keys_to_ignore := []) -> float:
-#	if not data is Dictionary:
-#		data = data.get_data()
-#
-#	if _last_tween_data == null:
-#		printerr('.also can be only used in after a .then or .with!')
-#
-#		return _last_animation_duration
-#
-#	var animation_data: Array = _anima_tween.get_animation_data()
-#	var previous_data = _last_tween_data
-#
-#	var keys_to_ignore = [
-#		'_is_first_frame',
-#		'_is_last_frame',
-#		'_wait_time',
-#		'delay',
-#		'relative',
-#		'_grid_node',
-#		"animation",
-#		'property',
-#		'from',
-#		'to',
-#	]
-#
-#	if previous_data.has('_grid_node'):
-#		previous_data.grid = previous_data._grid_node
-#
-#	for key in previous_data:
-#		if keys_to_ignore.find(key) >= 0 or extra_keys_to_ignore.find(key) >= 0:
-#			continue
-#
-#		if not data.has(key):
-#			data[key] = previous_data[key]
-#
-#	data.__do_not_update_last_tween_data = true
-#
-#	return with(data)
+
+func also(a, b) -> float:
+	return 0.0
 
 func _group(group_data: Array, animation_data: Dictionary) -> float:
 	var delay_index := 0
@@ -289,7 +253,7 @@ func loop_times_with_delay(times: float, delay: float) -> void:
 func loop_times_with_delay_and_speed(times: int, delay: float, speed: float) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay, speed)
 
-func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, speed := 1.0) -> void:
+func _do_loop(times: int, mode: int, delay: float = 0.00001, speed := 1.0) -> void:
 	_loop_times = times
 	_should_loop = times == -1
 	_play_mode = mode
@@ -698,3 +662,4 @@ func _on_all_tween_completed() -> void:
 
 	if _should_loop:
 		_maybe_play()
+

@@ -8,9 +8,9 @@ signal animation_completed
 var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "y", "position:y", "x"]
 
 var _animation_data := []
-var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
+var _visibility_strategy: int = 0
 var _callbacks := {}
-var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+var _loop_strategy := 0
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
@@ -54,7 +54,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	_animation_data.push_back(animation_data)
 	index = str(_animation_data.size())
 
-	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
+	var duration = animation_data.duration if animation_data.has('duration') else 0.5 #Anima.DEFAULT_DURATION
 
 	if animation_data.has('visibility_strategy'):
 		_apply_visibility_strategy(animation_data)
@@ -473,7 +473,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 	return new_data
 
-func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.VISIBILITY.IGNORE):
+func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = 0):
 	if not animation_data.has('_is_first_frame'):
 		return
 
@@ -549,7 +549,7 @@ class AnimatedItem extends Node:
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
-	var _loop_strategy: int = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+	var _loop_strategy: int = 0
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
 	var _animation_callback: FuncRef

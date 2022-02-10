@@ -47,9 +47,7 @@ func _on_pivot_button_pressed() -> void:
 			anima.set_single_shot(true)
 
 			anima.then(
-				Anima.Node(self) \
-					.anima_animation("pulse") \
-					.anima_duration(0.5)
+				Anima.Node(self).anima_animation("pulse", 0.5)
 			)
 			anima.play()
 

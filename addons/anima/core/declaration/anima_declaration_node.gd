@@ -12,6 +12,11 @@ func anima_animation(animation: String, duration = null) -> AnimaDeclarationBase
 
 	return c._init_me({ node = _node, animation = animation, duration = duration })
 
+func anima_animation_frames(frames: Dictionary, duration = null) -> AnimaDeclarationBase:
+	var c:= AnimaDeclarationBase.new()
+
+	return c._init_me({ node = _node, animation = frames, duration = duration })
+	
 func anima_property(property: String, final_value = null, duration = null) -> AnimaDeclarationWithEasing:
 	var c:= AnimaDeclarationWithEasing.new()
 

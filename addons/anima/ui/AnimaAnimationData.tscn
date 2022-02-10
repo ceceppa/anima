@@ -57,9 +57,8 @@ margin_bottom = 148.0
 rect_min_size = Vector2( 0, 116 )
 rect_pivot_offset = Vector2( 298, 58 )
 size_flags_horizontal = 3
-label = "Animate as:"
 Animation/Easing = 27.0
-Animation/Name = "fadeIn"
+label = "Animate as:"
 
 [node name="Wrapper" parent="NodeOrGroup" index="0"]
 rect_min_size = Vector2( 100, 0 )

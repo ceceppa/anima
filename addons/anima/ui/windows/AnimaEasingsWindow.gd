@@ -45,8 +45,7 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 	anima1.set_single_shot(true)
 	anima1.then(
 		Anima.Node(button) \
-			.anima_animation("pulse") \
-			.anima_duration(0.5)
+			.anima_animation("pulse", 0.3)
 	)
 	anima1.play()
 
@@ -56,11 +55,9 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 	anima2.set_single_shot(true)
 	anima2.then(
 		Anima.Node(_anima_logo) \
-		.anima_property("position") \
+		.anima_property("position", to, 1) \
 		.anima_from(_logo_origin) \
-		.anima_to(to) \
-		.anima_easing(easing_value) \
-		.anima_duration(1)
+		.anima_easing(easing_value)
 	)
 	anima2.play()
 
