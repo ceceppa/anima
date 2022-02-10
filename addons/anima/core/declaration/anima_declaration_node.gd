@@ -12,10 +12,10 @@ func anima_animation(animation: String, duration = null) -> AnimaDeclarationBase
 
 	return c._init_me({ node = _node, animation = animation, duration = duration })
 
-func anima_property(property: String, value, duration = null) -> AnimaDeclarationWithEasing:
+func anima_property(property: String, final_value = null, duration = null) -> AnimaDeclarationWithEasing:
 	var c:= AnimaDeclarationWithEasing.new()
 
-	return c._init_me({ node = _node, property = property, to = value, duration = duration })
+	return c._init_me({ node = _node, property = property, to = final_value, duration = duration })
 
 func anima_fade_in(duration = null) -> AnimaDeclarationWithEasing:
 	var c:= AnimaDeclarationWithEasing.new()
