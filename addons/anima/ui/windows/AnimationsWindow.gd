@@ -30,7 +30,7 @@ func _ready():
 		show_demo_by_type(_source_node)
 
 func _setup_list() -> void:
-	var animations = Anima.get_available_animations()
+	var animations = AnimaAnimationsUtils.get_available_animations()
 	var base = Anima.get_animation_path()
 	var old_category := ''
 	var group = ButtonGroup.new()

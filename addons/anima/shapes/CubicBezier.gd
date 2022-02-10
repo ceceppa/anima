@@ -1,6 +1,6 @@
 tool
 class_name AnimaCubicBezier
-extends "res://addons/anima/shapes/Base.gd"
+extends AnimaShape
 
 export var test := false setget set_text
 

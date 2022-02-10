@@ -1,5 +1,4 @@
 tool
-
 class_name AnimaNode
 extends Node
 
@@ -93,45 +92,6 @@ func with(data) -> float:
 		_last_tween_data = data
 
 	return _setup_animation(data)
-#
-#func also(data, extra_keys_to_ignore := []) -> float:
-#	if not data is Dictionary:
-#		data = data.get_data()
-#
-#	if _last_tween_data == null:
-#		printerr('.also can be only used in after a .then or .with!')
-#
-#		return _last_animation_duration
-#
-#	var animation_data: Array = _anima_tween.get_animation_data()
-#	var previous_data = _last_tween_data
-#
-#	var keys_to_ignore = [
-#		'_is_first_frame',
-#		'_is_last_frame',
-#		'_wait_time',
-#		'delay',
-#		'relative',
-#		'_grid_node',
-#		"animation",
-#		'property',
-#		'from',
-#		'to',
-#	]
-#
-#	if previous_data.has('_grid_node'):
-#		previous_data.grid = previous_data._grid_node
-#
-#	for key in previous_data:
-#		if keys_to_ignore.find(key) >= 0 or extra_keys_to_ignore.find(key) >= 0:
-#			continue
-#
-#		if not data.has(key):
-#			data[key] = previous_data[key]
-#
-#	data.__do_not_update_last_tween_data = true
-#
-#	return with(data)
 
 func _group(group_data: Array, animation_data: Dictionary) -> float:
 	var delay_index := 0
@@ -394,7 +354,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 		var keyframes = data.animation
 
 		if keyframes is String:
-			keyframes = Anima.get_animation_keyframes(data.animation)
+			keyframes = AnimaAnimationsUtils.get_animation_keyframes(data.animation)
 
 			if keyframes.size() == 0:
 				printerr('animation not found: %s' % data.animation)

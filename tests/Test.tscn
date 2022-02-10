@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/utils/anima_properties_list.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=5]
+[ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -191,6 +192,85 @@ Pressed/FontColor = Color( 1, 1, 1, 1 )
 Focused/UseSameStyleOf = ""
 Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
 Focused/FontColor = Color( 1, 1, 1, 1 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, -1, -1 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/BorderWidh/Left = 0
+Hovered/BorderWidh/Left = 0
+Focused/BorderWidh/Left = 0
+Pressed/BorderWidh/Left = 0
+Normal/BorderWidh/Top = 0
+Hovered/BorderWidh/Top = 0
+Focused/BorderWidh/Top = 0
+Pressed/BorderWidh/Top = 0
+Normal/BorderWidh/Right = 0
+Hovered/BorderWidh/Right = 0
+Focused/BorderWidh/Right = 0
+Pressed/BorderWidh/Right = 0
+Normal/BorderWidh/Bottom = 0
+Hovered/BorderWidh/Bottom = 0
+Focused/BorderWidh/Bottom = 0
+Pressed/BorderWidh/Bottom = 0
+Normal/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0 )
+Focused/Border/Color = Color( 1, 1, 1, 0 )
+Pressed/Border/Color = Color( 1, 1, 1, 0 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/CornerRadius/TopLeft = 0
+Hovered/CornerRadius/TopLeft = 0
+Focused/CornerRadius/TopLeft = 0
+Pressed/CornerRadius/TopLeft = 0
+Normal/CornerRadius/TopRight = 0
+Hovered/CornerRadius/TopRight = 0
+Focused/CornerRadius/TopRight = 0
+Pressed/CornerRadius/TopRight = 0
+Normal/CornerRadius/BottomRight = 0
+Hovered/CornerRadius/BottomRight = 0
+Focused/CornerRadius/BottomRight = 0
+Pressed/CornerRadius/BottomRight = 0
+Normal/CornerRadius/BottomLeft = 0
+Hovered/CornerRadius/BottomLeft = 0
+Focused/CornerRadius/BottomLeft = 0
+Pressed/CornerRadius/BottomLeft = 0
+Normal/Shadow/Color = Color( 1, 1, 1, 0 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
+Normal/Shadow/Size = 0
+Hovered/Shadow/Size = 0
+Focused/Shadow/Size = 0
+Pressed/Shadow/Size = 0
+Normal/Shadow/Offset = Vector2( 0, 0 )
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="AnimaAccordion" type="Control" parent="."]
+margin_right = 159.0
+margin_bottom = 70.0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
+Animation/Name = "fadeIn"
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
 Normal/Size = Rect2( 0, 0, 100, 100 )
 Hovered/Size = Rect2( -1, -1, -1, -1 )
 Focused/Size = Rect2( -1, -1, -1, -1 )

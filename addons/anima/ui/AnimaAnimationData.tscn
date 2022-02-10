@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.tscn" type="PackedScene" id=7]
+[ext_resource path="res://addons/anima/components/AnimaAccordion.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 3

@@ -1,5 +1,6 @@
 tool
 extends AnimaAnimatable
+class_name AnimaAccordion
 
 const COLLAPSED_VALUE := "./Wrapper/Title:size:y" 
 const EXPANDED_VALUE := "./Wrapper/Title:size:y + ./Wrapper/ContentWrapper/MarginContainer:size:y"
@@ -161,6 +162,8 @@ func _enter_tree():
 func _init():
 	._init()
 
+	_init_layout()
+
 	var extra_keys = ["Normal", "Hovered", "Focused", "Pressed"]
 
 	for key in RECTANGLE_PROPERTIES:
@@ -187,6 +190,26 @@ func _init():
 
 	_add_properties(CUSTOM_PROPERTIES)
 	_add_properties(_all_properties)
+
+func _init_layout() -> void:
+	var wrapper := VBoxContainer.new()
+	var title := AnimaButton.new()
+	var icon := Sprite.new()
+
+	icon.texture = load("res://addons/anima/icons/collapse.svg")
+	icon.position = Vector2(16, 16)
+
+	title.anchor_right = 1
+	title.anchor_bottom = 1
+	title.set(title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
+	title.set(title.BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, 1)
+
+	title.add_child(icon)
+
+	wrapper.anchor_right = 1
+	wrapper.add_child(title)
+	
+	add_child(wrapper)
 
 func _ready():
 	set_expanded(expanded)
@@ -239,11 +262,9 @@ func _animate_height_change() -> void:
 
 	anima.with(
 		Anima.Node($Wrapper/ContentWrapper/MarginContainer/Content) \
-			.anima_animation(get_property(CUSTOM_PROPERTIES.ANIMATION_NAME.name), true) \
-			.anima_easing(easing) \
-			.anima_pivot(Anima.PIVOT.CENTER) \
+			.anima_animation(get_property(CUSTOM_PROPERTIES.ANIMATION_NAME.name), true)
 	)
-	anima.also(
+	anima.with(
 		Anima.Node($Wrapper/Title/Icon) \
 			.anima_property("rotate", 0) \
 			.anima_from(-90) \

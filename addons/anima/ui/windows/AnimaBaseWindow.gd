@@ -4,12 +4,10 @@ extends WindowDialog
 var _anima: AnimaNode
 
 func _ready() -> void:
-	_register_animations()
-
 	_anima = Anima.begin(self)
 	_anima.then(
 		Anima.Node(self) \
-			.anima_animation({
+			.anima_animation_frames({
 				0: {
 					size = Vector2(1024, 0),
 					opacity = 0,
@@ -24,30 +22,13 @@ func _ready() -> void:
 				initial_values = {
 					opacity = 0,
 				},
-			}) \
-			.anima_duration(0.3)
+			}, 0.3)
 	)
 
 	rect_clip_content = false
 
 	if not is_connected("popup_hide", self, "_on_hide"):
 		connect("popup_hide", self, "_on_hide")
-
-func _register_animations() -> void:
-	Anima.register_animation("AnimaUISlideIn", {
-		0: {
-			y = 20,
-			opacity = 0,
-		},
-		100: {
-			y = 0,
-			opacity = 1,
-			easing = Anima.EASING.EASE_IN_OUT_BACK
-		},
-		initial_values = {
-			opacity = 0,
-		}
-	})
 
 func popup_centered(size := Vector2.ZERO) -> void:
 	rect_scale = Vector2.ONE

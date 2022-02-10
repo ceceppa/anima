@@ -2,21 +2,22 @@
 
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/icons/collapse.svg" type="Texture" id=2]
-[ext_resource path="res://addons/anima/ui/shared/AnimaAccordion.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.105882, 0.129412, 0.180392, 1 )
 
 [node name="AnimaAccordion" type="Control"]
 margin_right = 153.0
-margin_bottom = 56.0
-rect_min_size = Vector2( 153, 56 )
-rect_pivot_offset = Vector2( 76.5, 16.4149 )
+margin_bottom = 32.0
+rect_min_size = Vector2( 153, 32 )
+rect_pivot_offset = Vector2( 76.5, 16 )
 rect_clip_content = true
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+expanded = false
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -190,12 +191,13 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Icon" type="Sprite" parent="Wrapper/Title"]
 position = Vector2( 16, 15 )
+rotation = -1.5708
 texture = ExtResource( 2 )
 
 [node name="ContentWrapper" type="Panel" parent="Wrapper"]
 margin_top = 32.0
 margin_right = 153.0
-margin_bottom = 56.0
+margin_bottom = 32.0
 rect_pivot_offset = Vector2( 300, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -219,10 +221,12 @@ __meta__ = {
 }
 
 [node name="Content" type="VBoxContainer" parent="Wrapper/ContentWrapper/MarginContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 129.0
 margin_bottom = 12.0
+rect_pivot_offset = Vector2( 58.5, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1

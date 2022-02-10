@@ -133,15 +133,13 @@ func _maybe_show_graph_edit() -> bool:
 		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
 			.anima_fade_in() \
 			.anima_delay(0.3) \
-			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_initial_value(0)
 	)
-	anima.also(
+	anima.with(
 		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
 			.anima_scale(Vector2.ONE) \
 			.anima_delay(0.3) \
 			.anima_from(Vector2(0.2, 0.2)) \
-			.anima_sequence_type(Anima.GRID.FROM_CENTER) \
 			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK) \
 			.anima_pivot(Anima.PIVOT.CENTER)
 	)

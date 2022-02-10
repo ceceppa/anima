@@ -107,7 +107,7 @@ func _animate_custom_value(mode: int) -> void:
 			.anima_to(Vector2(0.5, 0.5)) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
-	anima.also(
+	anima.with(
 		Anima.Node(_current_value_button) \
 			.anima_property("opacity") \
 			.anima_from(1.0) \
@@ -122,7 +122,7 @@ func _animate_custom_value(mode: int) -> void:
 			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
 			.anima_initial_value(Vector2(1.5, 1.5))
 	)
-	anima.also(
+	anima.with(
 		Anima.Node(_custom_value) \
 			.anima_property("opacity") \
 			.anima_from(0.0) \

@@ -9,12 +9,22 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "AnimaAnimatable",
+"class": "AnimaAccordion",
+"language": "GDScript",
+"path": "res://addons/anima/components/AnimaAccordion.gd"
+}, {
 "base": "Control",
 "class": "AnimaAnimatable",
 "language": "GDScript",
 "path": "res://addons/anima/components/Animatable.gd"
 }, {
-"base": "Control",
+"base": "Reference",
+"class": "AnimaAnimationsUtils",
+"language": "GDScript",
+"path": "res://addons/anima/utils/animations.gd"
+}, {
+"base": "AnimaShape",
 "class": "AnimaArc",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Arc.gd"
@@ -39,7 +49,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Circle.gd"
 }, {
-"base": "Control",
+"base": "AnimaShape",
 "class": "AnimaCubicBezier",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/CubicBezier.gd"
@@ -48,6 +58,16 @@ _global_script_classes=[ {
 "class": "AnimaDeclarationBase",
 "language": "GDScript",
 "path": "res://addons/anima/core/declaration/anima_declaration_base.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": "AnimaDeclarationForAnimation",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_animation.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": "AnimaDeclarationForProperty",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_property.gd"
 }, {
 "base": "AnimaDeclarationNode",
 "class": "AnimaDeclarationGrid",
@@ -64,11 +84,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/core/declaration/anima_declaration_node.gd"
 }, {
-"base": "AnimaDeclarationBase",
-"class": "AnimaDeclarationWithEasing",
-"language": "GDScript",
-"path": "res://addons/anima/core/declaration/anima_declaration_with_easing.gd"
-}, {
 "base": "Reference",
 "class": "AnimaEasing",
 "language": "GDScript",
@@ -79,7 +94,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/components/AnimaLabel.gd"
 }, {
-"base": "Control",
+"base": "AnimaShape",
 "class": "AnimaLine",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Line.gd"
@@ -87,7 +102,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "AnimaNode",
 "language": "GDScript",
-"path": "res://addons/anima/core/node.gd"
+"path": "res://addons/anima/core/anima_node.gd"
 }, {
 "base": "Reference",
 "class": "AnimaNodesProperties",
@@ -145,7 +160,9 @@ _global_script_classes=[ {
 "path": "res://addons/anima/core/visual_node.gd"
 } ]
 _global_script_class_icons={
+"AnimaAccordion": "",
 "AnimaAnimatable": "",
+"AnimaAnimationsUtils": "",
 "AnimaArc": "",
 "AnimaButton": "res://addons/anima/icons/button.svg",
 "AnimaCarousel": "",
@@ -153,10 +170,11 @@ _global_script_class_icons={
 "AnimaCircle": "",
 "AnimaCubicBezier": "",
 "AnimaDeclarationBase": "",
+"AnimaDeclarationForAnimation": "",
+"AnimaDeclarationForProperty": "",
 "AnimaDeclarationGrid": "",
 "AnimaDeclarationGroup": "",
 "AnimaDeclarationNode": "",
-"AnimaDeclarationWithEasing": "",
 "AnimaEasing": "",
 "AnimaLabel": "",
 "AnimaLine": "",

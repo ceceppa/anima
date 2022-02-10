@@ -104,9 +104,7 @@ func animate_params(params: Array) -> void:
 	var duration: float = get_property(BASE_PROPERTIES.ANIMATION_SPEED.name)
 
 	for param in params:
-		var animation := Anima.Node(self)
-
-		animation.anima_property(param.property, param.to, duration)
+		var animation := Anima.Node(self).anima_property(param.property, param.to, duration)
 
 		if param.has("from"):
 			animation.anima_from(param.from)

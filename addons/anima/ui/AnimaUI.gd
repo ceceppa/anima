@@ -72,6 +72,9 @@ const CONNECTED_LABEL_COLOR = Color.white
 var _godot_base_control: Control
 var _anima_visual_node: Node
 
+var _custom_animations := {}
+var _animations_list := []
+
 const _is_debug_enabled := false
 
 const MAPPED_ICONS := {

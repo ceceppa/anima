@@ -1,6 +1,6 @@
 tool
 class_name AnimaArc
-extends "res://addons/anima/shapes/Base.gd"
+extends AnimaShape
 
 export (Vector2) var center setget set_center
 export (Anima.VALUES_IN) var values_in setget set_values_in

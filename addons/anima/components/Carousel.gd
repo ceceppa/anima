@@ -95,13 +95,13 @@ func set_index(new_index: int) -> void:
 			.anima_duration(duration)
 	)
 
-	anima.also(
+	anima.with(
 		Anima.Node(_container) \
 			.anima_property("position:x") \
 			.anima_to(-x) \
 			.anima_easing(scroll_easing)
 	)
-	anima.also(
+	anima.with(
 		Anima.Node($Wrapper) \
 			.anima_property("size:y") \
 			.anima_to(wrapper_height) \

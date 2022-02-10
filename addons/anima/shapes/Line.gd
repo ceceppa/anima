@@ -1,6 +1,6 @@
 tool
 class_name AnimaLine
-extends "res://addons/anima/shapes/Base.gd"
+extends AnimaShape
 
 const HANDLE = preload("./handle.gd")
 

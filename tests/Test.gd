@@ -10,7 +10,7 @@ func _ready():
 #			.anima_animation("typewrite") \
 #			.anima_duration(0.3)
 #	)
-#	anima.also({
+#	anima.with({
 #		property = "opacity",
 #		from = 0.0,
 #		to = 1.0,
@@ -36,7 +36,7 @@ func _ready():
 #		)
 #	)
 	
-#	anima.also(
+#	anima.with(
 #		Anima.Group($Control) \
 #			.anima_animation("zoomIn") \
 #			.anima_sequence_type(Anima.GRID.SEQUENCE_BOTTOM_RIGHT) \
