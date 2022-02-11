@@ -1,12 +1,19 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/components/AnimaAccordion.tscn" type="PackedScene" id=7]
+[ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 3
+use_filter = true
+font_data = ExtResource( 2 )
+__meta__ = {
+"_original_size": 2
+}
+
+[sub_resource type="DynamicFont" id=4]
 use_filter = true
 font_data = ExtResource( 2 )
 __meta__ = {
@@ -50,48 +57,120 @@ margin_top = 16.0
 margin_right = 596.0
 margin_bottom = 20.0
 
-[node name="NodeOrGroup" parent="." instance=ExtResource( 7 )]
+[node name="NodeOrGroup" type="Control" parent="."]
 margin_top = 32.0
 margin_right = 596.0
-margin_bottom = 148.0
-rect_min_size = Vector2( 0, 116 )
-rect_pivot_offset = Vector2( 298, 58 )
-size_flags_horizontal = 3
-label = "Animate as:"
-Animation/Easing = 27.0
-Animation/Name = "fadeIn"
-
-[node name="Wrapper" parent="NodeOrGroup" index="0"]
-rect_min_size = Vector2( 100, 0 )
-
-[node name="Title" parent="NodeOrGroup/Wrapper" index="0"]
-margin_right = 596.0
+margin_bottom = 140.0
+rect_min_size = Vector2( 0, 108 )
 rect_pivot_offset = Vector2( 298, 16 )
+rect_clip_content = true
+script = ExtResource( 4 )
+label = "Animate as:"
+font = SubResource( 4 )
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
-Button/Label = "Animate as:"
-Button/Align = ""
-Button/VAlign = 0
-Button/Font = 0
+Animation/Easing = 28.0
+Animation/Name = "fadeIn"
+Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
+ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonHovered/UseSameStyleOf = ""
+ButtonHovered/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonPressed/UseSameStyleOf = ""
+ButtonPressed/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonFocused/UseSameStyleOf = ""
+ButtonFocused/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonNormal/Size = Rect2( 0, 0, 100, 100 )
+ButtonHovered/Size = Rect2( -1, -1, -1, -1 )
+ButtonFocused/Size = Rect2( -1, -1, -1, -1 )
+ButtonPressed/Size = Rect2( -1, -1, -1, -1 )
+ButtonNormal/BorderWidh/Left = 0
+ButtonHovered/BorderWidh/Left = 0
+ButtonFocused/BorderWidh/Left = 0
+ButtonPressed/BorderWidh/Left = 0
+ButtonNormal/BorderWidh/Top = 0
+ButtonHovered/BorderWidh/Top = 0
+ButtonFocused/BorderWidh/Top = 0
+ButtonPressed/BorderWidh/Top = 0
+ButtonNormal/BorderWidh/Right = 0
+ButtonHovered/BorderWidh/Right = 0
+ButtonFocused/BorderWidh/Right = 0
+ButtonPressed/BorderWidh/Right = 0
+ButtonNormal/BorderWidh/Bottom = 0
+ButtonHovered/BorderWidh/Bottom = 0
+ButtonFocused/BorderWidh/Bottom = 0
+ButtonPressed/BorderWidh/Bottom = 0
+ButtonNormal/Border/Color = Color( 1, 1, 1, 0 )
+ButtonHovered/Border/Color = Color( 1, 1, 1, 0 )
+ButtonFocused/Border/Color = Color( 1, 1, 1, 0 )
+ButtonPressed/Border/Color = Color( 1, 1, 1, 0 )
+ButtonNormal/Border/Blend = false
+ButtonHovered/Border/Blend = false
+ButtonFocused/Border/Blend = false
+ButtonPressed/Border/Blend = false
+ButtonNormal/Border/Offset = Vector2( 0, 0 )
+ButtonHovered/Border/Offset = Vector2( -1, -1 )
+ButtonFocused/Border/Offset = Vector2( -1, -1 )
+ButtonPressed/Border/Offset = Vector2( -1, -1 )
+ButtonNormal/CornerRadius/TopLeft = 0
+ButtonHovered/CornerRadius/TopLeft = 0
+ButtonFocused/CornerRadius/TopLeft = 0
+ButtonPressed/CornerRadius/TopLeft = 0
+ButtonNormal/CornerRadius/TopRight = 0
+ButtonHovered/CornerRadius/TopRight = 0
+ButtonFocused/CornerRadius/TopRight = 0
+ButtonPressed/CornerRadius/TopRight = 0
+ButtonNormal/CornerRadius/BottomRight = 0
+ButtonHovered/CornerRadius/BottomRight = 0
+ButtonFocused/CornerRadius/BottomRight = 0
+ButtonPressed/CornerRadius/BottomRight = 0
+ButtonNormal/CornerRadius/BottomLeft = 0
+ButtonHovered/CornerRadius/BottomLeft = 0
+ButtonFocused/CornerRadius/BottomLeft = 0
+ButtonPressed/CornerRadius/BottomLeft = 0
+ButtonNormal/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonHovered/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonFocused/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonPressed/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonNormal/Shadow/Size = 0
+ButtonHovered/Shadow/Size = 0
+ButtonFocused/Shadow/Size = 0
+ButtonPressed/Shadow/Size = 0
+ButtonNormal/Shadow/Offset = Vector2( 0, 0 )
+ButtonHovered/Shadow/Offset = Vector2( -1, -1 )
+ButtonFocused/Shadow/Offset = Vector2( -1, -1 )
+ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="ContentWrapper" parent="NodeOrGroup/Wrapper" index="1"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="NodeOrGroup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 32.0
+rect_pivot_offset = Vector2( 298, 38 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup/VBoxContainer2"]
 margin_right = 596.0
-margin_bottom = 116.0
+margin_bottom = 76.0
+custom_constants/margin_right = 12
+custom_constants/margin_top = 8
+custom_constants/margin_left = 12
+custom_constants/margin_bottom = 8
 
-[node name="Content" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer" index="0"]
-margin_right = 572.0
-margin_bottom = 72.0
-rect_pivot_offset = Vector2( 500, 14 )
-
-[node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content" index="0"]
-margin_right = 560.0
-margin_bottom = 60.0
+[node name="GridContainer" type="GridContainer" parent="NodeOrGroup/VBoxContainer2/MarginContainer"]
+margin_left = 12.0
+margin_top = 8.0
+margin_right = 584.0
+margin_bottom = 68.0
 rect_pivot_offset = Vector2( 500, 14 )
 columns = 3
 
-[node name="AnimaButton" type="Control" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
-margin_right = 184.0
+[node name="AnimaButton" type="Control" parent="NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
+margin_right = 188.0
 margin_bottom = 28.0
-rect_pivot_offset = Vector2( 92, 14 )
+rect_pivot_offset = Vector2( 94, 14 )
 script = ExtResource( 3 )
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -115,23 +194,23 @@ Normal/Size = Rect2( 0, 0, 100, 100 )
 Hovered/Size = Rect2( -1, -1, -1, -1 )
 Focused/Size = Rect2( -1, -1, -1, -1 )
 Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/BorderWidh/Left = 0
+Normal/BorderWidh/Left = 1.0
 Hovered/BorderWidh/Left = 0
 Focused/BorderWidh/Left = 0
 Pressed/BorderWidh/Left = 0
-Normal/BorderWidh/Top = 0
+Normal/BorderWidh/Top = 1
 Hovered/BorderWidh/Top = 0
 Focused/BorderWidh/Top = 0
 Pressed/BorderWidh/Top = 0
-Normal/BorderWidh/Right = 0
+Normal/BorderWidh/Right = 1.0
 Hovered/BorderWidh/Right = 0
 Focused/BorderWidh/Right = 0
 Pressed/BorderWidh/Right = 0
-Normal/BorderWidh/Bottom = 0
+Normal/BorderWidh/Bottom = 1.0
 Hovered/BorderWidh/Bottom = 0
 Focused/BorderWidh/Bottom = 0
 Pressed/BorderWidh/Bottom = 0
-Normal/Border/Color = Color( 1, 1, 1, 0 )
+Normal/Border/Color = Color( 0.0156863, 0.141176, 0.47451, 1 )
 Hovered/Border/Color = Color( 1, 1, 1, 0 )
 Focused/Border/Color = Color( 1, 1, 1, 0 )
 Pressed/Border/Color = Color( 1, 1, 1, 0 )
@@ -159,22 +238,22 @@ Normal/CornerRadius/BottomLeft = 0
 Hovered/CornerRadius/BottomLeft = 0
 Focused/CornerRadius/BottomLeft = 0
 Pressed/CornerRadius/BottomLeft = 0
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
+Normal/Shadow/Color = Color( 0.0470588, 0.0470588, 0.0509804, 0 )
 Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
 Focused/Shadow/Color = Color( 1, 1, 1, 0 )
 Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
+Normal/Shadow/Size = 5.0
 Hovered/Shadow/Size = 0
 Focused/Shadow/Size = 0
 Pressed/Shadow/Size = 0
-Normal/Shadow/Offset = Vector2( 0, 0 )
+Normal/Shadow/Offset = Vector2( 2, 2 )
 Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="AsNode" type="Button" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
-margin_left = 188.0
-margin_right = 372.0
+[node name="AsNode" type="Button" parent="NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
+margin_left = 192.0
+margin_right = 380.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate the single node only"
@@ -186,9 +265,9 @@ pressed = true
 group = SubResource( 3 )
 text = "Node"
 
-[node name="AsGroup" type="Button" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
-margin_left = 376.0
-margin_right = 560.0
+[node name="AsGroup" type="Button" parent="NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
+margin_left = 384.0
+margin_right = 572.0
 margin_bottom = 28.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
@@ -199,9 +278,9 @@ toggle_mode = true
 group = SubResource( 3 )
 text = "Group"
 
-[node name="AsGrid" type="Button" parent="NodeOrGroup/Wrapper/ContentWrapper/MarginContainer/Content/GridContainer"]
+[node name="AsGrid" type="Button" parent="NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
 margin_top = 32.0
-margin_right = 184.0
+margin_right = 188.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 0, 28 )
 hint_tooltip = "Animate all the direct child of the node"
@@ -211,5 +290,3 @@ custom_fonts/font = SubResource( 2 )
 toggle_mode = true
 group = SubResource( 3 )
 text = "Grid"
-
-[editable path="NodeOrGroup"]

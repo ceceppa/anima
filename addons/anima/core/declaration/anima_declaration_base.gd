@@ -52,3 +52,4 @@ func anima_on_completed(on_completed: FuncRef):
 func debug():
 	_data.__debug = true
 
+	return self

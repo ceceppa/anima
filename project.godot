@@ -201,10 +201,6 @@ config/name="Anima"
 AnimaUI="*res://addons/anima/ui/AnimaUI.gd"
 Anima="*res://addons/anima/core/anima.gd"
 
-[debug]
-
-settings/stdout/verbose_stdout=true
-
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
