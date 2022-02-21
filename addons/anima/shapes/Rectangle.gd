@@ -21,26 +21,6 @@ const PROPERTIES := {
 		type = TYPE_COLOR,
 		default = Color("314569"),
 	},
-	RECTANGLE_BORDER_WIDTH_LEFT = {
-		name = "Rectangle/BorderWidh/Left",
-		type = TYPE_INT,
-		default = 0,
-	},
-	RECTANGLE_BORDER_WIDTH_TOP = {
-		name = "Rectangle/BorderWidh/Top",
-		type = TYPE_INT, 
-		default = 0
-	},
-	RECTANGLE_BORDER_WIDTH_RIGHT = {
-		name = "Rectangle/BorderWidh/Right",
-		type = TYPE_INT,
-		default = 0,
-	},
-	RECTANGLE_BORDER_WIDTH_BOTTOM = {
-		name = "Rectangle/BorderWidh/Bottom",
-		type = TYPE_INT,
-		default = 0,
-	},
 	RECTANGLE_BORDER_COLOR = {
 		name = "Rectangle/Border/Color",
 		type = TYPE_COLOR,
@@ -56,25 +36,79 @@ const PROPERTIES := {
 		type = TYPE_VECTOR2,
 		default = Vector2(0, 0)
 	},
-	RECTANGLE_CORNER_RADIUS_TOP_LEFT = {
-		name = "Rectangle/CornerRadius/TopLeft",
+	RECTANGLE_BORDER_WIDTH_LEFT = {
+		name = "Rectangle/Border/Widh/Left",
 		type = TYPE_INT,
 		default = 0,
 	},
-	RECTANGLE_CORNER_RADIUS_TOP_RIGHT = {
-		name ="Rectangle/CornerRadius/TopRight",
+	RECTANGLE_BORDER_WIDTH_TOP = {
+		name = "Rectangle/Border/Widh/Top",
+		type = TYPE_INT, 
+		default = 0
+	},
+	RECTANGLE_BORDER_WIDTH_RIGHT = {
+		name = "Rectangle/Border/Widh/Right",
 		type = TYPE_INT,
 		default = 0,
 	},
-	RECTANGLE_CORNER_RADIUS_BOTTOM_RIGHT = {
-		name = "Rectangle/CornerRadius/BottomRight",
+	RECTANGLE_BORDER_WIDTH_BOTTOM = {
+		name = "Rectangle/Border/Widh/Bottom",
 		type = TYPE_INT,
 		default = 0,
 	},
-	RECTANGLE_CORNER_RADIUS_BOTTOM_LEFT = {
-		name = "Rectangle/CornerRadius/BottomLeft",
+	RECTANGLE_DETAILS = {
+		name ="Rectangle/Border/Radius/Details",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_RANGE,
+		hint_string = "-1,20,1",
+		default = 8,
+	},
+	RECTANGLE_RADIUS_TOP_LEFT = {
+		name = "Rectangle/Border/Radius/TopLeft",
 		type = TYPE_INT,
 		default = 0,
+	},
+	RECTANGLE_RADIUS_TOP_RIGHT = {
+		name ="Rectangle/Border/Radius/TopRight",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_RADIUS_BOTTOM_RIGHT = {
+		name = "Rectangle/Border/Radius/BottomRight",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_RADIUS_BOTTOM_LEFT = {
+		name = "Rectangle/Border/Radius/BottomLeft",
+		type = TYPE_INT,
+		default = 0,
+	},
+	RECTANGLE_OFFSET_DETAILS = {
+		name ="Rectangle/Border/Offset/Radius/Details",
+		type = TYPE_INT,
+		hint = PROPERTY_HINT_RANGE,
+		hint_string = "0,20,1",
+		default = 8,
+	},
+	RECTANGLE_OFFSET_RADIUS_TOP_LEFT = {
+		name = "Rectangle/Border/Offset/Radius/TopLeft",
+		type = TYPE_INT,
+		default = -1,
+	},
+	RECTANGLE_OFFSET_RADIUS_TOP_RIGHT = {
+		name ="Rectangle/Border/Offset/Radius/TopRight",
+		type = TYPE_INT,
+		default = -1,
+	},
+	RECTANGLE_OFFSET_RADIUS_BOTTOM_RIGHT = {
+		name = "Rectangle/Border/Offset/Radius/BottomRight",
+		type = TYPE_INT,
+		default = -1,
+	},
+	RECTANGLE_OFFSET_RADIUS_BOTTOM_LEFT = {
+		name = "Rectangle/Border/Offset/Radius/BottomLeft",
+		type = TYPE_INT,
+		default = -1,
 	},
 	RECTANGLE_SHADOW_COLOR = {
 		name = "Rectangle/Shadow/Color",
@@ -119,12 +153,13 @@ func _draw() -> void:
 
 	var has_border_offset = border_offset.x > 0 or border_offset.y > 0
 	var stylebox: StyleBoxFlat = StyleBoxFlat.new()
-	
+
+	stylebox.corner_detail = max(0, get_property(PROPERTIES.RECTANGLE_DETAILS.name))
 	stylebox.set_corner_radius_individual(
-		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_TOP_LEFT.name),
-		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_TOP_RIGHT.name),
-		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_BOTTOM_RIGHT.name),
-		get_property(PROPERTIES.RECTANGLE_CORNER_RADIUS_BOTTOM_LEFT.name)
+		get_property(PROPERTIES.RECTANGLE_RADIUS_TOP_LEFT.name),
+		get_property(PROPERTIES.RECTANGLE_RADIUS_TOP_RIGHT.name),
+		get_property(PROPERTIES.RECTANGLE_RADIUS_BOTTOM_RIGHT.name),
+		get_property(PROPERTIES.RECTANGLE_RADIUS_BOTTOM_LEFT.name)
 	)
 
 	stylebox.border_color = get_property(PROPERTIES.RECTANGLE_BORDER_COLOR.name)
@@ -170,6 +205,20 @@ func _draw() -> void:
 	stylebox_border.shadow_color = get_property(PROPERTIES.RECTANGLE_SHADOW_COLOR.name)
 	stylebox_border.shadow_size = get_property(PROPERTIES.RECTANGLE_SHADOW_SIZE.name)
 	stylebox_border.shadow_offset = get_property(PROPERTIES.RECTANGLE_SHADOW_OFFSET.name)
+
+	var offset_radius := {
+			"corner_radius_top_left": PROPERTIES.RECTANGLE_OFFSET_RADIUS_TOP_LEFT.name,
+			"corner_radius_top_right": PROPERTIES.RECTANGLE_OFFSET_RADIUS_TOP_RIGHT.name,
+			"corner_radius_bottom_right": PROPERTIES.RECTANGLE_OFFSET_RADIUS_BOTTOM_RIGHT.name,
+			"corner_radius_bottom_left": PROPERTIES.RECTANGLE_OFFSET_RADIUS_BOTTOM_LEFT.name,
+			"corner_detail": PROPERTIES.RECTANGLE_OFFSET_DETAILS.name
+	}
+
+	for radius_key in offset_radius:
+		var radius: int = get_property(offset_radius[radius_key])
+
+		if radius > -1:
+			stylebox_border[radius_key] = radius
 
 	draw_style_box(stylebox_border, border_rect)
 

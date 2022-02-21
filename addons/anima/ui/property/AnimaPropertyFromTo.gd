@@ -12,16 +12,17 @@ enum TYPES {
 	STRING = TYPE_STRING
 }
 
-onready var _current_value_button: Button = find_node('CurrentValue')
+onready var _current_value_button: AnimaButton
 onready var _custom_value: HBoxContainer = find_node('CustomValue')
 onready var _delete_button: Button = find_node('DeleteButton')
-onready var _relative_selector: Button = find_node('RelativeSelectorButton')
+onready var _relative_selector: AnimaButton = find_node('RelativeSelectorButton')
 
 export (String) var label = 'current value' setget set_label
 export (TYPES) var type = TYPES.INT setget set_type
 export (bool) var can_clear_custom_value := true setget set_can_clear_custom_value
 export (bool) var show_relative_selector := true setget set_show_relative_selector
 export (bool) var can_edit_value := true setget set_can_edit_value
+export (bool) var borderless := false setget set_borderless
 
 const MIN_SIZE := 30.0
 
@@ -37,8 +38,10 @@ func _ready():
 	for button in relative_buttons:
 		button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
 
+	set_label(label)
 	set_type(type)
 	set_show_relative_selector(show_relative_selector)
+	set_can_clear_custom_value(can_clear_custom_value)
 
 func set_type(the_type: int) -> void:
 	type = the_type
@@ -102,35 +105,26 @@ func _animate_custom_value(mode: int) -> void:
 
 	anima.then(
 		Anima.Node(_current_value_button) \
-			.anima_property("scale") \
+			.anima_scale(Vector2(0.5, 0.5)) \
 			.anima_from(Vector2.ONE) \
-			.anima_to(Vector2(0.5, 0.5)) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
 	anima.with(
-		Anima.Node(_current_value_button) \
-			.anima_property("opacity") \
-			.anima_from(1.0) \
-			.anima_to(0.0)
+		Anima.Node(_current_value_button).anima_fade_out()
 	)
 	anima.with(
 		Anima.Node(_custom_value) \
-			.anima_property("scale") \
+			.anima_scale(Vector2.ONE) \
 			.anima_from(Vector2(1.5, 1.5)) \
-			.anima_to(Vector2.ONE) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK) \
 			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
 			.anima_initial_value(Vector2(1.5, 1.5))
 	)
 	anima.with(
-		Anima.Node(_custom_value) \
-			.anima_property("opacity") \
-			.anima_from(0.0) \
-			.anima_to(1.0) \
-			.anima_initial_value(0.0)
+		Anima.Node(_custom_value).anima_fade_in().anima_initial_value(0.0)
 	)
-	
-	var height: float = _input_visible.rect_size.y
+
+	var height: float = max(38, _input_visible.rect_size.y)
 
 	anima.with(
 		Anima.Node(self) \
@@ -151,8 +145,10 @@ func _animate_custom_value(mode: int) -> void:
 		
 		yield(anima, "animation_completed")
 
-#		if _input_visible.is_visible_in_tree():
-#			_input_visible.grab_focus()
+		prints(_custom_value.visible, _custom_value.modulate)
+
+		if is_inside_tree() and _input_visible.is_visible_in_tree():
+			_input_visible.grab_focus()
 	else:
 		anima.play_backwards()
 
@@ -194,7 +190,10 @@ func set_placeholder(value) -> void:
 	else:
 		_input_visible.placeholder_text = str(value)
 
-func set_value(value) -> void:
+func set_initial_value(value) -> void:
+	set_value(value, false)
+
+func set_value(value, animate := true) -> void:
 	if value == null:
 		return
 
@@ -234,7 +233,8 @@ func set_value(value) -> void:
 			w.text = str(value[2])
 			h.text = str(value[3])
 
-	_on_CurrentValue_pressed()
+	if animate:
+		_on_CurrentValue_pressed()
 
 func set_relative_value(value: String) -> void:
 	if _input_visible is LineEdit:
@@ -275,16 +275,18 @@ func get_value():
 		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
 func set_label(new_label: String) -> void:
-	if _current_value_button == null:
-		_current_value_button = find_node('CurrentValue')
+	if borderless:
+		_current_value_button = get_node("CurrentValueBorderless")
+	else:
+		_current_value_button = get_node('CurrentValue')
 
 	label = new_label
-	_current_value_button.text = label
+	_current_value_button.set("Button/Label", label)
 
 func set_show_relative_selector(relative_button: bool) -> void:
 	show_relative_selector = relative_button
 	
-	var button: Button = find_node("RelativeSelectorButton")
+	var button: AnimaButton = find_node("RelativeSelectorButton")
 	button.visible = show_relative_selector
 
 func _on_CurrentValue_pressed():
@@ -311,3 +313,11 @@ func _on_RelativeSelectorButton_pressed(source: Button):
 	_relative_source = source
 
 	emit_signal("select_relative_property")
+
+func set_borderless(is_borderless: bool) -> void:
+	borderless = is_borderless
+
+	$CurrentValue.visible = !is_borderless
+	$CurrentValueBorderless.visible = is_borderless
+
+	set_label(label)

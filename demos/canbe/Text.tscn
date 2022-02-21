@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://demos/canbe/Text.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/components/AnimaChars.tscn" type="PackedScene" id=5]
+
+[node name="Text" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 48
+alignment = 1
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Can" parent="." instance=ExtResource( 5 )]
+margin_top = 147.0
+margin_right = 1024.0
+margin_bottom = 217.0
+rect_min_size = Vector2( 0, 70 )
+
+[node name="With" parent="." instance=ExtResource( 5 )]
+margin_top = 265.0
+margin_right = 1024.0
+margin_bottom = 335.0
+rect_min_size = Vector2( 1024, 70 )
+
+[node name="Godot" parent="." instance=ExtResource( 5 )]
+margin_top = 383.0
+margin_right = 1024.0
+margin_bottom = 453.0
+rect_min_size = Vector2( 0, 70 )
+size_flags_vertical = 0

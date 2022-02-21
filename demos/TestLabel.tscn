@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/anima/components/AnimaLabel.gd" type="Script" id=1]
+[ext_resource path="res://resources/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 2 )
+
+[node name="AnimaLabel" type="Node"]
+
+[node name="AnimaLabel" type="TextureRect" parent="."]
+margin_right = 372.0
+margin_bottom = 105.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_font = SubResource( 1 )

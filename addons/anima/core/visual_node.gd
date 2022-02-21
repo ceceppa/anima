@@ -19,6 +19,20 @@ func _init():
 func get_source_node() -> Node:
 	var parent = self.get_parent()
 
+	# get data
+	var img = get_viewport().get_texture().get_data()
+	# wait two frames
+	yield(get_tree(), "idle_frame")
+	yield(get_tree(), "idle_frame")
+	# flip
+	img.flip_y()
+	# get screen ratio + resize capture
+	var ratio = 2
+	img.resize(img.get_width()*ratio,img.get_height()*ratio,0)
+	# save to file
+	print("saving")
+	img.save_png("screenshot.png")
+
 	if parent == null:
 		return self
 

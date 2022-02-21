@@ -151,6 +151,7 @@ func _init_layout() -> void:
 	_title.rect_min_size.y = 32
 	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
 	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, 1)
+	_title.connect("pressed", self, "_on_Title_pressed")
 
 	_title.add_child(_icon)
 

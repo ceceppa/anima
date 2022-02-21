@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://demos/components/Button.tscn" type="PackedScene" id=1]
+[ext_resource path="res://demos/components/Checkbox.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.878431, 0.878431, 0.878431, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 1
+
+[node name="Checkbox" instance=ExtResource( 1 )]
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 2 )
