@@ -1,0 +1,118 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/components/AnimaChars.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 72
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 72
+font_data = ExtResource( 3 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimaVisualNode" type="Node" parent="."]
+script = ExtResource( 1 )
+__anima_visual_editor_data = {
+"animations": [ {
+"name": "default",
+"visibility_strategy": 0
+} ],
+"connection_list": [ {
+"from": "AnimaNode628088",
+"from_port": 0,
+"to": "Animation629896",
+"to_port": 0
+} ],
+"data_by_animation": {
+0: [ {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Select animation...",
+"name": ""
+},
+"type": 0
+},
+"delay": 0.0,
+"duration": 0.7
+},
+"node_path": "CenterContainer/VBoxContainer/AnimaChars",
+"start_time": 0.0
+} ]
+},
+"events_slots": [  ],
+"nodes": [ {
+"data": {
+},
+"id": "AnimaNode",
+"name": "AnimaNode628088",
+"node_path": null,
+"position": Vector2( 1609, 20 ),
+"title": "AnimaNode"
+}, {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Select animation...",
+"name": ""
+},
+"type": 0
+},
+"delay": 0.0,
+"duration": 0.7
+},
+"id": "Animation",
+"name": "Animation629896",
+"node_path": NodePath("CenterContainer/VBoxContainer/AnimaChars"),
+"position": Vector2( 2000, -60 ),
+"title": "./CenterContainer/VBoxContainer/AnimaChars"
+} ],
+"scroll_offset": Vector2( 1511.93, -135.178 ),
+"zoom": 1.0
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 306.0
+margin_top = 204.0
+margin_right = 717.0
+margin_bottom = 396.0
+rect_min_size = Vector2( 0, 100 )
+
+[node name="AnimaChars" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+margin_right = 411.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+custom_constants/separation = 0
+alignment = 1
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+label = "MERRY"
+font = SubResource( 1 )
+font_color = Color( 1, 1, 1, 1 )
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+margin_top = 104.0
+margin_right = 411.0
+margin_bottom = 192.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "CHRISTMAS"
+align = 1

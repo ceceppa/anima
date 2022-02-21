@@ -2,6 +2,8 @@ extends Control
 
 const Test := {}
 
+export (StyleBoxFlat) var test setget set_test
+
 func _ready():
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
@@ -89,4 +91,12 @@ func _on_Button2_pressed():
 	else:
 		_temp.free()
 		_temp = null
+
+func _on_v_changed() -> void:
+	pass
+
+func set_test(v: StyleBoxFlat) -> void:
+	test = v
+	v.connect("changed", self, "_on_v_changed")
+	print(test)
 

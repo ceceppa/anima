@@ -35,10 +35,10 @@ func anima_property(property: String, final_value = null, duration = null) -> An
 	return _create_declaration_with_easing({ property = property, to = final_value, duration = duration })
 
 func anima_fade_in(duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "opacity", to = 1.0, duration = duration })
+	return _create_declaration_with_easing({ property = "opacity", from = 0.0, to = 1.0, duration = duration })
 
 func anima_fade_out(duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "opacity", to = 1.0, duration = duration })
+	return _create_declaration_with_easing({ property = "opacity", from = 1.0, to = 0.0, duration = duration })
 
 func anima_position(position: Vector2, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "position", to = position, duration = duration })

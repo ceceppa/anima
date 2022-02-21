@@ -1,0 +1,425 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/anima/ui/FramePanel.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/icons/Play.svg" type="Texture" id=5]
+[ext_resource path="res://addons/anima/icons/Time.svg" type="Texture" id=6]
+
+[sub_resource type="DynamicFont" id=4]
+size = 14
+use_filter = true
+font_data = ExtResource( 1 )
+__meta__ = {
+"_original_size": 18
+}
+
+[sub_resource type="DynamicFont" id=1]
+use_filter = true
+font_data = ExtResource( 1 )
+__meta__ = {
+"_original_size": 18
+}
+
+[node name="FramePanel" type="Control"]
+anchor_bottom = 1.0
+rect_min_size = Vector2( 360, 0 )
+rect_pivot_offset = Vector2( 180, 300 )
+size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
+Rectangle/Size = Rect2( 0, 0, 100, 100 )
+Rectangle/FillColor = Color( 0.133333, 0.129412, 0.176471, 1 )
+Rectangle/Border/Color = Color( 1, 1, 1, 0 )
+Rectangle/Border/Blend = false
+Rectangle/Border/Offset = Vector2( 0, 0 )
+Rectangle/Border/Widh/Left = 0
+Rectangle/Border/Widh/Top = 0
+Rectangle/Border/Widh/Right = 0
+Rectangle/Border/Widh/Bottom = 0
+Rectangle/Border/Radius/Details = 8
+Rectangle/Border/Radius/TopLeft = 20.0
+Rectangle/Border/Radius/TopRight = 20
+Rectangle/Border/Radius/BottomRight = 20.0
+Rectangle/Border/Radius/BottomLeft = 20.0
+Rectangle/Border/Offset/Radius/Details = 8
+Rectangle/Border/Offset/Radius/TopLeft = -1
+Rectangle/Border/Offset/Radius/TopRight = -1
+Rectangle/Border/Offset/Radius/BottomRight = -1
+Rectangle/Border/Offset/Radius/BottomLeft = -1
+Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
+Rectangle/Shadow/Size = 0
+Rectangle/Shadow/Offset = Vector2( 0, 0 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 24
+custom_constants/margin_top = 24
+custom_constants/margin_left = 24
+custom_constants/margin_bottom = 24
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 336.0
+margin_bottom = 576.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 312.0
+margin_bottom = 59.0
+rect_min_size = Vector2( 0, 42 )
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_right = 284.0
+margin_bottom = 59.0
+rect_min_size = Vector2( 0, 48 )
+size_flags_horizontal = 3
+
+[node name="FrameName" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_right = 284.0
+margin_bottom = 38.0
+rect_pivot_offset = Vector2( 142, 19 )
+label = " Frame 01"
+show_relative_selector = false
+borderless = true
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+margin_top = 42.0
+margin_right = 284.0
+margin_bottom = 59.0
+rect_min_size = Vector2( 32, 0 )
+mouse_filter = 1
+size_flags_vertical = 7
+custom_colors/font_color = Color( 0.580392, 0.576471, 0.615686, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "Animation"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_left = 288.0
+margin_right = 312.0
+margin_bottom = 59.0
+
+[node name="AnimaButton" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/CenterContainer"]
+margin_top = 17.0
+margin_right = 24.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 24, 24 )
+rect_pivot_offset = Vector2( 12, 12 )
+script = ExtResource( 3 )
+Animation/AnimatePropertyChange = false
+Animation/Speed = 0.3
+Animation/Easing = 0
+Button/Label = ""
+Button/Align = 0
+Button/VAlign = 0
+Button/Font = null
+Button/ToggleMode = false
+Normal/FillColor = Color( 0.239216, 0.239216, 0.266667, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.141176, 0.415686, 0.560784, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, -1, -1 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 4
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 4
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 4
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 4
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 1, 1, 1, 0 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Normal/Shadow/Size = 0
+Hovered/Shadow/Size = -1
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 0, 0 )
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="Play" type="Sprite" parent="MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/AnimaButton"]
+position = Vector2( 4, 4 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 59.0
+margin_right = 312.0
+margin_bottom = 159.0
+custom_constants/margin_top = 12
+custom_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
+margin_top = 12.0
+margin_right = 312.0
+margin_bottom = 88.0
+custom_constants/separation = 12
+
+[node name="GridContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+margin_right = 312.0
+margin_bottom = 38.0
+rect_pivot_offset = Vector2( 259.281, -180.348 )
+custom_constants/separation = 24
+
+[node name="Time" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer"]
+position = Vector2( 4.60373, 16.1706 )
+texture = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer"]
+margin_top = 9.0
+margin_right = 82.0
+margin_bottom = 29.0
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 1 )
+text = "     Duration:"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PropertyFromTo" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_left = 106.0
+margin_right = 312.0
+margin_bottom = 38.0
+show_relative_selector = false
+
+[node name="GridContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+margin_top = 50.0
+margin_right = 312.0
+margin_bottom = 76.0
+rect_pivot_offset = Vector2( 259.281, -180.348 )
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer2"]
+margin_top = 3.0
+margin_right = 236.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 1 )
+text = "Animations:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddAnimation" type="Control" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer2"]
+margin_left = 240.0
+margin_right = 312.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 72, 26 )
+script = ExtResource( 3 )
+Animation/AnimatePropertyChange = false
+Animation/Speed = 0.3
+Animation/Easing = 0
+Button/Label = "+ Add"
+Button/Align = 1
+Button/VAlign = 1
+Button/Font = null
+Button/ToggleMode = false
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, -1, -1 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 0
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 0
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 0
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 0
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 1, 1, 1, 0 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Normal/Shadow/Size = 0
+Hovered/Shadow/Size = -1
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 0, 0 )
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 159.0
+margin_right = 312.0
+margin_bottom = 552.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]

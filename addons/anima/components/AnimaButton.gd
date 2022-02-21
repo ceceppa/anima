@@ -5,13 +5,23 @@ class_name AnimaButton, "res://addons/anima/icons/button.svg"
 var _label := Label.new()
 
 var _is_focused := false
+var _is_pressed := false
 
-const STATE := {
-	NORMAL = "Normal",
-	HOVERED = "Hovered",
-	FOCUSED = "Focused",
-	PRESSED = "Pressed"
+enum STATE {
+	NORMAL,
+	HOVERED,
+	FOCUSED,
+	PRESSED
 }
+
+const STATES := {
+	STATE.NORMAL: "Normal",
+	STATE.HOVERED: "Hovered",
+	STATE.FOCUSED: "Focused",
+	STATE.PRESSED: "Pressed"
+}
+
+export (STATE) var _test_state = STATE.NORMAL setget _set_test_state
 
 const LABEL_PROPERTIES = ["Button/Label", "Button/Align", "Button/VAlign", "Button/Font",]
 const BUTTON_BASE_PROPERTIES := {
@@ -46,6 +56,12 @@ const BUTTON_BASE_PROPERTIES := {
 		default = null,
 		animatable = false
 	},
+	BUTTON_TOGGLE_MODE = {
+		name = "Button/ToggleMode",
+		type = TYPE_BOOL,
+		default = false,
+	},
+
 	# Normal
 	NORMAL_FILL_COLOR = {
 		name = "Normal/FillColor",
@@ -74,7 +90,7 @@ const BUTTON_BASE_PROPERTIES := {
 	HOVERED_FONT_COLOR = {
 		name = "Hovered/FontColor",
 		type = TYPE_COLOR,
-		default = Color("fff")
+		default = Color.transparent
 	},
 
 	# Pressed
@@ -82,7 +98,7 @@ const BUTTON_BASE_PROPERTIES := {
 		name = "Pressed/UseSameStyleOf",
 		type = TYPE_STRING,
 		hint = PROPERTY_HINT_ENUM,
-		hint_string = ",Normal,Pressed,Focused",
+		hint_string = ",Normal,Hovered,Focused",
 		default = ""
 	},
 	PRESSED_FILL_COLOR = {
@@ -93,7 +109,7 @@ const BUTTON_BASE_PROPERTIES := {
 	PRESSED_FONT_COLOR = {
 		name = "Pressed/FontColor",
 		type = TYPE_COLOR,
-		default = Color("fff")
+		default = Color.transparent
 	},
 
 	# Focused
@@ -101,7 +117,7 @@ const BUTTON_BASE_PROPERTIES := {
 		name = "Focused/UseSameStyleOf",
 		type = TYPE_STRING,
 		hint = PROPERTY_HINT_ENUM,
-		hint_string = ",Normal,Pressed,Focused",
+		hint_string = ",Normal,Hovered,Pressed",
 		default = ""
 	},
 	FOCUSED_FILL_COLOR = {
@@ -112,11 +128,12 @@ const BUTTON_BASE_PROPERTIES := {
 	FOCUSED_FONT_COLOR = {
 		name = "Focused/FontColor",
 		type = TYPE_COLOR,
-		default = Color("fff")
+		default = Color.transparent
 	},
 }
 
 var _all_properties := BUTTON_BASE_PROPERTIES
+var _is_toggable := false
 
 func _init():
 	._init()
@@ -134,12 +151,15 @@ func _init():
 			var new_value = PROPERTIES[key].duplicate()
 
 			if extra_key_index > 0:
-				if new_value.default is float:
+				if new_value.default is float or new_value.default is int:
 					new_value.default = -1
 				elif new_value.default is Vector2:
 					new_value.default = Vector2(-1, -1)
 				elif new_value.default is Rect2:
 					new_value.default = Rect2(-1, -1, -1, -1)
+				elif new_value.default is Color:
+					new_value.default = Color.transparent
+					new_value.default.a = 0.01
 
 			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
 
@@ -162,8 +182,11 @@ func _init():
 	connect("mouse_entered", self, "_on_mouse_entered")
 	connect("mouse_exited", self, "_on_mouse_exited")
 	connect("mouse_down", self, "_on_mouse_down")
+	connect("pressed", self, "_on_pressed")
 
 	add_child(_label)
+
+	_test_state = STATE.NORMAL
 
 func _ready():
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name))
@@ -171,7 +194,9 @@ func _ready():
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name))
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name))
 
-	update()
+	_is_toggable = get_property(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name)
+
+	_copy_properties("Normal")
 
 func _copy_properties(from: String) -> void:
 	var copy_from_key = from.to_upper()
@@ -203,7 +228,10 @@ func _animate_state(root_key: String) -> void:
 			var current_value = get_property(rectangle_property_name)
 			var final_value = get_property(property_name)
 
-			if final_value is String or final_value is bool or str(final_value).find("-1") >= 0:
+			if final_value is String \
+				or final_value is bool \
+				or str(final_value).find("-1") >= 0 \
+				or (final_value is Color and final_value.a == 0):
 				continue
 
 			if current_value != final_value:
@@ -212,13 +240,18 @@ func _animate_state(root_key: String) -> void:
 	if params_to_animate.size() > 0:
 		animate_params(params_to_animate)
 
-func refresh(state: String, ignore_if_focused := true) -> void:
+func refresh(state: int, ignore_if_focused := true) -> void:
 	if _is_focused and ignore_if_focused:
 		state = STATE.FOCUSED
+	elif _is_toggable and _is_pressed:
+		state = STATE.PRESSED
 
-	_animate_state(state)
+	_animate_state(STATES[state])
 
 func _set(property: String, value) -> void:
+	if Engine.editor_hint and property.find("Rectangle/") < 0:
+		prevent_animate_property_change()
+
 	._set(property, value)
 
 	if LABEL_PROPERTIES.find(property) >= 0:
@@ -231,14 +264,21 @@ func _set(property: String, value) -> void:
 			return
 
 		_label.set(property.replace("Button/", "").to_lower(), value)
-	elif property.find("Normal/") == 0:
-		_copy_properties("Normal")
+	elif property.find("FontColor") > 0:
+		_label.add_color_override("font_color", value)
+
+	restore_animate_property_change()
+
+	if Engine.editor_hint and property.find(STATES[_test_state]) >= 0 and is_inside_tree():
+		_animate_state(STATES[_test_state])
 
 func get(property):
-	if property.find("FontColor") < 0 or Engine.editor_hint:
-		return .get(property)
+	if property.find("FontColor") >= 0:
+		var color = _label.get_color("font_color")
 
-	return _label.get_color("font_color")
+		return color
+
+	return .get(property)
 
 func _on_mouse_entered():
 	refresh(STATE.HOVERED)
@@ -257,3 +297,14 @@ func _on_focus_exited():
 	_is_focused = false
 	
 	refresh(STATE.NORMAL)
+
+func _on_pressed() -> void:
+	_is_pressed = not _is_pressed
+
+	if _is_toggable:
+		refresh(STATE.PRESSED)
+
+func _set_test_state(new_state) -> void:
+	if Engine.editor_hint:
+		_test_state = new_state
+		_animate_state(STATES[new_state])

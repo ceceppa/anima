@@ -158,7 +158,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 
 	if node.get(property_name):
 		node_property_name = property_name
-	elif node.get(rect_property_name):
+	elif node.get(rect_property_name) != null:
 		node_property_name = rect_property_name
 	elif property_name in node:
 		node_property_name = property_name

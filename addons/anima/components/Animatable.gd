@@ -24,6 +24,7 @@ const BASE_PROPERTIES := {
 
 var _property_list := AnimaPropertyList.new()
 var _is_animating_property_change := false
+var _old_animate_property_change: bool
 
 func _init():
 	_add_properties(BASE_PROPERTIES)
@@ -74,14 +75,23 @@ func _set(property: String, value):
 
 		animate_param(property, value, from)
 
-func set(name: String, value) -> void:
-	var old_value = get_property(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name)
+func prevent_animate_property_change() -> void:
+	_old_animate_property_change = get_property(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name)
 
 	_property_list.set(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name, false)
+
+func restore_animate_property_change() -> void:
+	if not _old_animate_property_change:
+		return
+
+	_property_list.set(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name, _old_animate_property_change)
+
+func set(name: String, value) -> void:
+	prevent_animate_property_change()
+
 	.set(name, value)
 
-	_property_list.set(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name, old_value)
-
+	restore_animate_property_change()
 
 func _get_property_list() -> Array:
 	if _property_list:
@@ -110,7 +120,6 @@ func animate_params(params: Array) -> void:
 			animation.anima_from(param.from)
 
 		animation.anima_easing(easing)
-
 		animations.push_back(animation)
 
 	animate(animations)
