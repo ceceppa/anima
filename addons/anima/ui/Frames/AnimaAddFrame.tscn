@@ -48,10 +48,11 @@ margin_top = 231.0
 margin_right = 124.12
 margin_bottom = 231.0
 rect_pivot_offset = Vector2( 51, 51 )
+mouse_default_cursor_shape = 2
 script = ExtResource( 3 )
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
-Animation/Easing = 27.0
+Animation/Easing = 28.0
 
 [node name="Dotted" type="Control" parent="AddButton"]
 anchor_right = 1.0
@@ -63,6 +64,7 @@ __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
 }
+draw_from_center = true
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -75,9 +77,9 @@ Rectangle/Border/Widh/Left = 2.0
 Rectangle/Border/Widh/Top = 2.0
 Rectangle/Border/Widh/Right = 2
 Rectangle/Border/Widh/Bottom = 2.0
-Rectangle/Border/Radius/Details = 8
+Rectangle/Border/Radius/Details = 20.0
 Rectangle/Border/Radius/TopLeft = 8.0
-Rectangle/Border/Radius/TopRight = 8
+Rectangle/Border/Radius/TopRight = 8.0
 Rectangle/Border/Radius/BottomRight = 8.0
 Rectangle/Border/Radius/BottomLeft = 8.0
 Rectangle/Border/Offset/Radius/Details = 8
@@ -576,12 +578,17 @@ Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
 [node name="Plus" type="Control" parent="AddButton/Dotted"]
+modulate = Color( 0.192157, 0.270588, 0.411765, 0.972549 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
 
 [node name="Horizontal" type="Control" parent="AddButton/Dotted/Plus"]
 anchor_right = 1.0
@@ -590,6 +597,7 @@ rect_pivot_offset = Vector2( 51, 51 )
 mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 draw_from_center = true
@@ -597,7 +605,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 40, 5 )
-Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 0.972549 )
+Rectangle/FillColor = Color( 1, 1, 1, 0.972549 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -626,6 +634,7 @@ rect_pivot_offset = Vector2( 51, 51 )
 mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 draw_from_center = true
@@ -633,7 +642,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 5, 40 )
-Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Rectangle/FillColor = Color( 1, 1, 1, 0.972549 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -655,4 +664,6 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
+[connection signal="gui_input" from="AddButton" to="." method="_on_AddButton_gui_input"]
 [connection signal="mouse_entered" from="AddButton" to="." method="_on_AddButton_mouse_entered"]
+[connection signal="mouse_exited" from="AddButton" to="." method="_on_AddButton_mouse_exited"]
