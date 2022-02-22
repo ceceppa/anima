@@ -362,9 +362,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 	if node.get(property_name) or property_name in node:
 		node_property_name = property_name
-	elif node.get(rect_property_name):
-		node_property_name = rect_property_name
-	elif rect_property_name in node:
+	elif node.get(rect_property_name) or rect_property_name in node:
 		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
@@ -380,7 +378,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		}
 
 	if node_property_name:
-		var is_rect2 = node_property_name in node and node[node_property_name] is Rect2
+		var is_rect2 = (node_property_name in node and node[node_property_name] is Rect2)
 		if is_rect2 and p.size() > 1:
 			var k: String = p[1]
 

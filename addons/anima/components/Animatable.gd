@@ -122,9 +122,9 @@ func animate_params(params: Array) -> void:
 		animation.anima_easing(easing)
 		animations.push_back(animation)
 
-	animate(animations)
+	_animate(animations)
 
-func animate(anima_data: Array) -> AnimaNode:
+func _animate(anima_data: Array) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	for data in anima_data:
@@ -141,6 +141,9 @@ func animate(anima_data: Array) -> AnimaNode:
 
 func set_position(position: Vector2, default := false):
 	animate_param("position", position)
+
+func set_size(size: Vector2, default := false):
+	animate_param("size", size)
 
 func should_animate_property_change() -> bool:
 	return get_property(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name)

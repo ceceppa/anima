@@ -59,7 +59,7 @@ font = SubResource( 4 )
 expanded = false
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
-Animation/Easing = 28.0
+Animation/Easing = 0
 Animation/Name = "fadeIn"
 Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
 ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
@@ -197,7 +197,6 @@ anchor_right = 0.0
 margin_left = 71.0
 margin_right = 984.0
 label = "default speed"
-type = 3
 show_relative_selector = false
 
 [node name="Label2" type="Label" parent="Container/TimeDelay/AnimaAccordionContent/MarginContainer/GridContainer"]
@@ -218,7 +217,6 @@ margin_left = 71.0
 margin_top = 36.0
 margin_right = 984.0
 margin_bottom = 68.0
-type = 3
 can_clear_custom_value = false
 show_relative_selector = false
 
@@ -237,6 +235,12 @@ margin_right = 1008.0
 
 [node name="NodeOrGroup" parent="Container/AnimationData" index="2"]
 margin_right = 1008.0
+Animation/Easing = 0
+Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
+ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonHovered/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonPressed/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonFocused/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 ButtonNormal/Border/Widh/Left = 0
 ButtonHovered/Border/Widh/Left = 0
 ButtonFocused/Border/Widh/Left = 0
@@ -302,7 +306,19 @@ margin_right = 996.0
 
 [node name="AnimaButton" parent="Container/AnimationData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="0"]
 margin_right = 325.0
-Animation/AnimatePropertyChange = false
+Button/Label = "Anima Button"
+Button/Align = 0
+Button/VAlign = 0
+Button/Font = null
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
 Normal/Border/Widh/Left = 0
 Hovered/Border/Widh/Left = -1
 Focused/Border/Widh/Left = -1
@@ -359,6 +375,12 @@ Normal/Border/Offset/Radius/BottomLeft = -1
 Hovered/Border/Offset/Radius/BottomLeft = -1
 Focused/Border/Offset/Radius/BottomLeft = -1
 Pressed/Border/Offset/Radius/BottomLeft = -1
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Hovered/Shadow/Size = -1
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
 
 [node name="AsNode" parent="Container/AnimationData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="1"]
 margin_left = 329.0
@@ -377,7 +399,17 @@ group = SubResource( 3 )
 [node name="AnimaButton2" parent="Container/AnimationData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="4"]
 margin_left = 329.0
 margin_right = 654.0
-Animation/AnimatePropertyChange = false
+Button/Label = "Anima Button"
+Button/Align = 0
+Button/VAlign = 0
+Button/Font = null
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
 Normal/Border/Widh/Left = 0
 Hovered/Border/Widh/Left = -1
 Focused/Border/Widh/Left = -1
@@ -434,12 +466,18 @@ Normal/Border/Offset/Radius/BottomLeft = -1
 Hovered/Border/Offset/Radius/BottomLeft = -1
 Focused/Border/Offset/Radius/BottomLeft = -1
 Pressed/Border/Offset/Radius/BottomLeft = -1
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Hovered/Shadow/Size = -1
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 8.0
-margin_right = 1016.0
+margin_right = 520.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 
@@ -448,7 +486,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
+margin_right = 520.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
@@ -457,7 +495,7 @@ rect_clip_content = false
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 1016.0
+margin_right = 520.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )

@@ -178,7 +178,6 @@ static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
 			for k in value:
 				result[percentage][k] = value[k]
 
-
 	#
 	# Interpolates the "missing" keys, for example:
 	#
