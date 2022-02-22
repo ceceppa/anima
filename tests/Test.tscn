@@ -344,7 +344,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 draw_from_center = true
-Animation/AnimatePropertyChange = true
+Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
 Animation/Easing = 0
 Button/Label = "Anima Button"

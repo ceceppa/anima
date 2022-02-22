@@ -139,11 +139,14 @@ func _animate(anima_data: Array) -> AnimaNode:
 
 	return anima
 
-func set_position(position: Vector2, default := false):
+func set_position(position: Vector2, default := false) -> void:
 	animate_param("position", position)
 
-func set_size(size: Vector2, default := false):
+func set_size(size: Vector2, default := false) -> void:
 	animate_param("size", size)
+
+func set_scale(scale: Vector2, default := false) -> void:
+	animate_param("scale", scale)
 
 func should_animate_property_change() -> bool:
 	return get_property(BASE_PROPERTIES.ANIMATE_PROPERTY_CHANGE.name)
