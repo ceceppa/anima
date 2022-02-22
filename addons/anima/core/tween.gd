@@ -192,6 +192,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var is_first_frame = true
 	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
+	var easing = full_keyframes_data.easing if full_keyframes_data.has("easing") else null
 
 	if animation_data.has("_ignore_relative") and animation_data._ignore_relative:
 		relative_properties = []
@@ -214,6 +215,9 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	if keyframes_data.has("initial_values"):
 		animation_data.initial_values = keyframes_data.initial_values
+
+	if easing:
+		animation_data.easing = easing
 
 	keyframes_data.erase("initial_values")
 
@@ -631,6 +635,9 @@ class AnimatedItem extends Node:
 	func animate(elapsed: float) -> void:
 		if _property_data.size() == 0:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
+
+			if _animation_data.has("__debug"):
+				print(_property_data)
 
 		var from = _property_data.from
 		var diff = _property_data.diff
