@@ -21,6 +21,9 @@ __meta__ = {
 
 [node name="AnimaVisualNode" type="Node" parent="."]
 script = ExtResource( 1 )
+__meta__ = {
+"__anima_visual_node": true
+}
 __anima_visual_editor_data = {
 "animations": [ {
 "name": "default",
@@ -112,7 +115,7 @@ font_color = Color( 1, 1, 1, 1 )
 margin_top = 104.0
 margin_right = 411.0
 margin_bottom = 192.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "CHRISTMAS"
 align = 1

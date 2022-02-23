@@ -226,16 +226,25 @@ func _on_Event_mouse_exited():
 	_button_out($Rectangle/CenterContainer/Control/Event)
 
 func _on_Animation_mouse_down():
+	if _is_collapsed_mode:
+		return
+
 	_animate_add_button()
 
 	emit_signal("add_frame")
 
 func _on_Delay_mouse_down():
+	if _is_collapsed_mode:
+		return
+
 	_animate_add_button()
 
 	emit_signal("add_delay")
 
 func _on_Event_mouse_down():
+	if _is_collapsed_mode:
+		return
+
 	_animate_add_button()
 
 	emit_signal("add_event")

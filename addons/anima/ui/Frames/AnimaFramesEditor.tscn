@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/anima/ui/Frames/AnimaFramesEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/Frames/AnimaAddFrame.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/ui/Frames/AnimaFrameAnimation.tscn" type="PackedScene" id=3]
 
 [node name="FramesEditor" type="Control"]
 anchor_right = 1.0
@@ -73,14 +74,22 @@ __meta__ = {
 }
 
 [node name="FramesContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/HBoxContainer"]
+margin_right = 360.0
 margin_bottom = 576.0
 custom_constants/separation = 12
 
-[node name="AnimaAddFrame" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource( 2 )]
-anchor_right = 0.0
+[node name="InitialFrame" parent="MarginContainer/ScrollContainer/HBoxContainer/FramesContainer" instance=ExtResource( 3 )]
 anchor_bottom = 0.0
-margin_left = 24.0
-margin_right = 24.0
+margin_right = 360.0
+margin_bottom = 576.0
+rect_pivot_offset = Vector2( 180, 288 )
+rect_clip_content = false
+is_initial_frame = true
+
+[node name="AnimaAddFrame" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource( 2 )]
+anchor_bottom = 0.0
+margin_left = 384.0
+margin_right = 744.0
 margin_bottom = 576.0
 rect_pivot_offset = Vector2( 180, 288 )
 

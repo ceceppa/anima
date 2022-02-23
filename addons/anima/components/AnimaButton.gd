@@ -22,6 +22,7 @@ const STATES := {
 }
 
 export (STATE) var _test_state = STATE.NORMAL setget _set_test_state
+export (bool) var enabled := true
 
 const LABEL_PROPERTIES = ["Button/Label", "Button/Align", "Button/VAlign", "Button/Font",]
 const BUTTON_BASE_PROPERTIES := {
@@ -253,6 +254,9 @@ func refresh(state: int, ignore_if_focused := true) -> void:
 		state = STATE.FOCUSED
 	elif _is_toggable and _is_pressed:
 		state = STATE.PRESSED
+
+	if not enabled:
+		state = STATE.NORMAL
 
 	_animate_state(STATES[state])
 

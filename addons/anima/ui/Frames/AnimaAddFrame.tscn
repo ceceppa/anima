@@ -17,9 +17,8 @@ __meta__ = {
 }
 
 [node name="AnimaAddFrame" type="Control"]
-anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -664.0
+rect_min_size = Vector2( 360, 0 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -456,6 +455,8 @@ margin_right = 231.0
 margin_bottom = 351.0
 rect_min_size = Vector2( 102, 102 )
 mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
 [node name="AddButton" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper"]
 rect_min_size = Vector2( 102, 102 )
@@ -470,10 +471,12 @@ Animation/Speed = 0.3
 Animation/Easing = 2.0
 
 [node name="Dotted" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 51, 51 )
+margin_right = 102.0
+margin_bottom = 102.0
+rect_min_size = Vector2( 102, 102 )
 mouse_filter = 1
+size_flags_horizontal = 0
+size_flags_vertical = 0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true,

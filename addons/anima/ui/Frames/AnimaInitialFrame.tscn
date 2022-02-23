@@ -1,0 +1,73 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+use_filter = true
+font_data = ExtResource( 2 )
+__meta__ = {
+"_original_size": 18
+}
+
+[node name="InitialFrame" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Rectangle" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -664.0
+rect_min_size = Vector2( 360, 0 )
+rect_pivot_offset = Vector2( 180, 300 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
+Rectangle/Size = Rect2( 0, 0, 100, 100 )
+Rectangle/FillColor = Color( 0.0745098, 0.0823529, 0.105882, 1 )
+Rectangle/Border/Color = Color( 1, 1, 1, 0 )
+Rectangle/Border/Blend = false
+Rectangle/Border/Offset = Vector2( 0, 0 )
+Rectangle/Border/Widh/Left = 0
+Rectangle/Border/Widh/Top = 0
+Rectangle/Border/Widh/Right = 0
+Rectangle/Border/Widh/Bottom = 0
+Rectangle/Border/Radius/Details = 8
+Rectangle/Border/Radius/TopLeft = 24.0
+Rectangle/Border/Radius/TopRight = 24.0
+Rectangle/Border/Radius/BottomRight = 24.0
+Rectangle/Border/Radius/BottomLeft = 24.0
+Rectangle/Border/Offset/Radius/Details = 8
+Rectangle/Border/Offset/Radius/TopLeft = -1
+Rectangle/Border/Offset/Radius/TopRight = -1
+Rectangle/Border/Offset/Radius/BottomRight = -1
+Rectangle/Border/Offset/Radius/BottomLeft = -1
+Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
+Rectangle/Shadow/Size = 0
+Rectangle/Shadow/Offset = Vector2( 0, 0 )
+
+[node name="CenterContainer" type="CenterContainer" parent="Rectangle"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/CenterContainer"]
+margin_left = 27.0
+margin_top = 290.0
+margin_right = 332.0
+margin_bottom = 310.0
+
+[node name="Label" type="Label" parent="Rectangle/CenterContainer/VBoxContainer"]
+margin_right = 305.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 1 )
+text = "This frame contains the initial value of the UI"
