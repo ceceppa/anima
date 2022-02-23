@@ -444,7 +444,6 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 		if animation_data.has("initial_values"):
 			animation_data.erase("initial_values")
 
-
 		if not is_relative:
 			var temp = animation_data.to
 

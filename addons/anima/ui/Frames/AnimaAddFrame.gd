@@ -1,126 +1,241 @@
 tool
-extends AnimaRectangle
+extends Control
 
 var _is_collapsed_mode := true
+
+signal add_frame
+signal add_event
+signal add_delay
+
+onready var _dotted = find_node("Dotted")
+onready var _plus = find_node("Plus")
+onready var _add_button = find_node("AddButton")
 
 func _ready():
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.set_default_duration(0.3)
 
-	var dotted = $AddButton/Dotted
-
-	dotted.rect_position = (self.rect_position - dotted.rect_position) / 2
+	_dotted.rect_position = (self.rect_position - _dotted.rect_position) / 2
 
 	anima.then(
-		Anima.Node($AddButton).anima_fade_in().anima_initial_value(0)
+		Anima.Node(_add_button).anima_fade_in().anima_initial_value(0)
 	)
 	anima.with(
-		Anima.Node($AddButton/Dotted/Plus/Vertical) \
+		Anima.Node(_plus.get_child(1)) \
 			.anima_animation_frames({
 				from = {
-					PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2.ZERO),
+					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2.ZERO),
 					rotate = -45,
 				},
 				to = {
-					PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(5, 40)),
+					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(5, 40)),
 					rotate = 0,
 				},
 				easing = Anima.EASING.EASE_OUT_BACK
 			})
 	)
 	anima.with(
-		Anima.Node($AddButton/Dotted/Plus/Horizontal) \
+		Anima.Node(_plus.get_child(0)) \
 			.anima_animation_frames({
 				from = {
-					PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2.ZERO),
+					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2.ZERO),
 					rotate = -45,
 				},
 				to = {
-					PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(40, 5)),
+					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(40, 5)),
 					rotate = 0,
 				},
 				easing = Anima.EASING.EASE_OUT_BACK
 			})
 	)
 
-	anima.play_with_delay(1.0)
+	anima.play_with_delay(0.3)
+
+	for child in $Rectangle/CenterContainer/Control.get_children():
+		child.modulate.a = 0
 
 func _animate_add_button() -> void:
-	var anima: AnimaNode = Anima.begin(self)
+	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.set_default_duration(0.3)
 
 	anima.then(
-		Anima.Node($AddButton) \
+		Anima.Node(_add_button) \
 			.anima_relative_position_y(200) \
-			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK)
+			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
 
 	anima.with(
-		Anima.Node($AddButton/Dotted) \
+		Anima.Node(_dotted) \
 			.anima_animation_frames({
 				from = {
-					PROPERTIES.RECTANGLE_FILL_COLOR.name: Color.transparent,
-					PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(100, 100)),
-					PROPERTIES.RECTANGLE_RADIUS_BOTTOM_LEFT.name: 8,
-					PROPERTIES.RECTANGLE_RADIUS_BOTTOM_RIGHT.name: 8,
-					PROPERTIES.RECTANGLE_RADIUS_TOP_LEFT.name: 8,
-					PROPERTIES.RECTANGLE_RADIUS_TOP_RIGHT.name: 8,
-					PROPERTIES.RECTANGLE_BORDER_COLOR.name: Color("66667a"),
+					AnimaRectangle.PROPERTIES.RECTANGLE_FILL_COLOR.name: Color.transparent,
+					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(100, 100)),
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_BOTTOM_LEFT.name: 8,
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_BOTTOM_RIGHT.name: 8,
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_TOP_LEFT.name: 8,
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_TOP_RIGHT.name: 8,
+					AnimaRectangle.PROPERTIES.RECTANGLE_BORDER_COLOR.name: Color("66667a"),
+					AnimaRectangle.PROPERTIES.RECTANGLE_SHADOW_SIZE.name: 0
 				},
 				to = {
-					PROPERTIES.RECTANGLE_FILL_COLOR.name: Color.white,
-					PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(80, 80)),
-					PROPERTIES.RECTANGLE_RADIUS_BOTTOM_LEFT.name: 51,
-					PROPERTIES.RECTANGLE_RADIUS_BOTTOM_RIGHT.name: 51,
-					PROPERTIES.RECTANGLE_RADIUS_TOP_LEFT.name: 51,
-					PROPERTIES.RECTANGLE_RADIUS_TOP_RIGHT.name: 51,
-					PROPERTIES.RECTANGLE_BORDER_COLOR.name: Color("88888a"),
+					AnimaRectangle.PROPERTIES.RECTANGLE_FILL_COLOR.name: Color.white,
+					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(60, 60)),
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_BOTTOM_LEFT.name: 51,
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_BOTTOM_RIGHT.name: 51,
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_TOP_LEFT.name: 51,
+					AnimaRectangle.PROPERTIES.RECTANGLE_RADIUS_TOP_RIGHT.name: 51,
+					AnimaRectangle.PROPERTIES.RECTANGLE_BORDER_COLOR.name: Color("ee786c"),
+					AnimaRectangle.PROPERTIES.RECTANGLE_SHADOW_SIZE.name: 10
 				},
 			})
 	)
 	
 	anima.with(
-		Anima.Group($AddButton/Dotted, 0.0).anima_fade_out(0.01)
+		Anima.Group(_dotted, 0.0).anima_fade_out(0.01)
 	)
 	
 	anima.with(
-		Anima.Node($AddButton/Dotted/Plus) \
+		Anima.Node(_plus) \
 			.anima_animation_frames({
 				from = {
 					rotate = 0,
-					modulate = Color.white,
+					modulate = Color("f8314569"),
 				},
 				to = {
 					rotate = 45,
-					modulate = Color.black,
+					modulate = Color("ee786c"),
+					easing = Anima.EASING.EASE_IN_OUT
+				},
+			})
+	)
+
+	anima.with(
+		Anima.Node(_plus.get_child(0)) \
+			.anima_animation_frames({
+				from = {
+				AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(40, 5)),
+				},
+				to = {
+				AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(20, 2)),
+				},
+			})
+	)
+
+	anima.with(
+		Anima.Node(_plus.get_child(1)) \
+			.anima_animation_frames({
+				from = {
+				AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(5, 40)),
+				},
+				to = {
+				AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(2, 20)),
+				},
+			})
+	)
+
+	anima.with(
+		Anima.Node(_add_button).anima_scale(Vector2.ONE)
+	)
+
+	anima.with(
+		Anima.Group($Rectangle/CenterContainer/Control, 0.05) \
+			.anima_animation_frames({
+				from = {
+					scale = Vector2(0.8, 0.8),
+					opacity = 0,
+				},
+				to = {
+					scale = Vector2.ONE,
+					opacity = 1.0,
+					easing = Anima.EASING.EASE_OUT_BACK
 				}
 			})
 	)
-	anima.with(
-		Anima.Node($AddButton).anima_scale(Vector2.ONE)
+
+	if _is_collapsed_mode:
+		anima.play()
+	else:
+		anima.play_backwards_with_speed(1.2)
+
+	_is_collapsed_mode = not _is_collapsed_mode
+
+func _button_in(node: AnimaButton) -> void:
+	var anima: AnimaNode = Anima.begin_single_shot(self, node.name)
+
+	anima.then(
+		Anima.Node(node) \
+			.anima_scale(Vector2(1.05, 1.05), 0.15) \
+			.anima_easing(Anima.EASING.EASE_OUT_BACK)
+	)
+
+	anima.play()
+
+func _button_out(node: AnimaButton) -> void:
+	var anima: AnimaNode = Anima.begin_single_shot(self, node.name)
+
+	anima.then(
+		Anima.Node(node) \
+			.anima_scale(Vector2.ONE, 0.15) \
+			.anima_easing(Anima.EASING.EASE_IN_OUT)
 	)
 
 	anima.play()
 
 func _on_AddButton_mouse_entered():
-	$AddButton.set_scale(Vector2(1.2, 1.2))
+	_add_button.set_scale(Vector2(1.2, 1.2))
 
-	var color: Color = Color.white if _is_collapsed_mode else Color.black
+	var color: Color = Color.white if _is_collapsed_mode else Color("ee786c")
 
-	$AddButton/Dotted/Plus.animate_param("modulate", color)
-	$AddButton/Dotted.animate_param(PROPERTIES.RECTANGLE_BORDER_COLOR.name, Color.white)
+	_plus.animate_param("modulate", color)
+	
+	if _is_collapsed_mode:
+		_dotted.animate_param(AnimaRectangle.PROPERTIES.RECTANGLE_BORDER_COLOR.name, Color.white)
 
 func _on_AddButton_mouse_exited():
-	$AddButton.set_scale(Vector2.ONE)
+	_add_button.set_scale(Vector2.ONE)
 	
 	var color: Color = Color("f8314569") if _is_collapsed_mode else Color("#ee786c")
-	$AddButton/Dotted/Plus.animate_param("modulate", Color(color))
-	$AddButton/Dotted.animate_param(PROPERTIES.RECTANGLE_BORDER_COLOR.name, Color("66667a"))
+
+	_plus.animate_param("modulate", Color(color))
+
+	if _is_collapsed_mode:
+		_dotted.animate_param(AnimaRectangle.PROPERTIES.RECTANGLE_BORDER_COLOR.name, Color("66667a"))
 
 func _on_AddButton_gui_input(event):
 	if event is InputEventMouseButton and event.pressed:
-		_is_collapsed_mode = not _is_collapsed_mode
-
 		_animate_add_button()
+
+func _on_Animation_mouse_entered():
+	_button_in($Rectangle/CenterContainer/Control/Animation)
+
+func _on_Animation_mouse_exited():
+	_button_out($Rectangle/CenterContainer/Control/Animation)
+
+func _on_Delay_mouse_entered():
+	_button_in($Rectangle/CenterContainer/Control/Delay)
+
+func _on_Delay_mouse_exited():
+	_button_out($Rectangle/CenterContainer/Control/Delay)
+
+func _on_Event_mouse_entered():
+	_button_in($Rectangle/CenterContainer/Control/Event)
+
+func _on_Event_mouse_exited():
+	_button_out($Rectangle/CenterContainer/Control/Event)
+
+func _on_Animation_mouse_down():
+	_animate_add_button()
+
+	emit_signal("add_frame")
+
+func _on_Delay_mouse_down():
+	_animate_add_button()
+
+	emit_signal("add_delay")
+
+func _on_Event_mouse_down():
+	_animate_add_button()
+
+	emit_signal("add_event")
