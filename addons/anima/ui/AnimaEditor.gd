@@ -31,7 +31,7 @@ func edit(node: Node) -> void:
 	var data = node.__anima_visual_editor_data
 	AnimaUI.debug(self, 'restoring visual editor data', data)
 
-	_frames_editor.restore_data(data)
+#	_frames_editor.restore_data(data)
 
 	_is_restoring_data = false
 

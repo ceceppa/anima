@@ -9,6 +9,7 @@ enum EditorPosition {
 var _anima_editor
 var _anima_visual_node: Node
 var _current_position = EditorPosition.BOTTOM
+var _current_root_node: Node
 
 func get_name():
 	return 'Anima'
@@ -34,20 +35,32 @@ func _exit_tree():
 
 func handles(object):
 	var is_anima_node = object.has_meta("__anima_visual_node")
+	var root: Node
 
-	if is_anima_node:
+	if not is_anima_node and object is Node:
+		root = object
+
+		while root.get_parent():
+			var parent = root.get_parent()
+
+			if parent is Viewport:
+				break
+
+			root = parent
+
+	if root and root != _current_root_node:
+		object = root.get_node("AnimaVisualNode")
+
+		if object:
+			is_anima_node = true
+
+	printt(_anima_visual_node, object)
+	if is_anima_node and _anima_visual_node != object:
 		_anima_editor.set_anima_node(object)
-	else:
-		_anima_editor.set_anima_node(null)
+
+		_anima_visual_node = object
 
 	return is_anima_node
-
-func edit(object):
-	if _anima_visual_node == object:
-		return
-
-	_anima_visual_node = object
-	_anima_editor.edit(object)
 
 func _on_anima_editor_switch_position() -> void:
 	if _current_position == EditorPosition.BOTTOM:

@@ -145,8 +145,6 @@ func _animate_custom_value(mode: int) -> void:
 		
 		yield(anima, "animation_completed")
 
-		prints(_custom_value.visible, _custom_value.modulate)
-
 		if is_inside_tree() and _input_visible.is_visible_in_tree():
 			_input_visible.grab_focus()
 	else:
@@ -194,7 +192,7 @@ func set_initial_value(value) -> void:
 	set_value(value, false)
 
 func set_value(value, animate := true) -> void:
-	if value == null:
+	if value == null or _input_visible == null:
 		return
 
 	if _input_visible is LineEdit:

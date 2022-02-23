@@ -22,11 +22,10 @@ __meta__ = {
 bg_color = Color( 0.239216, 0.235294, 0.254902, 0.223529 )
 
 [node name="FrameAnimation" type="Control"]
-anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -663.912
+margin_right = 361.159
 rect_min_size = Vector2( 360, 0 )
-rect_pivot_offset = Vector2( 180.056, 300 )
+rect_pivot_offset = Vector2( 180, 300 )
 rect_clip_content = true
 script = ExtResource( 4 )
 __meta__ = {
@@ -82,7 +81,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/MarginContainer"]
+[node name="ContentContainer" type="VBoxContainer" parent="Rectangle/MarginContainer"]
 margin_left = 24.0
 margin_top = 24.0
 margin_right = 336.0
@@ -94,7 +93,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer"]
 margin_right = 312.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
@@ -104,20 +103,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FrameName" parent="Rectangle/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+[node name="FrameName" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 margin_right = 276.0
 rect_pivot_offset = Vector2( 142, 19 )
-label = " Frame 01"
 show_relative_selector = false
 borderless = true
 
-[node name="CenterContainer" type="CenterContainer" parent="Rectangle/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer"]
 margin_left = 280.0
 margin_right = 312.0
 margin_bottom = 32.0
 
-[node name="AnimaButton" type="Control" parent="Rectangle/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer"]
+[node name="AnimaButton" type="Control" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer/PlayContainer"]
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
@@ -229,12 +227,12 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Play" type="Sprite" parent="Rectangle/MarginContainer/VBoxContainer/HBoxContainer/CenterContainer/AnimaButton"]
+[node name="Play" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer/PlayContainer/AnimaButton"]
 position = Vector2( 8, 8 )
 texture = ExtResource( 5 )
 centered = false
 
-[node name="MarginContainer" type="MarginContainer" parent="Rectangle/MarginContainer/VBoxContainer"]
+[node name="DurationContainer" type="MarginContainer" parent="Rectangle/MarginContainer/ContentContainer"]
 margin_top = 44.0
 margin_right = 312.0
 margin_bottom = 100.0
@@ -242,23 +240,23 @@ rect_pivot_offset = Vector2( 156, 28 )
 custom_constants/margin_top = 12
 custom_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer"]
 margin_top = 12.0
 margin_right = 312.0
 margin_bottom = 44.0
 custom_constants/separation = 12
 
-[node name="GridContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="GridContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer"]
 margin_right = 312.0
 margin_bottom = 32.0
 rect_pivot_offset = Vector2( 259.281, -180.348 )
 custom_constants/separation = 24
 
-[node name="Time" type="Sprite" parent="Rectangle/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="Time" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer"]
 position = Vector2( 4.60373, 16.1706 )
 texture = ExtResource( 6 )
 
-[node name="Label" type="Label" parent="Rectangle/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer"]
 margin_top = 6.0
 margin_right = 88.0
 margin_bottom = 26.0
@@ -270,13 +268,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PropertyFromTo" parent="Rectangle/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer" instance=ExtResource( 3 )]
+[node name="PropertyFromTo" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 margin_left = 112.0
 margin_right = 312.0
 show_relative_selector = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/MarginContainer/ContentContainer"]
 margin_top = 112.0
 margin_right = 312.0
 margin_bottom = 476.0
@@ -288,204 +286,43 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/ScrollContainer"]
 margin_right = 312.0
 margin_bottom = 364.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
-[node name="Empty" type="Control" parent="Rectangle/MarginContainer/VBoxContainer"]
+[node name="Empty" type="Control" parent="Rectangle/MarginContainer/ContentContainer"]
 margin_top = 488.0
 margin_right = 312.0
 margin_bottom = 506.0
 rect_min_size = Vector2( 0, 18 )
 rect_pivot_offset = Vector2( 156, 9 )
 
-[node name="CenterContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/VBoxContainer"]
-margin_top = 518.0
-margin_right = 312.0
-margin_bottom = 552.0
-rect_pivot_offset = Vector2( 156, 17 )
-custom_constants/separation = 24
-alignment = 1
-
-[node name="Delete" type="Control" parent="Rectangle/MarginContainer/VBoxContainer/CenterContainer"]
-margin_left = 96.0
-margin_right = 216.0
-margin_bottom = 34.0
-rect_min_size = Vector2( 120, 34 )
-rect_pivot_offset = Vector2( 60, 17 )
-mouse_default_cursor_shape = 2
-script = ExtResource( 1 )
-Animation/AnimatePropertyChange = false
-Animation/Speed = 0.15
-Animation/Easing = 0
-Button/Label = ""
-Button/Align = 1
-Button/VAlign = 1
-Button/Font = SubResource( 1 )
-Button/ToggleMode = false
-Normal/FillColor = Color( 0.47451, 0.211765, 0.196078, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.635294, 0.309804, 0.290196, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
-Focused/Border/Color = Color( 1, 1, 1, 0.01 )
-Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 8
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 8
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 8
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 8
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 0, 0, 0, 0.517647 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 1
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 2, 2 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/VBoxContainer/CenterContainer/Delete"]
-margin_left = 19.0
-margin_top = 7.0
-margin_right = 72.0
-margin_bottom = 27.0
-mouse_filter = 2
-custom_constants/separation = 8
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CenterContainer" type="CenterContainer" parent="Rectangle/MarginContainer/VBoxContainer/CenterContainer/Delete/HBoxContainer"]
-margin_right = 16.0
-margin_bottom = 20.0
-mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="Rectangle/MarginContainer/VBoxContainer/CenterContainer/Delete/HBoxContainer/CenterContainer"]
-margin_top = 2.0
-margin_right = 16.0
-margin_bottom = 18.0
-rect_min_size = Vector2( 16, 16 )
-mouse_filter = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="Remove" type="Sprite" parent="Rectangle/MarginContainer/VBoxContainer/CenterContainer/Delete/HBoxContainer/CenterContainer/Control"]
-texture = ExtResource( 8 )
-centered = false
-
-[node name="Label" type="Label" parent="Rectangle/MarginContainer/VBoxContainer/CenterContainer/Delete/HBoxContainer"]
-margin_left = 24.0
-margin_right = 80.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-size_flags_vertical = 7
-custom_fonts/font = SubResource( 1 )
-text = "Remove"
-align = 1
-valign = 1
-
-[node name="AddContainer" type="CenterContainer" parent="Rectangle"]
-anchor_top = 0.808
+[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty"]
 anchor_right = 1.0
-anchor_bottom = 0.821
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/AddContainer"]
-margin_left = 134.0
-margin_right = 226.0
-margin_bottom = 34.0
+[node name="CTAContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control"]
+anchor_right = 1.0
+margin_top = -24.0
+margin_bottom = 10.0
 custom_constants/separation = 24
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="GenerateFrame" type="Control" parent="Rectangle/AddContainer/HBoxContainer"]
-margin_right = 34.0
+[node name="GenerateFrame" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
+margin_left = 110.0
+margin_right = 144.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 34, 34 )
 rect_pivot_offset = Vector2( 17, 17 )
+hint_tooltip = "Add all changes as Animation"
 mouse_default_cursor_shape = 2
 script = ExtResource( 1 )
 Animation/AnimatePropertyChange = false
@@ -499,7 +336,7 @@ Button/ToggleMode = true
 Normal/FillColor = Color( 0.984314, 0.729412, 0.388235, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.278431, 0.376471, 0.552941, 1 )
+Hovered/FillColor = Color( 0.984314, 0.85098, 0.388235, 1 )
 Hovered/FontColor = Color( 1, 1, 1, 0 )
 Hovered/Scale = Vector2( 1, 1 )
 Pressed/UseSameStyleOf = ""
@@ -593,7 +430,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="HBoxContainer" type="CenterContainer" parent="Rectangle/AddContainer/HBoxContainer/GenerateFrame"]
+[node name="HBoxContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/GenerateFrame"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
@@ -601,7 +438,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control" type="Control" parent="Rectangle/AddContainer/HBoxContainer/GenerateFrame/HBoxContainer"]
+[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/GenerateFrame/HBoxContainer"]
 margin_left = 9.0
 margin_top = 9.0
 margin_right = 25.0
@@ -611,14 +448,14 @@ mouse_filter = 1
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Icon" type="Sprite" parent="Rectangle/AddContainer/HBoxContainer/GenerateFrame/HBoxContainer/Control"]
+[node name="Icon" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/GenerateFrame/HBoxContainer/Control"]
 modulate = Color( 0, 0, 0, 1 )
 texture = ExtResource( 10 )
 centered = false
 
-[node name="AddAnimation" type="Control" parent="Rectangle/AddContainer/HBoxContainer"]
-margin_left = 58.0
-margin_right = 92.0
+[node name="AddAnimation" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
+margin_left = 168.0
+margin_right = 202.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 34, 34 )
 rect_pivot_offset = Vector2( 17, 17 )
@@ -729,15 +566,16 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="HBoxContainer" type="CenterContainer" parent="Rectangle/AddContainer/HBoxContainer/AddAnimation"]
+[node name="HBoxContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+hint_tooltip = "Add new Animation"
 mouse_filter = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control" type="Control" parent="Rectangle/AddContainer/HBoxContainer/AddAnimation/HBoxContainer"]
+[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation/HBoxContainer"]
 margin_left = 9.0
 margin_top = 9.0
 margin_right = 25.0
@@ -747,8 +585,174 @@ mouse_filter = 1
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Add" type="Sprite" parent="Rectangle/AddContainer/HBoxContainer/AddAnimation/HBoxContainer/Control"]
+[node name="Add" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation/HBoxContainer/Control"]
 texture = ExtResource( 9 )
 centered = false
 
-[connection signal="pressed" from="Rectangle/MarginContainer/VBoxContainer/CenterContainer/Delete" to="." method="_on_Delete_pressed"]
+[node name="RemoveWrapper" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer"]
+margin_top = 518.0
+margin_right = 312.0
+margin_bottom = 552.0
+rect_pivot_offset = Vector2( 156, 17 )
+custom_constants/separation = 24
+alignment = 1
+
+[node name="Delete" type="Control" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper"]
+margin_left = 96.0
+margin_right = 216.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 120, 34 )
+rect_pivot_offset = Vector2( 60, 17 )
+hint_tooltip = "Remove the frame"
+mouse_default_cursor_shape = 2
+script = ExtResource( 1 )
+Animation/AnimatePropertyChange = false
+Animation/Speed = 0.15
+Animation/Easing = 0
+Button/Label = ""
+Button/Align = 1
+Button/VAlign = 1
+Button/Font = SubResource( 1 )
+Button/ToggleMode = false
+Normal/FillColor = Color( 0.47451, 0.211765, 0.196078, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.635294, 0.309804, 0.290196, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, -1, -1 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 8
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 8
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 8
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 8
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 0, 0, 0, 0.517647 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
+Normal/Shadow/Size = 1
+Hovered/Shadow/Size = -1
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 2, 2 )
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete"]
+margin_left = 19.0
+margin_top = 7.0
+margin_right = 72.0
+margin_bottom = 27.0
+mouse_filter = 2
+custom_constants/separation = 8
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 20.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer/CenterContainer"]
+margin_top = 2.0
+margin_right = 16.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Remove" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer/CenterContainer/Control"]
+texture = ExtResource( 8 )
+centered = false
+
+[node name="Label" type="Label" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer"]
+margin_left = 24.0
+margin_right = 80.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 1 )
+text = "Remove"
+align = 1
+valign = 1
+
+[connection signal="pressed" from="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete" to="." method="_on_Delete_pressed"]
