@@ -28,7 +28,7 @@ var __do_nothing := 0.0
 var _last_tween_data: Dictionary
 
 func _exit_tree():
-	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
+	if _anima_tween == null or not is_instance_valid(_anima_tween):
 		return
 
 	for child in get_children():

@@ -11,13 +11,14 @@ var _anima_visual_node: Node
 var _node_offset: Vector2
 var _is_restoring_data := false
 
-onready var _graph_edit: GraphEdit = find_node("AnimaNodeEditor")
+onready var _frames_editor: AnimaRectangle = find_node("FramesEditor")
 onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
 onready var _warning_label = find_node("WarningLabel")
 onready var _animation_selector: OptionButton = find_node("AnimationSelector")
 onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
 
 func _ready():
+	$FramesEditor.hide()
 	$NodesPopup.rect_min_size = Vector2(260, 320) * AnimaUI.get_dpi_scale()
 
 func set_base_control(base_control: Control) -> void:
@@ -26,78 +27,13 @@ func set_base_control(base_control: Control) -> void:
 func edit(node: Node) -> void:
 	_is_restoring_data = true
 	_anima_visual_node = node
-	AnimaUI.set_selected_anima_visual_node(node)
-
-	clear_all_nodes()
 
 	var data = node.__anima_visual_editor_data
 	AnimaUI.debug(self, 'restoring visual editor data', data)
 
-	if data == null || not data.has('nodes') || data.nodes.size() == 0:
-		_start_node = _graph_edit.get_anima_start_node(node, [], [])
-
-		_graph_edit.add_child(_start_node)
-	else:
-		var animations := []
-
-		if data.has("animations"):
-			animations = data.animations
-
-		_add_nodes(data.nodes, animations, data.events_slots)
-		_connect_nodes(data.connection_list)
-
-		_graph_edit.set_scroll_ofs(data.scroll_offset)
-		_graph_edit.set_zoom(data.zoom)
+	_frames_editor.restore_data(data)
 
 	_is_restoring_data = false
-
-func clear_all_nodes() -> void:
-	for node in _graph_edit.get_children():
-		if node is GraphNode:
-			_graph_edit.remove_child(node)
-			node.free()
-
-func _add_nodes(nodes_data: Array, animations_names: Array, events_slots: Array) -> void:
-	AnimaUI.debug(self, 'adding nodes: ', nodes_data.size())
-
-	for node_data in nodes_data:
-		AnimaUI.debug(self, "node_data", node_data)
-		var node: GraphNode
-
-		if node_data.id == 'AnimaNode':
-			node = _graph_edit.get_anima_start_node(_anima_visual_node, animations_names, events_slots)
-			_start_node = node
-		else:
-			var root = _anima_visual_node.get_source_node()
-
-			if root == null:
-				root = _anima_visual_node
-
-			var node_path: String = node_data.node_path
-			var node_to_animate: Node = root.get_node(node_path)
-
-			AnimaUI.debug(self, 'set node to animate', node_path)
-			node = _graph_edit.add_node(node_data.id, node_to_animate, node_path, false)
-
-		if not node_data.has("name"):
-			continue
-
-		node.set_offset(node_data.position)
-		node.name = node_data.name
-		node.set_custom_title(node_data.title, node_data.name)
-		node.restore_data(node_data.data)
-
-		node.render()
-		_graph_edit.add_child(node)
-
-		AnimaUI.debug(self, "node added")
-
-func _connect_nodes(connection_list: Array) -> void:
-	AnimaUI.debug(self, "connecting nodes", connection_list)
-
-	for connection in connection_list:
-		AnimaUI.debug(self, "connecting node", connection)
-		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
 
 func set_anima_node(node: Node) -> void:
 	var should_animate = _anima_visual_node != node
@@ -116,71 +52,40 @@ func _maybe_show_graph_edit() -> bool:
 	anima.set_default_duration(0.3)
 
 	anima.then(
-		Anima.Node(_graph_edit).anima_fade_in()
+		Anima.Node(_frames_editor).anima_fade_in()
 	)
 	anima.with(
-		Anima.Node(_warning_label).anima_fade_out()
-	)
-	anima.with(
-		Anima.Node(_warning_label).anima_scale(Vector2(1.6, 1.6))
-	)
-	anima.with(
-		Anima.Node($PlayerBox) \
-			.anima_position_y(0.0) \
-			.anima_from("-:size:y - 20")
-	)
-	anima.with(
-		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
-			.anima_fade_in() \
-			.anima_delay(0.3) \
-			.anima_initial_value(0)
-	)
-	anima.with(
-		Anima.Group($PlayerBox/Controls/MarginContainer/PlayerControls, 0.01) \
-			.anima_scale(Vector2.ONE) \
-			.anima_delay(0.3) \
-			.anima_from(Vector2(0.2, 0.2)) \
-			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK) \
-			.anima_pivot(Anima.PIVOT.CENTER)
+		Anima.Node(_warning_label).anima_animation_frames({
+			from = {
+				opacity = 1,
+				scale = Vector2.ONE,
+			},
+			to = {
+				opacity = 0,
+				scale = Vector2(1.6, 1.6)
+			}
+		})
 	)
 
 	if is_graph_edit_visible:
-		_graph_edit.visible = true
+		_frames_editor.visible = true
 		_warning_label.visible = true
-		$PlayerBox.visible = true
 
 		anima.play()
-	elif _graph_edit.visible:
-		_graph_edit.visible = true
+	elif _frames_editor.visible:
+		_frames_editor.visible = true
 		_warning_label.visible = true
-		$PlayerBox.visible = true
 
 		anima.play_backwards_with_speed(1.3)
 
 	yield(anima, "animation_completed")
 
-	if _graph_edit:
-		_graph_edit.visible = is_graph_edit_visible
-		$PlayerBox.visible = is_graph_edit_visible
+	if _frames_editor:
+		_frames_editor.visible = is_graph_edit_visible
 		_warning_label.visible = !is_graph_edit_visible
 		$NodesPopup.visible = false
 
 	return is_graph_edit_visible
-
-func _on_Right_pressed():
-	emit_signal("switch_position")
-
-func _on_AddButton_pressed():
-	if _nodes_popup.visible:
-		_nodes_popup.hide()
-	else:
-		_nodes_popup.show()
-
-func _on_animaEditor_visibility_changed():
-	if not visible:
-		_nodes_popup.hide()
-
-	_maybe_show_graph_edit()
 
 func _on_GraphEdit_hide_nodes_list():
 	_nodes_popup.hide()
@@ -188,7 +93,7 @@ func _on_GraphEdit_hide_nodes_list():
 func _on_NodesPopup_node_selected(node: Node, path: String):
 	_nodes_popup.hide()
 
-	var graph_node: GraphNode = _graph_edit.add_node('', node, path)
+	var graph_node: GraphNode = _frames_editor.add_node('', node, path)
 	graph_node.set_offset(_node_offset)
 
 	_update_anima_node_data()
@@ -204,12 +109,12 @@ func _update_anima_node_data() -> void:
 		nodes = [],
 		animations = {},
 		events_slots = [],
-		connection_list = _graph_edit.get_connection_list(),
-		scroll_offset = _graph_edit.get_scroll_ofs(),
-		zoom = _graph_edit.get_zoom(),
+		connection_list = _frames_editor.get_connection_list(),
+		scroll_offset = _frames_editor.get_scroll_ofs(),
+		zoom = _frames_editor.get_zoom(),
 	}
 
-	for child in _graph_edit.get_children():
+	for child in _frames_editor.get_children():
 		if child == null or child.is_queued_for_deletion():
 			continue
 
@@ -228,8 +133,8 @@ func _update_anima_node_data() -> void:
 				data = child.get_data()
 			})
 
-	data.animations = _graph_edit.get_animations()
-	data.events_slots = _graph_edit.get_events_slots()
+	data.animations = _frames_editor.get_animations()
+	data.events_slots = _frames_editor.get_events_slots()
 	data.data_by_animation = _get_data_from_connections(_start_node)
 
 	AnimaUI.debug(self, 'updating visual editor data', data)
@@ -358,3 +263,6 @@ func _on_StopAnimation_pressed():
 	var visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
 
 	visual_node.stop()
+
+func _on_animaEditor_visibility_changed():
+	_nodes_popup.hide()

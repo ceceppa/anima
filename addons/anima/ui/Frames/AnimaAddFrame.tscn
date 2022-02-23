@@ -1,16 +1,37 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/Frames/AnimaAddFrame.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/components/Animatable.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=4]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://addons/anima/icons/Animation.svg" type="Texture" id=6]
+[ext_resource path="res://addons/anima/icons/Event.svg" type="Texture" id=7]
+[ext_resource path="res://addons/anima/icons/Delay.svg" type="Texture" id=8]
+
+[sub_resource type="DynamicFont" id=5]
+use_filter = true
+font_data = ExtResource( 5 )
+__meta__ = {
+"_original_size": 18
+}
 
 [node name="AnimaAddFrame" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -664.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Rectangle" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -664.0
 rect_min_size = Vector2( 360, 0 )
 rect_pivot_offset = Vector2( 180, 300 )
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -18,7 +39,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -40,21 +61,415 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AddButton" type="Control" parent="."]
-anchor_right = 0.283
-anchor_bottom = 0.17
-margin_left = 124.0
-margin_top = 231.0
-margin_right = 124.12
-margin_bottom = 231.0
+[node name="CenterContainer" type="CenterContainer" parent="Rectangle"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="VBoxContainer" parent="Rectangle/CenterContainer"]
+margin_left = 60.0
+margin_top = 204.0
+margin_right = 300.0
+margin_bottom = 396.0
+rect_min_size = Vector2( 240, 0 )
+custom_constants/separation = 24
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Animation" type="Control" parent="Rectangle/CenterContainer/Control"]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 240.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 0, 48 )
+rect_pivot_offset = Vector2( 124, 16 )
+mouse_default_cursor_shape = 2
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+draw_from_center = true
+Animation/AnimatePropertyChange = false
+Animation/Speed = 0.15
+Animation/Easing = 2
+Button/Label = "Animation"
+Button/Align = 1
+Button/VAlign = 1
+Button/Font = SubResource( 5 )
+Button/ToggleMode = false
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.294118, 0.431373, 0.670588, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, 100, 100 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 0.101961, 0.0980392, 0.0980392, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 4
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 4
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 4
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 4
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 0.0156863, 0.0117647, 0.0117647, 0.690196 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.160784 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Normal/Shadow/Size = 4
+Hovered/Shadow/Size = 5
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 2, 2 )
+Hovered/Shadow/Offset = Vector2( 2, 2 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/Control/Animation"]
+position = Vector2( 8, 7 )
+texture = ExtResource( 6 )
+centered = false
+
+[node name="Delay" type="Control" parent="Rectangle/CenterContainer/Control"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 72.0
+margin_right = 240.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 48 )
+rect_pivot_offset = Vector2( 124, 24 )
+mouse_default_cursor_shape = 2
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+draw_from_center = true
+Animation/AnimatePropertyChange = false
+Animation/Speed = 0.15
+Animation/Easing = 2
+Button/Label = "Delay"
+Button/Align = 1
+Button/VAlign = 1
+Button/Font = SubResource( 5 )
+Button/ToggleMode = false
+Normal/FillColor = Color( 0.454902, 0.407843, 0.556863, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.596078, 0.54902, 0.701961, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, 100, 100 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 0.101961, 0.0980392, 0.0980392, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 4
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 4
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 4
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 4
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 0.0156863, 0.0117647, 0.0117647, 0.690196 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.160784 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Normal/Shadow/Size = 4
+Hovered/Shadow/Size = 5
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 2, 2 )
+Hovered/Shadow/Offset = Vector2( 2, 2 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/Control/Delay"]
+position = Vector2( 8, 7 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="Event" type="Control" parent="Rectangle/CenterContainer/Control"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 144.0
+margin_right = 240.0
+margin_bottom = 192.0
+rect_min_size = Vector2( 0, 48 )
+rect_pivot_offset = Vector2( 124, 24 )
+mouse_default_cursor_shape = 2
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+draw_from_center = true
+Animation/AnimatePropertyChange = false
+Animation/Speed = 0.15
+Animation/Easing = 2
+Button/Label = "Event"
+Button/Align = 1
+Button/VAlign = 1
+Button/Font = SubResource( 5 )
+Button/ToggleMode = false
+Normal/FillColor = Color( 0.341176, 0.466667, 0.466667, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.470588, 0.611765, 0.611765, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, 100, 100 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 0.101961, 0.0980392, 0.0980392, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
+Focused/Border/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 4
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 4
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 4
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 4
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 0.0156863, 0.0117647, 0.0117647, 0.690196 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0.160784 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Normal/Shadow/Size = 4
+Hovered/Shadow/Size = 5
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 2, 2 )
+Hovered/Shadow/Offset = Vector2( 2, 2 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/Control/Event"]
+position = Vector2( 8, 7 )
+texture = ExtResource( 7 )
+centered = false
+
+[node name="AddButtonWrapper" type="Control" parent="Rectangle/CenterContainer"]
+margin_left = 129.0
+margin_top = 249.0
+margin_right = 231.0
+margin_bottom = 351.0
+rect_min_size = Vector2( 102, 102 )
+mouse_filter = 2
+
+[node name="AddButton" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper"]
+rect_min_size = Vector2( 102, 102 )
 rect_pivot_offset = Vector2( 51, 51 )
 mouse_default_cursor_shape = 2
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
-Animation/Easing = 28.0
+Animation/Easing = 2.0
 
-[node name="Dotted" type="Control" parent="AddButton"]
+[node name="Dotted" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 51, 51 )
@@ -87,11 +502,11 @@ Rectangle/Border/Offset/Radius/TopLeft = -1
 Rectangle/Border/Offset/Radius/TopRight = -1
 Rectangle/Border/Offset/Radius/BottomRight = -1
 Rectangle/Border/Offset/Radius/BottomLeft = -1
-Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
-Rectangle/Shadow/Size = 0
+Rectangle/Shadow/Color = Color( 0.996078, 0.996078, 0.996078, 0.352941 )
+Rectangle/Shadow/Size = 0.0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="VerticalLines" type="Control" parent="AddButton/Dotted"]
+[node name="VerticalLines" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
@@ -99,7 +514,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="AnimaRectangle" type="Control" parent="AddButton/Dotted/VerticalLines"]
+[node name="AnimaRectangle" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/VerticalLines"]
 anchor_bottom = 1.0
 margin_left = 8.0
 margin_top = -4.0
@@ -116,7 +531,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -138,7 +553,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle2" type="Control" parent="AddButton/Dotted/VerticalLines"]
+[node name="AnimaRectangle2" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/VerticalLines"]
 anchor_bottom = 1.0
 margin_left = 24.0
 margin_top = -4.0
@@ -155,7 +570,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -177,7 +592,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle3" type="Control" parent="AddButton/Dotted/VerticalLines"]
+[node name="AnimaRectangle3" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/VerticalLines"]
 anchor_bottom = 1.0
 margin_left = 40.0
 margin_top = -4.0
@@ -194,7 +609,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -216,7 +631,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle4" type="Control" parent="AddButton/Dotted/VerticalLines"]
+[node name="AnimaRectangle4" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/VerticalLines"]
 anchor_bottom = 1.0
 margin_left = 56.0
 margin_top = -4.0
@@ -233,7 +648,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -255,7 +670,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle5" type="Control" parent="AddButton/Dotted/VerticalLines"]
+[node name="AnimaRectangle5" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/VerticalLines"]
 anchor_bottom = 1.0
 margin_left = 72.0
 margin_top = -4.0
@@ -272,7 +687,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -294,7 +709,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle6" type="Control" parent="AddButton/Dotted/VerticalLines"]
+[node name="AnimaRectangle6" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/VerticalLines"]
 anchor_bottom = 1.0
 margin_left = 88.0
 margin_top = -4.0
@@ -311,7 +726,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -333,7 +748,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="HorizontalLines" type="Control" parent="AddButton/Dotted"]
+[node name="HorizontalLines" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_rotation = 90.0
@@ -343,7 +758,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="AnimaRectangle" type="Control" parent="AddButton/Dotted/HorizontalLines"]
+[node name="AnimaRectangle" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/HorizontalLines"]
 anchor_bottom = 1.0
 margin_left = 8.0
 margin_top = -4.0
@@ -360,7 +775,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -382,7 +797,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle2" type="Control" parent="AddButton/Dotted/HorizontalLines"]
+[node name="AnimaRectangle2" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/HorizontalLines"]
 anchor_bottom = 1.0
 margin_left = 24.0
 margin_top = -4.0
@@ -399,7 +814,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -421,7 +836,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle3" type="Control" parent="AddButton/Dotted/HorizontalLines"]
+[node name="AnimaRectangle3" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/HorizontalLines"]
 anchor_bottom = 1.0
 margin_left = 40.0
 margin_top = -4.0
@@ -438,7 +853,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -460,7 +875,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle4" type="Control" parent="AddButton/Dotted/HorizontalLines"]
+[node name="AnimaRectangle4" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/HorizontalLines"]
 anchor_bottom = 1.0
 margin_left = 56.0
 margin_top = -4.0
@@ -477,7 +892,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -499,7 +914,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle5" type="Control" parent="AddButton/Dotted/HorizontalLines"]
+[node name="AnimaRectangle5" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/HorizontalLines"]
 anchor_bottom = 1.0
 margin_left = 72.0
 margin_top = -4.0
@@ -516,7 +931,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -538,7 +953,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="AnimaRectangle6" type="Control" parent="AddButton/Dotted/HorizontalLines"]
+[node name="AnimaRectangle6" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/HorizontalLines"]
 anchor_bottom = 1.0
 margin_left = 88.0
 margin_top = -4.0
@@ -555,7 +970,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Rectangle/Size = Rect2( 0, 0, 100, 100 )
-Rectangle/FillColor = Color( 0.0862745, 0.0862745, 0.12549, 1 )
+Rectangle/FillColor = Color( 0.0901961, 0.0941176, 0.129412, 1 )
 Rectangle/Border/Color = Color( 1, 1, 1, 0 )
 Rectangle/Border/Blend = false
 Rectangle/Border/Offset = Vector2( 0, 0 )
@@ -577,7 +992,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="Plus" type="Control" parent="AddButton/Dotted"]
+[node name="Plus" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted"]
 modulate = Color( 0.192157, 0.270588, 0.411765, 0.972549 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -590,7 +1005,7 @@ Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 
-[node name="Horizontal" type="Control" parent="AddButton/Dotted/Plus"]
+[node name="Horizontal" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/Plus"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 51, 51 )
@@ -627,7 +1042,7 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[node name="Vertical" type="Control" parent="AddButton/Dotted/Plus"]
+[node name="Vertical" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper/AddButton/Dotted/Plus"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 51, 51 )
@@ -664,6 +1079,15 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[connection signal="gui_input" from="AddButton" to="." method="_on_AddButton_gui_input"]
-[connection signal="mouse_entered" from="AddButton" to="." method="_on_AddButton_mouse_entered"]
-[connection signal="mouse_exited" from="AddButton" to="." method="_on_AddButton_mouse_exited"]
+[connection signal="mouse_down" from="Rectangle/CenterContainer/Control/Animation" to="." method="_on_Animation_mouse_down"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/Control/Animation" to="." method="_on_Animation_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/Control/Animation" to="." method="_on_Animation_mouse_exited"]
+[connection signal="mouse_down" from="Rectangle/CenterContainer/Control/Delay" to="." method="_on_Delay_mouse_down"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/Control/Delay" to="." method="_on_Delay_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/Control/Delay" to="." method="_on_Delay_mouse_exited"]
+[connection signal="mouse_down" from="Rectangle/CenterContainer/Control/Event" to="." method="_on_Event_mouse_down"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/Control/Event" to="." method="_on_Event_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/Control/Event" to="." method="_on_Event_mouse_exited"]
+[connection signal="gui_input" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_gui_input"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_mouse_exited"]

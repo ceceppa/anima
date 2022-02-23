@@ -85,14 +85,17 @@ var _custom_animations := {}
 
 static func begin(node: Node, name: String = 'anima', single_shot := false):
 	var node_name = 'AnimaNode_' + name
+	var anima_node: AnimaNode
 
 	for child in node.get_children():
-		if child.name.find(node_name) >= 0:
-			child.free()
+		if child.name.find(node_name) >= 0 and is_instance_valid(child):
+			anima_node = child
+			anima_node.clear()
+			anima_node.stop()
 
-			break
+			return anima_node
 
-	var anima_node = load('res://addons/anima/core/anima_node.gd').new()
+	anima_node = load('res://addons/anima/core/anima_node.gd').new()
 
 	anima_node.name = node_name
 	anima_node.init_node(node)
@@ -103,6 +106,7 @@ static func begin(node: Node, name: String = 'anima', single_shot := false):
 
 static func begin_single_shot(node: Node, name: String = "anima"):
 	return begin(node, name, true)
+
 #
 #static func player(node: Node):
 #	var player = load('./player.gd').new()

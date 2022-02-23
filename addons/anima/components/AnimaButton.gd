@@ -92,6 +92,11 @@ const BUTTON_BASE_PROPERTIES := {
 		type = TYPE_COLOR,
 		default = Color.transparent
 	},
+	HOVERED_SCALE = {
+		name = "Hovered/Scale",
+		type = TYPE_VECTOR2,
+		default = Vector2.ONE,
+	},
 
 	# Pressed
 	PRESSED_USE_STYLE = {
@@ -159,7 +164,7 @@ func _init():
 					new_value.default = Rect2(-1, -1, -1, -1)
 				elif new_value.default is Color:
 					new_value.default = Color.transparent
-					new_value.default.a = 0.01
+					new_value.default.a = 0.00
 
 			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
 
@@ -237,6 +242,9 @@ func _animate_state(root_key: String) -> void:
 			if current_value != final_value:
 				params_to_animate.push_back({ property = rectangle_property_name, to = final_value })
 
+	if root_key == "Normal" and rect_scale != Vector2.ONE:
+		params_to_animate.push_back({ property = "scale", to = Vector2.ONE })
+
 	if params_to_animate.size() > 0:
 		animate_params(params_to_animate)
 
@@ -266,6 +274,8 @@ func _set(property: String, value) -> void:
 		_label.set(property.replace("Button/", "").to_lower(), value)
 	elif property.find("FontColor") > 0:
 		_label.add_color_override("font_color", value)
+	elif property == "Rectangle/Scale":
+		rect_scale = value
 
 	restore_animate_property_change()
 
@@ -277,6 +287,8 @@ func get(property):
 		var color = _label.get_color("font_color")
 
 		return color
+	elif property.find("/Scale") > 0:
+		return Vector2.ONE
 
 	return .get(property)
 
