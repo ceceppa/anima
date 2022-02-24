@@ -1,9 +1,14 @@
 tool
 extends Control
 
+const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationControl.tscn")
+
 signal frame_deleted
+signal select_node
 
 export (bool) var is_initial_frame := false setget set_is_initial_frame
+
+onready var _animations_container = find_node("AnimationsContainer")
 
 func _ready():
 	var frame_name = find_node("FrameName")
@@ -12,6 +17,11 @@ func _ready():
 	frame_name.set_placeholder("Frame01")
 
 	_animate_me()
+
+func add_animation_for(node: Node, path: String) -> void:
+	var animation_data = ANIMATION_DATA.instance()
+
+	_animations_container.add_child(animation_data)
 
 func _animate_me(backwards := false) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
@@ -104,3 +114,30 @@ func _on_Delete_pressed():
 
 	queue_free()
 	emit_signal("frame_deleted")
+
+func _on_AddAnimation_pressed():
+	emit_signal("select_node")
+
+#	print("here")
+#	var add_button: AnimaButton = find_node("AddAnimation")
+#	var position := add_button.rect_global_position
+#	var rectangle := AnimaRectangle.new()
+#
+#	rectangle.rect_position = position
+#
+#	add_child(rectangle)
+#	add_button.modulate.a = 0
+#
+#	var anima: AnimaNode = Anima.begin_single_shot(self, "addAnimation")
+#	anima.set_default_duration(0.3)
+#
+#	anima.then(
+#		Anima.Node(rectangle) \
+#			.anima_position(Vector2(10, 100))
+#	)
+#	anima.with(
+#		Anima.Node(rectangle) \
+#			.anima_size(Vector2(340, 400))
+#	)
+#
+#	anima.play()

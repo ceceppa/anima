@@ -85,6 +85,21 @@ func anima_scale_y(y: float, duration = null) -> AnimaDeclarationForProperty:
 func anima_scale_z(z: float, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "scale:z", to = z, duration = duration })
 
+func anima_size(size: Vector2, duration = null) -> AnimaDeclarationForProperty:
+	return _create_declaration_with_easing({ property = "size", to = size, duration = duration })
+
+func anima_size3D(size: Vector3, duration = null) -> AnimaDeclarationForProperty:
+	return _create_declaration_with_easing({ property = "size", to = size, duration = duration })
+
+func anima_size_x(size: float, duration = null) -> AnimaDeclarationForProperty:
+	return _create_declaration_with_easing({ property = "size:x", to = size, duration = duration })
+
+func anima_size_y(size: float, duration = null) -> AnimaDeclarationForProperty:
+	return _create_declaration_with_easing({ property = "size:y", to = size, duration = duration })
+
+func anima_size_z(size: float, duration = null) -> AnimaDeclarationForProperty:
+	return _create_declaration_with_easing({ property = "size:z", to = size, duration = duration })
+
 func anima_rotate(rotate: float, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "rotation", to = rotate, duration = duration })
 

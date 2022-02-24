@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/ui/property/AnimaPivotButton.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=4]
@@ -138,19 +138,19 @@ rect_min_size = Vector2( 3072, 0 )
 rect_pivot_offset = Vector2( 1748, 80 )
 
 [node name="Empty" type="Control" parent="NodeOrGroup/Carousel/Wrapper/Container" index="0"]
-margin_right = 1162.0
+margin_right = 1021.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="1"]
-margin_left = 1166.0
-margin_right = 2329.0
+margin_left = 1025.0
+margin_right = 2046.0
 margin_bottom = 80.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="GridContainer2" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer"]
-margin_right = 1163.0
+margin_right = 1021.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
@@ -171,7 +171,7 @@ text = "Items delay"
 
 [node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2" instance=ExtResource( 6 )]
 margin_left = 132.0
-margin_right = 1163.0
+margin_right = 1021.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
 text = "0.01"
@@ -191,7 +191,7 @@ text = "Animate from:"
 [node name="OptionButton" type="OptionButton" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
 margin_left = 132.0
 margin_top = 42.0
-margin_right = 1163.0
+margin_right = 1021.0
 margin_bottom = 68.0
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 19 )
@@ -200,8 +200,8 @@ items = [ "Top to bottotm", null, false, 0, null, "Center", null, false, 1, null
 selected = 0
 
 [node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="2"]
-margin_left = 2333.0
-margin_right = 3496.0
+margin_left = 2050.0
+margin_right = 3072.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -221,7 +221,7 @@ text = "Items delay"
 
 [node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/GridContainer" instance=ExtResource( 6 )]
 margin_left = 132.0
-margin_right = 1163.0
+margin_right = 1022.0
 custom_fonts/font = SubResource( 19 )
 text = "0.01"
 align = 2

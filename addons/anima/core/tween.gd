@@ -636,7 +636,8 @@ class AnimatedItem extends Node:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
 
 			if _animation_data.has("__debug"):
-				print(_property_data)
+				print("animate")
+				printt("", _property_data)
 
 		var from = _property_data.from
 		var diff = _property_data.diff

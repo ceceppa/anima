@@ -36,7 +36,8 @@ func _ready():
 	var relative_buttons := [$CustomValue/RelativeSelectorButton, $CustomValue/Vector2/X/RelativeVector2X, $CustomValue/Vector2/Y/RelativeVector2Y]
 
 	for button in relative_buttons:
-		button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
+		if not button.is_connected("pressed", self, "_on_RelativeSelectorButton_pressed"):
+			button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
 
 	set_label(label)
 	set_type(type)
