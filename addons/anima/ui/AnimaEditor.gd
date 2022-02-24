@@ -12,35 +12,38 @@ var _node_offset: Vector2
 var _is_restoring_data := false
 
 onready var _frames_editor: AnimaRectangle = find_node("FramesEditor")
-onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
+onready var _nodes_window: WindowDialog = find_node("NodesWindow")
 onready var _warning_label = find_node("WarningLabel")
 onready var _animation_selector: OptionButton = find_node("AnimationSelector")
 onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
 
 func _ready():
 	$FramesEditor.hide()
-	$NodesPopup.rect_min_size = Vector2(260, 320) * AnimaUI.get_dpi_scale()
+#	_nodes_window.rect_min_size = Vector2(260, 320) * AnimaUI.get_dpi_scale()
 
 func set_base_control(base_control: Control) -> void:
 		AnimaUI.set_godot_gui(base_control)
 
-func edit(node: Node) -> void:
+func set_anima_node(node: Node) -> void:
+	var is_node_different = _anima_visual_node != node
+	_anima_visual_node = node
+
+	if not is_node_different:
+		return
+
+	_maybe_show_graph_edit()
+
 	_is_restoring_data = true
 	_anima_visual_node = node
 
 	var data = node.__anima_visual_editor_data
+	_nodes_window.populate_nodes_list(node.get_root_node())
+
 	AnimaUI.debug(self, 'restoring visual editor data', data)
 
 #	_frames_editor.restore_data(data)
 
 	_is_restoring_data = false
-
-func set_anima_node(node: Node) -> void:
-	var should_animate = _anima_visual_node != node
-	_anima_visual_node = node
-
-	if should_animate:
-		_maybe_show_graph_edit()
 
 func show() -> void:
 	.show()
@@ -83,20 +86,19 @@ func _maybe_show_graph_edit() -> bool:
 	if _frames_editor:
 		_frames_editor.visible = is_graph_edit_visible
 		_warning_label.visible = !is_graph_edit_visible
-		$NodesPopup.visible = false
+		_nodes_window.visible = false
 
 	return is_graph_edit_visible
 
 func _on_GraphEdit_hide_nodes_list():
-	_nodes_popup.hide()
+	_nodes_window.hide()
 
 func _on_NodesPopup_node_selected(node: Node, path: String):
-	_nodes_popup.hide()
+	_nodes_window.hide()
 
-	var graph_node: GraphNode = _frames_editor.add_node('', node, path)
-	graph_node.set_offset(_node_offset)
+	_frames_editor.add_animation_for(node, path)
 
-	_update_anima_node_data()
+#	_update_anima_node_data()
 
 func _update_anima_node_data() -> void:
 	# This method is also invoked when restoring the Visual Editor using the
@@ -188,11 +190,11 @@ func _update_animations_list() -> void:
 
 func _on_AnimaNodeEditor_show_nodes_list(offset: Vector2, position: Vector2):
 	_node_offset = offset
-	_nodes_popup.set_global_position(position)
-	_nodes_popup.show()
+	_nodes_window.set_global_position(position)
+	_nodes_window.show()
 
 func _on_AnimaNodeEditor_hide_nodes_list():
-	_nodes_popup.hide()
+	_nodes_window.hide()
 
 func _on_AnimaNodeEditor_node_connected():
 	_update_anima_node_data()
@@ -264,5 +266,5 @@ func _on_StopAnimation_pressed():
 
 	visual_node.stop()
 
-func _on_animaEditor_visibility_changed():
-	_nodes_popup.hide()
+func _on_FramesEditor_select_node():
+	_nodes_window.popup_centered()

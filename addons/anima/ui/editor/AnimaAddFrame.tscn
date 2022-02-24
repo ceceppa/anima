@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/ui/Frames/AnimaAddFrame.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAddFrame.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/components/Animatable.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=4]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=5]

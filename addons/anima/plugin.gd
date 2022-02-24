@@ -9,7 +9,6 @@ enum EditorPosition {
 var _anima_editor
 var _anima_visual_node: Node
 var _current_position = EditorPosition.BOTTOM
-var _current_root_node: Node
 
 func get_name():
 	return 'Anima'
@@ -48,14 +47,13 @@ func handles(object):
 
 			root = parent
 
-	if root and root != _current_root_node:
-		object = root.get_node("AnimaVisualNode")
+	if root:
+		object = root.find_node("AnimaVisualNode", false)
 
 		if object:
 			is_anima_node = true
 
-	printt(_anima_visual_node, object)
-	if is_anima_node and _anima_visual_node != object:
+	if is_anima_node and object and _anima_visual_node != object:
 		_anima_editor.set_anima_node(object)
 
 		_anima_visual_node = object

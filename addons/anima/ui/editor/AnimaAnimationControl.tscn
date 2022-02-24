@@ -1,24 +1,24 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://addons/anima/nodes/AnimaAnimationControl.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
-[ext_resource path="res://addons/anima/ui/AnimaAnimationData.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
-[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=7]
-[ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=9]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationData.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationControl.gd" type="Script" id=5]
+[ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/anima/ui/windows/AnimaAddNodeWindow.tscn" type="PackedScene" id=7]
+[ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=4]
 use_filter = true
-font_data = ExtResource( 4 )
+font_data = ExtResource( 1 )
 __meta__ = {
 "_original_size": 2
 }
 
 [sub_resource type="DynamicFont" id=2]
 use_filter = true
-font_data = ExtResource( 4 )
+font_data = ExtResource( 1 )
 __meta__ = {
 "_original_size": 18
 }
@@ -33,7 +33,7 @@ custom_constants/margin_right = 8
 custom_constants/margin_top = 8
 custom_constants/margin_left = 8
 custom_constants/margin_bottom = 8
-script = ExtResource( 1 )
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -53,7 +53,7 @@ margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 rect_pivot_offset = Vector2( 504, 16 )
 rect_clip_content = true
-script = ExtResource( 9 )
+script = ExtResource( 3 )
 label = "Time:"
 font = SubResource( 4 )
 expanded = false
@@ -192,7 +192,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Duration" parent="Container/TimeDelay/AnimaAccordionContent/MarginContainer/GridContainer" instance=ExtResource( 7 )]
+[node name="Duration" parent="Container/TimeDelay/AnimaAccordionContent/MarginContainer/GridContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 margin_left = 71.0
 margin_right = 984.0
@@ -211,7 +211,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Delay" parent="Container/TimeDelay/AnimaAccordionContent/MarginContainer/GridContainer" instance=ExtResource( 7 )]
+[node name="Delay" parent="Container/TimeDelay/AnimaAccordionContent/MarginContainer/GridContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 margin_left = 71.0
 margin_top = 36.0
@@ -220,7 +220,7 @@ margin_bottom = 68.0
 can_clear_custom_value = false
 show_relative_selector = false
 
-[node name="AnimationData" parent="Container" instance=ExtResource( 5 )]
+[node name="AnimationData" parent="Container" instance=ExtResource( 4 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 36.0
@@ -244,7 +244,6 @@ margin_right = 996.0
 
 [node name="AnimaButton" parent="Container/AnimationData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="0"]
 margin_right = 325.0
-Animation/AnimatePropertyChange = false
 
 [node name="AsNode" parent="Container/AnimationData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="1"]
 margin_left = 329.0
@@ -263,31 +262,30 @@ group = SubResource( 3 )
 [node name="AnimaButton2" parent="Container/AnimationData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="4"]
 margin_left = 329.0
 margin_right = 654.0
-Animation/AnimatePropertyChange = false
 
-[node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
+[node name="PropertiesWindow" parent="." instance=ExtResource( 7 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 8.0
-margin_right = 520.0
+margin_right = 1016.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 
-[node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
+[node name="AnimationsWindow" parent="." instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 520.0
+margin_right = 1016.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
 rect_clip_content = false
 
-[node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
+[node name="AnimaEasingsWindow" parent="." instance=ExtResource( 8 )]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 520.0
+margin_right = 1016.0
 margin_bottom = 308.0
 rect_min_size = Vector2( 512, 300 )
 rect_pivot_offset = Vector2( 504, 292 )
@@ -300,7 +298,6 @@ rect_clip_content = false
 [connection signal="select_property" from="Container/AnimationData" to="." method="_on_AnimationData_select_property"]
 [connection signal="select_relative_property" from="Container/AnimationData" to="." method="_on_AnimationData_select_relative_property"]
 [connection signal="value_updated" from="Container/AnimationData" to="." method="_on_AnimationData_value_updated"]
-[connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
 [connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]
 [connection signal="easing_selected" from="AnimaEasingsWindow" to="." method="_on_AnimaEasingsWindow_easing_selected"]
 

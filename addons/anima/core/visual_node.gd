@@ -16,22 +16,22 @@ func _init():
 # Returns the node that Anima will use when handling the animations
 # done via visual editor
 #
-func get_source_node() -> Node:
+func get_root_node() -> Node:
 	var parent = self.get_parent()
 
-	# get data
-	var img = get_viewport().get_texture().get_data()
-	# wait two frames
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
-	# flip
-	img.flip_y()
-	# get screen ratio + resize capture
-	var ratio = 2
-	img.resize(img.get_width()*ratio,img.get_height()*ratio,0)
-	# save to file
-	print("saving")
-	img.save_png("screenshot.png")
+#	# get data
+#	var img = get_viewport().get_texture().get_data()
+#	# wait two frames
+#	yield(get_tree(), "idle_frame")
+#	yield(get_tree(), "idle_frame")
+#	# flip
+#	img.flip_y()
+#	# get screen ratio + resize capture
+#	var ratio = 2
+#	img.resize(img.get_width()*ratio,img.get_height()*ratio,0)
+#	# save to file
+#	print("saving")
+#	img.save_png("screenshot.png")
 
 	if parent == null:
 		return self
@@ -79,10 +79,10 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 	var visibility_strategy: int = animations_data.visibility_strategy
 	var timeline_debug := {}
 	
-	anima.set_root_node(get_source_node())
+	anima.set_root_node(get_root_node())
 	anima.set_visibility_strategy(visibility_strategy)
 
-	var source_node: Node = get_source_node()
+	var source_node: Node = get_root_node()
 
 	for animation in animations_data.data:
 		var node_path: String = animation.node_path
@@ -128,11 +128,11 @@ func preview_animation(node: Node, duration: float, delay: float, animation_data
 	var initial_value = null
 
 	var anima_data = _create_animation_data(node, duration, delay, animation_data)
-	anima.set_root_node(get_source_node())
+	anima.set_root_node(get_root_node())
 
 	AnimaUI.debug(self, 'playing node animation with data', anima_data)
 
-	anima_data._root_node = get_source_node()
+	anima_data._root_node = get_root_node()
 
 	anima.then(anima_data)
 

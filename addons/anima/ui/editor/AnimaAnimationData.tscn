@@ -1,28 +1,28 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://addons/anima/ui/AnimaAnimationData.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationData.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 3
 use_filter = true
-font_data = ExtResource( 2 )
+font_data = ExtResource( 1 )
 __meta__ = {
 "_original_size": 2
 }
 
 [sub_resource type="DynamicFont" id=4]
 use_filter = true
-font_data = ExtResource( 2 )
+font_data = ExtResource( 1 )
 __meta__ = {
 "_original_size": 2
 }
 
 [sub_resource type="DynamicFont" id=5]
 use_filter = true
-font_data = ExtResource( 2 )
+font_data = ExtResource( 1 )
 __meta__ = {
 "_original_size": 18
 }
@@ -37,7 +37,7 @@ margin_bottom = -0.200012
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
-script = ExtResource( 1 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -195,7 +195,7 @@ columns = 3
 margin_right = 188.0
 margin_bottom = 28.0
 rect_pivot_offset = Vector2( 94, 14 )
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -209,6 +209,7 @@ Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
 Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
 Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
 Pressed/UseSameStyleOf = ""
 Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
 Pressed/FontColor = Color( 1, 1, 1, 0 )
@@ -346,7 +347,7 @@ margin_top = 32.0
 margin_right = 380.0
 margin_bottom = 60.0
 rect_pivot_offset = Vector2( 94, 14 )
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -360,6 +361,7 @@ Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
 Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
 Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
 Pressed/UseSameStyleOf = ""
 Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
 Pressed/FontColor = Color( 1, 1, 1, 0 )

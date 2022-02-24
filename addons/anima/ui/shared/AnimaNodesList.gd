@@ -2,6 +2,7 @@ tool
 extends VBoxContainer
 
 signal node_selected(node, path)
+signal close
 
 export (bool) var trigger_selected := false
 
@@ -11,8 +12,12 @@ onready var _nodes_list: Tree = find_node("NodesList")
 var _start_node: Node
 var _search_text: String
 
-func populate():
-	var anima_visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
+func _ready():
+	if trigger_selected:
+		$ButtonsContainer.hide()
+
+func populate(root_node: Node):
+	_start_node = root_node
 
 	if _search_filed == null:
 		_search_filed = find_node("SearchField")
@@ -70,9 +75,6 @@ func _select_node(tree_item: TreeItem, name: String) -> void:
 		child = child.get_next()
 
 func _retrieves_list_of_nodes() -> void:
-	var anima_visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
-	_start_node = anima_visual_node.get_source_node()
-
 	if _nodes_list == null:
 		_nodes_list = find_node('NodesList')
 
@@ -134,3 +136,6 @@ func _on_NodesList_item_selected():
 
 func _on_GodotUIButton_pressed():
 	_on_NodesList_item_activated()
+
+func _on_Close_pressed():
+	emit_signal("close")
