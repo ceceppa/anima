@@ -1,10 +1,12 @@
 tool
 extends "./AnimaBaseWindow.gd"
 
-signal property_selected(property, property_type, node, node_name)
+signal property_selected(property, property_type, node, path)
 
 onready var _property_search: LineEdit = find_node('PropertySearch')
 onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
+
+export (bool) var nodes_list_visible := false
 
 var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
 var _source_node: Node
@@ -12,11 +14,11 @@ var _source_node: Node
 func _ready():
 	._ready()
 
-	_nodes_list.hide()
+	_nodes_list.visible = nodes_list_visible
 
 func _on_popup_visible() -> void:
 	var list: VBoxContainer = find_node('AnimaNodesList')
-	list.populate()
+
 	list.select_node(_source_node)
 
 	if _property_search == null:
@@ -30,7 +32,11 @@ func show_nodes_list(show: bool) -> void:
 
 	list.visible = show
 
-func populate_animatable_properties_list(source_node: Node) -> void:
+func populate(source_node: Node) -> void:
+	_nodes_list.populate(source_node)
+	_populate_animatable_properties_list(source_node)
+
+func _populate_animatable_properties_list(source_node: Node) -> void:
 	AnimaUI.debug(self, 'pupulating animatable properties for', source_node)
 
 	_source_node = source_node
@@ -127,7 +133,7 @@ func _on_PropertiesTree_item_double_clicked():
 	if is_child:
 		property_to_animate = parent.get_text(0) + ":" + property_to_animate
 
-	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type, selected_node)
+	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type, selected_node, "path")
 
 	hide()
 
@@ -135,4 +141,4 @@ func _on_PropertiesTree_item_activated():
 	_on_PropertiesTree_item_double_clicked()
 
 func _on_AnimaNodesList_node_selected(node: Node, _path) -> void:
-	populate_animatable_properties_list(node)
+	_populate_animatable_properties_list(node)

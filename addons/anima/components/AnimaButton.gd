@@ -182,6 +182,7 @@ func _init():
 	_label.size_flags_vertical = SIZE_EXPAND_FILL
 	_label.anchor_right = 1
 	_label.anchor_bottom = 1
+	_label.connect("item_rect_changed", self, "_on_label_rect_changed")
 
 	connect("focus_entered", self, "_on_focus_entered")
 	connect("focus_exited", self, "_on_focus_exited")
@@ -324,3 +325,8 @@ func _set_test_state(new_state) -> void:
 	if Engine.editor_hint:
 		_test_state = new_state
 		_animate_state(STATES[new_state])
+
+func _on_label_rect_changed() -> void:
+	if _label.rect_size.y > rect_size.y:
+		rect_min_size.y = _label.rect_size.y
+

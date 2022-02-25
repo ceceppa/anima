@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/anima/ui/shared/AnimaNodesList.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/icons/Close.svg" type="Texture" id=2]
@@ -7,13 +7,6 @@
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=18]
-use_filter = true
-font_data = ExtResource( 3 )
-__meta__ = {
-"_original_size": 18
-}
-
-[sub_resource type="DynamicFont" id=19]
 use_filter = true
 font_data = ExtResource( 3 )
 __meta__ = {
@@ -48,7 +41,6 @@ margin_right = 1016.0
 margin_bottom = 554.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 18 )
 
 [node name="ButtonsContainer" type="HBoxContainer" parent="."]
 margin_top = 558.0
@@ -72,7 +64,7 @@ Animation/Easing = 0
 Button/Label = "Add"
 Button/Align = 1
 Button/VAlign = 1
-Button/Font = SubResource( 19 )
+Button/Font = null
 Button/ToggleMode = false
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
@@ -191,7 +183,7 @@ Animation/Easing = 0
 Button/Label = "Close"
 Button/Align = 1
 Button/VAlign = 1
-Button/Font = SubResource( 19 )
+Button/Font = null
 Button/ToggleMode = false
 Normal/FillColor = Color( 0.239216, 0.235294, 0.254902, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )

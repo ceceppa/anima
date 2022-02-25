@@ -1,24 +1,17 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/editor/AnimaAddFrame.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/components/Animatable.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=4]
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://addons/anima/icons/Animation.svg" type="Texture" id=6]
 [ext_resource path="res://addons/anima/icons/Event.svg" type="Texture" id=7]
 [ext_resource path="res://addons/anima/icons/Delay.svg" type="Texture" id=8]
 
-[sub_resource type="DynamicFont" id=5]
-use_filter = true
-font_data = ExtResource( 5 )
-__meta__ = {
-"_original_size": 18
-}
-
 [node name="AnimaAddFrame" type="Control"]
 anchor_bottom = 1.0
-rect_min_size = Vector2( 360, 0 )
+margin_right = 360.0
+rect_min_size = Vector2( 540, 0 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -27,7 +20,6 @@ __meta__ = {
 [node name="Rectangle" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -664.0
 rect_min_size = Vector2( 360, 0 )
 rect_pivot_offset = Vector2( 180, 300 )
 script = ExtResource( 1 )
@@ -69,20 +61,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control" type="VBoxContainer" parent="Rectangle/CenterContainer"]
-margin_left = 60.0
+[node name="ButtonsContainer" type="VBoxContainer" parent="Rectangle/CenterContainer"]
+margin_left = 90.0
 margin_top = 204.0
-margin_right = 300.0
+margin_right = 450.0
 margin_bottom = 396.0
-rect_min_size = Vector2( 240, 0 )
+rect_min_size = Vector2( 360, 0 )
 custom_constants/separation = 24
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Animation" type="Control" parent="Rectangle/CenterContainer/Control"]
+[node name="Animation" type="Control" parent="Rectangle/CenterContainer/ButtonsContainer"]
 modulate = Color( 1, 1, 1, 0 )
-margin_right = 240.0
+margin_right = 360.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 124, 16 )
@@ -98,14 +90,14 @@ Animation/Easing = 2
 Button/Label = "Animation"
 Button/Align = 1
 Button/VAlign = 1
-Button/Font = SubResource( 5 )
+Button/Font = null
 Button/ToggleMode = false
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
 Hovered/FillColor = Color( 0.294118, 0.431373, 0.670588, 1 )
 Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
+Hovered/Scale = Vector2( 1.2, 1.2 )
 Pressed/UseSameStyleOf = ""
 Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
 Pressed/FontColor = Color( 1, 1, 1, 0 )
@@ -197,15 +189,15 @@ Hovered/Shadow/Offset = Vector2( 2, 2 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/Control/Animation"]
+[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/ButtonsContainer/Animation"]
 position = Vector2( 8, 7 )
 texture = ExtResource( 6 )
 centered = false
 
-[node name="Delay" type="Control" parent="Rectangle/CenterContainer/Control"]
+[node name="Delay" type="Control" parent="Rectangle/CenterContainer/ButtonsContainer"]
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 72.0
-margin_right = 240.0
+margin_right = 360.0
 margin_bottom = 120.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 124, 24 )
@@ -221,7 +213,7 @@ Animation/Easing = 2
 Button/Label = "Delay"
 Button/Align = 1
 Button/VAlign = 1
-Button/Font = SubResource( 5 )
+Button/Font = null
 Button/ToggleMode = false
 Normal/FillColor = Color( 0.454902, 0.407843, 0.556863, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
@@ -320,15 +312,15 @@ Hovered/Shadow/Offset = Vector2( 2, 2 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/Control/Delay"]
+[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/ButtonsContainer/Delay"]
 position = Vector2( 8, 7 )
 texture = ExtResource( 8 )
 centered = false
 
-[node name="Event" type="Control" parent="Rectangle/CenterContainer/Control"]
+[node name="Event" type="Control" parent="Rectangle/CenterContainer/ButtonsContainer"]
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 144.0
-margin_right = 240.0
+margin_right = 360.0
 margin_bottom = 192.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 124, 24 )
@@ -344,7 +336,7 @@ Animation/Easing = 2
 Button/Label = "Event"
 Button/Align = 1
 Button/VAlign = 1
-Button/Font = SubResource( 5 )
+Button/Font = null
 Button/ToggleMode = false
 Normal/FillColor = Color( 0.341176, 0.466667, 0.466667, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
@@ -443,15 +435,15 @@ Hovered/Shadow/Offset = Vector2( 2, 2 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/Control/Event"]
+[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/ButtonsContainer/Event"]
 position = Vector2( 8, 7 )
 texture = ExtResource( 7 )
 centered = false
 
 [node name="AddButtonWrapper" type="Control" parent="Rectangle/CenterContainer"]
-margin_left = 129.0
+margin_left = 219.0
 margin_top = 249.0
-margin_right = 231.0
+margin_right = 321.0
 margin_bottom = 351.0
 rect_min_size = Vector2( 102, 102 )
 mouse_filter = 2
@@ -1082,15 +1074,15 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[connection signal="mouse_down" from="Rectangle/CenterContainer/Control/Animation" to="." method="_on_Animation_mouse_down"]
-[connection signal="mouse_entered" from="Rectangle/CenterContainer/Control/Animation" to="." method="_on_Animation_mouse_entered"]
-[connection signal="mouse_exited" from="Rectangle/CenterContainer/Control/Animation" to="." method="_on_Animation_mouse_exited"]
-[connection signal="mouse_down" from="Rectangle/CenterContainer/Control/Delay" to="." method="_on_Delay_mouse_down"]
-[connection signal="mouse_entered" from="Rectangle/CenterContainer/Control/Delay" to="." method="_on_Delay_mouse_entered"]
-[connection signal="mouse_exited" from="Rectangle/CenterContainer/Control/Delay" to="." method="_on_Delay_mouse_exited"]
-[connection signal="mouse_down" from="Rectangle/CenterContainer/Control/Event" to="." method="_on_Event_mouse_down"]
-[connection signal="mouse_entered" from="Rectangle/CenterContainer/Control/Event" to="." method="_on_Event_mouse_entered"]
-[connection signal="mouse_exited" from="Rectangle/CenterContainer/Control/Event" to="." method="_on_Event_mouse_exited"]
+[connection signal="mouse_down" from="Rectangle/CenterContainer/ButtonsContainer/Animation" to="." method="_on_Animation_mouse_down"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/ButtonsContainer/Animation" to="." method="_on_Animation_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/ButtonsContainer/Animation" to="." method="_on_Animation_mouse_exited"]
+[connection signal="mouse_down" from="Rectangle/CenterContainer/ButtonsContainer/Delay" to="." method="_on_Delay_mouse_down"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/ButtonsContainer/Delay" to="." method="_on_Delay_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/ButtonsContainer/Delay" to="." method="_on_Delay_mouse_exited"]
+[connection signal="mouse_down" from="Rectangle/CenterContainer/ButtonsContainer/Event" to="." method="_on_Event_mouse_down"]
+[connection signal="mouse_entered" from="Rectangle/CenterContainer/ButtonsContainer/Event" to="." method="_on_Event_mouse_entered"]
+[connection signal="mouse_exited" from="Rectangle/CenterContainer/ButtonsContainer/Event" to="." method="_on_Event_mouse_exited"]
 [connection signal="gui_input" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_gui_input"]
 [connection signal="mouse_entered" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_mouse_entered"]
 [connection signal="mouse_exited" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_mouse_exited"]

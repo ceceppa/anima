@@ -9,9 +9,25 @@ signal add_delay
 
 onready var _dotted = find_node("Dotted")
 onready var _plus = find_node("Plus")
-onready var _add_button = find_node("AddButton")
+onready var _add_button: AnimaAnimatable = find_node("AddButton")
+onready var _buttons_container: VBoxContainer = find_node("ButtonsContainer")
+
+var _ratio: float = 1.0
 
 func _ready():
+	var final_width: float = 360
+
+	if Engine.editor_hint:
+		var animation: Node = find_node("Animation")
+		var height: float = animation.get_child(0).rect_size.y
+		_ratio = height / 32
+
+	rect_min_size.x = final_width * _ratio
+	_buttons_container.rect_min_size.x = 240 * _ratio
+
+	_animate_me()
+
+func _animate_me():
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.set_default_duration(0.3)
@@ -52,8 +68,9 @@ func _ready():
 
 	anima.play_with_delay(0.3)
 
-	for child in $Rectangle/CenterContainer/Control.get_children():
+	for child in _buttons_container.get_children():
 		child.modulate.a = 0
+		child.rect_min_size.y = 48 * _ratio
 
 func _animate_add_button() -> void:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
@@ -140,7 +157,7 @@ func _animate_add_button() -> void:
 	)
 
 	anima.with(
-		Anima.Group($Rectangle/CenterContainer/Control, 0.05) \
+		Anima.Group(_buttons_container, 0.05) \
 			.anima_animation_frames({
 				from = {
 					scale = Vector2(0.8, 0.8),
@@ -206,24 +223,6 @@ func _on_AddButton_mouse_exited():
 func _on_AddButton_gui_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		_animate_add_button()
-
-func _on_Animation_mouse_entered():
-	_button_in($Rectangle/CenterContainer/Control/Animation)
-
-func _on_Animation_mouse_exited():
-	_button_out($Rectangle/CenterContainer/Control/Animation)
-
-func _on_Delay_mouse_entered():
-	_button_in($Rectangle/CenterContainer/Control/Delay)
-
-func _on_Delay_mouse_exited():
-	_button_out($Rectangle/CenterContainer/Control/Delay)
-
-func _on_Event_mouse_entered():
-	_button_in($Rectangle/CenterContainer/Control/Event)
-
-func _on_Event_mouse_exited():
-	_button_out($Rectangle/CenterContainer/Control/Event)
 
 func _on_Animation_mouse_down():
 	if _is_collapsed_mode:

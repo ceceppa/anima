@@ -57,6 +57,10 @@ func handles(object):
 		_anima_editor.set_anima_node(object)
 
 		_anima_visual_node = object
+	elif not is_anima_node:
+		_anima_editor.set_anima_node(null)
+
+		_anima_visual_node = null
 
 	return is_anima_node
 
