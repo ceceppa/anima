@@ -19,8 +19,8 @@ func _ready():
 
 	if Engine.editor_hint:
 		var animation: Node = find_node("Animation")
-		var height: float = animation.get_child(0).rect_size.y
-		_ratio = height / 32
+		var height: float = animation.get_child(0).rect_size.y#
+		_ratio = height / 48
 
 	rect_min_size.x = final_width * _ratio
 	_buttons_container.rect_min_size.x = 240 * _ratio
