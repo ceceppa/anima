@@ -33,11 +33,17 @@ func set_anima_node(node: Node) -> void:
 
 	_maybe_show_graph_edit()
 
+	if node == null:
+		return
+
 	_is_restoring_data = true
 	_anima_visual_node = node
 
 	var data = node.__anima_visual_editor_data
-	_nodes_window.populate_nodes_list(node.get_root_node())
+	var root_node: Node = node.get_root_node()
+
+	_nodes_window.populate_nodes_list(root_node)
+	$PropertiesWindow.populate(root_node)
 
 	AnimaUI.debug(self, 'restoring visual editor data', data)
 
@@ -267,4 +273,8 @@ func _on_StopAnimation_pressed():
 	visual_node.stop()
 
 func _on_FramesEditor_select_node():
-	_nodes_window.popup_centered()
+#	_nodes_window.popup_centered()
+	$PropertiesWindow.popup_centered()
+
+func _on_PropertiesWindow_property_selected(property, property_type, node, node_name):
+	_frames_editor.add_animation_for(node, node_name)

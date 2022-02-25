@@ -187,8 +187,8 @@ visible = false
 margin_left = 82.0
 margin_top = 208.0
 margin_right = 293.0
-margin_bottom = 240.0
-rect_min_size = Vector2( 0, 32 )
+margin_bottom = 210.0
+rect_min_size = Vector2( 0, 2 )
 rect_pivot_offset = Vector2( 105.5, 16 )
 rect_clip_content = true
 script = ExtResource( 6 )
@@ -321,7 +321,7 @@ custom_constants/margin_bottom = 12
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 207.0
-margin_bottom = 26.0
+margin_bottom = 37.0
 text = "This is a test"
 
 [node name="ColorRect" type="Panel" parent="."]

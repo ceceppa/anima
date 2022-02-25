@@ -1,7 +1,8 @@
 tool
 extends Control
 
-const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationControl.tscn")
+const INITIAL_VALUE = preload("res://addons/anima/ui/editor/AnimaInitialValue.tscn")
+const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaInitialValue.tscn")
 
 signal frame_deleted
 signal select_node
@@ -10,16 +11,38 @@ export (bool) var is_initial_frame := false setget set_is_initial_frame
 
 onready var _animations_container = find_node("AnimationsContainer")
 
+var _final_width: float = 360
+
 func _ready():
 	var frame_name = find_node("FrameName")
 
 	frame_name.set_initial_value("Frame01")
 	frame_name.set_placeholder("Frame01")
 
+	if Engine.editor_hint:
+		var cta_container: HBoxContainer = find_node("CTAContainer")
+
+		var height: float = frame_name.rect_size.y
+		var ratio = height / 32.0
+
+		_final_width *= ratio
+
+		cta_container.rect_position.y = -32 * ratio
+		for child in cta_container.get_children():
+			var s: Vector2 = Vector2(48, 48) * ratio
+			child.rect_min_size = s
+
+			prints(child.name, s)
+
 	_animate_me()
 
 func add_animation_for(node: Node, path: String) -> void:
-	var animation_data = ANIMATION_DATA.instance()
+	var animation_data: Node
+
+	if is_initial_frame:
+		animation_data = INITIAL_VALUE.instance()
+	else:
+		animation_data = ANIMATION_DATA.instance()
 
 	_animations_container.add_child(animation_data)
 
@@ -36,8 +59,8 @@ func _animate_me(backwards := false) -> AnimaNode:
 					"min_size:x": 0,
 				},
 				to = {
-					"size:x": 360,
-					"min_size:x": 360,
+					"size:x": _final_width,
+					"min_size:x": _final_width,
 				},
 				easing = Anima.EASING.EASE_OUT_BACK
 			})

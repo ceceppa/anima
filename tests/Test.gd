@@ -1,3 +1,4 @@
+tool
 extends Control
 
 const Test := {}
@@ -72,9 +73,6 @@ func _ready():
 #	})
 #
 #	$AnimaNode.play_with_delay(0.5)
-
-func ciao():
-	print("hello")
 
 var _temp
 

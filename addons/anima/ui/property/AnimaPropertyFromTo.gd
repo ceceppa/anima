@@ -320,3 +320,7 @@ func set_borderless(is_borderless: bool) -> void:
 	$CurrentValueBorderless.visible = is_borderless
 
 	set_label(label)
+
+func _on_CurrentValue_item_rect_changed():
+	if $CurrentValue.rect_size.y > rect_size.y:
+		rect_min_size.y = $CurrentValue.rect_size.y
