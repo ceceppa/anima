@@ -88,7 +88,7 @@ is_initial_frame = true
 [node name="AnimaAddFrame" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource( 3 )]
 anchor_bottom = 0.0
 margin_left = 384.0
-margin_right = 744.0
+margin_right = 924.0
 margin_bottom = 576.0
 rect_pivot_offset = Vector2( 180, 288 )
 
