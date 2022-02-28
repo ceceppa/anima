@@ -117,6 +117,8 @@ func _init():
 	rect_clip_content = true
 
 func _ready():
+	_content_control = get_child(1)
+
 	set_expanded(expanded)
 	set_label(label)
 
@@ -149,6 +151,7 @@ func _init_layout() -> void:
 	_title.anchor_right = 1
 	_title.anchor_bottom = 1
 	_title.rect_min_size.y = 32
+	_title.rect_size.y = 32
 	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
 	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, 1)
 	_title.connect("pressed", self, "_on_Title_pressed")
@@ -157,7 +160,7 @@ func _init_layout() -> void:
 
 	_wrapper.anchor_right = 1
 	_wrapper.add_child(_title)
-	
+
 	add_child(_wrapper)
 
 func set_expanded(is_expanded: bool, animate := true) -> void:
@@ -255,7 +258,7 @@ func _on_Title_pressed():
 	set_expanded(!expanded)
 
 func _on_content_control_added() -> void:
-	if _content_control != null:
+	if _content_control == null:
 		return
 
 	_content_control.set_position(Vector2(0, _title.rect_min_size.y))

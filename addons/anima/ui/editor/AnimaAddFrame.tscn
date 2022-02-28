@@ -451,6 +451,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="AddButton" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper"]
+modulate = Color( 1, 1, 1, 0 )
 rect_min_size = Vector2( 102, 102 )
 rect_pivot_offset = Vector2( 51, 51 )
 mouse_default_cursor_shape = 2

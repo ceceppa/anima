@@ -3,8 +3,7 @@ class_name AnimaDeclarationNode
 var _data: Dictionary
 
 func _init(node: Node = null):
-	if node:
-		_data.node = node
+	_data.node = node
 
 func _set_data(data: Dictionary) -> void:
 	_data = data

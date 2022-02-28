@@ -18,11 +18,11 @@ onready var _animation_selector: OptionButton = find_node("AnimationSelector")
 onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
 
 func _ready():
-	$FramesEditor.hide()
+	_frames_editor.hide()
 #	_nodes_window.rect_min_size = Vector2(260, 320) * AnimaUI.get_dpi_scale()
 
 func set_base_control(base_control: Control) -> void:
-		AnimaUI.set_godot_gui(base_control)
+	AnimaUI.set_godot_gui(base_control)
 
 func set_anima_node(node: Node) -> void:
 	var is_node_different = _anima_visual_node != node
@@ -102,7 +102,7 @@ func _on_GraphEdit_hide_nodes_list():
 func _on_NodesPopup_node_selected(node: Node, path: String):
 	_nodes_window.hide()
 
-	_frames_editor.add_animation_for(node, path)
+#	_frames_editor.add_animation_for(node, path)
 
 #	_update_anima_node_data()
 
@@ -276,5 +276,7 @@ func _on_FramesEditor_select_node():
 #	_nodes_window.popup_centered()
 	$PropertiesWindow.popup_centered()
 
-func _on_PropertiesWindow_property_selected(property, property_type, node, node_name):
-	_frames_editor.add_animation_for(node, node_name)
+func _on_PropertiesWindow_property_selected(node_path, property, property_type):
+	var node: Node = _anima_visual_node.get_root_node().get_node(node_path)
+
+	_frames_editor.add_animation_for(node, node_path, property, property_type)

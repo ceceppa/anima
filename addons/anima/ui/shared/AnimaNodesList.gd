@@ -27,6 +27,9 @@ func populate(root_node: Node):
 	_search_filed.clear()
 	_search_filed.grab_focus()
 
+	var root: TreeItem = _nodes_list.get_root()
+	root.select(0)
+	
 func get_selected() -> String:
 	var selected := _nodes_list.get_selected()
 

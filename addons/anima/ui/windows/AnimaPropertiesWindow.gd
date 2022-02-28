@@ -1,7 +1,7 @@
 tool
 extends "./AnimaBaseWindow.gd"
 
-signal property_selected(property, property_type, node, path)
+signal property_selected(node_path, property, property_type)
 
 onready var _property_search: LineEdit = find_node('PropertySearch')
 onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
@@ -19,7 +19,7 @@ func _ready():
 func _on_popup_visible() -> void:
 	var list: VBoxContainer = find_node('AnimaNodesList')
 
-	list.select_node(_source_node)
+#	list.select_node(_source_node)
 
 	if _property_search == null:
 		_property_search = find_node("PropertySearch")
@@ -133,7 +133,7 @@ func _on_PropertiesTree_item_double_clicked():
 	if is_child:
 		property_to_animate = parent.get_text(0) + ":" + property_to_animate
 
-	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type, selected_node, "path")
+	emit_signal("property_selected", _nodes_list.get_selected(), property_to_animate, selected_item.get_metadata(0).type)
 
 	hide()
 

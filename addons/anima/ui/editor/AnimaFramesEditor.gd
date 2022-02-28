@@ -18,8 +18,8 @@ func _ready():
 	dotted.margin_left = 0
 	dotted.margin_right = 0
 
-func add_animation_for(node: Node, node_path: String) -> void:
-	_destination_frame.add_animation_for(node, node_path)
+func add_animation_for(node: Node, node_path: String, property_name, property_type) -> void:
+	_destination_frame.add_animation_for(node, node_path, property_name, property_type)
 
 func _add_component(node: Node) -> void:
 	_frames_container.add_child(node)

@@ -19,7 +19,7 @@ func _enter_tree():
 
 	_anima_editor = load("res://addons/anima/ui/AnimaEditor.tscn").instance()
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
-	_anima_editor.connect("connections_updated", self, '_on_connections_updated')
+	_anima_editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
 	_anima_editor.set_base_control(get_editor_interface().get_base_control())
 
 	add_control_to_bottom_panel(_anima_editor, "Anima")
@@ -35,6 +35,9 @@ func _exit_tree():
 func handles(object):
 	var is_anima_node = object.has_meta("__anima_visual_node")
 	var root: Node
+
+	if not object is Node:
+		return
 
 	if not is_anima_node and object is Node:
 		root = object
@@ -79,7 +82,7 @@ func _on_anima_editor_switch_position() -> void:
 
 	_anima_editor.show()
 
-func _on_connections_updated(data: Dictionary) -> void:
+func _on_visual_builder_updated(data: Dictionary) -> void:
 	var current_data: Dictionary = _anima_visual_node.__anima_visual_editor_data
 	var undo_redo = get_undo_redo() # Method of EditorPlugin.
 

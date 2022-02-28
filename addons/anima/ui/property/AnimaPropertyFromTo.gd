@@ -324,3 +324,6 @@ func set_borderless(is_borderless: bool) -> void:
 func _on_CurrentValue_item_rect_changed():
 	if $CurrentValue.rect_size.y > rect_size.y:
 		rect_min_size.y = $CurrentValue.rect_size.y
+
+func _on_PropertyFromTo_item_rect_changed():
+	$CustomValue.rect_size.x = rect_size.x

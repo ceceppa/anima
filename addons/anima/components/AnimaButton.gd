@@ -297,6 +297,9 @@ func get(property):
 
 	return .get(property)
 
+func set_label(label: String) -> void:
+	set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, label)
+
 func _on_mouse_entered():
 	refresh(STATE.HOVERED)
 
