@@ -23,15 +23,17 @@ __meta__ = {
 
 [node name="FrameAnimation" type="Control"]
 anchor_bottom = 1.0
-margin_right = 360.395
+margin_right = 360.066
 rect_min_size = Vector2( 360, 0 )
 rect_pivot_offset = Vector2( 180, 300 )
+rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Rectangle" type="Control" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 360, 0 )
@@ -92,6 +94,7 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 312.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
@@ -103,7 +106,7 @@ __meta__ = {
 
 [node name="FrameName" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer" instance=ExtResource( 9 )]
 anchor_right = 0.0
-margin_right = 276.0
+margin_right = 272.0
 rect_pivot_offset = Vector2( 142, 19 )
 show_relative_selector = false
 borderless = true
@@ -231,6 +234,7 @@ texture = ExtResource( 1 )
 centered = false
 
 [node name="DurationContainer" type="MarginContainer" parent="Rectangle/MarginContainer/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 44.0
 margin_right = 312.0
 margin_bottom = 100.0
@@ -255,9 +259,9 @@ position = Vector2( 4.60373, 16.1706 )
 texture = ExtResource( 10 )
 
 [node name="Label" type="Label" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer"]
-margin_top = 9.0
-margin_right = 87.0
-margin_bottom = 23.0
+margin_top = 3.0
+margin_right = 143.0
+margin_bottom = 28.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "       Duration:"
 align = 1
@@ -267,11 +271,12 @@ __meta__ = {
 
 [node name="PropertyFromTo" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 9 )]
 anchor_right = 0.0
-margin_left = 111.0
+margin_left = 167.0
 margin_right = 312.0
 show_relative_selector = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/MarginContainer/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 112.0
 margin_right = 312.0
 margin_bottom = 476.0
@@ -291,11 +296,12 @@ size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="Empty" type="Control" parent="Rectangle/MarginContainer/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 488.0
 margin_right = 312.0
 margin_bottom = 506.0
 rect_min_size = Vector2( 0, 18 )
-rect_pivot_offset = Vector2( 169, 9 )
+rect_pivot_offset = Vector2( 170.5, 9 )
 
 [node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty"]
 anchor_right = 1.0
@@ -314,6 +320,7 @@ __meta__ = {
 }
 
 [node name="GenerateFrame" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 96.0
 margin_right = 144.0
 margin_bottom = 48.0
@@ -451,6 +458,7 @@ texture = ExtResource( 7 )
 centered = false
 
 [node name="AddAnimation" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 168.0
 margin_right = 216.0
 margin_bottom = 48.0
@@ -587,10 +595,11 @@ texture = ExtResource( 2 )
 centered = false
 
 [node name="RemoveWrapper" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 518.0
 margin_right = 312.0
 margin_bottom = 552.0
-rect_pivot_offset = Vector2( 173.5, 17 )
+rect_pivot_offset = Vector2( 173, 17 )
 custom_constants/separation = 24
 alignment = 1
 
@@ -722,16 +731,16 @@ __meta__ = {
 
 [node name="CenterContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer"]
 margin_right = 16.0
-margin_bottom = 20.0
+margin_bottom = 25.0
 mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer/CenterContainer"]
-margin_top = 2.0
+margin_top = 4.0
 margin_right = 16.0
-margin_bottom = 18.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 16, 16 )
 mouse_filter = 2
 size_flags_horizontal = 0
@@ -743,8 +752,8 @@ centered = false
 
 [node name="Label" type="Label" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer"]
 margin_left = 24.0
-margin_right = 76.0
-margin_bottom = 20.0
+margin_right = 112.0
+margin_bottom = 25.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
 text = "Remove"

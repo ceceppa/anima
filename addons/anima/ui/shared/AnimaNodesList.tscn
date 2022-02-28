@@ -27,18 +27,18 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1016.0
-margin_bottom = 30.0
+margin_bottom = 22.0
 
 [node name="SearchField" type="LineEdit" parent="HBoxContainer"]
 margin_right = 1016.0
-margin_bottom = 30.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 18 )
 
 [node name="NodesList" type="Tree" parent="."]
-margin_top = 34.0
+margin_top = 30.0
 margin_right = 1016.0
-margin_bottom = 554.0
+margin_bottom = 550.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 

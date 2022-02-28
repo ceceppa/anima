@@ -11,7 +11,7 @@ export (bool) var is_initial_frame := false setget set_is_initial_frame
 
 onready var _animations_container = find_node("AnimationsContainer")
 
-var _final_width: float = 360
+var _final_width: float = 460
 
 func _ready():
 	var frame_name = find_node("FrameName")
@@ -34,15 +34,16 @@ func _ready():
 
 	_animate_me()
 
-func add_animation_for(node: Node, path: String) -> void:
-	var animation_data: Node
+func add_animation_for(node: Node, path: String, property, property_value) -> void:
+	var animation_item: Node
 
 	if is_initial_frame:
-		animation_data = INITIAL_VALUE.instance()
+		animation_item = INITIAL_VALUE.instance()
+		animation_item.add_for(node, path, property, property_value)
 	else:
-		animation_data = ANIMATION_DATA.instance()
+		animation_item = ANIMATION_DATA.instance()
 
-	_animations_container.add_child(animation_data)
+	_animations_container.add_child(animation_item)
 
 func _animate_me(backwards := false) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)

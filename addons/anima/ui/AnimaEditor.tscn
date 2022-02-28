@@ -1,17 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/ui/windows/AnimaNodesWindow.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/ui/editor/AnimaFramesEditor.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/ui/AnimaEditor.gd" type="Script" id=5]
 
 [sub_resource type="Theme" id=2]
-
-[sub_resource type="DynamicFont" id=3]
-size = 32
-use_filter = true
-font_data = ExtResource( 3 )
 
 [node name="AnimaEditor" type="Control"]
 anchor_right = 1.0
@@ -26,7 +20,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FramesEditor" parent="." instance=ExtResource( 2 )]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 25.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_right = 112.0
+margin_bottom = 25.0
+text = "Animation"
+
+[node name="FramesEditor" parent="VBoxContainer" instance=ExtResource( 2 )]
 visible = false
 
 [node name="NodesWindow" parent="." instance=ExtResource( 1 )]
@@ -37,7 +47,6 @@ anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 512, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 3 )
 text = "Please add an AnimaVisualNode to the current scene to use the Visual Animation Builder"
 align = 1
 valign = 1
@@ -50,6 +59,6 @@ __meta__ = {
 window_title = "Select the node and property"
 nodes_list_visible = true
 
-[connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
+[connection signal="select_node" from="VBoxContainer/FramesEditor" to="." method="_on_FramesEditor_select_node"]
 [connection signal="node_selected" from="NodesWindow" to="." method="_on_NodesPopup_node_selected"]
 [connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]

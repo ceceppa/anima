@@ -20,7 +20,7 @@ image = SubResource( 3 )
 size = Vector2( 16, 16 )
 
 [node name="PropertiesWindow" type="WindowDialog"]
-visible = true
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
