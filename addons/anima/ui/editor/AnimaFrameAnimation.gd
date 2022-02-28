@@ -32,8 +32,6 @@ func _ready():
 			var s: Vector2 = Vector2(48, 48) * ratio
 			child.rect_min_size = s
 
-			prints(child.name, s)
-
 	_animate_me()
 
 func add_animation_for(node: Node, path: String) -> void:

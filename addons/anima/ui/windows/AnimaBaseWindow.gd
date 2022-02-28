@@ -33,6 +33,7 @@ func _ready() -> void:
 func popup_centered(size := Vector2.ZERO) -> void:
 	rect_scale = Vector2.ONE
 	rect_size = Vector2(1024, 0)
+	rect_min_size = Vector2(1024, 0)
 
 	.popup_centered(rect_size)
 	_anima.play()
