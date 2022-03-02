@@ -23,21 +23,19 @@ __meta__ = {
 
 [node name="FrameAnimation" type="Control"]
 anchor_bottom = 1.0
-margin_right = 360.066
-rect_min_size = Vector2( 360, 0 )
-rect_pivot_offset = Vector2( 180, 300 )
-rect_clip_content = true
+margin_right = 460.0
+rect_min_size = Vector2( 460, 0 )
+rect_pivot_offset = Vector2( 230, 300 )
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Rectangle" type="Control" parent="."]
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 360, 0 )
-rect_pivot_offset = Vector2( 180, 300 )
+rect_pivot_offset = Vector2( 230, 300 )
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -84,7 +82,7 @@ __meta__ = {
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle/MarginContainer"]
 margin_left = 24.0
 margin_top = 24.0
-margin_right = 336.0
+margin_right = 436.0
 margin_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -94,26 +92,24 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
-rect_pivot_offset = Vector2( 156, 16 )
+rect_pivot_offset = Vector2( 206, 16 )
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="FrameName" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer" instance=ExtResource( 9 )]
-anchor_right = 0.0
-margin_right = 272.0
+margin_right = 372.0
 rect_pivot_offset = Vector2( 142, 19 )
 show_relative_selector = false
 borderless = true
 
 [node name="PlayContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer"]
-margin_left = 280.0
-margin_right = 312.0
+margin_left = 380.0
+margin_right = 412.0
 margin_bottom = 32.0
 
 [node name="AnimaButton" type="Control" parent="Rectangle/MarginContainer/ContentContainer/HBoxContainer/PlayContainer"]
@@ -126,11 +122,15 @@ script = ExtResource( 5 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0
-Button/Label = ""
+Button/Text = "Anima Button"
+Button/ICON = null
 Button/Align = 0
-Button/VAlign = 0
 Button/Font = null
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -234,22 +234,21 @@ texture = ExtResource( 1 )
 centered = false
 
 [node name="DurationContainer" type="MarginContainer" parent="Rectangle/MarginContainer/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_top = 44.0
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 100.0
-rect_pivot_offset = Vector2( 156, 28 )
+rect_pivot_offset = Vector2( 206, 28 )
 custom_constants/margin_top = 12
 custom_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer"]
 margin_top = 12.0
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 44.0
 custom_constants/separation = 12
 
 [node name="GridContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer"]
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 32.0
 rect_pivot_offset = Vector2( 259.281, -180.348 )
 custom_constants/separation = 24
@@ -270,17 +269,15 @@ __meta__ = {
 }
 
 [node name="PropertyFromTo" parent="Rectangle/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 9 )]
-anchor_right = 0.0
 margin_left = 167.0
-margin_right = 312.0
+margin_right = 412.0
 show_relative_selector = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/MarginContainer/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_top = 112.0
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 476.0
-rect_pivot_offset = Vector2( 156, 182 )
+rect_pivot_offset = Vector2( 195, 182 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/bg = SubResource( 2 )
@@ -289,19 +286,18 @@ __meta__ = {
 }
 
 [node name="AnimationsContainer" type="VBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/ScrollContainer"]
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 364.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="Empty" type="Control" parent="Rectangle/MarginContainer/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_top = 488.0
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 506.0
 rect_min_size = Vector2( 0, 18 )
-rect_pivot_offset = Vector2( 170.5, 9 )
+rect_pivot_offset = Vector2( 222, 9 )
 
 [node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty"]
 anchor_right = 1.0
@@ -320,23 +316,26 @@ __meta__ = {
 }
 
 [node name="GenerateFrame" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 96.0
-margin_right = 144.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 48, 48 )
-rect_pivot_offset = Vector2( 24, 24 )
+margin_left = 90.0
+margin_right = 210.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 120, 49 )
+rect_pivot_offset = Vector2( 86.5, 24.5 )
 hint_tooltip = "Add all changes as Animation"
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0
-Button/Label = ""
+Button/Text = "Record"
+Button/ICON = ExtResource( 7 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = SubResource( 1 )
+Button/Disabled = false
 Button/ToggleMode = true
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.984314, 0.729412, 0.388235, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -434,46 +433,26 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="HBoxContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/GenerateFrame"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/GenerateFrame/HBoxContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 16, 16 )
-mouse_filter = 1
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="Icon" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/GenerateFrame/HBoxContainer/Control"]
-modulate = Color( 0, 0, 0, 1 )
-texture = ExtResource( 7 )
-centered = false
-
 [node name="AddAnimation" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 168.0
-margin_right = 216.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 48, 48 )
-rect_pivot_offset = Vector2( 24, 24 )
+margin_left = 234.0
+margin_right = 321.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 87, 49 )
+rect_pivot_offset = Vector2( 24, 24.5 )
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0
-Button/Label = ""
+Button/Text = "Add"
+Button/ICON = ExtResource( 2 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = SubResource( 1 )
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -571,42 +550,18 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="HBoxContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-hint_tooltip = "Add new Animation"
-mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation/HBoxContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 16, 16 )
-mouse_filter = 1
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="Add" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation/HBoxContainer/Control"]
-texture = ExtResource( 2 )
-centered = false
-
 [node name="RemoveWrapper" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_top = 518.0
-margin_right = 312.0
+margin_right = 412.0
 margin_bottom = 552.0
-rect_pivot_offset = Vector2( 173, 17 )
+rect_pivot_offset = Vector2( 228, 17 )
 custom_constants/separation = 24
 alignment = 1
 
 [node name="Delete" type="Control" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper"]
-margin_left = 96.0
-margin_right = 216.0
-margin_bottom = 34.0
+margin_left = 146.0
+margin_right = 278.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 120, 34 )
 rect_pivot_offset = Vector2( 60, 17 )
 hint_tooltip = "Remove the frame"
@@ -615,11 +570,15 @@ script = ExtResource( 5 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0
-Button/Label = ""
+Button/Text = "Remove"
+Button/ICON = ExtResource( 3 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = SubResource( 1 )
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.47451, 0.211765, 0.196078, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -716,49 +675,6 @@ Normal/Shadow/Offset = Vector2( 2, 2 )
 Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete"]
-margin_left = 19.0
-margin_top = 7.0
-margin_right = 72.0
-margin_bottom = 27.0
-mouse_filter = 2
-custom_constants/separation = 8
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CenterContainer" type="CenterContainer" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer"]
-margin_right = 16.0
-margin_bottom = 25.0
-mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer/CenterContainer"]
-margin_top = 4.0
-margin_right = 16.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 16, 16 )
-mouse_filter = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="Remove" type="Sprite" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer/CenterContainer/Control"]
-texture = ExtResource( 3 )
-centered = false
-
-[node name="Label" type="Label" parent="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete/HBoxContainer"]
-margin_left = 24.0
-margin_right = 112.0
-margin_bottom = 25.0
-size_flags_horizontal = 3
-size_flags_vertical = 7
-text = "Remove"
-align = 1
-valign = 1
 
 [connection signal="pressed" from="Rectangle/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]
 [connection signal="pressed" from="Rectangle/MarginContainer/ContentContainer/RemoveWrapper/Delete" to="." method="_on_Delete_pressed"]

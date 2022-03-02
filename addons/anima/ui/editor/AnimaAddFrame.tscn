@@ -84,14 +84,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 draw_from_center = true
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.15
 Animation/Easing = 2
-Button/Label = "Animation"
+Button/Text = "Animation"
+Button/ICON = ExtResource( 6 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = null
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -189,11 +193,6 @@ Hovered/Shadow/Offset = Vector2( 2, 2 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/ButtonsContainer/Animation"]
-position = Vector2( 8, 7 )
-texture = ExtResource( 6 )
-centered = false
-
 [node name="Delay" type="Control" parent="Rectangle/CenterContainer/ButtonsContainer"]
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 72.0
@@ -207,14 +206,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 draw_from_center = true
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.15
 Animation/Easing = 2
-Button/Label = "Delay"
+Button/Text = "Delay"
+Button/ICON = ExtResource( 8 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = null
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.454902, 0.407843, 0.556863, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -312,11 +315,6 @@ Hovered/Shadow/Offset = Vector2( 2, 2 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/ButtonsContainer/Delay"]
-position = Vector2( 8, 7 )
-texture = ExtResource( 8 )
-centered = false
-
 [node name="Event" type="Control" parent="Rectangle/CenterContainer/ButtonsContainer"]
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 144.0
@@ -330,14 +328,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 draw_from_center = true
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.15
 Animation/Easing = 2
-Button/Label = "Event"
+Button/Text = "Event"
+Button/ICON = ExtResource( 7 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = null
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.341176, 0.466667, 0.466667, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -435,11 +437,6 @@ Hovered/Shadow/Offset = Vector2( 2, 2 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Icon" type="Sprite" parent="Rectangle/CenterContainer/ButtonsContainer/Event"]
-position = Vector2( 8, 7 )
-texture = ExtResource( 7 )
-centered = false
-
 [node name="AddButtonWrapper" type="Control" parent="Rectangle/CenterContainer"]
 margin_left = 129.0
 margin_top = 249.0
@@ -451,7 +448,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="AddButton" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper"]
-modulate = Color( 1, 1, 1, 0 )
 rect_min_size = Vector2( 102, 102 )
 rect_pivot_offset = Vector2( 51, 51 )
 mouse_default_cursor_shape = 2
@@ -1075,9 +1071,9 @@ Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
 Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
-[connection signal="mouse_down" from="Rectangle/CenterContainer/ButtonsContainer/Animation" to="." method="_on_Animation_mouse_down"]
-[connection signal="mouse_down" from="Rectangle/CenterContainer/ButtonsContainer/Delay" to="." method="_on_Delay_mouse_down"]
-[connection signal="mouse_down" from="Rectangle/CenterContainer/ButtonsContainer/Event" to="." method="_on_Event_mouse_down"]
+[connection signal="pressed" from="Rectangle/CenterContainer/ButtonsContainer/Animation" to="." method="_on_Animation_pressed"]
+[connection signal="pressed" from="Rectangle/CenterContainer/ButtonsContainer/Delay" to="." method="_on_Delay_pressed"]
+[connection signal="pressed" from="Rectangle/CenterContainer/ButtonsContainer/Event" to="." method="_on_Event_pressed"]
 [connection signal="gui_input" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_gui_input"]
 [connection signal="mouse_entered" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_mouse_entered"]
 [connection signal="mouse_exited" from="Rectangle/CenterContainer/AddButtonWrapper/AddButton" to="." method="_on_AddButton_mouse_exited"]

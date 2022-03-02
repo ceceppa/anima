@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
@@ -6,8 +6,11 @@
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=5]
 [ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=6]
+[ext_resource path="res://addons/anima/icons/anima.svg" type="Texture" id=7]
 
 [sub_resource type="StyleBoxFlat" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=8]
 
 [sub_resource type="DynamicFont" id=4]
 use_filter = true
@@ -39,6 +42,10 @@ tracks/0/keys = {
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = -69.1152
+margin_top = -23.9673
+margin_right = -69.1152
+margin_bottom = -23.9673
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -46,7 +53,6 @@ __meta__ = {
 test = SubResource( 5 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-visible = false
 margin_right = 703.0
 margin_bottom = 366.0
 text = "Testing typewriter"
@@ -55,11 +61,10 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="."]
-visible = false
-margin_left = 316.0
-margin_top = 221.0
-margin_right = 706.002
-margin_bottom = 358.0
+margin_left = 497.072
+margin_top = 366.23
+margin_right = 887.074
+margin_bottom = 503.23
 rect_pivot_offset = Vector2( 195.001, 68.5 )
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -139,7 +144,6 @@ __anima_visual_editor_data = {
 }
 
 [node name="Control" type="Control" parent="."]
-visible = false
 margin_left = 183.0
 margin_top = 374.0
 margin_right = 223.0
@@ -148,14 +152,19 @@ margin_bottom = 414.0
 [node name="Button2" type="Button" parent="Control"]
 anchor_right = 2.869
 anchor_bottom = 1.828
-margin_right = -102.76
-margin_bottom = -53.12
+margin_right = 176.24
+margin_bottom = -36.12
+custom_styles/normal = SubResource( 8 )
+icon = ExtResource( 7 )
 
 [node name="Button3" type="Button" parent="Control"]
 margin_left = -1.0
 margin_top = 54.0
 margin_right = 11.0
 margin_bottom = 74.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button4" type="Button" parent="Control"]
 margin_left = -4.0
@@ -164,7 +173,6 @@ margin_right = 9.0
 margin_bottom = 146.0
 
 [node name="Button2" type="Button" parent="."]
-visible = false
 margin_left = 835.0
 margin_top = 34.0
 margin_right = 967.0
@@ -174,7 +182,6 @@ text = "Do it"
 [node name="Timer" type="Timer" parent="."]
 
 [node name="AnimaTriangle" type="Control" parent="."]
-visible = false
 margin_left = -50.0
 margin_top = 117.0
 margin_right = 195.0
@@ -183,13 +190,12 @@ rect_pivot_offset = Vector2( 122.5, 73 )
 script = ExtResource( 3 )
 
 [node name="AnimaAccordion" type="Control" parent="."]
-visible = false
-margin_left = 82.0
-margin_top = 208.0
-margin_right = 293.0
-margin_bottom = 240.0
+margin_left = 90.0
+margin_top = 128.0
+margin_right = 546.0
+margin_bottom = 160.0
 rect_min_size = Vector2( 0, 32 )
-rect_pivot_offset = Vector2( 105.5, 16 )
+rect_pivot_offset = Vector2( 228, 16 )
 rect_clip_content = true
 script = ExtResource( 6 )
 __meta__ = {
@@ -198,8 +204,8 @@ __meta__ = {
 font = SubResource( 4 )
 expanded = false
 Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
+Animation/Speed = 0.15
+Animation/Easing = 27.0
 Animation/Name = "fadeIn"
 Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
 ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
@@ -295,11 +301,11 @@ ButtonFocused/Shadow/Offset = Vector2( -1, -1 )
 ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Content" type="VBoxContainer" parent="AnimaAccordion"]
-visible = false
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
-rect_pivot_offset = Vector2( 109.5, 19 )
+rect_pivot_offset = Vector2( 228, 24.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -307,8 +313,8 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="AnimaAccordion/Content"]
-margin_right = 219.0
-margin_bottom = 38.0
+margin_right = 456.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -319,12 +325,11 @@ custom_constants/margin_bottom = 12
 [node name="Label" type="Label" parent="AnimaAccordion/Content/MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 207.0
+margin_right = 444.0
 margin_bottom = 37.0
 text = "This is a test"
 
 [node name="ColorRect" type="Panel" parent="."]
-visible = false
 margin_left = -194.574
 margin_top = -24.5694
 margin_right = -5.57382
@@ -332,25 +337,28 @@ margin_bottom = 79.4306
 custom_styles/panel = SubResource( 6 )
 
 [node name="AnimaButton" type="Control" parent="."]
-visible = false
-margin_left = 264.173
-margin_top = 335.959
-margin_right = 753.173
-margin_bottom = 488.959
-rect_pivot_offset = Vector2( 244.5, 76.5 )
+margin_left = 576.422
+margin_top = 93.8172
+margin_right = 1121.42
+margin_bottom = 203.817
+rect_pivot_offset = Vector2( 272.499, 54.9999 )
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 draw_from_center = true
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
-Button/Label = "Anima Button"
-Button/Align = 0
-Button/VAlign = 0
+Button/Text = "Anima Button"
+Button/ICON = null
+Button/Align = 1
 Button/Font = null
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -368,9 +376,9 @@ Hovered/Size = Rect2( -1, -1, -1, -1 )
 Focused/Size = Rect2( -1, -1, -1, -1 )
 Pressed/Size = Rect2( -1, -1, -1, -1 )
 Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0.01 )
-Focused/Border/Color = Color( 1, 1, 1, 0.01 )
-Pressed/Border/Color = Color( 1, 1, 1, 0.01 )
+Hovered/Border/Color = Color( 1, 1, 1, 0 )
+Focused/Border/Color = Color( 1, 1, 1, 0 )
+Pressed/Border/Color = Color( 1, 1, 1, 0 )
 Normal/Border/Blend = false
 Hovered/Border/Blend = false
 Focused/Border/Blend = false
@@ -436,9 +444,9 @@ Hovered/Border/Offset/Radius/BottomLeft = -1
 Focused/Border/Offset/Radius/BottomLeft = -1
 Pressed/Border/Offset/Radius/BottomLeft = -1
 Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0.01 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0.01 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0.01 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
 Normal/Shadow/Size = 0
 Hovered/Shadow/Size = -1
 Focused/Shadow/Size = -1
