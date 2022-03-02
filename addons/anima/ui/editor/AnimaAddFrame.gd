@@ -17,11 +17,6 @@ var _ratio: float = 1.0
 func _ready():
 	var final_width: float = 360
 
-	if Engine.editor_hint:
-		var animation: Node = find_node("Animation")
-		var height: float = animation.get_child(0).rect_size.y#
-		_ratio = height / 48
-
 	rect_min_size.x = final_width * _ratio
 	_buttons_container.rect_min_size.x = 240 * _ratio
 
@@ -224,7 +219,7 @@ func _on_AddButton_gui_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		_animate_add_button()
 
-func _on_Animation_mouse_down():
+func _on_Animation_pressed():
 	if _is_collapsed_mode:
 		return
 
@@ -232,7 +227,7 @@ func _on_Animation_mouse_down():
 
 	emit_signal("add_frame")
 
-func _on_Delay_mouse_down():
+func _on_Delay_pressed():
 	if _is_collapsed_mode:
 		return
 
@@ -240,7 +235,7 @@ func _on_Delay_mouse_down():
 
 	emit_signal("add_delay")
 
-func _on_Event_mouse_down():
+func _on_Event_pressed():
 	if _is_collapsed_mode:
 		return
 

@@ -14,9 +14,10 @@ __meta__ = {
 }
 
 [node name="AnimaInitialValue" type="Control"]
-margin_bottom = 184.0
-rect_min_size = Vector2( 0, 184 )
-rect_pivot_offset = Vector2( 0, 32 )
+margin_right = 983.0
+margin_bottom = 227.0
+rect_min_size = Vector2( 0, 227 )
+rect_pivot_offset = Vector2( 491.5, 24.5 )
 rect_clip_content = true
 size_flags_horizontal = 3
 script = ExtResource( 3 )
@@ -123,8 +124,8 @@ ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 32.0
-rect_pivot_offset = Vector2( 512, 51 )
+margin_top = 64.0
+rect_pivot_offset = Vector2( 491.5, 97.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -138,15 +139,15 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 238.0
-margin_bottom = 140.0
+margin_right = 971.0
+margin_bottom = 179.0
 rect_pivot_offset = Vector2( -528, -77 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer"]
-margin_right = 226.0
+margin_right = 959.0
 margin_bottom = 82.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -161,7 +162,7 @@ text = "Property:"
 
 [node name="PropertyLabel" type="Label" parent="MarginContainer/VBoxContainer/GridContainer"]
 margin_left = 125.0
-margin_right = 226.0
+margin_right = 959.0
 margin_bottom = 25.0
 text = "Property:"
 
@@ -174,37 +175,41 @@ text = "Value:"
 [node name="PropertyValue" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource( 2 )]
 margin_left = 125.0
 margin_top = 37.0
-margin_right = 226.0
+margin_right = 959.0
 margin_bottom = 82.0
 rect_min_size = Vector2( 0, 45 )
-rect_pivot_offset = Vector2( 50.5, 22.5 )
+rect_pivot_offset = Vector2( 417, 24.5 )
 size_flags_vertical = 1
 type = 4
 can_clear_custom_value = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 margin_top = 94.0
-margin_right = 226.0
-margin_bottom = 128.0
+margin_right = 959.0
+margin_bottom = 167.0
 alignment = 1
 
 [node name="Delete" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-margin_left = 53.0
-margin_right = 173.0
-margin_bottom = 34.0
-rect_min_size = Vector2( 120, 34 )
-rect_pivot_offset = Vector2( 60, 17 )
+margin_left = 413.0
+margin_right = 545.0
+margin_bottom = 73.0
+rect_min_size = Vector2( 132, 73 )
+rect_pivot_offset = Vector2( 66, 36.5 )
 hint_tooltip = "Remove the frame"
 mouse_default_cursor_shape = 2
 script = ExtResource( 1 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0
-Button/Label = ""
+Button/Text = "Remove"
+Button/ICON = ExtResource( 4 )
 Button/Align = 1
-Button/VAlign = 1
 Button/Font = SubResource( 1 )
+Button/Disabled = false
 Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
 Normal/FillColor = Color( 0.47451, 0.211765, 0.196078, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -301,48 +306,5 @@ Normal/Shadow/Offset = Vector2( 2, 2 )
 Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/Delete"]
-margin_left = 19.0
-margin_top = 7.0
-margin_right = 72.0
-margin_bottom = 27.0
-mouse_filter = 2
-custom_constants/separation = 8
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/Delete/HBoxContainer"]
-margin_right = 16.0
-margin_bottom = 25.0
-mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/Delete/HBoxContainer/CenterContainer"]
-margin_top = 4.0
-margin_right = 16.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 16, 16 )
-mouse_filter = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="Remove" type="Sprite" parent="MarginContainer/VBoxContainer/HBoxContainer/Delete/HBoxContainer/CenterContainer/Control"]
-texture = ExtResource( 4 )
-centered = false
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/Delete/HBoxContainer"]
-margin_left = 24.0
-margin_right = 112.0
-margin_bottom = 25.0
-size_flags_horizontal = 3
-size_flags_vertical = 7
-text = "Remove"
-align = 1
-valign = 1
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Delete" to="." method="_on_Delete_pressed"]

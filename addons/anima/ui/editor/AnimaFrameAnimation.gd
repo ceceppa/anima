@@ -19,19 +19,6 @@ func _ready():
 	frame_name.set_initial_value("Frame01")
 	frame_name.set_placeholder("Frame01")
 
-	if Engine.editor_hint:
-		var cta_container: HBoxContainer = find_node("CTAContainer")
-
-		var height: float = frame_name.rect_size.y
-		var ratio = height / 32.0
-
-		_final_width *= ratio
-
-		cta_container.rect_position.y = -32 * ratio
-		for child in cta_container.get_children():
-			var s: Vector2 = Vector2(48, 48) * ratio
-			child.rect_min_size = s
-
 	_animate_me()
 
 func add_animation_for(node: Node, path: String, property, property_value) -> void:

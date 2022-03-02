@@ -3,6 +3,7 @@ extends Control
 
 signal switch_position
 signal connections_updated(new_list)
+signal visual_builder_updated
 
 const VISUAL_EDITOR_FADE_DURATION := 0.1
 

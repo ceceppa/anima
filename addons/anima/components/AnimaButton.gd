@@ -2,10 +2,9 @@ tool
 extends AnimaRectangle
 class_name AnimaButton, "res://addons/anima/icons/button.svg"
 
-var _label := Label.new()
-
-var _is_focused := false
-var _is_pressed := false
+signal button_down
+signal button_up
+signal toggled(button_pressed)
 
 enum STATE {
 	NORMAL,
@@ -24,29 +23,28 @@ const STATES := {
 export (STATE) var _test_state = STATE.NORMAL setget _set_test_state
 export (bool) var enabled := true
 
-const LABEL_PROPERTIES = ["Button/Label", "Button/Align", "Button/VAlign", "Button/Font",]
 const BUTTON_BASE_PROPERTIES := {
 	# Button
 	BUTTON_LABEL = {
-		name = "Button/Label",
+		name = "Button/Text",
 		type = TYPE_STRING,
 		default = "Anima Button",
+		animatable = false
+	},
+	BUTTON_ICON = {
+		name = "Button/ICON",
+		type = TYPE_OBJECT,
+		hint = PROPERTY_HINT_RESOURCE_TYPE,
+		hint_string = "Texture",
+		default = null,
 		animatable = false
 	},
 	BUTTON_ALIGN = {
 		name = "Button/Align",
 		type = TYPE_INT,
 		hint = PROPERTY_HINT_ENUM,
-		hint_string = "Left,Center,Right,Fill",
-		default = 0,
-		animatable = false
-	},
-	BUTTON_VALIGN = {
-		name = "Button/VAlign",
-		type = TYPE_INT,
-		hint = PROPERTY_HINT_ENUM,
-		hint_string = "Left,Center,Right,Fill",
-		default = 0,
+		hint_string = "Left,Center,Right",
+		default = 1,
 		animatable = false
 	},
 	BUTTON_FONT = {
@@ -57,11 +55,32 @@ const BUTTON_BASE_PROPERTIES := {
 		default = null,
 		animatable = false
 	},
+	BUTTON_DISABLED = {
+		name = "Button/Disabled",
+		type = TYPE_BOOL,
+		default = false,
+	},
 	BUTTON_TOGGLE_MODE = {
 		name = "Button/ToggleMode",
 		type = TYPE_BOOL,
 		default = false,
 	},
+	BUTTON_SHORTCUT_IN_TOOLTIP = {
+		name = "Button/ShortcutInTooltip",
+		type = TYPE_BOOL,
+		default = true,
+	},
+	BUTTON_PRESSED = {
+		name = "Button/Pressed",
+		type = TYPE_BOOL,
+		default = false,
+	},
+	BUTTON_CONTENT_MARGIN = {
+		name = "Button/ContentMargin",
+		type = TYPE_INT,
+		default = 12,
+	},
+
 
 	# Normal
 	NORMAL_FILL_COLOR = {
@@ -140,6 +159,7 @@ const BUTTON_BASE_PROPERTIES := {
 
 var _all_properties := BUTTON_BASE_PROPERTIES
 var _is_toggable := false
+var _button := Button.new()
 
 func _init():
 	._init()
@@ -178,32 +198,40 @@ func _init():
 
 	_copy_properties("Normal")
 
-	_label.size_flags_horizontal = SIZE_EXPAND_FILL
-	_label.size_flags_vertical = SIZE_EXPAND_FILL
-	_label.anchor_right = 1
-	_label.anchor_bottom = 1
-	_label.connect("item_rect_changed", self, "_on_label_rect_changed")
-
-	connect("focus_entered", self, "_on_focus_entered")
-	connect("focus_exited", self, "_on_focus_exited")
-	connect("mouse_entered", self, "_on_mouse_entered")
-	connect("mouse_exited", self, "_on_mouse_exited")
-	connect("mouse_down", self, "_on_mouse_down")
-	connect("pressed", self, "_on_pressed")
-
-	add_child(_label)
-
 	_test_state = STATE.NORMAL
+	
+	_init_button()
 
 func _ready():
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name))
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name))
-	_set(BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_VALIGN.name))
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name))
 
 	_is_toggable = get_property(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name)
 
 	_copy_properties("Normal")
+	
+	connect("item_rect_changed", self, "_on_resize_me")
+
+func _init_button() -> void:
+	var style := StyleBoxEmpty.new()
+
+	for s in ["normal", "hover", "pressed", "disabled", "focus"]:
+		_button.add_stylebox_override(s, style)
+
+	for c in ["font_color_disabled", "font_color_focus", "font_color", "font_color_hover", "font_color_pressed"]:
+		_button.add_color_override(c, Color.white)
+
+	_button.connect("focus_entered", self, "_on_focus_entered")
+	_button.connect("focus_exited", self, "_on_focus_exited")
+	_button.connect("mouse_entered", self, "_on_mouse_entered")
+	_button.connect("mouse_exited", self, "_on_mouse_exited")
+	_button.connect("button_down", self, "_on_mouse_down")
+	_button.connect("pressed", self, "_on_pressed")
+
+	add_child(_button)
+
+	_on_resize_me()
 
 func _copy_properties(from: String) -> void:
 	var copy_from_key = from.to_upper()
@@ -217,7 +245,7 @@ func _copy_properties(from: String) -> void:
 			if _property_exists(rectangle_property_name):
 				_property_list.set(rectangle_property_name, value)
 			elif property_name.find("/FontColor") > 0:
-				_label.add_color_override("font_color", value)
+				_button.add_color_override("font_color", value)
 
 func _animate_state(root_key: String) -> void:
 	var override_key = get_property(root_key + "/UseSameStyleOf")
@@ -251,9 +279,9 @@ func _animate_state(root_key: String) -> void:
 		animate_params(params_to_animate)
 
 func refresh(state: int, ignore_if_focused := true) -> void:
-	if _is_focused and ignore_if_focused:
+	if _button.has_focus() and ignore_if_focused:
 		state = STATE.FOCUSED
-	elif _is_toggable and _is_pressed:
+	elif _button.toggle_mode and _button.pressed:
 		state = STATE.PRESSED
 
 	if not enabled:
@@ -267,18 +295,20 @@ func _set(property: String, value) -> void:
 
 	._set(property, value)
 
-	if LABEL_PROPERTIES.find(property) >= 0:
-		if property == BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name:
-			property = "text"
-		elif property == BUTTON_BASE_PROPERTIES.BUTTON_FONT.name:
-			if value:
-				_label.add_font_override("font", value)
+	if property.find("Button/") == 0:
+		if property == BUTTON_BASE_PROPERTIES.BUTTON_CONTENT_MARGIN.name:
+			var style: StyleBoxEmpty = _button.get_stylebox("normal")
+			
+			style.content_margin_bottom = value
+			style.content_margin_top = value
+			style.content_margin_left = value
+			style.content_margin_right = value
 
-			return
-
-		_label.set(property.replace("Button/", "").to_lower(), value)
+			_on_resize_me()
+		else:
+			_button.set(property.replace("Button/", "").to_lower(), value)
 	elif property.find("FontColor") > 0:
-		_label.add_color_override("font_color", value)
+		_button.add_color_override("font_color", value)
 	elif property == "Rectangle/Scale":
 		rect_scale = value
 
@@ -289,7 +319,7 @@ func _set(property: String, value) -> void:
 
 func get(property):
 	if property.find("FontColor") >= 0:
-		var color = _label.get_color("font_color")
+		var color = _button.get_color("font_color")
 
 		return color
 	elif property.find("/Scale") > 0:
@@ -299,6 +329,9 @@ func get(property):
 
 func set_label(label: String) -> void:
 	set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, label)
+
+func set_icon(icon: Texture) -> void:
+	set(BUTTON_BASE_PROPERTIES.BUTTON_ICON.name, icon)
 
 func _on_mouse_entered():
 	refresh(STATE.HOVERED)
@@ -311,25 +344,23 @@ func _on_mouse_down():
 
 func _on_focus_entered():
 	refresh(STATE.FOCUSED)
-	_is_focused = true
 
 func _on_focus_exited():
-	_is_focused = false
-	
 	refresh(STATE.NORMAL)
 
 func _on_pressed() -> void:
-	_is_pressed = not _is_pressed
+	refresh(STATE.PRESSED)
 
-	if _is_toggable:
-		refresh(STATE.PRESSED)
+	emit_signal("pressed")
 
 func _set_test_state(new_state) -> void:
 	if Engine.editor_hint:
 		_test_state = new_state
 		_animate_state(STATES[new_state])
 
-func _on_label_rect_changed() -> void:
-	if _label.rect_size.y > rect_size.y:
-		rect_min_size.y = _label.rect_size.y
+func _on_resize_me() -> void:
+	_button.rect_size = rect_size
 
+	if rect_size < _button.rect_size:
+		rect_size = _button.rect_size
+		rect_min_size = _button.rect_size

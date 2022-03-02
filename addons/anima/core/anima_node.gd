@@ -191,6 +191,9 @@ func play_backwards_with_speed(speed: float) -> void:
 	_play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
 
 func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
+	if not is_inside_tree():
+		return
+
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
