@@ -21,7 +21,6 @@ const STATES := {
 }
 
 export (STATE) var _test_state = STATE.NORMAL setget _set_test_state
-export (bool) var enabled := true
 
 const BUTTON_BASE_PROPERTIES := {
 	# Button
@@ -284,7 +283,7 @@ func refresh(state: int, ignore_if_focused := true) -> void:
 	elif _button.toggle_mode and _button.pressed:
 		state = STATE.PRESSED
 
-	if not enabled:
+	if _button.disabled:
 		state = STATE.NORMAL
 
 	_animate_state(STATES[state])
@@ -363,4 +362,3 @@ func _on_resize_me() -> void:
 
 	if rect_size < _button.rect_size:
 		rect_size = _button.rect_size
-		rect_min_size = _button.rect_size

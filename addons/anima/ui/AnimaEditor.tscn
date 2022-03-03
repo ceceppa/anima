@@ -38,6 +38,7 @@ text = "Animation"
 
 [node name="FramesEditor" parent="VBoxContainer" instance=ExtResource( 2 )]
 visible = false
+Rectangle/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 
 [node name="NodesWindow" parent="." instance=ExtResource( 1 )]
 
@@ -60,5 +61,6 @@ window_title = "Select the node and property"
 nodes_list_visible = true
 
 [connection signal="select_node" from="VBoxContainer/FramesEditor" to="." method="_on_FramesEditor_select_node"]
+[connection signal="visual_builder_updated" from="VBoxContainer/FramesEditor" to="." method="_on_FramesEditor_visual_builder_updated"]
 [connection signal="node_selected" from="NodesWindow" to="." method="_on_NodesPopup_node_selected"]
 [connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]

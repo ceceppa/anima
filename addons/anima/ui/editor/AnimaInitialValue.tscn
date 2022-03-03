@@ -15,9 +15,9 @@ __meta__ = {
 
 [node name="AnimaInitialValue" type="Control"]
 margin_right = 983.0
-margin_bottom = 227.0
-rect_min_size = Vector2( 0, 227 )
-rect_pivot_offset = Vector2( 491.5, 24.5 )
+margin_bottom = 64.0
+rect_min_size = Vector2( 0, 64 )
+rect_pivot_offset = Vector2( 491.5, 32 )
 rect_clip_content = true
 size_flags_horizontal = 3
 script = ExtResource( 3 )
@@ -124,8 +124,8 @@ ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 64.0
-rect_pivot_offset = Vector2( 491.5, 97.5 )
+margin_top = 32.0
+rect_pivot_offset = Vector2( 491.5, 83.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -140,7 +140,7 @@ __meta__ = {
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 971.0
-margin_bottom = 179.0
+margin_bottom = 155.0
 rect_pivot_offset = Vector2( -528, -77 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -178,7 +178,7 @@ margin_top = 37.0
 margin_right = 959.0
 margin_bottom = 82.0
 rect_min_size = Vector2( 0, 45 )
-rect_pivot_offset = Vector2( 417, 24.5 )
+rect_pivot_offset = Vector2( 417, 22.5 )
 size_flags_vertical = 1
 type = 4
 can_clear_custom_value = false
@@ -186,14 +186,14 @@ can_clear_custom_value = false
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 margin_top = 94.0
 margin_right = 959.0
-margin_bottom = 167.0
+margin_bottom = 143.0
 alignment = 1
 
 [node name="Delete" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 margin_left = 413.0
 margin_right = 545.0
-margin_bottom = 73.0
-rect_min_size = Vector2( 132, 73 )
+margin_bottom = 49.0
+rect_min_size = Vector2( 132, 49 )
 rect_pivot_offset = Vector2( 66, 36.5 )
 hint_tooltip = "Remove the frame"
 mouse_default_cursor_shape = 2
@@ -307,4 +307,5 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
+[connection signal="vale_updated" from="MarginContainer/VBoxContainer/GridContainer/PropertyValue" to="." method="_on_PropertyValue_vale_updated"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Delete" to="." method="_on_Delete_pressed"]

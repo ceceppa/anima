@@ -22,7 +22,9 @@ export (TYPES) var type = TYPES.INT setget set_type
 export (bool) var can_clear_custom_value := true setget set_can_clear_custom_value
 export (bool) var show_relative_selector := true setget set_show_relative_selector
 export (bool) var can_edit_value := true setget set_can_edit_value
+export (bool) var show_confirm_button := false setget set_show_confirm_button
 export (bool) var borderless := false setget set_borderless
+export (bool) var disabled := false setget set_disabled
 
 const MIN_SIZE := 30.0
 
@@ -43,6 +45,8 @@ func _ready():
 	set_type(type)
 	set_show_relative_selector(show_relative_selector)
 	set_can_clear_custom_value(can_clear_custom_value)
+	set_disabled(disabled)
+	set_show_confirm_button(show_confirm_button)
 
 func set_type(the_type: int) -> void:
 	type = the_type
@@ -243,17 +247,19 @@ func set_relative_value(value: String) -> void:
 	linked_node.text = value
 
 func get_value():
-	if _input_visible == null or $CurrentValue.modulate.a > 0:
+	if _input_visible == null or _current_value_button.modulate.a > 0:
 		return null
 
 	if _input_visible is LineEdit:
 		if _input_visible.has_method('get_value'):
 			return _input_visible.get_value()
 		
-		if _input_visible.text.find(':') < 0:
-			return float(_input_visible.text)
+		var text: String = _input_visible.text
 
-		return _input_visible.text
+		if type != TYPE_STRING:
+			return float(text)
+
+		return text
 	elif _input_visible.name == 'Vector2':
 		var x: LineEdit = _input_visible.find_node('x')
 		var y: LineEdit = _input_visible.find_node('y')
@@ -321,9 +327,27 @@ func set_borderless(is_borderless: bool) -> void:
 
 	set_label(label)
 
+func set_disabled(is_disabled: bool) -> void:
+	disabled = is_disabled
+
+	$CurrentValue.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
+	$CurrentValueBorderless.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
+
+func set_show_confirm_button(show: bool) -> void:
+	show_confirm_button = show
+	$CustomValue/ConfirmButton.visible = show
+
 func _on_CurrentValue_item_rect_changed():
 	if $CurrentValue.rect_size.y > rect_size.y:
 		rect_min_size.y = $CurrentValue.rect_size.y
 
 func _on_PropertyFromTo_item_rect_changed():
 	$CustomValue.rect_size.x = rect_size.x
+
+func _on_ConfirmButton_pressed():
+	var label = get_value()
+
+	if label:
+		_current_value_button.set_label(label)
+
+	_on_ClearButton_pressed()
