@@ -6,22 +6,50 @@ const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaInitialValue.t
 
 signal frame_deleted
 signal select_node
+signal frame_updated
 
 export (bool) var is_initial_frame := false setget set_is_initial_frame
+export (bool) var animate_entrance_exit := true
 
 onready var _animations_container = find_node("AnimationsContainer")
+onready var _frame_name = find_node("FrameName")
+onready var _duration = find_node("Duration")
 
 var _final_width: float = 460
 
 func _ready():
-	var frame_name = find_node("FrameName")
+	_frame_name.set_initial_value("Frame01")
+	_frame_name.set_placeholder("Frame01")
 
-	frame_name.set_initial_value("Frame01")
-	frame_name.set_placeholder("Frame01")
+	if animate_entrance_exit:
+		_animate_me()
+	else:
+		rect_min_size.x = _final_width
 
-	_animate_me()
+func get_data() -> Dictionary:
+	var data := {
+		name = _frame_name.get_value(),
+		duration = _duration.get_value(),
+		type = "frame",
+		data = []
+	}
 
-func add_animation_for(node: Node, path: String, property, property_value) -> void:
+	for child in _animations_container.get_children():
+		data.data.push_back(child.get_data())
+
+	return data
+
+func set_name(name: String) -> void:
+	_frame_name.set_label(name)
+
+func set_duration(duration: float) -> void:
+	_duration.set_value(duration)
+
+func clear() -> void:
+	for child in _animations_container.get_children():
+		child.queue_free()
+
+func add_animation_for(node: Node, path: String, property, property_value) -> Node:
 	var animation_item: Node
 
 	if is_initial_frame:
@@ -30,7 +58,10 @@ func add_animation_for(node: Node, path: String, property, property_value) -> vo
 	else:
 		animation_item = ANIMATION_DATA.instance()
 
+	animation_item.connect("updated", self, "_on_animation_data_updated")
 	_animations_container.add_child(animation_item)
+
+	return animation_item
 
 func _animate_me(backwards := false) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
@@ -52,7 +83,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 			})
 	)
 	anima.with(
-		Anima.Node($Rectangle).anima_fade_in().anima_initial_value(0)
+		Anima.Node(find_node("ContentContainer")).anima_fade_in().anima_initial_value(0)
 	)
 	anima.with(
 		Anima.Group(find_node("ContentContainer"), 0.05) \
@@ -115,11 +146,13 @@ func set_is_initial_frame(is_initial: bool) -> void:
 		frame_name.label = "Initial Values"
 
 	remove.visible = not is_initial
-	find_node("PlayContainer").visible = not is_initial
+	find_node("PlayButton").visible = not is_initial
 	find_node("DurationContainer").visible = not is_initial
+	frame_name.disabled = is_initial
 
 func _on_Delete_pressed():
-	yield(_animate_me(true), "completed")
+	if animate_entrance_exit:
+		yield(_animate_me(true), "completed")
 
 	queue_free()
 	emit_signal("frame_deleted")
@@ -127,26 +160,6 @@ func _on_Delete_pressed():
 func _on_AddAnimation_pressed():
 	emit_signal("select_node")
 
-#	print("here")
-#	var add_button: AnimaButton = find_node("AddAnimation")
-#	var position := add_button.rect_global_position
-#	var rectangle := AnimaRectangle.new()
-#
-#	rectangle.rect_position = position
-#
-#	add_child(rectangle)
-#	add_button.modulate.a = 0
-#
-#	var anima: AnimaNode = Anima.begin_single_shot(self, "addAnimation")
-#	anima.set_default_duration(0.3)
-#
-#	anima.then(
-#		Anima.Node(rectangle) \
-#			.anima_position(Vector2(10, 100))
-#	)
-#	anima.with(
-#		Anima.Node(rectangle) \
-#			.anima_size(Vector2(340, 400))
-#	)
-#
-#	anima.play()
+func _on_animation_data_updated() -> void:
+	emit_signal("frame_updated")
+

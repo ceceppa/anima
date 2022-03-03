@@ -77,70 +77,35 @@ __meta__ = {
 "__anima_visual_node": true
 }
 __anima_visual_editor_data = {
-"animations": [ {
-"name": "default",
-"visibility_strategy": 0
+"0": {
+"frames": {
+0: {
+"data": [ {
+"node_path": ".",
+"property_name": "opacity",
+"property_type": 3,
+"type": "initial",
+"value": 0.0
 } ],
-"connection_list": [ {
-"from": "AnimaNode26175",
-"from_port": 0,
-"to": "Animation41344",
-"to_port": 0
+"duration": null,
+"name": null,
+"type": "frame"
+},
+1: {
+"data": [ {
+"node_path": ".",
+"property_name": "opacity",
+"property_type": 3,
+"type": "initial",
+"value": 0.0
 } ],
-"data_by_animation": {
-0: [ {
-"data": {
-"animation_data": {
-"animate_as": 0,
-"property": {
-"easing": 27,
-"name": "position:x",
-"pivot": [ 0, -1 ],
-"relative": false,
-"type": 3
+"duration": null,
+"name": null,
+"type": "frame"
+}
 },
-"type": 1
-},
-"delay": 0.0,
-"duration": 0.7
-},
-"node_path": "Button",
-"start_time": 0.0
-} ]
-},
-"events_slots": [  ],
-"nodes": [ {
-"data": {
-},
-"id": "AnimaNode",
-"name": "AnimaNode26175",
-"node_path": null,
-"position": Vector2( 1540, 20 ),
-"title": "AnimaNode"
-}, {
-"data": {
-"animation_data": {
-"animate_as": 0,
-"property": {
-"easing": 27,
-"name": "position:x",
-"pivot": [ 0, -1 ],
-"relative": false,
-"type": 3
-},
-"type": 1
-},
-"delay": 0.0,
-"duration": 0.7
-},
-"id": "Animation",
-"name": "Animation41344",
-"node_path": NodePath("Button"),
-"position": Vector2( 1953, -180 ),
-"title": "./Button"
-} ],
-"scroll_offset": Vector2( 0, 0 ),
-"zoom": 1.0
+"name": "animation"
+}
 }
 
 [node name="Control" type="Control" parent="."]
@@ -156,6 +121,9 @@ margin_right = 176.24
 margin_bottom = -36.12
 custom_styles/normal = SubResource( 8 )
 icon = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button3" type="Button" parent="Control"]
 margin_left = -1.0
@@ -178,6 +146,9 @@ margin_top = 34.0
 margin_right = 967.0
 margin_bottom = 54.0
 text = "Do it"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Timer" type="Timer" parent="."]
 
@@ -188,6 +159,9 @@ margin_right = 195.0
 margin_bottom = 263.0
 rect_pivot_offset = Vector2( 122.5, 73 )
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="AnimaAccordion" type="Control" parent="."]
 margin_left = 90.0
@@ -301,7 +275,6 @@ ButtonFocused/Shadow/Offset = Vector2( -1, -1 )
 ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Content" type="VBoxContainer" parent="AnimaAccordion"]
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
