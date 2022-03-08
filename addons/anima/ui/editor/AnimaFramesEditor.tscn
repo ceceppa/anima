@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/anima/ui/editor/AnimaFramesEditor.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/ui/editor/AnimaFrameAnimation.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimation.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/ui/editor/AnimaAddFrame.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=4]
 
@@ -80,26 +80,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="AnimaAnimation" parent="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource( 2 )]
+anchor_bottom = 0.0
+margin_right = 360.0
+margin_bottom = 576.0
+
 [node name="FramesContainer" type="HBoxContainer" parent="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer"]
-margin_right = 460.0
+margin_left = 384.0
+margin_right = 384.0
 margin_bottom = 576.0
 custom_constants/separation = 12
 
-[node name="InitialFrame" parent="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/FramesContainer" instance=ExtResource( 2 )]
-anchor_bottom = 0.0
-margin_right = 460.0
-margin_bottom = 576.0
-rect_pivot_offset = Vector2( 230, 288 )
-is_initial_frame = true
-
 [node name="AnimaAddFrame" parent="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource( 3 )]
 anchor_bottom = 0.0
-margin_left = 484.0
-margin_right = 844.0
+margin_left = 408.0
+margin_right = 768.0
 margin_bottom = 576.0
 rect_pivot_offset = Vector2( 180, 288 )
 
-[connection signal="frame_updated" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/FramesContainer/InitialFrame" to="." method="_on_InitialFrame_frame_updated"]
-[connection signal="select_node" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/FramesContainer/InitialFrame" to="." method="_on_InitialFrame_select_node"]
+[connection signal="animation_updated" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
 [connection signal="add_delay" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_delay"]
 [connection signal="add_frame" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_frame"]

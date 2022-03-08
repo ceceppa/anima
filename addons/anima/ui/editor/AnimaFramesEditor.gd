@@ -10,9 +10,10 @@ signal visual_builder_updated(data)
 export (bool) var disable_animations := false
 
 onready var _frames_container = find_node("FramesContainer")
-onready var _initial_frame = find_node("InitialFrame")
+onready var _anima_animation = find_node("AnimaAnimation")
 
 var _destination_frame: Control
+var _is_restoring_data := false
 
 func _ready():
 	# I have no idea why if I add the FRAME_ANIMATION via the Editor the +
@@ -29,14 +30,16 @@ func add_animation_for(node: Node, node_path: String, property_name, property_ty
 
 	return r
 
-func clear() -> void:
-	for index in range(1, _frames_container.get_child_count()):
-		var child = _frames_container.get_child(index)
+func restore_animation_data(data: Dictionary) -> void:
+	if _anima_animation == null:
+		_anima_animation = find_node("AnimaAnimation")
 
+	_anima_animation.restore_data(data)
+
+func clear() -> void:
+	for child in _frames_container.get_children():
 		child.animate_entrance_exit = false
 		child.queue_free()
-
-	_initial_frame.clear()
 
 func select_frame(index: int) -> void:
 	_destination_frame = _frames_container.get_child(index)
@@ -46,6 +49,9 @@ func set_frame_name(name: String) -> void:
 
 func set_frame_duration(duration: float) -> void:
 	_destination_frame.set_duration(duration)
+
+func set_is_restoring_data(is_restoring: bool) -> void:
+	_is_restoring_data = is_restoring
 
 func _add_component(node: Node) -> void:
 	node.connect("frame_updated", self, "_emit_updated")
@@ -68,30 +74,28 @@ func _on_AnimaAddFrame_add_delay():
 
 	_emit_updated()
 
-func _on_InitialFrame_select_node():
-	_destination_frame = find_node("InitialFrame")
-
-	emit_signal("select_node")
-
 func _on_frame_select_node(node: Node) -> void:
 	_destination_frame = node
 
 	emit_signal("select_node")
 
 func _emit_updated() -> void:
+	if _is_restoring_data or _anima_animation == null:
+		return
+
 	var data := {
 		"0": {
-			name = "animation",
+			animation = _anima_animation.get_data(),
 			frames = {}
 		}
 	}
 
 	for index in _frames_container.get_child_count():
-		var child: Control = _frames_container.get_child(0)
+		var child: Control = _frames_container.get_child(index)
 
 		data["0"].frames[index] = child.get_data()
 
 	emit_signal("visual_builder_updated", data)
 
-func _on_InitialFrame_frame_updated():
+func _on_AnimaAnimation_animation_updated():
 	_emit_updated()

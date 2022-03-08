@@ -79,7 +79,13 @@ const BUTTON_BASE_PROPERTIES := {
 		type = TYPE_INT,
 		default = 12,
 	},
-
+	BUTTON_GROUP = {
+		name = "Button/Group",
+		type = TYPE_OBJECT,
+		hint = PROPERTY_HINT_RESOURCE_TYPE,
+		hint_string = "ButtonGroup",
+		default = null
+	},
 
 	# Normal
 	NORMAL_FILL_COLOR = {
@@ -157,7 +163,6 @@ const BUTTON_BASE_PROPERTIES := {
 }
 
 var _all_properties := BUTTON_BASE_PROPERTIES
-var _is_toggable := false
 var _button := Button.new()
 
 func _init():
@@ -205,8 +210,7 @@ func _ready():
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name))
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name))
 	_set(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name))
-
-	_is_toggable = get_property(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name)
+	_set(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name))
 
 	_copy_properties("Normal")
 	
@@ -280,7 +284,8 @@ func _animate_state(root_key: String) -> void:
 func refresh(state: int, ignore_if_focused := true) -> void:
 	if _button.has_focus() and ignore_if_focused:
 		state = STATE.FOCUSED
-	elif _button.toggle_mode and _button.pressed:
+
+	if _button.toggle_mode and _button.pressed:
 		state = STATE.PRESSED
 
 	if _button.disabled:
@@ -305,7 +310,8 @@ func _set(property: String, value) -> void:
 
 			_on_resize_me()
 		else:
-			_button.set(property.replace("Button/", "").to_lower(), value)
+			var p: String = property.replace("Button/", "").capitalize().replace(" ", "_").to_lower()
+			_button.set(p.replace(" ", "_").to_lower(), value)
 	elif property.find("FontColor") > 0:
 		_button.add_color_override("font_color", value)
 	elif property == "Rectangle/Scale":
@@ -328,6 +334,9 @@ func get(property):
 
 func set_label(label: String) -> void:
 	set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, label)
+
+func get_label() -> String:
+	return get(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name)
 
 func set_icon(icon: Texture) -> void:
 	set(BUTTON_BASE_PROPERTIES.BUTTON_ICON.name, icon)

@@ -97,26 +97,32 @@ func _maybe_show_graph_edit() -> bool:
 	return is_graph_edit_visible
 
 func _restore_data(data: Dictionary) -> void:
+	if not data.has("0"):
+		return
+
 	var animation = data["0"]
 	
 	_frames_editor.clear()
+	_frames_editor.set_is_restoring_data(true)
+
+	_frames_editor.restore_animation_data(animation.animation)
 
 	for frame_key in animation.frames:
 		var frame_data = animation.frames[frame_key]
 		var index: int = int(frame_key)
 
-		if index > 0:
-			if frame_data.type == "frame":
-				_frames_editor._on_AnimaAddFrame_add_frame()
-			elif frame_data.type == "delay":
-				_frames_editor._on_AnimaAddFrame_add_delay()
-			else:
-				pass
+		if frame_data.type == "frame":
+			_frames_editor._on_AnimaAddFrame_add_frame()
+		elif frame_data.type == "delay":
+			_frames_editor._on_AnimaAddFrame_add_delay()
+		else:
+			pass
 
 		_frames_editor.select_frame(index)
 
-		if frame_data.name:
-			_frames_editor.set_frame_name(frame_data.name)
+		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
+
+		_frames_editor.set_frame_name(frame_name)
 
 		if frame_data.duration:
 			_frames_editor.set_frame_duration(frame_data.duration)
@@ -127,6 +133,8 @@ func _restore_data(data: Dictionary) -> void:
 
 				var item: Node = _frames_editor.add_animation_for(node, value.node_path, value.property_name, value.property_type)
 				item.set_value(value.value)
+
+	_frames_editor.set_is_restoring_data(false)
 
 func _on_GraphEdit_hide_nodes_list():
 	_nodes_window.hide()

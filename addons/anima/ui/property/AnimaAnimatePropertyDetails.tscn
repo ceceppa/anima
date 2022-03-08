@@ -29,16 +29,16 @@ __meta__ = {
 
 [node name="PropertyContainer" type="GridContainer" parent="."]
 margin_right = 1024.0
-margin_bottom = 26.0
+margin_bottom = 14.0
 columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PropertyLabel" type="Label" parent="PropertyContainer"]
-margin_top = 3.0
+margin_top = 6.0
 margin_right = 120.0
-margin_bottom = 23.0
+margin_bottom = 8.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 2 )
 text = "Property:"
@@ -48,9 +48,9 @@ __meta__ = {
 }
 
 [node name="PropertyButton" type="Button" parent="PropertyContainer"]
-margin_left = 124.0
+margin_left = 128.0
 margin_right = 1024.0
-margin_bottom = 26.0
+margin_bottom = 14.0
 hint_tooltip = "Click here to select the property to animate"
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 2 )
@@ -60,9 +60,9 @@ __meta__ = {
 }
 
 [node name="Label1" type="Label" parent="."]
-margin_top = 30.0
+margin_top = 22.0
 margin_right = 1024.0
-margin_bottom = 50.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 1 )
@@ -73,9 +73,9 @@ __meta__ = {
 }
 
 [node name="AnimateGrid" type="GridContainer" parent="."]
-margin_top = 54.0
+margin_top = 32.0
 margin_right = 1024.0
-margin_bottom = 232.0
+margin_bottom = 319.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -83,12 +83,11 @@ __meta__ = {
 }
 
 [node name="From" type="Label" parent="AnimateGrid"]
-margin_top = 6.0
+margin_top = 12.0
 margin_right = 120.0
-margin_bottom = 26.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
-custom_fonts/font = SubResource( 1 )
 text = "From:"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -96,15 +95,15 @@ __meta__ = {
 }
 
 [node name="FromValue" parent="AnimateGrid" instance=ExtResource( 4 )]
-anchor_right = 0.0
-margin_left = 124.0
+margin_left = 128.0
 margin_right = 1024.0
+margin_bottom = 49.0
 type = 4
 
 [node name="To" type="Label" parent="AnimateGrid"]
-margin_top = 42.0
+margin_top = 80.0
 margin_right = 120.0
-margin_bottom = 62.0
+margin_bottom = 82.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 custom_fonts/font = SubResource( 1 )
@@ -115,17 +114,16 @@ __meta__ = {
 }
 
 [node name="ToValue" parent="AnimateGrid" instance=ExtResource( 4 )]
-anchor_right = 0.0
-margin_left = 124.0
-margin_top = 36.0
+margin_left = 128.0
+margin_top = 57.0
 margin_right = 1024.0
-margin_bottom = 68.0
+margin_bottom = 106.0
 type = 4
 
 [node name="Initial" type="Label" parent="AnimateGrid"]
-margin_top = 78.0
+margin_top = 137.0
 margin_right = 120.0
-margin_bottom = 98.0
+margin_bottom = 139.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 custom_fonts/font = SubResource( 1 )
@@ -136,18 +134,17 @@ __meta__ = {
 }
 
 [node name="InitialValue" parent="AnimateGrid" instance=ExtResource( 4 )]
-anchor_right = 0.0
-margin_left = 124.0
-margin_top = 72.0
+margin_left = 128.0
+margin_top = 114.0
 margin_right = 1024.0
-margin_bottom = 104.0
+margin_bottom = 163.0
 label = "ignore"
 type = 4
 
 [node name="Relative" type="Label" parent="AnimateGrid"]
-margin_top = 112.0
+margin_top = 194.0
 margin_right = 120.0
-margin_bottom = 132.0
+margin_bottom = 196.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "Relative"
@@ -157,10 +154,10 @@ __meta__ = {
 }
 
 [node name="RelativeCheck" type="CheckBox" parent="AnimateGrid"]
-margin_left = 124.0
-margin_top = 108.0
+margin_left = 128.0
+margin_top = 171.0
 margin_right = 1024.0
-margin_bottom = 136.0
+margin_bottom = 219.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 custom_fonts/font = SubResource( 1 )
 text = "Relative value"
@@ -169,9 +166,9 @@ __meta__ = {
 }
 
 [node name="Pivot" type="Label" parent="AnimateGrid"]
-margin_top = 149.0
+margin_top = 256.0
 margin_right = 120.0
-margin_bottom = 169.0
+margin_bottom = 258.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "Pivot"
@@ -182,15 +179,16 @@ __meta__ = {
 
 [node name="PivotButton" parent="AnimateGrid" instance=ExtResource( 3 )]
 anchor_right = 0.0
-margin_left = 124.0
-margin_top = 140.0
+margin_left = 128.0
+margin_top = 227.0
 margin_right = 1024.0
-margin_bottom = 176.0
+margin_bottom = 287.0
+rect_min_size = Vector2( 0, 60 )
 
 [node name="Label2" type="Label" parent="."]
-margin_top = 236.0
+margin_top = 327.0
 margin_right = 1024.0
-margin_bottom = 256.0
+margin_bottom = 329.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 1 )
@@ -201,9 +199,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="."]
-margin_top = 260.0
+margin_top = 337.0
 margin_right = 1024.0
-margin_bottom = 286.0
+margin_bottom = 351.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -211,9 +209,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="Label" parent="Easing"]
-margin_top = 3.0
+margin_top = 6.0
 margin_right = 160.0
-margin_bottom = 23.0
+margin_bottom = 8.0
 rect_min_size = Vector2( 160, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "Easing"
@@ -223,9 +221,9 @@ __meta__ = {
 }
 
 [node name="EasingButton" type="Button" parent="Easing"]
-margin_left = 164.0
+margin_left = 168.0
 margin_right = 1024.0
-margin_bottom = 26.0
+margin_bottom = 14.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
 text = "Linear"
