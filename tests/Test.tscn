@@ -78,33 +78,14 @@ __meta__ = {
 }
 __anima_visual_editor_data = {
 "0": {
+"animation": {
+"default_duration": 0.3,
+"name": 0.0,
+"visibility_strategy": 2
+},
 "frames": {
-0: {
-"data": [ {
-"node_path": ".",
-"property_name": "opacity",
-"property_type": 3,
-"type": "initial",
-"value": 0.0
-} ],
-"duration": null,
-"name": null,
-"type": "frame"
-},
-1: {
-"data": [ {
-"node_path": ".",
-"property_name": "opacity",
-"property_type": 3,
-"type": "initial",
-"value": 0.0
-} ],
-"duration": null,
-"name": null,
-"type": "frame"
+0: null
 }
-},
-"name": "animation"
 }
 }
 
@@ -113,6 +94,9 @@ margin_left = 183.0
 margin_top = 374.0
 margin_right = 223.0
 margin_bottom = 414.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button2" type="Button" parent="Control"]
 anchor_right = 2.869
@@ -139,6 +123,9 @@ margin_left = -4.0
 margin_top = 126.0
 margin_right = 9.0
 margin_bottom = 146.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button2" type="Button" parent="."]
 margin_left = 835.0
@@ -332,6 +319,7 @@ Button/ToggleMode = false
 Button/ShortcutInTooltip = true
 Button/Pressed = false
 Button/ContentMargin = 12
+Button/Group = null
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""

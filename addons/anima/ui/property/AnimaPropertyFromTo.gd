@@ -1,8 +1,9 @@
 tool
 extends Control
 
-signal vale_updated
+signal value_updated
 signal select_relative_property
+signal confirmed
 
 enum TYPES {
 	INT = TYPE_INT,
@@ -12,7 +13,8 @@ enum TYPES {
 	STRING = TYPE_STRING
 }
 
-onready var _current_value_button: AnimaButton
+onready var _current_value: AnimaButton = find_node("CurrentValue")
+onready var _current_value_borderless: AnimaButton = find_node("CurrentValueBorderless")
 onready var _custom_value: HBoxContainer = find_node('CustomValue')
 onready var _delete_button: Button = find_node('DeleteButton')
 onready var _relative_selector: AnimaButton = find_node('RelativeSelectorButton')
@@ -30,6 +32,7 @@ const MIN_SIZE := 30.0
 
 var _input_visible: Control
 var _relative_source: Button
+var _current_value_button_visible: AnimaButton
 
 func _ready():
 	if _input_visible == null:
@@ -109,13 +112,13 @@ func _animate_custom_value(mode: int) -> void:
 	anima.set_default_duration(0.3)
 
 	anima.then(
-		Anima.Node(_current_value_button) \
+		Anima.Node(_current_value_button_visible) \
 			.anima_scale(Vector2(0.5, 0.5)) \
 			.anima_from(Vector2.ONE) \
 			.anima_easing(Anima.EASING.EASE_OUT_BACK)
 	)
 	anima.with(
-		Anima.Node(_current_value_button).anima_fade_out()
+		Anima.Node(_current_value_button_visible).anima_fade_out()
 	)
 	anima.with(
 		Anima.Node(_custom_value) \
@@ -247,7 +250,7 @@ func set_relative_value(value: String) -> void:
 	linked_node.text = value
 
 func get_value():
-	if _input_visible == null or _current_value_button.modulate.a > 0:
+	if _input_visible == null or _current_value_button_visible.modulate.a > 0:
 		return null
 
 	if _input_visible is LineEdit:
@@ -280,13 +283,19 @@ func get_value():
 		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
 func set_label(new_label: String) -> void:
+	_current_value = find_node("CurrentValue")
+	_current_value_borderless = find_node("CurrentValueBorderless")
+
 	if borderless:
-		_current_value_button = get_node("CurrentValueBorderless")
+		_current_value_button_visible = _current_value_borderless
 	else:
-		_current_value_button = get_node('CurrentValue')
+		_current_value_button_visible = _current_value
 
 	label = new_label
-	_current_value_button.set("Button/Label", label)
+	_current_value_button_visible.set_label(label)
+
+func get_label() -> String:
+	return _current_value_button_visible.get_label()
 
 func set_show_relative_selector(relative_button: bool) -> void:
 	show_relative_selector = relative_button
@@ -303,13 +312,13 @@ func _on_CurrentValue_pressed():
 func _on_ClearButton_pressed():
 	_animate_custom_value(AnimaTween.PLAY_MODE.BACKWARDS)
 
-	emit_signal("vale_updated")
+	emit_signal("value_updated")
 
 func _on_input_changed() -> void:
-	emit_signal('vale_updated')
+	emit_signal('value_updated')
 
 func _on_FreeText_text_changed(_new_text):
-	emit_signal("vale_updated")
+	emit_signal("value_updated")
 
 func _handle_custom_value_visibility(visible: bool) -> void:
 	_custom_value.visible = visible
@@ -322,24 +331,24 @@ func _on_RelativeSelectorButton_pressed(source: Button):
 func set_borderless(is_borderless: bool) -> void:
 	borderless = is_borderless
 
-	$CurrentValue.visible = !is_borderless
-	$CurrentValueBorderless.visible = is_borderless
+	_current_value.visible = !is_borderless
+	_current_value_borderless.visible = is_borderless
 
 	set_label(label)
 
 func set_disabled(is_disabled: bool) -> void:
 	disabled = is_disabled
 
-	$CurrentValue.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
-	$CurrentValueBorderless.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
+	_current_value.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
+	_current_value_borderless.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
 
 func set_show_confirm_button(show: bool) -> void:
 	show_confirm_button = show
 	$CustomValue/ConfirmButton.visible = show
 
 func _on_CurrentValue_item_rect_changed():
-	if $CurrentValue.rect_size.y > rect_size.y:
-		rect_min_size.y = $CurrentValue.rect_size.y
+	if _current_value.rect_size.y > rect_size.y:
+		rect_min_size.y = _current_value.rect_size.y
 
 func _on_PropertyFromTo_item_rect_changed():
 	$CustomValue.rect_size.x = rect_size.x
@@ -348,6 +357,8 @@ func _on_ConfirmButton_pressed():
 	var label = get_value()
 
 	if label:
-		_current_value_button.set_label(label)
+		_current_value_button_visible.set_label(label)
 
 	_on_ClearButton_pressed()
+
+	emit_signal("confirmed")

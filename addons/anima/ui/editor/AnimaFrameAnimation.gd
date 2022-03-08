@@ -1,14 +1,12 @@
 tool
 extends Control
 
-const INITIAL_VALUE = preload("res://addons/anima/ui/editor/AnimaInitialValue.tscn")
-const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaInitialValue.tscn")
+const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationData.tscn")
 
 signal frame_deleted
 signal select_node
 signal frame_updated
 
-export (bool) var is_initial_frame := false setget set_is_initial_frame
 export (bool) var animate_entrance_exit := true
 
 onready var _animations_container = find_node("AnimationsContainer")
@@ -18,9 +16,6 @@ onready var _duration = find_node("Duration")
 var _final_width: float = 460
 
 func _ready():
-	_frame_name.set_initial_value("Frame01")
-	_frame_name.set_placeholder("Frame01")
-
 	if animate_entrance_exit:
 		_animate_me()
 	else:
@@ -28,7 +23,7 @@ func _ready():
 
 func get_data() -> Dictionary:
 	var data := {
-		name = _frame_name.get_value(),
+		name = _frame_name.get_label(),
 		duration = _duration.get_value(),
 		type = "frame",
 		data = []
@@ -41,6 +36,8 @@ func get_data() -> Dictionary:
 
 func set_name(name: String) -> void:
 	_frame_name.set_label(name)
+	_frame_name.set_initial_value("Frame01")
+	_frame_name.set_placeholder("Frame01")
 
 func set_duration(duration: float) -> void:
 	_duration.set_value(duration)
@@ -50,13 +47,7 @@ func clear() -> void:
 		child.queue_free()
 
 func add_animation_for(node: Node, path: String, property, property_value) -> Node:
-	var animation_item: Node
-
-	if is_initial_frame:
-		animation_item = INITIAL_VALUE.instance()
-		animation_item.add_for(node, path, property, property_value)
-	else:
-		animation_item = ANIMATION_DATA.instance()
+	var animation_item: Node = ANIMATION_DATA.instance()
 
 	animation_item.connect("updated", self, "_on_animation_data_updated")
 	_animations_container.add_child(animation_item)
@@ -132,24 +123,6 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	return anima
 
-func set_is_initial_frame(is_initial: bool) -> void:
-	is_initial_frame = is_initial
-
-	var frame_name = find_node("FrameName")
-	var remove = find_node("RemoveWrapper")
-
-	frame_name.set_initial_value("Initial Values")
-	frame_name.can_edit_value = not is_initial
-	frame_name.can_clear_custom_value = not is_initial
-
-	if is_initial:
-		frame_name.label = "Initial Values"
-
-	remove.visible = not is_initial
-	find_node("PlayButton").visible = not is_initial
-	find_node("DurationContainer").visible = not is_initial
-	frame_name.disabled = is_initial
-
 func _on_Delete_pressed():
 	if animate_entrance_exit:
 		yield(_animate_me(true), "completed")
@@ -163,3 +136,5 @@ func _on_AddAnimation_pressed():
 func _on_animation_data_updated() -> void:
 	emit_signal("frame_updated")
 
+func _on_FrameName_confirmed():
+	emit_signal("frame_updated")

@@ -86,31 +86,25 @@ func set_index(new_index: int) -> void:
 
 	var anima: AnimaNode = Anima.begin(self)
 	anima.set_single_shot(true)
+	anima.set_default_duration(duration)
 
 	anima.then(
 		Anima.Node(self) \
-			.anima_property("min_size:y") \
-			.anima_to(height) \
-			.anima_easing(height_easing) \
-			.anima_duration(duration)
+			.anima_property("min_size:y", height) \
+			.anima_easing(height_easing)
 	)
 
 	anima.with(
 		Anima.Node(_container) \
-			.anima_property("position:x") \
-			.anima_to(-x) \
+			.anima_position_x(-x) \
 			.anima_easing(scroll_easing)
 	)
 	anima.with(
 		Anima.Node($Wrapper) \
-			.anima_property("size:y") \
-			.anima_to(wrapper_height) \
+			.anima_size_y(wrapper_height) \
 			.anima_easing(height_easing)
 	)
 	anima.play()
-
-	emit_signal("carousel_height_changed", height)
-	emit_signal("index_changed", new_index)
 
 func get_expected_wrapper_height() -> float:
 	return _heights[index]
@@ -124,7 +118,9 @@ func _on_Container_item_rect_changed() -> void:
 	emit_signal("carousel_size_changed", rect_size)
 
 func _on_control_pressed(index: int) -> void:
+	print("settami")
 	set_index(index)
 
 func _on_Carousel_item_rect_changed():
-	set_index(index)
+#	set_index(index)
+	pass

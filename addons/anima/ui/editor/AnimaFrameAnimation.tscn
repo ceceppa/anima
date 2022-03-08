@@ -22,9 +22,10 @@ __meta__ = {
 
 [node name="FrameAnimation" type="Control"]
 anchor_bottom = 1.0
-margin_right = 460.003
+margin_right = 460.371
 rect_min_size = Vector2( 460, 0 )
 rect_pivot_offset = Vector2( 230, 300 )
+rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -68,6 +69,7 @@ Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle"]
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 230, 300 )
@@ -77,6 +79,7 @@ __meta__ = {
 }
 
 [node name="AnimaRectangle" type="Control" parent="Rectangle/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 460.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
@@ -119,8 +122,8 @@ __meta__ = {
 [node name="FrameName" parent="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer" instance=ExtResource( 9 )]
 margin_right = 412.0
 margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 142, 19 )
+label = "Initial Values"
 type = 4
 show_relative_selector = false
 show_confirm_button = true
@@ -133,9 +136,11 @@ margin_bottom = 49.0
 icon = ExtResource( 1 )
 
 [node name="MarginContainer" type="MarginContainer" parent="Rectangle/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 49.0
 margin_right = 460.0
 margin_bottom = 600.0
+rect_pivot_offset = Vector2( 230, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -192,7 +197,7 @@ __meta__ = {
 margin_left = 125.0
 margin_right = 436.0
 margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
+label = "default time"
 show_relative_selector = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
@@ -239,6 +244,7 @@ __meta__ = {
 
 [node name="GenerateFrame" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
 visible = false
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 102.0
 margin_right = 222.0
 margin_bottom = 49.0
@@ -259,6 +265,7 @@ Button/ToggleMode = true
 Button/ShortcutInTooltip = true
 Button/Pressed = false
 Button/ContentMargin = 12
+Button/Group = null
 Normal/FillColor = Color( 0.984314, 0.729412, 0.388235, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -357,6 +364,7 @@ Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="AddAnimation" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 174.0
 margin_right = 261.0
 margin_bottom = 49.0
@@ -376,6 +384,7 @@ Button/ToggleMode = false
 Button/ShortcutInTooltip = true
 Button/Pressed = false
 Button/ContentMargin = 12
+Button/Group = null
 Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -502,6 +511,7 @@ Button/ToggleMode = false
 Button/ShortcutInTooltip = true
 Button/Pressed = false
 Button/ContentMargin = 12
+Button/Group = null
 Normal/FillColor = Color( 0.47451, 0.211765, 0.196078, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
@@ -599,5 +609,6 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
+[connection signal="confirmed" from="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer/FrameName" to="." method="_on_FrameName_confirmed"]
 [connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]
 [connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper/Delete" to="." method="_on_Delete_pressed"]

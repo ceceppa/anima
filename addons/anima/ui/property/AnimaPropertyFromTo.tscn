@@ -28,7 +28,7 @@ size = Vector2( 16, 16 )
 
 [node name="PropertyFromTo" type="Control"]
 margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
+rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( -430.525, -466.635 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -38,12 +38,21 @@ __meta__ = {
 }
 type = 3
 
-[node name="CurrentValue" type="Control" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_right = 1.0
-margin_bottom = 25.0
-rect_min_size = Vector2( 0, 25 )
-rect_pivot_offset = Vector2( 512, 16 )
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CurrentValue" type="Control" parent="HBoxContainer"]
+margin_right = 168.0
+margin_bottom = 49.0
+rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -51,7 +60,7 @@ __meta__ = {
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
 Animation/Easing = 0
-Button/Text = "custom value"
+Button/Text = "current value"
 Button/ICON = null
 Button/Align = 1
 Button/Font = null
@@ -157,13 +166,15 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="CurrentValueBorderless" type="Control" parent="."]
+[node name="CurrentValueBorderless" type="Control" parent="HBoxContainer"]
 visible = false
-anchor_right = 1.0
-margin_bottom = 25.0
+margin_right = 168.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 0, 25 )
-rect_pivot_offset = Vector2( 512, 16 )
+rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -279,7 +290,8 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
 visible = false
-margin_bottom = 38.0
+margin_right = 256.0
+margin_bottom = 45.0
 rect_pivot_offset = Vector2( 512, 15 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -681,10 +693,10 @@ caret_blink_speed = 0.5
 
 [node name="RelativeSelectorButton" type="Control" parent="CustomValue"]
 margin_left = 172.0
-margin_right = 210.0
-margin_bottom = 45.0
+margin_right = 212.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
-rect_pivot_offset = Vector2( 19, 19 )
+rect_pivot_offset = Vector2( 20, 24.5 )
 script = ExtResource( 4 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
@@ -797,10 +809,10 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="ClearButton" type="Control" parent="CustomValue"]
 margin_left = 218.0
-margin_right = 256.0
-margin_bottom = 45.0
+margin_right = 258.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
-rect_pivot_offset = Vector2( 19, 19 )
+rect_pivot_offset = Vector2( 20, 24.5 )
 script = ExtResource( 4 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
@@ -914,10 +926,10 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="ConfirmButton" type="Control" parent="CustomValue"]
 visible = false
 margin_left = 218.0
-margin_right = 256.0
-margin_bottom = 45.0
+margin_right = 258.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
-rect_pivot_offset = Vector2( 19, 19 )
+rect_pivot_offset = Vector2( 20, 24.5 )
 script = ExtResource( 4 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
@@ -1029,9 +1041,9 @@ Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [connection signal="item_rect_changed" from="." to="." method="_on_PropertyFromTo_item_rect_changed"]
-[connection signal="item_rect_changed" from="CurrentValue" to="." method="_on_CurrentValue_item_rect_changed"]
-[connection signal="pressed" from="CurrentValue" to="." method="_on_CurrentValue_pressed"]
-[connection signal="pressed" from="CurrentValueBorderless" to="." method="_on_CurrentValue_pressed"]
+[connection signal="item_rect_changed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_item_rect_changed"]
+[connection signal="pressed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_pressed"]
+[connection signal="pressed" from="HBoxContainer/CurrentValueBorderless" to="." method="_on_CurrentValue_pressed"]
 [connection signal="changed" from="CustomValue/Rect2/X/x" to="." method="_on_input_changed"]
 [connection signal="changed" from="CustomValue/Rect2/Y/y" to="." method="_on_input_changed"]
 [connection signal="changed" from="CustomValue/Rect2/W/w" to="." method="_on_input_changed"]
