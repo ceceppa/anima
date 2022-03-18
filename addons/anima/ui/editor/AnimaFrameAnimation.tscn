@@ -28,6 +28,8 @@ rect_pivot_offset = Vector2( 230, 300 )
 rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
+"__initial_min_size:x": 460.0,
+"__initial_size:x": 460.371,
 "_edit_use_anchors_": false
 }
 
@@ -85,6 +87,10 @@ margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 230, 24.5 )
 script = ExtResource( 6 )
+__meta__ = {
+"__initial_opacity": 0.0,
+"__initial_y": 0.0
+}
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -148,6 +154,8 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 12
 __meta__ = {
+"__initial_opacity": 0.0,
+"__initial_y": 49.0,
 "_edit_use_anchors_": false
 }
 
@@ -253,6 +261,10 @@ rect_pivot_offset = Vector2( 60, 24.5 )
 hint_tooltip = "Add all changes as Animation"
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
+__meta__ = {
+"__initial_opacity": 0.0,
+"__initial_scale": Vector2( 1, 1 )
+}
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0
@@ -372,6 +384,10 @@ rect_min_size = Vector2( 87, 49 )
 rect_pivot_offset = Vector2( 43.5, 24.5 )
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
+__meta__ = {
+"__initial_opacity": 0.0,
+"__initial_scale": Vector2( 1, 1 )
+}
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
 Animation/Easing = 0

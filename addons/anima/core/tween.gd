@@ -76,6 +76,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if animation_data.has("easing") and not animation_data.easing == null:
 		if animation_data.easing is FuncRef or animation_data.easing is Array:
 			easing_points = animation_data.easing
+		elif animation_data.easing is Curve:
+			easing_points = animation_data.easing
 		else:
 			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
 
@@ -102,6 +104,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		use_method = 'animate_with_anima_easing'
 	elif easing_points is FuncRef:
 		use_method = 'animate_with_easing_funcref'
+	elif easing_points is Curve:
+		use_method = 'animate_with_curve'
 
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
@@ -547,6 +551,7 @@ class AnimatedItem extends Node:
 	var _root_node: Node
 	var _visibility_strategy: int
 	var _property_data: Dictionary
+	var _easing_curve: Curve
 
 	func on_started() -> void:
 		var visibility_strategy = _visibility_strategy
@@ -611,6 +616,9 @@ class AnimatedItem extends Node:
 		if property_data.has("property"):
 			_property = property_data.property
 
+		if data.easing is Curve:
+			_easing_curve = data.easing
+
 		_key = property_data.key if property_data.has("key") else null
 		_subKey = property_data.subkey if property_data.has("subkey") else null
 
@@ -656,20 +664,25 @@ class AnimatedItem extends Node:
 
 		animate(easing_elapsed)
 
-	func animate_with_anima_easing(elapsed: float):
+	func animate_with_anima_easing(elapsed: float) -> void:
 		var easing_points_function = _animation_data._easing_points
 		var easing_callback = funcref(AnimaEasing, easing_points_function)
 		var easing_elapsed = easing_callback.call_func(elapsed)
 
 		animate(easing_elapsed)
 
-	func animate_with_easing_funcref(elapsed: float):
+	func animate_with_easing_funcref(elapsed: float) -> void:
 		var easing_callback = _animation_data._easing_points
 		var easing_elapsed = easing_callback.call_func(elapsed)
 
 		animate(easing_elapsed)
 
-	func animate_linear(elapsed: float):
+	func animate_with_curve(elapsed: float) -> void:
+		var easing_elapsed = _easing_curve.interpolate(elapsed)
+
+		animate(easing_elapsed)
+
+	func animate_linear(elapsed: float) -> void:
 		animate(elapsed)
 
 	func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:

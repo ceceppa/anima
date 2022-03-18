@@ -5,9 +5,7 @@ const Test := {}
 export (StyleBoxFlat) var test setget set_test
 
 func _ready():
-	Anima.begin(self).then(
-		Anima.Node($Button).anima_animation("bounce")
-	) #.play_with_delay(1.0)
+	
 
 #	var anima: AnimaNode = Anima.begin_single_shot(self)
 
@@ -76,6 +74,7 @@ func _ready():
 #	})
 #
 #	$AnimaNode.play_with_delay(0.5)
+	pass
 
 var _temp
 
@@ -101,3 +100,8 @@ func set_test(v: StyleBoxFlat) -> void:
 	v.connect("changed", self, "_on_v_changed")
 	print(test)
 
+func _on_Button_pressed():
+	Anima.begin(self).then(
+		Anima.Node($Button).anima_position_x(500, 1) \
+			.anima_easing(load("res://demos/resources/new_curve.tres"))
+	).play()
