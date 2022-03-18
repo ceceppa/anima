@@ -27,8 +27,8 @@ __meta__ = {
 [node name="AnimaAccordion" type="Control"]
 anchor_bottom = 1.0
 margin_right = 596.0
-margin_bottom = -229.0
-rect_min_size = Vector2( 0, 371 )
+margin_bottom = -180.0
+rect_min_size = Vector2( 0, 420 )
 rect_pivot_offset = Vector2( 298, 27.4843 )
 rect_clip_content = true
 script = ExtResource( 4 )
@@ -145,7 +145,7 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="Control"]
 margin_right = 596.0
-margin_bottom = 388.0
+margin_bottom = 417.0
 rect_pivot_offset = Vector2( 298, 127 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -158,7 +158,7 @@ custom_constants/margin_bottom = 12
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 584.0
-margin_bottom = 376.0
+margin_bottom = 405.0
 rect_pivot_offset = Vector2( 298, 127 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -708,7 +708,9 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 anchor_right = 0.0
 margin_top = 251.0
 margin_right = 572.0
-margin_bottom = 308.0
+margin_bottom = 337.0
+rect_min_size = Vector2( 0, 86 )
+rect_pivot_offset = Vector2( 286, 28.5 )
 
 [node name="Controls" parent="Control/MarginContainer/AnimaData/Carousel" index="0"]
 margin_right = 572.0
@@ -952,12 +954,14 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 margin_top = 57.0
 margin_right = 572.0
 margin_bottom = 57.0
+rect_pivot_offset = Vector2( 286, 0 )
 mouse_filter = 2
 
 [node name="Container" parent="Control/MarginContainer/AnimaData/Carousel/Wrapper" index="0"]
 margin_right = 572.0
 margin_bottom = 37.0
 rect_min_size = Vector2( 1144, 0 )
+rect_pivot_offset = Vector2( 572, 18.5 )
 
 [node name="AnimationButton" type="Button" parent="Control/MarginContainer/AnimaData/Carousel/Wrapper/Container" index="0"]
 margin_right = 568.0
@@ -984,9 +988,9 @@ __meta__ = {
 }
 
 [node name="AnimationType" type="Control" parent="Control/MarginContainer/AnimaData"]
-margin_top = 320.0
+margin_top = 349.0
 margin_right = 572.0
-margin_bottom = 352.0
+margin_bottom = 381.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="AnimationContainer" type="GridContainer" parent="Control/MarginContainer/AnimaData/AnimationType"]
@@ -1024,9 +1028,9 @@ __meta__ = {
 }
 
 [node name="Wrapper" type="Control" parent="Control/MarginContainer/AnimaData"]
-margin_top = 364.0
+margin_top = 393.0
 margin_right = 572.0
-margin_bottom = 364.0
+margin_bottom = 393.0
 size_flags_horizontal = 3
 
 [node name="PropertyValues" type="VBoxContainer" parent="Control/MarginContainer/AnimaData/Wrapper"]
@@ -1054,7 +1058,7 @@ __meta__ = {
 [node name="AnimateGrid" type="GridContainer" parent="Control/MarginContainer/AnimaData/Wrapper/PropertyValues"]
 margin_top = 10.0
 margin_right = 572.0
-margin_bottom = 297.0
+margin_bottom = 287.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -1155,9 +1159,9 @@ __meta__ = {
 
 [node name="Pivot" type="Label" parent="Control/MarginContainer/AnimaData/Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 256.0
+margin_top = 251.0
 margin_right = 120.0
-margin_bottom = 258.0
+margin_bottom = 253.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 5 )
 text = "Pivot"
@@ -1172,14 +1176,14 @@ anchor_right = 0.0
 margin_left = 128.0
 margin_top = 227.0
 margin_right = 572.0
-margin_bottom = 287.0
-rect_min_size = Vector2( 0, 60 )
+margin_bottom = 277.0
+rect_min_size = Vector2( 0, 50 )
 
 [node name="Label2" type="Label" parent="Control/MarginContainer/AnimaData/Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 305.0
+margin_top = 295.0
 margin_right = 572.0
-margin_bottom = 307.0
+margin_bottom = 297.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 custom_fonts/font = SubResource( 5 )
@@ -1190,9 +1194,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="Control/MarginContainer/AnimaData/Wrapper/PropertyValues"]
-margin_top = 315.0
+margin_top = 305.0
 margin_right = 572.0
-margin_bottom = 329.0
+margin_bottom = 319.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {

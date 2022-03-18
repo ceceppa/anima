@@ -13,6 +13,6 @@ var KEYFRAMES := {
 		opacity = 1
 	},
 	initial_values = {
-		opacity = 0
-	}
+		opacity = 0,
+	},
 }

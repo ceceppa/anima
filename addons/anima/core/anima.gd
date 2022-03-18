@@ -75,8 +75,8 @@ const VAlign = {
 }
 
 enum RELATIVE_TO {
+	INITIAL_VALUE,
 	PREVIOUS_FRAME,
-	INITIAL_VALUE
 }
 
 const EASING = AnimaEasing.EASING
