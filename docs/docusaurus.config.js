@@ -9,8 +9,8 @@ const config = {
   title: 'Anima',
   tagline: 'Animations are your friend',
   url: 'https://anima.ceceppa.me',
-  baseUrl: '/',
-  onBrokenLinks: 'throw',
+  baseUrl: '/docs/',
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'ceceppa',
@@ -54,8 +54,6 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
-          // {to: '/tutorials/intro', label: 'Tutorials', position: 'left'},
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/ceceppa/anima',
             label: 'GitHub',
@@ -76,11 +74,11 @@ const config = {
             items: [
               {
                 label: 'Documentation',
-                to: '/docs/intro',
+                to: '/docs/docs/intro',
               },
               {
                 label: 'Tutorial',
-                to: '/tutorial/intro',
+                to: '/docs/tutorial/fundamentals',
               },
             ],
           },
@@ -94,19 +92,6 @@ const config = {
               {
                 label: 'Twitter',
                 href: 'https://twitter.com/ceceppa',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
               },
             ],
           },

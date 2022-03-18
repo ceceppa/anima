@@ -23,6 +23,5 @@ var KEYFRAMES := {
 		y = -4,
 		"scale:y": 1.02,
 	},
-	relativeTo = Anima.RELATIVE_TO.INITIAL_VALUE
 }
 

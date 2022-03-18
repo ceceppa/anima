@@ -1,6 +1,6 @@
 var KEYFRAMES := {
 	0: {
-		y = ":size:x - 60",
+		y = ":size:y + 60",
 		scale = Vector3(0.7, 0.7, 0.7),
 		opacity = 0.7,
 	},

@@ -10,7 +10,7 @@ var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "
 var _animation_data := []
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
-var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+var _loop_strategy = Anima.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
@@ -207,7 +207,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 	if full_keyframes_data.has("relative"):
 		relative_properties = full_keyframes_data.relative
 
-	animation_data._relative_to = Anima.RELATIVE_TO.PREVIOUS_FRAME
+	animation_data._relative_to = Anima.RELATIVE_TO.INITIAL_VALUE
 
 	if full_keyframes_data.has("relativeTo"):
 		animation_data._relative_to = full_keyframes_data.relativeTo
@@ -233,8 +233,25 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 	frame_keys.sort_custom(self, "_sort_frame_index")
 
 	var percentage = frame_keys[0]
-	for key in keyframes_data[percentage]:
-		previous_key_value[key] = { percentage = percentage, value = keyframes_data[percentage][key] }
+	var base_data = animation_data.duplicate()
+	var node: Node = animation_data.node
+
+	for property_to_animate in keyframes_data[percentage]:
+		var current_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
+		var value = keyframes_data[percentage][property_to_animate]
+		var is_relative := relative_properties.find(property_to_animate) >= 0
+		var data := { percentage = percentage, value = current_value }
+
+		base_data.property = property_to_animate
+
+		if value != null and value is String:
+			print(value)
+			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
+			printt(current_value, value)
+			data.value += value
+
+		previous_key_value[property_to_animate] = data
+		node.set_meta("__initial_" + property_to_animate, current_value)
 
 	frame_keys.pop_front()
 	for frame_key in frame_keys:
@@ -294,55 +311,20 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		keys.push_back(key)
 
 	for property_to_animate in keys:
-		var initial_key = "__initial" + property_to_animate
-
-		node.remove_meta(initial_key)
-
-	for property_to_animate in keys:
 		var data = animation_data.duplicate()
-		var from_value
 		var start_percentage = previous_key_value[property_to_animate].percentage
 		var percentage = (current_frame_key - start_percentage) / 100.0
 		var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
 		var percentage_delay := 0.0
 		var relative = relative_properties.find(property_to_animate) >= 0
+		var initial_key = "__initial_" + property_to_animate
+		var initial_value = node.get_meta(initial_key)
 
 		if start_percentage > 0:
 			percentage_delay += (start_percentage/ 100.0) * duration
 
-		from_value = previous_key_value[property_to_animate].value
-
-		# Keys that have been injected in the 1st frame have the value set to null
-		# So, we need to get the current one from the node
-		if from_value == null:
-			from_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
-
+		var from_value = previous_key_value[property_to_animate].value
 		var to_value = frame_data[property_to_animate]
-		var initial_key = "__initial" + property_to_animate
-
-		if relative and animation_data._relative_to == Anima.RELATIVE_TO.INITIAL_VALUE:
-			relative = false
-
-			if node.has_meta(initial_key):
-				from_value = node.get_meta(initial_key)
-			else:
-				from_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
-
-				node.set_meta(initial_key, from_value)
-			
-			var previous = previous_key_value[property_to_animate]
-			var previous_to = previous.to if previous.has("to") else null
-			
-			to_value += from_value
-
-			if previous_to:
-				from_value = previous_to
-
-			if to_value == previous_to:
-				to_value = from_value
-
-		if relative:
-			to_value += from_value
 
 		#
 		# To have generic animations that works with 2D and 3D Nodes
@@ -361,23 +343,24 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 		var property_name = property_to_animate
 
-		data.to = to_value
+		data.to = AnimaTweenUtils.maybe_calculate_value(to_value, data)
+
+		if relative:
+			if previous_key_value[property_to_animate].has("to"):
+				from_value = previous_key_value[property_to_animate].to
+
+			data.to += initial_value
+
 		data.property = property_name
-		data.relative = relative
 		data.duration = frame_duration
 		data._wait_time = wait_time + percentage_delay
 		data.easing = easing
-
-		if not relative:
-			data.from = from_value
-		else:
-			data.to = AnimaTweenUtils.maybe_calculate_value(data.to, data)
-			data.to -= AnimaTweenUtils.maybe_calculate_value(from_value, data)
+		data.from = from_value
 
 		if animation_data.has("__debug"):
-			prints("\n=== FRAME", data.property, from_value, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", easing, " is relative:", str(relative))
+			prints("\n=== FRAME", data.property, ":", from_value, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", easing, " is relative:", str(relative))
 
-		if from_value != data.to:
+		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			add_animation_data(data)
 
 		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }
@@ -559,7 +542,7 @@ class AnimatedItem extends Node:
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
-	var _loop_strategy: int = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+	var _loop_strategy: int = Anima.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
 	var _visibility_strategy: int
@@ -606,7 +589,7 @@ class AnimatedItem extends Node:
 			_execute_callback(_animation_data.on_started)
 
 	func on_completed() -> void:
-		if _loop_strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA:
+		if _loop_strategy == Anima.LOOP_STRATEGY.RECALCULATE_RELATIVE_DATA:
 			_property_data.clear()
 
 		var should_trigger_on_completed = _animation_data.has('on_completed') and _animation_data.has('_is_last_frame')
