@@ -27,8 +27,8 @@ __meta__ = {
 [node name="AnimaAccordion" type="Control"]
 anchor_bottom = 1.0
 margin_right = 596.0
-margin_bottom = -180.0
-rect_min_size = Vector2( 0, 420 )
+margin_bottom = -151.0
+rect_min_size = Vector2( 0, 449 )
 rect_pivot_offset = Vector2( 298, 27.4843 )
 rect_clip_content = true
 script = ExtResource( 4 )
@@ -1176,8 +1176,8 @@ anchor_right = 0.0
 margin_left = 128.0
 margin_top = 227.0
 margin_right = 572.0
-margin_bottom = 277.0
-rect_min_size = Vector2( 0, 50 )
+margin_bottom = 267.0
+rect_min_size = Vector2( 0, 40 )
 
 [node name="Label2" type="Label" parent="Control/MarginContainer/AnimaData/Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )

@@ -53,6 +53,7 @@ __meta__ = {
 test = SubResource( 5 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
+visible = false
 margin_right = 703.0
 margin_bottom = 366.0
 text = "Testing typewriter"
@@ -61,10 +62,10 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="."]
-margin_left = 508.199
-margin_top = 327.811
-margin_right = 898.201
-margin_bottom = 464.811
+margin_left = 121.0
+margin_top = 286.0
+margin_right = 299.0
+margin_bottom = 338.0
 rect_pivot_offset = Vector2( 195.001, 68.5 )
 __meta__ = {
 "__initialy": 366.23,
@@ -90,6 +91,7 @@ __anima_visual_editor_data = {
 }
 
 [node name="Control" type="Control" parent="."]
+visible = false
 margin_left = 183.0
 margin_top = 374.0
 margin_right = 223.0
@@ -128,6 +130,7 @@ __meta__ = {
 }
 
 [node name="Button2" type="Button" parent="."]
+visible = false
 margin_left = 835.0
 margin_top = 34.0
 margin_right = 967.0
@@ -140,6 +143,7 @@ __meta__ = {
 [node name="Timer" type="Timer" parent="."]
 
 [node name="AnimaTriangle" type="Control" parent="."]
+visible = false
 margin_left = -50.0
 margin_top = 117.0
 margin_right = 195.0
@@ -151,6 +155,7 @@ __meta__ = {
 }
 
 [node name="AnimaAccordion" type="Control" parent="."]
+visible = false
 margin_left = 90.0
 margin_top = 128.0
 margin_right = 546.0
@@ -262,6 +267,7 @@ ButtonFocused/Shadow/Offset = Vector2( -1, -1 )
 ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Content" type="VBoxContainer" parent="AnimaAccordion"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
@@ -297,6 +303,7 @@ margin_bottom = 79.4306
 custom_styles/panel = SubResource( 6 )
 
 [node name="AnimaButton" type="Control" parent="."]
+visible = false
 margin_left = 549.934
 margin_top = 107.061
 margin_right = 1094.93
@@ -420,4 +427,5 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 "anims/New Anim" = SubResource( 7 )
 
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
