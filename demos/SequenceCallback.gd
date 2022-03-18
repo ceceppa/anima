@@ -14,7 +14,7 @@ func _ready():
 		var sprite = find_node('check' + str(i))
 		var anima = Anima.begin(sprite)
 
-		anima.then({ node = sprite, animation = 'jello', duration = 0.5, visibility_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
+		anima.then({ node = sprite, animation = 'jello', duration = 0.5, hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
 		_check_sprites.push_back(anima)
 
 func _on_Start_pressed():

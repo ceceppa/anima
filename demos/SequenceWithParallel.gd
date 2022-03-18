@@ -17,3 +17,7 @@ func _ready():
 	anima.with({node = cross, property = "rotation", from = 0, to = -360, easing = Anima.EASING.EASE_OUT_CIRC })
 
 	anima.play_with_delay(0.2)
+
+
+func _on_Button_pressed():
+	pass # Replace with function body.

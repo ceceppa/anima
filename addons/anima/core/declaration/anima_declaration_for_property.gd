@@ -8,6 +8,11 @@ func _init_me(data: Dictionary) -> AnimaDeclarationForProperty:
 
 	return self
 
+func anima_as_relative() -> AnimaDeclarationForProperty:
+	self._data.relative = true
+	
+	return self
+
 func anima_easing(easing) -> AnimaDeclarationForProperty:
 	self._data.easing = easing
 

@@ -1,4 +1,3 @@
-tool
 extends Control
 
 const Test := {}
@@ -6,7 +5,11 @@ const Test := {}
 export (StyleBoxFlat) var test setget set_test
 
 func _ready():
-	var anima: AnimaNode = Anima.begin_single_shot(self)
+	Anima.begin(self).then(
+		Anima.Node($Button).anima_animation("bounce")
+	) #.play_with_delay(1.0)
+
+#	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 #	anima.then(
 #		Anima.Node($RichTextLabel) \
@@ -54,7 +57,7 @@ func _ready():
 #			.anima_duration(1)
 #	)
 #	$AnimaRectangle.set("Rectangle/FillColor", Color.yellow)
-	anima.play_with_delay(0.5)
+#	anima.play_with_delay(0.5)
 #
 #	yield(anima, "animation_completed")
 #

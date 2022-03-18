@@ -49,7 +49,7 @@ func _init_balls() -> void:
 			clone.connect('pressed', self, '_on_ball_pressed', [Vector2(column, row)])
 
 func _on_ball_pressed(from: Vector2) -> void:
-	var anima: AnimaNode = Anima.begin(self)
+	var anima := Anima.begin(self)
 	
 	anima.then({
 		grid = $Grid,

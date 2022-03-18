@@ -18,11 +18,6 @@ func anima_visibility_strategy(value: int) -> AnimaDeclarationForAnimation:
 
 	return self
 
-func anima_initial_value(value) -> AnimaDeclarationForAnimation:
-	.anima_initial_value(value)
-
-	return self
-
 func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_completed_value) -> AnimaDeclarationForAnimation:
 	.anima_on_started(on_started, on_started_value, on_backwards_completed_value)
 

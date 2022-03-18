@@ -5,3 +5,8 @@ addons/gut
 .gut_editor_shortcuts.cfg
 .gut_editor_config.json
 .godot/shader_cache
+npm_modules
+node_modules
+.idea
+docs/*.import
+docs/**/.import

@@ -1,75 +1,89 @@
+tool
 extends Spatial
 
 export (bool) var _play_backwards = false
 
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
+const TOTAL_BOXES := 20
+const DISTANCE := 0.3
+
+export var _test_me:= false setget set_test_me
 
 func _ready():
-	Anima.register_animation(self, '3dboxes')
-	Anima.register_animation(self, 'ring')
+	AnimaAnimationsUtils.register_animation('3dboxes', _boxes_animation())
+	AnimaAnimationsUtils.register_animation('ring', _ring())
 
 	_init_boxes($Node)
-	
+
+	if not Engine.editor_hint:
+		_do_animation()
+
+func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
+	_reset_boxes_position($Node, start_position)
 
 	var anima: AnimaNode = Anima.begin($Node)
-	anima.then({ group = $Node, animation = '3dboxes', duration = 3, items_delay = 0.02 })
+	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3).debug() )
 
 	if _play_backwards:
 		_init_reverse_boxes()
 		start_position.z -= 2
 
-	_reset_boxes_position($Node, start_position)
-	anima.loop()
-
-	var ring: AnimaNode = Anima.begin($ring)
-	ring.then({ node = $ring, animation = 'ring', duration = 3 })
-
-	if _play_backwards:
-		ring.loop_backwards()
+	if loop:
+		anima.loop()
 	else:
-		ring.loop()
+		anima.play()
+#
+#	var ring: AnimaNode = Anima.begin($ring)
+#	ring.then( Anima.Node($ring).anima_animation('ring', 3) )
+#
+#	if _play_backwards:
+#		ring.loop_backwards()
+#	else:
+#		ring.loop()
 
-func generate_animation(tween: AnimaTween, data: Dictionary) -> void:
-	if data.animation == '3dboxes':
-		_boxes_animation(tween, data)
+func _ring() -> Dictionary:
+	return { 
+		from = {
+			"rotation:x": 0, 
+		},
+		to = {
+			"rotation:x": 360
+		}
+	}
 
-		return
-
-	var rotate = [
-		{ from = 0, to = 360 }
-	]
-
-#	tween.add_frames(data, "rotation:y", rotate)
-
-func _boxes_animation(tween: AnimaTween, data: Dictionary) -> void:
-	var position_frames = [
-		{ percentage = 35, to = -28.117, easing = Anima.EASING.EASE_OUT_CUBIC },
-		{ percentage = 65, to = 0 },
-		{ percentage = 100, to = -25.619, easing = Anima.EASING.EASE_IN_CIRC },
-	]
-	
-	var rotation_frames = [
-		{ percentage = 100, to = 360 },
-	]
-
-	var scale_frames = [
-		{ percentage = 0, from = Vector3(0.1, 1, 1) },
-		{ percentage = 65, to = Vector3(0.1, 1, 1) },
-		{ percentage = 100, to = Vector3.ZERO },
-	]
-
-	var shader_params = [
-		{ percentage = 0, from = Color('#6b9eb1') },
-		{ percentage = 30, to = Color('#e63946') },
-		{ percentage = 40, to = Color('#e63946') },
-		{ percentage = 100, to = Color('#6b9eb1') },
-	]
-
-#	tween.add_relative_frames(data, "position:x", position_frames)
-#	tween.add_relative_frames(data, "rotation:x", rotation_frames)
-#	tween.add_frames(data, "scale", scale_frames)
-#	tween.add_frames(data, "shader_param:albedo", shader_params)
+func _boxes_animation() -> Dictionary:
+	return {
+		from = {
+			scale = Vector3(0.1, 1, 1),
+			"shader_param:albedo": Color('#6b9eb1')
+		},
+		30: {
+			"shader_param:albedo": Color('#e63946')
+		},
+		35: {
+			x = -28.117,
+			easing = Anima.EASING.EASE_OUT_QUAD,
+		},
+		40: {
+			x = 0,
+			"shader_param:albedo": Color('#e63946')
+		},
+		65: {
+			x = 0,
+			scale = Vector3(0.1, 1, 1)
+		},
+		85: {
+			scale = Vector3.ZERO,
+		},
+		to = {
+			x = -25.619,
+			easing = Anima.EASING.EASE_IN_CIRC,
+			"rotation:x": 360,
+			"shader_param:albedo": Color('#6b9eb1')
+		},
+		relative = ['x', 'rotation:x']
+	}
 
 func _init_reverse_boxes() -> void:
 	var node = Node.new()
@@ -90,7 +104,7 @@ func _init_reverse_boxes() -> void:
 func _init_boxes(parentNode: Node) -> void:
 	var box := parentNode.get_child(0)
 
-	for i in 10:
+	for i in TOTAL_BOXES:
 		var clone := box.duplicate()
 		clone.global_transform = box.global_transform
 
@@ -105,7 +119,10 @@ func _reset_boxes_position(parentNode: Node, start_position: Vector3) -> void:
 		if not box is MeshInstance:
 			continue
 
-		box.global_transform.origin = start_position + Vector3(0.2, 0, 0) * i
+		box.global_transform.origin = start_position + Vector3(DISTANCE, 0, 0) * i
 		
 		var r = rng.randf_range(0, 360)
 		box.rotation.x = r
+
+func set_test_me(_ignore) -> void:
+	_do_animation()
