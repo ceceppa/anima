@@ -61,14 +61,14 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="."]
-margin_left = 497.072
-margin_top = 366.23
-margin_right = 887.074
-margin_bottom = 503.23
+margin_left = 508.199
+margin_top = 327.811
+margin_right = 898.201
+margin_bottom = 464.811
 rect_pivot_offset = Vector2( 195.001, 68.5 )
 __meta__ = {
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"__initialy": 366.23,
+"_edit_use_anchors_": false
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
@@ -297,10 +297,10 @@ margin_bottom = 79.4306
 custom_styles/panel = SubResource( 6 )
 
 [node name="AnimaButton" type="Control" parent="."]
-margin_left = 576.422
-margin_top = 93.8172
-margin_right = 1121.42
-margin_bottom = 203.817
+margin_left = 549.934
+margin_top = 107.061
+margin_right = 1094.93
+margin_bottom = 217.061
 rect_pivot_offset = Vector2( 272.499, 54.9999 )
 script = ExtResource( 5 )
 __meta__ = {

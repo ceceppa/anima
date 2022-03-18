@@ -2,7 +2,7 @@
 
 [ext_resource path="res://demos/Easings.gd" type="Script" id=1]
 [ext_resource path="res://resources/anima-preview.png" type="Texture" id=2]
-[ext_resource path="res://resources/fonts/Lato-Bold.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://demos/resources/Lato-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]

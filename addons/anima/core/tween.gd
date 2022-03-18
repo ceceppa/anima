@@ -89,13 +89,11 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	else:
 		property_data = AnimaNodesProperties.map_property_to_godot_property(animation_data.node, animation_data.property)
 
-	if not property_data.has("property"):
+	if not property_data.has("property") and not property_data.has("callback"):
+#		printerr("property/callback missing or not recognised for the animation: ", animation_data.property)
 		return
 
-	var relative = animation_data.has("relative") and animation_data.relative
-
-	var object: Node = _get_animated_object_item(property_data, relative)
-
+	var object: Node = _get_animated_object_item(property_data)
 	var use_method: String = "animate_linear"
 
 	if easing_points is Array:
@@ -109,6 +107,9 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	var to := 1.0 - from
 
 	object.set_animation_data(animation_data, property_data, is_backwards_animation, _visibility_strategy)
+
+	if animation_data.has("__debug"):
+		printt("use_method", use_method)
 
 	interpolate_method(
 		object,
@@ -145,9 +146,10 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		else:
 			node[property_data.property] = value
 
-func _get_animated_object_item(property_data: Dictionary, is_relative: bool) -> Node:
+func _get_animated_object_item(property_data: Dictionary) -> Node:
 	var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
-	var is_object = typeof(property_data.property) == TYPE_OBJECT
+	var animate_callback := property_data.has("callback")
+	var is_object = property_data.has("property") and typeof(property_data.property) == TYPE_OBJECT
 
 	if is_rect2:
 		return AnimateRect2.new()
@@ -160,6 +162,11 @@ func _get_animated_object_item(property_data: Dictionary, is_relative: bool) -> 
 		return AnimatedPropertyWithSubKeyItem.new()
 	elif property_data.has('key'):
 		return AnimatedPropertyWithKeyItem.new()
+	elif animate_callback:
+		if property_data.has("param"):
+			return AnimatedCallbackWithParam.new()
+
+		return AnimatedCallback.new()
 
 	return AnimatedPropertyItem.new()
 
@@ -187,7 +194,7 @@ func set_root_node(node: Node) -> void:
 #		y = 0
 #	}
 #
-func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
+func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 	var last_duration := 0.0
 	var is_first_frame = true
 	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
@@ -200,14 +207,15 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	if full_keyframes_data.has("relative"):
 		relative_properties = full_keyframes_data.relative
 
+	animation_data._relative_to = Anima.RELATIVE_TO.PREVIOUS_FRAME
+
+	if full_keyframes_data.has("relativeTo"):
+		animation_data._relative_to = full_keyframes_data.relativeTo
+
 	# Flattens the keyframe_data
 	var keyframes_data = AnimaTweenUtils.flatten_keyframes_data(full_keyframes_data)
 
-	animation_data.erase("animation")
-	keyframes_data.erase("pivot")
-
-	var previous_frame: Dictionary
-	var previous_frame_key: float
+	var previous_key_value := {}
 	var wait_time: float = animation_data._wait_time if animation_data.has('_wait_time') else 0.0
 
 	if pivot:
@@ -224,85 +232,61 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var frame_keys: Array = keyframes_data.keys()
 	frame_keys.sort_custom(self, "_sort_frame_index")
 
+	var percentage = frame_keys[0]
+	for key in keyframes_data[percentage]:
+		previous_key_value[key] = { percentage = percentage, value = keyframes_data[percentage][key] }
+
+	frame_keys.pop_front()
 	for frame_key in frame_keys:
 		if (not frame_key is int and not frame_key is float) or frame_key > 100:
 			continue
 
 		var keyframe_data: Dictionary = keyframes_data[frame_key]
 
-		if previous_frame.size() > 0:
-			wait_time += _calculate_frame_data(wait_time, animation_data, relative_properties, frame_key, keyframes_data[frame_key], previous_frame_key, previous_frame)
+		_calculate_frame_data(
+			wait_time,
+			animation_data,
+			relative_properties,
+			frame_key,
+			keyframes_data[frame_key],
+			previous_key_value
+		)
 
-			animation_data.erase("initial_values")
-		else:
-			#
-			# For relative-only values we need to create a fake frame
-			# used to set the from property at the expected value.
-			#
-			for property_to_animate in keyframe_data.keys():
-				if relative_properties.find(property_to_animate) < 0:
-					continue
-
-				var data = animation_data.duplicate()
-				var to_value = keyframe_data[property_to_animate]
-
-				to_value = _maybe_attenuate_y_value(animation_data.node, property_to_animate, to_value)
-
-				data.property = property_to_animate
-				data.relative = relative_properties.find(property_to_animate) >= 0
-				data.duration = Anima.MINIMUM_DURATION
-				data._wait_time = wait_time
-				data.to = to_value
-				data._ignore_for_backwards = true
-
-				add_animation_data(data)
-
-				animation_data.erase("initial_values")
-	
-			wait_time += Anima.MINIMUM_DURATION
-
-		previous_frame_key = frame_key
-		previous_frame = keyframes_data[frame_key]
-
-	return 0.0
+		animation_data.erase("initial_values")
 
 func _sort_frame_index(a, b) -> bool:
 	return int(a) < int(b)
 
-func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relative_properties: Array, current_frame_key: float, frame_data: Dictionary, previous_frame_key: float, previous_frame: Dictionary) -> float:
-	var percentage = (current_frame_key - previous_frame_key) / 100.0
+func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relative_properties: Array, current_frame_key: float, frame_data: Dictionary, previous_key_value: Dictionary) -> void:
 	var duration: float = animation_data.duration if animation_data.has('duration') else 0.0
 	var easing = null
 	var pivot = null
-	var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
 
 	if animation_data.has("easing"):
 		easing = animation_data.easing
 
-	if previous_frame.has("easing"):
-		easing = previous_frame.easing
-	elif frame_data.has("easing"):
+	if frame_data.has("easing"):
 		easing = frame_data.easing
-
-	if previous_frame.has("pivot"):
-		easing = previous_frame.easing
-	elif frame_data.has("pivot"):
-		easing = frame_data.easing
-
-	previous_frame.erase("easing")
-	previous_frame.erase("pivot")
 
 	var node: Node = animation_data.node
 	var is_mesh = node is MeshInstance
-	var properties_to_flip_values = ["y", "position:y"]
 	var keys := []
 
 	for key in frame_data.keys():
+		if key == "easing" or key == "pivot":
+			continue
+
 		if key == "skew":
 			var skew: Vector2 = frame_data[key]
 
-			frame_data["skew:x"] = skew.x / 32.0
-			frame_data["skew:y"] = skew.y / 32.0
+			frame_data["skew:x"] = skew.x / 32
+			frame_data["skew:y"] = skew.y / 32
+
+			if previous_key_value.skew and not previous_key_value.has("skew:x"):
+				var p: Dictionary = previous_key_value.skew
+
+				previous_key_value["skew:x"] = { percentage = p.percentage, value = p.value.x }
+				previous_key_value["skew:y"] = { percentage = p.percentage, value = p.value.y }
 
 			keys.push_back("skew:x")
 			key = "skew:y"
@@ -310,14 +294,55 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		keys.push_back(key)
 
 	for property_to_animate in keys:
+		var initial_key = "__initial" + property_to_animate
+
+		node.remove_meta(initial_key)
+
+	for property_to_animate in keys:
 		var data = animation_data.duplicate()
-
-		if not previous_frame.has(property_to_animate):
-			continue
-
-		var from_value = previous_frame[property_to_animate]
-		var to_value = frame_data[property_to_animate]
+		var from_value
+		var start_percentage = previous_key_value[property_to_animate].percentage
+		var percentage = (current_frame_key - start_percentage) / 100.0
+		var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
+		var percentage_delay := 0.0
 		var relative = relative_properties.find(property_to_animate) >= 0
+
+		if start_percentage > 0:
+			percentage_delay += (start_percentage/ 100.0) * duration
+
+		from_value = previous_key_value[property_to_animate].value
+
+		# Keys that have been injected in the 1st frame have the value set to null
+		# So, we need to get the current one from the node
+		if from_value == null:
+			from_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
+
+		var to_value = frame_data[property_to_animate]
+		var initial_key = "__initial" + property_to_animate
+
+		if relative and animation_data._relative_to == Anima.RELATIVE_TO.INITIAL_VALUE:
+			relative = false
+
+			if node.has_meta(initial_key):
+				from_value = node.get_meta(initial_key)
+			else:
+				from_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
+
+				node.set_meta(initial_key, from_value)
+			
+			var previous = previous_key_value[property_to_animate]
+			var previous_to = previous.to if previous.has("to") else null
+			
+			to_value += from_value
+
+			if previous_to:
+				from_value = previous_to
+
+			if to_value == previous_to:
+				to_value = from_value
+
+		if relative:
+			to_value += from_value
 
 		#
 		# To have generic animations that works with 2D and 3D Nodes
@@ -334,14 +359,13 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 			if to_value is Vector3:
 				to_value = Vector2(to_value.x, to_value.y)
 
-		from_value = _maybe_attenuate_y_value(node, property_to_animate, from_value)
-		to_value = _maybe_attenuate_y_value(node, property_to_animate, to_value)
+		var property_name = property_to_animate
 
 		data.to = to_value
-		data.property = property_to_animate
+		data.property = property_name
 		data.relative = relative
 		data.duration = frame_duration
-		data._wait_time = wait_time
+		data._wait_time = wait_time + percentage_delay
 		data.easing = easing
 
 		if not relative:
@@ -350,32 +374,13 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 			data.to = AnimaTweenUtils.maybe_calculate_value(data.to, data)
 			data.to -= AnimaTweenUtils.maybe_calculate_value(from_value, data)
 
-		add_animation_data(data)
+		if animation_data.has("__debug"):
+			prints("\n=== FRAME", data.property, from_value, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", easing, " is relative:", str(relative))
 
-	return frame_duration
+		if from_value != data.to:
+			add_animation_data(data)
 
-func _maybe_attenuate_y_value(node: Node, property_to_animate: String, value):
-	var is_mesh := node is MeshInstance
-	var should_flip_value = is_mesh and property_to_animate == "y"
-
-	if not is_mesh or PROPERTIES_TO_ATTENUATE.find(property_to_animate) < 0:
-		return value
-
-	var att_sign = -1 if should_flip_value else 1
-
-	if not value is String:
-		return value * 0.05 * att_sign
-	else:
-		return value + "* 0.05 * " + str(att_sign)
-
-func _maybe_flip_y(node: Node, property_to_animate: String) -> int:
-	var is_mesh := node is MeshInstance
-
-	var should_flip_value = is_mesh and property_to_animate == "y"
-	if should_flip_value:
-		return -1
-
-	return 1
+		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }
 
 func get_animation_data() -> Array:
 	return _animation_data
@@ -548,6 +553,8 @@ func _on_tween_started(node, _ignore) -> void:
 
 class AnimatedItem extends Node:
 	var _node: Node
+	var _callback: FuncRef
+	var _callback_param
 	var _property
 	var _key
 	var _subKey
@@ -555,7 +562,6 @@ class AnimatedItem extends Node:
 	var _loop_strategy: int = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
-	var _animation_callback: FuncRef
 	var _visibility_strategy: int
 	var _property_data: Dictionary
 
@@ -613,7 +619,15 @@ class AnimatedItem extends Node:
 		_is_backwards_animation = is_backwards_animation
 		_visibility_strategy = visibility_strategy
 
-		_property = property_data.property
+		if property_data.has("callback"):
+			_callback = property_data.callback
+
+		if property_data.has("param"):
+			_callback_param = property_data.param
+
+		if property_data.has("property"):
+			_property = property_data.property
+
 		_key = property_data.key if property_data.has("key") else null
 		_subKey = property_data.subkey if property_data.has("subkey") else null
 
@@ -621,9 +635,8 @@ class AnimatedItem extends Node:
 		_node.remove_meta("_visibility_strategy_reverted")
 
 		if _animation_data.has("__debug"):
-			print(data)
-
 			print("Using:")
+			printt("", property_data)
 			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
 			printt("", "AnimatedPropertyWithKeyItem:", self is AnimatedPropertyWithKeyItem)
 			printt("", "AnimatedPropertyWithSubKeyItem:", self is AnimatedPropertyWithSubKeyItem)
@@ -636,8 +649,8 @@ class AnimatedItem extends Node:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
 
 			if _animation_data.has("__debug"):
-				print("animate")
-				printt("", _property_data)
+				printt("_property_data", _property_data)
+				print("")
 
 		var from = _property_data.from
 		var diff = _property_data.diff
@@ -722,6 +735,14 @@ class AnimateObjectWithKey extends AnimatedItem:
 class AnimateObjectWithSubKey extends AnimatedItem:
 	func apply_value(value) -> void:
 		_property[_key][_subKey] = value
+
+class AnimatedCallback extends AnimatedItem:
+	func apply_value(value) -> void:
+		_callback
+
+class AnimatedCallbackWithParam extends AnimatedItem:
+	func apply_value(value) -> void:
+		_callback.call_funcv([_callback_param, value])
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:

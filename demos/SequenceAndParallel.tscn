@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://resources/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://demos/resources/Lato-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://demos/SequenceAndParallel.gd" type="Script" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 

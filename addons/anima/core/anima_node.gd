@@ -53,7 +53,7 @@ func init_node(node: Node):
 	if node != self:
 		node.add_child(self)
 
-func then(data) -> float:
+func then(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
 
@@ -68,9 +68,9 @@ func then(data) -> float:
 	var delay = data.delay if data.has('delay') else 0.0
 	_total_animation_length += _last_animation_duration + delay
 
-	return _last_animation_duration
+	return self
 
-func with(data) -> float:
+func with(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
 
@@ -91,9 +91,11 @@ func with(data) -> float:
 	if not data.has("__do_not_update_last_tween_data"):
 		_last_tween_data = data
 
-	return _setup_animation(data)
+	_setup_animation(data)
 
-func _group(group_data: Array, animation_data: Dictionary) -> float:
+	return self
+
+func _group(group_data: Array, animation_data: Dictionary) -> AnimaNode:
 	var delay_index := 0
 
 	_total_animation_length += animation_data.duration
@@ -101,7 +103,7 @@ func _group(group_data: Array, animation_data: Dictionary) -> float:
 	if not animation_data.has('items_delay'):
 		printerr('Please specify the `items_delay` value')
 
-		return 0.0
+		return self
 
 	var items = group_data.size() - 1
 	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
@@ -134,10 +136,10 @@ func _group(group_data: Array, animation_data: Dictionary) -> float:
 
 	_total_animation_length += animation_data.items_delay * (delay_index - 1)
 
-	return 0.0
+	return self
 
-func wait(seconds: float) -> void:
-	then({
+func wait(seconds: float) -> AnimaNode:
+	return then({
 		node = self,
 		property = '__do_nothing',
 		from = 0.0,
@@ -334,8 +336,6 @@ func _setup_animation(data: Dictionary) -> float:
 		 data.node = self.get_parent()
 
 	if data.node == null:
-		print(self.get_parent())
-		print_stray_nodes()
 		printerr("Invalid node!")
 
 		return 0.0

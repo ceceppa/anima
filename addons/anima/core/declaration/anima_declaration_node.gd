@@ -24,6 +24,14 @@ func _create_declaration_with_easing(data: Dictionary) -> AnimaDeclarationForPro
 
 	return c._init_me(_data)
 
+func _create_relative_declaration_with_easing(data: Dictionary) -> AnimaDeclarationForRelativeProperty:
+	var c:= AnimaDeclarationForRelativeProperty.new()
+
+	for key in data:
+		_data[key] = data[key]
+
+	return c._init_me(_data)
+
 func anima_animation(animation: String, duration = null, ignore_initial_values := false) -> AnimaDeclarationForAnimation:
 	return _create_declaration_for_animation({ animation = animation, duration = duration, _ignore_initial_values = ignore_initial_values })
 
@@ -54,20 +62,20 @@ func anima_position_y(y: float, duration = null) -> AnimaDeclarationForProperty:
 func anima_position_z(z: float, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "z", to = z, duration = duration })
 
-func anima_relative_position(position: Vector2, duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "position", to = position, duration = duration, relative = true })
+func anima_relative_position(position: Vector2, duration = null) -> AnimaDeclarationForRelativeProperty:
+	return _create_relative_declaration_with_easing({ property = "position", to = position, duration = duration, relative = true })
 
-func anima_relative_position3D(position: Vector3, duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "position", to = position, duration = duration, relative = true })
+func anima_relative_position3D(position: Vector3, duration = null) -> AnimaDeclarationForRelativeProperty:
+	return _create_relative_declaration_with_easing({ property = "position", to = position, duration = duration, relative = true })
 
-func anima_relative_position_x(x: float, duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "x", to = x, duration = duration, relative = true })
+func anima_relative_position_x(x: float, duration = null) -> AnimaDeclarationForRelativeProperty:
+	return _create_relative_declaration_with_easing({ property = "x", to = x, duration = duration, relative = true })
 
-func anima_relative_position_y(y: float, duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "y", to = y, duration = duration, relative = true })
+func anima_relative_position_y(y: float, duration = null) -> AnimaDeclarationForRelativeProperty:
+	return _create_relative_declaration_with_easing({ property = "y", to = y, duration = duration, relative = true })
 
-func anima_relative_position_z(z: float, duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "z", to = z, duration = duration, relative = true })
+func anima_relative_position_z(z: float, duration = null) -> AnimaDeclarationForRelativeProperty:
+	return _create_relative_declaration_with_easing({ property = "z", to = z, duration = duration, relative = true })
 
 func anima_scale(scale: Vector2, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "scale", to = scale, duration = duration })
@@ -100,7 +108,7 @@ func anima_size_z(size: float, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "size:z", to = size, duration = duration })
 
 func anima_rotate(rotate: float, duration = null) -> AnimaDeclarationForProperty:
-	return _create_declaration_with_easing({ property = "rotation", to = rotate, duration = duration })
+	return _create_declaration_with_easing({ property = "rotate", to = rotate, duration = duration })
 
 func anima_rotate3D(rotate: Vector3, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "rotation", to = rotate, duration = duration })
