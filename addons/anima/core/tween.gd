@@ -616,7 +616,7 @@ class AnimatedItem extends Node:
 		if property_data.has("property"):
 			_property = property_data.property
 
-		if data.easing is Curve:
+		if data.has("easing") and data.easing is Curve:
 			_easing_curve = data.easing
 
 		_key = property_data.key if property_data.has("key") else null

@@ -16,7 +16,7 @@ and if so, reuse it; otherwise, create a new one.
 
 :::caution
 
-Any time Anima finds an AnimaNode, after calling `begin` or `begin_single_shot`, it will automatically stop and clear any animation attached.
+Any time Anima finds an AnimaNode, after calling `begin` or `begin_single_shot`, it will automatically stop and clear any animation attached to it.
 :::
 
 ## When to use a custom animation name?
