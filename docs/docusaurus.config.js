@@ -26,11 +26,6 @@ const config = {
           // Please change this to your repo.
           editUrl: 'https://github.com/ceceppa/anima/docs/',
         },
-        blog: {
-          showReadingTime: true,
-          editUrl:
-            'https://github.com/ceceppa/anima/docs/',
-        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -53,6 +48,12 @@ const config = {
             docId: 'intro',
             position: 'left',
             label: 'Docs',
+          },
+          {
+            type: 'doc',
+            docId: 'tutorial-basics/fundamentals',
+            position: 'left',
+            label: 'Tutorials',
           },
           {
             href: 'https://github.com/ceceppa/anima',
@@ -101,7 +102,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ['gdscript']
+        additionalLanguages: ['gdscript'],
       },
     }),
 };

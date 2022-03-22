@@ -101,7 +101,9 @@ func set_test(v: StyleBoxFlat) -> void:
 	print(test)
 
 func _on_Button_pressed():
+	var button_size := 178
+	var half_screen_x := 1024 / 2 - button_size / 2
+
 	Anima.begin(self).then(
-		Anima.Node($Button).anima_position_x(500, 1) \
-			.anima_easing(load("res://demos/resources/new_curve.tres"))
-	).play()
+		Anima.Node($Button).anima_position_x(half_screen_x, 1).anima_from(-178)
+	).play_with_delay(1)
