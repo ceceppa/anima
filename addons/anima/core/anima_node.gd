@@ -56,6 +56,12 @@ func init_node(node: Node):
 func then(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
+	else:
+		printerr(
+			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
+			"\n",
+			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
+		)
 
 	if data.has("group") and data.group is Array:
 		return _group(data.group, data)
@@ -73,6 +79,12 @@ func then(data) -> AnimaNode:
 func with(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
+	else:
+		printerr(
+			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
+			"\n",
+			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
+		)
 
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
@@ -147,21 +159,25 @@ func wait(seconds: float) -> AnimaNode:
 		duration = seconds,
 	})
 
-func set_single_shot(single_shot: bool) -> void:
+func set_single_shot(single_shot: bool) -> AnimaNode:
 	_is_single_shot = single_shot
 
 	if _is_single_shot:
 		_anima_tween.set_repeat(false)
 
+	return self
+
 func is_single_shot() -> bool:
 	return _is_single_shot
 
-func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
+func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> AnimaNode:
 	_anima_tween.set_visibility_strategy(strategy)
 	_anima_backwards_tween.set_visibility_strategy(strategy)
 
 	if always_apply_on_play:
 		_apply_visibility_strategy_on_play = true
+
+	return self
 
 func clear() -> void:
 	stop()

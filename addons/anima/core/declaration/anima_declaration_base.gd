@@ -37,7 +37,7 @@ func anima_initial_value(initial_value):
 
 	_data.initial_values = values
 
-func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_completed_value):
+func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_completed_value = null):
 	if typeof(on_started_value) != TYPE_ARRAY:
 		on_started_value = [on_started_value]
 
@@ -46,8 +46,8 @@ func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_comple
 
 	_data.on_started = [on_started, on_started_value, on_backwards_completed_value]
 
-func anima_on_completed(on_completed: FuncRef):
-	_data.on_completed = on_completed
+func anima_on_completed(on_completed: FuncRef, on_completed_value, on_backwards_started_value = null):
+	_data.on_completed = [on_completed, on_completed_value, on_backwards_started_value]
 
 func debug():
 	_data.__debug = true

@@ -72,7 +72,9 @@ Anim.Node($node).anima_animation_frames({
 
 ## anima_property
 
-Animates the given property
+Animates the given property. 
+
+Compared to the other property specific fuctions, like `anima_position_x` this method allows us to specify a [dynamic value](/docs/docs/tutorial-extras/dynamic-value)
 
 ####  Syntax
 
@@ -86,7 +88,7 @@ anima_property(property: String, final_value, duration)
 | final_value | Variant | null | (Optional) The final value. If null, the current property value is used as final value |
 | duration | float | null | The animation duration (seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-The `property` parameter can be any animatable property, for example:
+The `property` parameter can be any node property that can be accessed, even exported variables. For example:
 
 - size
 - position
@@ -108,9 +110,16 @@ Anima also recognised these built-in property names:
 | height | This is equivalent to `size:y` or `rect_size:y` |
 | shared_param | This will call `set_shader_param` |
 
+####  Example
+
+```gdscript
+Anima.Node($node).anima_property("size:x").anima_from(100)
+Anima.Node($node).anima_property("x", 200)
+```
+
 ##### position vs rect_position
 
-Although Godot prefixes some of the **Controls** properties with `rect_`, we don't need to worry about that; Anima will figure out the correct property name for us.
+Although Godot prefixes some of the **Controls** properties with `rect_`, we don't need to worry about that; Anima will figure out the correct property name.
 
 For example:
 
@@ -119,15 +128,43 @@ Anima.Node($Control).property("position:x", 100 ) # Animates rect_position.x
 Anima.Node($Node2D).property("position:x", 100 )  # Animates position.x
 ```
 
+## anima_as_relative
+
+Tells anima that the final value is a relative one
+
+####  Syntax
+
+```gdscript
+anima_as_relative()
+```
 
 ####  Example
 
 ```gdscript
-Anima.Node($node).anima_property("size:x").anima_from(100)
-Anima.Node($node).anima_property("x", 200)
+Anima.Node($node).anima_scale_x(0.8).anima_as_relative()
 ```
 
-## animate_fade_in
+## anima_from
+
+Set the initial value.
+
+####  Syntax
+
+```gdscript
+anima_from(value: Variant)
+```
+
+| Param | Type | Description |
+|---|---|---|
+| value | Variant | The initial value. It can be a fixed or [dynamic](/docs/docs/tutorial-extras/dynamic-value) one. |
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_property("x").anima_from(-100)
+```
+
+## anima_fade_in
 
 Fades in the given element(s)
 
@@ -165,6 +202,64 @@ anima_fade_out(duration: float)
 
 ```gdscript
 Anima.Node($node).fade_out(0.4)
+```
+
+## anima_on_started
+
+Callback to be triggered when the Node animation starts.
+
+####  Syntax
+
+```gdscript
+anima_on_started(callback: Funcref | Callable, on_started_value, on_backwards_completed_value = null)
+```
+
+| Param | Type | Required | Description |
+|---|---|---|---|
+| callback | Funcref/Callable<sup>*</sup> | yes | The callback to call when the Node animation is starts (or complete<sup>**</sup>) |
+| on_started_value | Variant | yes | The parameter to pass at the callback when the Node animation is played forward |
+| on_backwards_completed_value | Variant | no | The parameter to pass at the callback when the Node animation is played backwards |
+
+<b><sup>*</sup></b> In Godot4 Funcref are called Callable.
+<br />
+<b><sup>**</sup></b> When the animation is played backwards this event is triggered when the Node animation starts
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_on_started(funcref(self, "do_something"), true, false)
+
+func do_something(is_forward) -> void:
+    print(is_forward)
+```
+
+## anima_on_completed
+
+Callback to be triggered when the Node animation completes.
+
+####  Syntax
+
+```gdscript
+anima_on_completed(on_completed: FuncRef | Callable, on_completed_value, on_backwards_started_value = null)
+```
+
+| Param | Type | Required | Description |
+|---|---|---|---|
+| callback | Funcref/Callable<sup>*</sup> | yes | The callback to call when the Node animation is completed (or started<sup>**</sup>) |
+| on_completed_value | Variant | yes | The parameter to pass at the callback when the Node animation is played forward |
+| on_backwards_started_value | Variant | no | The parameter to pass at the callback when the Node animation is played backwards |
+
+<b><sup>*</sup></b> In Godot4 Funcref are called Callable.
+<br />
+<b><sup>**</sup></b> When the animation is played backwards this event is triggered when the Node animation starts
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_on_started(funcref(self, "do_something"), true, false)
+
+func do_something(is_forward) -> void:
+    print(is_forward)
 ```
 
 ## anima_position
@@ -378,6 +473,112 @@ anima_relative_position_z(z: float, duration: float)
 Anima.Node($node).anima_relative_position_z(-1)
 ```
 
+
+## anima_rotate
+
+Animates the 2D rotate property of the given element(s)
+
+####  Syntax
+
+```gdscript
+anima_rotate(rotate: Vector2, duration: float)
+```
+
+| Param | Type | Default | Description |
+|---|---|---|---|
+| rotate | Vector2 |  | The final rotate value |
+| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_rotate(Vector2.ZERO)
+```
+
+## anima_rotate3D
+
+Animates the 3D rotate property of the given element(s)
+
+####  Syntax
+
+```gdscript
+anima_rotate3D(rotate: Vector3, duration: float)
+```
+
+| Param | Type | Default | Description |
+|---|---|---|---|
+| rotate | Vector3 |  | The final rotate value |
+| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_rotate3D(Vector3(10, 0, -0.5))
+```
+
+## anima_rotate_x
+
+Animates the `x` rotate property of the given element(s)
+
+####  Syntax
+
+```gdscript
+anima_rotate_x(rotate_x: float, duration: float)
+```
+
+| Param | Type | Default | Description |
+|---|---|---|---|
+| rotate_x | float |  | The final rotate `x` value |
+| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_rotate_x(0.8)
+```
+
+## anima_rotate_y
+
+Animates the `y` rotate property of the given element(s)
+
+####  Syntax
+
+```gdscript
+anima_rotate_y(rotate_y: float, duration: float)
+```
+
+| Param | Type | Default | Description |
+|---|---|---|---|
+| rotate_y | float |  | The final rotate `y` value |
+| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_rotate_y(0.8)
+```
+
+## anima_rotate_z
+
+Animates the `z` rotate property of the given element(s)
+
+####  Syntax
+
+```gdscript
+anima_rotate_z(rotate_z: float, duration: float)
+```
+
+| Param | Type | Default | Description |
+|---|---|---|---|
+| rotate_z | float |  | The final rotate `z` value |
+| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_rotate_z(0.8)
+```
+
 ## anima_scale
 
 Animates the 2D scale property of the given element(s)
@@ -587,126 +788,4 @@ anima_size_z(size_z: float, duration: float)
 
 ```gdscript
 Anima.Node($node).anima_size_z(0.8)
-```
-
-## anima_rotate
-
-Animates the 2D rotate property of the given element(s)
-
-####  Syntax
-
-```gdscript
-anima_rotate(rotate: Vector2, duration: float)
-```
-
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate | Vector2 |  | The final rotate value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-
-####  Example
-
-```gdscript
-Anima.Node($node).anima_rotate(Vector2.ZERO)
-```
-
-## anima_rotate3D
-
-Animates the 3D rotate property of the given element(s)
-
-####  Syntax
-
-```gdscript
-anima_rotate3D(rotate: Vector3, duration: float)
-```
-
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate | Vector3 |  | The final rotate value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-
-####  Example
-
-```gdscript
-Anima.Node($node).anima_rotate3D(Vector3(10, 0, -0.5))
-```
-
-## anima_rotate_x
-
-Animates the `x` rotate property of the given element(s)
-
-####  Syntax
-
-```gdscript
-anima_rotate_x(rotate_x: float, duration: float)
-```
-
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate_x | float |  | The final rotate `x` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-
-####  Example
-
-```gdscript
-Anima.Node($node).anima_rotate_x(0.8)
-```
-
-## anima_rotate_y
-
-Animates the `y` rotate property of the given element(s)
-
-####  Syntax
-
-```gdscript
-anima_rotate_y(rotate_y: float, duration: float)
-```
-
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate_y | float |  | The final rotate `y` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-
-####  Example
-
-```gdscript
-Anima.Node($node).anima_rotate_y(0.8)
-```
-
-## anima_rotate_z
-
-Animates the `z` rotate property of the given element(s)
-
-####  Syntax
-
-```gdscript
-anima_rotate_z(rotate_z: float, duration: float)
-```
-
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate_z | float |  | The final rotate `z` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-
-####  Example
-
-```gdscript
-Anima.Node($node).anima_rotate_z(0.8)
-```
-
-
-## anima_as_relative
-
-Tells anima that the final value is a relative one
-
-####  Syntax
-
-```gdscript
-anima_as_relative()
-```
-
-####  Example
-
-```gdscript
-Anima.Node($node).anima_scale_x(0.8).anima_as_relative()
 ```

@@ -57,7 +57,7 @@ margin_top = 92.0
 margin_right = 509.0
 margin_bottom = 176.0
 text = "Sequential and parallel animation"
-scene = "res://demos/SequenceAndParallel.tscn"
+scene = "res://demos/nodes/SequenceAndParallel.tscn"
 
 [node name="SequentialAnParallel2" parent="Control" instance=ExtResource( 3 )]
 margin_left = 517.0
@@ -65,14 +65,14 @@ margin_top = 92.0
 margin_right = 1024.0
 margin_bottom = 176.0
 text = "Sequential with paralel animation"
-scene = "res://demos/SequenceWithParallel.tscn"
+scene = "res://demos/nodes/SequenceWithParallel.tscn"
 
 [node name="SequentialAnParallel3" parent="Control" instance=ExtResource( 3 )]
 margin_top = 184.0
 margin_right = 509.0
 margin_bottom = 268.0
 text = "Sequential with paralel animation - Backwards"
-scene = "res://demos/SequenceWithParallelBackwards.tscn"
+scene = "res://demos/nodes/SequenceWithParallelBackwards.tscn"
 
 [node name="ButtonCallbacks" parent="Control" instance=ExtResource( 3 )]
 margin_left = 517.0
@@ -80,7 +80,7 @@ margin_top = 184.0
 margin_right = 1024.0
 margin_bottom = 268.0
 text = "Sequence animation and callbacks"
-scene = "res://demos/SequenceCallback.tscn"
+scene = "res://demos/nodes/SequenceCallback.tscn"
 
 [node name="Group" parent="Control" instance=ExtResource( 3 )]
 margin_top = 276.0
