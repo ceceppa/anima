@@ -51,7 +51,7 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'tutorial-basics/fundamentals',
+            docId: 'tutorials/fundamentals',
             position: 'left',
             label: 'Tutorials',
           },

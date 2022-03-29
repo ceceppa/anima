@@ -5,10 +5,11 @@ extends Tween
 
 signal animation_completed
 
+const VISIBILITY_STRATEGY_META_KEY = "__visibility_strategy"
+
 var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "y", "position:y", "x"]
 
 var _animation_data := []
-var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
 var _loop_strategy = Anima.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
@@ -110,7 +111,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
 
-	object.set_animation_data(animation_data, property_data, is_backwards_animation, _visibility_strategy)
+	object.set_animation_data(animation_data, property_data, is_backwards_animation)
 
 	if animation_data.has("__debug"):
 		printt("use_method", use_method)
@@ -392,8 +393,6 @@ func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
 
-	_visibility_strategy = strategy
-
 func set_loop_strategy(strategy: int) -> void:
 	_loop_strategy = strategy
 
@@ -499,9 +498,11 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 		node.set_meta('_old_modulate', modulate)
 
 		node.modulate = transparent
-#
+
 #		if animation_data.has('property') and animation_data.property == 'opacity':
 #			node.remove_meta('_old_modulate')
+
+	node.set_meta(VISIBILITY_STRATEGY_META_KEY, strategy)
 
 
 # We don't want the user to specify the from/to value as color
@@ -549,14 +550,13 @@ class AnimatedItem extends Node:
 	var _loop_strategy: int = Anima.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
-	var _visibility_strategy: int
 	var _property_data: Dictionary
 	var _easing_curve: Curve
 
 	func on_started() -> void:
-		var visibility_strategy = _visibility_strategy
+		var visibility_strategy = _node.get_meta(VISIBILITY_STRATEGY_META_KEY) if _node.has_meta(VISIBILITY_STRATEGY_META_KEY) else null
 
-		if _node.has_meta("_visibility_strategy_reverted") or not _animation_data.has('on_started'):
+		if _node.has_meta("_visibility_strategy_reverted") or visibility_strategy == null:
 			return
 
 		_node.set_meta("_visibility_strategy_reverted", true)
@@ -588,7 +588,9 @@ class AnimatedItem extends Node:
 		if should_restore_visibility:
 			_node.show()
 
-		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and _animation_data._is_first_frame
+		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and \
+												_animation_data._is_first_frame and \
+												_animation_data.has('on_started')
 
 		if should_trigger_on_started:
 			_execute_callback(_animation_data.on_started)
@@ -602,10 +604,9 @@ class AnimatedItem extends Node:
 		if should_trigger_on_completed:
 			_execute_callback(_animation_data.on_completed)
 
-	func set_animation_data(data: Dictionary, property_data: Dictionary, is_backwards_animation: bool, visibility_strategy) -> void:
+	func set_animation_data(data: Dictionary, property_data: Dictionary, is_backwards_animation: bool) -> void:
 		_animation_data = data
 		_is_backwards_animation = is_backwards_animation
-		_visibility_strategy = visibility_strategy
 
 		if property_data.has("callback"):
 			_callback = property_data.callback

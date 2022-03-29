@@ -81,7 +81,7 @@ signal loop_completed(loop_count: int)
 - [play_backwards_with_speed(speed)](#play-with-delay)
 - [stop()](#stop)
 - [clear()](#clear)
-- [set_visibility_strategy(Anima.VISIBILITY_STRATEGY)](#set_visibility_strategy)
+- [set_visibility_strategy](#set_visibility_strategy)
 - [set_loop_strategy()](#set-loop-strategy)
 - [get_length()](#get-length)
 - [set_default_duration](#set-default-duration)
@@ -180,8 +180,14 @@ So this method is helpful to avoid this kind of distraction, as we can specify, 
 #### Syntax
 
 ```
-set_visibility_strategy(strategy: Anima.Visibility)
+set_visibility_strategy(strategy: Anima.VISIBILITY, always_apply_on_play := true)
 ```
+|Param|Type|Description|
+|---|---|---|
+|strategy|int|The visibility strategy to apply|
+|always_apply_on_play|bool|If true re-apply the visibility strategy every time `.play()` is called|
+
+##### Visibility Strategies
 
 |Strategy|Description|
 |---|---|
@@ -200,13 +206,12 @@ set_visibility_strategy(strategy: Anima.Visibility)
 ```gdscript
 func _ready():
 	Anima.begin(self, 'sequence_and_parallel') \
+		.set_visibility_strategy(Anima.Visibility.TRANSPARENT_ONLY) \
 		.then( Anima.Node($Panel).anima_animation( "scale_y", 0.3 ) ) \
 		.then( Anima.Node($Panel/MarginContainer/Label).anima_animation( "typewrite", 0.3 ) ) \
 		.then( Anima.Node($Panel/CenterContainer/Button).anima_animation( "tada", 0.5 ).anima_delay(-0.5) ) \
-		.set_visibility_strategy(Anima.Visibility.TRANSPARENT_ONLY) \
 		.play_with_delay(0.5)
 ```
-
 
 ### loop
 

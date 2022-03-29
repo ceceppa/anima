@@ -23,6 +23,7 @@ var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
 var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _is_single_shot := false
+var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 
 var __do_nothing := 0.0
 var _last_tween_data: Dictionary
@@ -171,6 +172,8 @@ func is_single_shot() -> bool:
 	return _is_single_shot
 
 func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> AnimaNode:
+	_visibility_strategy = strategy
+
 	_anima_tween.set_visibility_strategy(strategy)
 	_anima_backwards_tween.set_visibility_strategy(strategy)
 
@@ -187,8 +190,7 @@ func clear() -> void:
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
-
-	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
+	_visibility_strategy = Anima.VISIBILITY.IGNORE
 
 func play() -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL)
@@ -218,7 +220,7 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	_play_speed = speed
 
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
-		set_visibility_strategy(_anima_tween._visibility_strategy)
+		set_visibility_strategy(_visibility_strategy)
 
 	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
 	_timer.start()
