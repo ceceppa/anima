@@ -16,7 +16,7 @@ In this case, we give Anima all the info needed to create the animation, so it d
 ## 2. The current value
 
 :::caution
-When the animation is created can matter!
+When the animation is created matters!
 :::
 
 To understand what this means, let's consider the following example:
@@ -33,7 +33,9 @@ Now let's consider the following two animations:
 <table style={{ width: '100%' }}><tr style={{ width: '100%'}}>
 
 <th style={{ width: '50%' }}>Initialise the animation on: `_ready`</th>
-<th style={{ width: '50%' }}>Initialise the animation on: `_on_Button_pressed`</th>
+<th style={{ width: '50%' }}>
+  Initialise the animation on: `_on_Button_pressed`
+</th>
 
 </tr>
 <tr style={{ width: '100%'}}>
@@ -90,7 +92,6 @@ Anima animates `x` from **490** _to_ **600**.
 </td>
 <td>
 
-
 Anima animates `x` from **490** _to_ **600**.
 
 **490** is the `x` value found when initialising the animation on `_on_Button_pressed`.
@@ -139,6 +140,7 @@ has completed, we will have:
 
 `x` is calculated when the animation is created and, in this case, matches with the final value. If we re-trigger the animation before
 it reaches the final `x` position, and then the initial value will be a number between **490** and **600**.
+
 </td>
 </tr>
 </table>
