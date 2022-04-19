@@ -50,8 +50,8 @@ const config = {
             label: 'Docs',
           },
           {
-            type: 'doc',
-            docId: 'tutorials/fundamentals',
+            type: 'tutorial',
+            docId: 'intro',
             position: 'left',
             label: 'Tutorials',
           },
