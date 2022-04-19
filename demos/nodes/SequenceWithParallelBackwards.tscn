@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://demos/SequenceWithParallelBackwards.gd" type="Script" id=1]
-[ext_resource path="res://resources/cross.png" type="Texture" id=2]
+[ext_resource path="res://demos/nodes/SequenceWithParallelBackwards.gd" type="Script" id=1]
+[ext_resource path="res://demos/resources/cross.png" type="Texture" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
 [node name="PlayReverse" type="Node2D"]

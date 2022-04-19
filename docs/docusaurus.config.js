@@ -21,18 +21,33 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
+        debug: true,
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
           editUrl: 'https://github.com/ceceppa/anima/docs/',
+          showLastUpdateTime: true,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+        },
       }),
     ],
   ],
-
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'tutorials',
+        path: 'tutorials',
+        routeBasePath: 'tutorials',
+        sidebarPath: require.resolve('./sidebars.js'),
+      },
+    ],
+  ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -50,8 +65,7 @@ const config = {
             label: 'Docs',
           },
           {
-            type: 'tutorial',
-            docId: 'intro',
+            to: '/tutorials/intro',
             position: 'left',
             label: 'Tutorials',
           },

@@ -77,6 +77,7 @@ anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 230, 300 )
 custom_constants/separation = 0
 __meta__ = {
+"__visibility_strategy": 0,
 "_edit_use_anchors_": false
 }
 

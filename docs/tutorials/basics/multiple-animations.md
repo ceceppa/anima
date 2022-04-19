@@ -35,8 +35,8 @@ func set_scale(scale: Vector2, default := false) -> void:
    animate_param("scale", scale)
 
 func animate_param(property: String, value, from = null) -> void:
-    Anima.begin_single_shot(self, property) `
-        then( Anima.Node(self).anima_property(property, value, 0.3).anima_from(from) ) `
+    Anima.begin_single_shot(self, property) \
+        then( Anima.Node(self).anima_property(property, value, 0.3).anima_from(from) ) \
         .play()
 ```
 
