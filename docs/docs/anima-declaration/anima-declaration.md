@@ -144,6 +144,29 @@ anima_as_relative()
 Anima.Node($node).anima_scale_x(0.8).anima_as_relative()
 ```
 
+## anima_delay
+
+The delay to use before starting the animation.
+
+####  Syntax
+
+```gdscript
+anima_delay(0.0)
+```
+
+:::tip
+You can also use negative values to anticipate a sequential/parallel animation
+:::
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_scale_x(0.8).anima_delay(0.5)
+
+# or
+Anima.Node($node).anima_scale_x(0.8).anima_delay(-0.5)
+```
+
 ## anima_from
 
 Set the initial value.

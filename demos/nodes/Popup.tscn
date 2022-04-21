@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://demos/resources/Lato-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://demos/nodes/SequenceAndParallel.gd" type="Script" id=2]
+[ext_resource path="res://demos/nodes/Popup.gd" type="Script" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -60,15 +60,12 @@ corner_radius_bottom_left = 8
 
 [node name="Node" type="Node"]
 
-[node name="SequenceAndParallel" type="CenterContainer" parent="."]
+[node name="Popup" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Panel" type="Panel" parent="SequenceAndParallel"]
+[node name="Panel" type="Panel" parent="Popup"]
 margin_left = 212.0
 margin_top = 100.0
 margin_right = 812.0
@@ -79,7 +76,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="SequenceAndParallel/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Popup/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 12.0
@@ -87,28 +84,25 @@ margin_top = 12.0
 margin_right = -12.0
 margin_bottom = -12.0
 
-[node name="Label" type="Label" parent="SequenceAndParallel/Panel/MarginContainer"]
+[node name="Label" type="Label" parent="Popup/Panel/MarginContainer"]
 margin_right = 576.0
 margin_bottom = 376.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
 custom_fonts/font = SubResource( 2 )
-text = "Demo of sequence and parallel animations :)"
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="SequenceAndParallel/Panel"]
+[node name="CenterContainer" type="CenterContainer" parent="Popup/Panel"]
 anchor_top = 0.745
 anchor_right = 1.0
 anchor_bottom = 0.869
 margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Button" type="Button" parent="SequenceAndParallel/Panel/CenterContainer"]
+[node name="Button" type="Button" parent="Popup/Panel/CenterContainer"]
 margin_left = 234.0
 margin_top = 13.0
 margin_right = 366.0
@@ -123,5 +117,6 @@ __meta__ = {
 }
 
 [node name="ShowAllDemos" parent="." instance=ExtResource( 3 )]
+visible = false
 
-[connection signal="pressed" from="SequenceAndParallel/Panel/CenterContainer/Button" to="SequenceAndParallel" method="_on_Button_pressed"]
+[connection signal="pressed" from="Popup/Panel/CenterContainer/Button" to="Popup" method="_on_Button_pressed"]

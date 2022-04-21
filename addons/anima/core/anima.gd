@@ -88,7 +88,7 @@ const MINIMUM_DURATION := 0.000001
 var _animations_list := []
 var _custom_animations := {}
 
-static func begin(node: Node, name: String = 'anima', single_shot := false):
+static func begin(node: Node, name: String = 'anima', single_shot := false) -> AnimaNode:
 	var node_name = 'AnimaNode_' + name
 	var anima_node: AnimaNode
 
@@ -109,7 +109,7 @@ static func begin(node: Node, name: String = 'anima', single_shot := false):
 
 	return anima_node
 
-static func begin_single_shot(node: Node, name: String = "anima"):
+static func begin_single_shot(node: Node, name: String = "anima") -> AnimaNode:
 	return begin(node, name, true)
 
 #
