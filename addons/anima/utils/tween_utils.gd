@@ -65,7 +65,7 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 		values_to_check = value
 
 	var regex := RegEx.new()
-	regex.compile("([\\w\\/.:]+[a-zA-Z]*:[a-z]*:?[a-z]*)")
+	regex.compile("([\\w\\/.:]+[a-zA-Z]*:[a-z]*:?[a-z_]*)")
 
 	var all_results := []
 	var root = animation_data.node

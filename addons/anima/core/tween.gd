@@ -199,9 +199,8 @@ func set_root_node(node: Node) -> void:
 #		y = 0
 #	}
 #
-func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
+func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
 	var last_duration := 0.0
-	var is_first_frame = true
 	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
 	var easing = full_keyframes_data.easing if full_keyframes_data.has("easing") else null
@@ -240,6 +239,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 	var percentage = frame_keys[0]
 	var base_data = animation_data.duplicate()
 	var node: Node = animation_data.node
+	var real_duration := 0.0
 
 	for property_to_animate in keyframes_data[percentage]:
 		var current_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
@@ -250,20 +250,37 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 		base_data.property = property_to_animate
 
 		if value != null and value is String:
-			print(value)
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
-			printt(current_value, value)
 			data.value += value
 
 		previous_key_value[property_to_animate] = data
 		node.set_meta("__initial_" + property_to_animate, current_value)
 
 	frame_keys.pop_front()
+
+	#
+	# Sometimes we want to be able to define the duration of each single step.
+	# For example for "typewrite" we want to specify the duration of the animation of the single
+	# character, instead of the full sentences, otherwise different string length will
+	# have different speed.
+	# In those cases we can define a special key called "_duration" where we can specify a formula
+	# using the "dynamic value" capability.
+	#
+	if full_keyframes_data.has("_duration"):
+		var duration_formula = full_keyframes_data._duration.replace("{duration}", animation_data.duration)
+		real_duration = AnimaTweenUtils.maybe_calculate_value(duration_formula, animation_data)
+		
+		animation_data.duration = real_duration
+
+	var is_first_frame := true
 	for frame_key in frame_keys:
 		if (not frame_key is int and not frame_key is float) or frame_key > 100:
 			continue
 
 		var keyframe_data: Dictionary = keyframes_data[frame_key]
+
+		animation_data._is_first_frame = is_first_frame
+		animation_data._is_last_frame = frame_key == 100
 
 		_calculate_frame_data(
 			wait_time,
@@ -275,6 +292,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 		)
 
 		animation_data.erase("initial_values")
+
+	return real_duration
 
 func _sort_frame_index(a, b) -> bool:
 	return int(a) < int(b)
@@ -498,9 +517,6 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 		node.set_meta('_old_modulate', modulate)
 
 		node.modulate = transparent
-
-#		if animation_data.has('property') and animation_data.property == 'opacity':
-#			node.remove_meta('_old_modulate')
 
 	node.set_meta(VISIBILITY_STRATEGY_META_KEY, strategy)
 

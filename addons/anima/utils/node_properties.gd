@@ -146,6 +146,8 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 			return get_size(node).x
 		"size:y", "height":
 			return get_size(node).y
+		"text:visible_characters":
+			return node.text.replace(" ", "").length()
 
 	var p = property.split(':')
 

@@ -326,8 +326,10 @@ func set_loop_strategy(strategy: int):
 	_anima_tween.set_loop_strategy(strategy)
 	_anima_backwards_tween.set_loop_strategy(strategy)
 
-func set_default_duration(duration: float) -> void:
+func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
+
+	return self
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
@@ -382,11 +384,10 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 				return duration
 
-		_anima_tween.add_frames(data, keyframes)
+		var real_duration = _anima_tween.add_frames(data, keyframes)
 
-#		var real_duration = 
-#		if real_duration is float:
-#			duration = real_duration
+		if real_duration > 0:
+			duration = real_duration
 	else:
 		_anima_tween.add_animation_data(data)
 
