@@ -240,19 +240,18 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var base_data = animation_data.duplicate()
 	var node: Node = animation_data.node
 	var real_duration := 0.0
+	var first_frame_data = keyframes_data[percentage]
 
-	for property_to_animate in keyframes_data[percentage]:
+	for property_to_animate in first_frame_data:
 		var current_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
-		var value = keyframes_data[percentage][property_to_animate]
-		var is_relative := relative_properties.find(property_to_animate) >= 0
-		var data := { percentage = percentage, value = current_value }
-
-		base_data.property = property_to_animate
+		var value = first_frame_data[property_to_animate]
 
 		if value != null and value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
-			data.value += value
 
+		var data := { percentage = percentage, value = value }
+
+		base_data.property = property_to_animate
 		previous_key_value[property_to_animate] = data
 		node.set_meta("__initial_" + property_to_animate, current_value)
 
@@ -381,8 +380,11 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		data.easing = easing
 		data.from = from_value
 
+		if property_name == "opacity":
+			data.easing = null
+
 		if animation_data.has("__debug"):
-			prints("\n=== FRAME", data.property, ":", from_value, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", easing, " is relative:", str(relative))
+			prints("\n=== FRAME", data.property, ":", data.from, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", data.easing, " is relative:", str(relative))
 
 		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			add_animation_data(data)
