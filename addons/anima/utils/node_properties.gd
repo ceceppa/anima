@@ -147,7 +147,10 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 		"size:y", "height":
 			return get_size(node).y
 		"text:visible_characters":
-			return node.text.replace(" ", "").length()
+			var hack = UseTRFromStaticMethod.new()
+			var translated_text = hack.get_translation(node.text)
+
+			return translated_text.replace(" ", "").length()
 
 	var p = property.split(':')
 
@@ -419,3 +422,10 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 	return {
 		property = property
 	}
+
+#
+# Allow calling "tr" from a static function
+#
+class UseTRFromStaticMethod:
+	func get_translation(key) -> String:
+		return tr(key)
