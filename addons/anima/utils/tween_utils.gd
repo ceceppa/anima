@@ -29,7 +29,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		to = current_value
 
 	var pivot = animation_data.pivot if animation_data.has("pivot") else Anima.PIVOT.CENTER
-	if not node is Spatial:
+	if not node is Spatial and not node is CanvasModulate:
 		AnimaNodesProperties.set_2D_pivot(animation_data.node, pivot)
 
 	var s = -1.0 if is_backwards_animation and relative else 1.0

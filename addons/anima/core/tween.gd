@@ -83,14 +83,17 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
 
 	animation_data._easing_points = easing_points
+
 	var property_data: Dictionary = {}
+	var node: Node = animation_data.node
+
 	if animation_data.property is Object:
 		property_data = {
 			property = animation_data.property,
 			key = animation_data.key
 		}
 	else:
-		property_data = AnimaNodesProperties.map_property_to_godot_property(animation_data.node, animation_data.property)
+		property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
 
 	if not property_data.has("property") and not property_data.has("callback"):
 #		printerr("property/callback missing or not recognised for the animation: ", animation_data.property)
@@ -128,6 +131,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	)
 	
 	add_child(object)
+	
+	node.connect("tree_exiting", self, "_on_node_tree_exiting")
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
 	var node: Node = animation_data.node
@@ -250,9 +255,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary):
 		base_data.property = property_to_animate
 
 		if value != null and value is String:
-			print(value)
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
-			printt(current_value, value)
 			data.value += value
 
 		previous_key_value[property_to_animate] = data
@@ -538,6 +541,9 @@ func _on_tween_completed(node, _ignore) -> void:
 
 func _on_tween_started(node, _ignore) -> void:
 	node.on_started()
+
+func _on_node_tree_exiting() -> void:
+	stop_all()
 
 class AnimatedItem extends Node:
 	var _node: Node

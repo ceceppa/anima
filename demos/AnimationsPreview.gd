@@ -51,7 +51,7 @@ func _on_animation_button_pressed(button: Button) -> void:
 	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
 
 	_play_animation($HBoxContainer/VBoxContainer/ControlContainer/ControlTest, button)
-#	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
+	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
 
 func _play_animation(node: Node, button: Button):
 	var script_name: String = button.get_meta('script')
