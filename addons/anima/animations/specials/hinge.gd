@@ -13,6 +13,6 @@ var KEYFRAMES := {
 		y = 700,
 		opacity = 0
 	},
-	easing = Anima.EASING.EASE_IN_OUT,
+	easing = ANIMA.EASING.EASE_IN_OUT,
 	pivot = Anima.PIVOT.TOP_LEFT
 }

@@ -11,7 +11,7 @@ var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "
 
 var _animation_data := []
 var _callbacks := {}
-var _loop_strategy = Anima.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
+var _loop_strategy = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
@@ -55,7 +55,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	_animation_data.push_back(animation_data)
 	index = str(_animation_data.size())
 
-	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
+	var duration = animation_data.duration if animation_data.has('duration') else ANIMA.DEFAULT_DURATION
 
 	if animation_data.has('visibility_strategy'):
 		_apply_visibility_strategy(animation_data)
@@ -132,7 +132,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	add_child(object)
 
-	node.connect("tree_exiting", self, "_on_node_tree_exiting")
+	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
+		node.connect("tree_exiting", self, "_on_node_tree_exiting")
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
 	var node: Node = animation_data.node
@@ -216,7 +217,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	if full_keyframes_data.has("relative"):
 		relative_properties = full_keyframes_data.relative
 
-	animation_data._relative_to = Anima.RELATIVE_TO.INITIAL_VALUE
+	animation_data._relative_to = ANIMA.RELATIVE_TO.INITIAL_VALUE
 
 	if full_keyframes_data.has("relativeTo"):
 		animation_data._relative_to = full_keyframes_data.relativeTo
@@ -253,7 +254,6 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 		if value != null and value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
-			data.value += value
 
 		var data := { percentage = percentage, value = value }
 
@@ -343,7 +343,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		var data = animation_data.duplicate()
 		var start_percentage = previous_key_value[property_to_animate].percentage
 		var percentage = (current_frame_key - start_percentage) / 100.0
-		var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
+		var frame_duration = max(ANIMA.MINIMUM_DURATION, duration * percentage)
 		var percentage_delay := 0.0
 		var relative = relative_properties.find(property_to_animate) >= 0
 		var initial_key = "__initial_" + property_to_animate
@@ -470,7 +470,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 			animation_data.from = temp
 
-		animation_data._wait_time = max(Anima.MINIMUM_DURATION, new_wait_time)
+		animation_data._wait_time = max(ANIMA.MINIMUM_DURATION, new_wait_time)
 
 		var old_on_completed = animation_data.on_completed if animation_data.has("on_completed") else null
 		var erase_on_completed := true
@@ -494,7 +494,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 	return new_data
 
-func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.VISIBILITY.IGNORE):
+func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIMA.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame'):
 		return
 
@@ -504,12 +504,12 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 	if animation_data.has("visibility_strategy"):
 		strategy = animation_data.visibility_strategy
 
-	if strategy == Anima.VISIBILITY.HIDDEN_ONLY:
+	if strategy == ANIMA.VISIBILITY.HIDDEN_ONLY:
 		should_hide_nodes = true
-	elif strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
+	elif strategy == ANIMA.VISIBILITY.HIDDEN_AND_TRANSPARENT:
 		should_hide_nodes = true
 		should_make_nodes_transparent = true
-	elif strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
+	elif strategy == ANIMA.VISIBILITY.TRANSPARENT_ONLY:
 		should_make_nodes_transparent = true
 
 	var node: Node = animation_data.node
@@ -574,7 +574,7 @@ class AnimatedItem extends Node:
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
-	var _loop_strategy: int = Anima.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
+	var _loop_strategy: int = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
 	var _property_data: Dictionary
@@ -594,12 +594,12 @@ class AnimatedItem extends Node:
 		var should_restore_visibility := false
 		var should_restore_modulate := false
 
-		if visibility_strategy == Anima.VISIBILITY.HIDDEN_ONLY:
+		if visibility_strategy == ANIMA.VISIBILITY.HIDDEN_ONLY:
 			should_restore_visibility = true
-		elif visibility_strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
+		elif visibility_strategy == ANIMA.VISIBILITY.HIDDEN_AND_TRANSPARENT:
 			should_restore_modulate = true
 			should_restore_visibility = true
-		elif visibility_strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
+		elif visibility_strategy == ANIMA.VISIBILITY.TRANSPARENT_ONLY:
 			should_restore_modulate = true
 
 		if should_restore_modulate:
@@ -623,7 +623,7 @@ class AnimatedItem extends Node:
 			_execute_callback(_animation_data.on_started)
 
 	func on_completed() -> void:
-		if _loop_strategy == Anima.LOOP_STRATEGY.RECALCULATE_RELATIVE_DATA:
+		if _loop_strategy == ANIMA.LOOP_STRATEGY.RECALCULATE_RELATIVE_DATA:
 			_property_data.clear()
 
 		var should_trigger_on_completed = _animation_data.has('on_completed') and _animation_data.has('_is_last_frame')

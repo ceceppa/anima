@@ -4,6 +4,7 @@ extends Control
 signal value_updated
 signal select_relative_property
 signal confirmed
+signal finished
 
 enum TYPES {
 	INT = TYPE_INT,
@@ -108,14 +109,15 @@ func _animate_custom_value(mode: int) -> AnimaNode:
 	if _input_visible == null:
 		return
 
-	var anima: AnimaNode = Anima.begin_single_shot(self)
+	var anima: AnimaNode = $AnimaNode
+	anima.clear()
 	anima.set_default_duration(0.3)
 
 	anima.then(
 		Anima.Node(_current_value_button_visible) \
 			.anima_scale(Vector2(0.5, 0.5)) \
 			.anima_from(Vector2.ONE) \
-			.anima_easing(Anima.EASING.EASE_OUT_BACK)
+			.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
 	)
 	anima.with(
 		Anima.Node(_current_value_button_visible).anima_fade_out()
@@ -124,7 +126,7 @@ func _animate_custom_value(mode: int) -> AnimaNode:
 		Anima.Node(_custom_value) \
 			.anima_scale(Vector2.ONE) \
 			.anima_from(Vector2(1.5, 1.5)) \
-			.anima_easing(Anima.EASING.EASE_OUT_BACK) \
+			.anima_easing(ANIMA.EASING.EASE_OUT_BACK) \
 			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
 			.anima_initial_value(Vector2(1.5, 1.5))
 	)
@@ -364,3 +366,6 @@ func _on_ConfirmButton_pressed():
 	_on_ClearButton_pressed()
 
 	emit_signal("confirmed")
+
+func _on_CurrentValueBorderless_pressed():
+	_on_ConfirmButton_pressed()

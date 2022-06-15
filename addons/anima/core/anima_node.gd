@@ -18,12 +18,12 @@ var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
-var _default_duration = Anima.DEFAULT_DURATION
+var _default_duration = ANIMA.DEFAULT_DURATION
 var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
 var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _is_single_shot := false
-var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
+var _visibility_strategy: int = ANIMA.VISIBILITY.IGNORE
 
 var __do_nothing := 0.0
 var _last_tween_data: Dictionary
@@ -64,7 +64,7 @@ func then(data) -> AnimaNode:
 		printerr(
 			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
 			"\n",
-			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
+			"Visit https://ANIMA.ceceppa.me/docs/docs/anima-declaration for more info"
 		)
 		print_stack()
 		print(data)
@@ -91,7 +91,7 @@ func with(data) -> AnimaNode:
 		printerr(
 			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
 			"\n",
-			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
+			"Visit https://ANIMA.ceceppa.me/docs/docs/anima-declaration for more info"
 		)
 		print(data)
 		print("\n")
@@ -200,7 +200,7 @@ func clear() -> void:
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
-	_visibility_strategy = Anima.VISIBILITY.IGNORE
+	_visibility_strategy = ANIMA.VISIBILITY.IGNORE
 
 func play() -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL)
@@ -232,7 +232,7 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_visibility_strategy)
 
-	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
+	_timer.wait_time = max(ANIMA.MINIMUM_DURATION, delay)
 	_timer.start()
 
 func _on_timer_completed() -> void:
@@ -253,7 +253,7 @@ func loop_in_circle_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, delay)
 
 func loop_in_circle_with_speed(speed: float, times: int = -1) -> void:
-	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, Anima.MINIMUM_DURATION, speed)
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, ANIMA.MINIMUM_DURATION, speed)
 
 func loop_in_circle_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, delay, speed)
@@ -262,7 +262,7 @@ func loop_backwards(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS)
 
 func loop_backwards_with_speed(speed: float, times: int = -1) -> void:
-	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS, Anima.MINIMUM_DURATION, speed)
+	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS, ANIMA.MINIMUM_DURATION, speed)
 
 func loop_backwards_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
@@ -274,7 +274,7 @@ func loop_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
 func loop_with_speed(speed: float, times: int = -1) -> void:
-	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, Anima.MINIMUM_DURATION, speed)
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, ANIMA.MINIMUM_DURATION, speed)
 
 func loop_times_with_delay(times: float, delay: float) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
@@ -282,7 +282,7 @@ func loop_times_with_delay(times: float, delay: float) -> void:
 func loop_times_with_delay_and_speed(times: int, delay: float, speed: float) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay, speed)
 
-func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, speed := 1.0) -> void:
+func _do_loop(times: int, mode: int, delay: float = ANIMA.MINIMUM_DURATION, speed := 1.0) -> void:
 	_loop_times = times
 	_should_loop = times == -1
 	_play_mode = mode
@@ -294,7 +294,7 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, spee
 
 	_play_speed = speed
 
-	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
+	_timer.wait_time = max(ANIMA.MINIMUM_DURATION, delay)
 	_timer.start()
 
 func get_length() -> float:
@@ -404,13 +404,13 @@ func _setup_node_animation(data: Dictionary) -> float:
 	return duration
 
 func _setup_grid_animation(animation_data: Dictionary) -> float:
-	var animation_type = Anima.GRID.SEQUENCE_TOP_LEFT
+	var animation_type = ANIMA.GRID.SEQUENCE_TOP_LEFT
 	
 	if animation_data.has("animation_type"):
 		animation_type = animation_data.animation_type
 
 	if not animation_data.has("items_delay"):
-		animation_data.items_delay = Anima.DEFAULT_ITEMS_DELAY
+		animation_data.items_delay = ANIMA.DEFAULT_ITEMS_DELAY
 
 	if animation_data.has("grid"):
 		animation_data._grid_node = animation_data.grid
@@ -423,19 +423,19 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var duration: float
 
 	match animation_type:
-		Anima.GRID.TOGETHER:
+		ANIMA.GRID.TOGETHER:
 			duration = _generate_animation_all_together(animation_data)
-		Anima.GRID.COLUMNS_EVEN:
+		ANIMA.GRID.COLUMNS_EVEN:
 			duration = _generate_animation_for_even_columns(animation_data)
-		Anima.GRID.COLUMNS_ODD:
+		ANIMA.GRID.COLUMNS_ODD:
 			duration = _generate_animation_for_odd_columns(animation_data)
-		Anima.GRID.ROWS_ODD:
+		ANIMA.GRID.ROWS_ODD:
 			duration = _generate_animation_for_odd_rows(animation_data)
-		Anima.GRID.ROWS_EVEN:
+		ANIMA.GRID.ROWS_EVEN:
 			duration = _generate_animation_for_even_rows(animation_data)
-		Anima.GRID.ODD:
+		ANIMA.GRID.ODD:
 			duration = _generate_animation_for_odd_items(animation_data)
-		Anima.GRID.EVEN:
+		ANIMA.GRID.EVEN:
 			duration = _generate_animation_for_even_items(animation_data)
 		_:
 			duration = _generate_animation_sequence(animation_data, animation_type)
@@ -484,7 +484,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 
 func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -> float:
 	var nodes := []
-	var children := _get_children(animation_data, start_from == Anima.GRID.RANDOM)
+	var children := _get_children(animation_data, start_from == ANIMA.GRID.RANDOM)
 	var is_grid: bool = animation_data.grid_size.x > 1
 	var grid_size: Vector2 = animation_data.grid_size
 	var from_x: int
@@ -493,18 +493,18 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 	from_y = grid_size.y / 2
 	from_x = grid_size.x / 2
 
-	if start_from == Anima.GRID.FROM_POINT and not animation_data.has('point'):
-		start_from = Anima.GRID.FROM_CENTER
+	if start_from == ANIMA.GRID.FROM_POINT and not animation_data.has('point'):
+		start_from = ANIMA.GRID.FROM_CENTER
 
 	for row_index in children.size():
 		var row: Array = children[row_index]
 		var from_index = 0
 
-		if start_from == Anima.GRID.SEQUENCE_BOTTOM_RIGHT:
+		if start_from == ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT:
 			from_index = row.size() - 1
-		elif start_from == Anima.GRID.FROM_CENTER:
+		elif start_from == ANIMA.GRID.FROM_CENTER:
 			from_index = (row.size() - 1) / 2
-		elif start_from == Anima.GRID.FROM_POINT:
+		elif start_from == ANIMA.GRID.FROM_POINT:
 			if is_grid:
 				from_y = animation_data.point.y
 				from_x = animation_data.point.x

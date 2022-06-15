@@ -6,8 +6,8 @@ const SpriteLabel = preload('./helpers/SpriteLabel.gd')
 
 export (String) var label = 'AnimaLabel' setget set_label
 export (Font) var font setget set_font
-export (Anima.Align) var align = Anima.Align.CENTER setget set_align
-export (Anima.VAlign) var valign = Anima.VAlign.CENTER setget set_valign
+export (ANIMA.Align) var align = ANIMA.Align.CENTER setget set_align
+export (ANIMA.VAlign) var valign = ANIMA.VAlign.CENTER setget set_valign
 export (Color) var font_color = Color.white setget set_font_color
 export (Vector2) var text_offset = Vector2.ZERO setget set_text_offset_px
 export (Vector2) var text_scale = Vector2(1, 1) setget set_text_scale

@@ -12,7 +12,7 @@ func _ready():
 func _draw() -> void:
 	var curve: Curve2D = Curve2D.new()
 
-	var easing = AnimaEasing.get_easing_points(Anima.EASING.EASE_IN_BACK)
+	var easing = AnimaEasing.get_easing_points(ANIMA.EASING.EASE_IN_BACK)
 
 	var p1: Vector2 = Vector2(0, rect_size.y)
 	var p2: Vector2 = p1 + (Vector2(easing[0], easing[1]) * rect_size)

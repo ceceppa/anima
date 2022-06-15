@@ -6,5 +6,5 @@ var KEYFRAMES := {
 		x = ":size:x",
 		"skew:x": 30,
 	},
-	easing = Anima.EASING.EASE_IN
+	easing = ANIMA.EASING.EASE_IN
 }

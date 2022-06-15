@@ -13,7 +13,7 @@ func _ready():
 		to = 5, 
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE,
+		easing = ANIMA.EASING.EASE_OUT_SINE,
 		items_delay = 0
 	})
 	group1.with({ 
@@ -24,7 +24,7 @@ func _ready():
 		to = -5, 
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE,
+		easing = ANIMA.EASING.EASE_OUT_SINE,
 		items_delay = 0
 	})
 
@@ -38,7 +38,7 @@ func _ready():
 		to = 5,
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE,
+		easing = ANIMA.EASING.EASE_OUT_SINE,
 		items_delay = 0,
 		_debug = true
 	})
@@ -50,7 +50,7 @@ func _ready():
 		to = -5,
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE,
+		easing = ANIMA.EASING.EASE_OUT_SINE,
 		items_delay = 0,
 	})
 
@@ -65,7 +65,7 @@ func _ready():
 		to = 5,
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE,
+		easing = ANIMA.EASING.EASE_OUT_SINE,
 		items_delay = 0
 	})
 	cube.with({
@@ -76,7 +76,7 @@ func _ready():
 		to = -5,
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE,
+		easing = ANIMA.EASING.EASE_OUT_SINE,
 		items_delay = 0
 	})
 	cube.with({
@@ -86,7 +86,7 @@ func _ready():
 		property = "scale",
 		to = Vector3(1, 0.2, 1),
 		duration = 0.6,
-		easing = Anima.EASING.EASE_OUT_BOUNCE,
+		easing = ANIMA.EASING.EASE_OUT_BOUNCE,
 		items_delay = 0
 	})
 	cube.with({
@@ -111,7 +111,7 @@ func _ready():
 		to = 5,
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE
+		easing = ANIMA.EASING.EASE_OUT_SINE
 	})
 	cube.with({
 		grid = $Cubes,
@@ -122,7 +122,7 @@ func _ready():
 		to = -5,
 		relative = true,
 		duration = 0.3,
-		easing = Anima.EASING.EASE_OUT_SINE
+		easing = ANIMA.EASING.EASE_OUT_SINE
 	})
 	cube.with({
 		grid = $Cubes,
@@ -132,7 +132,7 @@ func _ready():
 		property = "scale",
 		to = Vector3(1, 1, 1),
 		duration = 0.6,
-		easing = Anima.EASING.EASE_OUT_BOUNCE
+		easing = ANIMA.EASING.EASE_OUT_BOUNCE
 	})
 	cube.with({
 		grid = $Cubes,

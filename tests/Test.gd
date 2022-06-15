@@ -31,7 +31,7 @@ func _ready():
 #				100: {
 #					y = 0,
 #					opacity = 1,
-#					easing = Anima.EASING.EASE_IN_OUT_BACK
+#					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 #				},
 #				initial_values = {
 #					opacity = 0,

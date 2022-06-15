@@ -34,23 +34,23 @@ func _add_rings(parent: Spatial, mesh, scale_value: float = 0.05) -> void:
 
 func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	var frames = [
-		{ percentage = 0, from = 0, easing = Anima.EASING.EASE_IN_CIRC },
-		{ percentage = 10, to = 0.5, easing = Anima.EASING.EASE_IN_OUT_CIRC },
-		{ percentage = 60, to = -1, easing = Anima.EASING.EASE_IN_CIRC },
-		{ percentage = 100, to = 0.5, easing = Anima.EASING.EASE_IN_OUT_BACK },
+		{ percentage = 0, from = 0, easing = ANIMA.EASING.EASE_IN_CIRC },
+		{ percentage = 10, to = 0.5, easing = ANIMA.EASING.EASE_IN_OUT_CIRC },
+		{ percentage = 60, to = -1, easing = ANIMA.EASING.EASE_IN_CIRC },
+		{ percentage = 100, to = 0.5, easing = ANIMA.EASING.EASE_IN_OUT_BACK },
 	]
 
 	var rotate = [
-		{ from = Vector3(0, 0, 0), to = Vector3(0, 0, 180), easing = Anima.EASING.EASE_OUT_BACK }
+		{ from = Vector3(0, 0, 0), to = Vector3(0, 0, 180), easing = ANIMA.EASING.EASE_OUT_BACK }
 	]
 
 	var rotate2 = [
-		{ percentage = 0, from = Vector3(0, 0, 0), easing = Anima.EASING.EASE_IN_CIRC }, 
-		{ percentage = 100, to = Vector3(0, 0, 360), easing = Anima.EASING.EASE_OUT_BACK }
+		{ percentage = 0, from = Vector3(0, 0, 0), easing = ANIMA.EASING.EASE_IN_CIRC }, 
+		{ percentage = 100, to = Vector3(0, 0, 360), easing = ANIMA.EASING.EASE_OUT_BACK }
 	]
 
 	var rotate3 = [
-		{ from = Vector3(0, 0, 0), to = Vector3(360, 180, 180), easing = Anima.EASING.EASE_OUT_BACK }
+		{ from = Vector3(0, 0, 0), to = Vector3(360, 180, 180), easing = ANIMA.EASING.EASE_OUT_BACK }
 	]
 
 	if data.animation == 'ring1':

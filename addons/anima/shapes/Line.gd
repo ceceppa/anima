@@ -6,7 +6,7 @@ const HANDLE = preload("./handle.gd")
 
 export (Vector2) var from = Vector2(0, 0) setget set_from
 export (Vector2) var to = Vector2(100, 100) setget set_to
-export (Anima.VALUES_IN) var values_in = Anima.VALUES_IN.PERCENTAGE setget set_values_in
+export (ANIMA.VALUES_IN) var values_in = ANIMA.VALUES_IN.PERCENTAGE setget set_values_in
 export (bool) var from_center setget set_from_center
 export (Color) var color setget set_color
 export (float) var line_width setget set_line_width
@@ -26,12 +26,12 @@ func _draw() -> void:
 	if from_center:
 		draw_from = rect_size / 2
 
-		if values_in == Anima.VALUES_IN.PERCENTAGE:
+		if values_in == ANIMA.VALUES_IN.PERCENTAGE:
 			draw_from = Vector2(50, 50)
 
 		draw_from -= draw_to / 2
 
-	if values_in == Anima.VALUES_IN.PERCENTAGE:
+	if values_in == ANIMA.VALUES_IN.PERCENTAGE:
 		draw_from.x = rect_size.x * (draw_from.x / 100)
 		draw_from.y = rect_size.y * (draw_from.y / 100)
 		draw_to.x = rect_size.x * (draw_to.x / 100)

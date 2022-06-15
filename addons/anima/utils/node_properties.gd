@@ -45,7 +45,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
 
 	match pivot:
-		Anima.PIVOT.TOP_CENTER:
+		ANIMA.PIVOT.TOP_CENTER:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x / 2, 0))
 			else:
@@ -53,7 +53,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(0, size.y / 2)
 				node.global_position = position - node.offset
-		Anima.PIVOT.TOP_LEFT:
+		ANIMA.PIVOT.TOP_LEFT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(0, 0))
 			else:
@@ -61,10 +61,10 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(size.x / 2, 0)
 				node.global_position = position - node.offset
-		Anima.PIVOT.CENTER:
+		ANIMA.PIVOT.CENTER:
 			if node is Control:
 				node.set_pivot_offset(size / 2)
-		Anima.PIVOT.BOTTOM_CENTER:
+		ANIMA.PIVOT.BOTTOM_CENTER:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x / 2, size.y / 2))
 			else:
@@ -72,7 +72,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(0, -size.y / 2)
 				node.global_position = position - node.offset
-		Anima.PIVOT.BOTTOM_LEFT:
+		ANIMA.PIVOT.BOTTOM_LEFT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(0, size.y))
 			else:
@@ -80,7 +80,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(size.x / 2, size.y)
 				node.global_position = position - node.offset
-		Anima.PIVOT.BOTTOM_RIGHT:
+		ANIMA.PIVOT.BOTTOM_RIGHT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x, size.y / 2))
 			else:

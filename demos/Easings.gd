@@ -4,8 +4,8 @@ func _ready():
 	$Container/PanelContainer/PanelContainer/BaseButton.hide()
 	$Container/SpriteContainer/Anima.global_transform.origin = Vector2(100, 100)
 
-	for easing_name in Anima.EASING.keys():
-		var easing_value = Anima.EASING[easing_name]
+	for easing_name in ANIMA.EASING.keys():
+		var easing_value = ANIMA.EASING[easing_name]
 		var button := $Container/PanelContainer/PanelContainer/BaseButton.duplicate()
 
 		var text = easing_name
