@@ -137,6 +137,8 @@ __meta__ = {
 }
 
 [node name="Timer" type="Timer" parent="."]
+one_shot = true
+autostart = true
 
 [node name="AnimaTriangle" type="Control" parent="."]
 visible = false
@@ -423,5 +425,8 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 "anims/New Anim" = SubResource( 7 )
 
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

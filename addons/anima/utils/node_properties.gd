@@ -136,6 +136,8 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 					return material.get_shader_param("opacity")
 
 			return node.modulate.a
+		"skew":
+			return Vector2(node.get_global_transform().y.x, node.get_global_transform().x.y)
 		"skew:x":
 			return node.get_global_transform().y.x
 		"skew:y":

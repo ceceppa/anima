@@ -196,8 +196,6 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 
 			_initial_values[node][property] = AnimaNodesProperties.get_property_value(node, { property = property })
 
-	print(anima_data)
-
 	return anima_data
 
 func _reset_initial_values() -> void:

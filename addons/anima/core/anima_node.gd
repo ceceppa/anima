@@ -32,6 +32,8 @@ func _exit_tree():
 	if _anima_tween == null or not is_instance_valid(_anima_tween):
 		return
 
+	clear()
+
 	for child in get_children():
 		child.free()
 
