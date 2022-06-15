@@ -13,9 +13,6 @@ anchor_bottom = 1.0
 margin_right = 360.0
 rect_min_size = Vector2( 360, 0 )
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Rectangle" type="Control" parent="."]
 anchor_right = 1.0
@@ -57,9 +54,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="Rectangle/CenterContainer"]
 margin_left = 60.0
@@ -451,14 +445,13 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="AddButton" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper"]
-modulate = Color( 1, 1, 1, 0 )
 rect_min_size = Vector2( 102, 102 )
 rect_pivot_offset = Vector2( 51, 51 )
 mouse_default_cursor_shape = 2
 script = ExtResource( 3 )
 __meta__ = {
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -1011,8 +1004,10 @@ script = ExtResource( 1 )
 __meta__ = {
 "__initial_Rectangle/Size": Rect2( 0, 0, 40, 5 ),
 "__initial_rotate": 0.0,
+"__visibility_strategy": 0,
 "_edit_lock_": true,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 draw_from_center = true
 Animation/AnimatePropertyChange = true
@@ -1050,8 +1045,10 @@ script = ExtResource( 1 )
 __meta__ = {
 "__initial_Rectangle/Size": Rect2( 0, 0, 5, 40 ),
 "__initial_rotate": 0.0,
+"__visibility_strategy": 0,
 "_edit_lock_": true,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 draw_from_center = true
 Animation/AnimatePropertyChange = true
