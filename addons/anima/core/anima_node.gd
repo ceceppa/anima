@@ -59,12 +59,16 @@ func init_node(node: Node):
 func then(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
-	else:
+		data.__ignore_warning = true
+	elif not data.has("__ignore_warning"):
 		printerr(
 			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
 			"\n",
 			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
 		)
+		print_stack()
+		print(data)
+		print("\n")
 
 	if data.has("group") and data.group is Array:
 		return _group(data.group, data)
@@ -82,12 +86,16 @@ func then(data) -> AnimaNode:
 func with(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
-	else:
+		data.__ignore_warning = true
+	elif not data.has("__ignore_warning"):
 		printerr(
 			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
 			"\n",
 			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
 		)
+		print(data)
+		print("\n")
+		print_stack()
 
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
@@ -328,8 +336,10 @@ func set_loop_strategy(strategy: int):
 	_anima_tween.set_loop_strategy(strategy)
 	_anima_backwards_tween.set_loop_strategy(strategy)
 
-func set_default_duration(duration: float) -> void:
+func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
+
+	return self
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
@@ -384,11 +394,10 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 				return duration
 
-		_anima_tween.add_frames(data, keyframes)
+		var real_duration = _anima_tween.add_frames(data, keyframes)
 
-#		var real_duration = 
-#		if real_duration is float:
-#			duration = real_duration
+		if real_duration > 0:
+			duration = real_duration
 	else:
 		_anima_tween.add_animation_data(data)
 

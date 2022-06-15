@@ -103,11 +103,11 @@ func _animate_add_button() -> void:
 				},
 			})
 	)
-	
+
 	anima.with(
 		Anima.Group(_dotted, 0.0).anima_fade_out(0.01)
 	)
-	
+
 	anima.with(
 		Anima.Node(_plus) \
 			.anima_animation_frames({
@@ -169,7 +169,7 @@ func _animate_add_button() -> void:
 	if _is_collapsed_mode:
 		anima.play()
 	else:
-		anima.play_backwards_with_speed(1.2)
+		anima.play_backwards_with_speed(1.4)
 
 	_is_collapsed_mode = not _is_collapsed_mode
 

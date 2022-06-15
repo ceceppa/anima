@@ -3,21 +3,18 @@ extends Node2D
 func _ready():
 	var cross := $cross
 
-	var anima = Anima.begin(self, 'position')
-	anima.then({ node = cross, property = "X", to = 100, duration = 1, relative = true, easing = Anima.EASING.EASE_IN_SINE })
-	anima.with({node = cross, property = "rotation", from = 0, to = 360, easing = Anima.EASING.EASE_IN_SINE })
-
-	anima.then({ node = cross, property = "Y", to = 100, duration = 1, relative = true })
-	anima.with({node = cross, property = "rotation", from = 0, to = -360 })
-
-	anima.then({ node = cross, property = "X", to = -100, duration = 1, relative = true })
-	anima.with({node = cross, property = "rotation", from = 0, to = 360 })
-
-	anima.then({ node = cross, property = "Y", to = -100, duration = 1, relative = true, easing = Anima.EASING.EASE_OUT_CIRC })
-	anima.with({node = cross, property = "rotation", from = 0, to = -360, easing = Anima.EASING.EASE_OUT_CIRC })
-
-	anima.play_with_delay(0.2)
-
-
-func _on_Button_pressed():
-	pass # Replace with function body.
+	Anima.begin(self) \
+		.set_default_duration(1) \
+		.then( Anima.Node(cross).anima_relative_position_x(100).anima_easing(Anima.EASING.EASE_IN_SINE) ) \
+		.with( Anima.Node(cross).anima_rotate(360).anima_from(0).anima_easing(Anima.EASING.EASE_IN_SINE) ) \
+		\
+		.then( Anima.Node(cross).anima_relative_position_y(100) ) \
+		.with( Anima.Node(cross).anima_rotate(-360).anima_from(0) ) \
+		\
+		.then( Anima.Node(cross).anima_relative_position_x(-100) ) \
+		.with( Anima.Node(cross).anima_rotate(0).anima_from(360) ) \
+		\
+		.then( Anima.Node(cross).anima_relative_position_y(-100).anima_easing(Anima.EASING.EASE_OUT_CIRC) ) \
+		.with( Anima.Node(cross).anima_rotate(-360).anima_from(0).anima_easing(Anima.EASING.EASE_OUT_CIRC) ) \
+		\
+		.play_with_delay(0.2)

@@ -111,6 +111,9 @@ func _restore_data(data: Dictionary) -> void:
 		var frame_data = animation.frames[frame_key]
 		var index: int = int(frame_key)
 
+		if frame_data == null:
+			continue
+
 		if frame_data.type == "frame":
 			_frames_editor._on_AnimaAddFrame_add_frame()
 		elif frame_data.type == "delay":

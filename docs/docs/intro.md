@@ -8,6 +8,8 @@ We believe that creating animation should be easy for any skill level; that's wh
 It allows you to run sequential and parallel animations with few lines of code and simple syntax.
 You can pick any of the 89 animations and 33 easings or add your own.
 
+![Anima 3D Boxes demo](/img/anima.gif)
+
 ## Installation
 
 The plugin is available on the [Asset Library](https://godotengine.org/asset-library/asset/852).
