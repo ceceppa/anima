@@ -43,7 +43,7 @@ func _animate_me():
 					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(5, 40)),
 					rotate = 0,
 				},
-				easing = Anima.EASING.EASE_OUT_BACK
+				easing = ANIMA.EASING.EASE_OUT_BACK
 			})
 	)
 	anima.with(
@@ -57,7 +57,7 @@ func _animate_me():
 					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(40, 5)),
 					rotate = 0,
 				},
-				easing = Anima.EASING.EASE_OUT_BACK
+				easing = ANIMA.EASING.EASE_OUT_BACK
 			})
 	)
 
@@ -75,7 +75,7 @@ func _animate_add_button() -> void:
 	anima.then(
 		Anima.Node(_add_button) \
 			.anima_relative_position_y(200) \
-			.anima_easing(Anima.EASING.EASE_OUT_BACK)
+			.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
 	)
 
 	anima.with(
@@ -118,7 +118,7 @@ func _animate_add_button() -> void:
 				to = {
 					rotate = 45,
 					modulate = Color("ee786c"),
-					easing = Anima.EASING.EASE_IN_OUT
+					easing = ANIMA.EASING.EASE_IN_OUT
 				},
 			})
 	)
@@ -161,7 +161,7 @@ func _animate_add_button() -> void:
 				to = {
 					scale = Vector2.ONE,
 					opacity = 1.0,
-					easing = Anima.EASING.EASE_OUT_BACK
+					easing = ANIMA.EASING.EASE_OUT_BACK
 				}
 			})
 	)
@@ -179,7 +179,7 @@ func _button_in(node: AnimaButton) -> void:
 	anima.then(
 		Anima.Node(node) \
 			.anima_scale(Vector2(1.05, 1.05), 0.15) \
-			.anima_easing(Anima.EASING.EASE_OUT_BACK)
+			.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
 	)
 
 	anima.play()
@@ -190,7 +190,7 @@ func _button_out(node: AnimaButton) -> void:
 	anima.then(
 		Anima.Node(node) \
 			.anima_scale(Vector2.ONE, 0.15) \
-			.anima_easing(Anima.EASING.EASE_IN_OUT)
+			.anima_easing(ANIMA.EASING.EASE_IN_OUT)
 	)
 
 	anima.play()

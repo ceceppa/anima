@@ -17,7 +17,7 @@ func _ready() -> void:
 					size = Vector2(1024, 600),
 					opacity = 1,
 					y = - 300,
-					easing = Anima.EASING.EASE_IN_OUT_BACK
+					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 				},
 				initial_values = {
 					opacity = 0,

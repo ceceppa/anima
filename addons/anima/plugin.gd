@@ -15,6 +15,7 @@ func get_name():
 
 func _enter_tree():
 	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/AnimaUI.gd')
+	add_autoload_singleton("ANIMA", 'res://addons/anima/core/costants.gd')
 	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
 
 	_anima_editor = load("res://addons/anima/ui/AnimaEditor.tscn").instance()

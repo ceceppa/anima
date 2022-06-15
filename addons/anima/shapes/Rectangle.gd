@@ -5,7 +5,7 @@ extends AnimaShape
 signal pressed
 signal mouse_down
 
-export (Anima.VALUES_IN) var size_values_in = Anima.VALUES_IN.PERCENTAGE setget set_size_values_in
+export (ANIMA.VALUES_IN) var size_values_in = ANIMA.VALUES_IN.PERCENTAGE setget set_size_values_in
 export (bool) var draw_from_center setget set_draw_from_center
 
 var _is_mouse_down := false
@@ -165,7 +165,7 @@ func _draw() -> void:
 	stylebox.border_color = get_property(PROPERTIES.RECTANGLE_BORDER_COLOR.name)
 	stylebox.border_blend = get_property(PROPERTIES.RECTANGLE_BORDER_BLEND.name)
 
-	if size_values_in == Anima.VALUES_IN.PERCENTAGE:
+	if size_values_in == ANIMA.VALUES_IN.PERCENTAGE:
 		rect_to_draw.size.x = rect_size.x * (rect_to_draw.size.x / 100)
 		rect_to_draw.size.y = rect_size.y * (rect_to_draw.size.y / 100)
 		rect_to_draw.position.x = rect_size.x * (rect_to_draw.position.x / 100)

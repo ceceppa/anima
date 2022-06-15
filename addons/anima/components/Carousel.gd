@@ -12,8 +12,8 @@ onready var _controls: HBoxContainer = find_node('Controls')
 export (int) var index setget set_index
 export (float) var duration = 0.3
 export (float) var padding := 0.0
-export (Anima.EASING) var scroll_easing = Anima.EASING.LINEAR
-export (Anima.EASING) var height_easing = Anima.EASING.LINEAR
+export (ANIMA.EASING) var scroll_easing = ANIMA.EASING.LINEAR
+export (ANIMA.EASING) var height_easing = ANIMA.EASING.LINEAR
 
 var _heights: Array
 

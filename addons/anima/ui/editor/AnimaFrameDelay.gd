@@ -22,7 +22,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 					"size:x": 360,
 					"min_size:x": 360,
 				},
-				easing = Anima.EASING.EASE_OUT_BACK
+				easing = ANIMA.EASING.EASE_OUT_BACK
 			})
 	)
 	anima.with(
@@ -38,7 +38,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 				to = {
 					y = 0,
 					opacity = 1,
-					easing = Anima.EASING.EASE_OUT_BACK
+					easing = ANIMA.EASING.EASE_OUT_BACK
 				},
 				initial_values = {
 					opacity = 0

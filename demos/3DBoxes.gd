@@ -63,7 +63,7 @@ func _boxes_animation() -> Dictionary:
 		},
 		35: {
 			x = -28.117,
-			easing = Anima.EASING.EASE_OUT_QUAD,
+			easing = ANIMA.EASING.EASE_OUT_QUAD,
 		},
 		40: {
 			x = 0,
@@ -78,7 +78,7 @@ func _boxes_animation() -> Dictionary:
 		},
 		to = {
 			x = -25.619,
-			easing = Anima.EASING.EASE_IN_CIRC,
+			easing = ANIMA.EASING.EASE_IN_CIRC,
 			"rotation:x": 360,
 			"shader_param:albedo": Color('#6b9eb1')
 		},

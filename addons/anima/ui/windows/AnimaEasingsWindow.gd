@@ -10,11 +10,11 @@ onready var _grid_out: GridContainer = find_node('GridOut')
 onready var _grid_in_out: GridContainer = find_node('GridInOut')
 
 var _logo_origin: Vector2
-var _easing: int = Anima.EASING.LINEAR
+var _easing: int = ANIMA.EASING.LINEAR
 
 func _ready():
-	for easing_name in Anima.EASING.keys():
-		var easing_value = Anima.EASING[easing_name]
+	for easing_name in ANIMA.EASING.keys():
+		var easing_value = ANIMA.EASING[easing_name]
 		var button := _base_button.duplicate()
 
 		var text = easing_name

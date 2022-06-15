@@ -61,8 +61,7 @@ margin_right = 299.0
 margin_bottom = 338.0
 rect_pivot_offset = Vector2( 195.001, 68.5 )
 __meta__ = {
-"__initialy": 366.23,
-"_edit_use_anchors_": false
+"__initialy": 366.23
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
@@ -74,10 +73,22 @@ __anima_visual_editor_data = {
 "0": {
 "animation": {
 "default_duration": 0.3,
-"name": null,
+"name": "MyAnimation",
 "visibility_strategy": 2
 },
 "frames": {
+0: {
+"data": [  ],
+"duration": null,
+"name": "Initial Values",
+"type": "frame"
+},
+1: {
+"data": [  ],
+"duration": null,
+"name": "Initial Values",
+"type": "frame"
+}
 }
 }
 }

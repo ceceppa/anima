@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Arc.gd"
 }, {
+"base": "Reference",
+"class": "AnimaAwaitableAddChild",
+"language": "GDScript",
+"path": "res://addons/anima/core/deferred_add_child.gd"
+}, {
 "base": "AnimaRectangle",
 "class": "AnimaButton",
 "language": "GDScript",
@@ -169,6 +174,7 @@ _global_script_class_icons={
 "AnimaAnimatable": "",
 "AnimaAnimationsUtils": "",
 "AnimaArc": "",
+"AnimaAwaitableAddChild": "",
 "AnimaButton": "res://addons/anima/icons/button.svg",
 "AnimaCarousel": "",
 "AnimaChars": "",
@@ -205,6 +211,8 @@ run/main_scene="res://demos/DemosSelector.tscn"
 
 [autoload]
 
+AnimaCostants="*res://addons/anima/core/costants.gd"
+ANIMA="*res://addons/anima/core/costants.gd"
 AnimaUI="*res://addons/anima/ui/AnimaUI.gd"
 Anima="*res://addons/anima/core/anima.gd"
 

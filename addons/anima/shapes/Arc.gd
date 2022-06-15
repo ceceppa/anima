@@ -3,7 +3,7 @@ class_name AnimaArc
 extends AnimaShape
 
 export (Vector2) var center setget set_center
-export (Anima.VALUES_IN) var values_in setget set_values_in
+export (ANIMA.VALUES_IN) var values_in setget set_values_in
 export (float) var radius setget set_radius
 export (float) var from_angle setget set_from_angle
 export (float) var to_angle setget set_to_angle

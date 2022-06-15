@@ -32,7 +32,7 @@ func _apply_animation(animation_type: int) -> void:
 
 	_anima.clear()
 
-	_anima.then({ group = $Node, animation_type = animation_type, duration = 0.5, property = "x", to = 800, easing = Anima.EASING.EASE_OUT_BACK })
+	_anima.then({ group = $Node, animation_type = animation_type, duration = 0.5, property = "x", to = 800, easing = ANIMA.EASING.EASE_OUT_BACK })
 	_anima.play_with_delay(0.1)
 	
 func _on_First_pressed() -> void:

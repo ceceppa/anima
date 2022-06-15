@@ -19,7 +19,7 @@ func populate_nodes_list(root_node: Node) -> void:
 #		Anima.Node(self) \
 #			.anima_scale(Vector2.ONE, 0.3) \
 #			.anima_from(Vector2.ZERO) \
-#			.anima_easing(Anima.EASING.EASE_IN_OUT_BACK)
+#			.anima_easing(ANIMA.EASING.EASE_IN_OUT_BACK)
 #	)
 #	anima.with(
 #		Anima.Node(self) \

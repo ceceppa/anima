@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/icons/Check.svg" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/icons/Clear.svg" type="Texture" id=6]
 [ext_resource path="res://addons/anima/icons/GuiTabMenuHl.svg" type="Texture" id=7]
+[ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=8]
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
@@ -40,13 +41,9 @@ anchor_right = 1.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CurrentValue" type="Control" parent="HBoxContainer"]
-margin_right = 168.0
-margin_bottom = 49.0
+margin_bottom = 40.0
 rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
@@ -1042,10 +1039,13 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
+[node name="AnimaNode" type="Node" parent="."]
+script = ExtResource( 8 )
+
 [connection signal="item_rect_changed" from="." to="." method="_on_PropertyFromTo_item_rect_changed"]
 [connection signal="item_rect_changed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_item_rect_changed"]
 [connection signal="pressed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_pressed"]
-[connection signal="pressed" from="HBoxContainer/CurrentValueBorderless" to="." method="_on_CurrentValue_pressed"]
+[connection signal="pressed" from="HBoxContainer/CurrentValueBorderless" to="." method="_on_CurrentValueBorderless_pressed"]
 [connection signal="changed" from="CustomValue/Rect2/X/x" to="." method="_on_input_changed"]
 [connection signal="changed" from="CustomValue/Rect2/Y/y" to="." method="_on_input_changed"]
 [connection signal="changed" from="CustomValue/Rect2/W/w" to="." method="_on_input_changed"]
@@ -1060,6 +1060,3 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 [connection signal="changed" from="CustomValue/Real" to="." method="_on_input_changed"]
 [connection signal="type_changed" from="CustomValue/Real" to="." method="_on_Number_type_changed"]
 [connection signal="text_changed" from="CustomValue/FreeText" to="." method="_on_FreeText_text_changed"]
-[connection signal="pressed" from="CustomValue/RelativeSelectorButton" to="." method="_on_RelativeSelectorButton_pressed"]
-[connection signal="pressed" from="CustomValue/ClearButton" to="." method="_on_ClearButton_pressed"]
-[connection signal="pressed" from="CustomValue/ConfirmButton" to="." method="_on_ConfirmButton_pressed"]
