@@ -105,7 +105,7 @@ func set_can_clear_custom_value(can_clear: bool) -> void:
 func set_can_edit_value(can_edit: bool) -> void:
 	can_edit_value = can_edit
 
-func _animate_custom_value(mode: int) -> AnimaNode:
+func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 	if _input_visible == null:
 		return
 
@@ -159,6 +159,9 @@ func _animate_custom_value(mode: int) -> AnimaNode:
 			_input_visible.grab_focus()
 	else:
 		anima.play_backwards()
+
+	if signal_to_emit != null:
+		emit_signal(signal_to_emit)
 
 	return anima
 
@@ -314,9 +317,7 @@ func _on_CurrentValue_pressed():
 	_animate_custom_value(AnimaTween.PLAY_MODE.NORMAL)
 
 func _on_ClearButton_pressed():
-	yield(_animate_custom_value(AnimaTween.PLAY_MODE.BACKWARDS), "animation_completed")
-
-	emit_signal("value_updated")
+	_animate_custom_value(AnimaTween.PLAY_MODE.BACKWARDS, "value_updated")
 
 func _on_input_changed() -> void:
 	emit_signal('value_updated')
@@ -368,4 +369,4 @@ func _on_ConfirmButton_pressed():
 	emit_signal("confirmed")
 
 func _on_CurrentValueBorderless_pressed():
-	_on_ConfirmButton_pressed()
+	_on_CurrentValue_pressed()

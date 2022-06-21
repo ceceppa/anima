@@ -74,19 +74,13 @@ __anima_visual_editor_data = {
 "animation": {
 "default_duration": 0.3,
 "name": "MyAnimation",
-"visibility_strategy": 2
+"visibility_strategy": 0
 },
 "frames": {
 0: {
 "data": [  ],
 "duration": null,
-"name": "Initial Values",
-"type": "frame"
-},
-1: {
-"data": [  ],
-"duration": null,
-"name": "Initial Values",
+"name": "Frame01",
 "type": "frame"
 }
 }

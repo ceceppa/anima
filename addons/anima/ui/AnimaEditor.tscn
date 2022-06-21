@@ -16,9 +16,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 2 )
 script = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="FramesEditor" parent="." instance=ExtResource( 2 )]
 visible = false

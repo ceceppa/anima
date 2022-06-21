@@ -202,27 +202,27 @@ func clear() -> void:
 	_last_animation_duration = 0.0
 	_visibility_strategy = ANIMA.VISIBILITY.IGNORE
 
-func play() -> void:
-	_play(AnimaTween.PLAY_MODE.NORMAL)
+func play() -> AnimaNode:
+	return _play(AnimaTween.PLAY_MODE.NORMAL)
 
-func play_with_delay(delay: float) -> void:
-	_play(AnimaTween.PLAY_MODE.NORMAL, delay)
+func play_with_delay(delay: float) -> AnimaNode:
+	return _play(AnimaTween.PLAY_MODE.NORMAL, delay)
 
-func play_with_speed(speed: float) -> void:
-	_play(AnimaTween.PLAY_MODE.NORMAL, 0.0, speed)
+func play_with_speed(speed: float) -> AnimaNode:
+	return _play(AnimaTween.PLAY_MODE.NORMAL, 0.0, speed)
 
-func play_backwards() -> void:
-	_play(AnimaTween.PLAY_MODE.BACKWARDS)
+func play_backwards() -> AnimaNode:
+	return _play(AnimaTween.PLAY_MODE.BACKWARDS)
 
-func play_backwards_with_delay(delay: float) -> void:
-	_play(AnimaTween.PLAY_MODE.BACKWARDS, delay)
+func play_backwards_with_delay(delay: float) -> AnimaNode:
+	return _play(AnimaTween.PLAY_MODE.BACKWARDS, delay)
 
-func play_backwards_with_speed(speed: float) -> void:
-	_play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
+func play_backwards_with_speed(speed: float) -> AnimaNode:
+	return _play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
 
-func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
+func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
-		return
+		return self
 
 	_loop_times = 1
 	_play_mode = mode
@@ -234,6 +234,8 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 
 	_timer.wait_time = max(ANIMA.MINIMUM_DURATION, delay)
 	_timer.start()
+	
+	return self
 
 func _on_timer_completed() -> void:
 	_do_play()

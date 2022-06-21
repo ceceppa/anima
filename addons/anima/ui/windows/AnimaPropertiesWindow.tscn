@@ -20,7 +20,6 @@ image = SubResource( 3 )
 size = Vector2( 16, 16 )
 
 [node name="PropertiesWindow" type="WindowDialog"]
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -31,6 +30,9 @@ input_pass_on_modal_close_click = false
 window_title = "Select the property to animate"
 script = ExtResource( 1 )
 __meta__ = {
+"__initial_opacity": 0.0,
+"__initial_size": Vector2( 1008, 570 ),
+"__initial_y": 24.0,
 "_edit_use_anchors_": false,
 "_old_modulate": Color( 1, 1, 1, 0 )
 }

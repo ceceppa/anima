@@ -8,6 +8,7 @@ signal select_node
 signal frame_updated
 
 export (bool) var animate_entrance_exit := true
+export (bool) var is_initial_frame := false setget set_is_initial_frame
 
 onready var _animations_container = find_node("AnimationsContainer")
 onready var _frame_name = find_node("FrameName")
@@ -20,6 +21,8 @@ func _ready():
 		_animate_me()
 	else:
 		rect_min_size.x = _final_width
+
+	set_is_initial_frame(is_initial_frame)
 
 func get_data() -> Dictionary:
 	var data := {
@@ -122,6 +125,13 @@ func _animate_me(backwards := false) -> AnimaNode:
 	rect_clip_content = false
 
 	return anima
+
+func set_is_initial_frame(new_is_initial_frame: bool):
+	is_initial_frame = new_is_initial_frame
+
+	find_node("DurationContainer").visible = !is_initial_frame
+	find_node("RemoveWrapper").visible = !is_initial_frame
+	find_node("FrameName").set_can_edit_value(!is_initial_frame)
 
 func _on_Delete_pressed():
 	if animate_entrance_exit:

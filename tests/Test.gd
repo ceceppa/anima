@@ -4,6 +4,8 @@ const Test := {}
 
 export (StyleBoxFlat) var test setget set_test
 
+var anima: AnimaNode 
+
 func _ready():
 	
 
@@ -65,8 +67,8 @@ func _ready():
 #	print_tree_pretty()
 #
 
-	Anima.begin(self) \
-		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 0.5)) \
+	anima = Anima.begin(self) \
+		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 5.5)) \
 		.play()
 
 var _temp
@@ -102,4 +104,5 @@ func _on_Button_pressed():
 	).play_with_delay(1)
 
 func _on_Timer_timeout():
-	$Button.queue_free()
+	anima.queue_free()
+#	$Button.queue_free()
