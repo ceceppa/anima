@@ -177,7 +177,7 @@ __meta__ = {
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
 Animation/Easing = 0
-Button/Text = "custom value"
+Button/Text = "current value"
 Button/ICON = null
 Button/Align = 0
 Button/Font = null
@@ -693,6 +693,7 @@ margin_right = 212.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
+hint_tooltip = "Select relative property"
 script = ExtResource( 4 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
@@ -810,6 +811,7 @@ margin_right = 258.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
+hint_tooltip = "Clear value"
 script = ExtResource( 4 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
@@ -928,6 +930,7 @@ margin_right = 258.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
+hint_tooltip = "Confirm value"
 script = ExtResource( 4 )
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.3
@@ -1060,3 +1063,5 @@ script = ExtResource( 8 )
 [connection signal="changed" from="CustomValue/Real" to="." method="_on_input_changed"]
 [connection signal="type_changed" from="CustomValue/Real" to="." method="_on_Number_type_changed"]
 [connection signal="text_changed" from="CustomValue/FreeText" to="." method="_on_FreeText_text_changed"]
+[connection signal="pressed" from="CustomValue/ClearButton" to="." method="_on_ClearButton_pressed"]
+[connection signal="pressed" from="CustomValue/ConfirmButton" to="." method="_on_ConfirmButton_pressed"]

@@ -115,7 +115,7 @@ func _restore_data(data: Dictionary) -> void:
 			continue
 
 		if frame_data.type == "frame":
-			_frames_editor._on_AnimaAddFrame_add_frame()
+			_frames_editor._on_AnimaAddFrame_add_frame(frame_key == 0)
 		elif frame_data.type == "delay":
 			_frames_editor._on_AnimaAddFrame_add_delay()
 		else:

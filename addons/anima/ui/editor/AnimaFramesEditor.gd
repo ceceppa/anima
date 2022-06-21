@@ -64,8 +64,12 @@ func _add_component(node: Node) -> void:
 
 	node.animate_entrance_exit = true
 
-func _on_AnimaAddFrame_add_frame():
-	_add_component(FRAME_ANIMATION.instance())
+func _on_AnimaAddFrame_add_frame(is_initial_frame := false):
+	var node = FRAME_ANIMATION.instance()
+	
+	node.set_is_initial_frame(is_initial_frame)
+
+	_add_component(node)
 
 	_emit_updated()
 
