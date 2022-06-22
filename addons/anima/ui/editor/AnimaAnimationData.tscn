@@ -27,14 +27,11 @@ __meta__ = {
 [node name="AnimaAccordion" type="Control"]
 anchor_bottom = 1.0
 margin_right = 596.0
-margin_bottom = -151.0
-rect_min_size = Vector2( 0, 449 )
+margin_bottom = -294.0
+rect_min_size = Vector2( 0, 306 )
 rect_pivot_offset = Vector2( 298, 27.4843 )
 rect_clip_content = true
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 5.0
@@ -145,7 +142,7 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="Control"]
 margin_right = 596.0
-margin_bottom = 417.0
+margin_bottom = 274.0
 rect_pivot_offset = Vector2( 298, 127 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -158,7 +155,7 @@ custom_constants/margin_bottom = 12
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 584.0
-margin_bottom = 405.0
+margin_bottom = 262.0
 rect_pivot_offset = Vector2( 298, 127 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -168,14 +165,127 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="GridContainer" parent="Control/MarginContainer/AnimaData"]
+[node name="AnimaAccordion" type="Control" parent="Control/MarginContainer/AnimaData"]
 margin_right = 572.0
-margin_bottom = 110.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+rect_pivot_offset = Vector2( 286, 71 )
+rect_clip_content = true
+script = ExtResource( 4 )
+label = "Time"
+expanded = false
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
+Animation/Name = "fadeIn"
+Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
+ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonHovered/UseSameStyleOf = ""
+ButtonHovered/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonPressed/UseSameStyleOf = ""
+ButtonPressed/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonFocused/UseSameStyleOf = ""
+ButtonFocused/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonNormal/Size = Rect2( 0, 0, 100, 100 )
+ButtonHovered/Size = Rect2( -1, -1, -1, -1 )
+ButtonFocused/Size = Rect2( -1, -1, -1, -1 )
+ButtonPressed/Size = Rect2( -1, -1, -1, -1 )
+ButtonNormal/Border/Color = Color( 1, 1, 1, 0 )
+ButtonHovered/Border/Color = Color( 1, 1, 1, 0 )
+ButtonFocused/Border/Color = Color( 1, 1, 1, 0 )
+ButtonPressed/Border/Color = Color( 1, 1, 1, 0 )
+ButtonNormal/Border/Blend = false
+ButtonHovered/Border/Blend = false
+ButtonFocused/Border/Blend = false
+ButtonPressed/Border/Blend = false
+ButtonNormal/Border/Offset = Vector2( 0, 0 )
+ButtonHovered/Border/Offset = Vector2( -1, -1 )
+ButtonFocused/Border/Offset = Vector2( -1, -1 )
+ButtonPressed/Border/Offset = Vector2( -1, -1 )
+ButtonNormal/Border/Widh/Left = 0
+ButtonHovered/Border/Widh/Left = 0
+ButtonFocused/Border/Widh/Left = 0
+ButtonPressed/Border/Widh/Left = 0
+ButtonNormal/Border/Widh/Top = 0
+ButtonHovered/Border/Widh/Top = 0
+ButtonFocused/Border/Widh/Top = 0
+ButtonPressed/Border/Widh/Top = 0
+ButtonNormal/Border/Widh/Right = 0
+ButtonHovered/Border/Widh/Right = 0
+ButtonFocused/Border/Widh/Right = 0
+ButtonPressed/Border/Widh/Right = 0
+ButtonNormal/Border/Widh/Bottom = 0
+ButtonHovered/Border/Widh/Bottom = 0
+ButtonFocused/Border/Widh/Bottom = 0
+ButtonPressed/Border/Widh/Bottom = 0
+ButtonNormal/Border/Radius/Details = 8
+ButtonHovered/Border/Radius/Details = 8
+ButtonFocused/Border/Radius/Details = 8
+ButtonPressed/Border/Radius/Details = 8
+ButtonNormal/Border/Radius/TopLeft = 0
+ButtonHovered/Border/Radius/TopLeft = 0
+ButtonFocused/Border/Radius/TopLeft = 0
+ButtonPressed/Border/Radius/TopLeft = 0
+ButtonNormal/Border/Radius/TopRight = 0
+ButtonHovered/Border/Radius/TopRight = 0
+ButtonFocused/Border/Radius/TopRight = 0
+ButtonPressed/Border/Radius/TopRight = 0
+ButtonNormal/Border/Radius/BottomRight = 0
+ButtonHovered/Border/Radius/BottomRight = 0
+ButtonFocused/Border/Radius/BottomRight = 0
+ButtonPressed/Border/Radius/BottomRight = 0
+ButtonNormal/Border/Radius/BottomLeft = 0
+ButtonHovered/Border/Radius/BottomLeft = 0
+ButtonFocused/Border/Radius/BottomLeft = 0
+ButtonPressed/Border/Radius/BottomLeft = 0
+ButtonNormal/Border/Offset/Radius/Details = 8
+ButtonHovered/Border/Offset/Radius/Details = 8
+ButtonFocused/Border/Offset/Radius/Details = 8
+ButtonPressed/Border/Offset/Radius/Details = 8
+ButtonNormal/Border/Offset/Radius/TopLeft = -1
+ButtonHovered/Border/Offset/Radius/TopLeft = -1
+ButtonFocused/Border/Offset/Radius/TopLeft = -1
+ButtonPressed/Border/Offset/Radius/TopLeft = -1
+ButtonNormal/Border/Offset/Radius/TopRight = -1
+ButtonHovered/Border/Offset/Radius/TopRight = -1
+ButtonFocused/Border/Offset/Radius/TopRight = -1
+ButtonPressed/Border/Offset/Radius/TopRight = -1
+ButtonNormal/Border/Offset/Radius/BottomRight = -1
+ButtonHovered/Border/Offset/Radius/BottomRight = -1
+ButtonFocused/Border/Offset/Radius/BottomRight = -1
+ButtonPressed/Border/Offset/Radius/BottomRight = -1
+ButtonNormal/Border/Offset/Radius/BottomLeft = -1
+ButtonHovered/Border/Offset/Radius/BottomLeft = -1
+ButtonFocused/Border/Offset/Radius/BottomLeft = -1
+ButtonPressed/Border/Offset/Radius/BottomLeft = -1
+ButtonNormal/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonHovered/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonFocused/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonPressed/Shadow/Color = Color( 1, 1, 1, 0 )
+ButtonNormal/Shadow/Size = 0
+ButtonHovered/Shadow/Size = 0
+ButtonFocused/Shadow/Size = 0
+ButtonPressed/Shadow/Size = 0
+ButtonNormal/Shadow/Offset = Vector2( 0, 0 )
+ButtonHovered/Shadow/Offset = Vector2( -1, -1 )
+ButtonFocused/Shadow/Offset = Vector2( -1, -1 )
+ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
+
+[node name="HBoxContainer" type="GridContainer" parent="Control/MarginContainer/AnimaData/AnimaAccordion"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 32.0
+rect_pivot_offset = Vector2( 286, 55 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
 custom_constants/vseparation = 12
 custom_constants/hseparation = 24
 columns = 2
+__meta__ = {
+"__initial_opacity": 1.0
+}
 
-[node name="Label2" type="Label" parent="Control/MarginContainer/AnimaData/HBoxContainer"]
+[node name="Label2" type="Label" parent="Control/MarginContainer/AnimaData/AnimaAccordion/HBoxContainer"]
 margin_top = 12.0
 margin_right = 132.0
 margin_bottom = 37.0
@@ -184,14 +294,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Delay" parent="Control/MarginContainer/AnimaData/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Delay" parent="Control/MarginContainer/AnimaData/AnimaAccordion/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_right = 572.0
 margin_bottom = 49.0
 label = "default frame duration"
 show_relative_selector = false
 
-[node name="Label3" type="Label" parent="Control/MarginContainer/AnimaData/HBoxContainer"]
+[node name="Label3" type="Label" parent="Control/MarginContainer/AnimaData/AnimaAccordion/HBoxContainer"]
 margin_top = 73.0
 margin_right = 132.0
 margin_bottom = 98.0
@@ -200,7 +310,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Delay2" parent="Control/MarginContainer/AnimaData/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Delay2" parent="Control/MarginContainer/AnimaData/AnimaAccordion/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_top = 61.0
 margin_right = 572.0
@@ -209,20 +319,21 @@ label = "none"
 show_relative_selector = false
 
 [node name="HSeparator" type="HSeparator" parent="Control/MarginContainer/AnimaData"]
-margin_top = 122.0
+margin_top = 44.0
 margin_right = 572.0
-margin_bottom = 130.0
+margin_bottom = 52.0
 
 [node name="NodeOrGroup" type="Control" parent="Control/MarginContainer/AnimaData"]
-margin_top = 142.0
+margin_top = 64.0
 margin_right = 572.0
-margin_bottom = 239.0
-rect_min_size = Vector2( 0, 97 )
-rect_pivot_offset = Vector2( 298, 16 )
+margin_bottom = 96.0
+rect_min_size = Vector2( 0, 32 )
+rect_pivot_offset = Vector2( 286, 48.5 )
 rect_clip_content = true
 script = ExtResource( 4 )
 label = "Animate as:"
 font = SubResource( 4 )
+expanded = false
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -324,11 +435,11 @@ ButtonPressed/Shadow/Offset = Vector2( -1, -1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
-rect_pivot_offset = Vector2( 298, 38 )
+rect_pivot_offset = Vector2( 286, 32.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
-"_edit_use_anchors_": false
+"__initial_opacity": 1.0
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2"]
@@ -706,11 +817,11 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Carousel" parent="Control/MarginContainer/AnimaData" instance=ExtResource( 7 )]
 anchor_right = 0.0
-margin_top = 251.0
+margin_top = 108.0
 margin_right = 572.0
-margin_bottom = 337.0
+margin_bottom = 194.0
 rect_min_size = Vector2( 0, 86 )
-rect_pivot_offset = Vector2( 286, 28.5 )
+rect_pivot_offset = Vector2( 286, 43 )
 
 [node name="Controls" parent="Control/MarginContainer/AnimaData/Carousel" index="0"]
 margin_right = 572.0
@@ -953,7 +1064,7 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="Wrapper" parent="Control/MarginContainer/AnimaData/Carousel" index="1"]
 margin_top = 57.0
 margin_right = 572.0
-margin_bottom = 57.0
+margin_bottom = 94.0
 rect_pivot_offset = Vector2( 286, 0 )
 mouse_filter = 2
 
@@ -988,9 +1099,9 @@ __meta__ = {
 }
 
 [node name="AnimationType" type="Control" parent="Control/MarginContainer/AnimaData"]
-margin_top = 349.0
+margin_top = 206.0
 margin_right = 572.0
-margin_bottom = 381.0
+margin_bottom = 238.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="AnimationContainer" type="GridContainer" parent="Control/MarginContainer/AnimaData/AnimationType"]
@@ -1028,9 +1139,9 @@ __meta__ = {
 }
 
 [node name="Wrapper" type="Control" parent="Control/MarginContainer/AnimaData"]
-margin_top = 393.0
+margin_top = 250.0
 margin_right = 572.0
-margin_bottom = 393.0
+margin_bottom = 250.0
 size_flags_horizontal = 3
 
 [node name="PropertyValues" type="VBoxContainer" parent="Control/MarginContainer/AnimaData/Wrapper"]
@@ -1176,8 +1287,8 @@ anchor_right = 0.0
 margin_left = 128.0
 margin_top = 227.0
 margin_right = 572.0
-margin_bottom = 267.0
-rect_min_size = Vector2( 0, 40 )
+margin_bottom = 277.0
+rect_min_size = Vector2( 0, 50 )
 
 [node name="Label2" type="Label" parent="Control/MarginContainer/AnimaData/Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )

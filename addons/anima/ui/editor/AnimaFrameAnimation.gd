@@ -32,6 +32,7 @@ func get_data() -> Dictionary:
 		data = []
 	}
 
+	print(data)
 	for child in _animations_container.get_children():
 		data.data.push_back(child.get_data())
 
@@ -131,6 +132,7 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 
 	find_node("DurationContainer").visible = !is_initial_frame
 	find_node("RemoveWrapper").visible = !is_initial_frame
+	find_node("PlayButton").visible = !is_initial_frame
 	find_node("FrameName").set_can_edit_value(!is_initial_frame)
 
 func _on_Delete_pressed():

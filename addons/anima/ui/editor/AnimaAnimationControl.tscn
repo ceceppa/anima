@@ -8,6 +8,7 @@
 
 [node name="AnimationControl" type="MarginContainer"]
 anchor_right = 1.0
+rect_scale = Vector2( 0.99103, 0.951587 )
 mouse_filter = 1
 size_flags_horizontal = 3
 custom_constants/margin_right = 8
@@ -15,15 +16,12 @@ custom_constants/margin_top = 8
 custom_constants/margin_left = 8
 custom_constants/margin_bottom = 8
 script = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Container" type="VBoxContainer" parent="."]
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 1016.0
-margin_bottom = 375.0
+margin_bottom = 371.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -52,33 +50,40 @@ can_clear_custom_value = false
 show_relative_selector = false
 
 [node name="AnimationData" parent="Container" instance=ExtResource( 4 )]
+anchor_bottom = 0.0
 margin_top = 57.0
 margin_right = 1008.0
-margin_bottom = 367.0
+margin_bottom = 363.0
+rect_min_size = Vector2( 0, 306 )
 
 [node name="MarginContainer" parent="Container/AnimationData/Control" index="0"]
 margin_right = 1008.0
+margin_bottom = 274.0
 
 [node name="AnimaData" parent="Container/AnimationData/Control/MarginContainer" index="0"]
 margin_right = 996.0
+margin_bottom = 262.0
 
-[node name="HBoxContainer" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="0"]
+[node name="AnimaAccordion" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="0"]
 margin_right = 984.0
 
-[node name="Delay" parent="Container/AnimationData/Control/MarginContainer/AnimaData/HBoxContainer" index="1"]
+[node name="HBoxContainer" parent="Container/AnimationData/Control/MarginContainer/AnimaData/AnimaAccordion" index="1"]
+modulate = Color( 1, 1, 1, 1 )
+
+[node name="Delay" parent="Container/AnimationData/Control/MarginContainer/AnimaData/AnimaAccordion/HBoxContainer" index="1"]
 margin_right = 984.0
 
-[node name="HBoxContainer2" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="1"]
+[node name="Delay2" parent="Container/AnimationData/Control/MarginContainer/AnimaData/AnimaAccordion/HBoxContainer" index="3"]
 margin_right = 984.0
 
-[node name="Delay" parent="Container/AnimationData/Control/MarginContainer/AnimaData/HBoxContainer2" index="1"]
+[node name="HSeparator" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="1"]
 margin_right = 984.0
 
-[node name="HSeparator" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="2"]
+[node name="NodeOrGroup" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="2"]
 margin_right = 984.0
 
-[node name="NodeOrGroup" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="3"]
-margin_right = 984.0
+[node name="VBoxContainer2" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup" index="1"]
+modulate = Color( 1, 1, 1, 1 )
 
 [node name="MarginContainer" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2" index="0"]
 margin_right = 984.0
@@ -86,25 +91,91 @@ margin_right = 984.0
 [node name="GridContainer" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer" index="0"]
 margin_right = 972.0
 
-[node name="AnimaButton" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="0"]
+[node name="AsNode" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="0"]
 margin_right = 314.0
+Button/Group = SubResource( 1 )
 
-[node name="AsNode" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="1"]
+[node name="AsGroup" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="1"]
 margin_left = 322.0
 margin_right = 636.0
-group = SubResource( 1 )
+Button/Group = SubResource( 1 )
 
-[node name="AsGroup" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="2"]
+[node name="AsGrid" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="2"]
 margin_left = 644.0
 margin_right = 958.0
-group = SubResource( 1 )
+Button/Group = SubResource( 1 )
 
-[node name="AsGrid" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="3"]
-margin_right = 314.0
-group = SubResource( 1 )
+[node name="Carousel" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="3"]
+margin_right = 984.0
+margin_bottom = 194.0
+rect_pivot_offset = Vector2( 492, 43 )
 
-[node name="AnimaButton2" parent="Container/AnimationData/Control/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="4"]
-margin_left = 322.0
-margin_right = 636.0
+[node name="Controls" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel" index="0"]
+margin_right = 984.0
+
+[node name="AnimaButton" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel/Controls" index="0"]
+margin_right = 488.0
+
+[node name="AnimaButton2" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel/Controls" index="1"]
+margin_left = 496.0
+margin_right = 984.0
+
+[node name="Wrapper" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel" index="1"]
+margin_right = 984.0
+margin_bottom = 94.0
+rect_pivot_offset = Vector2( 492, 0 )
+
+[node name="Container" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel/Wrapper" index="0"]
+margin_right = 984.0
+rect_min_size = Vector2( 1968, 0 )
+rect_pivot_offset = Vector2( 984, 18.5 )
+
+[node name="AnimationButton" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel/Wrapper/Container" index="0"]
+margin_right = 980.0
+
+[node name="PropertyButton" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel/Wrapper/Container" index="1"]
+margin_left = 988.0
+margin_right = 1968.0
+
+[node name="AnimationType" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="4"]
+margin_top = 206.0
+margin_right = 984.0
+margin_bottom = 238.0
+
+[node name="Wrapper" parent="Container/AnimationData/Control/MarginContainer/AnimaData" index="5"]
+margin_top = 250.0
+margin_right = 984.0
+margin_bottom = 250.0
+
+[node name="Label1" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues" index="0"]
+margin_right = 984.0
+
+[node name="AnimateGrid" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues" index="1"]
+margin_right = 984.0
+
+[node name="FromValue" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues/AnimateGrid" index="1"]
+margin_right = 984.0
+
+[node name="ToValue" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues/AnimateGrid" index="3"]
+margin_right = 984.0
+
+[node name="InitialValue" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues/AnimateGrid" index="5"]
+margin_right = 984.0
+
+[node name="RelativeCheck" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues/AnimateGrid" index="7"]
+margin_right = 984.0
+
+[node name="PivotButton" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues/AnimateGrid" index="9"]
+margin_right = 984.0
+
+[node name="Label2" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues" index="2"]
+margin_right = 984.0
+
+[node name="Easing" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues" index="3"]
+margin_right = 984.0
+
+[node name="EasingButton" parent="Container/AnimationData/Control/MarginContainer/AnimaData/Wrapper/PropertyValues/Easing" index="1"]
+margin_right = 984.0
 
 [editable path="Container/AnimationData"]
+[editable path="Container/AnimationData/Control/MarginContainer/AnimaData/Carousel"]
