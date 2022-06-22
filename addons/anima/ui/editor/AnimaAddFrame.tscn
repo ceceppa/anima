@@ -445,13 +445,13 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="AddButton" type="Control" parent="Rectangle/CenterContainer/AddButtonWrapper"]
+modulate = Color( 1, 1, 1, 0 )
 rect_min_size = Vector2( 102, 102 )
 rect_pivot_offset = Vector2( 51, 51 )
 mouse_default_cursor_shape = 2
 script = ExtResource( 3 )
 __meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -1006,8 +1006,7 @@ __meta__ = {
 "__initial_rotate": 0.0,
 "__visibility_strategy": 0,
 "_edit_lock_": true,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"_edit_use_anchors_": false
 }
 draw_from_center = true
 Animation/AnimatePropertyChange = true
@@ -1047,8 +1046,7 @@ __meta__ = {
 "__initial_rotate": 0.0,
 "__visibility_strategy": 0,
 "_edit_lock_": true,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"_edit_use_anchors_": false
 }
 draw_from_center = true
 Animation/AnimatePropertyChange = true

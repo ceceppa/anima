@@ -31,6 +31,9 @@ func set_anima_node(node: Node) -> void:
 	if not is_node_different:
 		return
 
+	if not node.is_connected("tree_exited", self, "_on_anima_visual_node_deleted"):
+		node.connect("tree_exited", self, "_on_anima_visual_node_deleted")
+
 	_maybe_show_graph_edit()
 
 	if node == null:
@@ -98,6 +101,14 @@ func _maybe_show_graph_edit() -> bool:
 
 func _restore_data(data: Dictionary) -> void:
 	if not data.has("0"):
+		_frames_editor.clear()
+		_frames_editor.set_is_restoring_data(true)
+
+		# Always "insert" the initial frame
+		_frames_editor._on_AnimaAddFrame_add_frame(true)
+
+		_frames_editor.set_is_restoring_data(false)
+		
 		return
 
 	var animation = data["0"]
@@ -138,6 +149,7 @@ func _restore_data(data: Dictionary) -> void:
 				item.set_value(value.value)
 
 	_frames_editor.set_is_restoring_data(false)
+
 
 func _on_GraphEdit_hide_nodes_list():
 	_nodes_window.hide()
@@ -228,3 +240,8 @@ func _on_PropertiesWindow_property_selected(node_path, property, property_type):
 func _on_FramesEditor_visual_builder_updated(data):
 	if not _is_restoring_data:
 		emit_signal("visual_builder_updated", data)
+
+func _on_anima_visual_node_deleted() -> void:
+	_anima_visual_node = null
+
+	_maybe_show_graph_edit()

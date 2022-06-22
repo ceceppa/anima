@@ -234,7 +234,7 @@ func _animate_height_change() -> void:
 		Anima.Node(_icon) \
 			.anima_property("rotate", 0) \
 			.anima_from(-90) \
-			.anima_pivot(Anima.PIVOT.CENTER) \
+			.anima_pivot(ANIMA.PIVOT.CENTER) \
 			.anima_easing(easing)
 	)
 

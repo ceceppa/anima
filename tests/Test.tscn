@@ -64,29 +64,6 @@ __meta__ = {
 "__initialy": 366.23
 }
 
-[node name="AnimaVisualNode" type="Node" parent="."]
-script = ExtResource( 2 )
-__meta__ = {
-"__anima_visual_node": true
-}
-__anima_visual_editor_data = {
-"0": {
-"animation": {
-"default_duration": 0.3,
-"name": "MyAnimation",
-"visibility_strategy": 0
-},
-"frames": {
-0: {
-"data": [  ],
-"duration": null,
-"name": "Frame01",
-"type": "frame"
-}
-}
-}
-}
-
 [node name="Control" type="Control" parent="."]
 visible = false
 margin_left = 183.0
@@ -164,7 +141,9 @@ rect_pivot_offset = Vector2( 228, 16 )
 rect_clip_content = true
 script = ExtResource( 6 )
 __meta__ = {
-"_edit_use_anchors_": false
+"__visibility_strategy": 0,
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 font = SubResource( 4 )
 expanded = false
@@ -427,6 +406,14 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 "anims/New Anim" = SubResource( 7 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+
+[node name="AnimaVisualNode" type="Node" parent="."]
+script = ExtResource( 2 )
+__meta__ = {
+"__anima_visual_node": true
+}
+__anima_visual_editor_data = {
+}
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
