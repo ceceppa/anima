@@ -214,6 +214,14 @@ func stop() -> void:
 	_anima_tween.stop_all()
 	_anima_backwards_tween.stop_all()
 
+func pause() -> void:
+	_timer.paused = true
+	_anima_tween.stop_all()
+
+func resume() -> void:
+	_timer.paused = false
+	_anima_tween.resume_all()
+
 func loop(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
 
