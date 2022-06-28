@@ -555,7 +555,7 @@ func _on_tween_completed(node, _ignore) -> void:
 
 	_tween_completed += 1
 
-	if _tween_completed >= _animation_data.size():
+	if _tween_completed >= _animation_data.size() and not is_queued_for_deletion():
 		stop_all()
 
 		emit_signal("animation_completed")

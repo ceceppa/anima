@@ -1,7 +1,8 @@
 tool
 extends Control
 
-const ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationData.tscn")
+onready var ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationData.tscn")
+onready var INITIAL_DATA = preload("res://addons/anima/ui/editor/InitialValue.tscn")
 
 signal frame_deleted
 signal select_node
@@ -32,9 +33,9 @@ func get_data() -> Dictionary:
 		data = []
 	}
 
-	print(data)
 	for child in _animations_container.get_children():
-		data.data.push_back(child.get_data())
+		if is_instance_valid(child):
+			data.data.push_back(child.get_data())
 
 	return data
 
@@ -51,10 +52,13 @@ func clear() -> void:
 		child.queue_free()
 
 func add_animation_for(node: Node, path: String, property, property_value) -> Node:
-	var animation_item: Node = ANIMATION_DATA.instance()
+	var animation_item: Node = INITIAL_DATA.instance() if is_initial_frame else ANIMATION_DATA.instance() 
+
+	_animations_container.add_child(animation_item)
 
 	animation_item.connect("updated", self, "_on_animation_data_updated")
-	_animations_container.add_child(animation_item)
+	animation_item.connect("removed", self, "_on_animation_data_removed")
+	animation_item.set_data(node, path, property, property_value)
 
 	return animation_item
 
@@ -149,4 +153,9 @@ func _on_animation_data_updated() -> void:
 	emit_signal("frame_updated")
 
 func _on_FrameName_confirmed():
+	emit_signal("frame_updated")
+
+func _on_animation_data_removed(source: Node) -> void:
+	source.queue_free()
+
 	emit_signal("frame_updated")

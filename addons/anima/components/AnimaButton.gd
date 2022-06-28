@@ -215,7 +215,7 @@ func _ready():
 	_copy_properties("Normal")
 	
 	connect("item_rect_changed", self, "_on_resize_me")
-
+	
 func _init_button() -> void:
 	var style := StyleBoxEmpty.new()
 
@@ -231,6 +231,7 @@ func _init_button() -> void:
 	_button.connect("mouse_exited", self, "_on_mouse_exited")
 	_button.connect("button_down", self, "_on_mouse_down")
 	_button.connect("pressed", self, "_on_pressed")
+	_button.connect("toggled", self, "_on_toggled")
 
 	add_child(_button)
 
@@ -371,3 +372,9 @@ func _on_resize_me() -> void:
 
 	if rect_size < _button.rect_size:
 		rect_size = _button.rect_size
+
+func _on_toggled(is_toggled) -> void:
+	if is_toggled:
+		refresh(STATE.PRESSED)
+	else:
+		refresh(STATE.NORMAL)

@@ -21,7 +21,7 @@ func _ready():
 	for index in _controls.get_child_count():
 		var child: Node = _controls.get_child(index)
 
-		if child is Button:
+		if child.has_signal("pressed"):
 			child.connect("pressed", self, "_on_control_pressed", [index])
 
 	$Wrapper.anchor_right = 0
@@ -44,7 +44,7 @@ func update_size() -> void:
 		node.size_flags_horizontal = SIZE_EXPAND_FILL
 		node.size_flags_vertical = 0
 
-		_heights.push_back(node.rect_size.y)
+		_heights.push_back(node.rect_size.y + padding)
 
 
 func _maybe_get_container() -> void:
@@ -107,7 +107,7 @@ func set_index(new_index: int) -> void:
 	anima.play()
 
 func get_expected_wrapper_height() -> float:
-	return _heights[index]
+	return _heights[index] + padding
 
 func get_expected_height() -> float:
 	var height = _controls.rect_size.y + get_expected_wrapper_height()
@@ -118,9 +118,7 @@ func _on_Container_item_rect_changed() -> void:
 	emit_signal("carousel_size_changed", rect_size)
 
 func _on_control_pressed(index: int) -> void:
-	print("settami")
 	set_index(index)
 
 func _on_Carousel_item_rect_changed():
-#	set_index(index)
 	pass

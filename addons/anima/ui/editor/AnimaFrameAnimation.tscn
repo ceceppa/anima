@@ -22,14 +22,14 @@ __meta__ = {
 
 [node name="FrameAnimation" type="Control"]
 anchor_bottom = 1.0
-margin_right = 460.001
+margin_right = 460.527
 rect_min_size = Vector2( 460, 0 )
 rect_pivot_offset = Vector2( 230, 300 )
 rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
 "__initial_min_size:x": 460.0,
-"__initial_size:x": 460.001,
+"__initial_size:x": 460.527,
 "__visibility_strategy": 0
 }
 
@@ -89,7 +89,7 @@ rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 230, 24.5 )
 script = ExtResource( 6 )
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_y": 0.0,
 "__visibility_strategy": 0
 }
@@ -156,7 +156,7 @@ modulate = Color( 1, 1, 1, 0 )
 margin_top = 49.0
 margin_right = 460.0
 margin_bottom = 600.0
-rect_pivot_offset = Vector2( 180, 275.5 )
+rect_pivot_offset = Vector2( 230, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -164,7 +164,7 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 12
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_y": 49.0,
 "__visibility_strategy": 0,
 "_edit_use_anchors_": false
@@ -222,7 +222,7 @@ show_relative_selector = false
 [node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
 margin_top = 85.0
 margin_right = 436.0
-margin_bottom = 436.0
+margin_bottom = 466.0
 rect_pivot_offset = Vector2( 175, 157.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -233,12 +233,13 @@ __meta__ = {
 
 [node name="AnimationsContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/ScrollContainer"]
 margin_right = 436.0
-margin_bottom = 351.0
+margin_bottom = 381.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="Empty" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
+visible = false
 margin_top = 448.0
 margin_right = 436.0
 margin_bottom = 466.0
@@ -257,9 +258,6 @@ margin_top = -32.0
 margin_bottom = 16.0
 custom_constants/separation = 24
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="GenerateFrame" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
 visible = false
@@ -273,7 +271,7 @@ hint_tooltip = "Add all changes as Animation"
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0
 }
@@ -387,17 +385,24 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="AddAnimation" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 174.0
-margin_right = 261.0
+[node name="RemoveWrapper" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
+margin_top = 478.0
+margin_right = 436.0
+margin_bottom = 527.0
+rect_pivot_offset = Vector2( 228, 24.5 )
+custom_constants/separation = 24
+alignment = 1
+
+[node name="AddAnimation" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper"]
+margin_left = 96.0
+margin_right = 183.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 87, 49 )
 rect_pivot_offset = Vector2( 43.5, 24.5 )
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0
 }
@@ -511,17 +516,9 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="RemoveWrapper" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
-margin_top = 478.0
-margin_right = 436.0
-margin_bottom = 527.0
-rect_pivot_offset = Vector2( 228, 24.5 )
-custom_constants/separation = 24
-alignment = 1
-
 [node name="Delete" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper"]
-margin_left = 152.0
-margin_right = 284.0
+margin_left = 207.0
+margin_right = 339.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 132, 49 )
 rect_pivot_offset = Vector2( 60, 17 )
@@ -639,5 +636,5 @@ Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [connection signal="confirmed" from="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer/MarginContainer/FrameName" to="." method="_on_FrameName_confirmed"]
-[connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]
+[connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper/AddAnimation" to="." method="_on_AddAnimation_pressed"]
 [connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper/Delete" to="." method="_on_Delete_pressed"]

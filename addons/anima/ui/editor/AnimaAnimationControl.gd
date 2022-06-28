@@ -8,7 +8,7 @@ signal content_size_changed(new_size)
 onready var _duration: Control = find_node('Duration')
 onready var _delay: Control = find_node('Delay')
 onready var _animations_container: VBoxContainer = find_node('AnimationsContainer')
-onready var _animation_data: VBoxContainer = find_node('AnimationData')
+onready var _animation_data: Control = find_node('AnimationData')
 
 var _relative_control: Control
 var _source_node: Node

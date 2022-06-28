@@ -31,13 +31,13 @@ func set_anima_node(node: Node) -> void:
 	if not is_node_different:
 		return
 
-	if not node.is_connected("tree_exited", self, "_on_anima_visual_node_deleted"):
-		node.connect("tree_exited", self, "_on_anima_visual_node_deleted")
-
 	_maybe_show_graph_edit()
 
 	if node == null:
 		return
+
+	if not node.is_connected("tree_exited", self, "_on_anima_visual_node_deleted"):
+		node.connect("tree_exited", self, "_on_anima_visual_node_deleted")
 
 	_is_restoring_data = true
 	_anima_visual_node = node
@@ -105,7 +105,7 @@ func _restore_data(data: Dictionary) -> void:
 		_frames_editor.set_is_restoring_data(true)
 
 		# Always "insert" the initial frame
-		_frames_editor._on_AnimaAddFrame_add_frame(true)
+		_frames_editor._on_AnimaAddFrame_add_frame(0, true)
 
 		_frames_editor.set_is_restoring_data(false)
 		
@@ -126,13 +126,13 @@ func _restore_data(data: Dictionary) -> void:
 			continue
 
 		if frame_data.type == "frame":
-			_frames_editor._on_AnimaAddFrame_add_frame(frame_key == 0)
+			_frames_editor._on_AnimaAddFrame_add_frame(frame_key, frame_key == 0)
 		elif frame_data.type == "delay":
 			_frames_editor._on_AnimaAddFrame_add_delay()
 		else:
 			pass
 
-		_frames_editor.select_frame(index)
+		_frames_editor.select_frame(frame_key)
 
 		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
 
@@ -141,11 +141,16 @@ func _restore_data(data: Dictionary) -> void:
 		if frame_data.duration:
 			_frames_editor.set_frame_duration(frame_data.duration)
 
+		print_debug("restoring data", frame_data)
+
 		for value in frame_data.data:
-			if value.has("node_path"):
+			if value and value.has("node_path"):
 				var node: Node = _scene_root_node.get_node(value.node_path)
+				
+				yield(get_tree(), "idle_frame")
 
 				var item: Node = _frames_editor.add_animation_for(node, value.node_path, value.property_name, value.property_type)
+
 				item.set_value(value.value)
 
 	_frames_editor.set_is_restoring_data(false)
