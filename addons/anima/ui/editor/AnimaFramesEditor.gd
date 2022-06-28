@@ -41,8 +41,10 @@ func clear() -> void:
 		child.animate_entrance_exit = false
 		child.queue_free()
 
-func select_frame(index: int) -> void:
-	_destination_frame = _frames_container.get_child(index)
+func select_frame(key) -> void:
+	for child in _frames_container.get_children():
+		if is_instance_valid(child) and child.get_meta("_key") == key:
+			_destination_frame = child
 
 func set_frame_name(name: String) -> void:
 	_destination_frame.set_name(name)
@@ -64,10 +66,14 @@ func _add_component(node: Node) -> void:
 
 	node.animate_entrance_exit = true
 
-func _on_AnimaAddFrame_add_frame(is_initial_frame := false):
+func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
+	if key < 0:
+		key = _frames_container.get_child_count()
+
 	var node = FRAME_ANIMATION.instance()
 	
 	node.set_is_initial_frame(is_initial_frame)
+	node.set_meta("_key", key)
 
 	_add_component(node)
 

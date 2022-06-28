@@ -193,6 +193,9 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> Ani
 	return self
 
 func clear() -> void:
+	if not is_instance_valid(_anima_tween):
+		return
+
 	stop()
 
 	_anima_tween.clear_animations()
@@ -242,8 +245,9 @@ func _on_timer_completed() -> void:
 	_maybe_play()
 
 func stop() -> void:
-	_anima_tween.stop_all()
-	_anima_backwards_tween.stop_all()
+	if is_instance_valid(_anima_tween):
+		_anima_tween.stop_all()
+		_anima_backwards_tween.stop_all()
 
 func loop(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
@@ -401,7 +405,8 @@ func _setup_node_animation(data: Dictionary) -> float:
 		if real_duration > 0:
 			duration = real_duration
 	else:
-		_anima_tween.add_animation_data(data)
+		if is_instance_valid(_anima_tween):
+			_anima_tween.add_animation_data(data)
 
 	return duration
 

@@ -11,56 +11,7 @@ var _wrapper: VBoxContainer
 var _icon: Sprite
 var _content_control: Control
 
-const BUTTON_BASE_PROPERTIES := {
-	# Normal
-	NORMAL_FILL_COLOR = {
-		name = "ButtonNormal/FillColor",
-		type = TYPE_COLOR,
-		default = Color("314569")
-	},
-
-	# Hovered
-	HOVERED_USE_STYLE = {
-		name = "ButtonHovered/UseSameStyleOf",
-		type = TYPE_STRING,
-		hint = PROPERTY_HINT_ENUM,
-		hint_string = ",Normal,Pressed,Focused",
-		default = ""
-	},
-	HOVERED_FILL_COLOR = {
-		name = "ButtonHovered/FillColor",
-		type = TYPE_COLOR,
-		default = Color("628ad1")
-	},
-
-	# Pressed
-	PRESSED_USE_STYLE = {
-		name = "ButtonPressed/UseSameStyleOf",
-		type = TYPE_STRING,
-		hint = PROPERTY_HINT_ENUM,
-		hint_string = ",Normal,Pressed,Focused",
-		default = ""
-	},
-	PRESSED_FILL_COLOR = {
-		name = "ButtonPressed/FillColor",
-		type = TYPE_COLOR,
-		default = Color("428ad1")
-	},
-
-	# Focused
-	FOCUSED_USE_STYLE = {
-		name = "ButtonFocused/UseSameStyleOf",
-		type = TYPE_STRING,
-		hint = PROPERTY_HINT_ENUM,
-		hint_string = ",Normal,Pressed,Focused",
-		default = ""
-	},
-	FOCUSED_FILL_COLOR = {
-		name = "ButtonFocused/FillColor",
-		type = TYPE_COLOR,
-		default = Color("428ad1")
-	},
-}
+const BASE_COLOR = Color("663169")
 
 const CUSTOM_PROPERTIES := {
 	# Animation
@@ -77,7 +28,7 @@ const CUSTOM_PROPERTIES := {
 	}
 }
 
-var _all_properties := BUTTON_BASE_PROPERTIES
+var _all_properties := AnimaButton.BUTTON_BASE_PROPERTIES
 var _is_ready := false
 
 func _enter_tree():
@@ -88,29 +39,29 @@ func _init():
 
 	_init_layout()
 
-	var extra_keys = ["ButtonNormal", "ButtonHovered", "ButtonFocused", "ButtonPressed"]
-
-	for key in AnimaRectangle.PROPERTIES:
-		for extra_key_index in extra_keys.size():
-			var extra_key: String = extra_keys[extra_key_index]
-			var new_key = key.replace("RECTANGLE", extra_key.to_upper())
-
-			if BUTTON_BASE_PROPERTIES.has(new_key):
-				continue
-
-			var new_value = AnimaRectangle.PROPERTIES[key].duplicate()
-
-			if extra_key_index > 0:
-				if new_value.default is float:
-					new_value.default = -1
-				elif new_value.default is Vector2:
-					new_value.default = Vector2(-1, -1)
-				elif new_value.default is Rect2:
-					new_value.default = Rect2(-1, -1, -1, -1)
-
-			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
-
-			_all_properties[new_key] = new_value
+#	var extra_keys = [] #"ButtonNormal", "ButtonHovered", "ButtonFocused", "ButtonPressed"]
+#
+#	for key in AnimaRectangle.PROPERTIES:
+#		for extra_key_index in extra_keys.size():
+#			var extra_key: String = extra_keys[extra_key_index]
+#			var new_key = key.replace("RECTANGLE", extra_key.to_upper())
+#
+#			if AnimaButton.BUTTON_BASE_PROPERTIES.has(new_key):
+#				continue
+#
+#			var new_value = AnimaRectangle.PROPERTIES[key].duplicate()
+#
+#			if extra_key_index > 0:
+#				if new_value.default is float:
+#					new_value.default = -1
+#				elif new_value.default is Vector2:
+#					new_value.default = Vector2(-1, -1)
+#				elif new_value.default is Rect2:
+#					new_value.default = Rect2(-1, -1, -1, -1)
+#
+#			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
+#
+#			_all_properties[new_key] = new_value
 
 	_add_properties(CUSTOM_PROPERTIES)
 	_add_properties(_all_properties)
@@ -166,6 +117,9 @@ func set_expanded(is_expanded: bool, animate := true) -> void:
 	expanded = is_expanded
 
 	if not is_inside_tree():
+		if not expanded:
+			_icon.rotate(- PI / 2)
+
 		return
 
 	if _is_ready and animate and should_animate_property_change():
@@ -200,12 +154,16 @@ func _get_expanded_height() -> float:
 	_content_control.margin_bottom = 0
 	return _get_collapsed_height() + _content_control.rect_size.y
 
-func _set(property, value):
+func _set(property: String, value):
 	._set(property, value)
 
 	if _title and property == "label":
 		_title.set(property, value)
 		_title._on_mouse_exited()
+	elif property.begins_with("Button"):
+		var p = property.replace("Button", "");
+
+		_title.set(p, value)
 
 func _animate_height_change() -> void:
 	var anima: AnimaNode = Anima.begin_single_shot(self)

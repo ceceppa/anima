@@ -34,6 +34,7 @@ const MIN_SIZE := 30.0
 var _input_visible: Control
 var _relative_source: Button
 var _current_value_button_visible: AnimaButton
+var _should_return_null_value := true
 
 func _ready():
 	if _input_visible == null:
@@ -108,6 +109,8 @@ func set_can_edit_value(can_edit: bool) -> void:
 func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 	if _input_visible == null:
 		return
+
+	_should_return_null_value = false
 
 	var anima: AnimaNode = $AnimaNode
 	anima.clear()
@@ -257,7 +260,7 @@ func set_relative_value(value: String) -> void:
 	linked_node.text = value
 
 func get_value():
-	if _input_visible == null or _current_value_button_visible.modulate.a > 0:
+	if _input_visible == null or _should_return_null_value:
 		return null
 
 	if _input_visible is LineEdit:

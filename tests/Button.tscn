@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://tests/Button.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+
+[node name="Button" type="Button"]
+anchor_right = 0.476
+anchor_bottom = 0.31
+margin_right = -0.424011
+margin_bottom = -9.0
+custom_styles/hover = SubResource( 1 )
+script = ExtResource( 1 )

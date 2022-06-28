@@ -148,21 +148,124 @@ __meta__ = {
 font = SubResource( 4 )
 expanded = false
 Animation/AnimatePropertyChange = true
-Animation/Speed = 0.15
-Animation/Easing = 27.0
+Animation/Speed = 0.3
+Animation/Easing = 0
 Animation/Name = "fadeIn"
 Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
-ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-ButtonHovered/UseSameStyleOf = ""
-ButtonHovered/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-ButtonPressed/UseSameStyleOf = ""
-ButtonPressed/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-ButtonFocused/UseSameStyleOf = ""
-ButtonFocused/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Button/Text = "Anima Button"
+Button/ICON = null
+Button/Align = 1
+Button/Font = null
+Button/Disabled = false
+Button/ToggleMode = false
+Button/ShortcutInTooltip = true
+Button/Pressed = false
+Button/ContentMargin = 12
+Button/Group = null
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+Normal/FontColor = Color( 1, 1, 1, 1 )
+Hovered/UseSameStyleOf = ""
+Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
+Hovered/FontColor = Color( 1, 1, 1, 0 )
+Hovered/Scale = Vector2( 1, 1 )
+Pressed/UseSameStyleOf = ""
+Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Pressed/FontColor = Color( 1, 1, 1, 0 )
+Focused/UseSameStyleOf = ""
+Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
+Focused/FontColor = Color( 1, 1, 1, 0 )
+Normal/Size = Rect2( 0, 0, 100, 100 )
+Hovered/Size = Rect2( -1, -1, -1, -1 )
+Focused/Size = Rect2( -1, -1, -1, -1 )
+Pressed/Size = Rect2( -1, -1, -1, -1 )
+Normal/Border/Color = Color( 1, 1, 1, 0 )
+Hovered/Border/Color = Color( 1, 1, 1, 0 )
+Focused/Border/Color = Color( 1, 1, 1, 0 )
+Pressed/Border/Color = Color( 1, 1, 1, 0 )
+Normal/Border/Blend = false
+Hovered/Border/Blend = false
+Focused/Border/Blend = false
+Pressed/Border/Blend = false
+Normal/Border/Offset = Vector2( 0, 0 )
+Hovered/Border/Offset = Vector2( -1, -1 )
+Focused/Border/Offset = Vector2( -1, -1 )
+Pressed/Border/Offset = Vector2( -1, -1 )
+Normal/Border/Widh/Left = 0
+Hovered/Border/Widh/Left = -1
+Focused/Border/Widh/Left = -1
+Pressed/Border/Widh/Left = -1
+Normal/Border/Widh/Top = 0
+Hovered/Border/Widh/Top = -1
+Focused/Border/Widh/Top = -1
+Pressed/Border/Widh/Top = -1
+Normal/Border/Widh/Right = 0
+Hovered/Border/Widh/Right = -1
+Focused/Border/Widh/Right = -1
+Pressed/Border/Widh/Right = -1
+Normal/Border/Widh/Bottom = 0
+Hovered/Border/Widh/Bottom = -1
+Focused/Border/Widh/Bottom = -1
+Pressed/Border/Widh/Bottom = -1
+Normal/Border/Radius/Details = 8
+Hovered/Border/Radius/Details = -1
+Focused/Border/Radius/Details = -1
+Pressed/Border/Radius/Details = -1
+Normal/Border/Radius/TopLeft = 0
+Hovered/Border/Radius/TopLeft = -1
+Focused/Border/Radius/TopLeft = -1
+Pressed/Border/Radius/TopLeft = -1
+Normal/Border/Radius/TopRight = 0
+Hovered/Border/Radius/TopRight = -1
+Focused/Border/Radius/TopRight = -1
+Pressed/Border/Radius/TopRight = -1
+Normal/Border/Radius/BottomRight = 0
+Hovered/Border/Radius/BottomRight = -1
+Focused/Border/Radius/BottomRight = -1
+Pressed/Border/Radius/BottomRight = -1
+Normal/Border/Radius/BottomLeft = 0
+Hovered/Border/Radius/BottomLeft = -1
+Focused/Border/Radius/BottomLeft = -1
+Pressed/Border/Radius/BottomLeft = -1
+Normal/Border/Offset/Radius/Details = 8
+Hovered/Border/Offset/Radius/Details = -1
+Focused/Border/Offset/Radius/Details = -1
+Pressed/Border/Offset/Radius/Details = -1
+Normal/Border/Offset/Radius/TopLeft = -1
+Hovered/Border/Offset/Radius/TopLeft = -1
+Focused/Border/Offset/Radius/TopLeft = -1
+Pressed/Border/Offset/Radius/TopLeft = -1
+Normal/Border/Offset/Radius/TopRight = -1
+Hovered/Border/Offset/Radius/TopRight = -1
+Focused/Border/Offset/Radius/TopRight = -1
+Pressed/Border/Offset/Radius/TopRight = -1
+Normal/Border/Offset/Radius/BottomRight = -1
+Hovered/Border/Offset/Radius/BottomRight = -1
+Focused/Border/Offset/Radius/BottomRight = -1
+Pressed/Border/Offset/Radius/BottomRight = -1
+Normal/Border/Offset/Radius/BottomLeft = -1
+Hovered/Border/Offset/Radius/BottomLeft = -1
+Focused/Border/Offset/Radius/BottomLeft = -1
+Pressed/Border/Offset/Radius/BottomLeft = -1
+Normal/Shadow/Color = Color( 1, 1, 1, 0 )
+Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
+Focused/Shadow/Color = Color( 1, 1, 1, 0 )
+Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
+Normal/Shadow/Size = 0
+Hovered/Shadow/Size = -1
+Focused/Shadow/Size = -1
+Pressed/Shadow/Size = -1
+Normal/Shadow/Offset = Vector2( 0, 0 )
+Hovered/Shadow/Offset = Vector2( -1, -1 )
+Focused/Shadow/Offset = Vector2( -1, -1 )
+Pressed/Shadow/Offset = Vector2( -1, -1 )
 ButtonNormal/Size = Rect2( 0, 0, 100, 100 )
 ButtonHovered/Size = Rect2( -1, -1, -1, -1 )
 ButtonFocused/Size = Rect2( -1, -1, -1, -1 )
 ButtonPressed/Size = Rect2( -1, -1, -1, -1 )
+ButtonNormal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonHovered/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonFocused/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
+ButtonPressed/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 ButtonNormal/Border/Color = Color( 1, 1, 1, 0 )
 ButtonHovered/Border/Color = Color( 1, 1, 1, 0 )
 ButtonFocused/Border/Color = Color( 1, 1, 1, 0 )
@@ -286,9 +389,10 @@ margin_left = 549.934
 margin_top = 107.061
 margin_right = 1094.93
 margin_bottom = 217.061
-rect_pivot_offset = Vector2( 272.499, 54.9999 )
+rect_pivot_offset = Vector2( 272.498, 55 )
 script = ExtResource( 5 )
 __meta__ = {
+"__visibility_strategy": 0,
 "_edit_use_anchors_": false
 }
 draw_from_center = true
@@ -413,6 +517,33 @@ __meta__ = {
 "__anima_visual_node": true
 }
 __anima_visual_editor_data = {
+"0": {
+"animation": {
+"default_duration": null,
+"name": null,
+"visibility_strategy": 0
+},
+"frames": {
+0: {
+"data": [ {
+"node_path": ".",
+"property_name": "opacity",
+"property_type": 3,
+"value": 1.0
+} ],
+"duration": null,
+"name": "Initial Values",
+"type": "frame"
+},
+1: {
+"data": [ {
+} ],
+"duration": null,
+"name": "Initial Values",
+"type": "frame"
+}
+}
+}
 }
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
