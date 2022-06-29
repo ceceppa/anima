@@ -11,7 +11,7 @@ onready var _controls: HBoxContainer = find_node('Controls')
 
 export (int) var index setget set_index
 export (float) var duration = 0.3
-export (float) var padding := 0.0
+export (float) var padding := 0.0 setget set_padding
 export (ANIMA.EASING) var scroll_easing = ANIMA.EASING.LINEAR
 export (ANIMA.EASING) var height_easing = ANIMA.EASING.LINEAR
 
@@ -122,3 +122,8 @@ func _on_control_pressed(index: int) -> void:
 
 func _on_Carousel_item_rect_changed():
 	pass
+
+func set_padding(new_padding: float) -> void:
+	padding = new_padding
+
+	add_constant_override("separation", padding)

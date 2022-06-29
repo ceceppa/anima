@@ -184,6 +184,9 @@ func is_single_shot() -> bool:
 func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> AnimaNode:
 	_visibility_strategy = strategy
 
+	if not is_instance_valid(_anima_tween):
+		return self
+
 	_anima_tween.set_visibility_strategy(strategy)
 	_anima_backwards_tween.set_visibility_strategy(strategy)
 
