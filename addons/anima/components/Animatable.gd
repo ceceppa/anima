@@ -25,9 +25,12 @@ const BASE_PROPERTIES := {
 var _property_list := AnimaPropertyList.new()
 var _is_animating_property_change := false
 var _old_animate_property_change: bool
+var _anima: AnimaNode
 
 func _init():
 	_add_properties(BASE_PROPERTIES)
+	
+	_anima = Anima.begin(self)
 
 func _add_properties(properties: Dictionary) -> void:
 	for key in properties:
@@ -134,7 +137,7 @@ func _animate(anima_data: Array) -> AnimaNode:
 
 	anima.play()
 	yield(anima, "animation_completed")
-
+	
 	_is_animating_property_change = false
 
 	return anima

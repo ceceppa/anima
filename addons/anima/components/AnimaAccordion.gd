@@ -28,7 +28,7 @@ const CUSTOM_PROPERTIES := {
 	}
 }
 
-var _all_properties := AnimaButton.BUTTON_BASE_PROPERTIES
+var _all_properties := AnimaButton.BUTTON_BASE_PROPERTIES.duplicate()
 var _is_ready := false
 
 func _enter_tree():
@@ -39,36 +39,23 @@ func _init():
 
 	_init_layout()
 
-#	var extra_keys = [] #"ButtonNormal", "ButtonHovered", "ButtonFocused", "ButtonPressed"]
-#
-#	for key in AnimaRectangle.PROPERTIES:
-#		for extra_key_index in extra_keys.size():
-#			var extra_key: String = extra_keys[extra_key_index]
-#			var new_key = key.replace("RECTANGLE", extra_key.to_upper())
-#
-#			if AnimaButton.BUTTON_BASE_PROPERTIES.has(new_key):
-#				continue
-#
-#			var new_value = AnimaRectangle.PROPERTIES[key].duplicate()
-#
-#			if extra_key_index > 0:
-#				if new_value.default is float:
-#					new_value.default = -1
-#				elif new_value.default is Vector2:
-#					new_value.default = Vector2(-1, -1)
-#				elif new_value.default is Rect2:
-#					new_value.default = Rect2(-1, -1, -1, -1)
-#
-#			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
-#
-#			_all_properties[new_key] = new_value
+	var button_colors = {
+		NORMAL_FILL_COLOR = BASE_COLOR,
+		FOCUSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
+		HOVERED_FILL_COLOR = BASE_COLOR.lightened(0.2),
+		PRESSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
+	}
+	
+	for color_key in button_colors:
+		_all_properties[color_key].default = button_colors[color_key]
 
 	_add_properties(CUSTOM_PROPERTIES)
 	_add_properties(_all_properties)
+
 	rect_clip_content = true
 
 func _ready():
-	_content_control = get_child(1)
+	_content_control = get_child(get_child_count() - 1)
 
 	set_expanded(expanded)
 	set_label(label)
@@ -79,13 +66,13 @@ func _draw():
 	draw_rect(Rect2(Vector2(0, 0), rect_size), get_property(CUSTOM_PROPERTIES.PANEL_FILL_COLOR.name), true)
 
 func _get_configuration_warning():
-	if get_child_count() != 2:
+	if get_child_count() > 3:
 		if _content_control:
 			_on_content_control_removed()
 
-		return "You must add 1 child component"
+		return "You must add only 1 child component"
 
-	_content_control = get_child(1)
+	_content_control = get_child(get_child_count() - 1)
 	_on_content_control_added()
 
 	return ""
@@ -166,7 +153,7 @@ func _set(property: String, value):
 		_title.set(p, value)
 
 func _animate_height_change() -> void:
-	var anima: AnimaNode = Anima.begin_single_shot(self)
+	var anima: AnimaNode = Anima.begin_single_shot(self, "accordion")
 	var easing: int = get_easing()
 
 	anima.set_default_duration(get_duration())

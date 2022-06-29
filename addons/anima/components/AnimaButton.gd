@@ -8,15 +8,17 @@ signal toggled(button_pressed)
 
 enum STATE {
 	NORMAL,
-	HOVERED,
-	FOCUSED,
 	PRESSED
+	HOVERED,
+	DISABLED,
+	DRAW_HOVER_PRESSED,
 }
 
 const STATES := {
 	STATE.NORMAL: "Normal",
+	STATE.DISABLED: "Normal",
 	STATE.HOVERED: "Hovered",
-	STATE.FOCUSED: "Focused",
+	STATE.DRAW_HOVER_PRESSED: "Focused",
 	STATE.PRESSED: "Pressed"
 }
 
@@ -164,6 +166,7 @@ const BUTTON_BASE_PROPERTIES := {
 
 var _all_properties := BUTTON_BASE_PROPERTIES
 var _button := Button.new()
+var _old_state: int
 
 func _init():
 	._init()
@@ -207,15 +210,20 @@ func _init():
 	_init_button()
 
 func _ready():
-	_set(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name))
-	_set(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name))
-	_set(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name))
-	_set(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name, get_property(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name))
+	_set_button_property(BUTTON_BASE_PROPERTIES.BUTTON_LABEL.name)
+	_set_button_property(BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name)
+	_set_button_property(BUTTON_BASE_PROPERTIES.BUTTON_FONT.name)
+	_set_button_property(BUTTON_BASE_PROPERTIES.BUTTON_TOGGLE_MODE.name)
+	_set_button_property(BUTTON_BASE_PROPERTIES.BUTTON_PRESSED.name)
 
 	_copy_properties("Normal")
 	
 	connect("item_rect_changed", self, "_on_resize_me")
-	
+	_button.connect("draw", self, "_refresh_button")
+
+func _set_button_property(key: String) -> void:
+	_set(key, get_property(key))
+
 func _init_button() -> void:
 	var style := StyleBoxEmpty.new()
 
@@ -225,11 +233,8 @@ func _init_button() -> void:
 	for c in ["font_color_disabled", "font_color_focus", "font_color", "font_color_hover", "font_color_pressed"]:
 		_button.add_color_override(c, Color.white)
 
-	_button.connect("focus_entered", self, "_on_focus_entered")
-	_button.connect("focus_exited", self, "_on_focus_exited")
-	_button.connect("mouse_entered", self, "_on_mouse_entered")
-	_button.connect("mouse_exited", self, "_on_mouse_exited")
-	_button.connect("button_down", self, "_on_mouse_down")
+	_button.connect("button_down", self, "_on_button_down")
+	_button.connect("button_up", self, "_on_button_down")
 	_button.connect("pressed", self, "_on_pressed")
 	_button.connect("toggled", self, "_on_toggled")
 
@@ -282,17 +287,18 @@ func _animate_state(root_key: String) -> void:
 	if params_to_animate.size() > 0:
 		animate_params(params_to_animate)
 
-func refresh(state: int, ignore_if_focused := true) -> void:
-	if _button.has_focus() and ignore_if_focused:
-		state = STATE.FOCUSED
+func refresh() -> void:
+	var state = _button.get_draw_mode()
 
-	if _button.toggle_mode and _button.pressed:
-		state = STATE.PRESSED
+	if state == _old_state:
+		return
 
-	if _button.disabled:
-		state = STATE.NORMAL
+	if _is_animating_property_change:
+		_anima.stop()
 
 	_animate_state(STATES[state])
+
+	_old_state = state
 
 func _set(property: String, value) -> void:
 	if Engine.editor_hint and property.find("Rectangle/") < 0:
@@ -342,24 +348,13 @@ func get_label() -> String:
 func set_icon(icon: Texture) -> void:
 	set(BUTTON_BASE_PROPERTIES.BUTTON_ICON.name, icon)
 
-func _on_mouse_entered():
-	refresh(STATE.HOVERED)
+func _on_button_down() -> void:
+	emit_signal("button_down")
 
-func _on_mouse_exited():
-	refresh(STATE.NORMAL)
-
-func _on_mouse_down():
-	refresh(STATE.PRESSED, false)
-
-func _on_focus_entered():
-	refresh(STATE.FOCUSED)
-
-func _on_focus_exited():
-	refresh(STATE.NORMAL)
+func _on_button_up() -> void:
+	emit_signal("button_up")
 
 func _on_pressed() -> void:
-	refresh(STATE.PRESSED)
-
 	emit_signal("pressed")
 
 func _set_test_state(new_state) -> void:
@@ -374,7 +369,7 @@ func _on_resize_me() -> void:
 		rect_size = _button.rect_size
 
 func _on_toggled(is_toggled) -> void:
-	if is_toggled:
-		refresh(STATE.PRESSED)
-	else:
-		refresh(STATE.NORMAL)
+	emit_signal("toggled", is_toggled)
+
+func _refresh_button() -> void:
+	refresh()

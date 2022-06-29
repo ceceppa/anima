@@ -44,6 +44,5 @@ func get_data() -> Dictionary:
 		use = use_bg.get_pressed_button().name
 	}
 
-
 func restore_data(source_node: Node, data: Dictionary) -> void:
 	pass
