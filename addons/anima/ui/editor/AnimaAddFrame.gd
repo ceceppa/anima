@@ -11,6 +11,8 @@ onready var _dotted = find_node("Dotted")
 onready var _plus = find_node("Plus")
 onready var _add_button: AnimaAnimatable = find_node("AddButton")
 onready var _buttons_container: VBoxContainer = find_node("ButtonsContainer")
+onready var _plus_vertical: AnimaRectangle = _plus.find_node("Vertical")
+onready var _plus_horizontal: AnimaRectangle = _plus.find_node("Horizontal")
 
 var _ratio: float = 1.0
 
@@ -33,7 +35,7 @@ func _animate_me():
 		Anima.Node(_add_button).anima_fade_in().anima_initial_value(0)
 	)
 	anima.with(
-		Anima.Node(_plus.get_child(1)) \
+		Anima.Node(_plus_vertical) \
 			.anima_animation_frames({
 				from = {
 					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2.ZERO),
@@ -47,7 +49,7 @@ func _animate_me():
 			})
 	)
 	anima.with(
-		Anima.Node(_plus.get_child(0)) \
+		Anima.Node(_plus_horizontal) \
 			.anima_animation_frames({
 				from = {
 					AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2.ZERO),
@@ -124,7 +126,7 @@ func _animate_add_button() -> void:
 	)
 
 	anima.with(
-		Anima.Node(_plus.get_child(0)) \
+		Anima.Node(_plus_horizontal) \
 			.anima_animation_frames({
 				from = {
 				AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(40, 5)),
@@ -136,7 +138,7 @@ func _animate_add_button() -> void:
 	)
 
 	anima.with(
-		Anima.Node(_plus.get_child(1)) \
+		Anima.Node(_plus_vertical) \
 			.anima_animation_frames({
 				from = {
 				AnimaRectangle.PROPERTIES.RECTANGLE_SIZE.name: Rect2(Vector2.ZERO, Vector2(5, 40)),

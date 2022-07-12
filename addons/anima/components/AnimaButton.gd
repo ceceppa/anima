@@ -237,6 +237,8 @@ func _init_button() -> void:
 	_button.connect("button_up", self, "_on_button_down")
 	_button.connect("pressed", self, "_on_pressed")
 	_button.connect("toggled", self, "_on_toggled")
+	_button.connect("mouse_entered", self, "_on_mouse_entered")
+	_button.connect("mouse_exited", self, "_on_mouse_exited")
 
 	add_child(_button)
 
@@ -373,3 +375,9 @@ func _on_toggled(is_toggled) -> void:
 
 func _refresh_button() -> void:
 	refresh()
+
+func _on_mouse_entered() -> void:
+	emit_signal("mouse_entered")
+
+func _on_mouse_exited() -> void:
+	emit_signal("mouse_exited")

@@ -1,3 +1,4 @@
+tool
 extends Control
 
 const Test := {}
@@ -7,7 +8,6 @@ export (StyleBoxFlat) var test setget set_test
 var anima: AnimaNode 
 
 func _ready():
-	
 
 #	var anima: AnimaNode = Anima.begin_single_shot(self)
 

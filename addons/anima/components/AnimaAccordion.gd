@@ -2,14 +2,18 @@ tool
 extends AnimaAnimatable
 class_name AnimaAccordion
 
+signal animation_completed
+
 export var label := "Accordion" setget set_label
 export (Font) var font setget set_font
 export var expanded := true setget set_expanded
+export var set_size_flags := true
 
 var _title: AnimaButton
 var _wrapper: VBoxContainer
 var _icon: Sprite
 var _content_control: Control
+var _is_animating := false
 
 const BASE_COLOR = Color("663169")
 
@@ -69,8 +73,11 @@ func _get_configuration_warning():
 	if get_child_count() > 3:
 		if _content_control:
 			_on_content_control_removed()
+#
+#		for child in get_children():
+#			prints(child, child.name)
 
-		return "You must add only 1 child component"
+		return "AnimaAccordion can only have 1 child component"
 
 	_content_control = get_child(get_child_count() - 1)
 	_on_content_control_added()
@@ -92,6 +99,8 @@ func _init_layout() -> void:
 	_title.rect_size.y = 32
 	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
 	_title.connect("pressed", self, "_on_Title_pressed")
+	_title.connect("mouse_entered", self, "_on_mouse_entered")
+	_title.connect("mouse_exited", self, "_on_mouse_exited")
 
 	_title.add_child(_icon)
 
@@ -109,7 +118,7 @@ func set_expanded(is_expanded: bool, animate := true) -> void:
 
 		return
 
-	if _is_ready and animate and should_animate_property_change():
+	if _is_ready and animate:
 		_on_content_control_added()
 		_animate_height_change()
 
@@ -155,19 +164,27 @@ func _set(property: String, value):
 func _animate_height_change() -> void:
 	var anima: AnimaNode = Anima.begin_single_shot(self, "accordion")
 	var easing: int = get_easing()
+	var duration = get_duration()
+	_is_animating = true
 
-	anima.set_default_duration(get_duration())
+	if not should_animate_property_change():
+		duration = ANIMA.MINIMUM_DURATION
+
+	anima.set_default_duration(duration)
+
+	var to_height := _get_expanded_height()
+	var from_height := _get_collapsed_height()
 
 	anima.then(
 		Anima.Node(self) \
-			.anima_property("min_size:y", _get_expanded_height()) \
-			.anima_from(_get_collapsed_height()) \
+			.anima_property("min_size:y", to_height) \
+			.anima_from(from_height) \
 			.anima_easing(easing)
 	)
 	anima.with(
 		Anima.Node(self) \
-			.anima_property("size:y", _get_expanded_height()) \
-			.anima_from(_get_collapsed_height()) \
+			.anima_property("size:y", to_height) \
+			.anima_from(from_height) \
 			.anima_easing(easing)
 	)
 
@@ -188,6 +205,15 @@ func _animate_height_change() -> void:
 	else:
 		anima.play_backwards_with_speed(1.5)
 
+	yield(anima, "animation_completed")
+
+	if not should_animate_property_change() and not expanded:
+		rect_size.y = from_height
+
+	_is_animating = false
+
+	emit_signal("animation_completed")
+
 func set_label(new_label: String) -> void:
 	label = new_label
 
@@ -206,13 +232,23 @@ func _on_content_control_added() -> void:
 		return
 
 	_content_control.set_position(Vector2(0, _title.rect_min_size.y))
-	_content_control.size_flags_horizontal = SIZE_EXPAND_FILL
-	_content_control.size_flags_vertical = SIZE_EXPAND_FILL
-	_content_control.anchor_right = 1
-	_content_control.anchor_bottom = 1
-	_content_control.margin_right = 0
-	_content_control.margin_bottom = 0
+
+	if set_size_flags:
+		_content_control.size_flags_horizontal = SIZE_EXPAND_FILL
+		_content_control.size_flags_vertical = SIZE_EXPAND_FILL
+
+		_content_control.anchor_right = 1
+		_content_control.anchor_bottom = 1
+		_content_control.margin_right = 0
+		_content_control.margin_bottom = 0
+
 	_content_control.margin_top = _title.rect_min_size.y
 
 func _on_content_control_removed() -> void:
 	_content_control = null
+
+func _on_mouse_entered() -> void:
+	emit_signal("mouse_entered")
+
+func _on_mouse_exited() -> void:
+	emit_signal("mouse_exited")
