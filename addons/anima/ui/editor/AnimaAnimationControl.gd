@@ -130,3 +130,5 @@ func _on_AnimationData_select_relative_property(relative_control: Control):
 func _on_AnimationData_animate_as_changed(as_node):
 	_populate_animatable_properties_list(as_node)
 
+func _on_AnimationData_updated():
+	pass # Replace with function body.

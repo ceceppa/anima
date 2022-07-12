@@ -88,12 +88,17 @@ func set_index(new_index: int) -> void:
 	anima.set_single_shot(true)
 	anima.set_default_duration(duration)
 
+
 	anima.then(
 		Anima.Node(self) \
 			.anima_property("min_size:y", height) \
 			.anima_easing(height_easing)
 	)
-
+	anima.with(
+		Anima.Node(self) \
+			.anima_size_y(height) \
+			.anima_easing(height_easing)
+	)
 	anima.with(
 		Anima.Node(_container) \
 			.anima_position_x(-x) \
@@ -101,13 +106,13 @@ func set_index(new_index: int) -> void:
 	)
 	anima.with(
 		Anima.Node($Wrapper) \
-			.anima_size_y(wrapper_height) \
+			.anima_property("min_size:y", wrapper_height) \
 			.anima_easing(height_easing)
 	)
 	anima.play()
 
 func get_expected_wrapper_height() -> float:
-	return _heights[index] + padding
+	return _heights[index]
 
 func get_expected_height() -> float:
 	var height = _controls.rect_size.y + get_expected_wrapper_height()

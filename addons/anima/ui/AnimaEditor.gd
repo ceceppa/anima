@@ -4,6 +4,7 @@ extends Control
 signal switch_position
 signal connections_updated(new_list)
 signal visual_builder_updated
+signal highlight_node(node)
 
 const VISUAL_EDITOR_FADE_DURATION := 0.1
 
@@ -250,3 +251,6 @@ func _on_anima_visual_node_deleted() -> void:
 	_anima_visual_node = null
 
 	_maybe_show_graph_edit()
+
+func _on_FramesEditor_highlight_node(node):
+	emit_signal("highlight_node", node)

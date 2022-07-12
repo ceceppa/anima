@@ -46,7 +46,6 @@ script = ExtResource( 1 )
 test = SubResource( 5 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-visible = false
 margin_right = 703.0
 margin_bottom = 366.0
 text = "Testing typewriter"
@@ -65,7 +64,6 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
-visible = false
 margin_left = 183.0
 margin_top = 374.0
 margin_right = 223.0
@@ -81,9 +79,6 @@ margin_right = 176.24
 margin_bottom = -36.12
 custom_styles/normal = SubResource( 8 )
 icon = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Button3" type="Button" parent="Control"]
 margin_left = -1.0
@@ -147,6 +142,7 @@ __meta__ = {
 }
 font = SubResource( 4 )
 expanded = false
+set_size_flags = false
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
@@ -264,6 +260,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 228, 24.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -422,6 +419,10 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 "anims/New Anim" = SubResource( 7 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color( 0.4, 0.2, 0.6, 1 )
+__meta__ = {
+"__visibility_strategy": 0
+}
 
 [node name="AnimaVisualNode" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -449,6 +450,7 @@ __anima_visual_editor_data = {
 },
 1: {
 "data": [ {
+}, {
 } ],
 "duration": null,
 "name": "Initial Values",

@@ -21,6 +21,7 @@ func _enter_tree():
 	_anima_editor = load("res://addons/anima/ui/AnimaEditor.tscn").instance()
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
+	_anima_editor.connect("highlight_node", self, '_on_highlight_node')
 	_anima_editor.set_base_control(get_editor_interface().get_base_control())
 
 	add_control_to_bottom_panel(_anima_editor, "Anima")
@@ -93,3 +94,9 @@ func _on_visual_builder_updated(data: Dictionary) -> void:
 	undo_redo.add_do_property(_anima_visual_node, "__anima_visual_editor_data", data)
 	undo_redo.add_undo_property(_anima_visual_node, "__anima_visual_editor_data", current_data)
 	undo_redo.commit_action()
+
+func _on_highlight_node(node_to_highlight: Node) -> void:
+	var selection := get_editor_interface().get_selection()
+	
+	selection.clear()
+	selection.add_node(node_to_highlight)

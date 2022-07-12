@@ -6,6 +6,8 @@ const FRAME_DELAY = preload("res://addons/anima/ui/editor/AnimaFrameDelay.tscn")
 
 signal select_node
 signal visual_builder_updated(data)
+signal select_animation
+signal highlight_node(node)
 
 export (bool) var disable_animations := false
 
@@ -71,7 +73,8 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 		key = _frames_container.get_child_count()
 
 	var node = FRAME_ANIMATION.instance()
-	
+
+	node.connect("highlight_node", self, "_on_highlight_node")
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
 
@@ -109,3 +112,6 @@ func _emit_updated() -> void:
 
 func _on_AnimaAnimation_animation_updated():
 	_emit_updated()
+
+func _on_highlight_node(source: Node) -> void:
+	emit_signal("highlight_node", source)

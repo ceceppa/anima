@@ -7,6 +7,10 @@ onready var INITIAL_DATA = preload("res://addons/anima/ui/editor/InitialValue.ts
 signal frame_deleted
 signal select_node
 signal frame_updated
+signal select_animation
+signal select_easing
+signal select_relative_property
+signal highlight_node(node)
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -15,6 +19,7 @@ onready var _animations_container = find_node("AnimationsContainer")
 onready var _frame_name = find_node("FrameName")
 onready var _duration = find_node("Duration")
 
+var _source: Node
 var _final_width: float = 460
 
 func _ready():
@@ -58,6 +63,15 @@ func add_animation_for(node: Node, path: String, property, property_value) -> No
 
 	animation_item.connect("updated", self, "_on_animation_data_updated")
 	animation_item.connect("removed", self, "_on_animation_data_removed")
+
+	if not is_initial_frame:
+		animation_item.connect("highlight_node", self, "_on_highlight_node")
+
+	if animation_item.has_signal("select_animation"):
+		animation_item.connect("select_animation", self, "_on_select_animation", [animation_item])
+		animation_item.connect("select_easing", self, "_on_select_easing", [animation_item])
+		animation_item.connect("select_relative_property", self, "_on_select_relative_property", [animation_item])
+
 	animation_item.set_data(node, path, property, property_value)
 
 	return animation_item
@@ -159,3 +173,11 @@ func _on_animation_data_removed(source: Node) -> void:
 	source.queue_free()
 
 	emit_signal("frame_updated")
+
+func _on_select_animation(source: Node) -> void:
+	_source = source
+
+	emit_signal("select_animation")
+
+func _on_highlight_node(source: Node) -> void:
+	emit_signal("highlight_node", source)
