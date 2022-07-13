@@ -32,8 +32,15 @@ const CUSTOM_PROPERTIES := {
 	}
 }
 
-var _all_properties := AnimaButton.BUTTON_BASE_PROPERTIES.duplicate()
+var _all_properties: Dictionary = AnimaButton.BUTTON_BASE_PROPERTIES.duplicate()
 var _is_ready := false
+
+var _button_colors = {
+	NORMAL_FILL_COLOR = BASE_COLOR,
+	FOCUSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
+	HOVERED_FILL_COLOR = BASE_COLOR.lightened(0.2),
+	PRESSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
+}
 
 func _enter_tree():
 	set_expanded(expanded, false)
@@ -43,15 +50,8 @@ func _init():
 
 	_init_layout()
 
-	var button_colors = {
-		NORMAL_FILL_COLOR = BASE_COLOR,
-		FOCUSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
-		HOVERED_FILL_COLOR = BASE_COLOR.lightened(0.2),
-		PRESSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
-	}
-	
-	for color_key in button_colors:
-		_all_properties[color_key].default = button_colors[color_key]
+	for color_key in _button_colors:
+		_all_properties[color_key].default = _button_colors[color_key]
 
 	_add_properties(CUSTOM_PROPERTIES)
 	_add_properties(_all_properties)
@@ -103,6 +103,9 @@ func _init_layout() -> void:
 	_title.connect("mouse_exited", self, "_on_mouse_exited")
 
 	_title.add_child(_icon)
+
+	for color_key in _button_colors:
+		_title.set(AnimaButton.BUTTON_BASE_PROPERTIES[color_key].name, _button_colors[color_key])
 
 	_wrapper.anchor_right = 1
 	_wrapper.add_child(_title)

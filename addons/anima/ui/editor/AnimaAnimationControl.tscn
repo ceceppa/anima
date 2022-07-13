@@ -58,7 +58,7 @@ margin_bottom = 305.0
 rect_min_size = Vector2( 0, 248 )
 rect_pivot_offset = Vector2( 504, 16 )
 
-[node name="AnimaAnimationDataContent" parent="Container/AnimationData" index="2"]
+[node name="AnimaAnimationDataContent" parent="Container/AnimationData" index="0"]
 margin_right = 140.0
 rect_pivot_offset = Vector2( 504, 1434 )
 

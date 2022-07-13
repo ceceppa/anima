@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://addons/anima/ui/property/AnimaPivotButton.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/icons/Remove.svg" type="Texture" id=8]
+[ext_resource path="res://addons/anima/icons/Add.svg" type="Texture" id=9]
 [ext_resource path="res://addons/anima/icons/Animation.svg" type="Texture" id=10]
 
 [sub_resource type="DynamicFont" id=4]
@@ -28,44 +29,44 @@ __meta__ = {
 "_original_size": 18
 }
 
-[node name="AnimaAnimationData" type="Control"]
+[node name="AnimaAnimationData" type="VBoxContainer"]
 anchor_right = 1.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 0, 64 )
 rect_pivot_offset = Vector2( 512, 32 )
 rect_clip_content = true
 script = ExtResource( 3 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-set_size_flags = false
-Animation/AnimatePropertyChange = false
+
+[node name="Title" type="Control" parent="."]
+margin_right = 1024.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 0, 49 )
+mouse_filter = 1
+script = ExtResource( 2 )
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
-Animation/Name = "fadeIn"
-Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
 Button/Text = "Anima Button"
-Button/ICON = null
+Button/ICON = ExtResource( 9 )
 Button/Align = 1
 Button/Font = null
 Button/Disabled = false
-Button/ToggleMode = false
+Button/ToggleMode = true
 Button/ShortcutInTooltip = true
 Button/Pressed = false
 Button/ContentMargin = 12
 Button/Group = null
-Normal/FillColor = Color( 0.4, 0.192157, 0.411765, 1 )
+Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
 Normal/FontColor = Color( 1, 1, 1, 1 )
 Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.52, 0.353725, 0.529412, 1 )
+Hovered/FillColor = Color( 0.353725, 0.416471, 0.529412, 1 )
 Hovered/FontColor = Color( 1, 1, 1, 0 )
 Hovered/Scale = Vector2( 1, 1 )
 Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.46, 0.272941, 0.470588, 1 )
+Pressed/FillColor = Color( 0.272941, 0.343529, 0.470588, 1 )
 Pressed/FontColor = Color( 1, 1, 1, 0 )
 Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.46, 0.272941, 0.470588, 1 )
+Focused/FillColor = Color( 0.272941, 0.343529, 0.470588, 1 )
 Focused/FontColor = Color( 1, 1, 1, 0 )
 Normal/Size = Rect2( 0, 0, 100, 100 )
 Hovered/Size = Rect2( -1, -1, -1, -1 )
@@ -152,10 +153,10 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="AnimaAnimationDataContent" type="VBoxContainer" parent="."]
-anchor_right = 1.0
-margin_top = 32.0
-margin_bottom = 248.0
+[node name="Content" type="VBoxContainer" parent="."]
+margin_top = 57.0
+margin_right = 1024.0
+margin_bottom = 273.0
 rect_pivot_offset = Vector2( 512, 314.5 )
 size_flags_vertical = 0
 __meta__ = {
@@ -164,7 +165,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="AnimaAnimationDataContent"]
+[node name="MarginContainer" type="MarginContainer" parent="Content"]
 margin_right = 1024.0
 margin_bottom = 144.0
 rect_pivot_offset = Vector2( 298, 127 )
@@ -175,7 +176,7 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 12
 
-[node name="AnimaData" type="VBoxContainer" parent="AnimaAnimationDataContent/MarginContainer"]
+[node name="AnimaData" type="VBoxContainer" parent="Content/MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 1012.0
@@ -187,7 +188,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
-[node name="TimeAccordion" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData"]
+[node name="TimeAccordion" type="Control" parent="Content/MarginContainer/AnimaData"]
 margin_right = 1000.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
@@ -201,7 +202,7 @@ __meta__ = {
 label = "Time"
 expanded = false
 set_size_flags = false
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Animation/Name = "fadeIn"
@@ -313,7 +314,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="MarginContainer" type="MarginContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion"]
+[node name="MarginContainer" type="MarginContainer" parent="Content/MarginContainer/AnimaData/TimeAccordion"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
@@ -331,7 +332,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="HBoxContainer" type="GridContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer"]
+[node name="HBoxContainer" type="GridContainer" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer"]
 margin_left = 12.0
 margin_top = 24.0
 margin_right = 988.0
@@ -348,7 +349,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="Label2" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer"]
 margin_top = 12.0
 margin_right = 132.0
 margin_bottom = 37.0
@@ -357,14 +358,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Duration" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Duration" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_right = 976.0
 margin_bottom = 49.0
 label = "default frame duration"
 show_relative_selector = false
 
-[node name="Label3" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer"]
 margin_top = 73.0
 margin_right = 132.0
 margin_bottom = 98.0
@@ -373,7 +374,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Delay2" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Delay" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_top = 61.0
 margin_right = 976.0
@@ -381,12 +382,12 @@ margin_bottom = 110.0
 label = "none"
 show_relative_selector = false
 
-[node name="NodeOrGroup" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData"]
+[node name="NodeOrGroup" type="Control" parent="Content/MarginContainer/AnimaData"]
 margin_top = 44.0
 margin_right = 1000.0
 margin_bottom = 76.0
 rect_min_size = Vector2( 0, 32 )
-rect_pivot_offset = Vector2( 500, 16 )
+rect_pivot_offset = Vector2( 500, 48.5 )
 rect_clip_content = true
 script = ExtResource( 4 )
 __meta__ = {
@@ -397,7 +398,7 @@ label = "Animate as"
 font = SubResource( 4 )
 expanded = false
 set_size_flags = false
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Animation/Name = "fadeIn"
@@ -509,7 +510,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Content/MarginContainer/AnimaData/NodeOrGroup"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
@@ -523,7 +524,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2"]
 margin_right = 1000.0
 margin_bottom = 65.0
 custom_constants/margin_right = 12
@@ -531,7 +532,7 @@ custom_constants/margin_top = 8
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 8
 
-[node name="GridContainer" type="GridContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer"]
 margin_left = 12.0
 margin_top = 8.0
 margin_right = 988.0
@@ -539,7 +540,7 @@ margin_bottom = 57.0
 rect_pivot_offset = Vector2( 500, 14 )
 columns = 3
 
-[node name="AsNode" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
+[node name="AsNode" type="Control" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
 margin_right = 320.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 83, 49 )
@@ -662,7 +663,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="AsGroup" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
+[node name="AsGroup" type="Control" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
 margin_left = 328.0
 margin_right = 648.0
 margin_bottom = 49.0
@@ -785,7 +786,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="AsGrid" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
+[node name="AsGrid" type="Control" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
 margin_left = 656.0
 margin_right = 976.0
 margin_bottom = 49.0
@@ -908,7 +909,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="AnimaAccordion" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData"]
+[node name="AnimaAccordion" type="Control" parent="Content/MarginContainer/AnimaData"]
 margin_top = 88.0
 margin_right = 1000.0
 margin_bottom = 120.0
@@ -919,7 +920,7 @@ script = ExtResource( 4 )
 label = "Animation"
 expanded = false
 set_size_flags = false
-Animation/AnimatePropertyChange = false
+Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
 Animation/Easing = 0
 Animation/Name = "fadeIn"
@@ -1031,7 +1032,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="MarginContainer" type="MarginContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion"]
+[node name="MarginContainer" type="MarginContainer" parent="Content/MarginContainer/AnimaData/AnimaAccordion"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 32.0
@@ -1047,7 +1048,7 @@ __meta__ = {
 "__initial_opacity": 1.0
 }
 
-[node name="AnimateWith" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer" instance=ExtResource( 7 )]
+[node name="AnimateWith" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer" instance=ExtResource( 7 )]
 anchor_right = 0.0
 margin_left = 24.0
 margin_top = 12.0
@@ -1058,12 +1059,12 @@ rect_pivot_offset = Vector2( 476, 222.5 )
 custom_constants/separation = 24
 padding = 24.0
 
-[node name="Controls" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="0"]
+[node name="Controls" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="0"]
 margin_right = 952.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
 
-[node name="AnimateProperty" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="0"]
+[node name="AnimateProperty" type="Control" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="0"]
 margin_right = 472.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 236, 24.5 )
@@ -1183,7 +1184,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="UseAnimation" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="1"]
+[node name="UseAnimation" type="Control" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="1"]
 margin_left = 480.0
 margin_right = 952.0
 margin_bottom = 49.0
@@ -1304,7 +1305,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Wrapper" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="1"]
+[node name="Wrapper" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="1"]
 margin_top = 73.0
 margin_right = 952.0
 margin_bottom = 445.0
@@ -1312,19 +1313,19 @@ rect_min_size = Vector2( 0, 372 )
 rect_pivot_offset = Vector2( 476, 186 )
 mouse_filter = 2
 
-[node name="Container" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper" index="0"]
+[node name="Container" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper" index="0"]
 margin_right = 952.0
 margin_bottom = 356.0
 rect_min_size = Vector2( 1904, 0 )
 rect_pivot_offset = Vector2( 952, 178 )
 
-[node name="PropertyValues" type="VBoxContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container" index="0"]
+[node name="PropertyValues" type="VBoxContainer" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container" index="0"]
 margin_right = 948.0
 margin_bottom = 348.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="Label1" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
+[node name="Label1" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
 margin_right = 948.0
 margin_bottom = 2.0
 size_flags_horizontal = 3
@@ -1336,7 +1337,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="AnimateGrid" type="GridContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
+[node name="AnimateGrid" type="GridContainer" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
 margin_top = 10.0
 margin_right = 948.0
 margin_bottom = 282.0
@@ -1346,7 +1347,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="From" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="From" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 12.0
 margin_right = 128.0
 margin_bottom = 37.0
@@ -1358,13 +1359,13 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="FromValue" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="FromValue" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 136.0
 margin_right = 948.0
 margin_bottom = 49.0
 type = 4
 
-[node name="To" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="To" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 69.0
 margin_right = 128.0
 margin_bottom = 94.0
@@ -1376,14 +1377,14 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="ToValue" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="ToValue" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 136.0
 margin_top = 57.0
 margin_right = 948.0
 margin_bottom = 106.0
 type = 4
 
-[node name="Initial" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Initial" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 126.0
 margin_right = 128.0
 margin_bottom = 151.0
@@ -1395,7 +1396,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="InitialValue" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="InitialValue" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 136.0
 margin_top = 114.0
 margin_right = 948.0
@@ -1403,7 +1404,7 @@ margin_bottom = 163.0
 label = "ignore"
 type = 4
 
-[node name="Relative" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Relative" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 182.0
 margin_right = 128.0
 margin_bottom = 207.0
@@ -1414,7 +1415,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="RelativeCheck" type="CheckBox" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="RelativeCheck" type="CheckBox" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_left = 136.0
 margin_top = 171.0
 margin_right = 948.0
@@ -1425,7 +1426,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="Pivot" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Pivot" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 237.0
 margin_right = 128.0
 margin_bottom = 262.0
@@ -1436,7 +1437,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="PivotButton" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
+[node name="PivotButton" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
 anchor_right = 0.0
 margin_left = 136.0
 margin_top = 227.0
@@ -1444,7 +1445,7 @@ margin_right = 948.0
 margin_bottom = 272.0
 rect_min_size = Vector2( 0, 32 )
 
-[node name="Label2" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
+[node name="Label2" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
 margin_top = 290.0
 margin_right = 948.0
 margin_bottom = 315.0
@@ -1456,7 +1457,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="Easing" type="GridContainer" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
+[node name="Easing" type="GridContainer" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues"]
 margin_top = 323.0
 margin_right = 948.0
 margin_bottom = 348.0
@@ -1466,7 +1467,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="Easing" type="Label" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/Easing"]
+[node name="Easing" type="Label" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/Easing"]
 margin_right = 160.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 160, 0 )
@@ -1476,7 +1477,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="EasingButton" type="Button" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/Easing"]
+[node name="EasingButton" type="Button" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/Easing"]
 margin_left = 168.0
 margin_right = 948.0
 margin_bottom = 25.0
@@ -1487,7 +1488,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="AnimationButton" type="Control" parent="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container" index="1"]
+[node name="AnimationButton" type="Control" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container" index="1"]
 margin_left = 956.0
 margin_right = 1904.0
 margin_bottom = 56.0
@@ -1610,7 +1611,7 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="AnimaAnimationDataContent"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
 margin_top = 152.0
 margin_right = 1024.0
 margin_bottom = 216.0
@@ -1618,7 +1619,7 @@ rect_min_size = Vector2( 0, 64 )
 custom_constants/separation = 0
 alignment = 1
 
-[node name="AnimaButton" type="Control" parent="AnimaAnimationDataContent/HBoxContainer"]
+[node name="AnimaButton" type="Control" parent="Content/HBoxContainer"]
 margin_left = 442.0
 margin_top = 8.0
 margin_right = 582.0
@@ -1741,16 +1742,9 @@ Hovered/Shadow/Offset = Vector2( -1, -1 )
 Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="Timer" type="Timer" parent="AnimaAnimationDataContent"]
-wait_time = 0.01
-one_shot = true
-
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
-[connection signal="animation_completed" from="AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion" to="." method="_on_accordion_animation_completed"]
-[connection signal="animation_completed" from="AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup" to="." method="_on_accordion_animation_completed"]
-[connection signal="animation_completed" from="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion" to="." method="_on_accordion_animation_completed"]
-[connection signal="pressed" from="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls/UseAnimation" to="." method="_on_UseAnimation_pressed"]
-[connection signal="pressed" from="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/AnimationButton" to="." method="_on_AnimationButton_pressed"]
-[connection signal="timeout" from="AnimaAnimationDataContent/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="toggled" from="Title" to="." method="_on_Title_toggled"]
+[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls/UseAnimation" to="." method="_on_UseAnimation_pressed"]
+[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/AnimationButton" to="." method="_on_AnimationButton_pressed"]
 
-[editable path="AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith"]
+[editable path="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith"]

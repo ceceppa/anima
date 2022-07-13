@@ -24,6 +24,8 @@ const STATES := {
 
 export (STATE) var _test_state = STATE.NORMAL setget _set_test_state
 
+const BASE_COLOR = Color("314569")
+
 const BUTTON_BASE_PROPERTIES := {
 	# Button
 	BUTTON_LABEL = {
@@ -93,7 +95,6 @@ const BUTTON_BASE_PROPERTIES := {
 	NORMAL_FILL_COLOR = {
 		name = "Normal/FillColor",
 		type = TYPE_COLOR,
-		default = Color("314569")
 	},
 	NORMAL_FONT_COLOR = {
 		name = "Normal/FontColor",
@@ -112,7 +113,6 @@ const BUTTON_BASE_PROPERTIES := {
 	HOVERED_FILL_COLOR = {
 		name = "Hovered/FillColor",
 		type = TYPE_COLOR,
-		default = Color("628ad1")
 	},
 	HOVERED_FONT_COLOR = {
 		name = "Hovered/FontColor",
@@ -136,7 +136,6 @@ const BUTTON_BASE_PROPERTIES := {
 	PRESSED_FILL_COLOR = {
 		name = "Pressed/FillColor",
 		type = TYPE_COLOR,
-		default = Color("428ad1")
 	},
 	PRESSED_FONT_COLOR = {
 		name = "Pressed/FontColor",
@@ -155,7 +154,6 @@ const BUTTON_BASE_PROPERTIES := {
 	FOCUSED_FILL_COLOR = {
 		name = "Focused/FillColor",
 		type = TYPE_COLOR,
-		default = Color("428ad1")
 	},
 	FOCUSED_FONT_COLOR = {
 		name = "Focused/FontColor",
@@ -197,6 +195,17 @@ func _init():
 			new_value.name = new_value.name.replace("Rectangle/", extra_key + "/")
 
 			_all_properties[new_key] = new_value
+
+
+	var button_colors = {
+		NORMAL_FILL_COLOR = BASE_COLOR,
+		FOCUSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
+		HOVERED_FILL_COLOR = BASE_COLOR.lightened(0.2),
+		PRESSED_FILL_COLOR = BASE_COLOR.lightened(0.1),
+	}
+
+	for color_key in button_colors:
+		_all_properties[color_key].default = button_colors[color_key]
 
 	# We don't want to expose the Rectangulare properties as they're only used "internally"
 	_hide_properties(PROPERTIES)
