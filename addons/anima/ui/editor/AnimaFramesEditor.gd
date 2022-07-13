@@ -77,6 +77,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	node.connect("highlight_node", self, "_on_highlight_node")
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
+	node.set_name("Frame" + str(key))
 
 	_add_component(node)
 
@@ -106,7 +107,8 @@ func _emit_updated() -> void:
 	for index in _frames_container.get_child_count():
 		var child: Control = _frames_container.get_child(index)
 
-		data["0"].frames[index] = child.get_data()
+		if not child.is_queued_for_deletion():
+			data["0"].frames[index] = child.get_data()
 
 	emit_signal("visual_builder_updated", data)
 

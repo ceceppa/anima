@@ -45,9 +45,12 @@ func get_data() -> Dictionary:
 	return data
 
 func set_name(name: String) -> void:
+	if _frame_name == null:
+		_frame_name = find_node("FrameName")
+
 	_frame_name.set_label(name)
-	_frame_name.set_initial_value("Frame01")
-	_frame_name.set_placeholder("Frame01")
+	_frame_name.set_initial_value(name)
+	_frame_name.set_placeholder(name)
 
 func set_duration(duration: float) -> void:
 	_duration.set_value(duration)
@@ -56,7 +59,7 @@ func clear() -> void:
 	for child in _animations_container.get_children():
 		child.queue_free()
 
-func add_animation_for(node: Node, path: String, property, property_value) -> Node:
+func add_animation_for(node: Node, path: String, property, property_type) -> Node:
 	var animation_item: Node = INITIAL_DATA.instance() if is_initial_frame else ANIMATION_DATA.instance() 
 
 	_animations_container.add_child(animation_item)
@@ -72,7 +75,7 @@ func add_animation_for(node: Node, path: String, property, property_value) -> No
 		animation_item.connect("select_easing", self, "_on_select_easing", [animation_item])
 		animation_item.connect("select_relative_property", self, "_on_select_relative_property", [animation_item])
 
-	animation_item.set_data(node, path, property, property_value)
+	animation_item.set_data(node, path, property, property_type)
 
 	return animation_item
 
@@ -149,7 +152,7 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 	is_initial_frame = new_is_initial_frame
 
 	find_node("DurationContainer").visible = !is_initial_frame
-	find_node("RemoveWrapper").visible = !is_initial_frame
+	find_node("Delete").visible = !is_initial_frame
 	find_node("PlayButton").visible = !is_initial_frame
 	find_node("FrameName").set_can_edit_value(!is_initial_frame)
 

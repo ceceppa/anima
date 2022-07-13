@@ -94,9 +94,6 @@ margin_left = -4.0
 margin_top = 126.0
 margin_right = 9.0
 margin_bottom = 146.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Button2" type="Button" parent="."]
 visible = false
@@ -438,22 +435,23 @@ __anima_visual_editor_data = {
 },
 "frames": {
 0: {
-"data": [ {
-"node_path": ".",
-"property_name": "opacity",
-"property_type": 3,
-"value": 1.0
-} ],
+"data": [  ],
 "duration": null,
-"name": "Initial Values",
+"name": "Frame0",
 "type": "frame"
 },
 1: {
 "data": [ {
-}, {
+"animate_as": "Button",
+"delay": null,
+"duration": null,
+"node_path": ".",
+"property_name": "anchor_bottom",
+"property_type": 3,
+"use": "Button"
 } ],
 "duration": null,
-"name": "Initial Values",
+"name": "Frame1",
 "type": "frame"
 }
 }
