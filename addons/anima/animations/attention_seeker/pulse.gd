@@ -7,5 +7,5 @@ var KEYFRAMES := {
 		scale = Vector3(1.05, 1.05, 1.05),
 		easing = ANIMA.EASING.EASE_IN_OUT,
 	},
-	pivot = Anima.PIVOT.CENTER
+	pivot = ANIMA.PIVOT.CENTER
 }

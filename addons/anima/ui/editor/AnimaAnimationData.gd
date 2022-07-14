@@ -38,8 +38,14 @@ func set_data(node: Node, path: String, property, property_type):
 	_property_type = property_type
 
 func get_data() -> Dictionary:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
-	var use_bg: ButtonGroup = find_node("UseAnimation").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
+	var animate_as_group: String = _node_or_group.find_node("AsNode").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name).get_pressed_button().get_parent().name
+	var use_property_or_animation: String = find_node("UseAnimation").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name).get_pressed_button().get_parent().name
+	var use_animation = use_property_or_animation == find_node("UseAnimation").name
+
+	var value = {}
+
+	if use_animation:
+		pass
 
 	var data =  {
 		node_path = _path,
@@ -47,19 +53,30 @@ func get_data() -> Dictionary:
 		property_type = _property_type,
 		duration = _duration.get_value(),
 		delay = _delay.get_value(),
-		animate_as = animate_as_group.get_pressed_button().get_parent().name,
-		use = use_bg.get_pressed_button().get_parent().name
+		animate_as = animate_as_group,
+		use = use_property_or_animation
 	}
-
-	print(animate_as_group.get_pressed_button())
 
 	return data
 
-func restore_data(source_node: Node, data: Dictionary) -> void:
-	pass
+func restore_data(data: Dictionary) -> void:
+	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
+	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
+
+	_press_button_in_group(use_property_or_animation, data.use)
+	_press_button_in_group(animate_as_group, data.animate_as)
+
+	print("restoring data", data)
+
+func _press_button_in_group(group: ButtonGroup, selected_button_name: String) -> void:
+	var buttons = group.get_buttons()
+
+	print("pressing button", group, selected_button_name)
+	for button in buttons:
+		button.pressed = button.name == selected_button_name
 
 func _on_UseAnimation_pressed():
-	pass # Replace with function body.
+	emit_signal("updated")
 
 func _on_AnimationButton_pressed():
 	emit_signal("select_animation")
@@ -72,3 +89,12 @@ func _on_AnimaAnimationData_mouse_entered():
 
 func _on_Title_toggled(button_pressed):
 	$Content.visible = button_pressed
+
+func _on_RemoveButton_pressed():
+	emit_signal("removed", self)
+
+func selected_animation(label, name) -> void:
+	prints(label, name)
+
+func _on_AnimateProperty_pressed():
+	emit_signal("updated")

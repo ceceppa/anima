@@ -14,5 +14,5 @@ var KEYFRAMES := {
 	[70, 100]: {
 		scale = Vector3.ONE
 	},
-	pivot = Anima.PIVOT.CENTER
+	pivot = ANIMA.PIVOT.CENTER
 }

@@ -58,125 +58,26 @@ margin_bottom = 305.0
 rect_min_size = Vector2( 0, 248 )
 rect_pivot_offset = Vector2( 504, 16 )
 
-[node name="AnimaAnimationDataContent" parent="Container/AnimationData" index="0"]
-margin_right = 140.0
-rect_pivot_offset = Vector2( 504, 1434 )
+[node name="Content" parent="Container/AnimationData" index="1"]
+visible = false
 
-[node name="MarginContainer" parent="Container/AnimationData/AnimaAnimationDataContent" index="0"]
-margin_right = 1148.0
-
-[node name="AnimaData" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer" index="0"]
-margin_right = 1136.0
-
-[node name="TimeAccordion" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData" index="0"]
-margin_right = 1124.0
-
-[node name="HBoxContainer" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer" index="0"]
-margin_right = 1112.0
-
-[node name="Duration" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" index="1"]
-margin_right = 1100.0
-
-[node name="Delay2" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" index="3"]
-margin_right = 1100.0
-
-[node name="NodeOrGroup" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData" index="1"]
-margin_right = 1124.0
-
-[node name="MarginContainer" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2" index="0"]
-margin_right = 1124.0
-
-[node name="GridContainer" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer" index="0"]
-margin_right = 1112.0
-
-[node name="AsNode" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="0"]
-margin_right = 361.0
-rect_pivot_offset = Vector2( 180.5, 24.5 )
+[node name="AsNode" parent="Container/AnimationData/Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="0"]
 Button/Group = SubResource( 1 )
 
-[node name="AsGroup" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="1"]
-margin_left = 369.0
-margin_right = 730.0
+[node name="AsGroup" parent="Container/AnimationData/Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="1"]
 Button/Group = SubResource( 1 )
 
-[node name="AsGrid" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="2"]
-margin_left = 738.0
-margin_right = 1099.0
+[node name="AsGrid" parent="Container/AnimationData/Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer" index="2"]
 Button/Group = SubResource( 1 )
 
-[node name="AnimaAccordion" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData" index="2"]
-margin_right = 1124.0
-
-[node name="AnimateWith" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer" index="0"]
-margin_right = 1100.0
-rect_pivot_offset = Vector2( 538, 222.5 )
-
-[node name="Controls" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="0"]
-margin_right = 1076.0
-
-[node name="AnimateProperty" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="0"]
-margin_right = 534.0
-rect_pivot_offset = Vector2( 267, 24.5 )
+[node name="AnimateProperty" parent="Container/AnimationData/Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="0"]
 Button/Group = SubResource( 2 )
 
-[node name="UseAnimation" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="1"]
-margin_left = 542.0
-margin_right = 1076.0
+[node name="UseAnimation" parent="Container/AnimationData/Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls" index="1"]
 Button/Group = SubResource( 2 )
 
-[node name="Wrapper" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="1"]
-margin_right = 1076.0
-rect_pivot_offset = Vector2( 538, 186 )
-
-[node name="Container" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper" index="0"]
-margin_right = 1076.0
-rect_min_size = Vector2( 2152, 0 )
-rect_pivot_offset = Vector2( 1076, 178 )
-
-[node name="PropertyValues" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container" index="0"]
-margin_right = 1072.0
-
-[node name="Label1" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues" index="0"]
-margin_right = 1072.0
-
-[node name="AnimateGrid" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues" index="1"]
-margin_right = 1072.0
-
-[node name="FromValue" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" index="1"]
-margin_right = 1072.0
-
-[node name="ToValue" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" index="3"]
-margin_right = 1072.0
-
-[node name="InitialValue" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" index="5"]
-margin_right = 1072.0
-
-[node name="RelativeCheck" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" index="7"]
-margin_right = 1072.0
-
-[node name="PivotButton" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" index="9"]
-margin_right = 1072.0
+[node name="PivotButton" parent="Container/AnimationData/Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" index="9"]
 rect_min_size = Vector2( 0, 40 )
-
-[node name="Label2" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues" index="2"]
-margin_right = 1072.0
-
-[node name="Easing" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues" index="3"]
-margin_right = 1072.0
-
-[node name="EasingButton" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/PropertyValues/Easing" index="1"]
-margin_right = 1072.0
-
-[node name="AnimationButton" parent="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container" index="1"]
-margin_left = 1080.0
-margin_right = 2152.0
-
-[node name="HBoxContainer" parent="Container/AnimationData/AnimaAnimationDataContent" index="1"]
-margin_right = 1148.0
-
-[node name="AnimaButton" parent="Container/AnimationData/AnimaAnimationDataContent/HBoxContainer" index="0"]
-margin_left = 504.0
-margin_right = 644.0
 
 [connection signal="select_animation" from="Container/AnimationData" to="." method="_on_AnimationData_select_animation"]
 [connection signal="select_easing" from="Container/AnimationData" to="." method="_on_AnimationData_select_easing"]
@@ -185,4 +86,4 @@ margin_right = 644.0
 [connection signal="value_updated" from="Container/AnimationData" to="." method="_on_AnimationData_value_updated"]
 
 [editable path="Container/AnimationData"]
-[editable path="Container/AnimationData/AnimaAnimationDataContent/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith"]
+[editable path="Container/AnimationData/Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith"]

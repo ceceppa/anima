@@ -917,6 +917,10 @@ rect_min_size = Vector2( 0, 32 )
 rect_pivot_offset = Vector2( 500, 250.5 )
 rect_clip_content = true
 script = ExtResource( 4 )
+__meta__ = {
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
+}
 label = "Animation"
 expanded = false
 set_size_flags = false
@@ -1045,7 +1049,9 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 24
 custom_constants/margin_bottom = 12
 __meta__ = {
-"__initial_opacity": 1.0
+"__initial_opacity": 1.0,
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimateWith" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer" instance=ExtResource( 7 )]
@@ -1058,6 +1064,7 @@ rect_min_size = Vector2( 0, 421 )
 rect_pivot_offset = Vector2( 476, 222.5 )
 custom_constants/separation = 24
 padding = 24.0
+scroll_easing = 27
 
 [node name="Controls" parent="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith" index="0"]
 margin_right = 952.0
@@ -1619,7 +1626,7 @@ rect_min_size = Vector2( 0, 64 )
 custom_constants/separation = 0
 alignment = 1
 
-[node name="AnimaButton" type="Control" parent="Content/HBoxContainer"]
+[node name="RemoveButton" type="Control" parent="Content/HBoxContainer"]
 margin_left = 442.0
 margin_top = 8.0
 margin_right = 582.0
@@ -1744,7 +1751,9 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
 [connection signal="toggled" from="Title" to="." method="_on_Title_toggled"]
+[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls/AnimateProperty" to="." method="_on_AnimateProperty_pressed"]
 [connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Controls/UseAnimation" to="." method="_on_UseAnimation_pressed"]
 [connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith/Wrapper/Container/AnimationButton" to="." method="_on_AnimationButton_pressed"]
+[connection signal="pressed" from="Content/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 
 [editable path="Content/MarginContainer/AnimaData/AnimaAccordion/MarginContainer/AnimateWith"]

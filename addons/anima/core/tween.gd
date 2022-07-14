@@ -255,6 +255,9 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 		if value != null and value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
 
+		if relative_properties.has(property_to_animate):
+			value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
+
 		var data := { percentage = percentage, value = value }
 
 		base_data.property = property_to_animate
@@ -276,6 +279,10 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 		real_duration = AnimaTweenUtils.maybe_calculate_value(duration_formula, animation_data)
 
 		animation_data.duration = real_duration
+
+	if animation_data.has("__debug"):
+		prints("add_frames", animation_data)
+		printt("", "keys", frame_keys)
 
 	var is_first_frame := true
 	for frame_key in frame_keys:

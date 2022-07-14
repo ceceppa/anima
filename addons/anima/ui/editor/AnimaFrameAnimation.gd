@@ -184,3 +184,6 @@ func _on_select_animation(source: Node) -> void:
 
 func _on_highlight_node(source: Node) -> void:
 	emit_signal("highlight_node", source)
+
+func selected_animation(label, name) -> void:
+	_source.selected_animation(label, name)

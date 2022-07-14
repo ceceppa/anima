@@ -12,6 +12,7 @@ var _anima_visual_node: Node
 var _node_offset: Vector2
 var _is_restoring_data := false
 var _scene_root_node: Node
+var _animation_source_node: Node
 
 onready var _frames_editor: Control = find_node("FramesEditor")
 onready var _nodes_window: WindowDialog = find_node("NodesWindow")
@@ -150,9 +151,12 @@ func _restore_data(data: Dictionary) -> void:
 				
 				yield(get_tree(), "idle_frame")
 
+				print_debug("AnimaEditor", value)
 				var item: Node = _frames_editor.add_animation_for(node, value.node_path, value.property_name, value.property_type)
 
-				item.set_value(value.value)
+				item.connect("select_animation", self, "_on_select_animation", [item])
+
+				item.restore_data(value)
 
 	_frames_editor.set_is_restoring_data(false)
 
@@ -254,3 +258,12 @@ func _on_anima_visual_node_deleted() -> void:
 
 func _on_FramesEditor_highlight_node(node):
 	emit_signal("highlight_node", node)
+
+func _on_select_animation(source: Node) -> void:
+	_animation_source_node = source
+
+	$AnimationsWindow.show_demo_by_type(source)
+	$AnimationsWindow.popup_centered()
+
+func _on_AnimationsWindow_animation_selected(label, name):
+	_animation_source_node.selected_animation(label, name)

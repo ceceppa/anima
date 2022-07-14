@@ -22,15 +22,15 @@ __meta__ = {
 
 [node name="FrameAnimation" type="Control"]
 anchor_bottom = 1.0
-margin_right = 460.527
+margin_right = 460.015
 rect_min_size = Vector2( 460, 0 )
 rect_pivot_offset = Vector2( 230, 300 )
-rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
 "__initial_min_size:x": 460.0,
 "__initial_size:x": 460.527,
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Rectangle" type="Control" parent="."]
@@ -77,7 +77,8 @@ rect_pivot_offset = Vector2( 230, 300 )
 custom_constants/separation = 0
 __meta__ = {
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimaRectangle" type="Control" parent="Rectangle/ContentContainer"]
@@ -89,7 +90,8 @@ script = ExtResource( 6 )
 __meta__ = {
 "__initial_opacity": 0.0,
 "__initial_y": 0.0,
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -164,7 +166,8 @@ __meta__ = {
 "__initial_opacity": 0.0,
 "__initial_y": 49.0,
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer"]
@@ -271,7 +274,8 @@ script = ExtResource( 5 )
 __meta__ = {
 "__initial_opacity": 0.0,
 "__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
