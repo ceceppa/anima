@@ -15,6 +15,7 @@ var _source_node: Node
 func show_demo_by_type(node: Node) -> void:
 	var is_control_demo_visible = node is Control
 
+	prints("is_control_demo_visible", is_control_demo_visible)
 	if _control_demo:
 		_control_demo.get_parent().visible = is_control_demo_visible
 		_sprite_demo.get_parent().get_parent().visible = not is_control_demo_visible
@@ -28,10 +29,10 @@ func _ready():
 
 	if _source_node:
 		show_demo_by_type(_source_node)
-
+		
 func _setup_list() -> void:
 	var animations = AnimaAnimationsUtils.get_available_animations()
-	var base = Anima.get_animation_path()
+	var base = AnimaAnimationsUtils.get_animation_path()
 	var old_category := ''
 	var group = ButtonGroup.new()
 
@@ -54,7 +55,6 @@ func _setup_list() -> void:
 		button.set_meta('script', file)
 		button.toggle_mode = true
 		button.group = group
-		button.add_font_override("font", _confirm_button.get_font("font"))
 		button.connect("pressed", self, '_on_animation_button_pressed', [button])
 
 		_list_container.add_child(button)
@@ -81,18 +81,21 @@ func _create_new_header(text: String) -> PanelContainer:
 func _on_animation_button_pressed(button: Button) -> void:
 	var script_name: String = button.get_meta('script')
 
+	$AnimaNode.clear()
+
 	var duration = 0.5
 
-	_play_animation(_control_demo, button)
-	_play_animation(_sprite_demo, button)
+	var node1 := _clone_elements(_control_demo, button)
+	var node2 := _clone_elements(_sprite_demo, button)
 
 	_animation_name = button.text
 	_animation_script_name = script_name
+	
+	_play_animation(node1, node2, _animation_script_name)
 
-func _play_animation(node: Node, button: Button):
+func _clone_elements(node: Node, button: Button) -> Node:
 	var script_name: String = button.get_meta('script')
 
-	var duration = float(0.5)
 	var parent = node.get_parent()
 	var clone = node.duplicate()
 
@@ -102,15 +105,18 @@ func _play_animation(node: Node, button: Button):
 	clone.show()
 	node.hide()
 
-	var anima = Anima.begin(clone, 'control_test')
-	anima.then(
-		Anima.Node(clone) \
-			.anima_animation(script_name) \
-			.anima_duration(duration)
-	)
-	anima.play()
-	
-	yield(anima, "animation_completed")
+	return clone
+
+func _play_animation(node1: Node, node2: Node, animation_name: String) -> void:
+	$AnimaNode.then(
+		Anima.Node(node1).anima_animation(animation_name, 0.5)
+	)\
+	.with(
+		Anima.Node(node2).anima_animation(animation_name, 0.5)
+	)\
+	.play()
+
+	yield($AnimaNode, "animation_completed")
 
 	if $Timer.is_stopped():
 		$Timer.start()

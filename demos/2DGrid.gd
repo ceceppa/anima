@@ -59,7 +59,7 @@ func _on_ball_pressed(from: Vector2) -> void:
 		duration = 0.6,
 		items_delay = 0.05,
 		animation = "grid_test_in",
-		pivot = Anima.PIVOT.CENTER
+		pivot = ANIMA.PIVOT.CENTER
 	})
 	anima.wait(0.2)
 	anima.then({
@@ -70,7 +70,7 @@ func _on_ball_pressed(from: Vector2) -> void:
 		duration = 0.6,
 		items_delay = 0.05,
 		animation = "grid_test_out",
-		pivot = Anima.PIVOT.CENTER
+		pivot = ANIMA.PIVOT.CENTER
 	})
 	anima.play()
 

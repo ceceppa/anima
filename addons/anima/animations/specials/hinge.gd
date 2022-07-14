@@ -14,5 +14,5 @@ var KEYFRAMES := {
 		opacity = 0
 	},
 	easing = ANIMA.EASING.EASE_IN_OUT,
-	pivot = Anima.PIVOT.TOP_LEFT
+	pivot = ANIMA.PIVOT.TOP_LEFT
 }

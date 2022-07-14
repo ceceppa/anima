@@ -442,13 +442,13 @@ __anima_visual_editor_data = {
 },
 1: {
 "data": [ {
-"animate_as": "Button",
+"animate_as": "AsNode",
 "delay": null,
 "duration": null,
 "node_path": ".",
-"property_name": "anchor_bottom",
+"property_name": "anchor_right",
 "property_type": 3,
-"use": "Button"
+"use": "UseAnimation"
 } ],
 "duration": null,
 "name": "Frame1",

@@ -16,6 +16,7 @@ onready var _anima_animation = find_node("AnimaAnimation")
 
 var _destination_frame: Control
 var _is_restoring_data := false
+var _animation_node_source: Node
 
 func _ready():
 	# I have no idea why if I add the FRAME_ANIMATION via the Editor the +
@@ -75,6 +76,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	var node = FRAME_ANIMATION.instance()
 
 	node.connect("highlight_node", self, "_on_highlight_node")
+	node.connect("select_animation", self, "_on_select_animation", [node])
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
 	node.set_name("Frame" + str(key))
@@ -110,6 +112,7 @@ func _emit_updated() -> void:
 		if not child.is_queued_for_deletion():
 			data["0"].frames[index] = child.get_data()
 
+	prints("visual_builder_updated", data)
 	emit_signal("visual_builder_updated", data)
 
 func _on_AnimaAnimation_animation_updated():
@@ -117,3 +120,11 @@ func _on_AnimaAnimation_animation_updated():
 
 func _on_highlight_node(source: Node) -> void:
 	emit_signal("highlight_node", source)
+
+func _on_select_animation(source: Node) -> void:
+	_animation_node_source = source
+
+	emit_signal("select_animation")
+
+func selected_animation(label, name) -> void:
+	_anima_animation.selected_animation(label, name)
