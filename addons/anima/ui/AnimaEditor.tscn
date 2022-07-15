@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/anima/ui/windows/AnimaNodesWindow.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/ui/editor/AnimaFramesEditor.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/ui/AnimaEditor.gd" type="Script" id=5]
+[ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
 
 [sub_resource type="Theme" id=2]
 
@@ -38,11 +39,12 @@ __meta__ = {
 }
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 4 )]
-window_title = "Select the node and property"
+window_title = "Select the node and property to animate"
 nodes_list_visible = true
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 3 )]
-rect_clip_content = false
+
+[node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 
 [connection signal="highlight_node" from="FramesEditor" to="." method="_on_FramesEditor_highlight_node"]
 [connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
@@ -50,3 +52,4 @@ rect_clip_content = false
 [connection signal="node_selected" from="NodesWindow" to="." method="_on_NodesPopup_node_selected"]
 [connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
 [connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]
+[connection signal="easing_selected" from="AnimaEasingsWindow" to="." method="_on_AnimaEasingsWindow_easing_selected"]

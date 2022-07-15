@@ -16,6 +16,7 @@ export (ANIMA.EASING) var scroll_easing = ANIMA.EASING.LINEAR
 export (ANIMA.EASING) var height_easing = ANIMA.EASING.LINEAR
 
 var _heights: Array
+var _old_size_x: float
 
 func _ready():
 	for index in _controls.get_child_count():
@@ -45,7 +46,6 @@ func update_size() -> void:
 		node.size_flags_vertical = 0
 
 		_heights.push_back(node.rect_size.y + padding)
-
 
 func _maybe_get_container() -> void:
 	_container = find_node('Container')
@@ -84,10 +84,8 @@ func set_index(new_index: int) -> void:
 	var wrapper_height = get_expected_wrapper_height()
 	var height = get_expected_height()
 
-	var anima: AnimaNode = Anima.begin(self)
-	anima.set_single_shot(true)
+	var anima: AnimaNode = Anima.begin_single_shot(self)
 	anima.set_default_duration(duration)
-
 
 	anima.then(
 		Anima.Node(self) \
@@ -122,11 +120,23 @@ func get_expected_height() -> float:
 func _on_Container_item_rect_changed() -> void:
 	emit_signal("carousel_size_changed", rect_size)
 
-func _on_control_pressed(index: int) -> void:
-	set_index(index)
+func _on_control_pressed(new_index: int) -> void:
+	set_index(new_index)
 
 func _on_Carousel_item_rect_changed():
-	pass
+	if rect_size.x == _old_size_x:
+		return
+
+	update_size()
+	
+	# TODO: Why this throws an error?
+	# set_index(index)
+	
+	var x = -rect_size.x * index
+	if _container.rect_position.x != x:
+		_container.rect_position.x = x
+
+	_old_size_x = rect_size.x
 
 func set_padding(new_padding: float) -> void:
 	padding = new_padding

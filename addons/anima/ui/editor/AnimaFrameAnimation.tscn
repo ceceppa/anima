@@ -25,12 +25,12 @@ anchor_bottom = 1.0
 margin_right = 460.015
 rect_min_size = Vector2( 460, 0 )
 rect_pivot_offset = Vector2( 230, 300 )
+rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
 "__initial_min_size:x": 460.0,
-"__initial_size:x": 460.527,
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__initial_size:x": 460.015,
+"__visibility_strategy": 0
 }
 
 [node name="Rectangle" type="Control" parent="."]
@@ -71,17 +71,18 @@ Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle"]
+modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 230, 300 )
 custom_constants/separation = 0
 __meta__ = {
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"_edit_use_anchors_": false
 }
 
 [node name="AnimaRectangle" type="Control" parent="Rectangle/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 460.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
@@ -90,8 +91,7 @@ script = ExtResource( 6 )
 __meta__ = {
 "__initial_opacity": 0.0,
 "__initial_y": 0.0,
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -152,6 +152,7 @@ margin_bottom = 53.0
 icon = ExtResource( 1 )
 
 [node name="MarginContainer" type="MarginContainer" parent="Rectangle/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 49.0
 margin_right = 460.0
 margin_bottom = 600.0
@@ -166,8 +167,7 @@ __meta__ = {
 "__initial_opacity": 0.0,
 "__initial_y": 49.0,
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"_edit_use_anchors_": false
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer"]
@@ -263,6 +263,7 @@ alignment = 1
 
 [node name="GenerateFrame" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
 visible = false
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 102.0
 margin_right = 222.0
 margin_bottom = 49.0
@@ -274,8 +275,7 @@ script = ExtResource( 5 )
 __meta__ = {
 "__initial_opacity": 0.0,
 "__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15

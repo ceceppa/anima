@@ -156,6 +156,9 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 	find_node("PlayButton").visible = !is_initial_frame
 	find_node("FrameName").set_can_edit_value(!is_initial_frame)
 
+func set_relative_property(node_path: String, property: String) -> void:
+	_source.set_relative_propert(node_path, property)
+
 func _on_Delete_pressed():
 	if animate_entrance_exit:
 		yield(_animate_me(true), "completed")
@@ -187,3 +190,13 @@ func _on_highlight_node(source: Node) -> void:
 
 func selected_animation(label, name) -> void:
 	_source.selected_animation(label, name)
+
+func _on_select_relative_property(source: Node) -> void:
+	_source = source
+
+	emit_signal("select_relative_property")
+
+func _on_select_easing(source: Node) -> void:
+	_source = source
+
+	emit_signal("select_easing")

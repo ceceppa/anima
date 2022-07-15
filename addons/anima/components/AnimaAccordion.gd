@@ -73,9 +73,6 @@ func _get_configuration_warning():
 	if get_child_count() > 3:
 		if _content_control:
 			_on_content_control_removed()
-#
-#		for child in get_children():
-#			prints(child, child.name)
 
 		return "AnimaAccordion can only have 1 child component"
 

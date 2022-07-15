@@ -13,6 +13,7 @@ var _node_offset: Vector2
 var _is_restoring_data := false
 var _scene_root_node: Node
 var _animation_source_node: Node
+var _is_selecting_relative_property := false
 
 onready var _frames_editor: Control = find_node("FramesEditor")
 onready var _nodes_window: WindowDialog = find_node("NodesWindow")
@@ -143,18 +144,17 @@ func _restore_data(data: Dictionary) -> void:
 		if frame_data.duration:
 			_frames_editor.set_frame_duration(frame_data.duration)
 
-		print_debug("restoring data", frame_data)
-
 		for value in frame_data.data:
 			if value and value.has("node_path"):
 				var node: Node = _scene_root_node.get_node(value.node_path)
 				
 				yield(get_tree(), "idle_frame")
 
-				print_debug("AnimaEditor", value)
 				var item: Node = _frames_editor.add_animation_for(node, value.node_path, value.property_name, value.property_type)
 
 				item.connect("select_animation", self, "_on_select_animation", [item])
+				item.connect("select_relative_property", self, "_on_select_relative_property", [item])
+				item.connect("select_easing", self, "_on_select_easing", [item])
 
 				item.restore_data(value)
 
@@ -239,13 +239,18 @@ func _on_StopAnimation_pressed():
 	visual_node.stop()
 
 func _on_FramesEditor_select_node():
-#	_nodes_window.popup_centered()
+	$PropertiesWindow.window_title = "Select the node and property to animate"
 	$PropertiesWindow.popup_centered()
 
 func _on_PropertiesWindow_property_selected(node_path, property, property_type):
 	var node: Node = _anima_visual_node.get_root_node().get_node(node_path)
 
-	_frames_editor.add_animation_for(node, node_path, property, property_type)
+	if _is_selecting_relative_property:
+		_animation_source_node.set_relative_property(node_path, property)
+	else:
+		_frames_editor.add_animation_for(node, node_path, property, property_type)
+
+	_is_selecting_relative_property = false
 
 func _on_FramesEditor_visual_builder_updated(data):
 	if not _is_restoring_data:
@@ -267,3 +272,19 @@ func _on_select_animation(source: Node) -> void:
 
 func _on_AnimationsWindow_animation_selected(label, name):
 	_animation_source_node.selected_animation(label, name)
+
+func _on_select_relative_property(source: Node) -> void:
+	_animation_source_node = source
+
+	_is_selecting_relative_property = true
+
+	$PropertiesWindow.window_title = "Select the relative property source"
+	$PropertiesWindow.popup_centered()
+
+func _on_select_easing(source: Node) -> void:
+	_animation_source_node = source
+
+	$AnimaEasingsWindow.popup_centered()
+
+func _on_AnimaEasingsWindow_easing_selected(easing_name: String, easing_value: int):
+	prints(easing_name, easing_value)

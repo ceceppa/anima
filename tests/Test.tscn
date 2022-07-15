@@ -442,13 +442,35 @@ __anima_visual_editor_data = {
 },
 1: {
 "data": [ {
-"animate_as": "AsNode",
+"animate_as": "AsGrid",
+"animation_name": "",
 "delay": null,
 "duration": null,
+"easing": [ "EasingButton", 0 ],
+"from": null,
+"initialValue": null,
 "node_path": ".",
-"property_name": "anchor_right",
+"pivot": [ 0, 0 ],
+"property_name": "anchor_left",
 "property_type": 3,
-"use": "UseAnimation"
+"relative": false,
+"to": null,
+"use": "AnimateProperty"
+}, {
+"animate_as": "AsNode",
+"animation_name": "",
+"delay": null,
+"duration": null,
+"easing": [ "EasingButton", 0 ],
+"from": "0",
+"initialValue": null,
+"node_path": "./Control/Button2",
+"pivot": [ 1, 4 ],
+"property_name": "opacity",
+"property_type": 3,
+"relative": false,
+"to": "1",
+"use": "AnimateProperty"
 } ],
 "duration": null,
 "name": "Frame1",

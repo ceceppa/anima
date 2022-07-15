@@ -8,6 +8,8 @@ signal select_node
 signal visual_builder_updated(data)
 signal select_animation
 signal highlight_node(node)
+signal select_relative_property
+signal select_easing
 
 export (bool) var disable_animations := false
 
@@ -32,6 +34,9 @@ func add_animation_for(node: Node, node_path: String, property_name, property_ty
 	_emit_updated()
 
 	return r
+
+func set_relative_property(node_path: String, property: String) -> void:
+	_animation_node_source.set_relative_propert(node_path, property)
 
 func restore_animation_data(data: Dictionary) -> void:
 	if _anima_animation == null:
@@ -77,6 +82,8 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 
 	node.connect("highlight_node", self, "_on_highlight_node")
 	node.connect("select_animation", self, "_on_select_animation", [node])
+	node.connect("select_relative_property", self, "_on_select_relative_property", [node])
+	node.connect("select_easing", self, "_on_select_easing", [node])
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
 	node.set_name("Frame" + str(key))
@@ -112,7 +119,6 @@ func _emit_updated() -> void:
 		if not child.is_queued_for_deletion():
 			data["0"].frames[index] = child.get_data()
 
-	prints("visual_builder_updated", data)
 	emit_signal("visual_builder_updated", data)
 
 func _on_AnimaAnimation_animation_updated():
@@ -128,3 +134,13 @@ func _on_select_animation(source: Node) -> void:
 
 func selected_animation(label, name) -> void:
 	_anima_animation.selected_animation(label, name)
+
+func _on_select_relative_property(source: Node) -> void:
+	_animation_node_source = source
+
+	emit_signal("select_relative_property")
+
+func _on_select_easing(source: Node) -> void:
+	_animation_node_source = source
+
+	emit_signal("select_easing")
