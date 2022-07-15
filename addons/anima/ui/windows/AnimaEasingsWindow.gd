@@ -1,7 +1,7 @@
 tool
 extends "./AnimaBaseWindow.gd"
 
-signal easing_selected(easing)
+signal easing_selected(easing_name, easing_value)
 
 onready var _anima_logo: Sprite = find_node('Anima')
 onready var _base_button: Button = find_node('BaseButton')
@@ -11,6 +11,7 @@ onready var _grid_in_out: GridContainer = find_node('GridInOut')
 
 var _logo_origin: Vector2
 var _easing: int = ANIMA.EASING.LINEAR
+var _easing_name: String
 
 func _ready():
 	for easing_name in ANIMA.EASING.keys():
@@ -45,8 +46,7 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 	anima1.set_single_shot(true)
 	anima1.then(
 		Anima.Node(button) \
-			.anima_animation("pulse") \
-			.anima_duration(0.5)
+			.anima_animation("pulse", 0.5)
 	)
 	anima1.play()
 
@@ -56,18 +56,18 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 	anima2.set_single_shot(true)
 	anima2.then(
 		Anima.Node(_anima_logo) \
-		.anima_property("position") \
+		.anima_property("position", 1) \
 		.anima_from(_logo_origin) \
 		.anima_to(to) \
-		.anima_easing(easing_value) \
-		.anima_duration(1)
+		.anima_easing(easing_value)
 	)
 	anima2.play()
 
 	_easing = easing_value
+	_easing_name = "Ease" + button.get_parent().get_parent().name + button.text
 
 func _on_ConfirmButton_pressed():
-	emit_signal("easing_selected", _easing)
+	emit_signal("easing_selected", _easing_name, _easing)
 
 	hide()
 

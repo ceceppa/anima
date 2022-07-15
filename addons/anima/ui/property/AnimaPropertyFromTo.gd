@@ -163,6 +163,8 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 	else:
 		anima.play_backwards()
 
+		_should_return_null_value = true
+
 	if signal_to_emit != null:
 		emit_signal(signal_to_emit)
 
