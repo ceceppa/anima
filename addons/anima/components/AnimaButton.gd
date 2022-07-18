@@ -390,3 +390,6 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	emit_signal("mouse_exited")
+
+func pressed() -> bool:
+	return _button.pressed

@@ -85,9 +85,6 @@ margin_left = -1.0
 margin_top = 54.0
 margin_right = 11.0
 margin_bottom = 74.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Button4" type="Button" parent="Control"]
 margin_left = -4.0
@@ -429,21 +426,23 @@ __meta__ = {
 __anima_visual_editor_data = {
 "0": {
 "animation": {
-"default_duration": null,
+"default_duration": 0.3,
 "name": null,
 "visibility_strategy": 0
 },
 "frames": {
 0: {
+"collapsed": true,
 "data": [  ],
 "duration": null,
-"name": "Frame0",
+"name": "Initial Frame",
 "type": "frame"
 },
 1: {
+"collapsed": false,
 "data": [ {
 "animate_as": "AsGrid",
-"animation_name": "",
+"animation_name": "pulse",
 "delay": null,
 "duration": null,
 "easing": [ "EasingButton", 0 ],
@@ -455,17 +454,17 @@ __anima_visual_editor_data = {
 "property_type": 3,
 "relative": false,
 "to": null,
-"use": "AnimateProperty"
+"use": "UseAnimation"
 }, {
 "animate_as": "AsNode",
 "animation_name": "",
 "delay": null,
 "duration": null,
-"easing": [ "EasingButton", 0 ],
+"easing": [ "EaseInLinear", 0 ],
 "from": "0",
 "initialValue": null,
 "node_path": "./Control/Button2",
-"pivot": [ 1, 4 ],
+"pivot": [ 0, 4 ],
 "property_name": "opacity",
 "property_type": 3,
 "relative": false,

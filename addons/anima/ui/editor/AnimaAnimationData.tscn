@@ -1308,7 +1308,6 @@ margin_left = 172.0
 margin_top = 243.0
 margin_right = 996.0
 margin_bottom = 288.0
-rect_min_size = Vector2( 0, 32 )
 
 [node name="Easing" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 306.0

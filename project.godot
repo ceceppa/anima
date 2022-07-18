@@ -95,6 +95,11 @@ _global_script_classes=[ {
 "path": "res://addons/anima/core/declaration/anima_declaration_node.gd"
 }, {
 "base": "Reference",
+"class": "AnimaDeclarationNodes",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_nodes.gd"
+}, {
+"base": "Reference",
 "class": "AnimaEasing",
 "language": "GDScript",
 "path": "res://addons/anima/core/easings.gd"
@@ -187,6 +192,7 @@ _global_script_class_icons={
 "AnimaDeclarationGrid": "",
 "AnimaDeclarationGroup": "",
 "AnimaDeclarationNode": "",
+"AnimaDeclarationNodes": "",
 "AnimaEasing": "",
 "AnimaLabel": "",
 "AnimaLine": "",

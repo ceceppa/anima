@@ -72,7 +72,7 @@ func get_data() -> Dictionary:
 		initialValue = _property_values.find_node("InitialValue").get_value(),
 		relative = _property_values.find_node("RelativeCheck").pressed,
 		pivot = _property_values.find_node("PivotButton").get_value(),
-		easing = [easing_button.name, easing_value]
+		easing = [easing_button.text, easing_value]
 	}
 
 	return data
@@ -122,6 +122,9 @@ func restore_data(data: Dictionary) -> void:
 	if data.has("pivot"):
 		_property_values.find_node("PivotButton").set_value(data.pivot)
 
+	if data.has("easing"):
+		set_easing(data.easing[0], data.easing[1])
+
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()
 
@@ -157,6 +160,14 @@ func selected_animation(label, name) -> void:
 		find_node("SelectAnimation").set_label(name)
 
 		emit_signal("updated")
+
+func set_easing(name: String, value: int) -> void:
+	var button: Button = find_node("EasingButton")
+
+	button.text = name
+	button.set_meta("easing_value", value)
+
+	emit_signal("updated")
 
 func _on_AnimateProperty_pressed():
 	emit_signal("updated")

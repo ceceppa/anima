@@ -11,6 +11,7 @@ signal select_animation
 signal select_easing
 signal select_relative_property
 signal highlight_node(node)
+signal preview_frame
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -21,6 +22,7 @@ onready var _duration = find_node("Duration")
 
 var _source: Node
 var _final_width: float = 460
+var _old_height: float
 
 func _ready():
 	if animate_entrance_exit:
@@ -35,7 +37,8 @@ func get_data() -> Dictionary:
 		name = _frame_name.get_label(),
 		duration = _duration.get_value(),
 		type = "frame",
-		data = []
+		data = [],
+		collapsed = $Collapse.pressed()
 	}
 
 	for child in _animations_container.get_children():
@@ -47,6 +50,9 @@ func get_data() -> Dictionary:
 func set_name(name: String) -> void:
 	if _frame_name == null:
 		_frame_name = find_node("FrameName")
+
+	if is_initial_frame:
+		name = "Initial Frame"
 
 	_frame_name.set_label(name)
 	_frame_name.set_initial_value(name)
@@ -79,13 +85,16 @@ func add_animation_for(node: Node, path: String, property, property_type) -> Nod
 
 	return animation_item
 
+func collapse() -> void:
+	$Collapse.get_child(1).pressed = true
+
 func _animate_me(backwards := false) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 	
 	anima.set_default_duration(0.3)
 
 	anima.then(
-		Anima.Node(self) \
+		Anima.Nodes([self, $Rectangle]) \
 			.anima_animation_frames({
 				from = {
 					"size:x": 0,
@@ -97,11 +106,11 @@ func _animate_me(backwards := false) -> AnimaNode:
 				},
 				easing = ANIMA.EASING.EASE_OUT_BACK
 			})
-	)
-	anima.with(
+	) \
+	.with(
 		Anima.Node(find_node("ContentContainer")).anima_fade_in().anima_initial_value(0)
-	)
-	anima.with(
+	) \
+	.with(
 		Anima.Group(find_node("ContentContainer"), 0.05) \
 			.anima_animation_frames({
 				from = {
@@ -117,8 +126,8 @@ func _animate_me(backwards := false) -> AnimaNode:
 					opacity = 0
 				}
 			})
-	)
-	anima.with(
+	) \
+	.with(
 		Anima.Group(find_node("CTAContainer"), 0.05).anima_animation_frames({
 			from = {
 				scale = Vector2(0.1, 0.1),
@@ -133,9 +142,12 @@ func _animate_me(backwards := false) -> AnimaNode:
 				opacity = 0,
 			}
 		}).anima_delay(0.1)
+	) \
+	.with(
+		Anima.Node($Rectangle).anima_fade_in()
 	)
 
-	rect_clip_content = true
+#	rect_clip_content = true
 
 	if backwards:
 		anima.play_backwards_with_speed(1.5)
@@ -144,7 +156,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	yield(anima, "animation_completed")
 
-	rect_clip_content = false
+#	rect_clip_content = false
 
 	return anima
 
@@ -191,6 +203,9 @@ func _on_highlight_node(source: Node) -> void:
 func selected_animation(label, name) -> void:
 	_source.selected_animation(label, name)
 
+func set_easing(name: String, value: int) -> void:
+	_source.set_easing(name, value)
+
 func _on_select_relative_property(source: Node) -> void:
 	_source = source
 
@@ -200,3 +215,112 @@ func _on_select_easing(source: Node) -> void:
 	_source = source
 
 	emit_signal("select_easing")
+
+func _on_Collapse_pressed():
+	var anima := Anima.begin_single_shot(self, "collapse")
+	
+	anima.set_default_duration(0.3)
+
+	$FrameCollapsedTitle.text = _frame_name.get_label()
+
+	if $Collapse.pressed():
+		anima.then(
+			Anima.Node($Collapse) \
+				.anima_animation_frames({
+					to = {
+						x = 0,
+						y = 0,
+						"size:y": "..:size:y",
+						easing = ANIMA.EASING.EASE_IN_EXPO
+					},
+					relative = []
+				})
+		) \
+		.with(
+			Anima.Node(self) \
+				.anima_animation_frames({
+					to = {
+						"min_size:x": $Collapse.rect_size.x,
+						"size:x": $Collapse.rect_size.x,
+					},
+					easing = ANIMA.EASING.EASE_IN_EXPO
+				})
+		) \
+		.with(
+			Anima.Node($Collapse/Icon).anima_rotate(180)
+		) \
+		.with(
+			Anima.Node($Rectangle).anima_fade_out()
+		) \
+		.then(
+			Anima.Node($FrameCollapsedTitle).anima_animation_frames({
+				from = {
+					opacity = 0,
+					x = -100,
+				},
+				to = {
+					opacity = 1,
+					x = -20,
+					easing = ANIMA.EASING.EASE_OUT_BACK
+				},
+				initial_values = {
+					y = "(..:size:y - .:size:y) / 2",
+					x = -100
+				},
+				relative = []
+			})
+		)
+	else:
+		$Rectangle.rect_size.x = _final_width
+
+		anima.then(
+			Anima.Node($Rectangle).anima_fade_in()
+		) \
+		.with(
+			Anima.Node($Collapse).anima_animation_frames({
+				to = {
+					x = 400,
+					y = 540,
+					"size:y": ".:size:x",
+					easing = ANIMA.EASING.EASE_OUT_EXPO
+				},
+				relative = []
+			})
+		) \
+		.with(
+			Anima.Node($Collapse/Icon).anima_rotate(0)
+		) \
+		.with(
+			Anima.Node($FrameCollapsedTitle).anima_animation_frames({
+				to = {
+					opacity = 0,
+					x = -100,
+					easing = ANIMA.EASING.EASE_IN_EXPO
+				},
+				relative = []
+			})
+		)
+		_animate_me(false)
+
+	anima.play()
+
+	yield(anima, "animation_completed")
+
+	$Rectangle.rect_min_size.x = _final_width
+	$Rectangle.rect_size.x = _final_width
+
+	emit_signal("frame_updated")
+
+func _on_FrameAnimation_item_rect_changed():
+	if _old_height == rect_size.y:
+		pass
+
+	_old_height = rect_size.y
+
+	if $Collapse.pressed():
+		$Collapse.rect_size.y = rect_size.y
+	else:
+		$Collapse.rect_position.y = rect_size.y - $Collapse.rect_size.y - 12
+
+func _on_PlayButton_pressed():
+	emit_signal("preview_frame")

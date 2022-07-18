@@ -135,6 +135,9 @@ func _on_select_animation(source: Node) -> void:
 func selected_animation(label, name) -> void:
 	_anima_animation.selected_animation(label, name)
 
+func set_easing(name: String, value: int) -> void:
+	_anima_animation.set_easing(name, value)
+
 func _on_select_relative_property(source: Node) -> void:
 	_animation_node_source = source
 
