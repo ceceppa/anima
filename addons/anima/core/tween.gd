@@ -144,6 +144,9 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
 		var is_object = typeof(property_data.property) == TYPE_OBJECT
 
+		if value is String:
+			value = AnimaTweenUtils.maybe_calculate_value(value, animation_data)
+
 		if is_rect2:
 			push_warning("not yet implemented")
 			pass
@@ -348,18 +351,24 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 	for property_to_animate in keys:
 		var data = animation_data.duplicate()
-		var start_percentage = previous_key_value[property_to_animate].percentage
+		var start_percentage = previous_key_value[property_to_animate].percentage if previous_key_value.has(property_to_animate) else 0
 		var percentage = (current_frame_key - start_percentage) / 100.0
 		var frame_duration = max(ANIMA.MINIMUM_DURATION, duration * percentage)
 		var percentage_delay := 0.0
 		var relative = relative_properties.find(property_to_animate) >= 0
 		var initial_key = "__initial_" + property_to_animate
-		var initial_value = node.get_meta(initial_key)
+		var initial_value = node.get_meta(initial_key) if node.has_meta(initial_key) else null
 
 		if start_percentage > 0:
 			percentage_delay += (start_percentage/ 100.0) * duration
 
-		var from_value = previous_key_value[property_to_animate].value
+		var from_value
+		
+		if previous_key_value.has(property_to_animate):
+			from_value = previous_key_value[property_to_animate].value
+		else:
+			from_value = AnimaNodesProperties.get_property_value(node, animation_data, property_to_animate)
+
 		var to_value = frame_data[property_to_animate]
 
 		#

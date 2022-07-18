@@ -382,34 +382,39 @@ func _setup_animation(data: Dictionary) -> float:
 	return _setup_node_animation(data)
 
 func _setup_node_animation(data: Dictionary) -> float:
-	var node = data.node
+	var n = data.node
+	var nodes: Array = data.nodes if data.has("nodes") else []
 	var delay = data.delay if data.has('delay') else 0.0
 	var duration = data.duration
 
 	data._wait_time = max(0.0, data._wait_time + delay)
 
-	if data.has("property") and not data.has("animation"):
-		data._is_first_frame = true
-		data._is_last_frame = true
+	if n:
+		nodes.push_back(n)
 
-	if data.has("animation"):
-		var keyframes = data.animation
+	for node in nodes:
+		if data.has("property") and not data.has("animation"):
+			data._is_first_frame = true
+			data._is_last_frame = true
 
-		if keyframes is String:
-			keyframes = AnimaAnimationsUtils.get_animation_keyframes(data.animation)
+		if data.has("animation"):
+			var keyframes = data.animation
 
-			if keyframes.size() == 0:
-				printerr('animation not found: %s' % data.animation)
+			if keyframes is String:
+				keyframes = AnimaAnimationsUtils.get_animation_keyframes(data.animation)
 
-				return duration
+				if keyframes.size() == 0:
+					printerr('animation not found: %s' % data.animation)
 
-		var real_duration = _anima_tween.add_frames(data, keyframes)
+					return duration
 
-		if real_duration > 0:
-			duration = real_duration
-	else:
-		if is_instance_valid(_anima_tween):
-			_anima_tween.add_animation_data(data)
+			var real_duration = _anima_tween.add_frames(data, keyframes)
+
+			if real_duration > 0:
+				duration = real_duration
+		else:
+			if is_instance_valid(_anima_tween):
+				_anima_tween.add_animation_data(data)
 
 	return duration
 

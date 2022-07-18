@@ -135,7 +135,7 @@ func _restore_data(data: Dictionary) -> void:
 		else:
 			pass
 
-		_frames_editor.select_frame(frame_key)
+		var the_frame = _frames_editor.select_frame(frame_key)
 
 		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
 
@@ -157,6 +157,11 @@ func _restore_data(data: Dictionary) -> void:
 				item.connect("select_easing", self, "_on_select_easing", [item])
 
 				item.restore_data(value)
+
+		# TODO: Restore collapse
+		if frame_data.has("collapsed") and frame_data.collapsed:
+#			the_frame.collapse()
+			pass
 
 	_frames_editor.set_is_restoring_data(false)
 
@@ -287,4 +292,4 @@ func _on_select_easing(source: Node) -> void:
 	$AnimaEasingsWindow.popup_centered()
 
 func _on_AnimaEasingsWindow_easing_selected(easing_name: String, easing_value: int):
-	prints(easing_name, easing_value)
+	_animation_source_node.set_easing(easing_name, easing_value)
