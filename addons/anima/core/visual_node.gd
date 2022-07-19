@@ -57,51 +57,58 @@ func play_animation(name: String, speed: float = 1.0, reset_initial_values := fa
 	_play_animation_from_data(animations_data, speed, reset_initial_values)
 
 func _get_animation_data_by_name(animation_name: String) -> Dictionary:
-	var animations := get_animations_list()
-	var data_by_animation = __anima_visual_editor_data.data_by_animation
+	for animation_id in __anima_visual_editor_data:
+		var animation_data = __anima_visual_editor_data[animation_id]
+		var name = animation_data.animation.name
 
-	if data_by_animation == null:
-		return {}
-
-	for animation_id in animations.size():
-		var animation: Dictionary = animations[animation_id]
-
-		if animation.name == animation_name:
-			return {
-				data = data_by_animation[animation_id],
-				visibility_strategy = animation.visibility_strategy
-			}
+		if name == null or name == animation_name:
+			return animation_data
 
 	return {}
 
 func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_initial_values: bool) -> void:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
-	var visibility_strategy: int = animations_data.visibility_strategy
+	var visibility_strategy: int = animations_data.animation.visibility_strategy
+	var default_duration = animations_data.animation.default_duration
 	var timeline_debug := {}
-	
+
 	anima.set_root_node(get_root_node())
 	anima.set_visibility_strategy(visibility_strategy)
 
-	var source_node: Node = get_root_node()
+	if default_duration == null:
+		default_duration = ANIMA.DEFAULT_DURATION
 
-	for animation in animations_data.data:
-		var node_path: String = animation.node_path
-		var node: Node = source_node.get_node(node_path)
+	for frame_id in animations_data.frames:
+		var frame_data = animations_data.frames[frame_id]
+		var frame_default_duration = frame_data.duration
+
+		if frame_default_duration == null:
+			frame_default_duration = default_duration
 		
-		AnimaUI.debug(self, "getting node from path:", node_path, node)
-		var data: Dictionary = _create_animation_data(node, animation.data.duration, animation.data.delay, animation.data.animation_data)
+		anima.set_default_duration(frame_default_duration)
 
-		data._root_node = source_node
-		data._wait_time = animation.start_time
+		for animation in frame_data.data:
+			print(animation)
 
-		if not timeline_debug.has(data._wait_time):
-			timeline_debug[data._wait_time] = []
+			var data: Dictionary = _create_animation_data(animation)
 
-		var what = data.property if data.has("property") else data.animation
+			data._wait_time = 0 #animation.start_time
 
-		timeline_debug[data._wait_time].push_back({ duration = data.duration, delay = data.delay, what = what })
+			if not timeline_debug.has(data._wait_time):
+				timeline_debug[data._wait_time] = []
 
-		anima.with(data)
+			var what = data.property if data.has("property") else data.animation
+
+			var duration = data.duration if data.has("duration") else frame_default_duration
+			var delay = data.delay if data.has("delay") else 0.0
+
+			timeline_debug[data._wait_time].push_back({ 
+				duration = duration,
+				delay = delay,
+				what = what
+			})
+
+			anima.with(data)
 
 	var keys = timeline_debug.keys()
 	keys.sort()
@@ -120,26 +127,26 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 		_reset_initial_values()
 
 	emit_signal("animation_completed")
-
-func preview_animation(node: Node, duration: float, delay: float, animation_data: Dictionary) -> void:
-	var anima: AnimaNode = Anima.begin(self)
-	anima.set_single_shot(true)
-
-	var initial_value = null
-
-	var anima_data = _create_animation_data(node, duration, delay, animation_data)
-	anima.set_root_node(get_root_node())
-
-	AnimaUI.debug(self, 'playing node animation with data', anima_data)
-
-	anima_data._root_node = get_root_node()
-
-	anima.then(anima_data)
-
-	anima.play()
-	yield(anima, "animation_completed")
-
-	_reset_initial_values()
+#
+#func preview_animation(node: Node, duration: float, delay: float, animation_data: Dictionary) -> void:
+#	var anima: AnimaNode = Anima.begin(self)
+#	anima.set_single_shot(true)
+#
+#	var initial_value = null
+#
+#	var anima_data = _create_animation_data(node, duration, delay, animation_data)
+#	anima.set_root_node(get_root_node())
+#
+#	AnimaUI.debug(self, 'playing node animation with data', anima_data)
+#
+#	anima_data._root_node = get_root_node()
+#
+#	anima.then(anima_data)
+#
+#	anima.play()
+#	yield(anima, "animation_completed")
+#
+#	_reset_initial_values()
 
 func stop() -> void:
 	if _active_anima_node == null:
@@ -148,38 +155,47 @@ func stop() -> void:
 	_active_anima_node.stop()
 	_reset_initial_values()
 
-func _create_animation_data(node: Node, duration: float, delay: float, animation_data: Dictionary) -> Dictionary:
+func _create_animation_data(animation_data: Dictionary) -> Dictionary:
+	var source_node: Node = get_root_node()
+	var node_path: String = animation_data.node_path
+	var node: Node = source_node.get_node(node_path)
+
+	print(animation_data)
 	var anima_data = {
 		node = node,
-		duration = duration,
-		delay = delay
 	}
 
+	if animation_data.duration:
+		anima_data.duration = animation_data.duration
+
+	if animation_data.delay:
+		anima_data.delay = animation_data.delay
+
 	if animation_data.has("animate_as"):
-		if animation_data.animate_as == 1:
+		if animation_data.animate_as == "AsGroup":
 			anima_data.erase("node")
 			anima_data.group = node
-		elif animation_data.animate_as == 2:
+		elif animation_data.animate_as == "AsGrid":
 			anima_data.erase("node")
 			anima_data.grid = node
 		
 	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
-	if animation_data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
-		anima_data.animation = animation_data.animation.name
+	if animation_data.use == "UseAnimation":
+		anima_data.animation = animation_data.animation_name
 	else:
 		var node_name: String = node.name
-		var property: String = animation_data.property.name
+		var property: String = animation_data.property_name
 
 		properties_to_reset.clear()
-		properties_to_reset.push_back(animation_data.property.name)
+		properties_to_reset.push_back(property)
 
 		for key in animation_data.property:
 			if key == 'name':
-				anima_data.property = animation_data.property.name
+				anima_data.property = property
 			elif key == 'pivot':
-				var pivot = animation_data.property.pivot
+				var pivot = animation_data.pivot
 
 				if pivot[0] == 1:
 					anima_data.pivot = pivot[1]
@@ -195,6 +211,9 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 				_initial_values[node] = {}
 
 			_initial_values[node][property] = AnimaNodesProperties.get_property_value(node, { property = property })
+
+
+	anima_data._root_node = source_node
 
 	return anima_data
 

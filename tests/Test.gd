@@ -8,6 +8,7 @@ export (StyleBoxFlat) var test setget set_test
 var anima: AnimaNode 
 
 func _ready():
+	$AnimaVisualNode.play_animation("default")
 
 #	var anima: AnimaNode = Anima.begin_single_shot(self)
 

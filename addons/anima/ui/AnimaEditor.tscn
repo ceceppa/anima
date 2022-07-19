@@ -47,6 +47,7 @@ nodes_list_visible = true
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 
 [connection signal="highlight_node" from="FramesEditor" to="." method="_on_FramesEditor_highlight_node"]
+[connection signal="play_animation" from="FramesEditor" to="." method="_on_FramesEditor_play_animation"]
 [connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
 [connection signal="visual_builder_updated" from="FramesEditor" to="." method="_on_FramesEditor_visual_builder_updated"]
 [connection signal="node_selected" from="NodesWindow" to="." method="_on_NodesPopup_node_selected"]

@@ -2,6 +2,7 @@ tool
 extends Control
 
 signal animation_updated
+signal play_animation(name)
 
 onready var _animation_name: Control = find_node("AnimationName")
 onready var _visibility_strategy: OptionButton = find_node("VisibilityStrategy")
@@ -33,3 +34,11 @@ func restore_data(data: Dictionary) -> void:
 func _on_value_updated(_ignore = null):
 	if not _is_restoring_data:
 		emit_signal("animation_updated")
+
+func _on_AnimaButton_pressed():
+	var name = find_node("AnimationName").get_value()
+
+	if name == null:
+		name = "default"
+
+	emit_signal("play_animation", name)
