@@ -10,6 +10,7 @@ signal select_animation
 signal highlight_node(node)
 signal select_relative_property
 signal select_easing
+signal play_animation(name)
 
 export (bool) var disable_animations := false
 
@@ -147,3 +148,6 @@ func _on_select_easing(source: Node) -> void:
 	_animation_node_source = source
 
 	emit_signal("select_easing")
+
+func _on_AnimaAnimation_play_animation(name: String):
+	emit_signal("play_animation", name)

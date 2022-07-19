@@ -96,5 +96,6 @@ margin_bottom = 576.0
 rect_pivot_offset = Vector2( 180, 288 )
 
 [connection signal="animation_updated" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
+[connection signal="play_animation" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_play_animation"]
 [connection signal="add_delay" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_delay"]
 [connection signal="add_frame" from="AnimaRectangle/MarginContainer/ScrollContainer/HBoxContainer/AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_frame"]

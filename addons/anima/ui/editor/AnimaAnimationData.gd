@@ -67,12 +67,14 @@ func get_data() -> Dictionary:
 		animate_as = animate_as_button.get_parent().name,
 		use = use_property_or_animation,
 		animation_name = _animation_name,
-		from = _property_values.find_node("FromValue").get_value(),
-		to = _property_values.find_node("ToValue").get_value(),
-		initialValue = _property_values.find_node("InitialValue").get_value(),
-		relative = _property_values.find_node("RelativeCheck").pressed,
-		pivot = _property_values.find_node("PivotButton").get_value(),
-		easing = [easing_button.text, easing_value]
+		property = {
+			from = _property_values.find_node("FromValue").get_value(),
+			to = _property_values.find_node("ToValue").get_value(),
+			initialValue = _property_values.find_node("InitialValue").get_value(),
+			relative = _property_values.find_node("RelativeCheck").pressed,
+			pivot = _property_values.find_node("PivotButton").get_value(),
+			easing = [easing_button.text, easing_value]
+		}
 	}
 
 	return data
@@ -99,31 +101,25 @@ func restore_data(data: Dictionary) -> void:
 	if data.has("animation_name"):
 		selected_animation(data.animation_name, data.animation_name)
 
-#		from = _property_values.find_node("FromValue").get_value(),
-#		to = _property_values.find_node("ToValue").get_value(),
-#		initialValue = _property_values.find_node("InitialValue").get_value(),
-#		relative = _property_values.find_node("RelativeCheck").pressed,
-#		pivot = _property_values.find_node("PivotButton").get_value(),
-#		easing = easing_value
 	var _property_values = find_node("PropertyValues")
 
 	if data.has("from"):
-		_property_values.find_node("FromValue").set_value(data.from)
+		_property_values.find_node("FromValue").set_value(data.property.from)
 
 	if data.has("to"):
-		_property_values.find_node("ToValue").set_value(data.to)
+		_property_values.find_node("ToValue").set_value(data.property.to)
 
 	if data.has("initialValue"):
-		_property_values.find_node("InitialValue").set_value(data.initialValue)
+		_property_values.find_node("InitialValue").set_value(data.property.initialValue)
 
 	if data.has("relative"):
-		_property_values.find_node("RelativeCheck").pressed = data.relative
+		_property_values.find_node("RelativeCheck").pressed = data.property.relative
 
 	if data.has("pivot"):
-		_property_values.find_node("PivotButton").set_value(data.pivot)
+		_property_values.find_node("PivotButton").set_value(data.property.pivot)
 
 	if data.has("easing"):
-		set_easing(data.easing[0], data.easing[1])
+		set_easing(data.easing[0], data.property.easing[1])
 
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()

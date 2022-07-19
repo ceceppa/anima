@@ -5,6 +5,7 @@ signal switch_position
 signal connections_updated(new_list)
 signal visual_builder_updated
 signal highlight_node(node)
+signal play_animation(name)
 
 const VISUAL_EDITOR_FADE_DURATION := 0.1
 
@@ -293,3 +294,6 @@ func _on_select_easing(source: Node) -> void:
 
 func _on_AnimaEasingsWindow_easing_selected(easing_name: String, easing_value: int):
 	_animation_source_node.set_easing(easing_name, easing_value)
+
+func _on_FramesEditor_play_animation(name: String):
+	emit_signal("play_animation", name)

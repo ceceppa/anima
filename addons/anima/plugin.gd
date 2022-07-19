@@ -22,6 +22,7 @@ func _enter_tree():
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
 	_anima_editor.connect("highlight_node", self, '_on_highlight_node')
+	_anima_editor.connect("play_animation", self, '_on_play_animation')
 	_anima_editor.set_base_control(get_editor_interface().get_base_control())
 
 	add_control_to_bottom_panel(_anima_editor, "Anima")
@@ -100,3 +101,6 @@ func _on_highlight_node(node_to_highlight: Node) -> void:
 	
 	selection.clear()
 	selection.add_node(node_to_highlight)
+
+func _on_play_animation(name: String) -> void:
+	_anima_visual_node.play_animation(name, 1.0, true)

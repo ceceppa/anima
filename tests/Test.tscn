@@ -415,7 +415,8 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 color = Color( 0.4, 0.2, 0.6, 1 )
 __meta__ = {
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
@@ -432,7 +433,7 @@ __anima_visual_editor_data = {
 },
 "frames": {
 0: {
-"collapsed": true,
+"collapsed": false,
 "data": [  ],
 "duration": null,
 "name": "Initial Frame",
@@ -445,30 +446,34 @@ __anima_visual_editor_data = {
 "animation_name": "pulse",
 "delay": null,
 "duration": null,
-"easing": [ "EasingButton", 0 ],
+"node_path": ".",
+"property": {
+"easing": [ "Linear", 0 ],
 "from": null,
 "initialValue": null,
-"node_path": ".",
 "pivot": [ 0, 0 ],
+"relative": false,
+"to": null
+},
 "property_name": "anchor_left",
 "property_type": 3,
-"relative": false,
-"to": null,
 "use": "UseAnimation"
 }, {
 "animate_as": "AsNode",
 "animation_name": "",
 "delay": null,
 "duration": null,
-"easing": [ "EaseInLinear", 0 ],
+"node_path": "./Control/Button2",
+"property": {
+"easing": [ "Linear", 0 ],
 "from": "0",
 "initialValue": null,
-"node_path": "./Control/Button2",
-"pivot": [ 0, 4 ],
+"pivot": [ 0, 0 ],
+"relative": false,
+"to": null
+},
 "property_name": "opacity",
 "property_type": 3,
-"relative": false,
-"to": "1",
 "use": "AnimateProperty"
 } ],
 "duration": null,

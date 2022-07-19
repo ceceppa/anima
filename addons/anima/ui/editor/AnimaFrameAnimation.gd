@@ -147,16 +147,12 @@ func _animate_me(backwards := false) -> AnimaNode:
 		Anima.Node($Rectangle).anima_fade_in()
 	)
 
-#	rect_clip_content = true
-
 	if backwards:
 		anima.play_backwards_with_speed(1.5)
 	else:
 		anima.play()
 
 	yield(anima, "animation_completed")
-
-#	rect_clip_content = false
 
 	return anima
 
@@ -324,3 +320,9 @@ func _on_FrameAnimation_item_rect_changed():
 
 func _on_PlayButton_pressed():
 	emit_signal("preview_frame")
+
+func _on_Collapse_mouse_entered():
+	$FrameCollapsedTitle.add_color_override("font_color", Color.black)
+
+func _on_Collapse_mouse_exited():
+	$FrameCollapsedTitle.add_color_override("font_color", Color.white)
