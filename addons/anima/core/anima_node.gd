@@ -70,9 +70,6 @@ func then(data) -> AnimaNode:
 		print(data)
 		print("\n")
 
-	if data.has("group") and data.group is Array:
-		return _group(data.group, data)
-
 	data._wait_time = _total_animation_length
 
 	_last_tween_data = data.duplicate()
@@ -115,49 +112,6 @@ func with(data) -> AnimaNode:
 		_last_tween_data = data
 
 	_setup_animation(data)
-
-	return self
-
-func _group(group_data: Array, animation_data: Dictionary) -> AnimaNode:
-	var delay_index := 0
-
-	_total_animation_length += animation_data.duration
-
-	if not animation_data.has('items_delay'):
-		printerr('Please specify the `items_delay` value')
-
-		return self
-
-	var items = group_data.size() - 1
-	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
-	var on_started = animation_data.on_started if animation_data.has('on_started') else null
-
-	animation_data.erase("group")
-	animation_data.erase('on_completed')
-	animation_data.erase('on_started')
-
-	for index in group_data.size():
-		var group_item: Dictionary = group_data[index]
-		var data = animation_data.duplicate()
-
-		data._wait_time = animation_data.items_delay * delay_index
-
-		if group_item.has('node'):
-			data.node = group_item.node
-			delay_index += 1
-		else:
-			data.group = group_item.group
-			delay_index += data.group.get_child_count()
-
-		if index == 0 and on_started:
-			data.on_started = on_started
-
-		if index == items and on_completed:
-			data.on_completed = on_completed
-
-		with(data)
-
-	_total_animation_length += animation_data.items_delay * (delay_index - 1)
 
 	return self
 

@@ -21,10 +21,12 @@ onready var _frame_name = find_node("FrameName")
 onready var _duration = find_node("Duration")
 
 var _source: Node
-var _final_width: float = 460
+var _final_width: float = 600 if OS.get_screen_dpi() > 250 else 460
 var _old_height: float
 
 func _ready():
+	$Rectangle.rect_size.x = _final_width
+
 	if animate_entrance_exit:
 		_animate_me()
 	else:
@@ -275,7 +277,7 @@ func _on_Collapse_pressed():
 		.with(
 			Anima.Node($Collapse).anima_animation_frames({
 				to = {
-					x = 400,
+					x = _final_width - 80,
 					y = 540,
 					"size:y": ".:size:x",
 					easing = ANIMA.EASING.EASE_OUT_EXPO

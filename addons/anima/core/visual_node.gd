@@ -119,7 +119,7 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, " to: ", s + d.duration, " => ", d.what)
 
 	_active_anima_node = anima
-	anima.play_with_speed(speed)
+	anima.play_with_delay(1.0)
 
 	yield(anima, "animation_completed")
 
@@ -163,6 +163,7 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	print(animation_data)
 	var anima_data = {
 		node = node,
+		__ignore_warning = true
 	}
 
 	if animation_data.duration:
@@ -191,14 +192,30 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 		properties_to_reset.clear()
 		properties_to_reset.push_back(property)
 
+		anima_data.property = property
+
 		for key in animation_data.property:
-			if key == 'name':
-				anima_data.property = property
-			elif key == 'pivot':
-				var pivot = animation_data.pivot
+			if key == 'pivot':
+				var pivot = animation_data.property.pivot
 
 				if pivot[0] == 1:
 					anima_data.pivot = pivot[1]
+			elif key == "easing":
+				anima_data.easing = animation_data.property.easing[1]
+			elif key == "from":
+				var from: String = animation_data.property.from
+
+				if from.find(":") >= 0:
+					anima_data.from = from
+				else:
+					anima_data.from = float(from)
+			elif key == "to":
+				var to: String = animation_data.property.to
+
+				if to.find(":") >= 0:
+					anima_data.to = to
+				else:
+					anima_data.to = float(to)
 			else:
 				var value = animation_data.property[key]
 				
