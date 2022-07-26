@@ -24,25 +24,27 @@ __meta__ = {
 
 [node name="FrameAnimation" type="Control"]
 anchor_bottom = 1.0
-margin_right = 460.0
-rect_min_size = Vector2( 460, 0 )
-rect_pivot_offset = Vector2( 219.263, 300 )
+margin_right = 600.0
+rect_min_size = Vector2( 600, 0 )
+rect_pivot_offset = Vector2( 146.418, 300 )
 rect_clip_content = true
 script = ExtResource( 8 )
 __meta__ = {
 "__initial_min_size:x": 460.0,
 "__initial_size:x": 460.0,
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Rectangle" type="Control" parent="."]
 anchor_bottom = 1.0
-margin_right = 460.0
+margin_right = 600.0
 rect_min_size = Vector2( 460, 0 )
-rect_pivot_offset = Vector2( 219.263, 300 )
+rect_pivot_offset = Vector2( 230, 300 )
 script = ExtResource( 6 )
 __meta__ = {
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -71,26 +73,26 @@ Rectangle/Shadow/Size = 0
 Rectangle/Shadow/Offset = Vector2( 0, 0 )
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle"]
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 219.263, 300 )
+rect_pivot_offset = Vector2( 230, 300 )
 custom_constants/separation = 0
 __meta__ = {
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimaRectangle" type="Control" parent="Rectangle/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_right = 460.0
+margin_right = 600.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 230, 24.5 )
 script = ExtResource( 6 )
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_y": 0.0,
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
@@ -123,19 +125,9 @@ anchor_right = 1.0
 rect_pivot_offset = Vector2( 206, 24.5 )
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer"]
-margin_right = 412.0
-margin_bottom = 53.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-
-[node name="FrameName" parent="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer/MarginContainer" instance=ExtResource( 9 )]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 412.0
-margin_bottom = 53.0
+[node name="FrameName" parent="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer" instance=ExtResource( 9 )]
+margin_right = 552.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 142, 19 )
 mouse_default_cursor_shape = 1
 label = "Initial Values"
@@ -145,15 +137,14 @@ show_confirm_button = true
 borderless = true
 
 [node name="PlayButton" type="ToolButton" parent="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer"]
-margin_left = 420.0
-margin_right = 460.0
-margin_bottom = 53.0
+margin_left = 560.0
+margin_right = 600.0
+margin_bottom = 49.0
 icon = ExtResource( 1 )
 
 [node name="MarginContainer" type="MarginContainer" parent="Rectangle/ContentContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_top = 49.0
-margin_right = 460.0
+margin_right = 600.0
 margin_bottom = 600.0
 rect_pivot_offset = Vector2( 230, 275.5 )
 size_flags_horizontal = 3
@@ -163,16 +154,17 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 12
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_y": 49.0,
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 448.0
+margin_right = 588.0
 margin_bottom = 539.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -182,17 +174,20 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 rect_pivot_offset = Vector2( 218, 52.6564 )
 rect_clip_content = true
 script = ExtResource( 11 )
+__meta__ = {
+"__visibility_strategy": 0
+}
 label = "Duration:"
 expanded = false
 Animation/AnimatePropertyChange = true
 Animation/Speed = 0.3
-Animation/Easing = 26
+Animation/Easing = 2
 Animation/Name = "fadeIn"
 Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
 Button/Text = "Anima Button"
@@ -317,12 +312,12 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer/DurationMargin"]
 margin_top = 12.0
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 61.0
 custom_constants/separation = 12
 
 [node name="GridContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer/DurationMargin/VBoxContainer"]
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 259.281, -180.348 )
 custom_constants/separation = 24
@@ -340,14 +335,14 @@ __meta__ = {
 
 [node name="Duration" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer/DurationMargin/VBoxContainer/GridContainer" instance=ExtResource( 9 )]
 margin_left = 125.0
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 49.0
 label = "default time"
 show_relative_selector = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
 margin_top = 44.0
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 466.0
 rect_pivot_offset = Vector2( 175, 157.5 )
 size_flags_horizontal = 3
@@ -360,7 +355,7 @@ __meta__ = {
 }
 
 [node name="AnimationsContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/ScrollContainer"]
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 422.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -389,7 +384,6 @@ alignment = 1
 
 [node name="GenerateFrame" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/Empty/Control/CTAContainer"]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
 margin_left = 102.0
 margin_right = 222.0
 margin_bottom = 49.0
@@ -399,9 +393,10 @@ hint_tooltip = "Add all changes as Animation"
 mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
 __meta__ = {
-"__initial_opacity": 1.0,
+"__initial_opacity": 0.0,
 "__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = false
 Animation/Speed = 0.15
@@ -515,15 +510,15 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="RemoveWrapper" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
 margin_top = 478.0
-margin_right = 436.0
+margin_right = 576.0
 margin_bottom = 527.0
 rect_pivot_offset = Vector2( 228, 24.5 )
 custom_constants/separation = 24
 alignment = 1
 
 [node name="AddAnimation" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper"]
-margin_left = 96.0
-margin_right = 183.0
+margin_left = 166.0
+margin_right = 253.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 87, 49 )
 rect_pivot_offset = Vector2( 43.5, 24.5 )
@@ -645,8 +640,8 @@ Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Delete" type="Control" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper"]
-margin_left = 207.0
-margin_right = 339.0
+margin_left = 277.0
+margin_right = 409.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 132, 49 )
 rect_pivot_offset = Vector2( 60, 17 )
@@ -764,9 +759,9 @@ Focused/Shadow/Offset = Vector2( -1, -1 )
 Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [node name="Collapse" type="Control" parent="."]
-margin_left = 398.0
+anchor_left = 0.844
+anchor_right = 0.844
 margin_top = 539.0
-margin_right = 447.0
 margin_bottom = 588.0
 rect_min_size = Vector2( 49, 49 )
 rect_pivot_offset = Vector2( 66, 24.5 )
@@ -775,6 +770,7 @@ mouse_default_cursor_shape = 2
 script = ExtResource( 5 )
 __meta__ = {
 "__visibility_strategy": 0,
+"_edit_use_anchors_": false,
 "_visibility_strategy_reverted": true
 }
 Animation/AnimatePropertyChange = false
@@ -898,7 +894,7 @@ rect_rotation = -90.0
 text = "Frame01"
 
 [connection signal="item_rect_changed" from="." to="." method="_on_FrameAnimation_item_rect_changed"]
-[connection signal="confirmed" from="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer/MarginContainer/FrameName" to="." method="_on_FrameName_confirmed"]
+[connection signal="confirmed" from="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer/FrameName" to="." method="_on_FrameName_confirmed"]
 [connection signal="pressed" from="Rectangle/ContentContainer/AnimaRectangle/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper/AddAnimation" to="." method="_on_AddAnimation_pressed"]
 [connection signal="pressed" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/RemoveWrapper/Delete" to="." method="_on_Delete_pressed"]

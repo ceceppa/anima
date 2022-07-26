@@ -103,23 +103,23 @@ func restore_data(data: Dictionary) -> void:
 
 	var _property_values = find_node("PropertyValues")
 
-	if data.has("from"):
+	if data.property.has("from"):
 		_property_values.find_node("FromValue").set_value(data.property.from)
 
-	if data.has("to"):
+	if data.property.has("to"):
 		_property_values.find_node("ToValue").set_value(data.property.to)
 
-	if data.has("initialValue"):
+	if data.property.has("initialValue"):
 		_property_values.find_node("InitialValue").set_value(data.property.initialValue)
 
-	if data.has("relative"):
+	if data.property.has("relative"):
 		_property_values.find_node("RelativeCheck").pressed = data.property.relative
 
-	if data.has("pivot"):
+	if data.property.has("pivot"):
 		_property_values.find_node("PivotButton").set_value(data.property.pivot)
 
-	if data.has("easing"):
-		set_easing(data.easing[0], data.property.easing[1])
+	if data.property.has("easing"):
+		set_easing(data.property.easing[0], data.property.easing[1])
 
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()
@@ -146,6 +146,13 @@ func _on_AnimaAnimationData_mouse_entered():
 
 func _on_Title_toggled(button_pressed):
 	$Content.visible = button_pressed
+
+	var icon: String = "res://addons/anima/icons/Minus.svg"
+
+	if not button_pressed:
+		icon = "res://addons/anima/icons/Add.svg"
+
+	$Title.set_icon(load(icon))
 
 func _on_RemoveButton_pressed():
 	emit_signal("removed", self)
@@ -191,6 +198,9 @@ func _update_animate_as_label() -> void:
 	var selected = animate_as_group.get_pressed_button().get_parent().name
 
 	_node_or_group.set_label("Animate as:   " + selected.replace("As", ""))
+
+	var group_data = find_node("GroupData")
+	group_data.visible = selected == "AsGroup"
 
 	emit_signal("updated")
 

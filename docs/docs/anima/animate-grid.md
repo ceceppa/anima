@@ -17,5 +17,7 @@ Anima.Grid(grgrid: Node, grid_size: Vector2, items_delay: float, animation_type:
 | group | Node | | The node of whom children we want to animate |
 | grid_size | Vector2 | | The grid size |
 | items_delay | float | | The incremental delay to apply for each child of the group |
-| animation_type | [Anima.GRID](/docs/anima/#group--grid) | GROUP.FROM_TOP | The order to which animate the elements |
-| point | int | 0 | The starting point of the animation |
+| animation_type | [ANIMA.GRID](#animation-type) | ANIMA.GRID.FROM_TOP_RIGHT | The order to which animate the elements |
+| point | Vector2 | Vector2.ZERO | The starting point of the animation |
+
+
