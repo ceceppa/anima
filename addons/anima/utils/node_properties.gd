@@ -22,6 +22,8 @@ static func get_size(node: Node) -> Vector2:
 	if node is Control:
 		node.get_size()
 		return node.get_size()
+	elif node is CanvasModulate:
+		return Vector2.ZERO
 	elif node is Node2D:
 		return node.texture.get_size() * node.scale
 

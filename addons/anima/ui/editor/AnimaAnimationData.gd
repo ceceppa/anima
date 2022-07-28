@@ -22,11 +22,20 @@ onready var _node_or_group = find_node("NodeOrGroup")
 onready var _duration = find_node("Duration")
 onready var _delay = find_node("Delay")
 onready var _timer = find_node("Timer")
+onready var _animation_type = find_node("AnimationType")
 
 func _ready():
 	margin_right = 0
 
 	_on_Title_toggled(false)
+
+	_setup_group_data()
+
+func _setup_group_data() -> void:
+	_animation_type.clear()
+
+	for type in ANIMA.GROUP.keys():
+		_animation_type.add_item(type, ANIMA.GROUP[type])
 
 func show_group_or_node() -> void:
 	_node_or_group.show()
@@ -67,6 +76,11 @@ func get_data() -> Dictionary:
 		animate_as = animate_as_button.get_parent().name,
 		use = use_property_or_animation,
 		animation_name = _animation_name,
+		group = {
+			items_delay = float(find_node("ItemsDelay").get_value()),
+			animation_type = _animation_type.get_selected_id(),
+			start_index = int(find_node("StartIndex").get_value())
+		},
 		property = {
 			from = _property_values.find_node("FromValue").get_value(),
 			to = _property_values.find_node("ToValue").get_value(),
@@ -120,6 +134,19 @@ func restore_data(data: Dictionary) -> void:
 
 	if data.property.has("easing"):
 		set_easing(data.property.easing[0], data.property.easing[1])
+
+	if data.has("group"):
+		find_node("ItemsDelay").set_value(data.group.items_delay)
+		find_node("StartIndex").set_value(data.group.start_index)
+
+		var type = data.group.animation_type
+		for index in _animation_type.get_item_count():
+			var item_id = _animation_type.get_item_id(index)
+
+			if item_id == data.group.animation_type:
+				_animation_type.select(index)
+
+				break
 
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()
@@ -184,6 +211,9 @@ func _on_Duration_value_updated():
 func _on_Delay_value_updated():
 	emit_signal("updated")
 
+func _emit_updated():
+	emit_signal("updated")
+
 func _on_AsNode_pressed():
 	_update_animate_as_label()
 
@@ -230,3 +260,6 @@ func _on_InitialValue_select_relative_property():
 
 func _on_EasingButton_pressed():
 	emit_signal("select_easing")
+
+func _on_AnimationType_item_selected(_index):
+	_emit_updated()

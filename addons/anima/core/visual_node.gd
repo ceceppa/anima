@@ -88,8 +88,6 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 		anima.set_default_duration(frame_default_duration)
 
 		for animation in frame_data.data:
-			print(animation)
-
 			var data: Dictionary = _create_animation_data(animation)
 
 			data._wait_time = 0 #animation.start_time
@@ -160,7 +158,6 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	var node_path: String = animation_data.node_path
 	var node: Node = source_node.get_node(node_path)
 
-	print(animation_data)
 	var anima_data = {
 		node = node,
 		__ignore_warning = true
@@ -179,7 +176,12 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 		elif animation_data.animate_as == "AsGrid":
 			anima_data.erase("node")
 			anima_data.grid = node
-		
+	
+	if animation_data.has("group"):
+		anima_data.animation_type = animation_data.group.animation_type
+		anima_data.items_delay = animation_data.group.items_delay
+		anima_data.point = Vector2(animation_data.group.start_index, 0)
+
 	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 

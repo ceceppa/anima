@@ -57,8 +57,8 @@ func get_value():
 
 	return value
 
-func set_value(value: String) -> void:
-	text = value
+func set_value(value) -> void:
+	text = str(value)
 
 func set_type(new_type: int) -> void:
 	type = new_type
