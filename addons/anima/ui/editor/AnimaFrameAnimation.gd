@@ -21,7 +21,7 @@ onready var _frame_name = find_node("FrameName")
 onready var _duration = find_node("Duration")
 
 var _source: Node
-var _final_width: float = 600 if OS.get_screen_dpi() > 250 else 460
+var _final_width: float = 640 if OS.get_screen_dpi() > 100 else 460
 var _old_height: float
 
 func _ready():

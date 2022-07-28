@@ -8,6 +8,7 @@ export var label := "Accordion" setget set_label
 export (Font) var font setget set_font
 export var expanded := true setget set_expanded
 export var set_size_flags := true
+export var button_min_height := 32.0 setget set_button_min_height
 
 var _title: AnimaButton
 var _wrapper: VBoxContainer
@@ -44,6 +45,7 @@ var _button_colors = {
 
 func _enter_tree():
 	set_expanded(expanded, false)
+	set_button_min_height(button_min_height)
 
 func _init():
 	._init()
@@ -65,6 +67,8 @@ func _ready():
 	set_label(label)
 
 	_is_ready = true
+	
+	connect("item_rect_changed", self, "_on_resized")
 
 func _draw():
 	draw_rect(Rect2(Vector2(0, 0), rect_size), get_property(CUSTOM_PROPERTIES.PANEL_FILL_COLOR.name), true)
@@ -84,7 +88,7 @@ func _get_configuration_warning():
 func _init_layout() -> void:
 	_wrapper = VBoxContainer.new()
 	_icon = Sprite.new()
-	
+
 	_title = AnimaButton.new()
 
 	_icon.texture = load("res://addons/anima/icons/collapse.svg")
@@ -92,8 +96,8 @@ func _init_layout() -> void:
 
 	_title.anchor_right = 1
 	_title.anchor_bottom = 1
-	_title.rect_min_size.y = 32
-	_title.rect_size.y = 32
+	_title.rect_min_size.y = button_min_height
+	_title.rect_size.y = button_min_height
 	_title.set(_title.BUTTON_BASE_PROPERTIES.BUTTON_ALIGN.name, 1)
 	_title.connect("pressed", self, "_on_Title_pressed")
 	_title.connect("mouse_entered", self, "_on_mouse_entered")
@@ -108,6 +112,20 @@ func _init_layout() -> void:
 	_wrapper.add_child(_title)
 
 	add_child(_wrapper)
+
+func set_button_min_height(min_height: float) -> void:
+	button_min_height = min_height
+
+	if not is_inside_tree():
+		return
+
+	_title.rect_min_size.y = button_min_height
+	_title.rect_size.y = button_min_height
+
+	var icon_size: Vector2 = AnimaNodesProperties.get_size(_icon)
+	_icon.position.y = (_title.rect_size.y - icon_size.y) / 2
+
+	_update_size()
 
 func set_expanded(is_expanded: bool, animate := true) -> void:
 	expanded = is_expanded
@@ -124,7 +142,10 @@ func set_expanded(is_expanded: bool, animate := true) -> void:
 
 		return
 
-	var y: float = _get_expanded_height() if is_expanded else _get_collapsed_height()
+	_update_size()
+
+func _update_size() -> void:
+	var y: float = _get_expanded_height() if expanded else _get_collapsed_height()
 
 	rect_min_size.y = y
 	rect_size.y = y
@@ -134,7 +155,7 @@ func set_expanded(is_expanded: bool, animate := true) -> void:
 		_content_control.rect_scale = Vector2.ONE
 
 func _get_collapsed_height() -> float:
-	return _title.rect_min_size.y
+	return button_min_height
 
 func _get_expanded_height() -> float:
 	if _content_control == null:
@@ -252,3 +273,8 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	emit_signal("mouse_exited")
+
+func _on_resized() -> void:
+	var c: Node = get_child(2)
+
+	c.rect_size.x = rect_size.x

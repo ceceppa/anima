@@ -431,7 +431,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 
 	for child in children:
 		# Skip current node :)
-		if '__do_nothing' in child:
+		if '__do_nothing' in child or not (child is Spatial or child is CanvasItem):
 			continue
 		elif animation_data.has('skip_hidden') and not child.is_visible():
 			continue

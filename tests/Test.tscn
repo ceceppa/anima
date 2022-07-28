@@ -119,7 +119,6 @@ __meta__ = {
 }
 
 [node name="Button2" type="Button" parent="."]
-visible = false
 margin_left = 835.0
 margin_top = 34.0
 margin_right = 967.0
@@ -204,9 +203,14 @@ __anima_visual_editor_data = {
 "collapsed": false,
 "data": [ {
 "animate_as": "AsGroup",
-"animation_name": "pulse",
+"animation_name": "back_in_left",
 "delay": null,
 "duration": null,
+"group": {
+"animation_type": 2,
+"items_delay": 1.0,
+"start_index": 0
+},
 "node_path": ".",
 "property": {
 "easing": [ "Linear", 0 ],
@@ -224,6 +228,11 @@ __anima_visual_editor_data = {
 "animation_name": "",
 "delay": null,
 "duration": null,
+"group": {
+"animation_type": 9,
+"items_delay": 0.01,
+"start_index": 0
+},
 "node_path": "./Control/Button2",
 "property": {
 "easing": [ "Linear", 0 ],
