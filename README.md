@@ -23,9 +23,14 @@ You can also add your own with a CSS inspired syntax.
 
 This is a regular editor plugin. Copy the contents of addons/Anima into the same folder in your project, and activate it in your project settings.
 
+## Godot4
+
+The development happens on the godot-4 branch of the this repository. So, any issue or pull request needs to be open there.
+The ready to install version is available [here](https://github.com/ceceppa/anima-godot-4)
+
 ## Documentation & Demo
 
-Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
+Check out [documentation](https://anima.ceceppa.me/docs/), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
 
 ## The Visual Animation Builder
 
