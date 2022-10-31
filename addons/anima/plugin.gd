@@ -14,11 +14,10 @@ func get_name():
 	return 'Anima'
 
 func _enter_tree():
-	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/AnimaUI.gd')
 	add_autoload_singleton("ANIMA", 'res://addons/anima/core/costants.gd')
 	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
 
-	_anima_editor = load("res://addons/anima/ui/AnimaEditor.tscn").instance()
+	_anima_editor = load("res://addons/anima/visual-editor/AnimaVisualEditor.tscn").instance()
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
 	_anima_editor.connect("highlight_node", self, '_on_highlight_node')
