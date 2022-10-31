@@ -65,6 +65,11 @@ _global_script_classes=[ {
 "path": "res://addons/anima/core/easings.gd"
 }, {
 "base": "Node",
+"class": "AnimaKeyframesEngine",
+"language": "GDScript",
+"path": "res://addons/anima/core/keyframes-engine.gd"
+}, {
+"base": "Node",
 "class": "AnimaNode",
 "language": "GDScript",
 "path": "res://addons/anima/core/anima_node.gd"
@@ -116,6 +121,7 @@ _global_script_class_icons={
 "AnimaDeclarationNode": "",
 "AnimaDeclarationNodes": "",
 "AnimaEasing": "",
+"AnimaKeyframesEngine": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
 "AnimaPlayer": "",
