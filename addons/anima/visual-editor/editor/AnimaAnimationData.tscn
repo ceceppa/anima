@@ -2,15 +2,15 @@
 
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationData.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimationData.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=4]
-[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/ui/property/AnimaPivotButton.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=5]
+[ext_resource path="res://addons/anima/visual-editor/property/AnimaPivotButton.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/icons/Remove.svg" type="Texture" id=8]
 [ext_resource path="res://addons/anima/icons/Add.svg" type="Texture" id=9]
 [ext_resource path="res://addons/anima/icons/Animation.svg" type="Texture" id=10]
-[ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=11]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFont" id=4]
 use_filter = true

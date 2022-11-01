@@ -15,7 +15,6 @@ enum TYPES {
 }
 
 onready var _current_value: Button = find_node("CurrentValue")
-onready var _current_value_borderless: Button = find_node("CurrentValueBorderless")
 onready var _custom_value: HBoxContainer = find_node('CustomValue')
 onready var _delete_button: Button = find_node('DeleteButton')
 onready var _relative_selector: Button = find_node('RelativeSelectorButton')
@@ -26,25 +25,23 @@ export (bool) var can_clear_custom_value := true setget set_can_clear_custom_val
 export (bool) var show_relative_selector := true setget set_show_relative_selector
 export (bool) var can_edit_value := true setget set_can_edit_value
 export (bool) var show_confirm_button := false setget set_show_confirm_button
-export (bool) var borderless := false setget set_borderless
 export (bool) var disabled := false setget set_disabled
 
 const MIN_SIZE := 30.0
 
 var _input_visible: Control
 var _relative_source: Button
-var _current_value_button_visible: Button
 var _should_return_null_value := true
 
 func _ready():
 	if _input_visible == null:
 		_on_ClearButton_pressed()
-
-	var relative_buttons := [$CustomValue/RelativeSelectorButton, $CustomValue/Vector2/X/RelativeVector2X, $CustomValue/Vector2/Y/RelativeVector2Y]
-
-	for button in relative_buttons:
-		if not button.is_connected("pressed", self, "_on_RelativeSelectorButton_pressed"):
-			button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
+#
+#	var relative_buttons := [$CustomValue/RelativeSelectorButton, $CustomValue/Vector2/X/RelativeVector2X, $CustomValue/Vector2/Y/RelativeVector2Y]
+#
+#	for button in relative_buttons:
+#		if not button.is_connected("pressed", self, "_on_RelativeSelectorButton_pressed"):
+#			button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
 
 	set_label(label)
 	set_type(type)
@@ -106,7 +103,7 @@ func set_can_clear_custom_value(can_clear: bool) -> void:
 func set_can_edit_value(can_edit: bool) -> void:
 	can_edit_value = can_edit
 
-func _animate_custom_value(mode: int, signal_to_emit = null):
+func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 	if _input_visible == null:
 		return
 
@@ -117,13 +114,13 @@ func _animate_custom_value(mode: int, signal_to_emit = null):
 	anima.set_default_duration(0.3)
 
 	anima.then(
-		Anima.Node(_current_value_button_visible) \
+		Anima.Node(_current_value) \
 			.anima_scale(Vector2(0.5, 0.5)) \
 			.anima_from(Vector2.ONE) \
 			.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
 	)
 	anima.with(
-		Anima.Node(_current_value_button_visible).anima_fade_out()
+		Anima.Node(_current_value).anima_fade_out()
 	)
 	anima.with(
 		Anima.Node(_custom_value) \
@@ -295,19 +292,13 @@ func get_value():
 		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
 func set_label(new_label: String) -> void:
-	_current_value = find_node("CurrentValue")
-	_current_value_borderless = find_node("CurrentValueBorderless")
+	if not _current_value:
+		_current_value = find_node("CurrentValue")
 
-	if borderless:
-		_current_value_button_visible = _current_value_borderless
-	else:
-		_current_value_button_visible = _current_value
-
-	label = new_label
-	_current_value_button_visible.set_label(label)
+	_current_value.set_text(label)
 
 func get_label() -> String:
-	return _current_value_button_visible.get_label()
+	return _current_value.get_label()
 
 func set_show_relative_selector(relative_button: bool) -> void:
 	show_relative_selector = relative_button
@@ -338,19 +329,10 @@ func _on_RelativeSelectorButton_pressed(source: Button):
 
 	emit_signal("select_relative_property")
 
-func set_borderless(is_borderless: bool) -> void:
-	borderless = is_borderless
-
-	_current_value.visible = !is_borderless
-	_current_value_borderless.visible = is_borderless
-
-	set_label(label)
-
 func set_disabled(is_disabled: bool) -> void:
 	disabled = is_disabled
 
-	_current_value.set(Button.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
-	_current_value_borderless.set(Button.BUTTON_BASE_PROPERTIES.BUTTON_DISABLED.name, disabled)
+	_current_value.disabled = is_disabled
 
 func set_show_confirm_button(show: bool) -> void:
 	show_confirm_button = show
@@ -367,7 +349,7 @@ func _on_ConfirmButton_pressed():
 	var label = get_value()
 
 	if label:
-		_current_value_button_visible.set_label(label)
+		_current_value.set_text(label)
 
 	_on_ClearButton_pressed()
 

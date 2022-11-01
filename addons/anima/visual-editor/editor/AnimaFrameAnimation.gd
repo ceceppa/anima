@@ -1,8 +1,8 @@
 tool
 extends Control
 
-onready var ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationData.tscn")
-onready var INITIAL_DATA = preload("res://addons/anima/ui/editor/InitialValue.tscn")
+onready var ANIMATION_DATA = preload("res://addons/anima/visual-editor/editor/AnimaAnimationData.tscn")
+onready var INITIAL_DATA = preload("res://addons/anima/visual-editor/editor/InitialValue.tscn")
 
 signal frame_deleted
 signal select_node

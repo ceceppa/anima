@@ -87,7 +87,7 @@ const MAPPED_ICONS := {
 }
 
 func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
-	var row_container = load("res://addons/anima/ui/AnimaNodeRowContainer.tscn")
+	var row_container = load("res://addons/anima/visual-editor/AnimaNodeRowContainer.tscn")
 	var row = row_container.instance()
 
 	row.set_name("Row" + str(index))

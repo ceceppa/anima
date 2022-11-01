@@ -7,8 +7,8 @@
 [ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=5]
 [ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=6]
 [ext_resource path="res://addons/anima/icons/Key.svg" type="Texture" id=7]
-[ext_resource path="res://addons/anima/ui/editor/AnimaFrameAnimation.gd" type="Script" id=8]
-[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=9]
+[ext_resource path="res://addons/anima/visual-editor/editor/AnimaFrameAnimation.gd" type="Script" id=8]
+[ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/anima/icons/collapse-left.svg" type="Texture" id=10]
 [ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=11]
 
