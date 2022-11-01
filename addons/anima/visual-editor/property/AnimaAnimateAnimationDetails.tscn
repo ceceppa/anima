@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="DynamicFont" id=19]
+use_filter = true
+font_data = ExtResource( 1 )
+__meta__ = {
+"_original_size": 18
+}
+
+[node name="AnimationContainer" type="GridContainer"]
+anchor_right = 1.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationLabel" type="Label" parent="."]
+margin_top = 3.0
+margin_right = 120.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 120, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "Animation:"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="AnimationButton" type="Button" parent="."]
+margin_left = 124.0
+margin_right = 1024.0
+margin_bottom = 26.0
+hint_tooltip = "Click here to select/change animation"
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 19 )
+text = "Select animation..."
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}

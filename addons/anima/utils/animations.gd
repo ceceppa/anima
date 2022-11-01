@@ -8,13 +8,13 @@ static func get_animation_path() -> String:
 static func register_animation(animation_name: String, keyframes: Dictionary) -> void:
 	_deregister_animation(animation_name)
 
-	AnimaUI._custom_animations[animation_name] = keyframes
+	ANIMA._custom_animations[animation_name] = keyframes
 
 static func _deregister_animation(animation_name: String) -> void:
-	AnimaUI._custom_animations.erase(animation_name)
+	ANIMA._custom_animations.erase(animation_name)
 
 static func get_available_animations() -> Array:
-	if AnimaUI._animations_list.size() == 0:
+	if ANIMA._animations_list.size() == 0:
 		var list = _get_animations_list()
 		var filtered := []
 
@@ -22,9 +22,9 @@ static func get_available_animations() -> Array:
 			if file.find('.gd.') < 0 and file.find(".gd") > 0:
 				filtered.push_back(file.replace('.gdc', '.gd'))
 
-		AnimaUI._animations_list = filtered
+		ANIMA._animations_list = filtered
 
-	return AnimaUI._animations_list + AnimaUI._custom_animations.keys()
+	return ANIMA._animations_list + ANIMA._custom_animations.keys()
 
 static func get_available_animation_by_category() -> Dictionary:
 	var animations = get_available_animations()
@@ -46,15 +46,15 @@ static func get_available_animation_by_category() -> Dictionary:
 	return result
 
 static func get_animation_keyframes(animation_name: String) -> Dictionary:
-	if AnimaUI._custom_animations.has(animation_name):
-		return AnimaUI._custom_animations[animation_name]
+	if ANIMA._custom_animations.has(animation_name):
+		return ANIMA._custom_animations[animation_name]
 
 	var resource_file = _get_animation_script_with_path(animation_name)
 	if resource_file:
 		var script: Reference = load(resource_file).new()
 		var keyframes: Dictionary = script.KEYFRAMES
 
-		AnimaUI._custom_animations[animation_name] = keyframes
+		ANIMA._custom_animations[animation_name] = keyframes
 
 		script.unreference()
 
@@ -77,7 +77,7 @@ static func _get_animation_script_with_path(animation_name: String) -> String:
 	return ''
 
 static func is_built_in_animation(animation_name: String) -> bool:
-	return AnimaUI._animations_list.find(animation_name) >= 0
+	return ANIMA._animations_list.find(animation_name) >= 0
 
 static func _get_animations_list() -> Array:
 	var files = _get_scripts_in_dir(BASE_PATH)
