@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationData.tscn" type="PackedScene" id=4]
-[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationControl.gd" type="Script" id=5]
+[ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimationData.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimationControl.gd" type="Script" id=5]
 
 [sub_resource type="ButtonGroup" id=1]
 

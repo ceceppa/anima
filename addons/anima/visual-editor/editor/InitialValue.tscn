@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/ui/editor/InitialValue.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/visual-editor/editor/InitialValue.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/icons/Remove.svg" type="Texture" id=3]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=6]
 

@@ -1,8 +1,8 @@
 tool
 extends Control
 
-const FRAME_ANIMATION = preload("res://addons/anima/ui/editor/AnimaFrameAnimation.tscn")
-const FRAME_DELAY = preload("res://addons/anima/ui/editor/AnimaFrameDelay.tscn")
+const FRAME_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaFrameAnimation.tscn")
+const FRAME_DELAY = preload("res://addons/anima/visual-editor/editor/AnimaFrameDelay.tscn")
 
 signal select_node
 signal visual_builder_updated(data)

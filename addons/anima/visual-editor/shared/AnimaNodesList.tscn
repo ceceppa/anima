@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://addons/anima/ui/shared/AnimaNodesList.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/icons/Close.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/anima/icons/Add.svg" type="Texture" id=4]

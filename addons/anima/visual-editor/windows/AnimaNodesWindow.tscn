@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://addons/anima/ui/windows/AnimaNodesWindow.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/ui/shared/AnimaNodesList.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" type="PackedScene" id=2]
 
 [node name="NodesWindow" type="WindowDialog"]
 modulate = Color( 1, 1, 1, 0 )
