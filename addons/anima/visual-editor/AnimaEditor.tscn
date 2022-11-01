@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://addons/anima/ui/windows/AnimaNodesWindow.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/ui/editor/AnimaFramesEditor.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/ui/AnimaEditor.gd" type="Script" id=5]
+[ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Theme" id=2]
+
+[node name="AnimaEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 1024, 600 )
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = SubResource( 2 )
+script = ExtResource( 5 )
+
+[node name="FramesEditor" parent="." instance=ExtResource( 2 )]
+visible = false
+
+[node name="NodesWindow" parent="." instance=ExtResource( 1 )]
+
+[node name="WarningLabel" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 512, 300 )
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "Please add an AnimaVisualNode to the current scene to use the Visual Animation Builder"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PropertiesWindow" parent="." instance=ExtResource( 4 )]
+window_title = "Select the node and property to animate"
+nodes_list_visible = true
+
+[node name="AnimationsWindow" parent="." instance=ExtResource( 3 )]
+
+[node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
+
+[connection signal="highlight_node" from="FramesEditor" to="." method="_on_FramesEditor_highlight_node"]
+[connection signal="play_animation" from="FramesEditor" to="." method="_on_FramesEditor_play_animation"]
+[connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
+[connection signal="visual_builder_updated" from="FramesEditor" to="." method="_on_FramesEditor_visual_builder_updated"]
+[connection signal="node_selected" from="NodesWindow" to="." method="_on_NodesPopup_node_selected"]
+[connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
+[connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]
+[connection signal="easing_selected" from="AnimaEasingsWindow" to="." method="_on_AnimaEasingsWindow_easing_selected"]

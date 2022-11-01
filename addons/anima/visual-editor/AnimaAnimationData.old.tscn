@@ -1,0 +1,566 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimationData.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/anima/ui/property/AnimaPivotButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=5]
+[ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 3
+use_filter = true
+font_data = ExtResource( 2 )
+__meta__ = {
+"_original_size": 2
+}
+
+[sub_resource type="DynamicFont" id=19]
+use_filter = true
+font_data = ExtResource( 2 )
+__meta__ = {
+"_original_size": 18
+}
+
+[sub_resource type="ButtonGroup" id=3]
+
+[sub_resource type="ButtonGroup" id=4]
+
+[node name="AnimaData" type="VBoxContainer"]
+anchor_right = 1.0
+margin_bottom = 148.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/separation = 12
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_right = 1024.0
+margin_bottom = 2.0
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator" type="HSeparator" parent="."]
+margin_top = 14.0
+margin_right = 1024.0
+margin_bottom = 22.0
+
+[node name="NodeOrGroup" type="VBoxContainer" parent="."]
+margin_top = 34.0
+margin_right = 1024.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="NodeOrGroup"]
+margin_right = 1024.0
+margin_bottom = 2.0
+rect_min_size = Vector2( 120, 0 )
+hint_tooltip = "Choose if the selected node needs to be animated as single node or group.
+Single node: only the node itself will be animated
+Group: The direct child of the node will be animated"
+mouse_filter = 1
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 19 )
+text = "Animate as:"
+align = 1
+
+[node name="Carousel" parent="NodeOrGroup" instance=ExtResource( 5 )]
+anchor_right = 0.0
+margin_top = 10.0
+margin_right = 1024.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 0, 28 )
+rect_pivot_offset = Vector2( 512, 16 )
+scroll_easing = 6
+height_easing = 27
+
+[node name="Controls" parent="NodeOrGroup/Carousel" index="0"]
+margin_right = 1024.0
+margin_bottom = 28.0
+
+[node name="AsNode" type="Button" parent="NodeOrGroup/Carousel/Controls" index="0"]
+margin_right = 336.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 0, 28 )
+hint_tooltip = "Animate the single node only"
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 19 )
+toggle_mode = true
+pressed = true
+group = SubResource( 3 )
+text = "Node"
+
+[node name="AsGroup" type="Button" parent="NodeOrGroup/Carousel/Controls" index="1"]
+margin_left = 344.0
+margin_right = 680.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 0, 28 )
+hint_tooltip = "Animate all the direct child of the node"
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 19 )
+toggle_mode = true
+group = SubResource( 3 )
+text = "Group"
+
+[node name="AsGrid" type="Button" parent="NodeOrGroup/Carousel/Controls" index="2"]
+margin_left = 688.0
+margin_right = 1024.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 0, 28 )
+hint_tooltip = "Animate all the direct child of the node"
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 19 )
+toggle_mode = true
+group = SubResource( 3 )
+text = "Grid"
+
+[node name="Wrapper" parent="NodeOrGroup/Carousel" index="1"]
+margin_top = 36.0
+margin_right = 1024.0
+margin_bottom = 36.0
+rect_pivot_offset = Vector2( 512, 0 )
+mouse_filter = 2
+
+[node name="Container" parent="NodeOrGroup/Carousel/Wrapper" index="0"]
+margin_right = 2048.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 3072, 0 )
+rect_pivot_offset = Vector2( 1748, 80 )
+
+[node name="Empty" type="Control" parent="NodeOrGroup/Carousel/Wrapper/Container" index="0"]
+margin_right = 1018.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="1"]
+margin_left = 1026.0
+margin_right = 2045.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="GridContainer2" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer"]
+margin_right = 1019.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 80 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/vseparation = 12
+custom_constants/hseparation = 12
+columns = 2
+
+[node name="Label2" type="Label" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
+margin_top = 10.0
+margin_right = 120.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 120, 0 )
+hint_tooltip = "The delay to apply to each children"
+mouse_filter = 1
+custom_fonts/font = SubResource( 19 )
+text = "Items delay"
+
+[node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2" instance=ExtResource( 6 )]
+margin_left = 132.0
+margin_right = 1019.0
+margin_bottom = 22.0
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 19 )
+text = "0.01"
+align = 2
+min_value = 0.0
+
+[node name="Label3" type="Label" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
+margin_top = 51.0
+margin_right = 120.0
+margin_bottom = 53.0
+rect_min_size = Vector2( 120, 0 )
+hint_tooltip = "The delay of each child item"
+mouse_filter = 1
+custom_fonts/font = SubResource( 19 )
+text = "Animate from:"
+
+[node name="OptionButton" type="OptionButton" parent="NodeOrGroup/Carousel/Wrapper/Container/MarginContainer/GridContainer2"]
+margin_left = 132.0
+margin_top = 34.0
+margin_right = 1019.0
+margin_bottom = 70.0
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 19 )
+text = "Top to bottotm"
+items = [ "Top to bottotm", null, false, 0, null, "Center", null, false, 1, null, "Bottom to top", null, false, 2, null, "Even items only", null, false, 4, null, "Odd items only", null, false, 5, null, "Random", null, false, 5, null ]
+selected = 0
+
+[node name="GridContainer" type="GridContainer" parent="NodeOrGroup/Carousel/Wrapper/Container" index="2"]
+margin_left = 2053.0
+margin_right = 3072.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/vseparation = 12
+custom_constants/hseparation = 12
+columns = 2
+
+[node name="Label2" type="Label" parent="NodeOrGroup/Carousel/Wrapper/Container/GridContainer"]
+margin_top = 10.0
+margin_right = 120.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 120, 0 )
+hint_tooltip = "The delay of each child item"
+mouse_filter = 1
+custom_fonts/font = SubResource( 19 )
+text = "Items delay"
+
+[node name="NumberEdit" parent="NodeOrGroup/Carousel/Wrapper/Container/GridContainer" instance=ExtResource( 6 )]
+margin_left = 132.0
+margin_right = 1019.0
+margin_bottom = 22.0
+custom_fonts/font = SubResource( 19 )
+text = "0.01"
+align = 2
+min_value = 0.0
+
+[node name="Label3" type="Label" parent="."]
+margin_top = 92.0
+margin_right = 1024.0
+margin_bottom = 94.0
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 19 )
+text = "Animation:"
+align = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 106.0
+margin_right = 1024.0
+margin_bottom = 134.0
+size_flags_horizontal = 3
+
+[node name="AnimationTypeButton" type="Button" parent="HBoxContainer"]
+margin_right = 508.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 0, 28 )
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 19 )
+toggle_mode = true
+pressed = true
+group = SubResource( 4 )
+text = "Animation"
+
+[node name="PropertyTypeButton" type="Button" parent="HBoxContainer"]
+margin_left = 516.0
+margin_right = 1024.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 0, 28 )
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 19 )
+toggle_mode = true
+group = SubResource( 4 )
+text = "Property"
+
+[node name="AnimationType" type="Control" parent="."]
+margin_top = 146.0
+margin_right = 1024.0
+margin_bottom = 178.0
+rect_min_size = Vector2( 0, 32 )
+
+[node name="AnimationContainer" type="GridContainer" parent="AnimationType"]
+anchor_right = 1.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationLabel" type="Label" parent="AnimationType/AnimationContainer"]
+margin_top = 6.0
+margin_right = 120.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 120, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "Animation:"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="AnimationButton" type="Button" parent="AnimationType/AnimationContainer"]
+margin_left = 128.0
+margin_right = 1024.0
+margin_bottom = 14.0
+hint_tooltip = "Click here to select/change animation"
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 19 )
+text = "Select animation..."
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="PropertyContainer" type="GridContainer" parent="AnimationType"]
+visible = false
+anchor_right = 1.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PropertyLabel" type="Label" parent="AnimationType/PropertyContainer"]
+margin_top = 3.0
+margin_right = 160.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 120, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "Property:"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="PropertyButton" type="Button" parent="AnimationType/PropertyContainer"]
+margin_left = 164.0
+margin_right = 1024.0
+margin_bottom = 28.0
+hint_tooltip = "Click here to select the property to animate"
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 19 )
+text = "Select property..."
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="Wrapper" type="Control" parent="."]
+margin_top = 190.0
+margin_right = 1024.0
+margin_bottom = 190.0
+size_flags_horizontal = 3
+
+[node name="PropertyValues" type="VBoxContainer" parent="Wrapper"]
+anchor_right = 1.0
+margin_bottom = 336.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label1" type="Label" parent="Wrapper/PropertyValues"]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 1024.0
+margin_bottom = 2.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 19 )
+text = "Animate property:"
+align = 1
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
+margin_top = 10.0
+margin_right = 1024.0
+margin_bottom = 297.0
+size_flags_horizontal = 3
+columns = 2
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="From" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 23.0
+margin_right = 120.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 120, 0 )
+mouse_filter = 1
+custom_fonts/font = SubResource( 19 )
+text = "From:"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="FromValue" parent="Wrapper/PropertyValues/AnimateGrid" instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 128.0
+margin_right = 1024.0
+margin_bottom = 49.0
+type = 4
+
+[node name="To" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 80.0
+margin_right = 120.0
+margin_bottom = 82.0
+rect_min_size = Vector2( 120, 0 )
+mouse_filter = 1
+custom_fonts/font = SubResource( 19 )
+text = "To:"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="ToValue" parent="Wrapper/PropertyValues/AnimateGrid" instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 128.0
+margin_top = 57.0
+margin_right = 1024.0
+margin_bottom = 106.0
+type = 4
+
+[node name="Initial" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 137.0
+margin_right = 120.0
+margin_bottom = 139.0
+rect_min_size = Vector2( 120, 0 )
+mouse_filter = 1
+custom_fonts/font = SubResource( 19 )
+text = "Initial Value"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="InitialValue" parent="Wrapper/PropertyValues/AnimateGrid" instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 128.0
+margin_top = 114.0
+margin_right = 1024.0
+margin_bottom = 163.0
+label = "ignore"
+type = 4
+
+[node name="Relative" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 194.0
+margin_right = 120.0
+margin_bottom = 196.0
+rect_min_size = Vector2( 120, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "Relative"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="RelativeCheck" type="CheckBox" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 128.0
+margin_top = 171.0
+margin_right = 1024.0
+margin_bottom = 219.0
+hint_tooltip = "If true, the from and to value are applied according to the current node property value."
+custom_fonts/font = SubResource( 19 )
+text = "Relative value"
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="Pivot" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 256.0
+margin_right = 120.0
+margin_bottom = 258.0
+rect_min_size = Vector2( 120, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "Pivot"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="PivotButton" parent="Wrapper/PropertyValues/AnimateGrid" instance=ExtResource( 3 )]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 0.0
+margin_left = 128.0
+margin_top = 227.0
+margin_right = 1024.0
+margin_bottom = 287.0
+rect_min_size = Vector2( 0, 60 )
+
+[node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 305.0
+margin_right = 1024.0
+margin_bottom = 307.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+custom_fonts/font = SubResource( 19 )
+text = "Easing:"
+align = 1
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
+margin_top = 315.0
+margin_right = 1024.0
+margin_bottom = 329.0
+size_flags_horizontal = 3
+columns = 2
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="Easing" type="Label" parent="Wrapper/PropertyValues/Easing"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 6.0
+margin_right = 160.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 160, 0 )
+custom_fonts/font = SubResource( 19 )
+text = "Easing"
+__meta__ = {
+"_edit_use_anchors_": false,
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="EasingButton" type="Button" parent="Wrapper/PropertyValues/Easing"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 168.0
+margin_right = 1024.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 19 )
+text = "Linear"
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[connection signal="carousel_height_changed" from="NodeOrGroup/Carousel" to="." method="_on_Carousel_carousel_height_changed"]
+[connection signal="pressed" from="NodeOrGroup/Carousel/Controls/AsNode" to="." method="_on_AsNode_pressed"]
+[connection signal="pressed" from="NodeOrGroup/Carousel/Controls/AsGroup" to="." method="_on_AsGroup_pressed"]
+[connection signal="pressed" from="NodeOrGroup/Carousel/Controls/AsGrid" to="." method="_on_AsGroup_pressed"]
+[connection signal="pressed" from="HBoxContainer/AnimationTypeButton" to="." method="_on_AnimationTypeButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/PropertyTypeButton" to="." method="_on_PropertyTypeButton_pressed"]
+[connection signal="pressed" from="AnimationType/AnimationContainer/AnimationButton" to="." method="_on_AnimationButton_pressed"]
+[connection signal="pressed" from="AnimationType/PropertyContainer/PropertyButton" to="." method="_on_PropertyButton_pressed"]
+[connection signal="item_rect_changed" from="Wrapper/PropertyValues" to="." method="_on_PropertyValues_item_rect_changed"]
+[connection signal="resized" from="Wrapper/PropertyValues/AnimateGrid/FromValue" to="." method="_on_PropertyValues_item_rect_changed"]
+[connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
+[connection signal="resized" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_PropertyValues_item_rect_changed"]
+[connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
+[connection signal="resized" from="Wrapper/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_PropertyValues_item_rect_changed"]
+[connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
+[connection signal="pressed" from="Wrapper/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_CheckBox_pressed"]
+[connection signal="pivot_height_changed" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_height_changed"]
+[connection signal="pivot_point_selected" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_point_selected"]
+[connection signal="pressed" from="Wrapper/PropertyValues/Easing/EasingButton" to="." method="_on_EasingButton_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+[editable path="NodeOrGroup/Carousel"]
