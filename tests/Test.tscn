@@ -2,7 +2,7 @@
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/icons/anima.svg" type="Texture" id=7]
+[ext_resource path="res://addons/anima/visual-editor/icons/anima.svg" type="Texture" id=7]
 
 [sub_resource type="StyleBoxFlat" id=5]
 

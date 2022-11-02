@@ -7,9 +7,9 @@
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPivotButton.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=7]
-[ext_resource path="res://addons/anima/icons/Remove.svg" type="Texture" id=8]
-[ext_resource path="res://addons/anima/icons/Add.svg" type="Texture" id=9]
-[ext_resource path="res://addons/anima/icons/Animation.svg" type="Texture" id=10]
+[ext_resource path="res://addons/anima/visual-editor/icons/Remove.svg" type="Texture" id=8]
+[ext_resource path="res://addons/anima/visual-editor/icons/Add.svg" type="Texture" id=9]
+[ext_resource path="res://addons/anima/visual-editor/icons/Animation.svg" type="Texture" id=10]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFont" id=4]
