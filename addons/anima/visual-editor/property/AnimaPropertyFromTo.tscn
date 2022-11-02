@@ -1,11 +1,11 @@
 [gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaLinkedFieldButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/icons/Clear.svg" type="Texture" id=2]
+[ext_resource path="res://addons/anima/visual-editor/icons/Clear.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/icons/Check.svg" type="Texture" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=4]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/icons/GuiTabMenuHl.svg" type="Texture" id=6]
+[ext_resource path="res://addons/anima/visual-editor/icons/GuiTabMenuHl.svg" type="Texture" id=6]
 [ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=8]
 
 [sub_resource type="StyleBoxFlat" id=2]
