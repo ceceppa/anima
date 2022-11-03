@@ -14,12 +14,9 @@ var _relative_control: Control
 var _source_node: Node
 
 func _ready():
-	$Container/AnimateProperty.hide()
-	$Container/SelectAnimation.hide()
-#
-#	for window in [$PropertiesWindow, $AnimationsWindow, $AnimaEasingsWindow]:
-#		window.rect_min_size = Vector2(512, 300)
-#		window.rect_size = Vector2(512, 300)
+	for window in [$PropertiesWindow, $AnimationsWindow, $AnimaEasingsWindow]:
+		window.rect_min_size = Vector2(512, 300) * AnimaUI.get_dpi_scale()
+		window.rect_size = Vector2(512, 300) * AnimaUI.get_dpi_scale()
 
 func set_source_node(node: Node) -> void:
 	_source_node = node
@@ -49,6 +46,7 @@ func restore_data(data: Dictionary) -> void:
 	_duration.set_value(duration)
 	_delay.set_value(delay)
 
+	AnimaUI.debug(self, 'restoring data', data)
 	_animation_data.restore_data(_source_node, animation_data)
 
 	_maybe_show_node_or_group_option()
@@ -72,7 +70,7 @@ func _maybe_show_node_or_group_option() -> void:
 	if not is_inside_tree():
 		return
 
-	if _source_node.get_child_count() > 0:
+	if _source_node.get_child_count() > 0 and not _source_node is AnimaShape:
 		_animation_data.show_group_or_node()
 
 func _on_AnimationsWindow_animation_selected(label: String, name: String):
@@ -81,6 +79,8 @@ func _on_AnimationsWindow_animation_selected(label: String, name: String):
 	emit_signal("animation_updated")
 
 func _on_PropertiesWindow_property_selected(property: String, property_type: int, node_name: String):
+	AnimaUI.debug(self, 'property selected', property, property_type, node_name)
+
 	if _relative_control:
 		var relative_property: String = ":" + property
 
@@ -132,7 +132,3 @@ func _on_AnimationData_animate_as_changed(as_node):
 
 func _on_AnimationData_updated():
 	pass # Replace with function body.
-
-func _on_AnimateProperty_pressed():
-	$Container/SelectAnimation.visible = $Container/AnimateWith/UseAnimation.pressed
-	$Container/AnimateProperty.visible = !$Container/SelectAnimation.visible

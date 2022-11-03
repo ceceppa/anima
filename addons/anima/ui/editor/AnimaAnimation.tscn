@@ -1,0 +1,123 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/anima/shapes/Rectangle.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/ui/editor/AnimaAnimation.gd" type="Script" id=3]
+
+[node name="AnimaAnimation" type="Control"]
+anchor_bottom = 1.0
+rect_min_size = Vector2( 360, 0 )
+script = ExtResource( 3 )
+
+[node name="Rectangle" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -664.0
+rect_min_size = Vector2( 360, 0 )
+rect_pivot_offset = Vector2( 180, 300 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Animation/AnimatePropertyChange = true
+Animation/Speed = 0.3
+Animation/Easing = 0
+Rectangle/Size = Rect2( 0, 0, 100, 100 )
+Rectangle/FillColor = Color( 0, 0, 0, 1 )
+Rectangle/Border/Color = Color( 1, 1, 1, 0 )
+Rectangle/Border/Blend = false
+Rectangle/Border/Offset = Vector2( 0, 0 )
+Rectangle/Border/Widh/Left = 0
+Rectangle/Border/Widh/Top = 0
+Rectangle/Border/Widh/Right = 0
+Rectangle/Border/Widh/Bottom = 0
+Rectangle/Border/Radius/Details = 8
+Rectangle/Border/Radius/TopLeft = 8.0
+Rectangle/Border/Radius/TopRight = 8
+Rectangle/Border/Radius/BottomRight = 8.0
+Rectangle/Border/Radius/BottomLeft = 8.0
+Rectangle/Border/Offset/Radius/Details = 8
+Rectangle/Border/Offset/Radius/TopLeft = -1
+Rectangle/Border/Offset/Radius/TopRight = -1
+Rectangle/Border/Offset/Radius/BottomRight = -1
+Rectangle/Border/Offset/Radius/BottomLeft = -1
+Rectangle/Shadow/Color = Color( 1, 1, 1, 0 )
+Rectangle/Shadow/Size = 0
+Rectangle/Shadow/Offset = Vector2( 0, 0 )
+
+[node name="CenterContainer" type="CenterContainer" parent="Rectangle"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/CenterContainer"]
+margin_left = 24.0
+margin_top = 99.0
+margin_right = 336.0
+margin_bottom = 500.0
+rect_min_size = Vector2( 312, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="GridContainer" parent="Rectangle/CenterContainer/VBoxContainer"]
+margin_right = 312.0
+margin_bottom = 401.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/vseparation = 12
+
+[node name="Label" type="Label" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_right = 312.0
+margin_bottom = 25.0
+text = "Animation name:"
+
+[node name="AnimationName" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+margin_top = 37.0
+margin_right = 312.0
+margin_bottom = 86.0
+label = "default"
+type = 4
+show_relative_selector = false
+
+[node name="HSeparator" type="HSeparator" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_top = 98.0
+margin_right = 312.0
+margin_bottom = 146.0
+rect_min_size = Vector2( 0, 48 )
+
+[node name="Label2" type="Label" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_top = 158.0
+margin_right = 312.0
+margin_bottom = 183.0
+text = "Visibility strategy:"
+
+[node name="VisibilityStrategy" type="OptionButton" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_top = 195.0
+margin_right = 312.0
+margin_bottom = 243.0
+rect_min_size = Vector2( 0, 48 )
+text = "Ignore"
+items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
+selected = 0
+
+[node name="HSeparator2" type="HSeparator" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_top = 255.0
+margin_right = 312.0
+margin_bottom = 303.0
+rect_min_size = Vector2( 0, 48 )
+
+[node name="Label3" type="Label" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_top = 315.0
+margin_right = 312.0
+margin_bottom = 340.0
+text = "Default duration (s):"
+
+[node name="DefaultDuration" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+margin_top = 352.0
+margin_right = 312.0
+margin_bottom = 401.0
+label = "0.7"
+show_relative_selector = false
+
+[connection signal="value_updated" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/AnimationName" to="." method="_on_value_updated"]
+[connection signal="item_selected" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/VisibilityStrategy" to="." method="_on_value_updated"]
+[connection signal="value_updated" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/DefaultDuration" to="." method="_on_value_updated"]
