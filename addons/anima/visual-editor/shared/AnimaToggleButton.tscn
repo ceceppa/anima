@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/anima/visual-editor/icons/collapse.svg" type="Texture" id=1]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.gd" type="Script" id=2]
+
+[node name="AnimaToggleButton" type="Button"]
+margin_right = 1008.0
+margin_bottom = 37.0
+toggle_mode = true
+text = "Time"
+icon = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="toggled" from="." to="." method="_on_AnimaToggleButton_toggled"]
