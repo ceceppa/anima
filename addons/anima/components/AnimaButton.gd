@@ -1,7 +1,7 @@
 tool
 extends AnimaRectangle
 class_name AnimaButton, "res://addons/anima/icons/button.svg"
-
+GroupData2
 signal button_down
 signal button_up
 signal toggled(button_pressed)

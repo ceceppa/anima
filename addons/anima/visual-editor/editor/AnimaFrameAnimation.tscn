@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/anima/visual-editor/icons/Play.svg" type="Texture" id=1]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaFrameAnimation.gd" type="Script" id=8]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=9]
-[ext_resource path="res://addons/anima/visual-editor/icons/collapse-left.svg" type="Texture" id=10]
+[ext_resource path="res://addons/anima/visual-editor/icons/CollapseLeft.svg" type="Texture" id=10]
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.239216, 0.235294, 0.254902, 0.223529 )
