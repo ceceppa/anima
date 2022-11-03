@@ -918,6 +918,9 @@ margin_bottom = 585.0
 rect_min_size = Vector2( 0, 473 )
 rect_pivot_offset = Vector2( 500, 248.5 )
 custom_constants/separation = 24
+__meta__ = {
+"__visibility_strategy": 0
+}
 padding = 24.0
 scroll_easing = 27
 height_easing = 22
@@ -1175,12 +1178,20 @@ margin_bottom = 473.0
 rect_min_size = Vector2( 0, 424 )
 rect_pivot_offset = Vector2( 500, 212 )
 mouse_filter = 2
+__meta__ = {
+"__visibility_strategy": 0
+}
 
 [node name="Container" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper" index="0"]
 margin_right = 1000.0
 margin_bottom = 400.0
 rect_min_size = Vector2( 2000, 0 )
 rect_pivot_offset = Vector2( 1000, 200 )
+__meta__ = {
+"__visibility_strategy": 0,
+"_edit_use_anchors_": false,
+"_item_size": 0.0
+}
 
 [node name="PropertyValues" type="VBoxContainer" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container" index="0"]
 margin_right = 996.0
@@ -1266,8 +1277,8 @@ margin_left = 172.0
 margin_top = 122.0
 margin_right = 996.0
 margin_bottom = 171.0
-label = "ignore"
 type = 4
+label = "ignore"
 
 [node name="Relative" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 194.0
@@ -1308,7 +1319,6 @@ margin_left = 172.0
 margin_top = 243.0
 margin_right = 996.0
 margin_bottom = 288.0
-rect_min_size = Vector2( 0, 32 )
 
 [node name="Easing" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
 margin_top = 306.0
@@ -1594,24 +1604,8 @@ Pressed/Shadow/Offset = Vector2( -1, -1 )
 
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
 [connection signal="mouse_entered" from="Title" to="." method="_on_Title_mouse_entered"]
-[connection signal="toggled" from="Title" to="." method="_on_Title_toggled"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer/Duration" to="." method="_on_Duration_value_updated"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer/Delay" to="." method="_on_Delay_value_updated"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer/AsNode" to="." method="_on_AsNode_pressed"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer/AsGroup" to="." method="_on_AsGroup_pressed"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer/AsGrid" to="." method="_on_AsGrid_pressed"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimateWith/Controls/AnimateProperty" to="." method="_on_AnimateProperty_pressed"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimateWith/Controls/UseAnimation" to="." method="_on_UseAnimation_pressed"]
-[connection signal="select_relative_property" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/FromValue" to="." method="_update_me"]
-[connection signal="select_relative_property" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/ToValue" to="." method="_update_me"]
-[connection signal="select_relative_property" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/InitialValue" to="." method="_update_me"]
 [connection signal="toggled" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_RelativeCheck_toggled"]
 [connection signal="pivot_point_selected" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/PivotButton" to="." method="_update_me"]
 [connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/EasingButton" to="." method="_on_EasingButton_pressed"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/SelectAnimation" to="." method="_on_SelectAnimation_pressed"]
-[connection signal="pressed" from="Content/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 
 [editable path="Content/MarginContainer/AnimaData/AnimateWith"]

@@ -1,33 +1,20 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/anima/components/AnimaButton.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimationData.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/components/AnimaAccordion.gd" type="Script" id=4]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPivotButton.tscn" type="PackedScene" id=6]
-[ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/visual-editor/icons/Remove.svg" type="Texture" id=8]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/anima/visual-editor/icons/Animation.svg" type="Texture" id=10]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=11]
+[ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture" id=12]
+[ext_resource path="res://addons/anima/visual-editor/icons/GuiTabMenuHl.svg" type="Texture" id=13]
+[ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=14]
 
-[sub_resource type="DynamicFont" id=4]
-use_filter = true
-font_data = ExtResource( 1 )
-__meta__ = {
-"_original_size": 2
-}
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
 
-[sub_resource type="ButtonGroup" id=13]
-
-[sub_resource type="ButtonGroup" id=14]
-
-[sub_resource type="DynamicFont" id=5]
-use_filter = true
-font_data = ExtResource( 1 )
-__meta__ = {
-"_original_size": 18
-}
+[sub_resource type="ButtonGroup" id=15]
 
 [node name="AnimaAnimationData" type="VBoxContainer"]
 anchor_right = 1.0
@@ -36,68 +23,25 @@ rect_min_size = Vector2( 0, 64 )
 rect_pivot_offset = Vector2( 512, 32 )
 rect_clip_content = true
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Title" type="Control" parent="."]
+[node name="TimeAccordion" type="VBoxContainer" parent="."]
 margin_right = 1024.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
-mouse_filter = 1
-
-[node name="Content" type="VBoxContainer" parent="."]
-visible = false
-margin_top = 57.0
-margin_right = 1024.0
-margin_bottom = 770.0
-rect_pivot_offset = Vector2( 512, 314.5 )
-size_flags_vertical = 0
-__meta__ = {
-"__initial_opacity": 0.0,
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-
-[node name="MarginContainer" type="MarginContainer" parent="Content"]
-margin_right = 1024.0
-margin_bottom = 641.0
-rect_pivot_offset = Vector2( 298, 127 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/margin_right = 12
-custom_constants/margin_top = 12
-custom_constants/margin_left = 12
-custom_constants/margin_bottom = 12
-
-[node name="AnimaData" type="VBoxContainer" parent="Content/MarginContainer"]
-margin_left = 12.0
-margin_top = 12.0
-margin_right = 1012.0
-margin_bottom = 629.0
-rect_min_size = Vector2( 0, 118 )
-rect_pivot_offset = Vector2( 286, 191 )
-rect_clip_content = true
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/separation = 12
-
-[node name="TimeAccordion" type="Control" parent="Content/MarginContainer/AnimaData"]
-margin_right = 1000.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 500, 48 )
 rect_clip_content = true
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
-[node name="MarginContainer" type="MarginContainer" parent="Content/MarginContainer/AnimaData/TimeAccordion"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = 48.0
-margin_bottom = 158.0
+[node name="AnimaToggleButton2" parent="TimeAccordion" instance=ExtResource( 9 )]
+margin_right = 1024.0
+text = "Time:"
+icon = ExtResource( 12 )
+expand_icon = true
+
+[node name="MarginContainer" type="MarginContainer" parent="TimeAccordion"]
+visible = false
+margin_top = 45.0
+margin_right = 1024.0
+margin_bottom = 203.0
 rect_pivot_offset = Vector2( 500, 79 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -112,10 +56,10 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="HBoxContainer" type="GridContainer" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer"]
+[node name="HBoxContainer" type="GridContainer" parent="TimeAccordion/MarginContainer"]
 margin_left = 12.0
 margin_top = 24.0
-margin_right = 988.0
+margin_right = 1012.0
 margin_bottom = 134.0
 rect_pivot_offset = Vector2( 500, 55 )
 size_flags_horizontal = 3
@@ -129,7 +73,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="Label2" type="Label" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="TimeAccordion/MarginContainer/HBoxContainer"]
 margin_top = 12.0
 margin_right = 132.0
 margin_bottom = 37.0
@@ -138,13 +82,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Duration" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Duration" parent="TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
-margin_right = 976.0
+margin_right = 1000.0
 margin_bottom = 49.0
 show_relative_selector = false
 
-[node name="Label3" type="Label" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="TimeAccordion/MarginContainer/HBoxContainer"]
 margin_top = 73.0
 margin_right = 132.0
 margin_bottom = 98.0
@@ -153,1026 +97,346 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Delay" parent="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Delay" parent="TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_top = 61.0
-margin_right = 976.0
+margin_right = 1000.0
 margin_bottom = 110.0
 show_relative_selector = false
 
-[node name="NodeOrGroup" type="Control" parent="Content/MarginContainer/AnimaData"]
-margin_top = 60.0
-margin_right = 1000.0
-margin_bottom = 108.0
-rect_min_size = Vector2( 0, 48 )
-rect_pivot_offset = Vector2( 500, 24 )
+[node name="NodeOrGroup" type="VBoxContainer" parent="."]
+visible = false
+margin_top = 56.0
+margin_right = 1024.0
+margin_bottom = 93.0
+rect_min_size = Vector2( 0, 32 )
+rect_pivot_offset = Vector2( 500, 48.5 )
 rect_clip_content = true
-script = ExtResource( 4 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-label = "Animate as"
-font = SubResource( 4 )
-expanded = false
-set_size_flags = false
-button_min_height = 48.0
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Animation/Name = "fadeIn"
-Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
-Button/Text = "Anima Button"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = false
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = null
-Normal/FillColor = Color( 0.4, 0.192157, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.52, 0.353725, 0.529412, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.46, 0.272941, 0.470588, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.46, 0.272941, 0.470588, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Content/MarginContainer/AnimaData/NodeOrGroup"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = 48.0
-margin_bottom = 73.0
-rect_pivot_offset = Vector2( 500, 32.5 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"__initial_opacity": 1.0,
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
+[node name="AnimaToggleButton" parent="NodeOrGroup" instance=ExtResource( 9 )]
+margin_right = 1024.0
+text = "Animate as:"
+icon = ExtResource( 12 )
+expand_icon = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2"]
-margin_right = 1000.0
-margin_bottom = 73.0
+[node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup"]
+visible = false
+margin_top = 45.0
+margin_right = 1024.0
+margin_bottom = 110.0
 custom_constants/margin_right = 12
-custom_constants/margin_top = 12
+custom_constants/margin_top = 8
 custom_constants/margin_left = 12
-custom_constants/margin_bottom = 12
+custom_constants/margin_bottom = 8
 
-[node name="GridContainer" type="GridContainer" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="NodeOrGroup/MarginContainer"]
 margin_left = 12.0
-margin_top = 12.0
-margin_right = 988.0
-margin_bottom = 61.0
+margin_top = 8.0
+margin_right = 1012.0
+margin_bottom = 57.0
 rect_pivot_offset = Vector2( 500, 14 )
 columns = 3
 
-[node name="AsNode" type="Control" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
-margin_right = 320.0
+[node name="AsNode" type="Button" parent="NodeOrGroup/MarginContainer/GridContainer"]
+margin_right = 328.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 83, 49 )
 rect_pivot_offset = Vector2( 160, 24.5 )
 hint_tooltip = "Animates the single node only"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Node"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = true
-Button/ShortcutInTooltip = true
-Button/Pressed = true
-Button/ContentMargin = 12
-Button/Group = SubResource( 13 )
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+text = "Node"
 
-[node name="AsGroup" type="Control" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
-margin_left = 328.0
-margin_right = 648.0
+[node name="AsGroup" type="Button" parent="NodeOrGroup/MarginContainer/GridContainer"]
+margin_left = 336.0
+margin_right = 664.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 160, 24.5 )
 hint_tooltip = "Animate the direct children"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Group"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = true
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = SubResource( 13 )
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+text = "Group"
 
-[node name="AsGrid" type="Control" parent="Content/MarginContainer/AnimaData/NodeOrGroup/VBoxContainer2/MarginContainer/GridContainer"]
-margin_left = 656.0
-margin_right = 976.0
+[node name="AsGrid" type="Button" parent="NodeOrGroup/MarginContainer/GridContainer"]
+margin_left = 672.0
+margin_right = 1000.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 160, 24.5 )
 hint_tooltip = "Animates the direct children"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Grid"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = true
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = SubResource( 13 )
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+text = "Grid"
 
-[node name="GroupData" type="Control" parent="Content/MarginContainer/AnimaData"]
+[node name="GroupData" type="VBoxContainer" parent="."]
 visible = false
-margin_top = 88.0
-margin_bottom = 136.0
+margin_top = 101.0
+margin_right = 1024.0
+margin_bottom = 268.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 0, 24 )
 rect_clip_content = true
 size_flags_horizontal = 3
-script = ExtResource( 4 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-label = "Group"
-expanded = false
-set_size_flags = false
-button_min_height = 48.0
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Animation/Name = "fadeIn"
-Panel/FillColor = Color( 0.105882, 0.129412, 0.180392, 1 )
-Button/Text = "Anima Button"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = false
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = null
-Normal/FillColor = Color( 0.4, 0.192157, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.52, 0.353725, 0.529412, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.46, 0.272941, 0.470588, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.46, 0.272941, 0.470588, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
 
-[node name="MarginContainer" type="MarginContainer" parent="Content/MarginContainer/AnimaData/GroupData"]
-margin_top = 48.0
-margin_right = 405.0
-margin_bottom = 268.0
+[node name="MarginContainer" type="MarginContainer" parent="GroupData"]
+margin_right = 1024.0
+margin_bottom = 167.0
 custom_constants/margin_right = 24
 custom_constants/margin_top = 12
 custom_constants/margin_left = 24
 custom_constants/margin_bottom = 12
 
-[node name="GridContainer" type="GridContainer" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="GroupData/MarginContainer"]
 margin_left = 24.0
 margin_top = 12.0
-margin_right = 381.0
-margin_bottom = 208.0
+margin_right = 1000.0
+margin_bottom = 155.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
-[node name="Label" type="Label" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer"]
+[node name="Label" type="Label" parent="GroupData/MarginContainer/GridContainer"]
 margin_top = 10.0
-margin_right = 247.0
+margin_right = 171.0
 margin_bottom = 35.0
 text = "Items delay (s):"
 
-[node name="ItemsDelay" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer" instance=ExtResource( 11 )]
-margin_left = 255.0
-margin_right = 952.0
+[node name="ItemsDelay" parent="GroupData/MarginContainer/GridContainer" instance=ExtResource( 11 )]
+margin_left = 179.0
+margin_right = 976.0
 margin_bottom = 45.0
 text = "0.01"
 align = 2
 
-[node name="Label2" type="Label" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer"]
+[node name="Label2" type="Label" parent="GroupData/MarginContainer/GridContainer"]
 margin_top = 59.0
-margin_right = 247.0
+margin_right = 171.0
 margin_bottom = 84.0
 text = "Animation type:"
 
-[node name="AnimationType" type="OptionButton" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer"]
-margin_left = 255.0
+[node name="AnimationType" type="OptionButton" parent="GroupData/MarginContainer/GridContainer"]
+margin_left = 179.0
 margin_top = 53.0
-margin_right = 952.0
+margin_right = 976.0
 margin_bottom = 90.0
 text = "FROM_TOP"
 items = [ "FROM_TOP", null, false, 1, null, "FROM_BOTTOM", null, false, 2, null, "FROM_CENTER", null, false, 9, null, "ODDS_ONLY", null, false, 3, null, "EVEN_ONLY", null, false, 4, null, "RANDOM", null, false, 11, null, "TOGETHER", null, false, 0, null, "FROM_INDEX", null, false, 10, null ]
 selected = 0
 
-[node name="Label3" type="Label" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer"]
+[node name="Label3" type="Label" parent="GroupData/MarginContainer/GridContainer"]
 margin_top = 108.0
-margin_right = 247.0
+margin_right = 171.0
 margin_bottom = 133.0
 text = "Index:"
 
-[node name="StartIndex" parent="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer" instance=ExtResource( 11 )]
-margin_left = 255.0
+[node name="StartIndex" parent="GroupData/MarginContainer/GridContainer" instance=ExtResource( 11 )]
+margin_left = 179.0
 margin_top = 98.0
-margin_right = 952.0
+margin_right = 976.0
 margin_bottom = 143.0
 text = "0"
 align = 2
 type = 0
 min_value = 0.0
 
-[node name="AnimateWith" parent="Content/MarginContainer/AnimaData" instance=ExtResource( 7 )]
-anchor_right = 0.0
-margin_top = 120.0
+[node name="GridData" type="VBoxContainer" parent="."]
+visible = false
+margin_top = 276.0
+margin_right = 1024.0
+margin_bottom = 496.0
+rect_min_size = Vector2( 0, 48 )
+rect_pivot_offset = Vector2( 0, 24 )
+rect_clip_content = true
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="GridData"]
+margin_right = 1024.0
+margin_bottom = 220.0
+custom_constants/margin_right = 24
+custom_constants/margin_top = 12
+custom_constants/margin_left = 24
+custom_constants/margin_bottom = 12
+
+[node name="GridContainer" type="GridContainer" parent="GridData/MarginContainer"]
+margin_left = 24.0
+margin_top = 12.0
 margin_right = 1000.0
-margin_bottom = 617.0
-rect_min_size = Vector2( 0, 473 )
+margin_bottom = 208.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+
+[node name="Label" type="Label" parent="GridData/MarginContainer/GridContainer"]
+margin_top = 10.0
+margin_right = 171.0
+margin_bottom = 35.0
+text = "Grid Size:"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GridData/MarginContainer/GridContainer"]
+margin_left = 179.0
+margin_right = 976.0
+margin_bottom = 45.0
+rect_pivot_offset = Vector2( -581, 118 )
+
+[node name="X" type="HBoxContainer" parent="GridData/MarginContainer/GridContainer/HBoxContainer"]
+margin_right = 394.0
+margin_bottom = 45.0
+size_flags_horizontal = 3
+custom_constants/separation = 12
+
+[node name="Panel" type="Panel" parent="GridData/MarginContainer/GridContainer/HBoxContainer/X"]
+margin_right = 96.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 96, 32 )
+custom_styles/panel = SubResource( 16 )
+
+[node name="Label" type="Label" parent="GridData/MarginContainer/GridContainer/HBoxContainer/X/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
+text = "Rows:"
+align = 1
+valign = 1
+
+[node name="x" parent="GridData/MarginContainer/GridContainer/HBoxContainer/X" instance=ExtResource( 14 )]
+margin_left = 108.0
+margin_right = 394.0
+margin_bottom = 45.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 2
+
+[node name="Y" type="HBoxContainer" parent="GridData/MarginContainer/GridContainer/HBoxContainer"]
+margin_left = 402.0
+margin_right = 797.0
+margin_bottom = 45.0
+size_flags_horizontal = 3
+custom_constants/separation = 12
+
+[node name="Panel" type="Panel" parent="GridData/MarginContainer/GridContainer/HBoxContainer/Y"]
+margin_right = 120.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 120, 32 )
+custom_styles/panel = SubResource( 16 )
+
+[node name="Label" type="Label" parent="GridData/MarginContainer/GridContainer/HBoxContainer/Y/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
+text = "Columns:"
+align = 1
+valign = 1
+
+[node name="y" parent="GridData/MarginContainer/GridContainer/HBoxContainer/Y" instance=ExtResource( 14 )]
+margin_left = 132.0
+margin_right = 395.0
+margin_bottom = 45.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 2
+
+[node name="Label4" type="Label" parent="GridData/MarginContainer/GridContainer"]
+margin_top = 63.0
+margin_right = 171.0
+margin_bottom = 88.0
+text = "Items delay (s):"
+
+[node name="ItemsDelay" parent="GridData/MarginContainer/GridContainer" instance=ExtResource( 11 )]
+margin_left = 179.0
+margin_top = 53.0
+margin_right = 976.0
+margin_bottom = 98.0
+text = "0.01"
+align = 2
+
+[node name="Label2" type="Label" parent="GridData/MarginContainer/GridContainer"]
+margin_top = 112.0
+margin_right = 171.0
+margin_bottom = 137.0
+text = "Animation type:"
+
+[node name="AnimationType" type="OptionButton" parent="GridData/MarginContainer/GridContainer"]
+margin_left = 179.0
+margin_top = 106.0
+margin_right = 976.0
+margin_bottom = 143.0
+text = "FROM_TOP"
+items = [ "FROM_TOP", null, false, 1, null, "FROM_BOTTOM", null, false, 2, null, "FROM_CENTER", null, false, 9, null, "ODDS_ONLY", null, false, 3, null, "EVEN_ONLY", null, false, 4, null, "RANDOM", null, false, 11, null, "TOGETHER", null, false, 0, null, "FROM_INDEX", null, false, 10, null ]
+selected = 0
+
+[node name="Label3" type="Label" parent="GridData/MarginContainer/GridContainer"]
+margin_top = 161.0
+margin_right = 171.0
+margin_bottom = 186.0
+text = "Index:"
+
+[node name="StartIndex" parent="GridData/MarginContainer/GridContainer" instance=ExtResource( 11 )]
+margin_left = 179.0
+margin_top = 151.0
+margin_right = 976.0
+margin_bottom = 196.0
+text = "0"
+align = 2
+type = 0
+min_value = 0.0
+
+[node name="AnimateWith" type="HBoxContainer" parent="."]
+margin_top = 56.0
+margin_right = 1024.0
+margin_bottom = 100.0
 rect_pivot_offset = Vector2( 500, 248.5 )
+rect_clip_content = true
 custom_constants/separation = 24
-padding = 24.0
-scroll_easing = 27
-height_easing = 22
 
-[node name="Controls" parent="Content/MarginContainer/AnimaData/AnimateWith" index="0"]
-margin_right = 1000.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
-
-[node name="AnimateProperty" type="Control" parent="Content/MarginContainer/AnimaData/AnimateWith/Controls" index="0"]
-margin_right = 496.0
-margin_bottom = 49.0
+[node name="AnimateProperty" type="Button" parent="AnimateWith"]
+margin_right = 500.0
+margin_bottom = 44.0
 rect_pivot_offset = Vector2( 248, 24.5 )
 size_flags_horizontal = 3
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Animate Property"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = true
-Button/ShortcutInTooltip = true
-Button/Pressed = true
-Button/ContentMargin = 12
-Button/Group = SubResource( 14 )
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+toggle_mode = true
+group = SubResource( 15 )
+text = "Animate property"
+icon = ExtResource( 13 )
 
-[node name="UseAnimation" type="Control" parent="Content/MarginContainer/AnimaData/AnimateWith/Controls" index="1"]
-margin_left = 504.0
-margin_right = 1000.0
-margin_bottom = 49.0
+[node name="UseAnimation" type="Button" parent="AnimateWith"]
+margin_left = 524.0
+margin_right = 1024.0
+margin_bottom = 44.0
 rect_pivot_offset = Vector2( 248, 24.5 )
 size_flags_horizontal = 3
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Use Animation"
-Button/ICON = null
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = true
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = SubResource( 14 )
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+toggle_mode = true
+group = SubResource( 15 )
+text = "Use animation"
+icon = ExtResource( 10 )
 
-[node name="Wrapper" parent="Content/MarginContainer/AnimaData/AnimateWith" index="1"]
-margin_top = 73.0
-margin_right = 1000.0
-margin_bottom = 497.0
-rect_min_size = Vector2( 0, 424 )
-rect_pivot_offset = Vector2( 500, 212 )
-mouse_filter = 2
-
-[node name="Container" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper" index="0"]
-margin_right = 1000.0
-margin_bottom = 400.0
-rect_min_size = Vector2( 2000, 0 )
-rect_pivot_offset = Vector2( 1000, 200 )
-
-[node name="PropertyValues" type="VBoxContainer" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container" index="0"]
-margin_right = 996.0
-margin_bottom = 400.0
+[node name="PropertyValues" type="VBoxContainer" parent="."]
+visible = false
+margin_top = 556.0
+margin_right = 1024.0
+margin_bottom = 979.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="Label1" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues"]
-margin_right = 996.0
-margin_bottom = 2.0
+[node name="Label1" type="Label" parent="PropertyValues"]
+margin_right = 1024.0
+margin_bottom = 25.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
-custom_fonts/font = SubResource( 5 )
 text = "Animate property:"
 align = 1
 __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="AnimateGrid" type="GridContainer" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues"]
-margin_top = 10.0
-margin_right = 996.0
-margin_bottom = 347.0
+[node name="AnimateGrid" type="GridContainer" parent="PropertyValues"]
+margin_top = 33.0
+margin_right = 1024.0
+margin_bottom = 370.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 12
 custom_constants/hseparation = 12
@@ -1181,7 +445,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="From" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="From" type="Label" parent="PropertyValues/AnimateGrid"]
 margin_top = 12.0
 margin_right = 160.0
 margin_bottom = 37.0
@@ -1193,13 +457,13 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="FromValue" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="FromValue" parent="PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
-margin_right = 996.0
+margin_right = 1024.0
 margin_bottom = 49.0
 type = 4
 
-[node name="To" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="To" type="Label" parent="PropertyValues/AnimateGrid"]
 margin_top = 73.0
 margin_right = 160.0
 margin_bottom = 98.0
@@ -1211,14 +475,14 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="ToValue" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="ToValue" parent="PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
 margin_top = 61.0
-margin_right = 996.0
+margin_right = 1024.0
 margin_bottom = 110.0
 type = 4
 
-[node name="Initial" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Initial" type="Label" parent="PropertyValues/AnimateGrid"]
 margin_top = 134.0
 margin_right = 160.0
 margin_bottom = 159.0
@@ -1230,14 +494,14 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="InitialValue" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="InitialValue" parent="PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
 margin_top = 122.0
-margin_right = 996.0
+margin_right = 1024.0
 margin_bottom = 171.0
 type = 4
 
-[node name="Relative" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Relative" type="Label" parent="PropertyValues/AnimateGrid"]
 margin_top = 194.0
 margin_right = 160.0
 margin_bottom = 219.0
@@ -1248,10 +512,10 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="RelativeCheck" type="CheckBox" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="RelativeCheck" type="CheckBox" parent="PropertyValues/AnimateGrid"]
 margin_left = 172.0
 margin_top = 183.0
-margin_right = 996.0
+margin_right = 1024.0
 margin_bottom = 231.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 text = "Relative value"
@@ -1259,7 +523,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="Pivot" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Pivot" type="Label" parent="PropertyValues/AnimateGrid"]
 margin_top = 253.0
 margin_right = 160.0
 margin_bottom = 278.0
@@ -1270,14 +534,14 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="PivotButton" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
+[node name="PivotButton" parent="PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
 anchor_right = 0.0
 margin_left = 172.0
 margin_top = 243.0
-margin_right = 996.0
+margin_right = 1024.0
 margin_bottom = 288.0
 
-[node name="Easing" type="Label" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="Easing" type="Label" parent="PropertyValues/AnimateGrid"]
 margin_top = 306.0
 margin_right = 160.0
 margin_bottom = 331.0
@@ -1288,10 +552,10 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="EasingButton" type="Button" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid"]
+[node name="EasingButton" type="Button" parent="PropertyValues/AnimateGrid"]
 margin_left = 172.0
 margin_top = 300.0
-margin_right = 996.0
+margin_right = 1024.0
 margin_bottom = 337.0
 size_flags_horizontal = 3
 text = "Linear"
@@ -1299,281 +563,57 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="empty" type="Control" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues"]
-margin_top = 355.0
-margin_right = 996.0
-margin_bottom = 400.0
+[node name="empty" type="Control" parent="PropertyValues"]
+margin_top = 378.0
+margin_right = 1024.0
+margin_bottom = 423.0
 rect_min_size = Vector2( 0, 45 )
 
-[node name="SelectAnimation" type="Control" parent="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container" index="1"]
-margin_left = 1004.0
-margin_right = 2000.0
-margin_bottom = 56.0
+[node name="SelectAnimation" type="Button" parent="."]
+visible = false
+margin_top = 987.0
+margin_right = 1024.0
+margin_bottom = 1036.0
 rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 498, 24.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 0
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Select animation..."
-Button/ICON = ExtResource( 10 )
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = false
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = null
-Normal/FillColor = Color( 0.192157, 0.270588, 0.411765, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 0
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 0
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 0
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 0
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+text = "Select Animation"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
-margin_top = 649.0
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 108.0
 margin_right = 1024.0
-margin_bottom = 713.0
+margin_bottom = 172.0
 rect_min_size = Vector2( 0, 64 )
 custom_constants/separation = 0
 alignment = 1
 
-[node name="RemoveButton" type="Control" parent="Content/HBoxContainer"]
+[node name="RemoveButton" type="Button" parent="HBoxContainer"]
 margin_left = 442.0
 margin_top = 8.0
 margin_right = 582.0
-margin_bottom = 57.0
+margin_bottom = 56.0
 rect_min_size = Vector2( 140, 48 )
 rect_pivot_offset = Vector2( 60, 24.5 )
 size_flags_vertical = 4
-script = ExtResource( 2 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-Animation/AnimatePropertyChange = true
-Animation/Speed = 0.3
-Animation/Easing = 0
-Button/Text = "Remove"
-Button/ICON = ExtResource( 8 )
-Button/Align = 1
-Button/Font = null
-Button/Disabled = false
-Button/ToggleMode = false
-Button/ShortcutInTooltip = true
-Button/Pressed = false
-Button/ContentMargin = 12
-Button/Group = null
-Normal/FillColor = Color( 0.466667, 0.184314, 0.184314, 1 )
-Normal/FontColor = Color( 1, 1, 1, 1 )
-Hovered/UseSameStyleOf = ""
-Hovered/FillColor = Color( 0.384314, 0.541176, 0.819608, 1 )
-Hovered/FontColor = Color( 1, 1, 1, 0 )
-Hovered/Scale = Vector2( 1, 1 )
-Pressed/UseSameStyleOf = ""
-Pressed/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Pressed/FontColor = Color( 1, 1, 1, 0 )
-Focused/UseSameStyleOf = ""
-Focused/FillColor = Color( 0.258824, 0.541176, 0.819608, 1 )
-Focused/FontColor = Color( 1, 1, 1, 0 )
-Normal/Size = Rect2( 0, 0, 100, 100 )
-Hovered/Size = Rect2( -1, -1, -1, -1 )
-Focused/Size = Rect2( -1, -1, -1, -1 )
-Pressed/Size = Rect2( -1, -1, -1, -1 )
-Normal/Border/Color = Color( 1, 1, 1, 0 )
-Hovered/Border/Color = Color( 1, 1, 1, 0 )
-Focused/Border/Color = Color( 1, 1, 1, 0 )
-Pressed/Border/Color = Color( 1, 1, 1, 0 )
-Normal/Border/Blend = false
-Hovered/Border/Blend = false
-Focused/Border/Blend = false
-Pressed/Border/Blend = false
-Normal/Border/Offset = Vector2( 0, 0 )
-Hovered/Border/Offset = Vector2( -1, -1 )
-Focused/Border/Offset = Vector2( -1, -1 )
-Pressed/Border/Offset = Vector2( -1, -1 )
-Normal/Border/Widh/Left = 0
-Hovered/Border/Widh/Left = -1
-Focused/Border/Widh/Left = -1
-Pressed/Border/Widh/Left = -1
-Normal/Border/Widh/Top = 0
-Hovered/Border/Widh/Top = -1
-Focused/Border/Widh/Top = -1
-Pressed/Border/Widh/Top = -1
-Normal/Border/Widh/Right = 0
-Hovered/Border/Widh/Right = -1
-Focused/Border/Widh/Right = -1
-Pressed/Border/Widh/Right = -1
-Normal/Border/Widh/Bottom = 0
-Hovered/Border/Widh/Bottom = -1
-Focused/Border/Widh/Bottom = -1
-Pressed/Border/Widh/Bottom = -1
-Normal/Border/Radius/Details = 8
-Hovered/Border/Radius/Details = -1
-Focused/Border/Radius/Details = -1
-Pressed/Border/Radius/Details = -1
-Normal/Border/Radius/TopLeft = 12
-Hovered/Border/Radius/TopLeft = -1
-Focused/Border/Radius/TopLeft = -1
-Pressed/Border/Radius/TopLeft = -1
-Normal/Border/Radius/TopRight = 12
-Hovered/Border/Radius/TopRight = -1
-Focused/Border/Radius/TopRight = -1
-Pressed/Border/Radius/TopRight = -1
-Normal/Border/Radius/BottomRight = 12
-Hovered/Border/Radius/BottomRight = -1
-Focused/Border/Radius/BottomRight = -1
-Pressed/Border/Radius/BottomRight = -1
-Normal/Border/Radius/BottomLeft = 12
-Hovered/Border/Radius/BottomLeft = -1
-Focused/Border/Radius/BottomLeft = -1
-Pressed/Border/Radius/BottomLeft = -1
-Normal/Border/Offset/Radius/Details = 8
-Hovered/Border/Offset/Radius/Details = -1
-Focused/Border/Offset/Radius/Details = -1
-Pressed/Border/Offset/Radius/Details = -1
-Normal/Border/Offset/Radius/TopLeft = -1
-Hovered/Border/Offset/Radius/TopLeft = -1
-Focused/Border/Offset/Radius/TopLeft = -1
-Pressed/Border/Offset/Radius/TopLeft = -1
-Normal/Border/Offset/Radius/TopRight = -1
-Hovered/Border/Offset/Radius/TopRight = -1
-Focused/Border/Offset/Radius/TopRight = -1
-Pressed/Border/Offset/Radius/TopRight = -1
-Normal/Border/Offset/Radius/BottomRight = -1
-Hovered/Border/Offset/Radius/BottomRight = -1
-Focused/Border/Offset/Radius/BottomRight = -1
-Pressed/Border/Offset/Radius/BottomRight = -1
-Normal/Border/Offset/Radius/BottomLeft = -1
-Hovered/Border/Offset/Radius/BottomLeft = -1
-Focused/Border/Offset/Radius/BottomLeft = -1
-Pressed/Border/Offset/Radius/BottomLeft = -1
-Normal/Shadow/Color = Color( 1, 1, 1, 0 )
-Hovered/Shadow/Color = Color( 1, 1, 1, 0 )
-Focused/Shadow/Color = Color( 1, 1, 1, 0 )
-Pressed/Shadow/Color = Color( 1, 1, 1, 0 )
-Normal/Shadow/Size = 0
-Hovered/Shadow/Size = -1
-Focused/Shadow/Size = -1
-Pressed/Shadow/Size = -1
-Normal/Shadow/Offset = Vector2( 0, 0 )
-Hovered/Shadow/Offset = Vector2( -1, -1 )
-Focused/Shadow/Offset = Vector2( -1, -1 )
-Pressed/Shadow/Offset = Vector2( -1, -1 )
+text = "Remove"
+icon = ExtResource( 8 )
 
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
-[connection signal="mouse_entered" from="Title" to="." method="_on_Title_mouse_entered"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer/Duration" to="." method="_on_Duration_value_updated"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/TimeAccordion/MarginContainer/HBoxContainer/Delay" to="." method="_on_Delay_value_updated"]
-[connection signal="changed" from="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
-[connection signal="item_selected" from="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
-[connection signal="changed" from="Content/MarginContainer/AnimaData/GroupData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
-[connection signal="select_relative_property" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/FromValue" to="." method="_update_me"]
-[connection signal="select_relative_property" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/ToValue" to="." method="_update_me"]
-[connection signal="select_relative_property" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
-[connection signal="value_updated" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/InitialValue" to="." method="_update_me"]
-[connection signal="toggled" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_RelativeCheck_toggled"]
-[connection signal="pivot_point_selected" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/PivotButton" to="." method="_update_me"]
-[connection signal="pressed" from="Content/MarginContainer/AnimaData/AnimateWith/Wrapper/Container/PropertyValues/AnimateGrid/EasingButton" to="." method="_on_EasingButton_pressed"]
-
-[editable path="Content/MarginContainer/AnimaData/AnimateWith"]
+[connection signal="value_updated" from="TimeAccordion/MarginContainer/HBoxContainer/Duration" to="." method="_on_Duration_value_updated"]
+[connection signal="value_updated" from="TimeAccordion/MarginContainer/HBoxContainer/Delay" to="." method="_on_Delay_value_updated"]
+[connection signal="changed" from="GroupData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
+[connection signal="item_selected" from="GroupData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
+[connection signal="changed" from="GroupData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
+[connection signal="changed" from="GridData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
+[connection signal="item_selected" from="GridData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
+[connection signal="changed" from="GridData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
+[connection signal="select_relative_property" from="PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
+[connection signal="value_updated" from="PropertyValues/AnimateGrid/FromValue" to="." method="_update_me"]
+[connection signal="select_relative_property" from="PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
+[connection signal="value_updated" from="PropertyValues/AnimateGrid/ToValue" to="." method="_update_me"]
+[connection signal="select_relative_property" from="PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
+[connection signal="value_updated" from="PropertyValues/AnimateGrid/InitialValue" to="." method="_update_me"]
+[connection signal="toggled" from="PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_RelativeCheck_toggled"]
+[connection signal="pivot_point_selected" from="PropertyValues/AnimateGrid/PivotButton" to="." method="_update_me"]
+[connection signal="pressed" from="PropertyValues/AnimateGrid/EasingButton" to="." method="_on_EasingButton_pressed"]

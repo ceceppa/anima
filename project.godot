@@ -144,7 +144,7 @@ _global_script_class_icons={
 "AnimaAnimatable": "",
 "AnimaAnimationsUtils": "",
 "AnimaAwaitableAddChild": "",
-"AnimaButton": "res://addons/anima/icons/button.svg",
+"AnimaButton": "",
 "AnimaCarousel": "",
 "AnimaChars": "",
 "AnimaDeclarationBase": "",

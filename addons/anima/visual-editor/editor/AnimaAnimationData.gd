@@ -27,7 +27,11 @@ onready var _animation_type = find_node("AnimationType")
 func _ready():
 	margin_right = 0
 
-	_on_Title_toggled(false)
+	$NodeOrGroup.hide()
+	$GroupData.hide()
+	$GridData.hide()
+	$PropertyValues.hide()
+	$SelectAnimation.hide()
 
 	_setup_group_data()
 
@@ -51,8 +55,8 @@ func set_data(node: Node, path: String, property, property_type):
 	_node_or_group.visible = node.get_child_count() > 1
 
 func get_data() -> Dictionary:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
-	var use_property_or_animation: String = find_node("UseAnimation").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name).get_pressed_button().get_parent().name
+	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
+	var use_property_or_animation: String = find_node("UseAnimation").group
 	var use_animation = use_property_or_animation == find_node("UseAnimation").name
 	var _property_values = find_node("PropertyValues")
 
@@ -94,8 +98,8 @@ func get_data() -> Dictionary:
 	return data
 
 func restore_data(data: Dictionary) -> void:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
-	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
+	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
+	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").group
 
 	_press_button_in_group(use_property_or_animation, data.use)
 	_press_button_in_group(animate_as_group, data.animate_as)
@@ -103,12 +107,12 @@ func restore_data(data: Dictionary) -> void:
 	find_node("Duration").set_value(data.duration)
 	find_node("Delay").set_value(data.delay)
 
-	var animate_as: AnimaButton = _node_or_group.find_node(data.animate_as)
-	animate_as.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_PRESSED.name, true)
+	var animate_as: Button = _node_or_group.find_node(data.animate_as)
+	animate_as.pressed = true
 	animate_as._on_pressed()
 
-	var use: AnimaButton = find_node(data.use)
-	use.set(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_PRESSED.name, true)
+	var use: Button = find_node(data.use)
+	use.pressed = true
 	
 	find_node("AnimateWith").set_index(use.get_index())
 
@@ -224,7 +228,7 @@ func _on_AsGrid_pressed():
 	_update_animate_as_label()
 
 func _update_animate_as_label() -> void:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").get(AnimaButton.BUTTON_BASE_PROPERTIES.BUTTON_GROUP.name)
+	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
 	var selected = animate_as_group.get_pressed_button().get_parent().name
 
 	_node_or_group.set_label("Animate as:   " + selected.replace("As", ""))

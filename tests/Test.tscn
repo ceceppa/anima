@@ -81,8 +81,7 @@ custom_styles/normal = SubResource( 8 )
 icon = ExtResource( 7 )
 __meta__ = {
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"_edit_use_anchors_": false
 }
 
 [node name="Button3" type="Button" parent="Control"]
@@ -171,8 +170,7 @@ color = Color( 0.4, 0.2, 0.6, 1 )
 __meta__ = {
 "__initial_easing": "easing",
 "__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
