@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 margin_right = -664.0
 rect_min_size = Vector2( 360, 0 )
 rect_pivot_offset = Vector2( 180, 300 )
-color = Color( 0.109804, 0.109804, 0.109804, 1 )
+color = Color( 0.0470588, 0.176471, 0.282353, 1 )
 
 [node name="CenterContainer" type="CenterContainer" parent="Rectangle"]
 anchor_right = 1.0

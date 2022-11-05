@@ -53,7 +53,6 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	return anima
 
-
 func _on_Delete_pressed():
 	var anima := _animate_me(true)
 

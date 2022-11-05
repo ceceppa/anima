@@ -26,6 +26,8 @@ export (bool) var show_relative_selector := true setget set_show_relative_select
 export (bool) var can_edit_value := true setget set_can_edit_value
 export (bool) var show_confirm_button := false setget set_show_confirm_button
 export (bool) var disabled := false setget set_disabled
+export (bool) var transparent := false setget set_transparent
+export (Color) var font_color := Color.white setget set_font_color
 
 const MIN_SIZE := 30.0
 
@@ -298,7 +300,7 @@ func set_label(new_label: String) -> void:
 	_current_value.set_text(label)
 
 func get_label() -> String:
-	return _current_value.get_label()
+	return _current_value.text
 
 func set_show_relative_selector(relative_button: bool) -> void:
 	show_relative_selector = relative_button
@@ -357,3 +359,16 @@ func _on_ConfirmButton_pressed():
 
 func _on_CurrentValueBorderless_pressed():
 	_on_CurrentValue_pressed()
+
+func set_transparent(t: bool) -> void:
+	transparent = t
+
+	if transparent:
+		$HBoxContainer/CurrentValue.add_stylebox_override("normal", StyleBoxEmpty.new())
+	else:
+		$HBoxContainer/CurrentValue.remove_stylebox_override("normal")
+
+func set_font_color(c: Color) -> void:
+	font_color = c
+
+	$HBoxContainer/CurrentValue.add_color_override("font_color", font_color)

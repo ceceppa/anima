@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaLinkedFieldButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/icons/Clear.svg" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=4]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/visual-editor/icons/GuiTabMenuHl.svg" type="Texture" id=6]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=8]
 
 [sub_resource type="StyleBoxFlat" id=2]
@@ -33,31 +34,34 @@ rect_pivot_offset = Vector2( -430.525, -466.635 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_right = 1.0
-margin_bottom = 40.0
+anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="CurrentValue" type="Button" parent="HBoxContainer"]
-margin_right = 168.0
-margin_bottom = 40.0
+[node name="CurrentValue" parent="HBoxContainer" instance=ExtResource( 7 )]
+margin_right = 144.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "current value"
+flat = true
+__meta__ = {
+"_editor_description_": ""
+}
+style = 1
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
 visible = false
-margin_right = 260.0
-margin_bottom = 45.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 256.0
+margin_bottom = -4.0
 rect_min_size = Vector2( 0, 45 )
 rect_pivot_offset = Vector2( 512, 15 )
 size_flags_horizontal = 3
@@ -456,25 +460,32 @@ size_flags_vertical = 3
 caret_blink = true
 caret_blink_speed = 0.5
 
-[node name="RelativeSelectorButton" type="Button" parent="CustomValue"]
+[node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource( 7 )]
 margin_left = 172.0
-margin_right = 212.0
+margin_right = 210.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Select relative property"
 icon = ExtResource( 6 )
+__meta__ = {
+"_editor_description_": ""
+}
 
-[node name="ClearButton" type="Button" parent="CustomValue"]
-margin_left = 220.0
-margin_right = 260.0
+[node name="ClearButton" parent="CustomValue" instance=ExtResource( 7 )]
+margin_left = 218.0
+margin_right = 256.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Clear value"
 icon = ExtResource( 2 )
+__meta__ = {
+"_editor_description_": ""
+}
+style = 1
 
-[node name="ConfirmButton" type="Button" parent="CustomValue"]
+[node name="ConfirmButton" parent="CustomValue" instance=ExtResource( 7 )]
 visible = false
 margin_left = 218.0
 margin_right = 258.0
@@ -483,12 +494,14 @@ rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Confirm value"
 icon = ExtResource( 4 )
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 8 )
 
 [connection signal="item_rect_changed" from="." to="." method="_on_PropertyFromTo_item_rect_changed"]
-[connection signal="item_rect_changed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_item_rect_changed"]
 [connection signal="pressed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_pressed"]
 [connection signal="changed" from="CustomValue/Rect2/X/x" to="." method="_on_input_changed"]
 [connection signal="changed" from="CustomValue/Rect2/Y/y" to="." method="_on_input_changed"]

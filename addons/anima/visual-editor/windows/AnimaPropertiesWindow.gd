@@ -37,8 +37,6 @@ func populate(source_node: Node) -> void:
 	_populate_animatable_properties_list(source_node)
 
 func _populate_animatable_properties_list(source_node: Node) -> void:
-	AnimaUI.debug(self, 'pupulating animatable properties for', source_node)
-
 	_source_node = source_node
 	_animatable_properties.clear()
 
@@ -95,7 +93,7 @@ func populate_tree(filter: String = '') -> void:
 
 		item.set_text(0, animatable_property.name)
 		item.set_metadata(0, { type = animatable_property.type })
-		item.set_icon(0, AnimaUI.get_godot_icon_for_type(animatable_property.type))
+#		item.set_icon(0, AnimaUI.get_godot_icon_for_type(animatable_property.type))
 
 		var sub_properties := []
 		if animatable_property.type == TYPE_VECTOR2:
@@ -111,7 +109,7 @@ func populate_tree(filter: String = '') -> void:
 			var sub = tree.create_item(item)
 
 			sub.set_text(0, sub_property)
-			sub.set_icon(0, AnimaUI.get_godot_icon_for_type(TYPE_REAL))
+#			sub.set_icon(0, AnimaUI.get_godot_icon_for_type(TYPE_REAL))
 			sub.set_metadata(0, { type = TYPE_REAL })
 
 class PropertiesSorter:

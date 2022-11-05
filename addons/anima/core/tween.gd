@@ -16,6 +16,7 @@ var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
 var _keyframesEngine := AnimaKeyframesEngine.new(funcref(self, '_apply_initial_values'), funcref(self, 'add_animation_data'))
+var _use_meta_values := true
 
 enum PLAY_MODE {
 	NORMAL,
@@ -281,6 +282,9 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 		animation_data.erase("initial_values")
 		animation_data.erase("initial_value")
+		
+		if animation_data.has("easing") and animation_data.easing:
+			animation_data.easing = AnimaEasing.get_mirrored_easing(animation_data.easing)
 
 		new_data.push_back(animation_data)
 
@@ -321,7 +325,7 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIM
 	node.set_meta(VISIBILITY_STRATEGY_META_KEY, strategy)
 
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
-	return _keyframesEngine.add_frames(animation_data, full_keyframes_data)
+	return _keyframesEngine.add_frames(animation_data, full_keyframes_data, get_parent().name)
 
 # We don't want the user to specify the from/to value as color
 # we animate opacity.

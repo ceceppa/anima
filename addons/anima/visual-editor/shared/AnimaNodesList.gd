@@ -85,7 +85,7 @@ func _retrieves_list_of_nodes() -> void:
 
 	var root_item := _nodes_list.create_item()
 	root_item.set_text(0, _start_node.name)
-	root_item.set_icon(0, AnimaUI.get_node_icon(_start_node))
+#	root_item.set_icon(0, ANIMA.get_node_icon(_start_node))
 
 	_add_children(_start_node, root_item, true)
 
@@ -102,9 +102,9 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 		if _is_visible(child.name):
 			item = _nodes_list.create_item(parent_item)
 			item.set_text(0, child.name)
-			item.set_icon(0, AnimaUI.get_node_icon(child))
+#			item.set_icon(0, ANIMA.get_node_icon(child))
 
-		if child.get_child_count() > 0 and not child is AnimaShape and not child is AnimaChars:
+		if child.get_child_count() > 0:
 			_add_children(child, item)
 
 func _is_visible(name: String) -> bool:
@@ -125,8 +125,6 @@ func _on_NodesList_item_activated():
 	if node == null:
 		node = _start_node
 
-	AnimaUI.debug(self, 'node selected', node)
-
 	emit_signal("node_selected", node, path)
 
 func _on_SearchField_gui_input(event):
@@ -142,3 +140,7 @@ func _on_GodotUIButton_pressed():
 
 func _on_Close_pressed():
 	emit_signal("close")
+
+
+func _on_Add_pressed():
+	pass # Replace with function body.

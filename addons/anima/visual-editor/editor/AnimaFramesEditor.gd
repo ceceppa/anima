@@ -21,14 +21,6 @@ var _destination_frame: Control
 var _is_restoring_data := false
 var _animation_node_source: Node
 
-func _ready():
-	# I have no idea why if I add the FRAME_ANIMATION via the Editor the +
-	# button inside AnimaAddFrame ends up outside the parent container????
-	var dotted = find_node("Dotted")
-
-	dotted.margin_left = 0
-	dotted.margin_right = 0
-
 func add_animation_for(node: Node, node_path: String, property_name, property_type) -> Node:
 	var r: Node = _destination_frame.add_animation_for(node, node_path, property_name, property_type)
 
@@ -63,6 +55,23 @@ func set_frame_duration(duration: float) -> void:
 
 func set_is_restoring_data(is_restoring: bool) -> void:
 	_is_restoring_data = is_restoring
+
+func update_flow_direction(new_direction: int) -> void:
+	return
+	var flow_container = $AnimaRectangle/ScrollContainer.get_child(0)
+	var new_container = HBoxContainer.new() if new_direction == 0 else VBoxContainer.new()
+
+	print(new_direction)
+	for child in flow_container.get_children():
+		flow_container.remove_child(child)
+		new_container.add_child(child)
+
+	new_container.size_flags_horizontal = SIZE_EXPAND_FILL
+	new_container.size_flags_vertical = SIZE_EXPAND_FILL
+
+	flow_container.queue_free()
+	flow_container.queue_free()
+#	$AnimaRectangle/ScrollContainer.add_child(new_container)
 
 func _add_component(node: Node) -> void:
 	node.connect("frame_updated", self, "_emit_updated")

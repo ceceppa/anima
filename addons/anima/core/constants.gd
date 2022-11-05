@@ -1,3 +1,4 @@
+tool
 extends Node
 
 enum PIVOT {
@@ -83,3 +84,18 @@ const EASING = AnimaEasing.EASING
 const DEFAULT_DURATION := 0.7
 const DEFAULT_ITEMS_DELAY := 0.05
 const MINIMUM_DURATION := 0.000001
+
+var _custom_animations := {}
+var _animations_list := []
+
+func get_animations_list() -> Array:
+	return _animations_list
+
+func set_animations_list(new_list: Array) -> void:
+	_animations_list = new_list
+
+func get_custom_animations() -> Dictionary:
+	return _custom_animations
+
+func add_custom_animation(name: String, frames: Dictionary) -> void:
+	_custom_animations[name] = frames

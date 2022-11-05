@@ -1,13 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/anima/resources/Lato-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://addons/anima/resources/anima-preview.png" type="Texture" id=2]
 [ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimationsWindow.gd" type="Script" id=4]
-
-[sub_resource type="DynamicFont" id=5]
-size = 100
-font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.101961, 0.12549, 0.172549, 1 )
@@ -53,11 +48,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ControlTest" type="Label" parent="HBoxContainer/VBoxContainer/ControlContainer"]
-margin_left = 198.0
-margin_top = 87.0
-margin_right = 489.0
-margin_bottom = 208.0
-custom_fonts/font = SubResource( 5 )
+margin_left = 309.0
+margin_top = 135.0
+margin_right = 379.0
+margin_bottom = 160.0
 text = "Anima"
 
 [node name="SpriteContainer" type="CenterContainer" parent="HBoxContainer/VBoxContainer"]
@@ -113,7 +107,7 @@ caret_blink_speed = 0.5
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer2"]
 margin_top = 57.0
 margin_right = 320.0
-margin_bottom = 558.0
+margin_bottom = 535.0
 rect_min_size = Vector2( 320, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -121,7 +115,7 @@ custom_styles/bg = SubResource( 2 )
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/VBoxContainer2/ScrollContainer"]
 margin_right = 320.0
-margin_bottom = 501.0
+margin_bottom = 478.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 3 )
@@ -130,13 +124,13 @@ custom_styles/panel = SubResource( 3 )
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 308.0
-margin_bottom = 489.0
+margin_bottom = 466.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer2"]
-margin_top = 570.0
+margin_top = 547.0
 margin_right = 320.0
 margin_bottom = 600.0
 custom_constants/margin_right = 12
@@ -151,20 +145,20 @@ margin_right = 308.0
 margin_bottom = 45.0
 
 [node name="ConfirmButton" type="Button" parent="HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer"]
-margin_right = 37.0
-margin_bottom = 14.0
+margin_right = 181.0
+margin_bottom = 37.0
 text = "Use animation"
 
 [node name="Control" type="Control" parent="HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer"]
-margin_left = 45.0
-margin_right = 258.0
-margin_bottom = 14.0
+margin_left = 189.0
+margin_right = 193.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 
 [node name="CancelButton" type="Button" parent="HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer"]
-margin_left = 266.0
+margin_left = 201.0
 margin_right = 296.0
-margin_bottom = 14.0
+margin_bottom = 37.0
 text = "Cancel"
 
 [node name="Panel" type="Panel" parent="HBoxContainer"]

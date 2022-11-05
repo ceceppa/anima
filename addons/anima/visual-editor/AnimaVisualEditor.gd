@@ -56,6 +56,9 @@ func set_anima_node(node: Node) -> void:
 func show() -> void:
 	.show()
 
+func update_flow_direction(new_direction: int) -> void:
+	$FramesEditor.update_flow_direction(new_direction)
+
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
 	var anima: AnimaNode = Anima.begin_single_shot(self)

@@ -7,12 +7,11 @@ signal add_frame
 signal add_event
 signal add_delay
 
-var _ratio: float = 1.0
-
 func _ready():
 	var final_width: float = 360
 
-	rect_min_size.x = final_width * _ratio
+#	rect_min_size.x = final_width
+#	rect_size.x = final_width
 
 func _on_Animation_pressed():
 	emit_signal("add_frame")

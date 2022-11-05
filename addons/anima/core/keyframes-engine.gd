@@ -31,7 +31,7 @@ func _init(apply_initial_values_callback: FuncRef, add_animtion_data_callback: F
 #		y = 0
 #	}
 #
-func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
+func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, meta_data_prefix: String) -> float:
 	var last_duration := 0.0
 	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
@@ -80,6 +80,9 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var node: Node = animation_data.node
 	var real_duration := 0.0
 	var first_frame_data: Dictionary = keyframes_data["0"] if keyframes_data.has("0") else {}
+	
+	if keyframes_data.has(0):
+		first_frame_data = keyframes_data[0]
 
 	var all_properties_to_animate := []
 
@@ -91,7 +94,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	for property_to_animate in all_properties_to_animate:
 		var current_value = AnimaNodesProperties.get_property_value(node, {}, property_to_animate)
-		var value = first_frame_data[property_to_animate] if first_frame_data.has(property_to_animate) else current_value
+		var first_frame_has_property = first_frame_data.has(property_to_animate)
+		var value = first_frame_data[property_to_animate] if first_frame_has_property else current_value
 
 		if value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
@@ -100,10 +104,24 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 			value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
 
 		var data := { percentage = 0, value = value }
+		if animation_data.has("initial_values") and animation_data.initial_values.has(property_to_animate):
+			data.value = animation_data.initial_values[property_to_animate]
 
 		base_data.property = property_to_animate
+
+		var meta_key := "__initial_" + meta_data_prefix + "_" + str(property_to_animate) 
+
+		if node.has_meta(meta_key) and not first_frame_has_property:
+			var meta_value = node.get_meta(meta_key)
+
+			if should_debug_print(animation_data, property_to_animate):
+				prints("retrieving node meta value", meta_value, data)
+
+			data = meta_value
+		else:
+			node.set_meta(meta_key, data)
+
 		previous_key_value[property_to_animate] = data
-		# node.set_meta("__initial_" + str(property_to_animate), current_value)
 
 		if current_value != value and relative_properties.find(property_to_animate) < 0:
 			data.initial_value = value
@@ -124,9 +142,11 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 		animation_data.duration = real_duration
 
-	if animation_data.has("__debug"):
+	if should_debug_print(animation_data, ''):
 		prints("add_frames", animation_data)
-		printt("", "keys", frame_keys)
+		prints("", "first:", first_frame_data)
+		prints("", "previous:", previous_key_value)
+		prints("", "keys:", frame_keys)
 
 	var is_first_frame := true
 	for frame_key in frame_keys:
@@ -257,7 +277,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		if property_name == "opacity":
 			data.easing = null
 
-		if animation_data.has("__debug") and (animation_data.__debug == true or animation_data.__debug == data.property):
+		if should_debug_print(animation_data, data.property):
 			prints("\n=== FRAME", data.property, ":", data.from, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", data.easing, " is relative:", str(relative))
 
 		if previous_key_value.has(property_to_animate) and previous_key_value[property_to_animate].has("initial_value"):
@@ -270,7 +290,10 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			_add_animation_data.call_func(data)
-		elif animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == data.property):
+		elif animation_data.has("__debug") and (bool(animation_data.__debug) == true or animation_data.__debug == data.property):
 			prints("\t SKIPPING, from == to", from_value, data.to)
 
 		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }
+
+func should_debug_print(animation_data: Dictionary, property) -> bool:
+	return animation_data.has("__debug") and (animation_data.__debug == "---" or animation_data.__debug == property)
