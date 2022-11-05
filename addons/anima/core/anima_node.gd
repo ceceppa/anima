@@ -124,6 +124,9 @@ func wait(seconds: float) -> AnimaNode:
 		duration = seconds,
 	})
 
+func skip(_ignore) -> AnimaNode:
+	return self
+
 func set_single_shot(single_shot: bool) -> AnimaNode:
 	_is_single_shot = single_shot
 

@@ -49,7 +49,7 @@ func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_comple
 func anima_on_completed(on_completed: FuncRef, on_completed_value, on_backwards_started_value = null):
 	_data.on_completed = [on_completed, on_completed_value, on_backwards_started_value]
 
-func debug():
-	_data.__debug = true
+func debug(what = "---"):
+	_data.__debug = what
 
 	return self

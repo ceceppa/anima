@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="Button" type="Button"]
+margin_right = 24.0
+margin_bottom = 37.0
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/disabled = SubResource( 1 )
+custom_styles/normal = SubResource( 1 )
+script = ExtResource( 1 )
+
+[node name="Inner" type="Button" parent="."]
+margin_right = 24.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/disabled = SubResource( 1 )
+flat = true
+
+[connection signal="button_down" from="." to="." method="_on_Button_button_down"]
+[connection signal="button_up" from="." to="." method="_on_Button_button_up"]

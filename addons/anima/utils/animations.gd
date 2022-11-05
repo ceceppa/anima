@@ -14,7 +14,9 @@ static func _deregister_animation(animation_name: String) -> void:
 	ANIMA._custom_animations.erase(animation_name)
 
 static func get_available_animations() -> Array:
-	if ANIMA._animations_list.size() == 0:
+	var animations_list := ANIMA.get_animations_list()
+
+	if animations_list.size() == 0:
 		var list = _get_animations_list()
 		var filtered := []
 
@@ -22,9 +24,11 @@ static func get_available_animations() -> Array:
 			if file.find('.gd.') < 0 and file.find(".gd") > 0:
 				filtered.push_back(file.replace('.gdc', '.gd'))
 
-		ANIMA._animations_list = filtered
+		animations_list = filtered
+		
+		ANIMA.set_animations_list(animations_list)
 
-	return ANIMA._animations_list + ANIMA._custom_animations.keys()
+	return animations_list + ANIMA.get_custom_animations().keys()
 
 static func get_available_animation_by_category() -> Dictionary:
 	var animations = get_available_animations()
@@ -46,21 +50,29 @@ static func get_available_animation_by_category() -> Dictionary:
 	return result
 
 static func get_animation_keyframes(animation_name: String) -> Dictionary:
-	if ANIMA._custom_animations.has(animation_name):
-		return ANIMA._custom_animations[animation_name]
+	var custom_animations := ANIMA.get_custom_animations()
+
+	if custom_animations.has(animation_name):
+		return custom_animations[animation_name]
 
 	var resource_file = _get_animation_script_with_path(animation_name)
 	if resource_file:
 		var script: Reference = load(resource_file).new()
 		var keyframes: Dictionary = script.KEYFRAMES
 
-		ANIMA._custom_animations[animation_name] = keyframes
+		ANIMA.add_custom_animation(animation_name, keyframes)
 
 		script.unreference()
 
 		return keyframes
 
 	printerr('No animation found with name: ', animation_name)
+	print("Available animations:")
+	for animation in ANIMA._animations_list:
+		var parts = animation.replace("res://addons/anima/animations/", "").split("/")
+		var file = parts[1].split(".")[0]
+		
+		print(file)
 
 	return {}
 

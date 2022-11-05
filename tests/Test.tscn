@@ -32,9 +32,6 @@ tracks/0/keys = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 test = SubResource( 5 )
 
 [node name="Button" type="Button" parent="."]
@@ -181,75 +178,6 @@ __meta__ = {
 "__initial_scale": "scale",
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
-}
-__anima_visual_editor_data = {
-"0": {
-"animation": {
-"default_duration": 0.3,
-"name": null,
-"visibility_strategy": 0
-},
-"frames": {
-0: {
-"collapsed": false,
-"data": [  ],
-"duration": null,
-"name": "Initial Frame",
-"type": "frame"
-},
-1: {
-"collapsed": false,
-"data": [ {
-"animate_as": "AsGroup",
-"animation_name": "back_in_left",
-"delay": null,
-"duration": null,
-"group": {
-"animation_type": 2,
-"items_delay": 1.0,
-"start_index": 0
-},
-"node_path": ".",
-"property": {
-"easing": [ "Linear", 0 ],
-"from": null,
-"initialValue": null,
-"pivot": [ 0, 0 ],
-"relative": false,
-"to": null
-},
-"property_name": "anchor_left",
-"property_type": 3,
-"use": "UseAnimation"
-}, {
-"animate_as": "AsNode",
-"animation_name": "",
-"delay": null,
-"duration": null,
-"group": {
-"animation_type": 9,
-"items_delay": 0.01,
-"start_index": 0
-},
-"node_path": "./Control/Button2",
-"property": {
-"easing": [ "Linear", 0 ],
-"from": "0",
-"initialValue": null,
-"pivot": [ 0, 0 ],
-"relative": false,
-"to": "1"
-},
-"property_name": "opacity",
-"property_type": 3,
-"use": "AnimateProperty"
-} ],
-"duration": null,
-"name": "Frame1",
-"type": "frame"
-}
-}
-}
 }
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

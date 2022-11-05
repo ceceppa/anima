@@ -3,8 +3,16 @@ class_name AnimaVisualNode
 extends Node
 
 signal animation_completed
+signal on_editor_position_changed(new_position)
+
+enum EDITOR_POSITION {
+	BOTTOM,
+	CANVAS_RIGHT,
+	DOCK_RIGHT
+}
 
 export (Dictionary) var __anima_visual_editor_data = {}
+export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM setget set_editor_position
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode
@@ -266,3 +274,8 @@ func _reset_initial_values() -> void:
 			node.remove_meta("_old_modulate")
 
 	_initial_values.clear()
+
+func set_editor_position(new_position: int) -> void:
+	_editor_position = new_position
+
+	emit_signal("on_editor_position_changed", new_position)

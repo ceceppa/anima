@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaPropertiesWindow.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaLinkedFieldButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" type="PackedScene" id=3]
 
 [sub_resource type="Image" id=3]
@@ -20,6 +20,7 @@ image = SubResource( 3 )
 size = Vector2( 16, 16 )
 
 [node name="PropertiesWindow" type="WindowDialog"]
+visible = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -82,16 +83,19 @@ margin_right = 976.0
 margin_bottom = 45.0
 
 [node name="PropertySearch" type="LineEdit" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer"]
-margin_right = 919.0
+margin_right = 868.0
 margin_bottom = 45.0
 size_flags_horizontal = 3
 
-[node name="Button" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 927.0
+[node name="Clear" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 876.0
 margin_right = 976.0
 margin_bottom = 45.0
 text = "Clear"
 icon = SubResource( 2 )
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="PropertiesTree" type="Tree" parent="MarginContainer/HBoxContainer/ProperiesContainer"]
 margin_top = 53.0
