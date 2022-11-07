@@ -10,6 +10,9 @@ var _anima_editor
 var _anima_visual_node: Node
 var _current_position = EditorPosition.BOTTOM
 
+func _init():
+	randomize()
+
 func get_name():
 	return 'Anima'
 
@@ -89,6 +92,7 @@ func handles(object):
 	return is_anima_node
 
 func _on_editor_position_changed(new_position: int) -> void:
+	return
 	_remove_anima_editor()
 
 	_anima_editor.update_flow_direction(new_position)

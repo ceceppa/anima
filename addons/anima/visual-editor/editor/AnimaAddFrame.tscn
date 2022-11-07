@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://addons/anima/visual-editor/icons/Animation.svg" type="Texture" id=1]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaAddFrame.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/visual-editor/icons/Delay.svg" type="Texture" id=3]
 [ext_resource path="res://addons/anima/visual-editor/icons/Event.svg" type="Texture" id=4]
@@ -28,42 +27,93 @@ rect_min_size = Vector2( 240, 0 )
 custom_constants/separation = 24
 
 [node name="Animation" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
+modulate = Color( 1, 1, 1, 0.8 )
 margin_right = 240.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 0, 48 )
-rect_pivot_offset = Vector2( 124, 16 )
+rect_pivot_offset = Vector2( 120, 24 )
 mouse_default_cursor_shape = 2
-text = "Animation"
-icon = ExtResource( 1 )
+expand_icon = true
 __meta__ = {
-"_editor_description_": ""
+"__initial_AnimaNode__anima_461099317185058044__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_461099317185058044_opacity": {
+"percentage": 0,
+"value": 0.8
+},
+"__initial_AnimaNode__anima_461099317185058044_scale": {
+"percentage": 0,
+"value": Vector2( 0.9, 0.9 )
+},
+"__visibility_strategy": 0,
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
+button_icon = ExtResource( 3 )
+button_label = "Animation"
+default_opacity = 0.8
 
 [node name="Delay" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
+modulate = Color( 1, 1, 1, 0.8 )
 margin_top = 72.0
 margin_right = 240.0
 margin_bottom = 120.0
 rect_min_size = Vector2( 0, 48 )
-rect_pivot_offset = Vector2( 124, 24 )
+rect_pivot_offset = Vector2( 120, 24 )
 mouse_default_cursor_shape = 2
-text = "Delay"
-icon = ExtResource( 3 )
+expand_icon = true
 __meta__ = {
-"_editor_description_": ""
+"__initial_AnimaNode__anima_317239285122786133__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_317239285122786133_opacity": {
+"percentage": 0,
+"value": 0.8
+},
+"__initial_AnimaNode__anima_317239285122786133_scale": {
+"percentage": 0,
+"value": Vector2( 0.9, 0.9 )
+},
+"__visibility_strategy": 0,
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
+button_icon = ExtResource( 3 )
+button_label = "Delay"
+default_opacity = 0.8
 
 [node name="Event" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
+modulate = Color( 1, 1, 1, 0.8 )
 margin_top = 144.0
 margin_right = 240.0
 margin_bottom = 192.0
 rect_min_size = Vector2( 0, 48 )
-rect_pivot_offset = Vector2( 124, 24 )
+rect_pivot_offset = Vector2( 120, 24 )
 mouse_default_cursor_shape = 2
-text = "Event"
-icon = ExtResource( 4 )
+expand_icon = true
 __meta__ = {
-"_editor_description_": ""
+"__initial_AnimaNode__anima_1490043247423043213__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1490043247423043213_opacity": {
+"percentage": 0,
+"value": 0.8
+},
+"__initial_AnimaNode__anima_1490043247423043213_scale": {
+"percentage": 0,
+"value": Vector2( 0.9, 0.9 )
+},
+"__visibility_strategy": 0,
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
+button_icon = ExtResource( 4 )
+button_label = "Event"
+default_opacity = 0.8
 
 [connection signal="pressed" from="MarginContainer/ButtonsContainer/Animation" to="." method="_on_Animation_pressed"]
 [connection signal="pressed" from="MarginContainer/ButtonsContainer/Delay" to="." method="_on_Delay_pressed"]

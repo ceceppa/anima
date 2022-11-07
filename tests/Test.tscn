@@ -179,6 +179,24 @@ __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
+__anima_visual_editor_data = {
+"0": {
+"animation": {
+"default_duration": null,
+"name": null,
+"visibility_strategy": 0
+},
+"frames": {
+0: {
+"collapsed": false,
+"data": [  ],
+"duration": null,
+"name": "Frame0",
+"type": "frame"
+}
+}
+}
+}
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
