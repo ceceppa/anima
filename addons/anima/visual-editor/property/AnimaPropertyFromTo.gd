@@ -294,6 +294,8 @@ func get_value():
 		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
 func set_label(new_label: String) -> void:
+	label = new_label
+
 	if not _current_value:
 		_current_value = find_node("CurrentValue")
 

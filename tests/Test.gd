@@ -94,7 +94,6 @@ func _on_v_changed() -> void:
 func set_test(v: StyleBoxFlat) -> void:
 	test = v
 	v.connect("changed", self, "_on_v_changed")
-	print(test)
 
 func _on_Button_pressed():
 	var button_size := 178

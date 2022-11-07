@@ -7,13 +7,50 @@
 
 [node name="AnimaFrameDelay" type="Control"]
 anchor_bottom = 1.0
-margin_right = 360.0
-rect_pivot_offset = Vector2( 60.0706, 300 )
+margin_right = 360.038
+rect_min_size = Vector2( 360, 0 )
+rect_pivot_offset = Vector2( 87.2832, 300 )
 rect_clip_content = true
 script = ExtResource( 7 )
 __meta__ = {
-"__initial_AnimaNode_anima_min_size:x": {
+"__initial_AnimaNode__anima_296497687125696411_min_size:x": {
 "initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_296497687125696411_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_443683543868022217_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_443683543868022217_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_514557108683021851_min_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_514557108683021851_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_630452328046039185_min_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_630452328046039185_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima_min_size:x": {
 "percentage": 0,
 "value": 0
 },
@@ -32,17 +69,18 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 180, 300 )
 __meta__ = {
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimaRectangle" type="ColorRect" parent="CenterContainer"]
@@ -66,14 +104,46 @@ margin_bottom = 155.0
 custom_constants/separation = 24
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/CenterContainer/VBoxContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_right = 242.0
 margin_bottom = 45.0
 rect_pivot_offset = Vector2( 121, 22.5 )
 custom_constants/separation = 12
 __meta__ = {
-"__initial_AnimaNode_anima_opacity": {
+"__initial_AnimaNode__anima_296497687125696411_opacity": {
 "initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_296497687125696411_y": {
+"percentage": 0,
+"value": 40.0
+},
+"__initial_AnimaNode__anima_443683543868022217_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_443683543868022217_y": {
+"percentage": 0,
+"value": 40.0
+},
+"__initial_AnimaNode__anima_514557108683021851_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_514557108683021851_y": {
+"percentage": 0,
+"value": 40.0
+},
+"__initial_AnimaNode__anima_630452328046039185_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_630452328046039185_y": {
+"percentage": 0,
+"value": 40.0
+},
+"__initial_AnimaNode_anima_opacity": {
 "percentage": 0,
 "value": 0
 },
@@ -90,7 +160,8 @@ __meta__ = {
 "percentage": 0,
 "value": 40.0
 },
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Label" type="Label" parent="CenterContainer/AnimaRectangle/CenterContainer/VBoxContainer/HBoxContainer"]
@@ -114,16 +185,48 @@ align = 2
 placeholder_text = "0.0"
 
 [node name="DeleteContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/CenterContainer/VBoxContainer"]
-modulate = Color( 1, 1, 1, 0 )
 margin_top = 69.0
 margin_right = 242.0
 margin_bottom = 111.0
-rect_pivot_offset = Vector2( 121, 12.5 )
+rect_pivot_offset = Vector2( 121, 21 )
 custom_constants/separation = 24
 alignment = 1
 __meta__ = {
-"__initial_AnimaNode_anima_opacity": {
+"__initial_AnimaNode__anima_296497687125696411_opacity": {
 "initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_296497687125696411_y": {
+"percentage": 0,
+"value": 109.0
+},
+"__initial_AnimaNode__anima_443683543868022217_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_443683543868022217_y": {
+"percentage": 0,
+"value": 109.0
+},
+"__initial_AnimaNode__anima_514557108683021851_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_514557108683021851_y": {
+"percentage": 0,
+"value": 109.0
+},
+"__initial_AnimaNode__anima_630452328046039185_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_630452328046039185_y": {
+"percentage": 0,
+"value": 109.0
+},
+"__initial_AnimaNode_anima_opacity": {
 "percentage": 0,
 "value": 0
 },
@@ -141,7 +244,8 @@ __meta__ = {
 "value": 94.0
 },
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Delete" parent="CenterContainer/AnimaRectangle/CenterContainer/VBoxContainer/DeleteContainer" instance=ExtResource( 1 )]
@@ -149,8 +253,22 @@ margin_left = 61.0
 margin_right = 181.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 120, 42 )
-text = "Delete"
-icon = ExtResource( 3 )
+__meta__ = {
+"__initial_AnimaNode__anima_91944225528174353__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_91944225528174353_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_91944225528174353_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+}
+}
 style = 2
+button_icon = ExtResource( 3 )
+button_label = "Delete"
 
 [connection signal="pressed" from="CenterContainer/AnimaRectangle/CenterContainer/VBoxContainer/DeleteContainer/Delete" to="." method="_on_Delete_pressed"]

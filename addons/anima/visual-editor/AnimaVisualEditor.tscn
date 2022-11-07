@@ -34,9 +34,6 @@ text = "Please add an AnimaVisualNode to the current scene to use the Visual Ani
 align = 1
 valign = 1
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 4 )]
 window_title = "Select the node and property to animate"

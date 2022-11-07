@@ -63,6 +63,9 @@ func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 
+	if _frames_editor == null:
+		return
+
 	anima.set_default_duration(0.3)
 
 	anima.then(
@@ -107,7 +110,7 @@ func _restore_data(data: Dictionary) -> void:
 		_frames_editor.set_is_restoring_data(true)
 
 		# Always "insert" the initial frame
-		_frames_editor._on_AnimaAddFrame_add_frame(0, true)
+#		_frames_editor._on_AnimaAddFrame_add_frame(0, true)
 
 		_frames_editor.set_is_restoring_data(false)
 		
@@ -128,7 +131,7 @@ func _restore_data(data: Dictionary) -> void:
 			continue
 
 		if frame_data.type == "frame":
-			_frames_editor._on_AnimaAddFrame_add_frame(frame_key, frame_key == 0)
+			_frames_editor._on_AnimaAddFrame_add_frame(frame_key)
 		elif frame_data.type == "delay":
 			_frames_editor._on_AnimaAddFrame_add_delay()
 		else:

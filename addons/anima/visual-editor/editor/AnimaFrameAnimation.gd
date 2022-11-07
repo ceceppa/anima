@@ -153,10 +153,14 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 	find_node("DurationContainer").visible = !is_initial_frame
 	find_node("Delete").visible = !is_initial_frame
 	find_node("PlayButton").visible = !is_initial_frame
-	find_node("FrameName").set_can_edit_value(!is_initial_frame)
 	
-	print(new_is_initial_frame)
+	var frame_name = find_node("FrameName")
+	
+	frame_name.set_can_edit_value(!is_initial_frame)
 
+	if is_initial_frame:
+		frame_name.set_label("Initial Frame")
+	
 func set_relative_property(node_path: String, property: String) -> void:
 	_source.set_relative_propert(node_path, property)
 

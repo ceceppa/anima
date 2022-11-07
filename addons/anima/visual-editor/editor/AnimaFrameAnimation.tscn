@@ -21,6 +21,74 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 8 )
 __meta__ = {
+"__initial_AnimaNode__anima_1241493570390042725_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1241493570390042725_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_260268915206246948_min_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_260268915206246948_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_278625510151360474_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_278625510151360474_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_47940942052849823_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_47940942052849823_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_92901668142374292_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_92901668142374292_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima1170406314985598389_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima1170406314985598389_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima701885194459611694_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima701885194459611694_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
 "__initial_AnimaNode_anima_min_size:x": {
 "initial_value": 0,
 "percentage": 0,
@@ -217,9 +285,89 @@ margin_bottom = 49.0
 rect_min_size = Vector2( 87, 49 )
 rect_pivot_offset = Vector2( 43.5, 24.5 )
 mouse_default_cursor_shape = 2
-text = "Add"
-icon = ExtResource( 2 )
 __meta__ = {
+"__initial_AnimaNode__anima_108438600660880814__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_108438600660880814_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_108438600660880814_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1241493570390042725_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1241493570390042725_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_260268915206246948_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_260268915206246948_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_278625510151360474_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_278625510151360474_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_47940942052849823_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_47940942052849823_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_92901668142374292_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_92901668142374292_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode_anima1170406314985598389_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima1170406314985598389_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode_anima701885194459611694_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima701885194459611694_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode_anima_opacity": {
 "initial_value": 0,
 "percentage": 0,
@@ -234,6 +382,8 @@ __meta__ = {
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
 }
+button_icon = ExtResource( 2 )
+button_label = "Add"
 
 [node name="Delete" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/CTAContainer" instance=ExtResource( 4 )]
 margin_left = 297.0
@@ -243,9 +393,89 @@ rect_min_size = Vector2( 132, 49 )
 rect_pivot_offset = Vector2( 66, 24.5 )
 hint_tooltip = "Remove the frame"
 mouse_default_cursor_shape = 2
-text = "Remove"
-icon = ExtResource( 3 )
 __meta__ = {
+"__initial_AnimaNode__anima_1241493570390042725_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1241493570390042725_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_260268915206246948_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_260268915206246948_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_278625510151360474_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_278625510151360474_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_47940942052849823_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_47940942052849823_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_862356917189312134__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_862356917189312134_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_862356917189312134_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_92901668142374292_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_92901668142374292_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode_anima1170406314985598389_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima1170406314985598389_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode_anima701885194459611694_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_anima701885194459611694_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode_anima_opacity": {
 "initial_value": 0,
 "percentage": 0,
@@ -261,6 +491,8 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 style = 2
+button_icon = ExtResource( 3 )
+button_label = "Remove"
 
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 margin_left = 578.0
@@ -274,6 +506,18 @@ mouse_default_cursor_shape = 2
 toggle_mode = true
 expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_1630074731607979004__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1630074731607979004_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1630074731607979004_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__visibility_strategy": 0,
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
