@@ -29,10 +29,10 @@ func _enter_tree():
 	_add_anima_editor(0)
 
 func _exit_tree():
+	_remove_anima_editor()
+
 	remove_autoload_singleton('ANIMA')
 	remove_autoload_singleton('Anima')
-
-	_remove_anima_editor()
 
 	if _anima_editor:
 		_anima_editor.queue_free()
@@ -47,9 +47,8 @@ func _add_anima_editor(where: int) -> void:
 
 func _remove_anima_editor() -> void:
 	remove_control_from_bottom_panel(_anima_editor)
-	remove_control_from_docks(_anima_editor)
-	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_RIGHT, _anima_editor)
-
+#	remove_control_from_docks(_anima_editor)
+#	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_RIGHT, _anima_editor)
 
 func handles(object):
 	var is_anima_node = object.has_meta("__anima_visual_node")

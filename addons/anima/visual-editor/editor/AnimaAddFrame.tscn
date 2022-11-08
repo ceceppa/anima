@@ -27,7 +27,7 @@ rect_min_size = Vector2( 240, 0 )
 custom_constants/separation = 24
 
 [node name="Animation" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
-modulate = Color( 1, 1, 1, 0.8 )
+modulate = Color( 1, 1, 1, 0.6 )
 margin_right = 240.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 0, 48 )
@@ -35,6 +35,30 @@ rect_pivot_offset = Vector2( 120, 24 )
 mouse_default_cursor_shape = 2
 expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_1445047506340072998__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1445047506340072998_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_1445047506340072998_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_157115189058788916__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_157115189058788916_opacity": {
+"percentage": 0,
+"value": 0.8
+},
+"__initial_AnimaNode__anima_157115189058788916_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_461099317185058044__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -47,16 +71,40 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.9, 0.9 )
 },
+"__initial_AnimaNode__anima_596404491081041016__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_596404491081041016_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_596404491081041016_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_90656005121131311__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_90656005121131311_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_90656005121131311_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__visibility_strategy": 0,
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
 }
 button_icon = ExtResource( 3 )
 button_label = "Animation"
-default_opacity = 0.8
+default_opacity = 0.6
 
 [node name="Delay" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
-modulate = Color( 1, 1, 1, 0.8 )
+modulate = Color( 1, 1, 1, 0.6 )
 margin_top = 72.0
 margin_right = 240.0
 margin_bottom = 120.0
@@ -65,6 +113,42 @@ rect_pivot_offset = Vector2( 120, 24 )
 mouse_default_cursor_shape = 2
 expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_1094764007057055908__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1094764007057055908_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_1094764007057055908_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1259282284560217529__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1259282284560217529_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_1259282284560217529_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1588485889749674072__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1588485889749674072_opacity": {
+"percentage": 0,
+"value": 0.8
+},
+"__initial_AnimaNode__anima_1588485889749674072_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_317239285122786133__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -77,16 +161,28 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.9, 0.9 )
 },
+"__initial_AnimaNode__anima_89414597557095047__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_89414597557095047_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_89414597557095047_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__visibility_strategy": 0,
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
 }
 button_icon = ExtResource( 3 )
 button_label = "Delay"
-default_opacity = 0.8
+default_opacity = 0.6
 
 [node name="Event" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
-modulate = Color( 1, 1, 1, 0.8 )
+modulate = Color( 1, 1, 1, 0.6 )
 margin_top = 144.0
 margin_right = 240.0
 margin_bottom = 192.0
@@ -95,6 +191,30 @@ rect_pivot_offset = Vector2( 120, 24 )
 mouse_default_cursor_shape = 2
 expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_1157989374698871826__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1157989374698871826_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_1157989374698871826_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_131675652973939484__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_131675652973939484_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_131675652973939484_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1490043247423043213__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -107,13 +227,37 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.9, 0.9 )
 },
+"__initial_AnimaNode__anima_245479102343773499__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_245479102343773499_opacity": {
+"percentage": 0,
+"value": 0.8
+},
+"__initial_AnimaNode__anima_245479102343773499_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_740394933930164429__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_740394933930164429_opacity": {
+"percentage": 0,
+"value": 0.6
+},
+"__initial_AnimaNode__anima_740394933930164429_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__visibility_strategy": 0,
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
 }
 button_icon = ExtResource( 4 )
 button_label = "Event"
-default_opacity = 0.8
+default_opacity = 0.6
 
 [connection signal="pressed" from="MarginContainer/ButtonsContainer/Animation" to="." method="_on_Animation_pressed"]
 [connection signal="pressed" from="MarginContainer/ButtonsContainer/Delay" to="." method="_on_Delay_pressed"]

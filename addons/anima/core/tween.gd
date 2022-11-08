@@ -15,8 +15,9 @@ var _loop_strategy = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
-var _keyframesEngine := AnimaKeyframesEngine.new(funcref(self, '_apply_initial_values'), funcref(self, 'add_animation_data'))
+var _keyframes_engine := AnimaKeyframesEngine.new(funcref(self, '_apply_initial_values'), funcref(self, 'add_animation_data'))
 var _use_meta_values := true
+var _should_apply_initial_values := true
 
 enum PLAY_MODE {
 	NORMAL,
@@ -50,6 +51,9 @@ func play(play_speed: float):
 
 	resume_all()
 
+func set_apply_initial_values(apply: bool) -> void:
+	_should_apply_initial_values = apply
+
 func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
 	var index: String
 	var is_backwards_animation = play_mode != PLAY_MODE.NORMAL
@@ -70,7 +74,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
 		if not animation_data.has("to"):
-			printerr("When using '_initial_value' the 'to' cannot be empty!")
+			printerr("When specifying 'initial_values' the 'to' keyframe cannot be empty!")
 		else:
 			_apply_initial_values(animation_data)
 
@@ -138,6 +142,9 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		node.connect("tree_exiting", self, "_on_node_tree_exiting")
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
+	if not _should_apply_initial_values:
+		return
+
 	var node: Node = animation_data.node
 
 	for property in animation_data.initial_values:
@@ -325,7 +332,7 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIM
 	node.set_meta(VISIBILITY_STRATEGY_META_KEY, strategy)
 
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
-	return _keyframesEngine.add_frames(animation_data, full_keyframes_data, get_parent().name)
+	return _keyframes_engine.add_frames(animation_data, full_keyframes_data, get_parent().name)
 
 # We don't want the user to specify the from/to value as color
 # we animate opacity.

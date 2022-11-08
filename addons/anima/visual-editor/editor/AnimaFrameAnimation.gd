@@ -36,6 +36,7 @@ func _ready():
 		rect_min_size.x = _final_width
 
 	set_is_initial_frame(is_initial_frame)
+	_on_DefaultFrameDuration_toggled(false)
 
 func get_data() -> Dictionary:
 	var data := {
@@ -97,6 +98,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 	
 	anima.set_default_duration(0.3)
+	anima.set_apply_initial_values(!backwards)
 
 	anima.then(
 		Anima.Node(self) \
@@ -109,7 +111,11 @@ func _animate_me(backwards := false) -> AnimaNode:
 					"min_size:x": _final_width,
 					"size:x": _final_width,
 				},
-				easing = ANIMA.EASING.EASE_OUT_BACK
+				easing = ANIMA.EASING.EASE_OUT_BACK,
+				initial_values = {
+					"min_size:x": 0,
+					"size:x": 0
+				}
 			})
 	) \
 	.with(
@@ -141,9 +147,11 @@ func _animate_me(backwards := false) -> AnimaNode:
 	if backwards:
 		anima.play_backwards_with_speed(1.5)
 	else:
-		anima.play_with_delay(0.0)
+		anima.play()
 
 	yield(anima, "animation_completed")
+
+	rect_clip_content = false
 
 	return anima
 
@@ -304,3 +312,6 @@ func _on_Collapse_mouse_entered():
 
 func _on_Collapse_mouse_exited():
 	$FrameCollapsedTitle.add_color_override("font_color", Color.white)
+
+func _on_DefaultFrameDuration_toggled(button_pressed):
+	find_node("DurationContainer").visible = button_pressed

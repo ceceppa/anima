@@ -36,6 +36,7 @@ var _force_default_zoom := true
 func _ready():
 	$Inner.rect_min_size = rect_min_size
 	$Inner.rect_size = rect_size
+	$Inner.icon_align = icon_align
 
 	_refresh_button(get_draw_mode())
 	icon = null
@@ -64,11 +65,11 @@ func _refresh_button(draw_mode: int) -> void:
 		if draw_mode == STATE.HOVERED:
 			final_color = color.lightened(0.1)
 			final_opacity = 1.0
-			final_zoom = 1.1
+			final_zoom = 1.05
 		elif draw_mode == STATE.PRESSED:
 			final_color = color.darkened(0.2)
 			final_opacity = 1.0
-			final_zoom = 1.1
+			final_zoom = 1.05
 
 		if not zoom_on_hover:
 			final_zoom = 1.0
@@ -80,18 +81,19 @@ func _refresh_button(draw_mode: int) -> void:
 						_button_bg = final_color,
 						opacity = final_opacity,
 						scale = Vector2.ONE * final_zoom,
-						easing = ANIMA.EASING.EASE_IN_OUT_BACK
+						easing = ANIMA.EASING.EASE_IN_EXPO
 					}
 				}, 0.15)
 			) \
 			.play()
 
 func _set(property, value):
-	if PROPERTIES_TO_COPY.find(property) >= 0:
+	if PROPERTIES_TO_COPY.find(property) >= 0 and is_inside_tree():
 		$Inner.set(property, value)
 
 		if property.begins_with("button_"):
 			var inner_property = property.replace("button_", "")
+
 			$Inner[inner_property] = value
 
 func set_button_style(new_style: int) -> void:

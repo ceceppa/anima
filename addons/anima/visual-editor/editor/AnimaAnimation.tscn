@@ -88,6 +88,8 @@ text = "Default duration (s):"
 margin_top = 194.0
 margin_right = 312.0
 margin_bottom = 243.0
+type = 3
+can_clear_custom_value = false
 show_relative_selector = false
 
 [node name="HSeparator3" type="HSeparator" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]

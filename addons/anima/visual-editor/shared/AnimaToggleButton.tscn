@@ -1,17 +1,41 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://addons/anima/visual-editor/icons/Collapse.svg" type="Texture" id=1]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture" id=3]
 
-[node name="AnimaToggleButton" type="Button"]
-margin_right = 1008.0
-margin_bottom = 37.0
+[node name="Button" instance=ExtResource( 1 )]
+anchor_right = 1.0
+margin_right = 0.0
+size_flags_horizontal = 3
 toggle_mode = true
-text = "Time"
-icon = ExtResource( 1 )
-script = ExtResource( 2 )
 __meta__ = {
-"_edit_use_anchors_": false
+"__initial_AnimaNode__anima_349292019378698608__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_349292019378698608_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_349292019378698608_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"_editor_description_": ""
 }
+button_icon = ExtResource( 3 )
 
-[connection signal="toggled" from="." to="." method="_on_AnimaToggleButton_toggled"]
+[node name="Inner" parent="." index="0"]
+icon = ExtResource( 3 )

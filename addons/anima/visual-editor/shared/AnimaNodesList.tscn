@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/visual-editor/icons/Add.svg" type="Texture" id=6]
 
@@ -12,28 +13,36 @@ margin_top = 4.0
 margin_right = -4.0
 margin_bottom = -4.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1016.0
 margin_bottom = 45.0
 
+[node name="Label" type="Label" parent="HBoxContainer"]
+margin_top = 10.0
+margin_right = 65.0
+margin_bottom = 35.0
+text = "Node:"
+
 [node name="SearchField" type="LineEdit" parent="HBoxContainer"]
+margin_left = 73.0
 margin_right = 1016.0
 margin_bottom = 45.0
 size_flags_horizontal = 3
+placeholder_text = "Search node..."
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="NodesList" type="Tree" parent="."]
 margin_top = 53.0
 margin_right = 1016.0
-margin_bottom = 552.0
+margin_bottom = 535.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ButtonsContainer" type="HBoxContainer" parent="."]
-margin_top = 560.0
+margin_top = 543.0
 margin_right = 1016.0
 margin_bottom = 592.0
 custom_constants/separation = 24
@@ -42,18 +51,120 @@ alignment = 2
 [node name="Add" parent="ButtonsContainer" instance=ExtResource( 4 )]
 margin_left = 752.0
 margin_right = 872.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 120, 0 )
-text = "Add"
-icon = ExtResource( 6 )
+margin_bottom = 49.0
+rect_min_size = Vector2( 120, 49 )
+__meta__ = {
+"__initial_AnimaNode__anima_1649710294016685303__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1649710294016685303_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1649710294016685303_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_487858336780782837__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_487858336780782837_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_487858336780782837_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+}
+}
+button_icon = ExtResource( 6 )
+button_label = "Add"
 
 [node name="Close" parent="ButtonsContainer" instance=ExtResource( 4 )]
 margin_left = 896.0
 margin_right = 1016.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 120, 32 )
+margin_bottom = 49.0
+rect_min_size = Vector2( 120, 49 )
 text = "Close"
-icon = ExtResource( 6 )
+__meta__ = {
+"__initial_AnimaNode__anima_1426774800575406494__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1426774800575406494_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1426774800575406494_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_660973083785754761__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_660973083785754761_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_660973083785754761_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+}
+}
+style = 1
+button_icon = ExtResource( 2 )
+button_label = "Close"
 
 [connection signal="text_changed" from="HBoxContainer/SearchField" to="." method="_on_SearchField_text_changed"]
 [connection signal="item_activated" from="NodesList" to="." method="_on_NodesList_item_activated"]
