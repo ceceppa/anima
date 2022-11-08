@@ -10,6 +10,9 @@ onready var _default_duration: Control = find_node("DefaultDuration")
 
 var _is_restoring_data := false
 
+func _ready():
+	pass
+
 func get_data() -> Dictionary:
 	return {
 		name = _animation_name.get_value(),
@@ -24,6 +27,9 @@ func restore_data(data: Dictionary) -> void:
 		_animation_name = find_node("AnimationName")
 		_visibility_strategy = find_node("VisibilityStrategy")
 		_default_duration = find_node("DefaultDuration")
+
+	if data.default_duration == null:
+		data.default_duration = ANIMA.DEFAULT_DURATION
 
 	_animation_name.set_value(data.name)
 	_visibility_strategy.select(data.visibility_strategy)

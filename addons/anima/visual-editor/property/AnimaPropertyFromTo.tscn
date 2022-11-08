@@ -42,19 +42,55 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CurrentValue" parent="HBoxContainer" instance=ExtResource( 7 )]
-margin_right = 144.0
+margin_right = 0.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "current value"
 flat = true
 __meta__ = {
+"__initial_AnimaNode__anima_44189857887221794__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_44189857887221794_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_44189857887221794_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_648279015778426147__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_648279015778426147_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_648279015778426147_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_96307527408182526__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_96307527408182526_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_96307527408182526_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
 style = 1
+button_label = "current value"
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
 visible = false
@@ -467,10 +503,47 @@ margin_bottom = 45.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Select relative property"
-icon = ExtResource( 6 )
+expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_114847595052069458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_114847595052069458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_114847595052069458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1268400931279730469__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1268400931279730469_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1268400931279730469_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_926060885944299805__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_926060885944299805_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_926060885944299805_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
+button_icon = ExtResource( 6 )
 
 [node name="ClearButton" parent="CustomValue" instance=ExtResource( 7 )]
 margin_left = 218.0
@@ -479,11 +552,48 @@ margin_bottom = 45.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Clear value"
-icon = ExtResource( 2 )
+expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_1399386351466780518__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1399386351466780518_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1399386351466780518_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_785919416932637573__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_785919416932637573_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_785919416932637573_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_83067773902615707__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_83067773902615707_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_83067773902615707_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
 style = 1
+button_icon = ExtResource( 2 )
 
 [node name="ConfirmButton" parent="CustomValue" instance=ExtResource( 7 )]
 visible = false
@@ -493,10 +603,48 @@ margin_bottom = 49.0
 rect_min_size = Vector2( 38, 38 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Confirm value"
-icon = ExtResource( 4 )
+icon_align = 1
+expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_118338048585262085__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_118338048585262085_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_118338048585262085_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_124048735319653549__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_124048735319653549_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_124048735319653549_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_776853832511085571__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_776853832511085571_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_776853832511085571_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
+button_icon = ExtResource( 4 )
 
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 8 )

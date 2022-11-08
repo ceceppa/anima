@@ -163,6 +163,7 @@ func clear() -> void:
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
+
 	_visibility_strategy = ANIMA.VISIBILITY.IGNORE
 
 func play() -> AnimaNode:
@@ -306,6 +307,9 @@ func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
 
 	return self
+
+func set_apply_initial_values(apply: bool) -> void:
+	_anima_tween.set_apply_initial_values(apply)
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
