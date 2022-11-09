@@ -52,30 +52,38 @@ func get_selected() -> String:
 
 	return PoolStringArray(path).join("/")
 
-func select_node(node: Node) -> void:
+func select_node(node: Node, emit_signal := false) -> void:
 	var root: TreeItem = _nodes_list.get_root()
 	
 	if node == null:
 		return
 
-	_select_node(root, node.name)
+	var element = _select_node(root.get_children(), node.name)
 
-func _select_node(tree_item: TreeItem, name: String) -> void:
-	var child := tree_item.get_children()
+	if element:
+		element.select(0)
+		
+		if emit_signal:
+			_on_NodesList_item_activated()
 
-	while child != null:
-		var child_name: String = child.get_text(0)
+func _select_node(tree_item: TreeItem, name: String):
+	while tree_item != null:
+		var child_name: String = tree_item.get_text(0)
 
 		if child_name == name:
-			child.select(0)
+			return tree_item
 
-			return
-
-		var subchild = child.get_children()
+		var subchild = tree_item.get_children()
+		
 		if subchild:
-			_select_node(subchild, name)
+			var found = _select_node(subchild, name)
 
-		child = child.get_next()
+			if found:
+				return found
+
+		tree_item = tree_item.get_next()
+
+	return null
 
 func _retrieves_list_of_nodes() -> void:
 	if _nodes_list == null:
@@ -140,7 +148,6 @@ func _on_GodotUIButton_pressed():
 
 func _on_Close_pressed():
 	emit_signal("close")
-
 
 func _on_Add_pressed():
 	pass # Replace with function body.

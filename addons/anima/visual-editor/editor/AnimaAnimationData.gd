@@ -45,7 +45,7 @@ func show_group_or_node() -> void:
 	_node_or_group.show()
 
 func set_data(node: Node, path: String, property, property_type):
-	$Title.set_label(node.name + ":" + property)
+	$Title.set_text(node.name + ":" + property)
 	
 	_path = path
 	_property = property
@@ -56,8 +56,8 @@ func set_data(node: Node, path: String, property, property_type):
 
 func get_data() -> Dictionary:
 	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
-	var use_property_or_animation: String = find_node("UseAnimation").group
-	var use_animation = use_property_or_animation == find_node("UseAnimation").name
+	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").group
+	var use_animation = use_property_or_animation.get_pressed_button().get_index() == 1
 	var _property_values = find_node("PropertyValues")
 
 	var animate_as_button: Button = animate_as_group.get_pressed_button()
@@ -77,8 +77,8 @@ func get_data() -> Dictionary:
 		property_type = _property_type,
 		duration = _duration.get_value(),
 		delay = _delay.get_value(),
-		animate_as = animate_as_button.get_parent().name,
-		use = use_property_or_animation,
+		animate_as = animate_as_group.get_pressed_button().get_index(),
+		use = use_property_or_animation.get_pressed_button().get_index(),
 		animation_name = _animation_name,
 		group = {
 			items_delay = float(find_node("ItemsDelay").get_value()),
@@ -101,6 +101,7 @@ func restore_data(data: Dictionary) -> void:
 	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
 	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").group
 
+	print(data)
 	_press_button_in_group(use_property_or_animation, data.use)
 	_press_button_in_group(animate_as_group, data.animate_as)
 
@@ -173,6 +174,11 @@ func _on_PropertyButton_pressed():
 	emit_signal("select_property")
 
 func _on_AnimaAnimationData_mouse_entered():
+	if _source_node == null:
+		printerr("_on_AnimaAnimationData_mouse_entered: _source_node is null")
+
+		return
+
 	emit_signal("highlight_node", _source_node)
 
 func _on_Title_toggled(button_pressed):

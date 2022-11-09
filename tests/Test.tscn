@@ -77,8 +77,7 @@ rect_pivot_offset = Vector2( 145.5, 18.5 )
 custom_styles/normal = SubResource( 8 )
 icon = ExtResource( 7 )
 __meta__ = {
-"__visibility_strategy": 0,
-"_edit_use_anchors_": false
+"__visibility_strategy": 0
 }
 
 [node name="Button3" type="Button" parent="Control"]
@@ -163,7 +162,8 @@ color = Color( 0.4, 0.2, 0.6, 1 )
 __meta__ = {
 "__initial_easing": "easing",
 "__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
@@ -178,16 +178,38 @@ __meta__ = {
 __anima_visual_editor_data = {
 "0": {
 "animation": {
-"default_duration": 0.0,
+"default_duration": 0.7,
 "name": null,
 "visibility_strategy": 0
 },
 "frames": {
 0: {
 "collapsed": false,
-"data": [ null ],
+"data": [ {
+"animate_as": 0,
+"animation_name": "",
+"delay": null,
 "duration": null,
-"name": "",
+"group": {
+"animation_type": 1,
+"items_delay": 0.01,
+"start_index": 0
+},
+"node_path": "./Control/Button1",
+"property": {
+"easing": [ "Linear", 0 ],
+"from": null,
+"initialValue": null,
+"pivot": [ 0, 0 ],
+"relative": false,
+"to": null
+},
+"property_name": "position",
+"property_type": 5,
+"use": 0
+} ],
+"duration": null,
+"name": "Frame0",
 "type": "frame"
 }
 }

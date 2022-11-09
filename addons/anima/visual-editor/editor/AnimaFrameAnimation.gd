@@ -12,6 +12,7 @@ signal select_easing
 signal select_relative_property
 signal highlight_node(node)
 signal preview_frame
+signal select_node_property(node_path)
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -48,7 +49,7 @@ func get_data() -> Dictionary:
 	}
 
 	for child in _animations_container.get_children():
-		if is_instance_valid(child):
+		if is_instance_valid(child) and child.name != "Control":
 			data.data.push_back(child.get_data())
 
 	return data
@@ -315,3 +316,9 @@ func _on_Collapse_mouse_exited():
 
 func _on_DefaultFrameDuration_toggled(button_pressed):
 	find_node("DurationContainer").visible = button_pressed
+
+func _on_FrameAnimation_gui_input(event):
+	pass # Replace with function body.
+
+func _on_AnimationsContainer_node_dragged(node_path: String) -> void:
+	emit_signal("select_node_property", node_path)

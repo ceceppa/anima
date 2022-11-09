@@ -5,6 +5,7 @@ const FRAME_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaFr
 const FRAME_DELAY = preload("res://addons/anima/visual-editor/editor/AnimaFrameDelay.tscn")
 
 signal select_node
+signal select_node_property(node_path)
 signal visual_builder_updated(data)
 signal select_animation
 signal highlight_node(node)
@@ -77,6 +78,7 @@ func _add_component(node: Node) -> void:
 	node.connect("frame_updated", self, "_emit_updated")
 	node.connect("frame_deleted", self, "_emit_updated")
 	node.connect("select_node", self, "_on_frame_select_node", [node])
+	node.connect("select_node_property", self, "_on_frame_select_node_property", [node])
 
 	node.animate_entrance_exit = not disable_animations
 
@@ -160,3 +162,8 @@ func _on_select_easing(source: Node) -> void:
 
 func _on_AnimaAnimation_play_animation(name: String):
 	emit_signal("play_animation", name)
+
+func _on_frame_select_node_property(node_path, destination_frame) -> void:
+	_destination_frame = destination_frame
+
+	emit_signal("select_node_property", node_path)

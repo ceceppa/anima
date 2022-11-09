@@ -1,7 +1,7 @@
 tool
 extends Button
 
-var PROPERTIES_TO_COPY = ["rect_size", "rect_min_size", "button_label", "button_icon", "align", "clip_text", "icon_align", "expand_icon", "__meta__", "modulate"]
+var PROPERTIES_TO_COPY = ["rect_min_size", "text", "icon", "align", "clip_text", "icon_align", "expand_icon", "__meta__", "modulate"]
 
 enum STATE {
 	NORMAL,
@@ -18,9 +18,10 @@ enum STYLE {
 }
 
 export (STYLE) var style = STYLE.PRIMARY setget set_button_style
-export (Texture) var button_icon setget set_button_icon
-export (String) var button_label setget set_button_label
-export (float, 0.0, 1.0) var default_opacity := 1.0 setget set_default_opacity
+#export (float, 0.0, 1.0) var default_opacity := 1.0 setget set_default_opacity
+var default_opacity := 1.0 setget set_default_opacity
+var _zoom_on_hover = 1.05
+
 export (bool) var zoom_on_hover := true
 
 const COLORS := {
@@ -34,12 +35,13 @@ var _old_draw_mode
 var _force_default_zoom := true
 
 func _ready():
-	$Inner.rect_min_size = rect_min_size
-	$Inner.rect_size = rect_size
-	$Inner.icon_align = icon_align
+#	$Inner.rect_min_size = rect_min_size
+#	$Inner.rect_size = rect_size
+#	$Inner.icon_align = icon_align
+	for property in PROPERTIES_TO_COPY:
+		$Inner.set(property, self[property])
 
 	_refresh_button(get_draw_mode())
-	icon = null
 
 func _draw():
 	draw_rect(Rect2(Vector2.ZERO, rect_size), _button_bg, true)
@@ -65,11 +67,10 @@ func _refresh_button(draw_mode: int) -> void:
 		if draw_mode == STATE.HOVERED:
 			final_color = color.lightened(0.1)
 			final_opacity = 1.0
-			final_zoom = 1.05
+			final_zoom = _zoom_on_hover
 		elif draw_mode == STATE.PRESSED:
 			final_color = color.darkened(0.2)
 			final_opacity = 1.0
-			final_zoom = 1.05
 
 		if not zoom_on_hover:
 			final_zoom = 1.0
@@ -90,11 +91,6 @@ func _refresh_button(draw_mode: int) -> void:
 func _set(property, value):
 	if PROPERTIES_TO_COPY.find(property) >= 0 and is_inside_tree():
 		$Inner.set(property, value)
-
-		if property.begins_with("button_"):
-			var inner_property = property.replace("button_", "")
-
-			$Inner[inner_property] = value
 
 func set_button_style(new_style: int) -> void:
 	style = new_style
@@ -124,12 +120,6 @@ func set_default_opacity(new_opacity: float) -> void:
 
 	modulate.a = default_opacity
 
-func set_button_icon(texture: Texture) -> void:
-	button_icon = texture
-
-	$Inner.icon = button_icon
-
-func set_button_label(label: String) -> void:
-	button_label = label
-
-	$Inner.text = button_label
+func _on_Inner_item_rect_changed():
+	rect_min_size = $Inner.rect_size
+	rect_size = $Inner.rect_size

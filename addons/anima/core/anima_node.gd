@@ -184,6 +184,12 @@ func play_backwards_with_delay(delay: float) -> AnimaNode:
 func play_backwards_with_speed(speed: float) -> AnimaNode:
 	return _play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
 
+func play_as_backwards_when(variable, value_to_match) -> void:
+	if variable == value_to_match:
+		_play(AnimaTween.PLAY_MODE.NORMAL)
+	else:
+		_play(AnimaTween.PLAY_MODE.BACKWARDS)
+
 func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
 		return self

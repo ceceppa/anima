@@ -140,3 +140,14 @@ func _on_PropertiesTree_item_activated():
 
 func _on_AnimaNodesList_node_selected(node: Node, _path) -> void:
 	_populate_animatable_properties_list(node)
+	_on_LineEdit_text_changed(find_node("PropertySearch").text)
+
+func select_node(node: Node) -> void:
+	_nodes_list.select_node(node, true)
+	_nodes_list.hide()
+
+func _on_Close_pressed():
+	hide()
+
+func _on_ConfirmProperty_pressed():
+	_on_PropertiesTree_item_activated()

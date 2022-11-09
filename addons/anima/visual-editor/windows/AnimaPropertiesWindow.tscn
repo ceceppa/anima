@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaPropertiesWindow.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/anima/visual-editor/icons/Clear.svg" type="Texture" id=4]
-[ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture" id=5]
-[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=6]
+[ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=5]
 
 [node name="PropertiesWindow" type="WindowDialog"]
 visible = true
@@ -33,9 +32,6 @@ custom_constants/margin_right = 16
 custom_constants/margin_top = 16
 custom_constants/margin_left = 16
 custom_constants/margin_bottom = 16
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 margin_left = 16.0
@@ -68,27 +64,27 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ProperiesContainer"]
 margin_right = 976.0
-margin_bottom = 45.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer"]
-margin_top = 10.0
+margin_top = 12.0
 margin_right = 101.0
-margin_bottom = 35.0
+margin_bottom = 37.0
 text = "Property:"
 
 [node name="PropertySearch" type="LineEdit" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer"]
 margin_left = 109.0
-margin_right = 848.0
-margin_bottom = 45.0
+margin_right = 868.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
 placeholder_text = "Search property..."
 
 [node name="Clear" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 856.0
+margin_left = 876.0
 margin_right = 976.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 120, 32 )
+rect_min_size = Vector2( 100, 49 )
+text = "Clear"
 __meta__ = {
 "__initial_AnimaNode__anima_1080271746666121704__button_bg": {
 "percentage": 0,
@@ -99,6 +95,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1080271746666121704_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1287287328536725098__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1287287328536725098_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1287287328536725098_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -114,6 +122,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_140603786740584375__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_140603786740584375_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_140603786740584375_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1495134435045234863__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -123,6 +143,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1495134435045234863_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1556346690039356445__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1556346690039356445_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1556346690039356445_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -162,6 +194,54 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1655706274790281738__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1655706274790281738_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1655706274790281738_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_228946890192292328__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_228946890192292328_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_228946890192292328_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_36178990162575005__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_36178990162575005_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_36178990162575005_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_409559256597347473__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_409559256597347473_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_409559256597347473_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_41221484238745293__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -174,13 +254,47 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_519637341227367798__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_519637341227367798_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_519637341227367798_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_52845308628953418__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_52845308628953418_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_52845308628953418_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_689922193978339722__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_689922193978339722_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_689922193978339722_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
-button_icon = ExtResource( 4 )
-button_label = "Clear"
 
 [node name="PropertiesTree" type="Tree" parent="MarginContainer/HBoxContainer/ProperiesContainer"]
-margin_top = 53.0
+margin_top = 57.0
 margin_right = 976.0
 margin_bottom = 481.0
 size_flags_horizontal = 3
@@ -195,11 +309,36 @@ custom_constants/separation = 24
 alignment = 2
 
 [node name="ConfirmProperty" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2" instance=ExtResource( 2 )]
-margin_left = 632.0
-margin_right = 832.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 200, 49 )
+margin_left = 641.0
+margin_right = 850.0
+rect_min_size = Vector2( 209, 49 )
+text = "Select property"
+icon = ExtResource( 5 )
 __meta__ = {
+"__initial_AnimaNode__anima_114412537975414917__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_114412537975414917_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_114412537975414917_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1437133061494181885__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1437133061494181885_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1437133061494181885_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1499879602498721436__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -212,6 +351,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1612464491181773926__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1612464491181773926_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1612464491181773926_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_170279135818502197__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -221,6 +372,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_170279135818502197_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_396892560187069946__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_396892560187069946_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_396892560187069946_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -245,6 +408,42 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_60137936920824501__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_60137936920824501_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_60137936920824501_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_634584514564950073__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_634584514564950073_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_634584514564950073_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_637668903419335693__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_637668903419335693_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_637668903419335693_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -283,17 +482,64 @@ __meta__ = {
 "__initial_AnimaNode__anima_774037851557249634_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_790501768808943237__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_790501768808943237_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_790501768808943237_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_96243273560041687__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_96243273560041687_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_96243273560041687_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_977066723579859863__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_977066723579859863_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_977066723579859863_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
 }
 }
-button_icon = ExtResource( 6 )
-button_label = "Select property"
 
 [node name="Close" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2" instance=ExtResource( 2 )]
-margin_left = 856.0
+margin_left = 874.0
 margin_right = 976.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 120, 49 )
+rect_min_size = Vector2( 102, 49 )
+text = "Close"
+icon = ExtResource( 4 )
 __meta__ = {
+"__initial_AnimaNode__anima_1146114021813908203__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1146114021813908203_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1146114021813908203_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1182219923550827881__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -315,6 +561,42 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_119535684429189911_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1317949744054282227__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1317949744054282227_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1317949744054282227_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1322546452133662354__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1322546452133662354_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1322546452133662354_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_166204072058050415__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_166204072058050415_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_166204072058050415_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -342,6 +624,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_419091834504109436__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_419091834504109436_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_419091834504109436_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_454360864891194458__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -351,6 +645,42 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_570564905348995605__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_570564905348995605_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_570564905348995605_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_579699083132369385__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_579699083132369385_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_579699083132369385_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_730238884945867798__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_730238884945867798_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_730238884945867798_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -378,6 +708,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_779371382342741333__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_779371382342741333_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_779371382342741333_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_793977205687616455__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -389,13 +731,25 @@ __meta__ = {
 "__initial_AnimaNode__anima_793977205687616455_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_963571198868391724__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_963571198868391724_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_963571198868391724_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
 }
 }
 style = 1
-button_icon = ExtResource( 5 )
-button_label = "Close"
 
 [connection signal="node_selected" from="MarginContainer/HBoxContainer/AnimaNodesList" to="." method="_on_AnimaNodesList_node_selected"]
 [connection signal="text_changed" from="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer/PropertySearch" to="." method="_on_LineEdit_text_changed"]
 [connection signal="item_activated" from="MarginContainer/HBoxContainer/ProperiesContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_activated"]
 [connection signal="item_double_clicked" from="MarginContainer/HBoxContainer/ProperiesContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_double_clicked"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2/ConfirmProperty" to="." method="_on_ConfirmProperty_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2/Close" to="." method="_on_Close_pressed"]
