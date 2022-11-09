@@ -299,7 +299,7 @@ func set_label(new_label: String) -> void:
 	if not _current_value:
 		_current_value = find_node("CurrentValue")
 
-	_current_value.set_button_label(label)
+	_current_value.set_text(label)
 
 func get_label() -> String:
 	return _current_value.text

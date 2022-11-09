@@ -286,6 +286,8 @@ func _on_select_relative_property(source: Node) -> void:
 	_is_selecting_relative_property = true
 
 	$PropertiesWindow.window_title = "Select the relative property source"
+	$PropertiesWindow._nodes_list.show()
+
 	$PropertiesWindow.popup_centered()
 
 func _on_select_easing(source: Node) -> void:
@@ -298,3 +300,12 @@ func _on_AnimaEasingsWindow_easing_selected(easing_name: String, easing_value: i
 
 func _on_FramesEditor_play_animation(name: String):
 	emit_signal("play_animation", name)
+
+func _on_FramesEditor_select_node_property(node_path: String):
+	var node = get_node(node_path)
+#	var relative_path = _anima_visual_node.get_path_to(node)
+
+	$PropertiesWindow.select_node(node)
+
+	$PropertiesWindow.window_title = "Select the node property to animate"
+	$PropertiesWindow.popup_centered()
