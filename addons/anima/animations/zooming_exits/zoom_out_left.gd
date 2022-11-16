@@ -7,6 +7,6 @@ var KEYFRAMES := {
   to = {
 	opacity = 0,
 	scale = Vector3(0.1, 0.1, 0.1),
-	x = ":size:x",
+	x = "- :size:x",
   }
 }

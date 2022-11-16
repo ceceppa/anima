@@ -206,6 +206,28 @@ __anima_visual_editor_data = {
 },
 "property_name": "position",
 "property_type": 5,
+"use": 1
+}, {
+"animate_as": 0,
+"animation_name": "",
+"delay": null,
+"duration": null,
+"group": {
+"animation_type": 1,
+"items_delay": 0.01,
+"start_index": 0
+},
+"node_path": "./Control/Button2",
+"property": {
+"easing": [ "Linear", 0 ],
+"from": null,
+"initialValue": null,
+"pivot": 0,
+"relative": false,
+"to": null
+},
+"property_name": "position",
+"property_type": 5,
 "use": 0
 } ],
 "duration": null,
