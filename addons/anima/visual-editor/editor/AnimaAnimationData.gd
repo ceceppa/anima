@@ -19,21 +19,29 @@ var _animation_name: String
 var _relative_source: Node
 
 onready var _node_or_group = find_node("NodeOrGroup")
+onready var _group_data = find_node("GroupData")
+onready var _grid_data = find_node("GridData")
+onready var _property_values = find_node("PropertyValues")
+onready var _select_animation = find_node("SelectAnimation")
+onready var _animate_property = find_node("AnimateProperty")
 onready var _duration = find_node("Duration")
 onready var _delay = find_node("Delay")
 onready var _timer = find_node("Timer")
+onready var _title = find_node("Title")
 onready var _animation_type = find_node("AnimationType")
+onready var _background_rect = find_node("Background")
 
 func _ready():
 	margin_right = 0
 
-	$NodeOrGroup.hide()
-	$GroupData.hide()
-	$GridData.hide()
-	$PropertyValues.hide()
-	$SelectAnimation.hide()
+	_node_or_group.hide()
+	_group_data.hide()
+	_grid_data.hide()
+	_property_values.hide()
+	_select_animation.hide()
 
 	_setup_group_data()
+	_on_AnimateWith_toggled(42)
 
 func _setup_group_data() -> void:
 	_animation_type.clear()
@@ -45,7 +53,7 @@ func show_group_or_node() -> void:
 	_node_or_group.show()
 
 func set_data(node: Node, path: String, property, property_type):
-	$Title.set_text(node.name + ":" + property)
+	_title.set_text(node.name + ":" + property)
 	
 	_path = path
 	_property = property
@@ -101,26 +109,20 @@ func restore_data(data: Dictionary) -> void:
 	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
 	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").group
 
-	print(data)
 	_press_button_in_group(use_property_or_animation, data.use)
 	_press_button_in_group(animate_as_group, data.animate_as)
 
 	find_node("Duration").set_value(data.duration)
 	find_node("Delay").set_value(data.delay)
 
-	var animate_as: Button = _node_or_group.find_node(data.animate_as)
-	animate_as.pressed = true
-	animate_as._on_pressed()
-
-	var use: Button = find_node(data.use)
-	use.pressed = true
-	
-	find_node("AnimateWith").set_index(use.get_index())
-
 	if data.has("animation_name"):
 		selected_animation(data.animation_name, data.animation_name)
 
 	var _property_values = find_node("PropertyValues")
+
+	for child in _property_values.get_child(1).get_children():
+		if child.has_method('set_type'):
+			child.set_type(data.property_type)
 
 	if data.property.has("from"):
 		_property_values.find_node("FromValue").set_value(data.property.from)
@@ -153,6 +155,8 @@ func restore_data(data: Dictionary) -> void:
 
 				break
 
+	_on_AnimateWith_toggled(42)
+
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()
 
@@ -161,11 +165,10 @@ func set_relative_property(node_path: String, property: String) -> void:
 
 	_relative_source.set_value(value + " " + node_path + ":" + property)
 
-func _press_button_in_group(group: ButtonGroup, selected_button_name: String) -> void:
+func _press_button_in_group(group: ButtonGroup, selected_button: int) -> void:
 	var buttons = group.get_buttons()
 
-	for button in buttons:
-		button.pressed = button.name == selected_button_name
+	buttons[selected_button].pressed = true
 
 func _on_UseAnimation_pressed():
 	emit_signal("updated")
@@ -273,3 +276,14 @@ func _on_EasingButton_pressed():
 
 func _on_AnimationType_item_selected(_index):
 	_emit_updated()
+
+func _on_AnimateWith_toggled(_ignore):
+	var button_index = _animate_property.group.get_pressed_button().get_index()
+	var is_property = button_index == 0
+
+	_property_values.visible = is_property
+	_select_animation.visible = !is_property
+
+func _on_AnimaAnimationData_item_rect_changed():
+	if _background_rect:
+		_background_rect.rect_size = rect_size

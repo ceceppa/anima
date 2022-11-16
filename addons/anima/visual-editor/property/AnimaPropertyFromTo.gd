@@ -109,11 +109,15 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 	if _input_visible == null:
 		return
 
+	if _custom_value == null:
+		_custom_value = find_node('CustomValue')
+
 	_should_return_null_value = false
 
 	var anima := $AnimaNode
 	anima.clear()
 	anima.set_default_duration(0.3)
+	anima.set_apply_initial_values(AnimaTween.PLAY_MODE.NORMAL)
 
 	anima.then(
 		Anima.Node(_current_value) \
@@ -158,7 +162,7 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 		yield(anima, "animation_completed")
 
 		if is_inside_tree() and _input_visible.is_visible_in_tree():
-			_input_visible.grab_focus()
+			_grab_focus(_input_visible)
 	else:
 		anima.play_backwards()
 
@@ -168,6 +172,13 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 		emit_signal(signal_to_emit)
 
 	return anima
+
+func _grab_focus(node: Node) -> void:
+	if not node is LineEdit:
+		node = node.find_next_valid_focus()
+
+	if node:
+		node.grab_focus()
 
 func clear_value() -> void:
 	_on_ClearButton_pressed()

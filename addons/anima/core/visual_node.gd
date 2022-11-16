@@ -178,10 +178,10 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 		anima_data.delay = animation_data.delay
 
 	if animation_data.has("animate_as"):
-		if animation_data.animate_as == "AsGroup":
+		if animation_data.animate_as == 1:
 			anima_data.erase("node")
 			anima_data.group = node
-		elif animation_data.animate_as == "AsGrid":
+		elif animation_data.animate_as == 2:
 			anima_data.erase("node")
 			anima_data.grid = node
 	
@@ -193,8 +193,7 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
-	print(animation_data)
-	if animation_data.use == "UseAnimation":
+	if animation_data.use == 1:
 		anima_data.animation = animation_data.animation_name
 	else:
 		var node_name: String = node.name

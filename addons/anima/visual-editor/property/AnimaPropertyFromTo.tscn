@@ -42,15 +42,52 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CurrentValue" parent="HBoxContainer" instance=ExtResource( 7 )]
-margin_right = 0.0
-margin_bottom = 49.0
+margin_right = 168.0
+rect_min_size = Vector2( 168, 49 )
 rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "current value"
 flat = true
 __meta__ = {
+"__initial_AnimaNode__anima_1014441018145550415__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1014441018145550415_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1014441018145550415_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1202920097238041504__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1202920097238041504_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1202920097238041504_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1419115733788789062__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1419115733788789062_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1419115733788789062_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_44189857887221794__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -90,14 +127,12 @@ __meta__ = {
 "_editor_description_": ""
 }
 style = 1
-button_label = "current value"
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = 256.0
-margin_bottom = -4.0
+margin_right = 260.0
 rect_min_size = Vector2( 0, 45 )
 rect_pivot_offset = Vector2( 512, 15 )
 size_flags_horizontal = 3
@@ -106,7 +141,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Rect2" type="VBoxContainer" parent="CustomValue"]
+[node name="Rect2" type="HBoxContainer" parent="CustomValue"]
 visible = false
 margin_right = 252.0
 margin_bottom = 204.0
@@ -276,7 +311,7 @@ margin_bottom = 45.0
 icon = SubResource( 4 )
 linked_field = NodePath("../h")
 
-[node name="Vector3" type="VBoxContainer" parent="CustomValue"]
+[node name="Vector3" type="HBoxContainer" parent="CustomValue"]
 visible = false
 margin_right = 200.0
 margin_bottom = 151.0
@@ -381,22 +416,22 @@ caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
-[node name="Vector2" type="VBoxContainer" parent="CustomValue"]
+[node name="Vector2" type="HBoxContainer" parent="CustomValue"]
 visible = false
-margin_right = 260.0
-margin_bottom = 98.0
+margin_right = 480.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector2"]
-margin_right = 260.0
-margin_bottom = 45.0
+margin_right = 236.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
+custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/X"]
 margin_right = 32.0
-margin_bottom = 45.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 32, 32 )
 custom_styles/panel = SubResource( 2 )
 
@@ -409,35 +444,33 @@ size_flags_vertical = 7
 custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
 text = "x"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+valign = 1
 
 [node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 5 )]
-margin_left = 44.0
-margin_right = 208.0
-margin_bottom = 45.0
+margin_left = 32.0
+margin_right = 196.0
+margin_bottom = 49.0
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="RelativeVector2X" parent="CustomValue/Vector2/X" instance=ExtResource( 1 )]
-margin_left = 220.0
-margin_right = 260.0
-margin_bottom = 45.0
+margin_left = 196.0
+margin_right = 236.0
+margin_bottom = 49.0
 icon = SubResource( 4 )
 linked_field = NodePath("../x")
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
-margin_top = 53.0
-margin_right = 260.0
-margin_bottom = 98.0
+margin_left = 244.0
+margin_right = 480.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
+custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/Y"]
 margin_right = 32.0
-margin_bottom = 45.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 32, 32 )
 custom_styles/panel = SubResource( 2 )
 
@@ -450,28 +483,26 @@ size_flags_vertical = 7
 custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
 text = "y"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+valign = 1
 
 [node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 5 )]
-margin_left = 44.0
-margin_right = 208.0
-margin_bottom = 45.0
+margin_left = 32.0
+margin_right = 196.0
+margin_bottom = 49.0
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="RelativeVector2Y" parent="CustomValue/Vector2/Y" instance=ExtResource( 1 )]
-margin_left = 220.0
-margin_right = 260.0
-margin_bottom = 45.0
+margin_left = 196.0
+margin_right = 236.0
+margin_bottom = 49.0
 icon = SubResource( 4 )
 linked_field = NodePath("../y")
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
 margin_right = 164.0
-margin_bottom = 45.0
+margin_bottom = 49.0
 align = 2
 caret_blink = true
 caret_blink_speed = 0.5
@@ -498,13 +529,25 @@ caret_blink_speed = 0.5
 
 [node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource( 7 )]
 margin_left = 172.0
-margin_right = 210.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 38, 38 )
+margin_right = 212.0
+rect_min_size = Vector2( 40, 49 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Select relative property"
-expand_icon = true
+icon = ExtResource( 6 )
+icon_align = 1
 __meta__ = {
+"__initial_AnimaNode__anima_1081785286790930664__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1081785286790930664_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1081785286790930664_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_114847595052069458__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -529,6 +572,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_590050087356832886__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_590050087356832886_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_590050087356832886_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_719773648351920166__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_719773648351920166_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_719773648351920166_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_926060885944299805__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -543,17 +610,28 @@ __meta__ = {
 },
 "_editor_description_": ""
 }
-button_icon = ExtResource( 6 )
 
 [node name="ClearButton" parent="CustomValue" instance=ExtResource( 7 )]
-margin_left = 218.0
-margin_right = 256.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 38, 38 )
+margin_left = 220.0
+margin_right = 260.0
+rect_min_size = Vector2( 40, 49 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Clear value"
-expand_icon = true
+icon = ExtResource( 2 )
+icon_align = 1
 __meta__ = {
+"__initial_AnimaNode__anima_1212383672440035645__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1212383672440035645_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1212383672440035645_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1399386351466780518__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -563,6 +641,30 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1399386351466780518_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1420756633515148926__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1420756633515148926_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1420756633515148926_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_662520870655614868__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_662520870655614868_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_662520870655614868_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -593,18 +695,16 @@ __meta__ = {
 "_editor_description_": ""
 }
 style = 1
-button_icon = ExtResource( 2 )
 
 [node name="ConfirmButton" parent="CustomValue" instance=ExtResource( 7 )]
 visible = false
 margin_left = 218.0
 margin_right = 258.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 38, 38 )
+rect_min_size = Vector2( 40, 49 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Confirm value"
+icon = ExtResource( 4 )
 icon_align = 1
-expand_icon = true
 __meta__ = {
 "__initial_AnimaNode__anima_118338048585262085__button_bg": {
 "percentage": 0,
@@ -630,6 +730,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1272839985066247803__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1272839985066247803_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1272839985066247803_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_776853832511085571__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -642,9 +754,32 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_950339360209650391__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_950339360209650391_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_950339360209650391_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_979077788926711914__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_979077788926711914_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_979077788926711914_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
-button_icon = ExtResource( 4 )
 
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 8 )

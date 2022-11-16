@@ -67,6 +67,7 @@ margin_left = -4.0
 margin_top = 126.0
 margin_right = 9.0
 margin_bottom = 146.0
+icon_align = 1
 
 [node name="Button2" type="Button" parent="Control"]
 anchor_right = 2.869
@@ -162,8 +163,7 @@ color = Color( 0.4, 0.2, 0.6, 1 )
 __meta__ = {
 "__initial_easing": "easing",
 "__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
@@ -186,7 +186,7 @@ __anima_visual_editor_data = {
 0: {
 "collapsed": false,
 "data": [ {
-"animate_as": 0,
+"animate_as": 2,
 "animation_name": "",
 "delay": null,
 "duration": null,
@@ -197,12 +197,12 @@ __anima_visual_editor_data = {
 },
 "node_path": "./Control/Button1",
 "property": {
-"easing": [ "Linear", 0 ],
-"from": null,
+"easing": [ "EaseOutQuad", 9 ],
+"from": [ "0", "0" ],
 "initialValue": null,
-"pivot": [ 0, 0 ],
-"relative": false,
-"to": null
+"pivot": 7,
+"relative": true,
+"to": [ "100", "100" ]
 },
 "property_name": "position",
 "property_type": 5,

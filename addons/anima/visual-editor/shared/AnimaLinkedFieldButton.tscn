@@ -20,8 +20,3 @@ size = Vector2( 16, 16 )
 [node name="AnimaLinkedFieldButton" type="Button"]
 icon = SubResource( 3 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[connection signal="visibility_changed" from="." to="." method="_on_GodotUIButton_visibility_changed"]

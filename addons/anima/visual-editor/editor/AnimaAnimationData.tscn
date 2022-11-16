@@ -18,28 +18,251 @@ bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
 
 [node name="AnimaAnimationData" type="VBoxContainer"]
 anchor_right = 1.0
-margin_bottom = 754.0
+margin_left = 12.0
 rect_min_size = Vector2( 0, 64 )
 rect_pivot_offset = Vector2( 512, 32 )
+size_flags_horizontal = 3
+custom_constants/separation = 0
 script = ExtResource( 3 )
 
-[node name="Title" type="Label" parent="."]
-margin_right = 1024.0
-margin_bottom = 25.0
+[node name="Control" type="Control" parent="."]
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
-[node name="TimeAccordion" type="VBoxContainer" parent="."]
-margin_top = 33.0
-margin_right = 1024.0
-margin_bottom = 82.0
+[node name="Background" type="ColorRect" parent="Control"]
+margin_right = 36.0
+margin_bottom = 658.0
+color = Color( 0.309804, 0.309804, 0.309804, 1 )
+
+[node name="Title" parent="." instance=ExtResource( 9 )]
+anchor_right = 0.0
+margin_right = 1012.0
+__meta__ = {
+"__initial_AnimaNode__anima_1278306204750764893__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1278306204750764893_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1278306204750764893_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1499315795561348633__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1499315795561348633_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1499315795561348633_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_153114881770126678__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_153114881770126678_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_153114881770126678_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1549509437193156006__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1549509437193156006_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1549509437193156006_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_166565200350604126__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_166565200350604126_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_166565200350604126_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_349292019378698608__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_349292019378698608_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_349292019378698608_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_489041539162971741__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_489041539162971741_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_489041539162971741_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_602168229187361206__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_602168229187361206_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_602168229187361206_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_673553816023160278__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_673553816023160278_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_673553816023160278_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_847502603284283447__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_847502603284283447_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_847502603284283447_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_856636816732041748__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_856636816732041748_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_856636816732041748_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_904831392550357666__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_904831392550357666_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_904831392550357666_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_951881673607589478__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_951881673607589478_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_951881673607589478_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"_editor_description_": ""
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+visible = false
+margin_top = 49.0
+margin_right = 1000.0
+margin_bottom = 674.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 12
+custom_constants/margin_top = 12
+custom_constants/margin_left = 12
+custom_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 988.0
+margin_bottom = 613.0
+
+[node name="TimeAccordion" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 976.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 500, 48 )
 
-[node name="AnimaToggleButton2" parent="TimeAccordion" instance=ExtResource( 9 )]
+[node name="AnimaToggleButton2" parent="MarginContainer/VBoxContainer/TimeAccordion" instance=ExtResource( 9 )]
 anchor_right = 0.0
-margin_right = 1024.0
+margin_right = 100.0
 rect_min_size = Vector2( 100, 49 )
 text = "Time:"
 __meta__ = {
+"__initial_AnimaNode__anima_1070812936268385376__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1070812936268385376_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1070812936268385376_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1081049456576640625__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1081049456576640625_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1081049456576640625_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1147325282171995605__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -76,6 +299,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1386521645371217041__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1386521645371217041_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1386521645371217041_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1442409750527740234__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -85,6 +320,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1442409750527740234_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1503911035928305176__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1503911035928305176_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1503911035928305176_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -148,6 +395,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_210527324169697845__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_210527324169697845_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_210527324169697845_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_30965383480160366__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_30965383480160366_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_30965383480160366_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_349292019378698608__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -157,6 +428,30 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_349292019378698608_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_385640646407383179__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_385640646407383179_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_385640646407383179_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_453625126973765686__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_453625126973765686_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_453625126973765686_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -232,6 +527,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_880927995900962769__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_880927995900962769_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_880927995900962769_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_921722251889199097__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -244,10 +551,22 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_947511132398020508__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_947511132398020508_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_947511132398020508_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="TimeAccordion"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/TimeAccordion"]
 visible = false
 margin_top = 57.0
 margin_right = 1024.0
@@ -266,7 +585,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="HBoxContainer" type="GridContainer" parent="TimeAccordion/MarginContainer"]
+[node name="HBoxContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer"]
 margin_left = 12.0
 margin_top = 24.0
 margin_right = 1012.0
@@ -283,7 +602,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="Label2" type="Label" parent="TimeAccordion/MarginContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer"]
 margin_top = 12.0
 margin_right = 132.0
 margin_bottom = 37.0
@@ -292,13 +611,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Duration" parent="TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Duration" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_right = 1000.0
 margin_bottom = 49.0
 show_relative_selector = false
 
-[node name="Label3" type="Label" parent="TimeAccordion/MarginContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer"]
 margin_top = 73.0
 margin_right = 132.0
 margin_bottom = 98.0
@@ -307,26 +626,51 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Delay" parent="TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+[node name="Delay" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_top = 61.0
 margin_right = 1000.0
 margin_bottom = 110.0
 show_relative_selector = false
 
-[node name="NodeOrGroup" type="VBoxContainer" parent="."]
+[node name="NodeOrGroup" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
 margin_top = 211.0
 margin_right = 1024.0
-margin_bottom = 248.0
+margin_bottom = 275.0
 rect_min_size = Vector2( 0, 32 )
 rect_pivot_offset = Vector2( 500, 48.5 )
 
-[node name="AnimaToggleButton" parent="NodeOrGroup" instance=ExtResource( 9 )]
-margin_right = -897.0
+[node name="AnimaToggleButton" parent="MarginContainer/VBoxContainer/NodeOrGroup" instance=ExtResource( 9 )]
+margin_right = -873.0
+rect_min_size = Vector2( 151, 49 )
 text = "Animate as:"
 expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_102418009692750259__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_102418009692750259_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_102418009692750259_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1025658482726843018__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1025658482726843018_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1025658482726843018_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_108595590607143457__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -339,6 +683,54 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1100200598800156494__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1100200598800156494_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1100200598800156494_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1124046770437324219__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1124046770437324219_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1124046770437324219_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1130848200490285645__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1130848200490285645_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1130848200490285645_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1144226987828651123__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1144226987828651123_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1144226987828651123_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_121137527659820874__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -348,6 +740,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_121137527659820874_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1370327331219320312__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1370327331219320312_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1370327331219320312_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -483,6 +887,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_84962322933352737__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_84962322933352737_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_84962322933352737_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_88661068209940979__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -519,6 +935,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_959286519572786621__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_959286519572786621_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_959286519572786621_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_96893619236196121__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_96893619236196121_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_96893619236196121_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_969849182708370117__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -534,7 +974,7 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="NodeOrGroup"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup"]
 visible = false
 margin_top = 45.0
 margin_right = 1024.0
@@ -544,7 +984,7 @@ custom_constants/margin_top = 8
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 8
 
-[node name="GridContainer" type="GridContainer" parent="NodeOrGroup/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/MarginContainer"]
 margin_left = 12.0
 margin_top = 8.0
 margin_right = 1012.0
@@ -552,7 +992,7 @@ margin_bottom = 57.0
 rect_pivot_offset = Vector2( 500, 14 )
 columns = 3
 
-[node name="AsNode" type="Button" parent="NodeOrGroup/MarginContainer/GridContainer"]
+[node name="AsNode" type="Button" parent="MarginContainer/VBoxContainer/NodeOrGroup/MarginContainer/GridContainer"]
 margin_right = 328.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 83, 49 )
@@ -565,7 +1005,7 @@ pressed = true
 group = SubResource( 17 )
 text = "Node"
 
-[node name="AsGroup" type="Button" parent="NodeOrGroup/MarginContainer/GridContainer"]
+[node name="AsGroup" type="Button" parent="MarginContainer/VBoxContainer/NodeOrGroup/MarginContainer/GridContainer"]
 margin_left = 336.0
 margin_right = 664.0
 margin_bottom = 49.0
@@ -577,7 +1017,7 @@ toggle_mode = true
 group = SubResource( 17 )
 text = "Group"
 
-[node name="AsGrid" type="Button" parent="NodeOrGroup/MarginContainer/GridContainer"]
+[node name="AsGrid" type="Button" parent="MarginContainer/VBoxContainer/NodeOrGroup/MarginContainer/GridContainer"]
 margin_left = 672.0
 margin_right = 1000.0
 margin_bottom = 49.0
@@ -589,7 +1029,7 @@ toggle_mode = true
 group = SubResource( 17 )
 text = "Grid"
 
-[node name="GroupData" type="VBoxContainer" parent="."]
+[node name="GroupData" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
 margin_top = 256.0
 margin_right = 1024.0
@@ -598,7 +1038,7 @@ rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 0, 24 )
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="GroupData"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/GroupData"]
 margin_right = 1024.0
 margin_bottom = 167.0
 custom_constants/margin_right = 24
@@ -606,7 +1046,7 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 24
 custom_constants/margin_bottom = 12
 
-[node name="GridContainer" type="GridContainer" parent="GroupData/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer"]
 margin_left = 24.0
 margin_top = 12.0
 margin_right = 1000.0
@@ -615,26 +1055,26 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
-[node name="Label" type="Label" parent="GroupData/MarginContainer/GridContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer"]
 margin_top = 10.0
 margin_right = 171.0
 margin_bottom = 35.0
 text = "Items delay (s):"
 
-[node name="ItemsDelay" parent="GroupData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
+[node name="ItemsDelay" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
 margin_left = 179.0
 margin_right = 976.0
 margin_bottom = 45.0
 text = "0.01"
 align = 2
 
-[node name="Label2" type="Label" parent="GroupData/MarginContainer/GridContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer"]
 margin_top = 59.0
 margin_right = 171.0
 margin_bottom = 84.0
 text = "Animation type:"
 
-[node name="AnimationType" type="OptionButton" parent="GroupData/MarginContainer/GridContainer"]
+[node name="AnimationType" type="OptionButton" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer"]
 margin_left = 179.0
 margin_top = 53.0
 margin_right = 976.0
@@ -643,13 +1083,13 @@ text = "FROM_TOP"
 items = [ "FROM_TOP", null, false, 1, null, "FROM_BOTTOM", null, false, 2, null, "FROM_CENTER", null, false, 9, null, "ODDS_ONLY", null, false, 3, null, "EVEN_ONLY", null, false, 4, null, "RANDOM", null, false, 11, null, "TOGETHER", null, false, 0, null, "FROM_INDEX", null, false, 10, null ]
 selected = 0
 
-[node name="Label3" type="Label" parent="GroupData/MarginContainer/GridContainer"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer"]
 margin_top = 108.0
 margin_right = 171.0
 margin_bottom = 133.0
 text = "Index:"
 
-[node name="StartIndex" parent="GroupData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
+[node name="StartIndex" parent="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
 margin_left = 179.0
 margin_top = 98.0
 margin_right = 976.0
@@ -659,7 +1099,7 @@ align = 2
 type = 0
 min_value = 0.0
 
-[node name="GridData" type="VBoxContainer" parent="."]
+[node name="GridData" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
 margin_top = 431.0
 margin_right = 1024.0
@@ -668,7 +1108,7 @@ rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 0, 24 )
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="GridData"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/GridData"]
 margin_right = 1024.0
 margin_bottom = 220.0
 custom_constants/margin_right = 24
@@ -676,7 +1116,7 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 24
 custom_constants/margin_bottom = 12
 
-[node name="GridContainer" type="GridContainer" parent="GridData/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/GridData/MarginContainer"]
 margin_left = 24.0
 margin_top = 12.0
 margin_right = 1000.0
@@ -685,31 +1125,31 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
-[node name="Label" type="Label" parent="GridData/MarginContainer/GridContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer"]
 margin_top = 10.0
 margin_right = 171.0
 margin_bottom = 35.0
 text = "Grid Size:"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GridData/MarginContainer/GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer"]
 margin_left = 179.0
 margin_right = 976.0
 margin_bottom = 45.0
 rect_pivot_offset = Vector2( -581, 118 )
 
-[node name="X" type="HBoxContainer" parent="GridData/MarginContainer/GridContainer/HBoxContainer"]
+[node name="X" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer"]
 margin_right = 394.0
 margin_bottom = 45.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
-[node name="Panel" type="Panel" parent="GridData/MarginContainer/GridContainer/HBoxContainer/X"]
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer/X"]
 margin_right = 96.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 96, 32 )
 custom_styles/panel = SubResource( 16 )
 
-[node name="Label" type="Label" parent="GridData/MarginContainer/GridContainer/HBoxContainer/X/Panel"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer/X/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
@@ -720,7 +1160,7 @@ text = "Rows:"
 align = 1
 valign = 1
 
-[node name="x" parent="GridData/MarginContainer/GridContainer/HBoxContainer/X" instance=ExtResource( 14 )]
+[node name="x" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer/X" instance=ExtResource( 14 )]
 margin_left = 108.0
 margin_right = 394.0
 margin_bottom = 45.0
@@ -728,20 +1168,20 @@ caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
-[node name="Y" type="HBoxContainer" parent="GridData/MarginContainer/GridContainer/HBoxContainer"]
+[node name="Y" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer"]
 margin_left = 402.0
 margin_right = 797.0
 margin_bottom = 45.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
-[node name="Panel" type="Panel" parent="GridData/MarginContainer/GridContainer/HBoxContainer/Y"]
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer/Y"]
 margin_right = 120.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 120, 32 )
 custom_styles/panel = SubResource( 16 )
 
-[node name="Label" type="Label" parent="GridData/MarginContainer/GridContainer/HBoxContainer/Y/Panel"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer/Y/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
@@ -752,7 +1192,7 @@ text = "Columns:"
 align = 1
 valign = 1
 
-[node name="y" parent="GridData/MarginContainer/GridContainer/HBoxContainer/Y" instance=ExtResource( 14 )]
+[node name="y" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/HBoxContainer/Y" instance=ExtResource( 14 )]
 margin_left = 132.0
 margin_right = 395.0
 margin_bottom = 45.0
@@ -760,13 +1200,13 @@ caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
-[node name="Label4" type="Label" parent="GridData/MarginContainer/GridContainer"]
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer"]
 margin_top = 63.0
 margin_right = 171.0
 margin_bottom = 88.0
 text = "Items delay (s):"
 
-[node name="ItemsDelay" parent="GridData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
+[node name="ItemsDelay" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
 margin_left = 179.0
 margin_top = 53.0
 margin_right = 976.0
@@ -774,13 +1214,13 @@ margin_bottom = 98.0
 text = "0.01"
 align = 2
 
-[node name="Label2" type="Label" parent="GridData/MarginContainer/GridContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer"]
 margin_top = 112.0
 margin_right = 171.0
 margin_bottom = 137.0
 text = "Animation type:"
 
-[node name="AnimationType" type="OptionButton" parent="GridData/MarginContainer/GridContainer"]
+[node name="AnimationType" type="OptionButton" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer"]
 margin_left = 179.0
 margin_top = 106.0
 margin_right = 976.0
@@ -789,13 +1229,13 @@ text = "FROM_TOP"
 items = [ "FROM_TOP", null, false, 1, null, "FROM_BOTTOM", null, false, 2, null, "FROM_CENTER", null, false, 9, null, "ODDS_ONLY", null, false, 3, null, "EVEN_ONLY", null, false, 4, null, "RANDOM", null, false, 11, null, "TOGETHER", null, false, 0, null, "FROM_INDEX", null, false, 10, null ]
 selected = 0
 
-[node name="Label3" type="Label" parent="GridData/MarginContainer/GridContainer"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer"]
 margin_top = 161.0
 margin_right = 171.0
 margin_bottom = 186.0
 text = "Index:"
 
-[node name="StartIndex" parent="GridData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
+[node name="StartIndex" parent="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
 margin_left = 179.0
 margin_top = 151.0
 margin_right = 976.0
@@ -805,17 +1245,17 @@ align = 2
 type = 0
 min_value = 0.0
 
-[node name="AnimateWith" type="HBoxContainer" parent="."]
-margin_top = 90.0
-margin_right = 1024.0
-margin_bottom = 139.0
+[node name="AnimateWith" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 57.0
+margin_right = 976.0
+margin_bottom = 106.0
 rect_pivot_offset = Vector2( 500, 248.5 )
 custom_constants/separation = 24
 
-[node name="AnimateProperty" parent="AnimateWith" instance=ExtResource( 1 )]
-margin_right = 500.0
+[node name="AnimateProperty" parent="MarginContainer/VBoxContainer/AnimateWith" instance=ExtResource( 1 )]
+margin_right = 236.0
 rect_min_size = Vector2( 236, 49 )
-rect_pivot_offset = Vector2( 250, 24.5 )
+rect_pivot_offset = Vector2( 118, 24.5 )
 size_flags_horizontal = 3
 toggle_mode = true
 pressed = true
@@ -832,6 +1272,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1070897193286982178_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1107893780707212891__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1107893780707212891_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1107893780707212891_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -859,6 +1311,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1230802686554393311__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1230802686554393311_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1230802686554393311_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_127145520218448999__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -883,6 +1347,66 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1304015429538737061__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1304015429538737061_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1304015429538737061_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1306746366042697754__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1306746366042697754_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1306746366042697754_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1368162526659527832__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1368162526659527832_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1368162526659527832_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1564755348235416992__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1564755348235416992_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1564755348235416992_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1588878837386729492__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1588878837386729492_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1588878837386729492_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1660187554038967529__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -892,6 +1416,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1660187554038967529_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1666268779983128174__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1666268779983128174_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1666268779983128174_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -967,6 +1503,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_591961231199156006__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_591961231199156006_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_591961231199156006_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_653541886001731812__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_653541886001731812_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_653541886001731812_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_680878084928499512__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -1008,9 +1568,9 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="UseAnimation" parent="AnimateWith" instance=ExtResource( 1 )]
-margin_left = 524.0
-margin_right = 1024.0
+[node name="UseAnimation" parent="MarginContainer/VBoxContainer/AnimateWith" instance=ExtResource( 1 )]
+margin_left = 500.0
+margin_right = 717.0
 rect_min_size = Vector2( 217, 49 )
 rect_pivot_offset = Vector2( 248, 24.5 )
 size_flags_horizontal = 3
@@ -1031,6 +1591,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1116356449878613281__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1116356449878613281_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1116356449878613281_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_112488763094848877__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_112488763094848877_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_112488763094848877_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1178798221296332275__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -1040,6 +1624,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1178798221296332275_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1184103851224831787__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1184103851224831787_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1184103851224831787_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1079,6 +1675,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1413598971016823242__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1413598971016823242_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1413598971016823242_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1508733619219099854__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -1112,6 +1720,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1586556817634817627_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1667065355757192627__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1667065355757192627_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1667065355757192627_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1151,6 +1771,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_36189271010648291__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_36189271010648291_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_36189271010648291_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_468392983782244324__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_468392983782244324_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_468392983782244324_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_544719326112596313__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -1160,6 +1804,30 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_544719326112596313_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_563424330552692871__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_563424330552692871_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_563424330552692871_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_570131928232174316__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_570131928232174316_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_570131928232174316_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1199,20 +1867,31 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_964598276076908813__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_964598276076908813_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_964598276076908813_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
 style = 1
 
-[node name="PropertyValues" type="VBoxContainer" parent="."]
-visible = false
-margin_top = 711.0
-margin_right = 1024.0
-margin_bottom = 1134.0
+[node name="PropertyValues" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 114.0
+margin_right = 976.0
+margin_bottom = 529.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="Label1" type="Label" parent="PropertyValues"]
-margin_right = 1024.0
+[node name="Label1" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues"]
+margin_right = 976.0
 margin_bottom = 25.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
@@ -1222,10 +1901,10 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="AnimateGrid" type="GridContainer" parent="PropertyValues"]
+[node name="AnimateGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/PropertyValues"]
 margin_top = 33.0
-margin_right = 1024.0
-margin_bottom = 370.0
+margin_right = 976.0
+margin_bottom = 362.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 12
 custom_constants/hseparation = 12
@@ -1234,7 +1913,7 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="From" type="Label" parent="PropertyValues/AnimateGrid"]
+[node name="From" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_top = 12.0
 margin_right = 160.0
 margin_bottom = 37.0
@@ -1246,13 +1925,13 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="FromValue" parent="PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="FromValue" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
-margin_right = 1024.0
+margin_right = 976.0
 margin_bottom = 49.0
 type = 4
 
-[node name="To" type="Label" parent="PropertyValues/AnimateGrid"]
+[node name="To" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_top = 73.0
 margin_right = 160.0
 margin_bottom = 98.0
@@ -1264,14 +1943,14 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="ToValue" parent="PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="ToValue" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
 margin_top = 61.0
-margin_right = 1024.0
+margin_right = 976.0
 margin_bottom = 110.0
 type = 4
 
-[node name="Initial" type="Label" parent="PropertyValues/AnimateGrid"]
+[node name="Initial" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_top = 134.0
 margin_right = 160.0
 margin_bottom = 159.0
@@ -1283,14 +1962,15 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="InitialValue" parent="PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
+[node name="InitialValue" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
 margin_top = 122.0
-margin_right = 1024.0
+margin_right = 976.0
 margin_bottom = 171.0
+label = "none"
 type = 4
 
-[node name="Relative" type="Label" parent="PropertyValues/AnimateGrid"]
+[node name="Relative" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_top = 194.0
 margin_right = 160.0
 margin_bottom = 219.0
@@ -1301,10 +1981,10 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="RelativeCheck" type="CheckBox" parent="PropertyValues/AnimateGrid"]
+[node name="RelativeCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_left = 172.0
 margin_top = 183.0
-margin_right = 1024.0
+margin_right = 976.0
 margin_bottom = 231.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 text = "Relative value"
@@ -1312,10 +1992,10 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="Pivot" type="Label" parent="PropertyValues/AnimateGrid"]
-margin_top = 253.0
+[node name="Pivot" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
+margin_top = 249.0
 margin_right = 160.0
-margin_bottom = 278.0
+margin_bottom = 274.0
 rect_min_size = Vector2( 120, 0 )
 text = "Pivot"
 __meta__ = {
@@ -1323,17 +2003,16 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="PivotButton" parent="PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
-anchor_right = 0.0
+[node name="PivotButton" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
 margin_left = 172.0
 margin_top = 243.0
-margin_right = 1024.0
-margin_bottom = 288.0
+margin_right = 976.0
+margin_bottom = 280.0
 
-[node name="Easing" type="Label" parent="PropertyValues/AnimateGrid"]
-margin_top = 306.0
+[node name="Easing" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
+margin_top = 298.0
 margin_right = 160.0
-margin_bottom = 331.0
+margin_bottom = 323.0
 rect_min_size = Vector2( 160, 0 )
 text = "Easing"
 __meta__ = {
@@ -1341,24 +2020,24 @@ __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="EasingButton" type="Button" parent="PropertyValues/AnimateGrid"]
+[node name="EasingButton" type="Button" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_left = 172.0
-margin_top = 300.0
-margin_right = 1024.0
-margin_bottom = 337.0
+margin_top = 292.0
+margin_right = 976.0
+margin_bottom = 329.0
 size_flags_horizontal = 3
 text = "Linear"
 __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
-[node name="empty" type="Control" parent="PropertyValues"]
-margin_top = 378.0
-margin_right = 1024.0
-margin_bottom = 423.0
+[node name="empty" type="Control" parent="MarginContainer/VBoxContainer/PropertyValues"]
+margin_top = 370.0
+margin_right = 976.0
+margin_bottom = 415.0
 rect_min_size = Vector2( 0, 45 )
 
-[node name="SelectAnimation" type="Button" parent="."]
+[node name="SelectAnimation" type="Button" parent="MarginContainer/VBoxContainer"]
 visible = false
 margin_top = 1142.0
 margin_right = 1024.0
@@ -1369,24 +2048,36 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 text = "Select Animation"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_top = 147.0
-margin_right = 1024.0
-margin_bottom = 211.0
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 537.0
+margin_right = 976.0
+margin_bottom = 601.0
 rect_min_size = Vector2( 0, 64 )
 custom_constants/separation = 0
 alignment = 1
 
-[node name="RemoveButton" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 442.0
+[node name="RemoveButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
+margin_left = 418.0
 margin_top = 7.0
-margin_right = 582.0
+margin_right = 558.0
 margin_bottom = 56.0
 rect_min_size = Vector2( 140, 49 )
 rect_pivot_offset = Vector2( 60, 24.5 )
 size_flags_vertical = 4
 text = "Remove"
 __meta__ = {
+"__initial_AnimaNode__anima_1051137046184623901__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1051137046184623901_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1051137046184623901_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1076177778440205933__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -1399,6 +2090,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1092082553453193237__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1092082553453193237_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1092082553453193237_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_109601274963306604__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -1408,6 +2111,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_109601274963306604_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1119160995749956543__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1119160995749956543_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1119160995749956543_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1435,6 +2150,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1315943244304628906__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1315943244304628906_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1315943244304628906_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1324716405258830078__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -1456,6 +2183,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1460047866037521484_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1492251709813551025__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1492251709813551025_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1492251709813551025_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1543,6 +2282,66 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_41423352580388739__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_41423352580388739_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_41423352580388739_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_460139456246138306__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_460139456246138306_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_460139456246138306_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_501277787037977234__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_501277787037977234_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_501277787037977234_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_586356877488027954__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_586356877488027954_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_586356877488027954_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_728013055103217896__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_728013055103217896_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_728013055103217896_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_982685151582223633__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -1571,22 +2370,25 @@ __meta__ = {
 }
 style = 2
 
+[connection signal="item_rect_changed" from="." to="." method="_on_AnimaAnimationData_item_rect_changed"]
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
-[connection signal="value_updated" from="TimeAccordion/MarginContainer/HBoxContainer/Duration" to="." method="_on_Duration_value_updated"]
-[connection signal="value_updated" from="TimeAccordion/MarginContainer/HBoxContainer/Delay" to="." method="_on_Delay_value_updated"]
-[connection signal="changed" from="GroupData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
-[connection signal="item_selected" from="GroupData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
-[connection signal="changed" from="GroupData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
-[connection signal="changed" from="GridData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
-[connection signal="item_selected" from="GridData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
-[connection signal="changed" from="GridData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
-[connection signal="select_relative_property" from="PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
-[connection signal="value_updated" from="PropertyValues/AnimateGrid/FromValue" to="." method="_update_me"]
-[connection signal="select_relative_property" from="PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
-[connection signal="value_updated" from="PropertyValues/AnimateGrid/ToValue" to="." method="_update_me"]
-[connection signal="select_relative_property" from="PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
-[connection signal="value_updated" from="PropertyValues/AnimateGrid/InitialValue" to="." method="_update_me"]
-[connection signal="toggled" from="PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_RelativeCheck_toggled"]
-[connection signal="pivot_point_selected" from="PropertyValues/AnimateGrid/PivotButton" to="." method="_update_me"]
-[connection signal="pressed" from="PropertyValues/AnimateGrid/EasingButton" to="." method="_on_EasingButton_pressed"]
-[connection signal="pressed" from="HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
+[connection signal="value_updated" from="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer/Duration" to="." method="_on_Duration_value_updated"]
+[connection signal="value_updated" from="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer/Delay" to="." method="_on_Delay_value_updated"]
+[connection signal="changed" from="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
+[connection signal="changed" from="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
+[connection signal="changed" from="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/AnimationType" to="." method="_on_AnimationType_item_selected"]
+[connection signal="changed" from="MarginContainer/VBoxContainer/GridData/MarginContainer/GridContainer/StartIndex" to="." method="_emit_updated"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/AnimateWith/AnimateProperty" to="." method="_on_AnimateWith_toggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/AnimateWith/UseAnimation" to="." method="_on_AnimateWith_toggled"]
+[connection signal="select_relative_property" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
+[connection signal="value_updated" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/FromValue" to="." method="_update_me"]
+[connection signal="select_relative_property" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
+[connection signal="value_updated" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/ToValue" to="." method="_update_me"]
+[connection signal="select_relative_property" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/InitialValue" to="." method="_on_InitialValue_select_relative_property"]
+[connection signal="value_updated" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/InitialValue" to="." method="_update_me"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_RelativeCheck_toggled"]
+[connection signal="pivot_point_selected" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/PivotButton" to="." method="_update_me"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid/EasingButton" to="." method="_on_EasingButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/RemoveButton" to="MarginContainer" method="_on_RemoveButton_pressed"]
