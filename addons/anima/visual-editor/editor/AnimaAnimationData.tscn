@@ -26,12 +26,14 @@ custom_constants/separation = 0
 script = ExtResource( 3 )
 
 [node name="Control" type="Control" parent="."]
+mouse_filter = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="Background" type="ColorRect" parent="Control"]
-margin_right = 36.0
-margin_bottom = 658.0
+margin_right = 1012.0
+margin_bottom = 840.0
+mouse_filter = 2
 color = Color( 0.309804, 0.309804, 0.309804, 1 )
 
 [node name="Title" parent="." instance=ExtResource( 9 )]
@@ -98,6 +100,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_321618163384966858__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_321618163384966858_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_321618163384966858_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_349292019378698608__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -131,6 +145,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_489041539162971741_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_597868438488380615__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_597868438488380615_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_597868438488380615_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -212,8 +238,8 @@ __meta__ = {
 [node name="MarginContainer" type="MarginContainer" parent="."]
 visible = false
 margin_top = 49.0
-margin_right = 1000.0
-margin_bottom = 674.0
+margin_right = 1012.0
+margin_bottom = 840.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -224,12 +250,12 @@ custom_constants/margin_bottom = 12
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 988.0
-margin_bottom = 613.0
+margin_right = 1000.0
+margin_bottom = 779.0
 
 [node name="TimeAccordion" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_right = 976.0
-margin_bottom = 49.0
+margin_right = 988.0
+margin_bottom = 215.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 500, 48 )
 
@@ -383,6 +409,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_166829154657712738__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_166829154657712738_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_166829154657712738_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_167851160001467804__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -515,6 +553,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_720749975802646118__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_720749975802646118_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_720749975802646118_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_808392077212716187__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -569,7 +619,7 @@ __meta__ = {
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/TimeAccordion"]
 visible = false
 margin_top = 57.0
-margin_right = 1024.0
+margin_right = 988.0
 margin_bottom = 215.0
 rect_pivot_offset = Vector2( 500, 79 )
 size_flags_horizontal = 3
@@ -588,7 +638,7 @@ __meta__ = {
 [node name="HBoxContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer"]
 margin_left = 12.0
 margin_top = 24.0
-margin_right = 1012.0
+margin_right = 976.0
 margin_bottom = 134.0
 rect_pivot_offset = Vector2( 500, 55 )
 size_flags_horizontal = 3
@@ -613,8 +663,9 @@ __meta__ = {
 
 [node name="Duration" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
-margin_right = 1000.0
+margin_right = 964.0
 margin_bottom = 49.0
+label = "default duration"
 show_relative_selector = false
 
 [node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer"]
@@ -629,8 +680,9 @@ __meta__ = {
 [node name="Delay" parent="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
 margin_left = 156.0
 margin_top = 61.0
-margin_right = 1000.0
+margin_right = 964.0
 margin_bottom = 110.0
+label = "none"
 show_relative_selector = false
 
 [node name="NodeOrGroup" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -827,6 +879,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_37223150931853119__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_37223150931853119_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_37223150931853119_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_454360864891194458__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -884,6 +948,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_772384246053583862_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_779755910102055786__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_779755910102055786_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_779755910102055786_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1246,16 +1322,16 @@ type = 0
 min_value = 0.0
 
 [node name="AnimateWith" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 57.0
-margin_right = 976.0
-margin_bottom = 106.0
+margin_top = 223.0
+margin_right = 988.0
+margin_bottom = 272.0
 rect_pivot_offset = Vector2( 500, 248.5 )
 custom_constants/separation = 24
 
 [node name="AnimateProperty" parent="MarginContainer/VBoxContainer/AnimateWith" instance=ExtResource( 1 )]
 margin_right = 236.0
 rect_min_size = Vector2( 236, 49 )
-rect_pivot_offset = Vector2( 118, 24.5 )
+rect_pivot_offset = Vector2( 241, 24.5 )
 size_flags_horizontal = 3
 toggle_mode = true
 pressed = true
@@ -1404,6 +1480,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1588878837386729492_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1652640972655849121__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1652640972655849121_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1652640972655849121_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1563,14 +1651,26 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_85664859492149277__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_85664859492149277_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_85664859492149277_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__visibility_strategy": 0,
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
 }
 
 [node name="UseAnimation" parent="MarginContainer/VBoxContainer/AnimateWith" instance=ExtResource( 1 )]
-margin_left = 500.0
-margin_right = 717.0
+margin_left = 506.0
+margin_right = 723.0
 rect_min_size = Vector2( 217, 49 )
 rect_pivot_offset = Vector2( 248, 24.5 )
 size_flags_horizontal = 3
@@ -1807,6 +1907,30 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_550566720188353149__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_550566720188353149_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_550566720188353149_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_555416117795706055__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_555416117795706055_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_555416117795706055_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_563424330552692871__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -1884,14 +2008,14 @@ __meta__ = {
 style = 1
 
 [node name="PropertyValues" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 114.0
-margin_right = 976.0
-margin_bottom = 529.0
+margin_top = 280.0
+margin_right = 988.0
+margin_bottom = 695.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="Label1" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues"]
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 25.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
@@ -1903,7 +2027,7 @@ __meta__ = {
 
 [node name="AnimateGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/PropertyValues"]
 margin_top = 33.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 362.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 12
@@ -1927,7 +2051,7 @@ __meta__ = {
 
 [node name="FromValue" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 49.0
 type = 4
 
@@ -1946,7 +2070,7 @@ __meta__ = {
 [node name="ToValue" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
 margin_top = 61.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 110.0
 type = 4
 
@@ -1965,7 +2089,7 @@ __meta__ = {
 [node name="InitialValue" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 5 )]
 margin_left = 172.0
 margin_top = 122.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 171.0
 label = "none"
 type = 4
@@ -1984,7 +2108,7 @@ __meta__ = {
 [node name="RelativeCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_left = 172.0
 margin_top = 183.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 231.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 text = "Relative value"
@@ -2004,9 +2128,10 @@ __meta__ = {
 }
 
 [node name="PivotButton" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid" instance=ExtResource( 6 )]
+anchor_right = 0.0
 margin_left = 172.0
 margin_top = 243.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 280.0
 
 [node name="Easing" type="Label" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
@@ -2023,7 +2148,7 @@ __meta__ = {
 [node name="EasingButton" type="Button" parent="MarginContainer/VBoxContainer/PropertyValues/AnimateGrid"]
 margin_left = 172.0
 margin_top = 292.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 329.0
 size_flags_horizontal = 3
 text = "Linear"
@@ -2033,7 +2158,7 @@ __meta__ = {
 
 [node name="empty" type="Control" parent="MarginContainer/VBoxContainer/PropertyValues"]
 margin_top = 370.0
-margin_right = 976.0
+margin_right = 988.0
 margin_bottom = 415.0
 rect_min_size = Vector2( 0, 45 )
 
@@ -2049,17 +2174,17 @@ size_flags_vertical = 0
 text = "Select Animation"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 537.0
-margin_right = 976.0
-margin_bottom = 601.0
+margin_top = 703.0
+margin_right = 988.0
+margin_bottom = 767.0
 rect_min_size = Vector2( 0, 64 )
 custom_constants/separation = 0
 alignment = 1
 
 [node name="RemoveButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 418.0
+margin_left = 424.0
 margin_top = 7.0
-margin_right = 558.0
+margin_right = 564.0
 margin_bottom = 56.0
 rect_min_size = Vector2( 140, 49 )
 rect_pivot_offset = Vector2( 60, 24.5 )
@@ -2330,6 +2455,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_656366918336703247__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_656366918336703247_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_656366918336703247_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_728013055103217896__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -2339,6 +2476,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_728013055103217896_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_77771230488595093__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_77771230488595093_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_77771230488595093_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -2372,6 +2521,7 @@ style = 2
 
 [connection signal="item_rect_changed" from="." to="." method="_on_AnimaAnimationData_item_rect_changed"]
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
+[connection signal="mouse_entered" from="Title" to="." method="_on_AnimaAnimationData_mouse_entered"]
 [connection signal="value_updated" from="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer/Duration" to="." method="_on_Duration_value_updated"]
 [connection signal="value_updated" from="MarginContainer/VBoxContainer/TimeAccordion/MarginContainer/HBoxContainer/Delay" to="." method="_on_Delay_value_updated"]
 [connection signal="changed" from="MarginContainer/VBoxContainer/GroupData/MarginContainer/GridContainer/ItemsDelay" to="." method="_emit_updated"]
