@@ -39,7 +39,7 @@ func _exit_tree():
 
 func _add_anima_editor(where: int) -> void:
 	if where == 0:
-		add_control_to_bottom_panel(_anima_editor, "Anima V.E.")
+		add_control_to_bottom_panel(_anima_editor, "Anima Animation Builder")
 	elif where == 1:
 		add_control_to_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_RIGHT, _anima_editor)
 	else:

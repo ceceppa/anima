@@ -123,6 +123,10 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 
 		previous_key_value[property_to_animate] = data
 
+		if typeof(value) != typeof(current_value):
+			if typeof(current_value) == TYPE_VECTOR2:
+				value = Vector2(value.x, value.y)
+
 		if current_value != value and relative_properties.find(property_to_animate) < 0:
 			data.initial_value = value
 

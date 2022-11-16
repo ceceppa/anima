@@ -243,6 +243,18 @@ margin_right = 832.0
 text = "Use Easing"
 icon = SubResource( 14 )
 __meta__ = {
+"__initial_AnimaNode__anima_941939754830175293__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_941939754830175293_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_941939754830175293_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
 
@@ -259,6 +271,18 @@ rect_min_size = Vector2( 160, 0 )
 text = "Cancel"
 icon = SubResource( 16 )
 __meta__ = {
+"__initial_AnimaNode__anima_1501669471304777588__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1501669471304777588_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1501669471304777588_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "_editor_description_": ""
 }
 style = 1
