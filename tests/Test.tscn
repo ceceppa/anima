@@ -63,10 +63,11 @@ __meta__ = {
 }
 
 [node name="Button1" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
+margin_left = 179.0
+margin_top = 125.0
+margin_right = 295.0
+margin_bottom = 162.0
+text = "Button 1"
 icon_align = 1
 
 [node name="Button2" type="Button" parent="Control"]
@@ -76,6 +77,7 @@ margin_right = 176.24
 margin_bottom = -36.12
 rect_pivot_offset = Vector2( 145.5, 18.5 )
 custom_styles/normal = SubResource( 8 )
+text = "Button NR 2"
 icon = ExtResource( 7 )
 __meta__ = {
 "__visibility_strategy": 0
@@ -159,7 +161,6 @@ __meta__ = {
 }
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color( 0.4, 0.2, 0.6, 1 )
 __meta__ = {
 "__initial_easing": "easing",
 "__initial_scale": Vector2( 1, 1 ),
@@ -186,7 +187,7 @@ __anima_visual_editor_data = {
 0: {
 "collapsed": false,
 "data": [ {
-"animate_as": 2,
+"animate_as": 0,
 "animation_name": "",
 "delay": null,
 "duration": null,
@@ -200,16 +201,16 @@ __anima_visual_editor_data = {
 "easing": [ "EaseOutQuad", 9 ],
 "from": [ "0", "0" ],
 "initialValue": null,
-"pivot": 7,
-"relative": true,
+"pivot": -1,
+"relative": false,
 "to": [ "100", "100" ]
 },
 "property_name": "position",
 "property_type": 5,
-"use": 1
+"use": 0
 }, {
 "animate_as": 0,
-"animation_name": "",
+"animation_name": "rubber_band",
 "delay": null,
 "duration": null,
 "group": {
@@ -228,7 +229,7 @@ __anima_visual_editor_data = {
 },
 "property_name": "position",
 "property_type": 5,
-"use": 0
+"use": 1
 } ],
 "duration": null,
 "name": "Frame0",

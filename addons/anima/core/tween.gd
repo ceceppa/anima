@@ -17,7 +17,7 @@ var _tween_started := 0
 var _root_node: Node
 var _keyframes_engine := AnimaKeyframesEngine.new(funcref(self, '_apply_initial_values'), funcref(self, 'add_animation_data'))
 var _use_meta_values := true
-var _should_apply_initial_values := true
+var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
 
 enum PLAY_MODE {
 	NORMAL,
@@ -51,8 +51,8 @@ func play(play_speed: float):
 
 	resume_all()
 
-func set_apply_initial_values(apply: bool) -> void:
-	_should_apply_initial_values = apply
+func set_apply_initial_values(when) -> void:
+	_apply_initial_values_on = when
 
 func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
 	var index: String
@@ -75,6 +75,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
 		if not animation_data.has("to"):
 			printerr("When specifying 'initial_values' the 'to' keyframe cannot be empty!")
+		elif _apply_initial_values_on == ANIMA.APPLY_INITIAL_VALUES.ON_PLAY:
+			printerr("Implement me")
 		else:
 			_apply_initial_values(animation_data)
 
@@ -142,9 +144,6 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		node.connect("tree_exiting", self, "_on_node_tree_exiting")
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
-	if not _should_apply_initial_values:
-		return
-
 	var node: Node = animation_data.node
 
 	for property in animation_data.initial_values:

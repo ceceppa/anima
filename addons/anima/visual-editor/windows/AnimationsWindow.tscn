@@ -48,10 +48,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ControlTest" type="Label" parent="HBoxContainer/VBoxContainer/ControlContainer"]
-margin_left = 309.0
-margin_top = 135.0
-margin_right = 379.0
-margin_bottom = 160.0
+margin_left = 210.0
+margin_top = 92.0
+margin_right = 477.0
+margin_bottom = 203.0
 text = "Anima"
 
 [node name="SpriteContainer" type="CenterContainer" parent="HBoxContainer/VBoxContainer"]
@@ -123,8 +123,8 @@ custom_styles/panel = SubResource( 3 )
 [node name="ListContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer2/ScrollContainer/PanelContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 308.0
-margin_bottom = 466.0
+margin_right = 284.0
+margin_bottom = 5326.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 8

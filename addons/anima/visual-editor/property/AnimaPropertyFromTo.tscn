@@ -5,7 +5,7 @@
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=4]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/visual-editor/icons/GuiTabMenuHl.svg" type="Texture" id=6]
+[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture" id=6]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=8]
 
@@ -110,6 +110,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_44189857887221794_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_464764718130447205__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_464764718130447205_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_464764718130447205_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -609,6 +621,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_657050753570362427__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_657050753570362427_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_657050753570362427_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_719773648351920166__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -654,6 +678,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1212383672440035645_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1315080266764573975__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1315080266764573975_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1315080266764573975_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -776,6 +812,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1272839985066247803_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_579480199471437256__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_579480199471437256_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_579480199471437256_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
