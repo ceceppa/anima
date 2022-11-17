@@ -1,4 +1,3 @@
-tool
 extends Control
 
 const Test := {}

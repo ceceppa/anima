@@ -11,13 +11,6 @@ signal updated
 signal removed
 signal highlight_node(node)
 
-var _path: String
-var _property
-var _source_node: Node
-var _property_type
-var _animation_name: String
-var _relative_source: Node
-
 onready var _node_or_group = find_node("NodeOrGroup")
 onready var _group_data = find_node("GroupData")
 onready var _grid_data = find_node("GridData")
@@ -29,7 +22,17 @@ onready var _delay = find_node("Delay")
 onready var _timer = find_node("Timer")
 onready var _title = find_node("Title")
 onready var _animation_type = find_node("AnimationType")
+onready var _animation_type_icon = find_node("AnimationTypeIcon")
 onready var _background_rect = find_node("Background")
+
+var _path: String
+var _property
+var _source_node: Node
+var _property_type
+var _animation_name: String
+var _relative_source: Node
+var _animate_with: int = AnimaVisualNode.USE.ANIMATE_PROPERTY
+var _animate_as: int = AnimaVisualNode.ANIMATE_AS.NODE
 
 func _ready():
 	margin_right = 0
@@ -41,7 +44,6 @@ func _ready():
 	_select_animation.hide()
 
 	_setup_group_data()
-	_on_AnimateWith_toggled(42)
 
 func _setup_group_data() -> void:
 	_animation_type.clear()
@@ -63,15 +65,7 @@ func set_data(node: Node, path: String, property, property_type):
 	_node_or_group.visible = node.get_child_count() > 1
 
 func get_data() -> Dictionary:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
-	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").group
-	var use_animation = use_property_or_animation.get_pressed_button().get_index() == 1
 	var _property_values = find_node("PropertyValues")
-
-	var animate_as_button: Button = animate_as_group.get_pressed_button()
-	if animate_as_button == null:
-		animate_as_button = animate_as_group.get_buttons()[0]
-		animate_as_button.pressed = true
 
 	var easing_value = ANIMA.EASING.LINEAR
 	var easing_button: Button = _property_values.find_node("EasingButton")
@@ -79,14 +73,17 @@ func get_data() -> Dictionary:
 	if easing_button.has_meta("easing_value"):
 		easing_value = int(easing_button.get_meta("easing_value"))
 
+	if not _node_or_group.visible:
+		_animate_as = AnimaVisualNode.ANIMATE_AS.NODE
+
 	var data =  {
 		node_path = _path,
 		property_name = _property,
 		property_type = _property_type,
 		duration = _duration.get_value(),
 		delay = _delay.get_value(),
-		animate_as = animate_as_group.get_pressed_button().get_index(),
-		use = use_property_or_animation.get_pressed_button().get_index(),
+		animate_as = _animate_as,
+		use = _animate_with,
 		animation_name = _animation_name,
 		group = {
 			items_delay = float(find_node("ItemsDelay").get_value()),
@@ -107,10 +104,11 @@ func get_data() -> Dictionary:
 
 func restore_data(data: Dictionary) -> void:
 	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
-	var use_property_or_animation: ButtonGroup = find_node("UseAnimation").group
 
-	_press_button_in_group(use_property_or_animation, data.use)
+	_press_button_in_group(_animate_property.group, data.use)
 	_press_button_in_group(animate_as_group, data.animate_as)
+
+	_update_icon(data.use, false)
 
 	find_node("Duration").set_value(data.duration)
 	find_node("Delay").set_value(data.delay)
@@ -155,8 +153,6 @@ func restore_data(data: Dictionary) -> void:
 
 				break
 
-	_on_AnimateWith_toggled(42)
-
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()
 
@@ -168,7 +164,7 @@ func set_relative_property(node_path: String, property: String) -> void:
 func _press_button_in_group(group: ButtonGroup, selected_button: int) -> void:
 	var buttons = group.get_buttons()
 
-	buttons[selected_button].pressed = true
+	buttons[selected_button].set_pressed(true)
 
 func _on_UseAnimation_pressed():
 	emit_signal("updated")
@@ -200,7 +196,7 @@ func _on_RemoveButton_pressed():
 func selected_animation(label, name) -> void:
 	if name:
 		_animation_name = name
-		find_node("SelectAnimation").set_label(name)
+		find_node("SelectAnimation").set_text(name)
 
 		emit_signal("updated")
 
@@ -277,13 +273,44 @@ func _on_EasingButton_pressed():
 func _on_AnimationType_item_selected(_index):
 	_emit_updated()
 
-func _on_AnimateWith_toggled(_ignore):
-	var button_index = _animate_property.group.get_pressed_button().get_index()
-	var is_property = button_index == 0
+func _update_icon(button_index: int, emit := true) -> void:
+	var is_property = button_index == AnimaVisualNode.USE.ANIMATE_PROPERTY
+
+	if _animate_with == button_index:
+		return
+
+	var icon := "res://addons/anima/visual-editor/icons/Animation.svg"
+
+	if is_property:
+		icon = "res://addons/anima/visual-editor/icons/Property.svg"
 
 	_property_values.visible = is_property
 	_select_animation.visible = !is_property
 
+	_animation_type_icon.texture = load(icon)
+
+	_animate_with = button_index
+
+	if emit:
+		emit_signal("updated")
+
 func _on_AnimaAnimationData_item_rect_changed():
 	if _background_rect:
 		_background_rect.rect_size = rect_size
+
+		_animation_type_icon.position.x = rect_size.x - 48
+
+func _on_UseAnimation_toggled(button_pressed):
+	_update_icon(AnimaVisualNode.USE.ANIMATION)
+
+func _on_AnimateProperty_toggled(button_pressed):
+	_update_icon(AnimaVisualNode.USE.ANIMATE_PROPERTY)
+
+func _on_AsNode_toggled(button_pressed):
+	_animate_as = AnimaVisualNode.ANIMATE_AS.NODE
+
+func _on_AsGroup_toggled(button_pressed):
+	_animate_as = AnimaVisualNode.ANIMATE_AS.GROUP
+
+func _on_AsGrid_toggled(button_pressed):
+	_animate_as = AnimaVisualNode.ANIMATE_AS.GRID

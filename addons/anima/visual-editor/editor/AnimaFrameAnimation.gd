@@ -49,7 +49,7 @@ func get_data() -> Dictionary:
 	}
 
 	for child in _animations_container.get_children():
-		if is_instance_valid(child) and child.name != "Control":
+		if is_instance_valid(child) and child.has_method("get_data") and not child.is_queued_for_deletion():
 			data.data.push_back(child.get_data())
 
 	return data

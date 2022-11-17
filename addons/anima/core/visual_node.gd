@@ -11,6 +11,17 @@ enum EDITOR_POSITION {
 	DOCK_RIGHT
 }
 
+enum USE {
+	ANIMATE_PROPERTY,
+	ANIMATION
+}
+
+enum ANIMATE_AS {
+	NODE,
+	GROUP,
+	GRID
+}
+
 export (Dictionary) var __anima_visual_editor_data = {}
 export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM setget set_editor_position
 
@@ -62,7 +73,7 @@ func play_animation(name: String, speed: float = 1.0, reset_initial_values := fa
 
 		return
 
-	_play_animation_from_data(animations_data, speed, reset_initial_values)
+	_play_animation_from_data(name, animations_data, speed, reset_initial_values)
 
 func _get_animation_data_by_name(animation_name: String) -> Dictionary:
 	for animation_id in __anima_visual_editor_data:
@@ -74,8 +85,8 @@ func _get_animation_data_by_name(animation_name: String) -> Dictionary:
 
 	return {}
 
-func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_initial_values: bool) -> void:
-	var anima: AnimaNode = Anima.begin_single_shot(self)
+func _play_animation_from_data(animation_name: String, animations_data: Dictionary, speed: float, reset_initial_values: bool) -> void:
+	var anima: AnimaNode = Anima.begin_single_shot(self, animation_name)
 	var visibility_strategy: int = animations_data.animation.visibility_strategy
 	var default_duration = animations_data.animation.default_duration
 	var timeline_debug := {}
@@ -122,9 +133,11 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 	for k in keys:
 		for d in timeline_debug[k]:
 			var s: float = k + d.delay
-			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, " to: ", s + d.duration, " => ", d.what)
+			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + d.duration, "s => ", d.what)
 
 	_active_anima_node = anima
+
+#	anima.debug()
 	anima.play_with_delay(1.0)
 
 	yield(anima, "animation_completed")
@@ -178,10 +191,10 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 		anima_data.delay = animation_data.delay
 
 	if animation_data.has("animate_as"):
-		if animation_data.animate_as == 1:
+		if animation_data.animate_as == ANIMATE_AS.GROUP:
 			anima_data.erase("node")
 			anima_data.group = node
-		elif animation_data.animate_as == 2:
+		elif animation_data.animate_as == ANIMATE_AS.GRID:
 			anima_data.erase("node")
 			anima_data.grid = node
 	
@@ -208,22 +221,32 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 			if key == 'pivot':
 				var pivot = animation_data.property.pivot
 
-				if pivot[0] == 1:
-					anima_data.pivot = pivot[1]
+				if pivot >= 0:
+					anima_data.pivot = pivot
 			elif key == "easing":
 				anima_data.easing = animation_data.property.easing[1]
 			elif key == "from":
-				var from: String = animation_data.property.from
+				var from = animation_data.property.from
 
-				if from.find(":") >= 0:
+				if from is String and from.find(":") >= 0:
 					anima_data.from = from
+				elif from is Array:
+					if from.size() == 2:
+						anima_data.from = Vector2(from[0], from[1])
+					else:
+						anima_data.from = Vector3(from[0], from[1], from[2])
 				else:
 					anima_data.from = float(from)
 			elif key == "to":
-				var to: String = animation_data.property.to
+				var to = animation_data.property.to
 
-				if to.find(":") >= 0:
-					anima_data.to = to
+				if to is String and to.find(":") >= 0:
+					anima_data.from = to
+				elif to is Array:
+					if to.size() == 2:
+						anima_data.to = Vector2(to[0], to[1])
+					else:
+						anima_data.to = Vector3(to[0], to[1], to[2])
 				else:
 					anima_data.to = float(to)
 			else:

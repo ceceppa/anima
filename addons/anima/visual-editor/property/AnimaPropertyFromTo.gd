@@ -360,7 +360,6 @@ func _on_CurrentValue_item_rect_changed():
 func _on_PropertyFromTo_item_rect_changed():
 	$CustomValue.rect_size.x = rect_size.x
 	$HBoxContainer.rect_size.x = rect_size.x
-	print(rect_size)
 
 func _on_ConfirmButton_pressed():
 	var label = get_value()
@@ -390,5 +389,3 @@ func set_font_color(c: Color) -> void:
 
 func _on_CustomValue_item_rect_changed():
 	$HBoxContainer.rect_size.x = $CustomValue.rect_size.x
-	
-	print($HBoxContainer.rect_size)

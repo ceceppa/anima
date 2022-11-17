@@ -326,6 +326,16 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
+"__initial_AnimaNode__anima_55068251480552856_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_55068251480552856_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
 "__initial_AnimaNode__anima_623676688524852417_min_size:x": {
 "percentage": 0,
 "value": 0
@@ -661,6 +671,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1188092954160781738_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1191360128302505615__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1191360128302505615_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1191360128302505615_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1034,7 +1056,6 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
-visible = false
 margin_right = 616.0
 margin_bottom = 73.0
 rect_pivot_offset = Vector2( 218, 36.5 )
@@ -1076,6 +1097,7 @@ label = "animation default"
 show_relative_selector = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
+margin_top = 85.0
 margin_right = 616.0
 margin_bottom = 466.0
 rect_pivot_offset = Vector2( 175, 157.5 )
@@ -1092,7 +1114,7 @@ __meta__ = {
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 616.0
-margin_bottom = 466.0
+margin_bottom = 381.0
 
 [node name="CTAContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
 margin_top = 478.0
@@ -1491,6 +1513,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_1578481254389182129__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1578481254389182129_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1578481254389182129_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1587800505530282715_opacity": {
 "percentage": 0,
 "value": 0
@@ -1776,6 +1810,16 @@ __meta__ = {
 "__initial_AnimaNode__anima_52414286533678123_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_55068251480552856_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_55068251480552856_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
 },
 "__initial_AnimaNode__anima_623676688524852417_opacity": {
 "percentage": 0,
@@ -2791,6 +2835,28 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_55068251480552856_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_55068251480552856_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_60986980077515518__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_60986980077515518_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_60986980077515518_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_612816116982381226__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -3306,6 +3372,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1637903244327373535_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_20045347066879444__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_20045347066879444_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_20045347066879444_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },

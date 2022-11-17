@@ -88,7 +88,7 @@ func with(data) -> AnimaNode:
 		printerr(
 			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
 			"\n",
-			"Visit https://ANIMA.ceceppa.me/docs/docs/anima-declaration for more info"
+			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
 		)
 		print(data)
 		print("\n")
@@ -192,6 +192,11 @@ func play_as_backwards_when(variable, value_to_match) -> void:
 
 func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
+		return self
+
+	if _anima_tween.get_animation_data().size() == 0:
+#		printerr("Nothing to play: Animation data is empty :(")
+
 		return self
 
 	_loop_times = 1
@@ -314,8 +319,28 @@ func set_default_duration(duration: float) -> AnimaNode:
 
 	return self
 
-func set_apply_initial_values(apply: bool) -> void:
-	_anima_tween.set_apply_initial_values(apply)
+func set_apply_initial_values(when: int) -> void:
+	_anima_tween.set_apply_initial_values(when)
+
+func debug() -> void:
+	var data = _anima_tween.get_animation_data()
+
+	for d in data:
+		print("")
+		var source := ""
+
+		if d.node:
+			source = d.node.get_path()
+		elif d.group:
+			source = d.group
+		elif d.grid:
+			source = d.grid
+
+		print(source, ":")
+
+		for k in d:
+			if not k.begins_with("_"):
+				prints("", k, d[k])
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
