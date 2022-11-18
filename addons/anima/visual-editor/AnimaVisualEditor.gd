@@ -7,7 +7,18 @@ signal visual_builder_updated
 signal highlight_node(node)
 signal play_animation(name)
 
+onready var _frames_editor: Control = find_node("FramesEditor")
+onready var _nodes_window: WindowDialog = find_node("NodesWindow")
+onready var _warning_label = find_node("WarningLabel")
+onready var _animation_selector: OptionButton = find_node("AnimationSelector")
+onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
+
 const VISUAL_EDITOR_FADE_DURATION := 0.1
+
+enum PROPERTY_SELECTED_ACTION {
+	ADD_NEW_ANIMATION,
+	UPDATE_ANIMATION
+}
 
 var _anima_visual_node: Node
 var _node_offset: Vector2
@@ -15,12 +26,8 @@ var _is_restoring_data := false
 var _scene_root_node: Node
 var _animation_source_node: Node
 var _is_selecting_relative_property := false
-
-onready var _frames_editor: Control = find_node("FramesEditor")
-onready var _nodes_window: WindowDialog = find_node("NodesWindow")
-onready var _warning_label = find_node("WarningLabel")
-onready var _animation_selector: OptionButton = find_node("AnimationSelector")
-onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
+var _on_property_selected_action: int = PROPERTY_SELECTED_ACTION.ADD_NEW_ANIMATION
+var _source_animation_data_node: Node
 
 func _ready():
 	_frames_editor.hide()
@@ -148,15 +155,11 @@ func _restore_data(data: Dictionary) -> void:
 
 		for value in frame_data.data:
 			if value and value.has("node_path"):
-				var node: Node = _scene_root_node.get_node(value.node_path)
+				var node: Node = _anima_visual_node.get_root_node().get_node(value.node_path)
 				
 				yield(get_tree(), "idle_frame")
 
-				var item: Node = _frames_editor.add_animation_for(node, value.node_path, value.property_name, value.property_type)
-
-				item.connect("select_animation", self, "_on_select_animation", [item])
-				item.connect("select_relative_property", self, "_on_select_relative_property", [item])
-				item.connect("select_easing", self, "_on_select_easing", [item])
+				var item: Node = _add_animation_for(node, value.node_path, value.property_name, value.property_type)
 
 				item.restore_data(value)
 
@@ -167,6 +170,14 @@ func _restore_data(data: Dictionary) -> void:
 
 	_frames_editor.set_is_restoring_data(false)
 
+func _add_animation_for(node: Node, node_path: String, property_name: String, property_type) -> Node:
+	var item: Node = _frames_editor.add_animation_for(node, node_path, property_name, property_type)
+
+	item.connect("select_animation", self, "_on_select_animation", [item])
+	item.connect("select_relative_property", self, "_on_select_relative_property", [item])
+	item.connect("select_easing", self, "_on_select_easing", [item])
+
+	return item
 
 func _on_GraphEdit_hide_nodes_list():
 	_nodes_window.hide()
@@ -254,8 +265,10 @@ func _on_PropertiesWindow_property_selected(node_path, property, property_type):
 
 	if _is_selecting_relative_property:
 		_animation_source_node.set_relative_property(node_path, property)
-	else:
+	elif _on_property_selected_action == PROPERTY_SELECTED_ACTION.ADD_NEW_ANIMATION:
 		_frames_editor.add_animation_for(node, node_path, property, property_type)
+	else:
+		_source_animation_data_node.set_property_to_aniamte(property, property_type)
 
 	_is_selecting_relative_property = false
 
@@ -272,6 +285,7 @@ func _on_FramesEditor_highlight_node(node: Node):
 	emit_signal("highlight_node", node)
 
 func _on_select_animation(source: Node) -> void:
+	print("slect ani")
 	_animation_source_node = source
 
 	$AnimationsWindow.show_demo_by_type(source)
@@ -301,10 +315,11 @@ func _on_AnimaEasingsWindow_easing_selected(easing_name: String, easing_value: i
 func _on_FramesEditor_play_animation(name: String):
 	emit_signal("play_animation", name)
 
-func _on_FramesEditor_select_node_property(node_path: String):
-	print("ciao")
+func _on_FramesEditor_select_node_property(source: Node, node_path: String):
+	_on_property_selected_action = PROPERTY_SELECTED_ACTION.UPDATE_ANIMATION
+	_source_animation_data_node = source
+
 	var node = get_node(node_path)
-#	var relative_path = _anima_visual_node.get_path_to(node)
 
 	$PropertiesWindow.select_node(node)
 
@@ -314,4 +329,10 @@ func _on_FramesEditor_select_node_property(node_path: String):
 func _on_FramesEditor_add_node(node_path):
 	var node = get_node(node_path)
 
-	_frames_editor.add_animation_for(node, node_path, "", TYPE_NIL)
+	# The node_path needs to be relative to the AnimaVlisualNode
+	var relative_node_path = _anima_visual_node.get_root_node().get_path_to(node)
+
+	_add_animation_for(node, relative_node_path, "", TYPE_NIL)
+
+func _on_FramesEditor_select_animation():
+	pass # Replace with function body.

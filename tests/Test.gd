@@ -68,16 +68,16 @@ func _ready():
 #
 
 #		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 0.5)) \
-	anima = Anima.begin(self) \
-		.then(Anima.Node($CanvasModulate).anima_animation_frames({
-			to = {
-				color = Color.rebeccapurple
-			},
-			initial_values = {
-				color = Color.yellow
-			}
-		}, 0.5)
-	).play_with_delay(2)
+#	anima = Anima.begin(self) \
+#		.then(Anima.Node($CanvasModulate).anima_animation_frames({
+#			to = {
+#				color = Color.rebeccapurple
+#			},
+#			initial_values = {
+#				color = Color.yellow
+#			}
+#		}, 0.5)
+#	).play_with_delay(2)
 
 var _temp
 

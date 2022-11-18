@@ -1,12 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://tests/Test.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/visual-editor/icons/anima.svg" type="Texture" id=7]
 
 [sub_resource type="StyleBoxFlat" id=5]
-
-[sub_resource type="StyleBoxEmpty" id=8]
 
 [sub_resource type="StyleBoxFlat" id=6]
 corner_radius_top_left = 100
@@ -15,18 +12,6 @@ corner_detail = 18
 
 [sub_resource type="Animation" id=7]
 resource_name = "New Anim"
-tracks/0/type = "value"
-tracks/0/path = NodePath("Control/Button2:rect_position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray(  ),
-"transitions": PoolRealArray(  ),
-"update": 0,
-"values": [  ]
-}
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -75,24 +60,6 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="Button2" type="Button" parent="Control"]
-anchor_right = 2.869
-anchor_bottom = 1.828
-margin_right = 176.24
-margin_bottom = -36.12
-rect_pivot_offset = Vector2( 145.5, 18.5 )
-custom_styles/normal = SubResource( 8 )
-text = "Button NR 2"
-icon = ExtResource( 7 )
-__meta__ = {
-"__initial_AnimaNode_default_scale": {
-"percentage": 0,
-"value": Vector3( 1, 1, 1 )
-},
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
-
 [node name="Button3" type="Button" parent="Control"]
 margin_left = -1.0
 margin_top = 54.0
@@ -100,10 +67,25 @@ margin_right = 11.0
 margin_bottom = 74.0
 
 [node name="Button4" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
+margin_left = 321.0
+margin_top = -122.0
+margin_right = 752.001
+margin_bottom = -23.0001
+rect_pivot_offset = Vector2( 215.5, 49.4999 )
+text = "Button 4"
+__meta__ = {
+"__initial_AnimaNode_default_rotate:y": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_default_x": {
+"percentage": 0,
+"value": 100.0
+},
+"__visibility_strategy": 0,
+"_initial_relative_value_x_to": 100.0,
+"_visibility_strategy_reverted": true
+}
 
 [node name="Button5" type="Button" parent="Control"]
 margin_left = -4.0
@@ -112,10 +94,11 @@ margin_right = 9.0
 margin_bottom = 146.0
 
 [node name="Button6" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
+margin_left = 248.0
+margin_top = 160.0
+margin_right = 364.0
+margin_bottom = 197.0
+text = "Button 6"
 
 [node name="Button7" type="Button" parent="Control"]
 margin_left = -4.0
@@ -189,7 +172,7 @@ __meta__ = {
 __anima_visual_editor_data = {
 "0": {
 "animation": {
-"default_duration": 0.7,
+"default_duration": 0.3,
 "name": null,
 "visibility_strategy": 0
 },
@@ -206,7 +189,36 @@ __anima_visual_editor_data = {
 "items_delay": 0.01,
 "start_index": 0
 },
-"node_path": "/root/EditorNode/@@596/@@597/@@605/@@607/@@611/@@615/@@616/@@617/@@633/@@634/@@643/@@644/@@6618/@@6450/@@6451/@@6452/@@6453/@@6454/@@6455/Control/Control/Button2",
+"node_path": "Control/Button4",
+"property": {
+"easing": [ "Linear", 0 ],
+"from": [ "0", "0" ],
+"initialValue": null,
+"pivot": 0,
+"relative": false,
+"to": [ "100", "100" ]
+},
+"property_name": "position",
+"property_type": 5,
+"use": 0
+} ],
+"duration": null,
+"name": "Frame0",
+"type": "frame"
+},
+1: {
+"collapsed": false,
+"data": [ {
+"animate_as": 0,
+"animation_name": "wobble",
+"delay": null,
+"duration": null,
+"group": {
+"animation_type": 1,
+"items_delay": 0.01,
+"start_index": 0
+},
+"node_path": "Control/Button4",
 "property": {
 "easing": [ "Linear", 0 ],
 "from": null,
@@ -217,32 +229,10 @@ __anima_visual_editor_data = {
 },
 "property_name": "",
 "property_type": 0,
-"use": 0
-}, {
-"animate_as": 0,
-"animation_name": "",
-"delay": null,
-"duration": null,
-"group": {
-"animation_type": 1,
-"items_delay": 0.01,
-"start_index": 0
-},
-"node_path": "./Control/Button2",
-"property": {
-"easing": [ "Linear", 0 ],
-"from": null,
-"initialValue": null,
-"pivot": 0,
-"relative": false,
-"to": null
-},
-"property_name": "position",
-"property_type": 5,
-"use": 0
+"use": 1
 } ],
 "duration": null,
-"name": "Frame0",
+"name": "Frame1",
 "type": "frame"
 }
 }

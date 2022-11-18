@@ -153,7 +153,7 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> Ani
 	return self
 
 func clear() -> void:
-	if not is_instance_valid(_anima_tween):
+	if not is_instance_valid(_anima_tween) or _anima_tween.is_queued_for_deletion():
 		return
 
 	stop()
@@ -286,7 +286,8 @@ func get_length() -> float:
 	return _total_animation_length
 
 func set_root_node(node) -> void:
-	_anima_tween.set_root_node(node)
+	if is_instance_valid(_anima_tween) and not _anima_tween.is_queued_for_deletion():
+		_anima_tween.set_root_node(node)
 
 func _do_play() -> void:
 	var play_mode: int = _play_mode

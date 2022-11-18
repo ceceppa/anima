@@ -54,18 +54,26 @@ func _setup_group_data() -> void:
 func show_group_or_node() -> void:
 	_node_or_group.show()
 
-func set_data(node: Node, path: String, property, property_type):
+func set_data(node: Node, path: String, property, property_type, toggle_title := true):
 	_title.set_text(node.name + ":" + property)
 	
 	_path = path
-	_property = property
 	_source_node = node
+	_property = property
 	_property_type = property_type
 
 	_node_or_group.visible = node.get_child_count() > 1
 
+	find_node("PropertySelector").visible = property_type == TYPE_NIL
 	find_node("PropertyData").visible = property_type != TYPE_NIL
-	find_node("Title").pressed = property_type == TYPE_NIL
+
+	_set_property_type(property_type)
+
+	if toggle_title:
+		_maybe_toggle_title()
+
+func _maybe_toggle_title() -> void:
+	find_node("Title").pressed = _property_type == TYPE_NIL and _animation_name == ""
 
 func get_data() -> Dictionary:
 	if _property_values == null:
@@ -112,8 +120,6 @@ func restore_data(data: Dictionary) -> void:
 	_press_button_in_group(_animate_property.group, data.use)
 	_press_button_in_group(animate_as_group, data.animate_as)
 
-	_update_icon(data.use, false)
-
 	find_node("Duration").set_value(data.duration)
 	find_node("Delay").set_value(data.delay)
 
@@ -123,9 +129,7 @@ func restore_data(data: Dictionary) -> void:
 	if _property_values == null:
 		_property_values = find_node("PropertyValues")
 
-	for child in _property_values.get_child(1).get_children():
-		if child.has_method('set_type') and data.property_type != TYPE_NIL:
-			child.set_type(data.property_type)
+	_set_property_type(data.property_type)
 
 	if data.property.has("from"):
 		_property_values.find_node("FromValue").set_value(data.property.from)
@@ -157,6 +161,14 @@ func restore_data(data: Dictionary) -> void:
 				_animation_type.select(index)
 
 				break
+
+	_maybe_toggle_title()
+	_update_icon(data.use, false)
+
+func _set_property_type(property_type) -> void:
+	for child in _property_values.get_child(1).get_children():
+		if child.has_method('set_type') and property_type != TYPE_NIL:
+			child.set_type(property_type)
 
 func set_relative_property(node_path: String, property: String) -> void:
 	var value = _relative_source.get_value()
@@ -280,6 +292,9 @@ func _on_AnimationType_item_selected(_index):
 
 func _update_icon(button_index: int, emit := true) -> void:
 	var is_property = button_index == AnimaVisualNode.USE.ANIMATE_PROPERTY
+	var value = _property if is_property else _animation_name
+
+	_title.set_text(_source_node.name + ":" + value)
 
 	if _animate_with == button_index:
 		return
@@ -296,6 +311,7 @@ func _update_icon(button_index: int, emit := true) -> void:
 
 	_animate_with = button_index
 
+
 	if emit:
 		emit_signal("updated")
 
@@ -307,8 +323,6 @@ func _on_AnimaAnimationData_item_rect_changed():
 
 func _on_UseAnimation_toggled(button_pressed):
 	_update_icon(AnimaVisualNode.USE.ANIMATION)
-	
-	emit_signal("select_animation")
 
 func _on_AnimateProperty_toggled(button_pressed):
 	_update_icon(AnimaVisualNode.USE.ANIMATE_PROPERTY)
@@ -323,4 +337,12 @@ func _on_AsGrid_toggled(button_pressed):
 	_animate_as = AnimaVisualNode.ANIMATE_AS.GRID
 
 func _on_SelectProperty_pressed():
-	emit_signal("select_node_property", _source_node.get_path())
+	emit_signal("select_node_property", self, _source_node.get_path())
+
+func set_property_to_aniamte(property: String, property_type: int) -> void:
+	set_data(_source_node, _path, property, property_type, false)
+
+	_update_me()
+
+func _on_Background_mouse_entered():
+	pass # Replace with function body.

@@ -267,17 +267,20 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 		data.to = AnimaTweenUtils.maybe_calculate_value(to_value, data)
 
-		if relative:
-			if previous_key_value[property_to_animate].has("to"):
-				from_value = previous_key_value[property_to_animate].to
-
-			data.to += from_value
+#		if relative:
+#			if previous_key_value[property_to_animate].has("to"):
+#				from_value = previous_key_value[property_to_animate].to
+#
+#			data.to += from_value
 
 		data.property = property_name
 		data.duration = frame_duration
 		data._wait_time = wait_time + percentage_delay
 		data.easing = easing
-		data.from = from_value
+		data.relative = relative
+
+		if not relative:
+			data.from = from_value
 
 		if property_name == "opacity":
 			data.easing = null
