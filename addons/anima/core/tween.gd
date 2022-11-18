@@ -352,7 +352,10 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIM
 	node.set_meta(VISIBILITY_STRATEGY_META_KEY, strategy)
 
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
-	return _keyframes_engine.add_frames(animation_data, full_keyframes_data, get_parent().name)
+	if is_instance_valid(get_parent()):
+		return _keyframes_engine.add_frames(animation_data, full_keyframes_data, get_parent().name)
+
+	return 0.0
 
 # We don't want the user to specify the from/to value as color
 # we animate opacity.
@@ -456,6 +459,11 @@ class AnimatedItem extends Node:
 		if should_trigger_on_completed:
 			_execute_callback(_animation_data.on_completed)
 
+		var meta_key = "_initial_relative_value_" + _animation_data.property
+
+		if _animation_data._is_last_frame and _animation_data.node.has_meta(meta_key):
+			_animation_data.node.remove_meta(meta_key)
+
 	func set_animation_data(data: Dictionary, property_data: Dictionary, is_backwards_animation: bool) -> void:
 		_animation_data = data
 		_is_backwards_animation = is_backwards_animation
@@ -491,6 +499,12 @@ class AnimatedItem extends Node:
 	func animate(elapsed: float) -> void:
 		if _property_data.size() == 0:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
+
+			if _animation_data.property == "x":
+				if _animation_data.has("from"):
+					print(_animation_data.from)
+
+				prints(_property_data.from, _animation_data.to)
 
 			if _animation_data.has("__debug"):
 				printt("_property_data", _property_data)

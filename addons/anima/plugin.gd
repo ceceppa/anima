@@ -112,7 +112,11 @@ func _on_visual_builder_updated(data: Dictionary) -> void:
 
 func _on_highlight_node(node_to_highlight: Node) -> void:
 	var selection := get_editor_interface().get_selection()
-	
+	var nodes := selection.get_selected_nodes()
+
+	if nodes.size() == 1 and nodes[0] == node_to_highlight:
+		return
+
 	selection.clear()
 	selection.add_node(node_to_highlight)
 

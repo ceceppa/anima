@@ -13,7 +13,7 @@ signal select_easing
 signal select_relative_property
 signal highlight_node(node)
 signal preview_frame
-signal select_node_property(node_path)
+signal select_node_property(source, node_path)
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -86,7 +86,7 @@ func add_animation_for(node: Node, path: String, property, property_type) -> Nod
 
 	if animation_item.has_signal("select_animation"):
 		animation_item.connect("select_animation", self, "_on_select_animation", [animation_item])
-		animation_item.connect("select_node_property", self, "_on_select_node_property", [animation_item])
+		animation_item.connect("select_node_property", self, "_on_select_node_property")
 		animation_item.connect("select_easing", self, "_on_select_easing", [animation_item])
 		animation_item.connect("select_relative_property", self, "_on_select_relative_property", [animation_item])
 
@@ -204,10 +204,8 @@ func _on_select_animation(source: Node) -> void:
 
 	emit_signal("select_animation")
 
-func _on_select_node_property(path: String, source: Node) -> void:
-	_source = source
-
-	emit_signal("select_node_property", path)
+func _on_select_node_property(source: Node, path: String) -> void:
+	emit_signal("select_node_property", source, path)
 
 func _on_highlight_node(source: Node) -> void:
 	emit_signal("highlight_node", source)

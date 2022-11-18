@@ -157,6 +157,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_244749208274176392__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_244749208274176392_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_244749208274176392_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_447088250819550293__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -280,4 +292,5 @@ __meta__ = {
 }
 
 [connection signal="item_selected" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/VisibilityStrategy" to="." method="_on_value_updated"]
+[connection signal="value_updated" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/DefaultDuration" to="." method="_on_value_updated"]
 [connection signal="pressed" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]

@@ -199,6 +199,18 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
+"__initial_AnimaNode__anima_1560694873826660889_min_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1560694873826660889_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1560694873826660889_size:x": {
+"percentage": 0,
+"value": 0
+},
 "__initial_AnimaNode__anima_1570426223302575195_min_size:x": {
 "initial_value": 0,
 "percentage": 0,
@@ -621,8 +633,7 @@ transparent = true
 
 [node name="DefaultFrameDuration" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 4 )]
 margin_left = 548.0
-margin_right = 588.0
-rect_min_size = Vector2( 40, 49 )
+margin_right = 572.0
 hint_tooltip = "Show default frame duration"
 toggle_mode = true
 icon = ExtResource( 5 )
@@ -782,6 +793,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1405281210687337646_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1417498487237851318__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1417498487237851318_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1417498487237851318_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -1200,8 +1223,7 @@ __meta__ = {
 [node name="AnimationsContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/ScrollContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 616.0
-margin_bottom = 381.0
+margin_right = 592.0
 
 [node name="CTAContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
 margin_top = 478.0
@@ -1214,8 +1236,7 @@ alignment = 1
 [node name="AddAnimation" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/CTAContainer" instance=ExtResource( 4 )]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 186.0
-margin_right = 273.0
-rect_min_size = Vector2( 87, 49 )
+margin_right = 249.0
 rect_pivot_offset = Vector2( 43.5, 24.5 )
 text = "Add"
 icon = ExtResource( 2 )
@@ -1591,6 +1612,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1560694873826660889_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1560694873826660889_scale": {
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode__anima_1569943273020510254__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -1622,6 +1651,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1571036811343564209_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1575583089356375977__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1575583089356375977_opacity": {
+"percentage": 0,
+"value": 0.0
+},
+"__initial_AnimaNode__anima_1575583089356375977_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -2323,8 +2364,7 @@ __meta__ = {
 [node name="Delete" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/CTAContainer" instance=ExtResource( 4 )]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 297.0
-margin_right = 429.0
-rect_min_size = Vector2( 132, 49 )
+margin_right = 405.0
 rect_pivot_offset = Vector2( 66, 24.5 )
 hint_tooltip = "Remove the frame"
 text = "Remove"
@@ -2797,6 +2837,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1560694873826660889_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1560694873826660889_scale": {
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode__anima_1569072056286178223__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -2924,6 +2972,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1638998483927275391_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1643030200008097412__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1643030200008097412_opacity": {
+"percentage": 0,
+"value": 0.0
+},
+"__initial_AnimaNode__anima_1643030200008097412_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -3811,6 +3871,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_491566338280967834_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_50752388874945618__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_50752388874945618_opacity": {
+"percentage": 0,
+"value": 0.0
+},
+"__initial_AnimaNode__anima_50752388874945618_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },

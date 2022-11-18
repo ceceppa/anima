@@ -13,20 +13,33 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if animation_data.has("to") and animation_data.to == null:
 		animation_data.erase('to')
 
-	if animation_data.has('from'):
+	var meta_key = "_initial_relative_value_" + animation_data.property
+
+	if relative and node.has_meta(meta_key):
+		from = node.get_meta(meta_key + "_to")
+	elif animation_data.has('from'):
 		from = maybe_calculate_value(animation_data.from, animation_data)
 		from = _maybe_convert_from_deg_to_rad(node, animation_data, from)
 	else:
 		from = current_value
 
+		if relative:
+			node.set_meta(meta_key, from)
+
 	if animation_data.has('to'):
 		var start = current_value if is_backwards_animation else from
+
+		if relative:
+			start = node.get_meta(meta_key)
 
 		to = maybe_calculate_value(animation_data.to, animation_data)
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, to)
 		to = _maybe_calculate_relative_value(relative, to, start)
 	else:
 		to = current_value
+
+	if relative:
+		node.set_meta(meta_key + "_to", to)
 
 	var pivot = animation_data.pivot if animation_data.has("pivot") else ANIMA.PIVOT.CENTER
 	if not node is Spatial and not node is CanvasModulate:

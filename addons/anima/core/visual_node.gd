@@ -90,6 +90,7 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 	var visibility_strategy: int = animations_data.animation.visibility_strategy
 	var default_duration = animations_data.animation.default_duration
 	var timeline_debug := {}
+	var start_time := 0.0
 
 	anima.set_root_node(get_root_node())
 	anima.set_visibility_strategy(visibility_strategy)
@@ -103,13 +104,14 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 
 		if frame_default_duration == null:
 			frame_default_duration = default_duration
-		
+
 		anima.set_default_duration(frame_default_duration)
 
 		for animation in frame_data.data:
 			var data: Dictionary = _create_animation_data(animation)
 
-			data._wait_time = 0 #animation.start_time
+			data._wait_time = start_time #animation.start_time
+#			data.__debug = "---"
 
 			if not timeline_debug.has(data._wait_time):
 				timeline_debug[data._wait_time] = []
@@ -122,10 +124,12 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 			timeline_debug[data._wait_time].push_back({ 
 				duration = duration,
 				delay = delay,
-				what = what
+				what = what,
 			})
 
 			anima.with(data)
+
+		start_time += frame_default_duration + 0.1
 
 	var keys = timeline_debug.keys()
 	keys.sort()
@@ -137,7 +141,6 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 
 	_active_anima_node = anima
 
-#	anima.debug()
 	anima.play()
 
 	yield(anima, "animation_completed")
