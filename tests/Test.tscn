@@ -63,12 +63,17 @@ __meta__ = {
 }
 
 [node name="Button1" type="Button" parent="Control"]
-margin_left = 179.0
-margin_top = 125.0
-margin_right = 295.0
-margin_bottom = 162.0
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 216.0
+margin_bottom = 137.0
+rect_pivot_offset = Vector2( 58, 18.5 )
 text = "Button 1"
 icon_align = 1
+__meta__ = {
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
+}
 
 [node name="Button2" type="Button" parent="Control"]
 anchor_right = 2.869
@@ -80,7 +85,12 @@ custom_styles/normal = SubResource( 8 )
 text = "Button NR 2"
 icon = ExtResource( 7 )
 __meta__ = {
-"__visibility_strategy": 0
+"__initial_AnimaNode_default_scale": {
+"percentage": 0,
+"value": Vector3( 1, 1, 1 )
+},
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button3" type="Button" parent="Control"]
@@ -110,14 +120,14 @@ margin_bottom = 146.0
 [node name="Button7" type="Button" parent="Control"]
 margin_left = -4.0
 margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
+margin_right = 20.0
+margin_bottom = 163.0
 
 [node name="Button2" type="Button" parent="."]
-margin_left = 835.0
-margin_top = 34.0
-margin_right = 967.0
-margin_bottom = 54.0
+margin_left = 847.0
+margin_top = 21.0
+margin_right = 979.0
+margin_bottom = 58.0
 rect_pivot_offset = Vector2( 66, 18.5 )
 text = "Do it"
 __meta__ = {
@@ -196,21 +206,21 @@ __anima_visual_editor_data = {
 "items_delay": 0.01,
 "start_index": 0
 },
-"node_path": "./Control/Button1",
+"node_path": "/root/EditorNode/@@596/@@597/@@605/@@607/@@611/@@615/@@616/@@617/@@633/@@634/@@643/@@644/@@6618/@@6450/@@6451/@@6452/@@6453/@@6454/@@6455/Control/Control/Button2",
 "property": {
-"easing": [ "EaseOutQuad", 9 ],
-"from": [ "0", "0" ],
+"easing": [ "Linear", 0 ],
+"from": null,
 "initialValue": null,
-"pivot": -1,
+"pivot": 0,
 "relative": false,
-"to": [ "100", "100" ]
+"to": null
 },
-"property_name": "position",
-"property_type": 5,
+"property_name": "",
+"property_type": 0,
 "use": 0
 }, {
 "animate_as": 0,
-"animation_name": "rubber_band",
+"animation_name": "",
 "delay": null,
 "duration": null,
 "group": {
@@ -229,7 +239,7 @@ __anima_visual_editor_data = {
 },
 "property_name": "position",
 "property_type": 5,
-"use": 1
+"use": 0
 } ],
 "duration": null,
 "name": "Frame0",
@@ -241,4 +251,3 @@ __anima_visual_editor_data = {
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

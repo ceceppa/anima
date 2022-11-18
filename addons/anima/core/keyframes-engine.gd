@@ -2,13 +2,13 @@ extends Node
 class_name AnimaKeyframesEngine
 
 var _frame_key_checker = RegEx.new()
-var _apply_initial_values: FuncRef
+var _add_initial_values: FuncRef
 var _add_animation_data: FuncRef
 
-func _init(apply_initial_values_callback: FuncRef, add_animtion_data_callback: FuncRef):
+func _init(_add_initial_values_callback: FuncRef, add_animtion_data_callback: FuncRef):
 	_frame_key_checker.compile("\\d")
 
-	_apply_initial_values = apply_initial_values_callback
+	_add_initial_values = _add_initial_values_callback
 	_add_animation_data = add_animtion_data_callback
 
 #
@@ -51,6 +51,10 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 	# Flattens the keyframe_data
 	var keyframes_data = AnimaTweenUtils.flatten_keyframes_data(full_keyframes_data)
 
+	if keyframes_data.has("initial_values"):
+		animation_data.initial_values = keyframes_data.initial_values
+		keyframes_data.erase("initial_values")
+
 	if keyframes_data.size() == 1:
 		if not keyframes_data.has(0):
 			keyframes_data[0] = {}
@@ -64,9 +68,6 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 
 	if pivot:
 		animation_data.pivot = pivot
-
-	if keyframes_data.has("initial_values"):
-		animation_data.initial_values = keyframes_data.initial_values
 
 	if easing:
 		animation_data.easing = easing
@@ -127,8 +128,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 			if typeof(current_value) == TYPE_VECTOR2:
 				value = Vector2(value.x, value.y)
 
-		if current_value != value and relative_properties.find(property_to_animate) < 0:
-			data.initial_value = value
+#		if current_value != value and relative_properties.find(property_to_animate) < 0:
+#			data.initial_value = value
 
 	frame_keys.pop_front()
 
@@ -290,7 +291,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 			data.initial_values[property_to_animate] = previous_key_value[property_to_animate].initial_value
 
-			_apply_initial_values.call_func(data)
+			_add_initial_values.call_func(data)
 
 		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			_add_animation_data.call_func(data)

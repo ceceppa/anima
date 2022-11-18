@@ -15,7 +15,6 @@ var _source_node: Node
 func show_demo_by_type(node: Node) -> void:
 	var is_control_demo_visible = node is Control
 
-	prints("is_control_demo_visible", is_control_demo_visible)
 	if _control_demo:
 		_control_demo.get_parent().visible = is_control_demo_visible
 		_sprite_demo.get_parent().get_parent().visible = not is_control_demo_visible

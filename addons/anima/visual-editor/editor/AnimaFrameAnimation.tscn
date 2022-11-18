@@ -14,9 +14,8 @@
 bg_color = Color( 0.239216, 0.235294, 0.254902, 0.223529 )
 
 [node name="FrameAnimation" type="Control"]
+modulate = Color( 1, 1, 1, 0 )
 anchor_bottom = 1.0
-margin_right = 640.0
-rect_min_size = Vector2( 640, 0 )
 rect_pivot_offset = Vector2( 0, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -160,6 +159,16 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
+"__initial_AnimaNode__anima_1442190096143858398_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1442190096143858398_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
 "__initial_AnimaNode__anima_1504371451638076904_min_size:x": {
 "initial_value": 0,
 "percentage": 0,
@@ -248,6 +257,16 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
+"__initial_AnimaNode__anima_1664967955750375977_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1664967955750375977_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
 "__initial_AnimaNode__anima_260268915206246948_min_size:x": {
 "percentage": 0,
 "value": 0
@@ -326,6 +345,16 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
+"__initial_AnimaNode__anima_484738954076670532_min_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_484738954076670532_size:x": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
 "__initial_AnimaNode__anima_55068251480552856_min_size:x": {
 "initial_value": 0,
 "percentage": 0,
@@ -333,6 +362,18 @@ __meta__ = {
 },
 "__initial_AnimaNode__anima_55068251480552856_size:x": {
 "initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_572381661227295654_min_size:x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_572381661227295654_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_572381661227295654_size:x": {
 "percentage": 0,
 "value": 0
 },
@@ -520,8 +561,7 @@ __meta__ = {
 "percentage": 0,
 "value": 640.0
 },
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="Rectangle" type="ColorRect" parent="."]
@@ -531,8 +571,7 @@ rect_min_size = Vector2( 460, 0 )
 rect_pivot_offset = Vector2( 320, 300 )
 color = Color( 0.0470588, 0.176471, 0.282353, 1 )
 __meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle"]
@@ -546,6 +585,7 @@ __meta__ = {
 }
 
 [node name="Rectangle" type="ColorRect" parent="Rectangle/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 640.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
@@ -560,8 +600,7 @@ __meta__ = {
 "percentage": 0,
 "value": 0.0
 },
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/Rectangle"]
@@ -571,7 +610,7 @@ size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="FrameName" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 9 )]
-margin_right = 527.0
+margin_right = 536.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 142, 19 )
 mouse_default_cursor_shape = 1
@@ -581,9 +620,9 @@ show_confirm_button = true
 transparent = true
 
 [node name="DefaultFrameDuration" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 4 )]
-margin_left = 539.0
+margin_left = 548.0
 margin_right = 588.0
-rect_min_size = Vector2( 49, 49 )
+rect_min_size = Vector2( 40, 49 )
 hint_tooltip = "Show default frame duration"
 toggle_mode = true
 icon = ExtResource( 5 )
@@ -611,6 +650,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1120520912434124512_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1129604716203967529__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1129604716203967529_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1129604716203967529_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -707,6 +758,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1231054075833760742_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1388505280083093262__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1388505280083093262_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1388505280083093262_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -866,6 +929,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_437772036840998718__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_437772036840998718_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_437772036840998718_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_44736725116228009__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -998,6 +1073,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_906341665743908813__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_906341665743908813_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_906341665743908813_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_972180003042450928__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -1019,6 +1106,7 @@ margin_bottom = 49.0
 icon = ExtResource( 1 )
 
 [node name="MarginContainer" type="MarginContainer" parent="Rectangle/ContentContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_top = 49.0
 margin_right = 640.0
 margin_bottom = 600.0
@@ -1039,8 +1127,7 @@ __meta__ = {
 "value": 49.0
 },
 "__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
+"_edit_use_anchors_": false
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer"]
@@ -1125,6 +1212,7 @@ custom_constants/separation = 24
 alignment = 1
 
 [node name="AddAnimation" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/CTAContainer" instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 186.0
 margin_right = 273.0
 rect_min_size = Vector2( 87, 49 )
@@ -1403,6 +1491,28 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_1433348972748688477__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1433348972748688477_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1433348972748688477_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1442190096143858398_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1442190096143858398_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode__anima_1474356618146319824__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -1469,6 +1579,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_1544250362514436035__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1544250362514436035_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1544250362514436035_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1569943273020510254__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -1533,6 +1655,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_1594014070541592529__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1594014070541592529_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1594014070541592529_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_159732713505552399_opacity": {
 "initial_value": 0,
 "percentage": 0,
@@ -1574,6 +1708,16 @@ __meta__ = {
 "__initial_AnimaNode__anima_1664049567970285645_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1664967955750375977_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1664967955750375977_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
 },
 "__initial_AnimaNode__anima_208265330648173096__button_bg": {
 "percentage": 0,
@@ -1799,6 +1943,16 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_484738954076670532_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_484738954076670532_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode__anima_52414286533678123__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -1811,6 +1965,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_524633493797624695__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_524633493797624695_opacity": {
+"percentage": 0,
+"value": 0.0
+},
+"__initial_AnimaNode__anima_524633493797624695_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_55068251480552856_opacity": {
 "initial_value": 0,
 "percentage": 0,
@@ -1818,6 +1984,14 @@ __meta__ = {
 },
 "__initial_AnimaNode__anima_55068251480552856_scale": {
 "initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_572381661227295654_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_572381661227295654_scale": {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
@@ -2143,11 +2317,11 @@ __meta__ = {
 "value": Vector2( 0.1, 0.1 )
 },
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 
 [node name="Delete" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/CTAContainer" instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 297.0
 margin_right = 429.0
 rect_min_size = Vector2( 132, 49 )
@@ -2298,6 +2472,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_1141135700875711182__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1141135700875711182_opacity": {
+"percentage": 0,
+"value": 0.0
+},
+"__initial_AnimaNode__anima_1141135700875711182_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1171856071556354492__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -2331,6 +2517,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_119267013218035873_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1210414331767963379__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1210414331767963379_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1210414331767963379_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -2441,6 +2639,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_1365081271168298828__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_1365081271168298828_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1365081271168298828_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_13754403939492688__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -2498,6 +2708,16 @@ __meta__ = {
 "__initial_AnimaNode__anima_1436222813479651367_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1442190096143858398_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1442190096143858398_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
 },
 "__initial_AnimaNode__anima_1449256771612783691__button_bg": {
 "percentage": 0,
@@ -2707,6 +2927,16 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1664967955750375977_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_1664967955750375977_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode__anima_260268915206246948_opacity": {
 "initial_value": 0,
 "percentage": 0,
@@ -2823,6 +3053,16 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
+"__initial_AnimaNode__anima_484738954076670532_opacity": {
+"initial_value": 0,
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_484738954076670532_scale": {
+"initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
 "__initial_AnimaNode__anima_525943409593000854__button_bg": {
 "percentage": 0,
 "value": Color( 0.270588, 0, 0.0117647, 1 )
@@ -2842,6 +3082,14 @@ __meta__ = {
 },
 "__initial_AnimaNode__anima_55068251480552856_scale": {
 "initial_value": Vector2( 0.1, 0.1 ),
+"percentage": 0,
+"value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_572381661227295654_opacity": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__anima_572381661227295654_scale": {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
@@ -2997,6 +3245,18 @@ __meta__ = {
 "initial_value": Vector2( 0.1, 0.1 ),
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
+},
+"__initial_AnimaNode__anima_771162588174858032__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0, 0.0117647, 1 )
+},
+"__initial_AnimaNode__anima_771162588174858032_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_771162588174858032_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
 },
 "__initial_AnimaNode__anima_774686557512039185_opacity": {
 "initial_value": 0,
@@ -3167,22 +3427,33 @@ __meta__ = {
 "value": Vector2( 0.1, 0.1 )
 },
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 style = 2
 
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 578.0
 margin_top = 539.0
-margin_right = 627.0
+margin_right = 602.0
 margin_bottom = 588.0
-rect_min_size = Vector2( 49, 49 )
-rect_pivot_offset = Vector2( 24.5, 24.5 )
+rect_pivot_offset = Vector2( 12, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true
 expand_icon = true
 __meta__ = {
+"__initial_AnimaNode__anima_101397411676819168__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_101397411676819168_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_101397411676819168_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1050420453296050903__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -3216,6 +3487,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1076020892368966797_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1079120412963377808__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1079120412963377808_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1079120412963377808_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -3372,6 +3655,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1637903244327373535_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1640102436293397217__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1640102436293397217_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1640102436293397217_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -3663,6 +3958,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_89663208309029236__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_89663208309029236_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_89663208309029236_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_930936590303820435__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -3700,8 +4007,7 @@ __meta__ = {
 "value": Vector2( 1, 1 )
 },
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 
 [node name="IconCollapse" type="Control" parent="Collapse"]
