@@ -6,6 +6,7 @@ onready var INITIAL_DATA = preload("res://addons/anima/visual-editor/editor/Init
 
 signal frame_deleted
 signal select_node
+signal add_node(node_path)
 signal frame_updated
 signal select_animation
 signal select_easing
@@ -85,6 +86,7 @@ func add_animation_for(node: Node, path: String, property, property_type) -> Nod
 
 	if animation_item.has_signal("select_animation"):
 		animation_item.connect("select_animation", self, "_on_select_animation", [animation_item])
+		animation_item.connect("select_node_property", self, "_on_select_node_property", [animation_item])
 		animation_item.connect("select_easing", self, "_on_select_easing", [animation_item])
 		animation_item.connect("select_relative_property", self, "_on_select_relative_property", [animation_item])
 
@@ -99,7 +101,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 	
 	anima.set_default_duration(0.3)
-	anima.set_apply_initial_values(!backwards)
+	anima.set_apply_initial_values(ANIMA.APPLY_INITIAL_VALUES.ON_PLAY)
 
 	anima.then(
 		Anima.Node(self) \
@@ -107,15 +109,18 @@ func _animate_me(backwards := false) -> AnimaNode:
 				from = {
 					"min_size:x": 0,
 					"size:x": 0,
+					"opacity": 0,
 				},
 				to = {
 					"min_size:x": _final_width,
 					"size:x": _final_width,
+					"opacity": 1,
 				},
 				easing = ANIMA.EASING.EASE_OUT_BACK,
 				initial_values = {
 					"min_size:x": 0,
-					"size:x": 0
+					"size:x": 0,
+					"opacity": 0,
 				}
 			})
 	) \
@@ -198,6 +203,11 @@ func _on_select_animation(source: Node) -> void:
 	_source = source
 
 	emit_signal("select_animation")
+
+func _on_select_node_property(path: String, source: Node) -> void:
+	_source = source
+
+	emit_signal("select_node_property", path)
 
 func _on_highlight_node(source: Node) -> void:
 	emit_signal("highlight_node", source)
@@ -321,4 +331,4 @@ func _on_FrameAnimation_gui_input(event):
 	pass # Replace with function body.
 
 func _on_AnimationsContainer_node_dragged(node_path: String) -> void:
-	emit_signal("select_node_property", node_path)
+	emit_signal("add_node", node_path)

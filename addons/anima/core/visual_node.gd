@@ -138,7 +138,7 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 	_active_anima_node = anima
 
 #	anima.debug()
-	anima.play_with_delay(1.0)
+	anima.play()
 
 	yield(anima, "animation_completed")
 

@@ -76,6 +76,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_611141024203869141__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_611141024203869141_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_774037851557249634__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -230,6 +242,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_838497898335865356_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_840572761080846802_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },

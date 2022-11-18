@@ -58,7 +58,7 @@ func select_node(node: Node, emit_signal := false) -> void:
 	if node == null:
 		return
 
-	var element = _select_node(root.get_children(), node.name)
+	var element = _select_node(root.get_children(), node.get_path())
 
 	if element:
 		element.select(0)
@@ -66,17 +66,17 @@ func select_node(node: Node, emit_signal := false) -> void:
 		if emit_signal:
 			_on_NodesList_item_activated()
 
-func _select_node(tree_item: TreeItem, name: String):
+func _select_node(tree_item: TreeItem, node_path: String, c = ""):
 	while tree_item != null:
-		var child_name: String = tree_item.get_text(0)
+		var child_path: String = tree_item.get_meta("path")
 
-		if child_name == name:
+		if child_path == node_path:
 			return tree_item
 
 		var subchild = tree_item.get_children()
 		
 		if subchild:
-			var found = _select_node(subchild, name)
+			var found = _select_node(subchild, node_path)
 
 			if found:
 				return found
@@ -93,6 +93,7 @@ func _retrieves_list_of_nodes() -> void:
 
 	var root_item := _nodes_list.create_item()
 	root_item.set_text(0, _start_node.name)
+	root_item.set_meta("path", str(_start_node.get_path()))
 #	root_item.set_icon(0, ANIMA.get_node_icon(_start_node))
 
 	_add_children(_start_node, root_item, true)
@@ -110,6 +111,8 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 		if _is_visible(child.name):
 			item = _nodes_list.create_item(parent_item)
 			item.set_text(0, child.name)
+			item.set_meta("path", str(child.get_path()))
+
 #			item.set_icon(0, ANIMA.get_node_icon(child))
 
 		if child.get_child_count() > 0:

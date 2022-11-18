@@ -67,9 +67,17 @@ func _ready():
 #	print_tree_pretty()
 #
 
+#		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 0.5)) \
 	anima = Anima.begin(self) \
-		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 5.5)) \
-		.play()
+		.then(Anima.Node($CanvasModulate).anima_animation_frames({
+			to = {
+				color = Color.rebeccapurple
+			},
+			initial_values = {
+				color = Color.yellow
+			}
+		}, 0.5)
+	).play_with_delay(2)
 
 var _temp
 
@@ -102,6 +110,3 @@ func _on_Button_pressed():
 		Anima.Node($Button).anima_position_x(half_screen_x, 1).anima_from(-178)
 	).play_with_delay(1)
 
-func _on_Timer_timeout():
-	anima.queue_free()
-#	$Button.queue_free()

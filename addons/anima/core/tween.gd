@@ -18,12 +18,20 @@ var _root_node: Node
 var _keyframes_engine := AnimaKeyframesEngine.new(funcref(self, '_apply_initial_values'), funcref(self, 'add_animation_data'))
 var _use_meta_values := true
 var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
+var _is_backwards_tween := false
+var _should_apply_initial_values: bool
+var _initial_values := []
 
 enum PLAY_MODE {
 	NORMAL,
 	BACKWARDS,
 	LOOP_IN_CIRCLE
 }
+
+func _init(play_mode: int):
+	_is_backwards_tween = play_mode != PLAY_MODE.NORMAL
+
+	_should_apply_initial_values = !_is_backwards_tween
 
 func _ready():
 	connect("tween_started", self, '_on_tween_started')
@@ -51,12 +59,18 @@ func play(play_speed: float):
 
 	resume_all()
 
+func do_apply_initial_values() -> void:
+	if _should_apply_initial_values:
+		for data in _initial_values:
+			_apply_initial_values(data)
+
+	_should_apply_initial_values = false
+
 func set_apply_initial_values(when) -> void:
 	_apply_initial_values_on = when
 
-func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
+func add_animation_data(animation_data: Dictionary) -> void:
 	var index: String
-	var is_backwards_animation = play_mode != PLAY_MODE.NORMAL
 
 	_animation_data.push_back(animation_data)
 	index = str(_animation_data.size())
@@ -72,13 +86,11 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	var ignore_initial_values = animation_data.has("_ignore_initial_values") and animation_data._ignore_initial_values
 
-	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
+	if animation_data.has("initial_values"):
 		if not animation_data.has("to"):
-			printerr("When specifying 'initial_values' the 'to' keyframe cannot be empty!")
-		elif _apply_initial_values_on == ANIMA.APPLY_INITIAL_VALUES.ON_PLAY:
-			printerr("Implement me")
+			printerr("When specifying 'initial_values' the 'to' keyframe cannot be undefined!")
 		else:
-			_apply_initial_values(animation_data)
+			_add_initial_values(animation_data)
 
 	var easing_points
 
@@ -119,10 +131,10 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	elif easing_points is Curve:
 		use_method = 'animate_with_curve'
 
-	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
+	var from := 1.0 if _is_backwards_tween else 0.0
 	var to := 1.0 - from
 
-	object.set_animation_data(animation_data, property_data, is_backwards_animation)
+	object.set_animation_data(animation_data, property_data, _is_backwards_tween)
 
 	if animation_data.has("__debug"):
 		printt("use_method", use_method)
@@ -143,8 +155,17 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
 		node.connect("tree_exiting", self, "_on_node_tree_exiting")
 
+func _add_initial_values(animation_data: Dictionary) -> void:
+	if _animation_data.has("__debug"):
+		prints("_add_initial_values", animation_data.node, animation_data.initial_values)
+
+	_initial_values.push_back({ node = animation_data.node, initial_values = animation_data.initial_values })
+
 func _apply_initial_values(animation_data: Dictionary) -> void:
 	var node: Node = animation_data.node
+
+	if _animation_data.has("__debug"):
+		prints("_apply_initial_values", node, animation_data.initial_values)
 
 	for property in animation_data.initial_values:
 		var value = animation_data.initial_values[property]
@@ -222,13 +243,13 @@ func set_visibility_strategy(strategy: int) -> void:
 func set_loop_strategy(strategy: int) -> void:
 	_loop_strategy = strategy
 
-func reverse_animation(animation_data: Array, animation_length: float, default_duration: float):
+func _reverse_animation(animation_data: Array, animation_length: float, default_duration: float):
 	clear_animations()
 
 	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
 
 	for new_data in data:
-		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
+		add_animation_data(new_data)
 
 #
 # In order to flip "nested relative" animations we need to calculate what all the

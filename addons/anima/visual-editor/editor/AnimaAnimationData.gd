@@ -10,6 +10,7 @@ signal animate_as_changed(as_node)
 signal updated
 signal removed
 signal highlight_node(node)
+signal select_node_property(node_path)
 
 onready var _node_or_group = find_node("NodeOrGroup")
 onready var _group_data = find_node("GroupData")
@@ -40,7 +41,6 @@ func _ready():
 	_node_or_group.hide()
 	_group_data.hide()
 	_grid_data.hide()
-	_property_values.hide()
 	_select_animation.hide()
 
 	_setup_group_data()
@@ -64,8 +64,12 @@ func set_data(node: Node, path: String, property, property_type):
 
 	_node_or_group.visible = node.get_child_count() > 1
 
+	find_node("PropertyData").visible = property_type != TYPE_NIL
+	find_node("Title").pressed = property_type == TYPE_NIL
+
 func get_data() -> Dictionary:
-	var _property_values = find_node("PropertyValues")
+	if _property_values == null:
+		_property_values = find_node("PropertyValues")
 
 	var easing_value = ANIMA.EASING.LINEAR
 	var easing_button: Button = _property_values.find_node("EasingButton")
@@ -116,10 +120,11 @@ func restore_data(data: Dictionary) -> void:
 	if data.has("animation_name"):
 		selected_animation(data.animation_name, data.animation_name)
 
-	var _property_values = find_node("PropertyValues")
+	if _property_values == null:
+		_property_values = find_node("PropertyValues")
 
 	for child in _property_values.get_child(1).get_children():
-		if child.has_method('set_type'):
+		if child.has_method('set_type') and data.property_type != TYPE_NIL:
 			child.set_type(data.property_type)
 
 	if data.property.has("from"):
@@ -302,6 +307,8 @@ func _on_AnimaAnimationData_item_rect_changed():
 
 func _on_UseAnimation_toggled(button_pressed):
 	_update_icon(AnimaVisualNode.USE.ANIMATION)
+	
+	emit_signal("select_animation")
 
 func _on_AnimateProperty_toggled(button_pressed):
 	_update_icon(AnimaVisualNode.USE.ANIMATE_PROPERTY)
@@ -314,3 +321,6 @@ func _on_AsGroup_toggled(button_pressed):
 
 func _on_AsGrid_toggled(button_pressed):
 	_animate_as = AnimaVisualNode.ANIMATE_AS.GRID
+
+func _on_SelectProperty_pressed():
+	emit_signal("select_node_property", _source_node.get_path())

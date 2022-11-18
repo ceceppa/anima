@@ -7,8 +7,8 @@ signal animation_completed
 signal loop_started
 signal loop_completed
 
-var _anima_tween := AnimaTween.new()
-var _anima_backwards_tween := AnimaTween.new()
+var _anima_tween := AnimaTween.new(AnimaTween.PLAY_MODE.NORMAL)
+var _anima_backwards_tween := AnimaTween.new(AnimaTween.PLAY_MODE.BACKWARDS)
 var _timer := Timer.new()
 
 var _total_animation_length := 0.0
@@ -199,6 +199,13 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 
 		return self
 
+	#
+	# If the user wants to play an animation with a delay, we still
+	# need to apply for the initial values
+	#
+	if mode != AnimaTween.PLAY_MODE.BACKWARDS:
+		_anima_tween.do_apply_initial_values()
+
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
@@ -293,7 +300,7 @@ func _do_play() -> void:
 	var tween: AnimaTween = _anima_tween
 	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
 		if not _anima_backwards_tween.has_data():
-			_anima_backwards_tween.reverse_animation(_anima_tween.get_animation_data(), _total_animation_length, _default_duration)
+			_anima_backwards_tween._reverse_animation(_anima_tween.get_animation_data(), _total_animation_length, _default_duration)
 
 		tween = _anima_backwards_tween
 
@@ -319,8 +326,10 @@ func set_default_duration(duration: float) -> AnimaNode:
 
 	return self
 
-func set_apply_initial_values(when: int) -> void:
+func set_apply_initial_values(when: int) -> AnimaNode:
 	_anima_tween.set_apply_initial_values(when)
+
+	return self
 
 func debug() -> void:
 	var data = _anima_tween.get_animation_data()

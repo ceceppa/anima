@@ -81,8 +81,7 @@ placeholder_text = "Search property..."
 
 [node name="Clear" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer" instance=ExtResource( 2 )]
 margin_left = 876.0
-margin_right = 976.0
-rect_min_size = Vector2( 100, 49 )
+margin_right = 932.0
 text = "Clear"
 __meta__ = {
 "__initial_AnimaNode__anima_1080271746666121704__button_bg": {
@@ -265,6 +264,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_465109440567587708__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_465109440567587708_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_465109440567587708_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_519637341227367798__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -333,8 +344,7 @@ alignment = 2
 
 [node name="ConfirmProperty" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2" instance=ExtResource( 2 )]
 margin_left = 641.0
-margin_right = 850.0
-rect_min_size = Vector2( 209, 49 )
+margin_right = 826.0
 text = "Select property"
 icon = ExtResource( 5 )
 __meta__ = {
@@ -371,6 +381,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_114412537975414917_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1381026267201946777__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1381026267201946777_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1381026267201946777_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -570,8 +592,7 @@ __meta__ = {
 
 [node name="Close" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2" instance=ExtResource( 2 )]
 margin_left = 874.0
-margin_right = 976.0
-rect_min_size = Vector2( 102, 49 )
+margin_right = 952.0
 text = "Close"
 icon = ExtResource( 4 )
 __meta__ = {
@@ -764,6 +785,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_779371382342741333_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_793461359493260376__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_793461359493260376_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_793461359493260376_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },

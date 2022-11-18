@@ -49,12 +49,24 @@ custom_constants/separation = 24
 alignment = 2
 
 [node name="Add" parent="ButtonsContainer" instance=ExtResource( 4 )]
-margin_left = 785.0
-margin_right = 872.0
+margin_left = 803.0
+margin_right = 890.0
 rect_min_size = Vector2( 87, 49 )
 text = "Add"
 icon = ExtResource( 6 )
 __meta__ = {
+"__initial_AnimaNode__anima_124385497331026416__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_124385497331026416_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_124385497331026416_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1314369784619903809__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -254,6 +266,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_248374958406203888__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_248374958406203888_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_248374958406203888_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_454360864891194458__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -341,9 +365,9 @@ __meta__ = {
 }
 
 [node name="Close" parent="ButtonsContainer" instance=ExtResource( 4 )]
-margin_left = 896.0
+margin_left = 914.0
 margin_right = 1016.0
-rect_min_size = Vector2( 120, 49 )
+rect_min_size = Vector2( 102, 49 )
 text = "Close"
 icon = ExtResource( 2 )
 __meta__ = {
@@ -404,6 +428,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1651762914922848633_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_270049370735037628__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_270049370735037628_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_270049370735037628_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },

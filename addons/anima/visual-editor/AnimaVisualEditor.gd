@@ -246,8 +246,8 @@ func _on_StopAnimation_pressed():
 	visual_node.stop()
 
 func _on_FramesEditor_select_node():
-	$PropertiesWindow.window_title = "Select the node and property to animate"
-	$PropertiesWindow.popup_centered()
+#	$PropertiesWindow.window_title = "Select the node to animate"
+	$NodesWindow.popup_centered()
 
 func _on_PropertiesWindow_property_selected(node_path, property, property_type):
 	var node: Node = _anima_visual_node.get_root_node().get_node(node_path)
@@ -268,7 +268,7 @@ func _on_anima_visual_node_deleted() -> void:
 
 	_maybe_show_graph_edit()
 
-func _on_FramesEditor_highlight_node(node):
+func _on_FramesEditor_highlight_node(node: Node):
 	emit_signal("highlight_node", node)
 
 func _on_select_animation(source: Node) -> void:
@@ -302,6 +302,7 @@ func _on_FramesEditor_play_animation(name: String):
 	emit_signal("play_animation", name)
 
 func _on_FramesEditor_select_node_property(node_path: String):
+	print("ciao")
 	var node = get_node(node_path)
 #	var relative_path = _anima_visual_node.get_path_to(node)
 
@@ -309,3 +310,8 @@ func _on_FramesEditor_select_node_property(node_path: String):
 
 	$PropertiesWindow.window_title = "Select the node property to animate"
 	$PropertiesWindow.popup_centered()
+
+func _on_FramesEditor_add_node(node_path):
+	var node = get_node(node_path)
+
+	_frames_editor.add_animation_for(node, node_path, "", TYPE_NIL)

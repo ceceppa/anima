@@ -4,6 +4,7 @@ extends Control
 const FRAME_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaFrameAnimation.tscn")
 const FRAME_DELAY = preload("res://addons/anima/visual-editor/editor/AnimaFrameDelay.tscn")
 
+signal add_node(node_path)
 signal select_node
 signal select_node_property(node_path)
 signal visual_builder_updated(data)
@@ -78,7 +79,8 @@ func _add_component(node: Node) -> void:
 	node.connect("frame_updated", self, "_emit_updated")
 	node.connect("frame_deleted", self, "_emit_updated")
 	node.connect("select_node", self, "_on_frame_select_node", [node])
-	node.connect("select_node_property", self, "_on_frame_select_node_property", [node])
+	node.connect("add_node", self, "_on_frame_add_node", [node])
+#	node.connect("select_node_property", self, "_on_frame_select_node_property", [node])
 
 	node.animate_entrance_exit = not disable_animations
 
@@ -95,6 +97,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	node.connect("highlight_node", self, "_on_highlight_node")
 	node.connect("select_animation", self, "_on_select_animation", [node])
 	node.connect("select_relative_property", self, "_on_select_relative_property", [node])
+	node.connect("select_node_property", self, "_on_select_node_property", [node])
 	node.connect("select_easing", self, "_on_select_easing", [node])
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
@@ -155,6 +158,11 @@ func _on_select_relative_property(source: Node) -> void:
 
 	emit_signal("select_relative_property")
 
+func _on_select_node_property(path: String, source: Node) -> void:
+	_animation_node_source = source
+
+	emit_signal("select_node_property", path)
+
 func _on_select_easing(source: Node) -> void:
 	_animation_node_source = source
 
@@ -167,3 +175,8 @@ func _on_frame_select_node_property(node_path, destination_frame) -> void:
 	_destination_frame = destination_frame
 
 	emit_signal("select_node_property", node_path)
+
+func _on_frame_add_node(node_path, destination_frame) -> void:
+	_destination_frame = destination_frame
+
+	emit_signal("add_node", node_path)

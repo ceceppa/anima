@@ -48,3 +48,6 @@ func _on_AnimaButton_pressed():
 		name = "default"
 
 	emit_signal("play_animation", name)
+
+func _on_Button_pressed():
+	emit_signal("play_animation", "default")
