@@ -109,6 +109,42 @@ text = "Play"
 icon = ExtResource( 4 )
 icon_align = 1
 __meta__ = {
+"__initial_AnimaNode__anima_1014784780557386597__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1014784780557386597_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1014784780557386597_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1093028618151158569__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1093028618151158569_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1093028618151158569_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1104750793260801514__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1104750793260801514_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1104750793260801514_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1109358829504410889__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -118,6 +154,18 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1109358829504410889_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_116350859342515332__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_116350859342515332_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_116350859342515332_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -133,6 +181,42 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_131444226569915332__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_131444226569915332_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_131444226569915332_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1342101466859780029__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1342101466859780029_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1342101466859780029_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1401074338933200928__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1401074338933200928_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1401074338933200928_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_1478112231503369141__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -142,6 +226,30 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_AnimaNode__anima_1478112231503369141_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1627199582695054199__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1627199582695054199_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1627199582695054199_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_174852194257686707__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_174852194257686707_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_174852194257686707_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
@@ -205,6 +313,18 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_519245905911639526__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_519245905911639526_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_519245905911639526_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
 "__initial_AnimaNode__anima_528217024870129761__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -228,6 +348,38 @@ __meta__ = {
 "__initial_AnimaNode__anima_701244623661959473_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_72086718746556543__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_72086718746556543_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_72086718746556543_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_729250343778595703__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_729250343778595703_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_729250343778595703_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_76347745406773285__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_76347745406773285_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_774037851557249634__button_bg": {
 "percentage": 0,
@@ -253,6 +405,22 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_841478593885864868__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_841478593885864868_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_90541011117874023__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_90541011117874023_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_914465395103311768__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -264,6 +432,14 @@ __meta__ = {
 "__initial_AnimaNode__anima_914465395103311768_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_916906820893198486__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_916906820893198486_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_944680552210345459__button_bg": {
 "percentage": 0,
