@@ -48,16 +48,19 @@ __meta__ = {
 }
 
 [node name="Button1" type="Button" parent="Control"]
-margin_left = 100.0
-margin_top = 100.0
-margin_right = 216.0
-margin_bottom = 137.0
+margin_left = 117.0
+margin_top = -238.0
+margin_right = 233.0
+margin_bottom = -201.0
 rect_pivot_offset = Vector2( 58, 18.5 )
 text = "Button 1"
 icon_align = 1
 __meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__initial_AnimaNode_default_y": {
+"percentage": 0,
+"value": 100.0
+},
+"__visibility_strategy": 0
 }
 
 [node name="Button3" type="Button" parent="Control"]
@@ -67,11 +70,10 @@ margin_right = 11.0
 margin_bottom = 74.0
 
 [node name="Button4" type="Button" parent="Control"]
-margin_left = 321.0
-margin_top = -122.0
-margin_right = 752.001
-margin_bottom = -23.0001
-rect_pivot_offset = Vector2( 215.5, 49.4999 )
+margin_left = 293.0
+margin_top = -106.0
+margin_right = 724.001
+margin_bottom = -7.0
 text = "Button 4"
 __meta__ = {
 "__initial_AnimaNode_default_rotate:y": {
@@ -80,11 +82,10 @@ __meta__ = {
 },
 "__initial_AnimaNode_default_x": {
 "percentage": 0,
-"value": 100.0
+"value": 298.0
 },
 "__visibility_strategy": 0,
-"_initial_relative_value_x_to": 100.0,
-"_visibility_strategy_reverted": true
+"_initial_relative_value_x_to": 100.0
 }
 
 [node name="Button5" type="Button" parent="Control"]
@@ -201,6 +202,28 @@ __anima_visual_editor_data = {
 "property_name": "position",
 "property_type": 5,
 "use": 0
+}, {
+"animate_as": 0,
+"animation_name": "shake_y",
+"delay": null,
+"duration": null,
+"group": {
+"animation_type": 1,
+"items_delay": 0.01,
+"start_index": 0
+},
+"node_path": "Control/Button1",
+"property": {
+"easing": [ "Linear", 0 ],
+"from": null,
+"initialValue": null,
+"pivot": 0,
+"relative": false,
+"to": null
+},
+"property_name": "",
+"property_type": 0,
+"use": 1
 } ],
 "duration": null,
 "name": "Frame0",
@@ -221,19 +244,25 @@ __anima_visual_editor_data = {
 "node_path": "Control/Button4",
 "property": {
 "easing": [ "Linear", 0 ],
-"from": null,
+"from": [ "0", "0" ],
 "initialValue": null,
 "pivot": 0,
 "relative": false,
-"to": null
+"to": [ "100", "100" ]
 },
-"property_name": "",
-"property_type": 0,
+"property_name": "position",
+"property_type": 5,
 "use": 1
 } ],
 "duration": null,
-"name": "Frame1",
+"name": "Frame 2",
 "type": "frame"
+},
+2: {
+"data": {
+"delay": 0.5
+},
+"type": "delay"
 }
 }
 }

@@ -74,6 +74,18 @@ func handles(object):
 		if object:
 			is_anima_node = true
 
+	#
+	# We need to defer this call for when we open a project as the user might have
+	# multiple tabs open and this causes this function to be triggered for each
+	# of them, causing some restoring data to be stopped while running.
+	# Causing funny results
+	#
+	if _anima_visual_node != object:
+		call_deferred("set_anima_node", is_anima_node, object)
+
+	return is_anima_node
+
+func set_anima_node(is_anima_node: bool, object) -> void:
 	if is_anima_node and object and _anima_visual_node != object:
 		_anima_editor.set_anima_node(object)
 
@@ -82,13 +94,11 @@ func handles(object):
 		_anima_editor.set_anima_node(null)
 
 		_anima_visual_node = null
-
-	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed", self, "_on_editor_position_changed"):
-		_anima_visual_node.connect("on_editor_position_changed", self, "_on_editor_position_changed")
-
-		_on_editor_position_changed(_anima_visual_node._editor_position)
-
-	return is_anima_node
+#
+#	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed", self, "_on_editor_position_changed"):
+#		_anima_visual_node.connect("on_editor_position_changed", self, "_on_editor_position_changed")
+#
+#		_on_editor_position_changed(_anima_visual_node._editor_position)
 
 func _on_editor_position_changed(new_position: int) -> void:
 	return

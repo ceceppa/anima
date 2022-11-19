@@ -4,8 +4,6 @@ extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
 func _init():
 	toggle_mode = true
 
-	_zoom_on_hover = 1.0
-
 func _ready():
 	_on_AnimaToggleButton_toggled(pressed)
 	toggle_mode = true
@@ -16,8 +14,7 @@ func _on_AnimaToggleButton_toggled(button_pressed):
 	if button_pressed:
 		path = "res://addons/anima/visual-editor/icons/Collapse.svg"
 
-	_set('icon', load(path))
-#	icon = load(path)
+	set('icon', load(path))
 
 	if not get_parent():
 		return

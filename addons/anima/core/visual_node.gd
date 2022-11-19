@@ -100,6 +100,12 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 
 	for frame_id in animations_data.frames:
 		var frame_data = animations_data.frames[frame_id]
+		
+		if frame_data.type == "delay":
+			start_time += frame_data.data.delay
+
+			continue
+
 		var frame_default_duration = frame_data.duration
 
 		if frame_default_duration == null:

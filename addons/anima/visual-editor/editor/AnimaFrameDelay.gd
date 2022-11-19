@@ -2,13 +2,33 @@ tool
 extends Control
 
 signal frame_deleted
+signal frame_updated
+
+export var animate_entrance_exit := true
+
+onready var _delay = find_node("DelayValue")
 
 func _ready():
-	_animate_me()
+	if animate_entrance_exit:
+		_animate_me()
+
+func get_data() -> Dictionary:
+	return {
+		type = "delay",
+		data = {
+			delay = _delay.get_value()
+		}
+	}
+
+func restore_data(data: Dictionary) -> void:
+	if _delay == null:
+		_delay = find_node("DelayValue")
+
+	_delay.set_value(data.delay)
 
 func _animate_me(backwards := false) -> AnimaNode:
+
 	var anima: AnimaNode = Anima.begin_single_shot(self)
-	
 	anima.set_default_duration(0.3)
 
 	anima.then(
@@ -54,9 +74,11 @@ func _animate_me(backwards := false) -> AnimaNode:
 	return anima
 
 func _on_Delete_pressed():
-	var anima := _animate_me(true)
-
-	yield(anima, "animation_completed")
+	if animate_entrance_exit:
+		yield(_animate_me(true), "animation_completed")
 
 	queue_free()
 	emit_signal("frame_deleted")
+
+func _on_DelayValue_changed():
+	emit_signal("frame_updated")

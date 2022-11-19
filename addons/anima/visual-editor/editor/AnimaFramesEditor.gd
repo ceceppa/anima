@@ -44,10 +44,14 @@ func clear() -> void:
 		child.animate_entrance_exit = false
 		child.queue_free()
 
-func select_frame(key) -> void:
+func select_frame(key) -> Node:
+	_destination_frame = null
+
 	for child in _frames_container.get_children():
 		if is_instance_valid(child) and child.get_meta("_key") == key:
 			_destination_frame = child
+
+	return _destination_frame
 
 func set_frame_name(name: String) -> void:
 	_destination_frame.set_name(name)
@@ -78,8 +82,6 @@ func update_flow_direction(new_direction: int) -> void:
 func _add_component(node: Node) -> void:
 	node.connect("frame_updated", self, "_emit_updated")
 	node.connect("frame_deleted", self, "_emit_updated")
-	node.connect("select_node", self, "_on_frame_select_node", [node])
-	node.connect("add_node", self, "_on_frame_add_node", [node])
 
 	node.animate_entrance_exit = not disable_animations
 
@@ -98,6 +100,9 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	node.connect("select_relative_property", self, "_on_select_relative_property", [node])
 	node.connect("select_node_property", self, "_on_select_node_property")
 	node.connect("select_easing", self, "_on_select_easing", [node])
+	node.connect("select_node", self, "_on_frame_select_node", [node])
+	node.connect("add_node", self, "_on_frame_add_node", [node])
+
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
 	node.set_name("Frame" + str(key))
@@ -106,8 +111,15 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 
 	_emit_updated()
 
-func _on_AnimaAddFrame_add_delay():
-	_add_component(FRAME_DELAY.instance())
+func _on_AnimaAddFrame_add_delay(key := -1):
+	if key < 0:
+		key = _frames_container.get_child_count()
+
+	var node = FRAME_DELAY.instance()
+
+	node.set_meta("_key", key)
+
+	_add_component(node)
 
 	_emit_updated()
 
