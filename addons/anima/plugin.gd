@@ -108,7 +108,6 @@ func _on_editor_position_changed(new_position: int) -> void:
 
 	_add_anima_editor(new_position)
 
-
 func _on_visual_builder_updated(data: Dictionary) -> void:
 	var current_data: Dictionary = _anima_visual_node.__anima_visual_editor_data
 	var undo_redo = get_undo_redo() # Method of EditorPlugin.

@@ -500,12 +500,6 @@ class AnimatedItem extends Node:
 		if _property_data.size() == 0:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
 
-			if _animation_data.property == "x":
-				if _animation_data.has("from"):
-					print(_animation_data.from)
-
-				prints(_property_data.from, _animation_data.to)
-
 			if _animation_data.has("__debug"):
 				printt("_property_data", _property_data)
 				print("")

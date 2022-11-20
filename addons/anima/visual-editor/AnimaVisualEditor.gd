@@ -29,6 +29,7 @@ var _animation_source_node: Node
 var _is_selecting_relative_property := false
 var _on_property_selected_action: int = PROPERTY_SELECTED_ACTION.ADD_NEW_ANIMATION
 var _source_animation_data_node: Node
+var _current_animation := "0"
 
 func _ready():
 	_frames_editor.hide()
@@ -120,23 +121,20 @@ func _maybe_show_graph_edit() -> bool:
 	return is_graph_edit_visible
 
 func _restore_data(data: Dictionary) -> void:
-	if not data.has("0"):
+	if not data.has(_current_animation):
 		_frames_editor.clear()
-		_frames_editor.set_is_restoring_data(true)
 
-		# Always "insert" the initial frame
-#		_frames_editor._on_AnimaAddFrame_add_frame(0, true)
-
-		_frames_editor.set_is_restoring_data(false)
-		
 		return
 
-	var animation = data["0"]
+	var animation = data[_current_animation]
 	
 	_frames_editor.clear()
 	_frames_editor.set_is_restoring_data(true)
 
 	_frames_editor.restore_animation_data(animation.animation)
+
+	var key_index := 0
+	var total_frames = animation.frames.keys().size() - 1
 
 	for frame_key in animation.frames:
 		var frame_data = animation.frames[frame_key]
@@ -155,6 +153,10 @@ func _restore_data(data: Dictionary) -> void:
 		var the_frame = _frames_editor.select_frame(frame_key)
 		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
 
+		if not the_frame.is_connected("move_one_left", self, "_on_frame_move_one_left"):
+			the_frame.connect("move_one_left", self, "_on_frame_move_one_left", [key_index])
+			the_frame.connect("move_one_right", self, "_on_frame_move_one_right", [key_index])
+
 		_frames_editor.set_frame_name(frame_name)
 
 		if frame_data.has("duration") and frame_data.duration != null:
@@ -162,6 +164,9 @@ func _restore_data(data: Dictionary) -> void:
 
 		if not frame_data.has("data"):
 			frame_data.data = {}
+
+		the_frame.set_has_previous(key_index > 0)
+		the_frame.set_has_next(key_index < total_frames)
 
 		for value in frame_data.data:
 			if value is String:
@@ -188,6 +193,8 @@ func _restore_data(data: Dictionary) -> void:
 		if frame_data.has("collapsed") and frame_data.collapsed:
 #			the_frame.collapse()
 			pass
+
+		key_index += 1
 
 	_frames_editor.set_is_restoring_data(false)
 
@@ -357,3 +364,20 @@ func _on_FramesEditor_add_node(node_path):
 
 func _on_FramesEditor_select_animation():
 	pass # Replace with function body.
+
+func _on_frame_move_one_left(frame_index: int) -> void:
+	_swap_frames(frame_index, frame_index - 1)
+
+func _on_frame_move_one_right(frame_index: int) -> void:
+	_swap_frames(frame_index, frame_index + 1)
+
+func _swap_frames(from: int, to: int) -> void:
+	var data = _anima_visual_node.__anima_visual_editor_data
+	var temp = data[_current_animation].frames[from]
+
+	data[_current_animation].frames[from] = data[_current_animation].frames[to]
+	data[_current_animation].frames[to] = temp
+
+	_on_FramesEditor_visual_builder_updated(data)
+
+	_restore_data(data)

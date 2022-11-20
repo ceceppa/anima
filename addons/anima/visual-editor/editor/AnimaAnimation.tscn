@@ -1,113 +1,122 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimation.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/visual-editor/icons/Play.svg" type="Texture" id=4]
 
-[node name="AnimaAnimation" type="Control"]
-anchor_bottom = 1.0
-rect_min_size = Vector2( 360, 0 )
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.113725, 0.207843, 0.341176, 1 )
+border_width_bottom = 4
+border_color = Color( 0.0392157, 0.105882, 0.2, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 64.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[node name="AnimaAnimation" type="Label"]
+anchor_right = 1.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 0, 67 )
+custom_styles/normal = SubResource( 1 )
 script = ExtResource( 3 )
 
-[node name="Rectangle" type="ColorRect" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -664.0
-rect_min_size = Vector2( 360, 0 )
-rect_pivot_offset = Vector2( 180, 300 )
-color = Color( 0.0470588, 0.176471, 0.282353, 1 )
+margin_bottom = -8.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 24
+custom_constants/margin_top = 4
+custom_constants/margin_left = 24
+custom_constants/margin_bottom = 4
 
-[node name="CenterContainer" type="CenterContainer" parent="Rectangle"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/CenterContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 margin_left = 24.0
-margin_top = 118.0
-margin_right = 336.0
-margin_bottom = 482.0
-rect_min_size = Vector2( 312, 0 )
+margin_top = 4.0
+margin_right = 1005.0
+margin_bottom = 63.0
 size_flags_horizontal = 3
-size_flags_vertical = 3
+custom_constants/separation = 48
 
-[node name="HBoxContainer" type="GridContainer" parent="Rectangle/CenterContainer/VBoxContainer"]
-margin_right = 312.0
-margin_bottom = 364.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/vseparation = 12
-
-[node name="Label" type="Label" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
 visible = false
-margin_right = 312.0
-margin_bottom = 25.0
+margin_top = 12.0
+margin_right = 186.0
+margin_bottom = 37.0
 text = "Animation name:"
 
-[node name="AnimationName" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+[node name="AnimationName" parent="MarginContainer/HBoxContainer" instance=ExtResource( 2 )]
 visible = false
-margin_right = 312.0
 margin_bottom = 49.0
 type = 4
 show_relative_selector = false
 
-[node name="HSeparator" type="HSeparator" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer"]
 visible = false
-margin_right = 312.0
-margin_bottom = 48.0
+margin_right = 3.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 0, 48 )
 
-[node name="Label2" type="Label" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_right = 312.0
-margin_bottom = 25.0
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer"]
+margin_top = 17.0
+margin_right = 189.0
+margin_bottom = 42.0
 text = "Visibility strategy:"
 
-[node name="VisibilityStrategy" type="OptionButton" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_top = 37.0
-margin_right = 312.0
-margin_bottom = 85.0
+[node name="VisibilityStrategy" type="OptionButton" parent="MarginContainer/HBoxContainer"]
+margin_left = 237.0
+margin_right = 368.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 0, 48 )
 text = "Ignore"
 items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
 selected = 0
 
-[node name="HSeparator2" type="HSeparator" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_top = 97.0
-margin_right = 312.0
-margin_bottom = 145.0
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/HBoxContainer"]
+margin_left = 416.0
+margin_right = 419.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 0, 48 )
 
-[node name="Label3" type="Label" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_top = 157.0
-margin_right = 312.0
-margin_bottom = 182.0
+[node name="Label3" type="Label" parent="MarginContainer/HBoxContainer"]
+margin_left = 467.0
+margin_top = 17.0
+margin_right = 681.0
+margin_bottom = 42.0
 text = "Default duration (s):"
 
-[node name="DefaultDuration" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
-margin_top = 194.0
-margin_right = 312.0
-margin_bottom = 243.0
+[node name="DefaultDuration" parent="MarginContainer/HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 729.0
+margin_right = 729.0
+margin_bottom = 59.0
 type = 3
 can_clear_custom_value = false
 show_relative_selector = false
 
-[node name="HSeparator3" type="HSeparator" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_top = 255.0
-margin_right = 312.0
-margin_bottom = 303.0
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/HBoxContainer"]
+margin_left = 777.0
+margin_right = 780.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 0, 48 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Button" parent="Rectangle/CenterContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_top = 315.0
-margin_right = 312.0
-margin_bottom = 364.0
-rect_min_size = Vector2( 69, 49 )
+[node name="PlayButton" parent="MarginContainer/HBoxContainer" instance=ExtResource( 1 )]
+margin_left = 828.0
+margin_right = 981.0
+margin_bottom = 59.0
+custom_styles/normal = SubResource( 2 )
 text = "Play"
 icon = ExtResource( 4 )
-icon_align = 1
 __meta__ = {
 "__initial_AnimaNode__anima_1014784780557386597__button_bg": {
 "percentage": 0,
@@ -145,6 +154,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1105315936924831787__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0.482353, 0.615686, 1 )
+},
+"__initial_AnimaNode__anima_1105315936924831787_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_1109358829504410889__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -169,6 +186,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1197130057364789062__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1197130057364789062_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_1199797368124862305__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -180,6 +205,22 @@ __meta__ = {
 "__initial_AnimaNode__anima_1199797368124862305_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1243538350115708252__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1243538350115708252_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1286340389251659424__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1286340389251659424_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_131444226569915332__button_bg": {
 "percentage": 0,
@@ -228,6 +269,30 @@ __meta__ = {
 "__initial_AnimaNode__anima_1478112231503369141_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1495468418847140381__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1495468418847140381_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_157885457136916333__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_157885457136916333_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1624610822152358643__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1624610822152358643_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_1627199582695054199__button_bg": {
 "percentage": 0,
@@ -336,6 +401,22 @@ __meta__ = {
 "__initial_AnimaNode__anima_528217024870129761_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_549445984197827515__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_549445984197827515_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_585556612542947144__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_585556612542947144_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_701244623661959473__button_bg": {
 "percentage": 0,
@@ -464,9 +545,16 @@ __meta__ = {
 "__initial_AnimaNode__anima_946609607021070435_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_947193999469267334__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_947193999469267334_opacity": {
+"percentage": 0,
+"value": 1.0
 }
 }
+style = 4
 
-[connection signal="item_selected" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/VisibilityStrategy" to="." method="_on_value_updated"]
-[connection signal="value_updated" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/DefaultDuration" to="." method="_on_value_updated"]
-[connection signal="pressed" from="Rectangle/CenterContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]

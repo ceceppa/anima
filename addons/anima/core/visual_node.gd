@@ -27,6 +27,7 @@ export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM setget s
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode
+var _is_playing := false
 
 func _init():
 	set_meta("__anima_visual_node", true)
@@ -37,20 +38,6 @@ func _init():
 #
 func get_root_node() -> Node:
 	var parent = self.get_parent()
-
-#	# get data
-#	var img = get_viewport().get_texture().get_data()
-#	# wait two frames
-#	yield(get_tree(), "idle_frame")
-#	yield(get_tree(), "idle_frame")
-#	# flip
-#	img.flip_y()
-#	# get screen ratio + resize capture
-#	var ratio = 2
-#	img.resize(img.get_width()*ratio,img.get_height()*ratio,0)
-#	# save to file
-#	print("saving")
-#	img.save_png("screenshot.png")
 
 	if parent == null:
 		return self
@@ -66,6 +53,9 @@ func get_animations_list() -> Array:
 	return []
 
 func play_animation(name: String, speed: float = 1.0, reset_initial_values := false) -> void:
+	var result = _reset_initial_values(0.0)
+	yield(result, "completed")
+
 	var animations_data: Dictionary = _get_animation_data_by_name(name)
 
 	if animations_data.size() == 0:
@@ -152,36 +142,16 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 	yield(anima, "animation_completed")
 
 	if reset_initial_values:
-		_reset_initial_values()
+		_reset_initial_values(1.0)
 
 	emit_signal("animation_completed")
-#
-#func preview_animation(node: Node, duration: float, delay: float, animation_data: Dictionary) -> void:
-#	var anima: AnimaNode = Anima.begin(self)
-#	anima.set_single_shot(true)
-#
-#	var initial_value = null
-#
-#	var anima_data = _create_animation_data(node, duration, delay, animation_data)
-#	anima.set_root_node(get_root_node())
-#
-#	AnimaUI.debug(self, 'playing node animation with data', anima_data)
-#
-#	anima_data._root_node = get_root_node()
-#
-#	anima.then(anima_data)
-#
-#	anima.play()
-#	yield(anima, "animation_completed")
-#
-#	_reset_initial_values()
 
 func stop() -> void:
 	if _active_anima_node == null:
 		return
 
 	_active_anima_node.stop()
-	_reset_initial_values()
+	_reset_initial_values(1.0)
 
 func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	var source_node: Node = get_root_node()
@@ -276,14 +246,19 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 
 	return anima_data
 
-func _reset_initial_values() -> void:
+func _reset_initial_values(clear_timeout: float):
+	if is_instance_valid(_active_anima_node) and not _active_anima_node.is_queued_for_deletion():
+		_active_anima_node.stop()
+	else:
+		return yield(get_tree(), "idle_frame")
+
 	_active_anima_node = null
 
-	yield(get_tree().create_timer(1.0), "timeout")
+	yield(get_tree().create_timer(clear_timeout), "timeout")
 
 	# reset node initial values
 	if _initial_values.size() == 0:
-		return
+		return yield(get_tree(), "idle_frame")
 
 	for node in _initial_values:
 		var initial_values: Dictionary = _initial_values[node]
@@ -306,6 +281,8 @@ func _reset_initial_values() -> void:
 			node.remove_meta("_old_modulate")
 
 	_initial_values.clear()
+
+	yield(get_tree(), "idle_frame")
 
 func set_editor_position(new_position: int) -> void:
 	_editor_position = new_position
