@@ -55,8 +55,8 @@ func show_group_or_node() -> void:
 	_node_or_group.show()
 
 func set_data(node: Node, path: String, property, property_type, toggle_title := true):
-	_title.set_text(node.name + ":" + property)
-	
+	_set_title(node.name, property, AnimaVisualNode.USE.ANIMATE_PROPERTY)
+
 	_path = path
 	_source_node = node
 	_property = property
@@ -190,7 +190,7 @@ func _on_PropertyButton_pressed():
 	emit_signal("select_property")
 
 func _on_AnimaAnimationData_mouse_entered():
-	if _source_node == null:
+	if _source_node == null and Engine.editor_hint:
 		printerr("_on_AnimaAnimationData_mouse_entered: _source_node is null")
 
 		return
@@ -294,7 +294,7 @@ func _update_icon(button_index: int, emit := true) -> void:
 	var is_property = button_index == AnimaVisualNode.USE.ANIMATE_PROPERTY
 	var value = _property if is_property else _animation_name
 
-	_title.set_text(_source_node.name + ":" + value)
+	_set_title(_source_node.name, value, button_index)
 
 	if _animate_with == button_index:
 		return
@@ -307,19 +307,24 @@ func _update_icon(button_index: int, emit := true) -> void:
 	_property_values.visible = is_property
 	_select_animation.visible = !is_property
 
-	_animation_type_icon.texture = load(icon)
-
+	_title.set_left_icon(load(icon))
 	_animate_with = button_index
-
 
 	if emit:
 		emit_signal("updated")
 
+func _set_title(node_name: String, what: String, type: int) -> void:
+	var title = node_name + "->" + what
+
+	if type == AnimaVisualNode.USE.ANIMATION:
+		title = node_name + " (" + what + ")"
+
+	_title.set_text(title)
+
+
 func _on_AnimaAnimationData_item_rect_changed():
 	if _background_rect:
 		_background_rect.rect_size = rect_size
-
-		_animation_type_icon.position.x = rect_size.x - 48
 
 func _on_UseAnimation_toggled(button_pressed):
 	_update_icon(AnimaVisualNode.USE.ANIMATION)

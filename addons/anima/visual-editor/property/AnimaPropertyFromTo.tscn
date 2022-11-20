@@ -38,13 +38,12 @@ script = ExtResource( 3 )
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = 168.0
+margin_right = 192.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CurrentValue" parent="HBoxContainer" instance=ExtResource( 7 )]
-margin_right = 168.0
-rect_min_size = Vector2( 168, 49 )
+margin_right = 192.0
 rect_pivot_offset = Vector2( 84, 24.5 )
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
@@ -64,6 +63,14 @@ __meta__ = {
 "__initial_AnimaNode__anima_1014441018145550415_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_118540672383365918__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_118540672383365918_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_1202920097238041504__button_bg": {
 "percentage": 0,
@@ -157,7 +164,7 @@ style = 1
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = 260.0
+margin_right = 308.0
 rect_min_size = Vector2( 0, 45 )
 rect_pivot_offset = Vector2( 512, 15 )
 size_flags_horizontal = 3
@@ -609,6 +616,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_1587721614314442871__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1587721614314442871_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_590050087356832886__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -669,6 +684,14 @@ hint_tooltip = "Clear value"
 icon = ExtResource( 2 )
 icon_align = 1
 __meta__ = {
+"__initial_AnimaNode__anima_1004628049937195801__button_bg": {
+"percentage": 0,
+"value": Color( 0.215686, 0.254902, 0.25098, 1 )
+},
+"__initial_AnimaNode__anima_1004628049937195801_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_1212383672440035645__button_bg": {
 "percentage": 0,
 "value": Color( 0.215686, 0.254902, 0.25098, 1 )
@@ -814,6 +837,14 @@ __meta__ = {
 "__initial_AnimaNode__anima_1272839985066247803_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_435531694377409607__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_435531694377409607_opacity": {
+"percentage": 0,
+"value": 1.0
 },
 "__initial_AnimaNode__anima_579480199471437256__button_bg": {
 "percentage": 0,

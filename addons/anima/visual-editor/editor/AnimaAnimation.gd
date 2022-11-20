@@ -11,6 +11,7 @@ onready var _default_duration: Control = find_node("DefaultDuration")
 var _is_restoring_data := false
 
 func _ready():
+	rect_position = Vector2.ZERO
 	pass
 
 func get_data() -> Dictionary:
@@ -49,5 +50,5 @@ func _on_AnimaButton_pressed():
 
 	emit_signal("play_animation", name)
 
-func _on_Button_pressed():
+func _on_PlayButton_pressed():
 	emit_signal("play_animation", "default")

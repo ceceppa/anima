@@ -14,6 +14,8 @@ signal select_relative_property
 signal highlight_node(node)
 signal preview_frame
 signal select_node_property(source, node_path)
+signal move_one_left
+signal move_one_right
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -65,6 +67,18 @@ func set_name(name: String) -> void:
 	_frame_name.set_label(name)
 	_frame_name.set_initial_value(name)
 	_frame_name.set_placeholder(name)
+
+func set_has_previous(has: bool) -> void:
+	_maybe_set_visible("MoveLeft", has)
+
+func set_has_next(has: bool) -> void:
+	_maybe_set_visible("MoveRight", has)
+
+func _maybe_set_visible(node_name: String, visible: bool) -> void:
+	var node = find_node(node_name)
+
+	if node:
+		node.visible = visible
 
 func set_duration(duration: float) -> void:
 	_duration.set_value(duration)
@@ -166,7 +180,7 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 
 	find_node("DurationContainer").visible = !is_initial_frame
 	find_node("Delete").visible = !is_initial_frame
-	find_node("PlayButton").visible = !is_initial_frame
+#	find_node("PlayButton").visible = !is_initial_frame
 	
 	var frame_name = find_node("FrameName")
 	

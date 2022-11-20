@@ -51,6 +51,8 @@ func _ready():
 	set_can_clear_custom_value(can_clear_custom_value)
 	set_disabled(disabled)
 	set_show_confirm_button(show_confirm_button)
+	
+	_on_PropertyFromTo_item_rect_changed()
 
 func set_type(the_type: int) -> void:
 	type = the_type
@@ -389,3 +391,4 @@ func set_font_color(c: Color) -> void:
 
 func _on_CustomValue_item_rect_changed():
 	$HBoxContainer.rect_size.x = $CustomValue.rect_size.x
+

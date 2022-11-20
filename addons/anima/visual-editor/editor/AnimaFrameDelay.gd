@@ -3,6 +3,8 @@ extends Control
 
 signal frame_deleted
 signal frame_updated
+signal move_one_left
+signal move_one_right
 
 export var animate_entrance_exit := true
 
@@ -46,10 +48,10 @@ func _animate_me(backwards := false) -> AnimaNode:
 			})
 	)
 	anima.with(
-		Anima.Node($CenterContainer).anima_fade_in().anima_initial_value(0)
+		Anima.Node(find_node("CenterContainer")).anima_fade_in().anima_initial_value(0)
 	)
 	anima.with(
-		Anima.Group($CenterContainer/AnimaRectangle/CenterContainer/VBoxContainer, 0.05) \
+		Anima.Group(find_node("DelayContent"), 0.05) \
 			.anima_animation_frames({
 				from = {
 					y = 40,
@@ -82,3 +84,20 @@ func _on_Delete_pressed():
 
 func _on_DelayValue_changed():
 	emit_signal("frame_updated")
+func set_has_previous(has: bool) -> void:
+	_maybe_set_visible("MoveLeft", has)
+
+func set_has_next(has: bool) -> void:
+	_maybe_set_visible("MoveRight", has)
+
+func _maybe_set_visible(node_name: String, visible: bool) -> void:
+	var node = find_node(node_name)
+
+	if node:
+		node.visible = visible
+
+func _on_MoveRight_pressed():
+	emit_signal("move_one_right")
+
+func _on_MoveLeft_pressed():
+	emit_signal("move_one_left")
