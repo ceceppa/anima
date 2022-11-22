@@ -36,10 +36,10 @@ func _apply_animation(animation_type: int) -> void:
 	_anima.play_with_delay(0.1)
 	
 func _on_First_pressed() -> void:
-	_apply_animation(Anima.GRID.SEQUENCE_TOP_LEFT)
+	_apply_animation(ANIMA.GRID.SEQUENCE_TOP_LEFT)
 
 func _on_Last_pressed():
-	_apply_animation(Anima.GRID.SEQUENCE_BOTTOM_RIGHT)
+	_apply_animation(ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT)
 
 func _on_Center_pressed():
-	_apply_animation(Anima.GRID.FROM_CENTER)
+	_apply_animation(ANIMA.GRID.FROM_CENTER)

@@ -42,8 +42,8 @@ custom_constants/margin_bottom = 4
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 margin_left = 24.0
 margin_top = 4.0
-margin_right = 1005.0
-margin_bottom = 63.0
+margin_right = 1054.0
+margin_bottom = 85.0
 size_flags_horizontal = 3
 custom_constants/separation = 48
 
@@ -67,53 +67,52 @@ margin_bottom = 49.0
 rect_min_size = Vector2( 0, 48 )
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer"]
-margin_top = 17.0
+margin_top = 28.0
 margin_right = 189.0
-margin_bottom = 42.0
+margin_bottom = 53.0
 text = "Visibility strategy:"
 
 [node name="VisibilityStrategy" type="OptionButton" parent="MarginContainer/HBoxContainer"]
 margin_left = 237.0
-margin_right = 368.0
-margin_bottom = 59.0
-rect_min_size = Vector2( 0, 48 )
+margin_right = 417.0
+margin_bottom = 81.0
+rect_min_size = Vector2( 180, 48 )
 text = "Ignore"
 items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
 selected = 0
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/HBoxContainer"]
-margin_left = 416.0
-margin_right = 419.0
-margin_bottom = 59.0
+margin_left = 465.0
+margin_right = 468.0
+margin_bottom = 81.0
 rect_min_size = Vector2( 0, 48 )
 
 [node name="Label3" type="Label" parent="MarginContainer/HBoxContainer"]
-margin_left = 467.0
-margin_top = 17.0
-margin_right = 681.0
-margin_bottom = 42.0
+margin_left = 516.0
+margin_top = 28.0
+margin_right = 730.0
+margin_bottom = 53.0
 text = "Default duration (s):"
 
 [node name="DefaultDuration" parent="MarginContainer/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 729.0
-margin_right = 729.0
-margin_bottom = 59.0
+margin_left = 778.0
+margin_right = 778.0
 type = 3
 can_clear_custom_value = false
 show_relative_selector = false
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/HBoxContainer"]
-margin_left = 777.0
-margin_right = 780.0
-margin_bottom = 59.0
+margin_left = 826.0
+margin_right = 829.0
+margin_bottom = 81.0
 rect_min_size = Vector2( 0, 48 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PlayButton" parent="MarginContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 828.0
-margin_right = 981.0
-margin_bottom = 59.0
+margin_left = 877.0
+margin_right = 1030.0
+margin_bottom = 81.0
 custom_styles/normal = SubResource( 2 )
 text = "Play"
 icon = ExtResource( 4 )
@@ -341,6 +340,10 @@ __meta__ = {
 "__initial_AnimaNode__anima_244749208274176392_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_311986443565306702__button_bg": {
+"percentage": 0,
+"value": Color( 0.270588, 0.482353, 0.615686, 1 )
 },
 "__initial_AnimaNode__anima_447088250819550293__button_bg": {
 "percentage": 0,

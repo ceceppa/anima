@@ -1,9 +1,21 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture" id=3]
 [ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture" id=4]
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 48.0
+content_margin_right = 24.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.270588, 0.482353, 0.615686, 1 )
@@ -13,10 +25,10 @@ anchor_right = 1.0
 margin_right = -988.0
 rect_min_size = Vector2( 36, 49 )
 size_flags_horizontal = 3
+custom_styles/normal = SubResource( 2 )
 toggle_mode = true
 icon = ExtResource( 3 )
 align = 0
-icon_align = 2
 script = ExtResource( 2 )
 __meta__ = {
 "__initial_AnimaNode__anima_1026196471787050537__button_bg": {
@@ -80,6 +92,14 @@ __meta__ = {
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
 },
 "__initial_AnimaNode__anima_1243208455671268555_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1250071303453626953__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1250071303453626953_opacity": {
 "percentage": 0,
 "value": 1.0
 },
@@ -147,6 +167,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_176350233777164154__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_176350233777164154_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_182479716706684784__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -154,6 +182,10 @@ __meta__ = {
 "__initial_AnimaNode__anima_182479716706684784_opacity": {
 "percentage": 0,
 "value": 1.0
+},
+"__initial_AnimaNode__anima_25251814383807316__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
 },
 "__initial_AnimaNode__anima_29394051146191687__button_bg": {
 "percentage": 0,
@@ -199,6 +231,14 @@ __meta__ = {
 "percentage": 0,
 "value": 1.0
 },
+"__initial_AnimaNode__anima_45382050488086261__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_45382050488086261_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_454360864891194458__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -231,6 +271,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_671673069936997192__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_671673069936997192_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_67208459753343536__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -244,6 +292,14 @@ __meta__ = {
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
 },
 "__initial_AnimaNode__anima_678982245694211792_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_700715562397729492__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_700715562397729492_opacity": {
 "percentage": 0,
 "value": 1.0
 },
@@ -303,6 +359,14 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_881551837120315918__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_881551837120315918_opacity": {
+"percentage": 0,
+"value": 1.0
+},
 "__initial_AnimaNode__anima_919919446918478271__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -341,9 +405,9 @@ __meta__ = {
 },
 "_editor_description_": ""
 }
-left_icon = null
 
 [node name="Label" parent="." index="0"]
+custom_styles/normal = SubResource( 3 )
 align = 0
 
 [node name="IconWrapper" type="Label" parent="." index="1"]

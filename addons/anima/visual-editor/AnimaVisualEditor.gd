@@ -185,21 +185,20 @@ func _restore_data(data: Dictionary) -> void:
 				
 				yield(get_tree(), "idle_frame")
 
-				var item: Node = _add_animation_for(node, value.node_path, value.property_name, value.property_type)
+				var item: Node = _add_animation_for(node, value.node_path)
 
 				item.restore_data(value)
 
 		# TODO: Restore collapse
 		if frame_data.has("collapsed") and frame_data.collapsed:
-#			the_frame.collapse()
-			pass
+			the_frame.collapse()
 
 		key_index += 1
 
 	_frames_editor.set_is_restoring_data(false)
 
-func _add_animation_for(node: Node, node_path: String, property_name: String, property_type) -> Node:
-	var item: Node = _frames_editor.add_animation_for(node, node_path, property_name, property_type)
+func _add_animation_for(node: Node, node_path: String) -> Node:
+	var item: Node = _frames_editor.add_animation_for(node, node_path)
 
 	item.connect("select_animation", self, "_on_select_animation", [item])
 	item.connect("select_relative_property", self, "_on_select_relative_property", [item])
@@ -296,7 +295,7 @@ func _on_PropertiesWindow_property_selected(node_path, property, property_type):
 	elif _on_property_selected_action == PROPERTY_SELECTED_ACTION.ADD_NEW_ANIMATION:
 		_frames_editor.add_animation_for(node, node_path, property, property_type)
 	else:
-		_source_animation_data_node.set_property_to_aniamte(property, property_type)
+		_source_animation_data_node.set_property_to_animate(property, property_type)
 
 	_is_selecting_relative_property = false
 
@@ -313,7 +312,6 @@ func _on_FramesEditor_highlight_node(node: Node):
 	emit_signal("highlight_node", node)
 
 func _on_select_animation(source: Node) -> void:
-	print("slect ani")
 	_animation_source_node = source
 
 	$AnimationsWindow.show_demo_by_type(source)
@@ -360,7 +358,7 @@ func _on_FramesEditor_add_node(node_path):
 	# The node_path needs to be relative to the AnimaVlisualNode
 	var relative_node_path = _anima_visual_node.get_root_node().get_path_to(node)
 
-	_add_animation_for(node, relative_node_path, "", TYPE_NIL)
+	_add_animation_for(node, relative_node_path)
 
 func _on_FramesEditor_select_animation():
 	pass # Replace with function body.

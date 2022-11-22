@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaMenuButton.gd" type="Script" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+
+[node name="Button" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="PopupMenu" type="PopupMenu" parent="." index="1"]
+margin_right = 40.0
+margin_bottom = 40.0
+items = [ "Item 0", ExtResource( 3 ), 0, false, false, 0, 0, null, "", false ]
+
+[connection signal="pressed" from="." to="." method="_on_Button_pressed"]
+[connection signal="id_pressed" from="PopupMenu" to="." method="_on_PopupMenu_id_pressed"]

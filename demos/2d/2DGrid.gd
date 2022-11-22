@@ -8,8 +8,27 @@ var _rows: int
 var _columns: int
 
 func _ready() -> void:
-	Anima.register_animation(self, 'grid_test_in')
-	Anima.register_animation(self, 'grid_test_out')
+	AnimaAnimationsUtils.register_animation('grid_test_in', {
+		from = {
+			scale = Vector2.ONE,
+			modulate = Color.white,
+		},
+		to = {
+			scale = Vector2.ZERO,
+			modulate = Color(1, 0, 0.49, 0)
+		},
+		pivot = ANIMA.PIVOT.CENTER
+	})
+	AnimaAnimationsUtils.register_animation('grid_test_out', {
+		from = {
+			scale = Vector2.ZERO,
+			modulate = Color(0.33, 0.66, 0.49, 0),
+		},
+		to = {
+			scale = Vector2.ONE,
+			modulate = Color.white
+		}
+	})
 
 	_init_balls()
 
@@ -51,48 +70,18 @@ func _init_balls() -> void:
 func _on_ball_pressed(from: Vector2) -> void:
 	var anima := Anima.begin(self)
 	
-	anima.then({
-		grid = $Grid,
-		grid_size = Vector2(_columns, _rows),
-		animation_type = Anima.GRID.FROM_POINT,
-		point = from,
-		duration = 0.6,
-		items_delay = 0.05,
-		animation = "grid_test_in",
-		pivot = ANIMA.PIVOT.CENTER
-	})
-	anima.wait(0.2)
-	anima.then({
-		grid = $Grid,
-		grid_size = Vector2(_columns, _rows),
-		animation_type = Anima.GRID.FROM_POINT,
-		point = from,
-		duration = 0.6,
-		items_delay = 0.05,
-		animation = "grid_test_out",
-		pivot = ANIMA.PIVOT.CENTER
-	})
-	anima.play()
+	anima.then(
+		Anima.Grid($Grid, Vector2(_columns, _rows), 0.05, ANIMA.GRID.FROM_POINT, from) \
+			.anima_distance_formula($HBoxContainer/Formula.get_selected_id()) \
+			.anima_animation("grid_test_in", 0.6)
+	) \
+	.wait(0.2) \
+	.then(
+		Anima.Grid($Grid, Vector2(_columns, _rows), 0.05, ANIMA.GRID.FROM_POINT, from) \
+			.anima_distance_formula($HBoxContainer/Formula.get_selected_id()) \
+			.anima_animation("grid_test_out", 0.3) \
+	) \
+	.play()
 
-
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var scale_frames := []
-	var modulate_frames := []
-
-	if data.animation == 'grid_test_in':
-		scale_frames = [
-			{ from = Vector2(1, 1), to = Vector2(0, 0) }
-		]
-		modulate_frames = [
-			{ from = Color.white, to = Color(1, 0, 0.49, 0) }
-		]
-	else:
-		scale_frames = [
-			{ from = Vector2(0, 0), to = Vector2(1, 1) }
-		]
-		modulate_frames = [
-			{ from = Color(0.33, 0.66, 0.49, 0), to = Color.white }
-		]
-
-	anima_tween.add_frames(data, 'scale', scale_frames)
-	anima_tween.add_frames(data, 'modulate', modulate_frames)
+func _on_OptionButton_item_selected(index):
+	pass # Replace with function body.

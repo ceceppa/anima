@@ -13,7 +13,7 @@ script = ExtResource( 2 )
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_left = 48.0
 margin_right = 312.0
-margin_bottom = 219.0
+margin_bottom = 160.0
 custom_constants/margin_right = 12
 custom_constants/margin_top = 12
 custom_constants/margin_left = 12
@@ -23,17 +23,22 @@ custom_constants/margin_bottom = 12
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 252.0
-margin_bottom = 207.0
+margin_bottom = 148.0
 rect_min_size = Vector2( 240, 0 )
 custom_constants/separation = 24
 
 [node name="Animation" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
 margin_right = 240.0
+margin_bottom = 56.0
 rect_min_size = Vector2( 240, 49 )
 rect_pivot_offset = Vector2( 120, 24.5 )
 text = "Animation"
 icon = ExtResource( 1 )
 __meta__ = {
+"__initial_AnimaNode__anima_1231122503675754639__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
 "__initial_AnimaNode__anima_1254346198627174561__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -196,9 +201,9 @@ __meta__ = {
 }
 
 [node name="Delay" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
-margin_top = 73.0
+margin_top = 80.0
 margin_right = 240.0
-margin_bottom = 122.0
+margin_bottom = 136.0
 rect_min_size = Vector2( 240, 49 )
 rect_pivot_offset = Vector2( 120, 24 )
 text = "Delay"
@@ -288,6 +293,10 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
+"__initial_AnimaNode__anima_16798298519475592__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
 "__initial_AnimaNode__anima_201898350034701355__button_bg": {
 "percentage": 0,
 "value": Color( 0.0196078, 0.266667, 0.368627, 1 )
@@ -364,11 +373,13 @@ __meta__ = {
 "_editor_description_": "",
 "_visibility_strategy_reverted": true
 }
+style = 1
 
 [node name="Event" parent="MarginContainer/ButtonsContainer" instance=ExtResource( 5 )]
-margin_top = 146.0
+visible = false
+margin_top = 160.0
 margin_right = 240.0
-margin_bottom = 195.0
+margin_bottom = 216.0
 rect_min_size = Vector2( 240, 49 )
 rect_pivot_offset = Vector2( 120, 24 )
 text = "Event"
@@ -421,6 +432,10 @@ __meta__ = {
 "__initial_AnimaNode__anima_1284308796611476562_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1310462514478814453__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
 },
 "__initial_AnimaNode__anima_1313466593553946777__button_bg": {
 "percentage": 0,

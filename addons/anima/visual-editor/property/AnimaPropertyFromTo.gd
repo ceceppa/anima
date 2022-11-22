@@ -38,12 +38,20 @@ var _should_return_null_value := true
 func _ready():
 	if _input_visible == null:
 		_on_ClearButton_pressed()
-#
-#	var relative_buttons := [$CustomValue/RelativeSelectorButton, $CustomValue/Vector2/X/RelativeVector2X, $CustomValue/Vector2/Y/RelativeVector2Y]
-#
-#	for button in relative_buttons:
-#		if not button.is_connected("pressed", self, "_on_RelativeSelectorButton_pressed"):
-#			button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
+
+	var relative_buttons := [
+		$CustomValue/RelativeSelectorButton,
+		$CustomValue/Vector2/X/RelativeVector2X,
+		$CustomValue/Vector2/Y/RelativeVector2Y,
+		$CustomValue/Rect2/X/RelativeRect2X,
+		$CustomValue/Rect2/Y/RelativeRect2Y,
+		$CustomValue/Rect2/H/RelativeRect2H,
+		$CustomValue/Rect2/W/RelativeRect2W,
+	]
+
+	for button in relative_buttons:
+		if not button.is_connected("pressed", self, "_on_RelativeSelectorButton_pressed"):
+			button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
 
 	set_label(label)
 	set_type(type)
@@ -146,12 +154,12 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 
 	anima.with(
 		Anima.Node(self) \
-			.anima_property("size:y") \
+			.anima_property("min_size:y") \
 			.anima_to(height)
 	)
 	anima.with(
 		Anima.Node(self) \
-			.anima_property("min_size:y") \
+			.anima_property("size:y") \
 			.anima_to(height)
 	)
 
@@ -273,6 +281,8 @@ func set_relative_value(value: String) -> void:
 	var linked_node: LineEdit = _relative_source.get_node(_relative_source.linked_field)
 	linked_node.text = value
 
+	emit_signal("value_updated")
+
 func get_value():
 	if _input_visible == null or _should_return_null_value:
 		return null
@@ -391,4 +401,3 @@ func set_font_color(c: Color) -> void:
 
 func _on_CustomValue_item_rect_changed():
 	$HBoxContainer.rect_size.x = $CustomValue.rect_size.x
-

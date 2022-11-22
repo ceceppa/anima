@@ -29,26 +29,18 @@ static func begin(node: Node, name: String = '_anima_', single_shot := false) ->
 static func begin_single_shot(node: Node, name: String = "_anima_") -> AnimaNode:
 	return begin(node, name, true)
 
-#
-#static func player(node: Node):
-#	var player = load('./player.gd').new()
-#
-#	node.add_child(player)
-#
-#	return player
-
 static func Node(node: Node) -> AnimaDeclarationNode:
 	return AnimaDeclarationNode.new(node)
 
-static func Nodes(nodes: Array) -> AnimaDeclarationNodes:
-	return AnimaDeclarationNodes.new(nodes)
+static func Nodes(nodes: Array, items_delay: float) -> AnimaDeclarationNodes:
+	return AnimaDeclarationNodes.new(nodes, items_delay)
 
 static func Group(group: Node, items_delay: float, animation_type: int = ANIMA.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:
 	var c := AnimaDeclarationGroup.new()
 
 	return c._init_me(group, items_delay, animation_type, point)
 
-static func Grid(grid: Node, grid_size: Vector2, items_delay: float, animation_type: int = ANIMA.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGrid:
+static func Grid(grid: Node, grid_size: Vector2, items_delay: float, animation_type: int = ANIMA.GROUP.FROM_TOP, point := Vector2.ZERO) -> AnimaDeclarationGrid:
 	var c := AnimaDeclarationGrid.new()
 
 	return c._init_me(grid, grid_size, items_delay, animation_type, point)

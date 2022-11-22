@@ -45,7 +45,7 @@ func _ready():
 #	anima.with(
 #		Anima.Group($Control) \
 #			.anima_animation("zoomIn") \
-#			.anima_sequence_type(Anima.GRID.SEQUENCE_BOTTOM_RIGHT) \
+#			.anima_sequence_type(ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT) \
 #			.anima_items_delay(1)
 #	)
 #

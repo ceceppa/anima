@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://demos/3DBoxes.gd" type="Script" id=1]
+[ext_resource path="res://demos/3d/3DBoxes.gd" type="Script" id=1]
 [ext_resource path="res://resources/ring.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
