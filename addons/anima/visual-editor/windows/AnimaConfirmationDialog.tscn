@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.gd" type="Script" id=1]
+
+[node name="AnimaConfirmationDialog" type="ConfirmationDialog"]
+margin_right = 278.0
+margin_bottom = 110.0
+script = ExtResource( 1 )

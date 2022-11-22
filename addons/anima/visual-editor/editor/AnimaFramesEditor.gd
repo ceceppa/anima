@@ -23,8 +23,8 @@ var _destination_frame: Control
 var _is_restoring_data := false
 var _animation_node_source: Node
 
-func add_animation_for(node: Node, node_path: String, property_name, property_type) -> Node:
-	var r: Node = _destination_frame.add_animation_for(node, node_path, property_name, property_type)
+func add_animation_for(node: Node, node_path: String) -> Node:
+	var r: Node = _destination_frame.add_animation_for(node, node_path)
 
 	_emit_updated()
 

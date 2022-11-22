@@ -6,6 +6,8 @@ signal frame_updated
 signal move_one_left
 signal move_one_right
 
+const FINAL_WIDTH := 360.0
+
 export var animate_entrance_exit := true
 
 onready var _delay = find_node("DelayValue")
@@ -41,8 +43,8 @@ func _animate_me(backwards := false) -> AnimaNode:
 					"min_size:x": 0,
 				},
 				to = {
-					"size:x": 360,
-					"min_size:x": 360,
+					"size:x": FINAL_WIDTH,
+					"min_size:x": FINAL_WIDTH,
 				},
 				easing = ANIMA.EASING.EASE_OUT_BACK
 			})

@@ -18,25 +18,25 @@ enum STYLE {
 	SECONDARY,
 	REMOVE,
 	ICON_ONLY,
-	ROUND
+	ROUND,
+	TRANSPARENT
 }
 
 export (STYLE) var style = STYLE.PRIMARY setget set_button_style
 
-var default_opacity := 1.0 setget set_default_opacity
-
-const COLORS := {
+var COLORS := {
 	STYLE.PRIMARY: "#05445E",
 	STYLE.SECONDARY: "#374140",
 	STYLE.REMOVE: "#450003",
 	STYLE.ICON_ONLY: "#374140",
 	STYLE.ROUND: "#457B9D",
+	STYLE.TRANSPARENT: Color(0.02, 0.266, 0.3686, 0.0),
 }
 
 onready var _label = find_node("Label")
 
 var _button_bg: Color = COLORS[0] setget _set_button_bg
-var _old_draw_mode
+var _old_draw_mode: int = DRAW_NORMAL
 var _force_default_zoom := true
 var _font: DynamicFont
 var _font_color: Color = get_color("font_color")
@@ -44,6 +44,7 @@ var _text_position: Vector2
 var _text_size := Vector2.ZERO
 var _box_style := StyleBoxFlat.new()
 var _left_padding = 24.0 setget set_left_padding
+var _icon_color := Color.white
 
 func _ready():
 	_box_style.corner_radius_bottom_left = BORDER_RADIUS
@@ -59,7 +60,8 @@ func _ready():
 
 func _draw():
 	_box_style.bg_color = _button_bg
-	_box_style.border_color = _button_bg.lightened(0.3)
+
+#	_box_style.border_color = _button_bg.lightened(0.3)
 
 	if style == STYLE.ROUND:
 		_box_style.corner_radius_bottom_left = 50
@@ -78,38 +80,44 @@ func _draw():
 		elif icon_align == ALIGN_CENTER or style == STYLE.ICON_ONLY:
 			position.x = (rect_size.x - icon_size.x) / 2
 
-		draw_texture(icon, position)
+		draw_texture(icon, position, _icon_color)
 
 func _input(_event):
 	var draw_mode = get_draw_mode()
 
-	_refresh_button(draw_mode)
+	if draw_mode != _old_draw_mode:
+		_refresh_button(draw_mode)
 
 	_old_draw_mode = draw_mode
 
+func _get_bg_color(draw_mode: int) -> Color:
+	var color: Color = COLORS[style]
+
+	if style == STYLE.TRANSPARENT and draw_mode != DRAW_NORMAL:
+		color = COLORS[STYLE.PRIMARY]
+
+	var final_color = color
+	
+	_icon_color = Color.white
+
+	if draw_mode == STATE.HOVERED:
+		final_color = color.lightened(0.1)
+	elif draw_mode == STATE.PRESSED and not toggle_mode:
+		final_color = color.darkened(0.2)
+	elif draw_mode == STATE.DISABLED:
+		_icon_color = Color("#666")
+		final_color = color
+		final_color.a = 0
+
+	return final_color
+
 func _refresh_button(draw_mode: int) -> void:
 	if draw_mode != _old_draw_mode:
-
-		var color: Color = COLORS[style]
-		var final_color = color
-		var final_opacity := default_opacity
-
-		if draw_mode == STATE.HOVERED:
-			final_color = color.lightened(0.1)
-			final_opacity = 1.0
-		elif draw_mode == STATE.PRESSED:
-			final_color = color.darkened(0.2)
-			final_opacity = 1.0
+		var final_color: Color = _get_bg_color(draw_mode)
 
 		Anima.begin_single_shot(self) \
 			.with(
-				Anima.Node(self).anima_animation_frames({
-					to = {
-						_button_bg = final_color,
-						opacity = final_opacity,
-						easing = ANIMA.EASING.EASE_IN_EXPO
-					}
-				}, 0.15)
+				Anima.Node(self).anima_property("_button_bg", final_color, 0.15)
 			) \
 			.play()
 
@@ -131,14 +139,14 @@ func _on_Button_button_down():
 func _on_Button_button_up():
 	_refresh_button(get_draw_mode())
 
-func set_default_opacity(new_opacity: float) -> void:
-	default_opacity = new_opacity
-
-	modulate.a = default_opacity
-
 func _set(property, value):
 	if _label == null:
 		_label = find_node("_label")
+	
+	if property == "disabled":
+		var mode = DRAW_DISABLED if value else DRAW_NORMAL
+
+#		_refresh_button(mode)
 
 	if not _label:
 		return
@@ -147,7 +155,7 @@ func _set(property, value):
 		_label.text = value
 	elif property == "align":
 		_label.align = value
-
+		
 func set_text(text: String) -> void:
 	if not _label:
 		_label = find_node("Label")

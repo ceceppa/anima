@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://resources/ball.png" type="Texture" id=2]
-[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
+[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=1]
+[ext_resource path="res://demos/resources/ball.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Control
@@ -63,13 +63,10 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="tile" type="Sprite" parent="."]
 texture = ExtResource( 2 )
 
 [node name="Grid" type="Node" parent="."]
 
-[node name="ShowAllDemos" parent="." instance=ExtResource( 3 )]
+[node name="ShowAllDemos" parent="." instance=ExtResource( 1 )]

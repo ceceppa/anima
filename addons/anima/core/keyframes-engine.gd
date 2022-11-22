@@ -102,7 +102,12 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
 
 		if relative_properties.has(property_to_animate) and first_frame_data.has(property_to_animate):
-			value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
+			var property_value = AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
+
+			if value == null:
+				value = property_value
+			else:
+				value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
 
 		var data := { percentage = 0, value = value }
 		if animation_data.has("initial_values") and animation_data.initial_values.has(property_to_animate):

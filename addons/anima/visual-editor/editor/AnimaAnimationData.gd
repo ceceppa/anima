@@ -1,6 +1,8 @@
 tool
 extends VBoxContainer
 
+const SINGLE_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaSingleAnimationData.tscn")
+
 signal select_animation
 signal select_easing
 signal content_size_changed(new_size)
@@ -12,28 +14,27 @@ signal removed
 signal highlight_node(node)
 signal select_node_property(node_path)
 
+onready var _title = find_node("Title")
 onready var _node_or_group = find_node("NodeOrGroup")
 onready var _group_data = find_node("GroupData")
 onready var _grid_data = find_node("GridData")
-onready var _property_values = find_node("PropertyValues")
-onready var _select_animation = find_node("SelectAnimation")
-onready var _animate_property = find_node("AnimateProperty")
+onready var _animations_container = find_node("AnimationsContainer")
+onready var _animation_group_type = find_node("AnimationGroupType")
+onready var _animation_grid_type = find_node("AnimationGridType")
+onready var _animation_type_icon = find_node("AnimationTypeIcon")
+onready var _background_rect = find_node("Background")
+onready var _distance_formula = find_node("DistanceFormula")
+
 onready var _duration = find_node("Duration")
 onready var _delay = find_node("Delay")
 onready var _timer = find_node("Timer")
-onready var _title = find_node("Title")
-onready var _animation_type = find_node("AnimationType")
-onready var _animation_type_icon = find_node("AnimationTypeIcon")
-onready var _background_rect = find_node("Background")
 
 var _path: String
-var _property
 var _source_node: Node
-var _property_type
-var _animation_name: String
 var _relative_source: Node
-var _animate_with: int = AnimaVisualNode.USE.ANIMATE_PROPERTY
 var _animate_as: int = AnimaVisualNode.ANIMATE_AS.NODE
+var _is_restoring := false
+var _source_instance: Node
 
 func _ready():
 	margin_right = 0
@@ -41,142 +42,127 @@ func _ready():
 	_node_or_group.hide()
 	_group_data.hide()
 	_grid_data.hide()
-	_select_animation.hide()
 
-	_setup_group_data()
+func _enter_tree():
+	_populate_combos()
 
-func _setup_group_data() -> void:
-	_animation_type.clear()
+func _populate_combos() -> void:
+	if _distance_formula == null:
+		_distance_formula = find_node("DistanceFormula")
+		_animation_group_type = find_node("AnimationGroupType")
+		_animation_grid_type = find_node("AnimationGridType")
 
-	for type in ANIMA.GROUP.keys():
-		_animation_type.add_item(type, ANIMA.GROUP[type])
+	_populate_combo(_distance_formula, ANIMA.DISTANCE.keys())
+	_populate_combo(_animation_group_type, ANIMA.GROUP.keys())
+	_populate_combo(_animation_grid_type, ANIMA.GRID.keys())
+
+func _populate_combo(node: OptionButton, options: Array) -> void:
+	node.clear()
+
+	for option in options:
+		var s: String = option
+		node.add_item(s.replace("_", " ").capitalize())
 
 func show_group_or_node() -> void:
 	_node_or_group.show()
 
-func set_data(node: Node, path: String, property, property_type, toggle_title := true):
-	_set_title(node.name, property, AnimaVisualNode.USE.ANIMATE_PROPERTY)
+func set_data(node: Node, path: String, toggle_title := true):
+	_title.set_text("./" + path)
 
 	_path = path
 	_source_node = node
-	_property = property
-	_property_type = property_type
 
-	_node_or_group.visible = node.get_child_count() > 1
-
-	find_node("PropertySelector").visible = property_type == TYPE_NIL
-	find_node("PropertyData").visible = property_type != TYPE_NIL
-
-	_set_property_type(property_type)
+	var animate_as = find_node("AnimateAs")
+	animate_as.visible = node.get_child_count() > 1
+	animate_as.get_parent().rect_size.x = 0
 
 	if toggle_title:
 		_maybe_toggle_title()
 
 func _maybe_toggle_title() -> void:
-	find_node("Title").pressed = _property_type == TYPE_NIL and _animation_name == ""
+	_title.pressed = _animations_container.get_child_count() == 0
 
 func get_data() -> Dictionary:
-	if _property_values == null:
-		_property_values = find_node("PropertyValues")
+	if _animations_container == null:
+		_animations_container = find_node("AnimationsContainer")
 
-	var easing_value = ANIMA.EASING.LINEAR
-	var easing_button: Button = _property_values.find_node("EasingButton")
+	var animations := []
 
-	if easing_button.has_meta("easing_value"):
-		easing_value = int(easing_button.get_meta("easing_value"))
+	for child in _animations_container.get_children():
+		if is_instance_valid(child) and not child.is_queued_for_deletion():
+			animations.push_back(child.get_data())
 
-	if not _node_or_group.visible:
-		_animate_as = AnimaVisualNode.ANIMATE_AS.NODE
-
-	var data =  {
+	return  {
 		node_path = _path,
-		property_name = _property,
-		property_type = _property_type,
 		duration = _duration.get_value(),
 		delay = _delay.get_value(),
 		animate_as = _animate_as,
-		use = _animate_with,
-		animation_name = _animation_name,
+		animations = animations,
 		group = {
-			items_delay = float(find_node("ItemsDelay").get_value()),
-			animation_type = _animation_type.get_selected_id(),
-			start_index = int(find_node("StartIndex").get_value())
+			items_delay = float(_group_data.find_node("ItemsDelay").get_value()),
+			animation_type = _animation_group_type.get_selected_id(),
+			start_index = int(_group_data.find_node("StartIndex").get_value())
 		},
-		property = {
-			from = _property_values.find_node("FromValue").get_value(),
-			to = _property_values.find_node("ToValue").get_value(),
-			initialValue = _property_values.find_node("InitialValue").get_value(),
-			relative = _property_values.find_node("RelativeCheck").pressed,
-			pivot = _property_values.find_node("PivotButton").get_value(),
-			easing = [easing_button.text, easing_value]
-		}
+		grid = {
+			size = Vector2(_grid_data.find_node("x").get_value(), _grid_data.find_node("y").get_value()),
+			items_delay = float(_grid_data.find_node("ItemsDelay").get_value()),
+			animation_type = _animation_grid_type.get_selected_id(),
+			start_point = Vector2(_grid_data.find_node("pointX").get_value(), _grid_data.find_node("pointY").get_value()),
+			formula = _distance_formula.get_selected_id(),
+		},
 	}
 
-	return data
-
 func restore_data(data: Dictionary) -> void:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
+	_is_restoring = true
 
-	_press_button_in_group(_animate_property.group, data.use)
-	_press_button_in_group(animate_as_group, data.animate_as)
+	$MarginContainer/VBoxContainer/NoAnimationsWarning.visible = not $MarginContainer/VBoxContainer/AnimationsContainer.get_child_count()
+
+	_node_or_group.find_node("GridContainer").get_child(data.animate_as).pressed = true
 
 	find_node("Duration").set_value(data.duration)
 	find_node("Delay").set_value(data.delay)
 
-	if data.has("animation_name"):
-		selected_animation(data.animation_name, data.animation_name)
-
-	if _property_values == null:
-		_property_values = find_node("PropertyValues")
-
-	_set_property_type(data.property_type)
-
-	if data.property.has("from"):
-		_property_values.find_node("FromValue").set_value(data.property.from)
-
-	if data.property.has("to"):
-		_property_values.find_node("ToValue").set_value(data.property.to)
-
-	if data.property.has("initialValue"):
-		_property_values.find_node("InitialValue").set_value(data.property.initialValue)
-
-	if data.property.has("relative"):
-		_property_values.find_node("RelativeCheck").pressed = data.property.relative
-
-	if data.property.has("pivot"):
-		_property_values.find_node("PivotButton").set_value(data.property.pivot)
-
-	if data.property.has("easing"):
-		set_easing(data.property.easing[0], data.property.easing[1])
-
 	if data.has("group"):
-		find_node("ItemsDelay").set_value(data.group.items_delay)
-		find_node("StartIndex").set_value(data.group.start_index)
+		_group_data.find_node("ItemsDelay").set_value(data.group.items_delay)
+		_group_data.find_node("StartIndex").set_value(data.group.start_index)
 
 		var type = data.group.animation_type
-		for index in _animation_type.get_item_count():
-			var item_id = _animation_type.get_item_id(index)
+		for index in _animation_group_type.get_item_count():
+			var item_id = _animation_group_type.get_item_id(index)
 
 			if item_id == data.group.animation_type:
-				_animation_type.select(index)
+				_animation_group_type.select(index)
 
 				break
 
-	_maybe_toggle_title()
-	_update_icon(data.use, false)
+	if data.has("grid"):
+		var size = data.grid.size
 
-func _set_property_type(property_type) -> void:
-	for child in _property_values.get_child(1).get_children():
-		if child.has_method('set_type') and property_type != TYPE_NIL:
-			child.set_type(property_type)
+		_grid_data.find_node("ItemsDelay").set_value(data.grid.items_delay)
+		_grid_data.find_node("pointX").set_value(data.grid.start_point.x)
+		_grid_data.find_node("pointY").set_value(data.grid.start_point.y)
+		_grid_data.find_node("x").set_value(size.x)
+		_grid_data.find_node("y").set_value(size.y)
+
+		_animation_grid_type.select(data.grid.animation_type)
+		_on_AnimationType_item_selected(data.grid.animation_type)
+
+		_distance_formula.select(data.grid.formula)
+
+	for animation in data.animations:
+		var item = _on_AddAnimation_pressed()
+
+		item.restore_data(animation)
+
+	_maybe_toggle_title()
+
+	_is_restoring = false
+
+func _toggle_add_message() -> void:
+	$MarginContainer/VBoxContainer/NoAnimationsWarning.visible = not $MarginContainer/VBoxContainer/AnimationsContainer.get_child_count()
 
 func set_relative_property(node_path: String, property: String) -> void:
-	var value = _relative_source.get_value()
-
-	if value == null:
-		value = ""
-
-	_relative_source.set_value(value + " " + node_path + ":" + property)
+	_relative_source.set_relative_value(node_path + ":" + property)
 
 func _press_button_in_group(group: ButtonGroup, selected_button: int) -> void:
 	var buttons = group.get_buttons()
@@ -210,21 +196,6 @@ func _on_Title_toggled(button_pressed):
 func _on_RemoveButton_pressed():
 	emit_signal("removed", self)
 
-func selected_animation(label, name) -> void:
-	if name:
-		_animation_name = name
-		find_node("SelectAnimation").set_text(name)
-
-		emit_signal("updated")
-
-func set_easing(name: String, value: int) -> void:
-	var button: Button = find_node("EasingButton")
-
-	button.text = name
-	button.set_meta("easing_value", value)
-
-	emit_signal("updated")
-
 func _on_AnimateProperty_pressed():
 	emit_signal("updated")
 
@@ -240,23 +211,19 @@ func _on_Delay_value_updated():
 func _emit_updated():
 	emit_signal("updated")
 
-func _on_AsNode_pressed():
-	_update_animate_as_label()
-
-func _on_AsGroup_pressed():
-	_update_animate_as_label()
-
-func _on_AsGrid_pressed():
-	_update_animate_as_label()
-
 func _update_animate_as_label() -> void:
 	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
-	var selected = animate_as_group.get_pressed_button().get_parent().name
+	var selected_button = animate_as_group.get_pressed_button().get_index()
 
-	_node_or_group.set_label("Animate as:   " + selected.replace("As", ""))
+	if _group_data == null:
+		_group_data = find_node("GroupData")
+		_grid_data = find_node("GridData")
 
-	var group_data = find_node("GroupData")
-	group_data.visible = selected == "AsGroup"
+	_grid_data.visible = selected_button == AnimaVisualNode.ANIMATE_AS.GRID
+	_group_data.visible = selected_button == AnimaVisualNode.ANIMATE_AS.GROUP
+
+	if _is_restoring:
+		return
 
 	emit_signal("updated")
 
@@ -266,88 +233,88 @@ func _on_Title_mouse_entered():
 func _update_me():
 	emit_signal("updated")
 
-func _on_RelativeCheck_toggled(_button_pressed):
-	_update_me()
+func _on_AnimationType_item_selected(index: int):
+	_grid_data.find_node("StartPoint").visible = index == ANIMA.GRID.FROM_POINT
+	_grid_data.find_node("Vector2").visible = index == ANIMA.GRID.FROM_POINT
 
-func _on_FromValue_select_relative_property():
-	_relative_source = find_node("FromValue")
-
-	emit_signal("select_relative_property")
-
-func _on_ToValue_select_relative_property():
-	_relative_source = find_node("ToValue")
-
-	emit_signal("select_relative_property")
-
-func _on_InitialValue_select_relative_property():
-	_relative_source = find_node("InitialValue")
-
-	emit_signal("select_relative_property")
-
-func _on_EasingButton_pressed():
-	emit_signal("select_easing")
-
-func _on_AnimationType_item_selected(_index):
 	_emit_updated()
-
-func _update_icon(button_index: int, emit := true) -> void:
-	var is_property = button_index == AnimaVisualNode.USE.ANIMATE_PROPERTY
-	var value = _property if is_property else _animation_name
-
-	_set_title(_source_node.name, value, button_index)
-
-	if _animate_with == button_index:
-		return
-
-	var icon := "res://addons/anima/visual-editor/icons/Animation.svg"
-
-	if is_property:
-		icon = "res://addons/anima/visual-editor/icons/Property.svg"
-
-	_property_values.visible = is_property
-	_select_animation.visible = !is_property
-
-	_title.set_left_icon(load(icon))
-	_animate_with = button_index
-
-	if emit:
-		emit_signal("updated")
-
-func _set_title(node_name: String, what: String, type: int) -> void:
-	var title = node_name + "->" + what
-
-	if type == AnimaVisualNode.USE.ANIMATION:
-		title = node_name + " (" + what + ")"
-
-	_title.set_text(title)
-
 
 func _on_AnimaAnimationData_item_rect_changed():
 	if _background_rect:
 		_background_rect.rect_size = rect_size
 
-func _on_UseAnimation_toggled(button_pressed):
-	_update_icon(AnimaVisualNode.USE.ANIMATION)
+	if not _title:
+		_title = find_node("Title")
 
-func _on_AnimateProperty_toggled(button_pressed):
-	_update_icon(AnimaVisualNode.USE.ANIMATE_PROPERTY)
+	_title.find_node("ActionsContainer").rect_size.x = rect_size.x
 
-func _on_AsNode_toggled(button_pressed):
-	_animate_as = AnimaVisualNode.ANIMATE_AS.NODE
+func _on_PropertyFromTo_value_updated():
+	_emit_updated()
 
-func _on_AsGroup_toggled(button_pressed):
-	_animate_as = AnimaVisualNode.ANIMATE_AS.GROUP
+func _on_Button_pressed():
+	var size := Vector2.ZERO
 
-func _on_AsGrid_toggled(button_pressed):
-	_animate_as = AnimaVisualNode.ANIMATE_AS.GRID
+	if _source_node is GridContainer:
+		size.y = max(1, _source_node.columns)
+	else:
+		size.y = 1
 
-func _on_SelectProperty_pressed():
-	emit_signal("select_node_property", self, _source_node.get_path())
+	size.x = floor(_source_node.get_child_count() / size.y)
 
-func set_property_to_aniamte(property: String, property_type: int) -> void:
-	set_data(_source_node, _path, property, property_type, false)
+	_grid_data.find_node("x").set_value(size.x)
+	_grid_data.find_node("y").set_value(size.y)
 
-	_update_me()
+	_emit_updated()
 
-func _on_Background_mouse_entered():
-	pass # Replace with function body.
+func _on_AddAnimation_pressed():
+	var instance = SINGLE_ANIMATION.instance()
+	_animations_container.add_child(instance)
+
+	instance.connect("select_property_to_animate", self, "_on_select_property_to_animate", [instance])
+	instance.connect("updated", self, "_emit_updated")
+	instance.connect("select_relative_property", self, "_on_select_relative_property")
+	instance.connect("select_easing", self, "_on_select_easing", [instance])
+	instance.connect("tree_exited", self, "_toggle_add_message")
+
+	_toggle_add_message()
+
+	if not _is_restoring:
+		emit_signal("updated")
+
+	return instance
+
+func _on_Time_toggled(button_pressed):
+	find_node("TimeContent").visible = button_pressed
+
+	if button_pressed:
+		_title.pressed = true
+
+func _on_AnimateAs_toggled(button_pressed):
+	find_node("NodeOrGroup").visible = button_pressed
+
+	if button_pressed:
+		_title.pressed = true
+
+func _on_Remove_pressed():
+	$ConfirmationDialog.popup_centered()
+
+func _on_select_property_to_animate(source: Node) -> void:
+	emit_signal("select_node_property", source, _source_node.get_path())
+
+func _on_ConfirmationDialog_confirmed():
+	queue_free()
+
+	emit_signal("updated")
+
+func _on_select_relative_property(source_from_to: Node) -> void:
+	_relative_source = source_from_to
+
+	emit_signal("select_relative_property")
+
+func _on_select_easing(source_instance: Node) -> void:
+	_source_instance = source_instance
+
+	emit_signal("select_easing")
+
+func set_easing(name: String, value: int) -> void:
+	_source_instance.set_easing(name, value)

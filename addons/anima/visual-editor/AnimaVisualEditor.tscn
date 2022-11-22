@@ -47,6 +47,7 @@ valign = 1
 autowrap = true
 
 [node name="NodesWindow" parent="." instance=ExtResource( 1 )]
+popup_exclusive = false
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 4 )]
 window_title = "Select the node and property to animate"

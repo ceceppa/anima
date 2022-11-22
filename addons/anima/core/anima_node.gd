@@ -122,6 +122,7 @@ func wait(seconds: float) -> AnimaNode:
 		from = 0.0,
 		to = 1.0,
 		duration = seconds,
+		__ignore_warning = true
 	})
 
 func skip(_ignore) -> AnimaNode:
@@ -385,16 +386,21 @@ func _setup_animation(data: Dictionary) -> float:
 
 func _setup_node_animation(data: Dictionary) -> float:
 	var n = data.node
-	var nodes: Array = data.nodes if data.has("nodes") else []
+	var are_multiple_nodes :=  data.has("nodes")
+	var nodes: Array = data.nodes if are_multiple_nodes else []
 	var delay = data.delay if data.has('delay') else 0.0
 	var duration = data.duration
 
 	data._wait_time = max(0.0, data._wait_time + delay)
 
-	if n:
+	if not are_multiple_nodes and n:
 		nodes.push_back(n)
 
+	data.erase("nodes")
+
 	for node in nodes:
+		data.node = node
+
 		if data.has("property") and not data.has("animation"):
 			data._is_first_frame = true
 			data._is_last_frame = true
@@ -417,6 +423,9 @@ func _setup_node_animation(data: Dictionary) -> float:
 		else:
 			if is_instance_valid(_anima_tween):
 				_anima_tween.add_animation_data(data)
+
+		if are_multiple_nodes:
+			delay += data.items_delay
 
 	return duration
 
@@ -450,9 +459,9 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 			duration = _generate_animation_for_odd_rows(animation_data)
 		ANIMA.GRID.ROWS_EVEN:
 			duration = _generate_animation_for_even_rows(animation_data)
-		ANIMA.GRID.ODD:
+		ANIMA.GRID.ODD_ITEMS:
 			duration = _generate_animation_for_odd_items(animation_data)
-		ANIMA.GRID.EVEN:
+		ANIMA.GRID.EVEN_ITEMS:
 			duration = _generate_animation_for_even_items(animation_data)
 		_:
 			duration = _generate_animation_sequence(animation_data, animation_type)
@@ -504,45 +513,70 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 	var children := _get_children(animation_data, start_from == ANIMA.GRID.RANDOM)
 	var is_grid: bool = animation_data.grid_size.x > 1
 	var grid_size: Vector2 = animation_data.grid_size
-	var from_x: int
-	var from_y: int
-
-	from_y = grid_size.y / 2
-	from_x = grid_size.x / 2
+	var start_point: Vector2 = grid_size / 2
 
 	if start_from == ANIMA.GRID.FROM_POINT and not animation_data.has('point'):
 		start_from = ANIMA.GRID.FROM_CENTER
 
-	for row_index in children.size():
-		var row: Array = children[row_index]
-		var from_index = 0
+	if start_from == ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT:
+		start_point = grid_size
+	elif start_from == ANIMA.GRID.FROM_POINT:
+		start_point = animation_data.point
+	
+	var use_forumla = animation_data.distance_foruma if animation_data.has("distance_foruma") else ANIMA.DISTANCE.EUCLIDIAN
+	var row := 0
+	var column := 0
 
-		if start_from == ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT:
-			from_index = row.size() - 1
-		elif start_from == ANIMA.GRID.FROM_CENTER:
-			from_index = (row.size() - 1) / 2
-		elif start_from == ANIMA.GRID.FROM_POINT:
-			if is_grid:
-				from_y = animation_data.point.y
-				from_x = animation_data.point.x
-			else:
-				from_index = animation_data.point.x
+	for row_items in children:
+		column = 0
+		for item in row_items:
+			var point = Vector2(row, column)
+			var distance
 
-		for index in row.size():
-			var current_index = index
-			var distance: int = abs(from_index - current_index)
-			
-			if is_grid:
-				var distance_x = index - from_y
-				var distance_y = row_index - from_x
+			if use_forumla == ANIMA.DISTANCE.MANHATTAN:
+				distance = _manhattan_distance(point, start_point)
+			elif use_forumla == ANIMA.DISTANCE.EUCLIDIAN:
+				distance = _euclidian_distance(point, start_point)
+			elif use_forumla == ANIMA.DISTANCE.CHEBYSHEV:
+				distance = _chebyshev_distance(point, start_point)
+			elif use_forumla == ANIMA.DISTANCE.ROW:
+				distance = abs(column - start_point.y)
+			elif use_forumla == ANIMA.DISTANCE.COLUMN:
+				distance = abs(row - start_point.x)
+			elif use_forumla == ANIMA.DISTANCE.DIAGONAL:
+				var sum: int = start_point.x + start_point.y
 
-				distance = sqrt(distance_x * distance_x + distance_y * distance_y)
+				distance = abs((row + column) - sum)
 
-			var node = row[index]
+			nodes.push_back({ node = item, delay_index = distance })
 
-			nodes.push_back({ node = node, delay_index = distance })
+			column += 1
+
+		row += 1
 
 	return _create_grid_animation_with(nodes, animation_data)
+
+func _manhattan_distance(point1: Vector2, point2: Vector2) -> float:
+	var distance_x = point1.x - point2.x
+	var distance_y = point1.y - point2.y
+	var distance = abs(distance_x) + abs(distance_y)
+
+	return distance
+
+func _euclidian_distance(point1: Vector2, point2: Vector2) -> float:
+	var distance_x = point1.x - point2.x
+	var distance_y = point1.y - point2.y
+	var distance = sqrt(distance_x * distance_x + distance_y * distance_y)
+
+	return distance
+
+func _chebyshev_distance(point1: Vector2, point2: Vector2) -> float:
+	var y2 = point2.y
+	var y1 = point1.y
+	var x2 = point2.x
+	var x1 = point1.x
+
+	return abs(max(abs(y2 - y1), abs(x2 - x1)))
 
 func _generate_animation_sequence_bottom_right(animation_data: Dictionary) -> float:
 	var nodes := []

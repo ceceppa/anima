@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://resources/new_opensimplexnoise.tres" type="OpenSimplexNoise" id=1]
-[ext_resource path="res://demos/Grid.gd" type="Script" id=2]
+[ext_resource path="res://demos/3d/Grid.gd" type="Script" id=1]
+[ext_resource path="res://demos/resources/new_opensimplexnoise.tres" type="OpenSimplexNoise" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
 [sub_resource type="SpatialMaterial" id=1]
@@ -163,7 +163,7 @@ shader_param/uv2_offset = Vector3( 0, 0, 0 )
 size = Vector3( 0.5, 0.5, 3 )
 
 [sub_resource type="NoiseTexture" id=15]
-noise = ExtResource( 1 )
+noise = ExtResource( 2 )
 
 [sub_resource type="ShaderMaterial" id=16]
 shader = SubResource( 12 )
@@ -179,12 +179,11 @@ shader_param/uv2_offset = Vector3( 0, 0, 0 )
 shader_param/texture_albedo = SubResource( 15 )
 
 [node name="Grid" type="Spatial"]
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 
 [node name="Base" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.13543, -0.213983, -88.9201 )
 mesh = SubResource( 2 )
-material/0 = null
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 0.823341, 0.34741, -0.448794, 0.0143215, 0.777791, 0.62836, 0.567366, -0.523782, 0.635412, -9.39514, 6.30094, 7.25923 )
@@ -215,7 +214,6 @@ custom_styles/normal = SubResource( 6 )
 [node name="Dark" type="MeshInstance" parent="Main"]
 transform = Transform( 1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0 )
 mesh = SubResource( 9 )
-material/0 = null
 
 [node name="Light" type="MeshInstance" parent="Main"]
 transform = Transform( 1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0 )
