@@ -284,9 +284,12 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 		if not is_relative:
 			var temp = animation_data.to
+			var meta_key: String = "__initial_" + node.name + "_" + str(animation_data.property) 
 
 			if animation_data.has("from"):
 				animation_data.to = animation_data.from
+			elif node.has_meta(meta_key):
+				animation_data.to = node.get_meta(meta_key)
 
 			animation_data.from = temp
 

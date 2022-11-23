@@ -7,7 +7,7 @@ func _init_me(group: Node, items_delay: float, animation_type: int, point: int) 
 		items_delay = items_delay,
 		animation_type = animation_type,
 		point = Vector2(point, 0),
-		distance_formula = ANIMA.DISTANCE.MANHATTAN
+		distance_formula = ANIMA.DISTANCE.EUCLIDIAN
 	})
 
 	return self

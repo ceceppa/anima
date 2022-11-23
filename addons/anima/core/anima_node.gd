@@ -185,19 +185,17 @@ func play_backwards_with_delay(delay: float) -> AnimaNode:
 func play_backwards_with_speed(speed: float) -> AnimaNode:
 	return _play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
 
-func play_as_backwards_when(variable, value_to_match) -> void:
-	if variable == value_to_match:
-		_play(AnimaTween.PLAY_MODE.NORMAL)
-	else:
+func play_as_backwards_when(when: bool) -> void:
+	if when:
 		_play(AnimaTween.PLAY_MODE.BACKWARDS)
+	else:
+		_play(AnimaTween.PLAY_MODE.NORMAL)
 
 func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
 		return self
 
 	if _anima_tween.get_animation_data().size() == 0:
-#		printerr("Nothing to play: Animation data is empty :(")
-
 		return self
 
 	#
@@ -382,6 +380,15 @@ func _setup_animation(data: Dictionary) -> float:
 
 		return 0.0
 
+	var node: Node = data.node
+	var meta_key: String = ""
+
+	if data.has("property"):
+		meta_key = "__initial_" + node.name + "_" + str(data.property) 
+
+	if meta_key and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
+		data.node.set_meta(meta_key, AnimaNodesProperties.get_property_value(node, data, data.property))
+
 	return _setup_node_animation(data)
 
 func _setup_node_animation(data: Dictionary) -> float:
@@ -513,7 +520,7 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 	var children := _get_children(animation_data, start_from == ANIMA.GRID.RANDOM)
 	var is_grid: bool = animation_data.grid_size.x > 1
 	var grid_size: Vector2 = animation_data.grid_size
-	var start_point: Vector2 = grid_size / 2
+	var start_point: Vector2 = Vector2(floor(grid_size.x / 2), floor(grid_size.y / 2))
 
 	if start_from == ANIMA.GRID.FROM_POINT and not animation_data.has('point'):
 		start_from = ANIMA.GRID.FROM_CENTER
@@ -522,7 +529,11 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 		start_point = grid_size
 	elif start_from == ANIMA.GRID.FROM_POINT:
 		start_point = animation_data.point
-	
+	elif start_from == ANIMA.GROUP.FROM_TOP:
+		start_point = Vector2.ZERO
+	elif start_from == ANIMA.GROUP.FROM_BOTTOM:
+		start_point = Vector2(children.size(), 0)
+
 	var use_forumla = animation_data.distance_foruma if animation_data.has("distance_foruma") else ANIMA.DISTANCE.EUCLIDIAN
 	var row := 0
 	var column := 0

@@ -13,6 +13,7 @@ signal highlight_node(node)
 signal select_relative_property
 signal select_easing
 signal play_animation(name)
+signal preview_animation(preview_info)
 
 export (bool) var disable_animations := false
 
@@ -22,6 +23,9 @@ onready var _anima_animation = find_node("AnimaAnimation")
 var _destination_frame: Control
 var _is_restoring_data := false
 var _animation_node_source: Node
+
+func _ready():
+	_on_FramesEditor_resized()
 
 func add_animation_for(node: Node, node_path: String) -> Node:
 	var r: Node = _destination_frame.add_animation_for(node, node_path)
@@ -102,6 +106,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	node.connect("select_easing", self, "_on_select_easing", [node])
 	node.connect("select_node", self, "_on_frame_select_node", [node])
 	node.connect("add_node", self, "_on_frame_add_node", [node])
+	node.connect("preview_animation", self, "_on_preview_animation")
 
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
@@ -184,3 +189,9 @@ func _on_frame_add_node(node_path, destination_frame) -> void:
 	_destination_frame = destination_frame
 
 	emit_signal("add_node", node_path)
+
+func _on_FramesEditor_resized():
+	$AnimaAddFrame.update_position(rect_size)
+
+func _on_preview_animation(preview_info) -> void:
+	emit_signal("preview_animation",preview_info)

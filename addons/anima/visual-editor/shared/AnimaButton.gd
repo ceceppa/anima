@@ -19,10 +19,10 @@ enum STYLE {
 	REMOVE,
 	ICON_ONLY,
 	ROUND,
-	TRANSPARENT
 }
 
 export (STYLE) var style = STYLE.PRIMARY setget set_button_style
+export (bool) var transparent = false setget set_transparent
 
 var COLORS := {
 	STYLE.PRIMARY: "#05445E",
@@ -30,7 +30,6 @@ var COLORS := {
 	STYLE.REMOVE: "#450003",
 	STYLE.ICON_ONLY: "#374140",
 	STYLE.ROUND: "#457B9D",
-	STYLE.TRANSPARENT: Color(0.02, 0.266, 0.3686, 0.0),
 }
 
 onready var _label = find_node("Label")
@@ -45,6 +44,7 @@ var _text_size := Vector2.ZERO
 var _box_style := StyleBoxFlat.new()
 var _left_padding = 24.0 setget set_left_padding
 var _icon_color := Color.white
+var _ignore_toggle_mode := false
 
 func _ready():
 	_box_style.corner_radius_bottom_left = BORDER_RADIUS
@@ -60,8 +60,6 @@ func _ready():
 
 func _draw():
 	_box_style.bg_color = _button_bg
-
-#	_box_style.border_color = _button_bg.lightened(0.3)
 
 	if style == STYLE.ROUND:
 		_box_style.corner_radius_bottom_left = 50
@@ -93,21 +91,26 @@ func _input(_event):
 func _get_bg_color(draw_mode: int) -> Color:
 	var color: Color = COLORS[style]
 
-	if style == STYLE.TRANSPARENT and draw_mode != DRAW_NORMAL:
-		color = COLORS[STYLE.PRIMARY]
-
 	var final_color = color
-	
+	var final_opacity = 0 if transparent else 1
+
 	_icon_color = Color.white
 
 	if draw_mode == STATE.HOVERED:
 		final_color = color.lightened(0.1)
-	elif draw_mode == STATE.PRESSED and not toggle_mode:
-		final_color = color.darkened(0.2)
+		final_opacity = 1
+	elif draw_mode == STATE.PRESSED and not _ignore_toggle_mode:
+		final_color = color.darkened(0.3)
+		final_opacity = 1
 	elif draw_mode == STATE.DISABLED:
 		_icon_color = Color("#666")
 		final_color = color
-		final_color.a = 0
+		final_opacity = 0
+
+	final_color.a = final_opacity
+
+	if not _ignore_toggle_mode and draw_mode == STATE.HOVERED and pressed:
+		final_color.darkened(0.2)
 
 	return final_color
 
@@ -195,3 +198,16 @@ func _update_padding() -> void:
 		label_style_box.content_margin_right = PADDING
 
 		_label.add_stylebox_override("normal", label_style_box)
+
+func _on_Button_toggled(button_pressed):
+	_refresh_button(get_draw_mode())
+
+func _maybe_show_group_data():
+	pass # Replace with function body.
+
+func set_transparent(t: bool) -> void:
+	transparent = t
+	
+	_old_draw_mode = -1
+	
+	_refresh_button(get_draw_mode())

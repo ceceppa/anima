@@ -109,6 +109,9 @@ func _on_editor_position_changed(new_position: int) -> void:
 	_add_anima_editor(new_position)
 
 func _on_visual_builder_updated(data: Dictionary) -> void:
+	if not _anima_visual_node:
+		return
+
 	var current_data: Dictionary = _anima_visual_node.__anima_visual_editor_data
 	var undo_redo = get_undo_redo() # Method of EditorPlugin.
 
@@ -116,7 +119,8 @@ func _on_visual_builder_updated(data: Dictionary) -> void:
 #	undo_redo.add_do_method(self, "_do_update_anima_node")
 #	undo_redo.add_undo_method(self, "_do_update_anima_node")
 	undo_redo.add_do_property(_anima_visual_node, "__anima_visual_editor_data", data)
-	undo_redo.add_undo_property(_anima_visual_node, "__anima_visual_editor_data", current_data)
+#	undo_redo.add_undo_property(_anima_visual_node, "__anima_visual_editor_data", current_data)
+	undo_redo.add_undo_method(self, "_undo_visual_editor_data", current_data)
 	undo_redo.commit_action()
 
 func _on_highlight_node(node_to_highlight: Node) -> void:
@@ -131,3 +135,8 @@ func _on_highlight_node(node_to_highlight: Node) -> void:
 
 func _on_play_animation(name: String) -> void:
 	_anima_visual_node.play_animation(name, 1.0, true)
+
+func _undo_visual_editor_data(previous_data) -> void:
+	_anima_visual_node.__anima_visual_editor_data = previous_data
+
+	_anima_editor.refresh()

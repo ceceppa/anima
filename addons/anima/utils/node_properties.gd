@@ -91,7 +91,8 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 				node.offset = Vector2(-size.x / 2, size.y / 2)
 				node.global_position = position - node.offset
 		_:
-			printerr('Pivot point not handled yet')
+			pass
+#			printerr('Pivot point not handled yet')
 
 static func get_property_value(node: Node, animation_data: Dictionary, property = null):
 	if property == null:
@@ -155,6 +156,8 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 			var translated_text = hack.get_translation(node.text)
 
 			return translated_text.replace(" ", "").length()
+		"index":
+			return node.get_index()
 
 	var p = property.split(':')
 

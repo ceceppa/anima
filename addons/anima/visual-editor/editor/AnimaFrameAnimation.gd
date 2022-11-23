@@ -16,6 +16,7 @@ signal preview_frame
 signal select_node_property(source, node_path)
 signal move_one_left
 signal move_one_right
+signal preview_animation(preview_info)
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -103,6 +104,7 @@ func add_animation_for(node: Node, path: String) -> Node:
 		animation_item.connect("select_node_property", self, "_on_select_node_property")
 		animation_item.connect("select_easing", self, "_on_select_easing", [animation_item])
 		animation_item.connect("select_relative_property", self, "_on_select_relative_property", [animation_item])
+		animation_item.connect("preview_animation", self, "_on_preview_animation")
 
 	animation_item.set_data(node, path)
 
@@ -181,15 +183,7 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 
 	find_node("DurationContainer").visible = !is_initial_frame
 	find_node("Delete").visible = !is_initial_frame
-#	find_node("PlayButton").visible = !is_initial_frame
-#
-#	var frame_name = find_node("FrameName")
-#
-#	frame_name.set_can_edit_value(!is_initial_frame)
-#
-#	if is_initial_frame:
-#		frame_name.set_label("Initial Frame")
-	
+
 func set_relative_property(node_path: String, property: String) -> void:
 	_source.set_relative_propert(node_path, property)
 
@@ -353,3 +347,19 @@ func _on_ConfirmationDialog_confirmed():
 
 	queue_free()
 	emit_signal("frame_deleted")
+
+func _get_data_index() -> int:
+	return get_meta("_data_index")
+
+func _on_preview_animation(preview_info: Dictionary) -> void:
+	preview_info.frame_id = _get_data_index()
+
+	emit_signal("preview_animation", preview_info)
+
+func _on_Preview_pressed():
+	var preview_info := {
+		frame_id = _get_data_index(),
+		preview_button = find_node("Preview")
+	}
+
+	emit_signal("preview_animation", preview_info)

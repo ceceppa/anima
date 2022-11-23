@@ -56,11 +56,15 @@ func set_anima_node(node: Node) -> void:
 	if not node.is_connected("tree_exited", self, "_on_anima_visual_node_deleted"):
 		node.connect("tree_exited", self, "_on_anima_visual_node_deleted")
 
-	_is_restoring_data = true
 	_anima_visual_node = node
 
-	var data = node.__anima_visual_editor_data
-	_scene_root_node = node.get_root_node()
+	_restore_visual_editor_data()
+
+func _restore_visual_editor_data() -> void:
+	_is_restoring_data = true
+
+	var data = _anima_visual_node.__anima_visual_editor_data
+	_scene_root_node = _anima_visual_node.get_root_node()
 
 	_nodes_window.populate_nodes_list(_scene_root_node)
 	$PropertiesWindow.populate(_scene_root_node)
@@ -167,8 +171,11 @@ func _restore_data(data: Dictionary) -> void:
 
 		the_frame.set_has_previous(key_index > 0)
 		the_frame.set_has_next(key_index < total_frames)
+		the_frame.set_meta("_data_index", key_index)
 
-		for value in frame_data.data:
+		for data_index in frame_data.data.size():
+			var value = frame_data.data[data_index]
+
 			if value is String:
 				if the_frame.has_method("restore_data"):
 					the_frame.restore_data(frame_data.data)
@@ -187,6 +194,7 @@ func _restore_data(data: Dictionary) -> void:
 
 				var item: Node = _add_animation_for(node, value.node_path)
 
+				item.set_meta("_data_index", data_index)
 				item.restore_data(value)
 
 		# TODO: Restore collapse
@@ -226,29 +234,9 @@ func _on_PlayAnimation_pressed():
 	var name: String = _animation_selector.get_item_text(animation_id)
 	var speed = float(_animation_speed.text)
 
-#	var all_data = _get_data_from_connections(_start_node)
-#	var data: Array = all_data[animation_id]
-#	var anima: AnimaNode = Anima.begin(self)
-#
-#	for animation in data:
-#		var animation_data: Dictionary = animation.data.animation_data
-#		var node: Node = $AnimaNodeEditor.find_node(animation.node_path, true, false)
-#
-#		animation_data.property.on_started = [funcref(self, "_on_animation_started"), [node]]
-#		animation_data.property.on_completed = [funcref(self, "_on_node_animation_completed"), [node]]
-#
-#		anima.with({ node = node, property = "opacity", duration = VISUAL_EDITOR_FADE_DURATION, to = 0.3 })
-#		anima.with({ node = node, property = "scale", duration = VISUAL_EDITOR_FADE_DURATION, from = Vector2(1, 1), to = Vector2(0.8, 0.8) })
-
-#	anima.play()
-#	yield(anima, "animation_completed")
-
 	visual_node.play_animation(name, speed, true)
 
 	yield(visual_node, "animation_completed")
-	
-#	anima.play_backwards()
-#	anima.queue_free()
 
 func _on_animation_started(node: Node) -> void:
 	if node == null:
@@ -279,12 +267,11 @@ func _on_node_animation_completed(node: Node) -> void:
 	anima.play()
 
 func _on_StopAnimation_pressed():
-	var visual_node: AnimaVisualNode = null #AnimaUI.get_selected_anima_visual_node()
+	var visual_node: AnimaVisualNode = null
 
 	visual_node.stop()
 
 func _on_FramesEditor_select_node():
-#	$PropertiesWindow.window_title = "Select the node to animate"
 	$NodesWindow.popup_centered()
 
 func _on_PropertiesWindow_property_selected(node_path, property, property_type):
@@ -379,3 +366,9 @@ func _swap_frames(from: int, to: int) -> void:
 	_on_FramesEditor_visual_builder_updated(data)
 
 	_restore_data(data)
+
+func _on_FramesEditor_preview_animation(preview_info):
+	_anima_visual_node.preview_animation(preview_info)
+
+func refresh() -> void:
+	_restore_visual_editor_data()

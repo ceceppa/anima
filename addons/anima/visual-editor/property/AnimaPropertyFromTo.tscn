@@ -254,7 +254,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Rect2" type="HBoxContainer" parent="CustomValue"]
+[node name="Rect2" type="VBoxContainer" parent="CustomValue"]
 visible = false
 margin_right = 252.0
 margin_bottom = 204.0
@@ -424,7 +424,7 @@ margin_bottom = 45.0
 icon = SubResource( 4 )
 linked_field = NodePath("../h")
 
-[node name="Vector3" type="HBoxContainer" parent="CustomValue"]
+[node name="Vector3" type="VBoxContainer" parent="CustomValue"]
 visible = false
 margin_right = 200.0
 margin_bottom = 151.0
@@ -529,7 +529,7 @@ caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
-[node name="Vector2" type="HBoxContainer" parent="CustomValue"]
+[node name="Vector2" type="VBoxContainer" parent="CustomValue"]
 visible = false
 margin_right = 480.0
 margin_bottom = 49.0
@@ -615,6 +615,7 @@ linked_field = NodePath("../y")
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
 margin_right = 164.0
+margin_bottom = 49.0
 align = 2
 caret_blink = true
 caret_blink_speed = 0.5
@@ -642,7 +643,6 @@ caret_blink_speed = 0.5
 [node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource( 7 )]
 margin_left = 172.0
 margin_right = 236.0
-margin_bottom = 81.0
 rect_min_size = Vector2( 40, 49 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Select relative property"
@@ -839,7 +839,6 @@ __meta__ = {
 [node name="ClearButton" parent="CustomValue" instance=ExtResource( 7 )]
 margin_left = 244.0
 margin_right = 308.0
-margin_bottom = 81.0
 rect_min_size = Vector2( 40, 49 )
 rect_pivot_offset = Vector2( 20, 24.5 )
 hint_tooltip = "Clear value"

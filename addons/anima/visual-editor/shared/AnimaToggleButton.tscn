@@ -24,6 +24,7 @@ bg_color = Color( 0.270588, 0.482353, 0.615686, 1 )
 anchor_right = 1.0
 margin_right = -988.0
 rect_min_size = Vector2( 36, 49 )
+rect_pivot_offset = Vector2( 44, 24.5 )
 size_flags_horizontal = 3
 custom_styles/normal = SubResource( 2 )
 toggle_mode = true
@@ -403,8 +404,12 @@ __meta__ = {
 "percentage": 0,
 "value": 1.0
 },
-"_editor_description_": ""
+"__initial_AnimaToggleButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0,
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
+node_to_toggle = NodePath("")
 
 [node name="Label" parent="." index="0"]
 custom_styles/normal = SubResource( 3 )
