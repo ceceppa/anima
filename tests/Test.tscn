@@ -185,27 +185,28 @@ __anima_visual_editor_data = {
 0: {
 "collapsed": false,
 "data": [ {
-"animate_as": 0,
+"animate_as": 2,
 "animations": [ {
+"animate_with": 0,
 "animation_name": "",
 "property": {
 "easing": [ "EaseOutBack", 27 ],
-"from": [ "0", "0" ],
+"from": 0.0,
 "initialValue": null,
 "pivot": -1,
 "relative": false,
-"to": [ "100", "100" ]
+"to": 1.0
 },
-"property_name": "position",
-"property_type": 5
+"property_name": "opacity",
+"property_type": 3
 } ],
 "delay": null,
 "duration": null,
 "grid": {
-"animation_type": 0,
-"formula": 0,
-"items_delay": 0.01,
-"size": Vector2( 0, 0 ),
+"animation_type": 9,
+"formula": 1,
+"items_delay": 0.05,
+"size": Vector2( 3, 4 ),
 "start_point": Vector2( 0, 0 )
 },
 "group": {
@@ -216,7 +217,20 @@ __anima_visual_editor_data = {
 "node_path": "GridContainer"
 }, {
 "animate_as": 0,
-"animations": [  ],
+"animations": [ {
+"animate_with": 1,
+"animation_name": "wobble",
+"property": {
+"easing": [ "Linear", 0 ],
+"from": null,
+"initialValue": null,
+"pivot": 0,
+"relative": false,
+"to": null
+},
+"property_name": "",
+"property_type": 0
+} ],
 "delay": null,
 "duration": null,
 "grid": {
@@ -246,50 +260,86 @@ margin_left = 589.0
 margin_top = 93.0
 margin_right = 800.0
 margin_bottom = 220.0
+rect_pivot_offset = Vector2( 105.5, 63.5 )
 columns = 4
+__meta__ = {
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
+}
 
 [node name="Button" type="Button" parent="GridContainer"]
 margin_right = 37.0
 margin_bottom = 37.0
+rect_pivot_offset = Vector2( 18.5, 18.5 )
 text = "1"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button2" type="Button" parent="GridContainer"]
 margin_left = 45.0
 margin_right = 95.0
 margin_bottom = 37.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "2"
 __meta__ = {
-"_edit_lock_": true
+"__initial_AnimaNode__single_animation_rotate:y": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode__single_animation_x": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_default_rotate:y": {
+"percentage": 0,
+"value": 0
+},
+"__initial_AnimaNode_default_x": {
+"percentage": 0,
+"value": 0
+},
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button3" type="Button" parent="GridContainer"]
 margin_left = 103.0
 margin_right = 153.0
 margin_bottom = 37.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "3"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button4" type="Button" parent="GridContainer"]
 margin_left = 161.0
 margin_right = 211.0
 margin_bottom = 37.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "4"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button5" type="Button" parent="GridContainer"]
 margin_top = 45.0
 margin_right = 37.0
 margin_bottom = 82.0
+rect_pivot_offset = Vector2( 18.5, 18.5 )
 text = "5"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button6" type="Button" parent="GridContainer"]
@@ -297,9 +347,12 @@ margin_left = 45.0
 margin_top = 45.0
 margin_right = 95.0
 margin_bottom = 82.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "6"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button7" type="Button" parent="GridContainer"]
@@ -307,9 +360,12 @@ margin_left = 103.0
 margin_top = 45.0
 margin_right = 153.0
 margin_bottom = 82.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "7"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button8" type="Button" parent="GridContainer"]
@@ -317,18 +373,24 @@ margin_left = 161.0
 margin_top = 45.0
 margin_right = 211.0
 margin_bottom = 82.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "8"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button9" type="Button" parent="GridContainer"]
 margin_top = 90.0
 margin_right = 37.0
 margin_bottom = 127.0
+rect_pivot_offset = Vector2( 18.5, 18.5 )
 text = "9"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button10" type="Button" parent="GridContainer"]
@@ -336,9 +398,12 @@ margin_left = 45.0
 margin_top = 90.0
 margin_right = 95.0
 margin_bottom = 127.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "10"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button11" type="Button" parent="GridContainer"]
@@ -346,9 +411,12 @@ margin_left = 103.0
 margin_top = 90.0
 margin_right = 153.0
 margin_bottom = 127.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "11"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Button12" type="Button" parent="GridContainer"]
@@ -356,9 +424,12 @@ margin_left = 161.0
 margin_top = 90.0
 margin_right = 211.0
 margin_bottom = 127.0
+rect_pivot_offset = Vector2( 25, 18.5 )
 text = "12"
 __meta__ = {
-"_edit_lock_": true
+"__visibility_strategy": 0,
+"_edit_lock_": true,
+"_visibility_strategy_reverted": true
 }
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

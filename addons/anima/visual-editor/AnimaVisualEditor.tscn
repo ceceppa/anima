@@ -60,6 +60,7 @@ nodes_list_visible = true
 [connection signal="add_node" from="FramesEditor" to="." method="_on_FramesEditor_add_node"]
 [connection signal="highlight_node" from="FramesEditor" to="." method="_on_FramesEditor_highlight_node"]
 [connection signal="play_animation" from="FramesEditor" to="." method="_on_FramesEditor_play_animation"]
+[connection signal="preview_animation" from="FramesEditor" to="." method="_on_FramesEditor_preview_animation"]
 [connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
 [connection signal="select_node_property" from="FramesEditor" to="." method="_on_FramesEditor_select_node_property"]
 [connection signal="visual_builder_updated" from="FramesEditor" to="." method="_on_FramesEditor_visual_builder_updated"]

@@ -3,32 +3,33 @@ extends VBoxContainer
 
 signal select_animation
 signal select_easing
-signal content_size_changed(new_size)
 signal select_relative_property(source)
-signal animate_as_changed(as_node)
 signal updated
 signal removed
 signal highlight_node(node)
 signal select_property_to_animate
+signal preview_animation(data)
 
 onready var _property_data = find_node("PropertyData")
 onready var _select_animation = find_node("SelectAnimation")
 onready var _animate_property = find_node("AnimateProperty")
 onready var _title = find_node("Title")
+onready var _property_or_animation = find_node("PropertyOrAnimation")
 
 var _property_name = ""
 var _property_type = TYPE_NIL
 var _animation_name: String
-var _animate_with: int = AnimaVisualNode.USE.ANIMATE_PROPERTY
 var _is_restoring := false
 
 func _ready():
 	_select_animation.hide()
-	
+	_on_PropertyOrAnimation_item_selected(0)
+
 	find_node("PropertyOrAnimation").set_items([
 		{ icon = "res://addons/anima/visual-editor/icons/Property.svg", label = "Animate proeprty" },
 		{ icon = "res://addons/anima/visual-editor/icons/Animation.svg", label = "Use existing animation" },
 	])
+
 	_update_title()
 
 func get_data() -> Dictionary:
@@ -45,6 +46,7 @@ func get_data() -> Dictionary:
 		animation_name = _animation_name,
 		property_type = _property_type,
 		property_name = _property_name,
+		animate_with = _property_or_animation.get_selected_id(),
 		property = {
 			from = _property_data.find_node("FromValue").get_value(),
 			to = _property_data.find_node("ToValue").get_value(),
@@ -74,10 +76,17 @@ func restore_data(data: Dictionary) -> void:
 	_property_data.find_node("RelativeCheck").pressed = data.property.relative
 	_property_data.find_node("PivotButton").set_value(data.property.pivot)
 
+	if data.has("animate_with"):
+		_property_or_animation.set_selected_id(data.animate_with)
+	else:
+		_property_or_animation.set_selected_id(0)
+
 	set_easing(data.property.easing[0], data.property.easing[1])
 
 	if _animation_name == "" and _property_name == "":
 		_title.pressed = true
+
+	_on_PropertyOrAnimation_item_selected(_property_or_animation.get_selected_id())
 
 	_is_restoring= false
 
@@ -85,6 +94,8 @@ func selected_animation(name) -> void:
 	if name:
 		_animation_name = name
 		find_node("SelectAnimation").set_text(name)
+
+	_update_title()
 
 	_emit_node_update()
 
@@ -100,9 +111,6 @@ func set_property_to_animate(name: String, type) -> void:
 	_property_name = name
 	_property_type = type
 
-	_property_data.visible = true
-	find_node("SelectProperty").hide()
-
 	_set_property_type(type)
 
 	_update_title()
@@ -112,12 +120,16 @@ func set_property_to_animate(name: String, type) -> void:
 func _update_title() -> void:
 	var title = "(no animation)"
 	var id = find_node("PropertyOrAnimation").get_selected_id()
-	
+	var show_preview := false
+
 	if id == 0 and _property_name:
 		title = "Property: " + _property_name
+		show_preview = true
 	elif id == 1 and _animation_name:
 		title = "Animation: " + _animation_name
+		show_preview = true
 
+	find_node("Preview").visible = show_preview
 	_title.set_text(title)
 
 func _set_property_type(property_type) -> void:
@@ -129,7 +141,13 @@ func _on_SelectProperty_pressed():
 	emit_signal("select_property_to_animate")
 
 func _on_PropertyOrAnimation_item_selected(id):
+	_property_data.visible = id == 0 and _property_name != ""
+	find_node("SelectProperty").visible = id == 0
+	_select_animation.visible = id == 1
+
 	_update_title()
+
+	_emit_node_update()
 
 func _emit_node_update() -> void:
 	if not _is_restoring:
@@ -150,7 +168,8 @@ func _on_Remove_pressed():
 # a button is hidden
 #
 func _adjust_property_data_height():
-	_property_data.get_parent().get_parent().rect_size.y = 0
+	if _property_data:
+		_property_data.get_parent().get_parent().rect_size.y = 0
 
 func _on_FromValue_select_relative_property():
 	emit_signal("select_relative_property", find_node("FromValue"))
@@ -160,3 +179,18 @@ func _on_ToValue_select_relative_property():
 
 func _on_InitialValue_select_relative_property():
 	emit_signal("select_relative_property", find_node("InitialValue"))
+
+func _on_SelectAnimation_pressed():
+	emit_signal("select_animation")
+
+func _on_MarginContainer_item_rect_changed():
+	var bg_color: ColorRect = find_node("BGColor")
+
+	bg_color.margin_right = $MarginContainer.rect_size.x
+	bg_color.margin_bottom = $MarginContainer.rect_size.y
+
+func _on_MarginContainer_visibility_changed():
+	find_node("BGColor").visible = $MarginContainer.visible
+
+func _on_Preview_pressed():
+	emit_signal("preview_animation", { preview_button = find_node("Preview"), single_animation_id = get_meta("_data_index") })

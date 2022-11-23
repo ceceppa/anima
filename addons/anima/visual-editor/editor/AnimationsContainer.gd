@@ -36,7 +36,7 @@ func _highlight_me() -> void:
 		.with(
 			Anima.Node($Control/ColorRect).anima_property("color", Color('00ffffff'), 0.15).anima_from(Color('0affffff'))
 		) \
-		.play_as_backwards_when(_is_dragging, false)
+		.play_as_backwards_when(_is_dragging)
 
 func _on_AnimationsContainer_item_rect_changed():
 	$Control/ColorRect.rect_size = rect_size

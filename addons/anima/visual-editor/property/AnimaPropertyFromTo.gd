@@ -370,7 +370,11 @@ func _on_CurrentValue_item_rect_changed():
 		rect_min_size.y = _current_value.rect_size.y
 
 func _on_PropertyFromTo_item_rect_changed():
+	$CustomValue.rect_min_size.x = 0
 	$CustomValue.rect_size.x = rect_size.x
+
+	rect_size.x = max($CustomValue.rect_size.x, rect_size.x)
+
 	$HBoxContainer.rect_size.x = rect_size.x
 
 func _on_ConfirmButton_pressed():

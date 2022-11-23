@@ -32,6 +32,7 @@ func _play(backwards := false) -> AnimaNode:
 				initial_values = {
 					opacity = 0,
 				},
+				relative = ["y"]
 			}, 0.3)
 	)
 	

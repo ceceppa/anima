@@ -33,7 +33,8 @@ func _init(_add_initial_values_callback: FuncRef, add_animtion_data_callback: Fu
 #
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, meta_data_prefix: String) -> float:
 	var last_duration := 0.0
-	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
+	var relative_properties: Array = [] 
+	# "x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
 	var easing = full_keyframes_data.easing if full_keyframes_data.has("easing") else null
 
@@ -107,7 +108,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 			if value == null:
 				value = property_value
 			else:
-				value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
+				value += property_value
 
 		var data := { percentage = 0, value = value }
 		if animation_data.has("initial_values") and animation_data.initial_values.has(property_to_animate):
@@ -117,7 +118,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 
 		var meta_key := "__initial_" + meta_data_prefix + "_" + str(property_to_animate) 
 
-		if node.has_meta(meta_key) and not first_frame_has_property:
+		if node.has_meta(meta_key) and not first_frame_has_property and not base_data.has("from"):
 			var meta_value = node.get_meta(meta_key)
 
 			if should_debug_print(animation_data, property_to_animate):
@@ -271,12 +272,6 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		var property_name: String = property_to_animate
 
 		data.to = AnimaTweenUtils.maybe_calculate_value(to_value, data)
-
-#		if relative:
-#			if previous_key_value[property_to_animate].has("to"):
-#				from_value = previous_key_value[property_to_animate].to
-#
-#			data.to += from_value
 
 		data.property = property_name
 		data.duration = frame_duration

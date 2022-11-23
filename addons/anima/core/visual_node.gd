@@ -53,7 +53,7 @@ func get_animations_list() -> Array:
 	return []
 
 func play_animation(name: String, speed: float = 1.0, reset_initial_values := false) -> void:
-	var result = _reset_initial_values(0.0)
+	var result = reset_scene(0.0)
 	yield(result, "completed")
 
 	var animations_data: Dictionary = _get_animation_data_by_name(name)
@@ -75,7 +75,17 @@ func _get_animation_data_by_name(animation_name: String) -> Dictionary:
 
 	return {}
 
-func _play_animation_from_data(animation_name: String, animations_data: Dictionary, speed: float, reset_initial_values: bool) -> void:
+func _play_animation_from_data(
+	animation_name: String,
+	animations_data: Dictionary,
+	speed: float,
+	reset_initial_values: bool
+) -> void:
+	if _is_playing:
+		return
+
+	_is_playing = true
+
 	var anima: AnimaNode = Anima.begin_single_shot(self, animation_name)
 	var visibility_strategy: int = animations_data.animation.visibility_strategy
 	var default_duration = animations_data.animation.default_duration
@@ -88,9 +98,9 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 	if default_duration == null:
 		default_duration = ANIMA.DEFAULT_DURATION
 
-	for frame_id in animations_data.frames:
+	for frame_id in animations_data.frames.keys():
 		var frame_data = animations_data.frames[frame_id]
-		
+
 		if frame_data.type == "delay":
 			start_time += frame_data.data.delay
 
@@ -142,16 +152,18 @@ func _play_animation_from_data(animation_name: String, animations_data: Dictiona
 	yield(anima, "animation_completed")
 
 	if reset_initial_values:
-		_reset_initial_values(1.0)
+		reset_scene(1.0)
 
 	emit_signal("animation_completed")
+
+	_is_playing = false
 
 func stop() -> void:
 	if _active_anima_node == null:
 		return
 
 	_active_anima_node.stop()
-	_reset_initial_values(1.0)
+	reset_scene(1.0)
 
 func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	var source_node: Node = get_root_node()
@@ -173,66 +185,72 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 		if animation_data.animate_as == ANIMATE_AS.GROUP:
 			anima_data.erase("node")
 			anima_data.group = node
+
+			anima_data.items_delay = animation_data.group.items_delay
+			anima_data.animation_type = animation_data.group.animation_type
+			anima_data.start_index = animation_data.group.start_index
 		elif animation_data.animate_as == ANIMATE_AS.GRID:
 			anima_data.erase("node")
 			anima_data.grid = node
-	
-	if animation_data.has("group"):
-		anima_data.animation_type = animation_data.group.animation_type
-		anima_data.items_delay = animation_data.group.items_delay
-		anima_data.point = Vector2(animation_data.group.start_index, 0)
+
+			anima_data.grid_size = animation_data.grid.size
+			anima_data.items_delay = animation_data.grid.items_delay
+			anima_data.animation_type = animation_data.grid.animation_type
+			anima_data.start_point = animation_data.grid.start_point
+			anima_data.distance_formula = animation_data.grid.formula
 
 	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
-	if animation_data.use == 1:
-		anima_data.animation = animation_data.animation_name
-	else:
-		var node_name: String = node.name
-		var property: String = animation_data.property_name
+	for animation in animation_data.animations:
+		if animation.animate_with == USE.ANIMATION:
+			anima_data.animation = animation.animation_name
+		else:
+			var node_name: String = node.name
+			var property: String = animation.property_name
 
-		properties_to_reset.clear()
-		properties_to_reset.push_back(property)
+			properties_to_reset.clear()
+			properties_to_reset.push_back(property)
 
-		anima_data.property = property
+			anima_data.property = property
 
-		for key in animation_data.property:
-			if key == 'pivot':
-				var pivot = animation_data.property.pivot
+			for key in animation.property:
+				if key == 'pivot':
+					var pivot = animation.property.pivot
 
-				if pivot >= 0:
-					anima_data.pivot = pivot
-			elif key == "easing":
-				anima_data.easing = animation_data.property.easing[1]
-			elif key == "from":
-				var from = animation_data.property.from
+					if pivot >= 0:
+						anima_data.pivot = pivot
+				elif key == "easing":
+					anima_data.easing = animation.property.easing[1]
+				elif key == "from":
+					var from = animation.property.from
 
-				if from is String and from.find(":") >= 0:
-					anima_data.from = from
-				elif from is Array:
-					if from.size() == 2:
-						anima_data.from = Vector2(from[0], from[1])
+					if from is String and from.find(":") >= 0:
+						anima_data.from = from
+					elif from is Array:
+						if from.size() == 2:
+							anima_data.from = Vector2(from[0], from[1])
+						else:
+							anima_data.from = Vector3(from[0], from[1], from[2])
 					else:
-						anima_data.from = Vector3(from[0], from[1], from[2])
-				else:
-					anima_data.from = float(from)
-			elif key == "to":
-				var to = animation_data.property.to
+						anima_data.from = float(from)
+				elif key == "to":
+					var to = animation.property.to
 
-				if to is String and to.find(":") >= 0:
-					anima_data.from = to
-				elif to is Array:
-					if to.size() == 2:
-						anima_data.to = Vector2(to[0], to[1])
+					if to is String and to.find(":") >= 0:
+						anima_data.from = to
+					elif to is Array:
+						if to.size() == 2:
+							anima_data.to = Vector2(to[0], to[1])
+						else:
+							anima_data.to = Vector3(to[0], to[1], to[2])
 					else:
-						anima_data.to = Vector3(to[0], to[1], to[2])
+						anima_data.to = float(to)
 				else:
-					anima_data.to = float(to)
-			else:
-				var value = animation_data.property[key]
-				
-				if value != null:
-					anima_data[key] = animation_data.property[key]
+					var value = animation.property[key]
+					
+					if value != null:
+						anima_data[key] = animation.property[key]
 
 	for property in properties_to_reset:
 		if not _initial_values.has(node) or not _initial_values[node].has(property):
@@ -246,7 +264,7 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 
 	return anima_data
 
-func _reset_initial_values(clear_timeout: float):
+func reset_scene(clear_timeout: float):
 	if is_instance_valid(_active_anima_node) and not _active_anima_node.is_queued_for_deletion():
 		_active_anima_node.stop()
 	else:
@@ -288,3 +306,41 @@ func set_editor_position(new_position: int) -> void:
 	_editor_position = new_position
 
 	emit_signal("on_editor_position_changed", new_position)
+
+func preview_animation(preview_info: Dictionary) -> void:
+	var animations_data: Dictionary = _get_animation_data_by_name(name)
+
+	if animations_data.size() == 0:
+		printerr("The selected animation is empty") 
+
+		return
+
+	var preview_button: Button = preview_info.preview_button
+
+	var single_animation_data := {}
+	
+	single_animation_data.animation = animations_data.animation
+	single_animation_data.frames = {
+		0: animations_data.frames[preview_info.frame_id].duplicate()
+	}
+
+	if preview_info.has("animation_data_id"):
+		single_animation_data.frames.erase("data")
+
+		single_animation_data.frames[0].data = [
+			animations_data.frames[preview_info.frame_id].data[preview_info.animation_data_id].duplicate()
+		]
+
+	if preview_info.has("single_animation_id"):
+		single_animation_data.frames[0].data[0].erase("animations")
+
+		single_animation_data.frames[0].data[0].animations = [
+			animations_data.frames[preview_info.frame_id].data[preview_info.animation_data_id].animations[preview_info.single_animation_id]
+		]
+
+	preview_button.pressed = true
+	var doit = _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
+
+	yield(doit, "completed")
+
+	preview_button.pressed = false

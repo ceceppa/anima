@@ -67,7 +67,8 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	}
 
 static func maybe_calculate_value(value, animation_data: Dictionary):
-	if (not value is String and not value is Array) or (value is String and value.find(':') < 0):
+	var should_ignore = (not value is String and not value is Array) or (value is String and value.find(':') < 0)
+	if should_ignore:
 		return value
 
 	var values_to_check: Array
@@ -78,7 +79,7 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 		values_to_check = value
 
 	var regex := RegEx.new()
-	regex.compile("([\\w\\/.:]+[a-zA-Z]*:[a-z]*:?[a-z_]*)")
+	regex.compile("([\\.:\\/]*[a-zA-Z]*:[a-z]*:?[^\\s]+)")
 
 	var all_results := []
 	var root = animation_data.node
@@ -86,11 +87,11 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 	if animation_data.has("_root_node"):
 		root = animation_data._root_node
 
-	for single_value in values_to_check:
-		if single_value == "":
-			single_value = "0.0"
+	for single_formula in values_to_check:
+		if single_formula == "":
+			single_formula = "0.0"
 
-		var results := regex.search_all(single_value)
+		var results := regex.search_all(single_formula)
 		var variables := []
 		var values := []
 
@@ -102,30 +103,30 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 			var source = info.pop_front()
 			var source_node: Node
 
+			
 			if source == '' or source == '.':
 				source_node = animation_data.node
 			else:
 				source_node = root.get_node(source)
 
 			if source_node == null:
-				printerr("Node not found: ", source)
+				printerr("Node not found: ", source, info)
 
 				return value
 
 			var property: String = PoolStringArray(info).join(":")
 
 			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data, property)
-
 			var variable := char(65 + index)
 
 			variables.push_back(variable)
 			values.push_back(property_value)
 
-			single_value.erase(rm.get_start(), rm.get_end() - rm.get_start())
-			single_value = single_value.insert(rm.get_start(), variable)
+			single_formula.erase(rm.get_start(), rm.get_end() - rm.get_start())
+			single_formula = single_formula.insert(rm.get_start(), variable)
 
 		var expression := Expression.new()
-		expression.parse(single_value, variables)
+		expression.parse(single_formula, variables)
 
 		var result = expression.execute(values)
 
