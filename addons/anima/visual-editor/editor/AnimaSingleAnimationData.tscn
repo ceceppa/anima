@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaSingleAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" type="PackedScene" id=11]
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=13]
+[ext_resource path="res://addons/anima/visual-editor/icons/Collapse.svg" type="Texture" id=14]
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 48.0
@@ -49,7 +50,9 @@ margin_right = 903.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 451.5, 24.5 )
 custom_styles/normal = SubResource( 2 )
+pressed = true
 text = "No animation defined"
+icon = ExtResource( 14 )
 __meta__ = {
 "__initial_AnimaNode__anima_1026196471787050537__button_bg": {
 "percentage": 0,
@@ -740,6 +743,7 @@ __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
+show_panel_on = 12
 
 [node name="Label" type="Label" parent="ActionsContainer/ColorRect/HBoxContainer"]
 margin_top = 12.0
@@ -759,6 +763,7 @@ icon_align = 1
 expand_icon = true
 __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_PropertyOrAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
 "_editor_description_": "",
@@ -1053,7 +1058,6 @@ margin_right = 1024.0
 margin_bottom = 49.0
 
 [node name="BGColor" parent="Control" instance=ExtResource( 11 )]
-visible = false
 margin_right = 1024.0
 margin_bottom = 73.0
 size_flags_vertical = 3
@@ -1061,7 +1065,6 @@ color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-visible = false
 margin_top = 49.0
 margin_right = 1024.0
 margin_bottom = 122.0

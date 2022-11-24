@@ -292,7 +292,6 @@ func _on_Button_pressed():
 
 func _on_AddAnimation_pressed():
 	var instance = SINGLE_ANIMATION.instance()
-	_animations_container.add_child(instance)
 
 	instance.connect("select_property_to_animate", self, "_on_select_property_to_animate", [instance])
 	instance.connect("updated", self, "_emit_updated")
@@ -301,6 +300,9 @@ func _on_AddAnimation_pressed():
 	instance.connect("tree_exited", self, "_toggle_add_message")
 	instance.connect("select_animation", self, "_on_select_animation", [instance])
 	instance.connect("preview_animation", self, "_on_single_animation_preview")
+	instance.set_meta("_data_index", _animations_container.get_child_count())
+
+	_animations_container.add_child(instance)
 
 	_toggle_add_message()
 

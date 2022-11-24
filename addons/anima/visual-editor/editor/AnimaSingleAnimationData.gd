@@ -198,4 +198,5 @@ func _on_MarginContainer_visibility_changed():
 	find_node("BGColor").visible = $MarginContainer.visible
 
 func _on_Preview_pressed():
+	print(get_meta("_data_index"))
 	emit_signal("preview_animation", { preview_button = find_node("Preview"), single_animation_id = get_meta("_data_index") })
