@@ -60,6 +60,13 @@ static func get_animation_keyframes(animation_name: String) -> Dictionary:
 		var script: Reference = load(resource_file).new()
 		var keyframes: Dictionary = script.KEYFRAMES
 
+		#
+		# This was once "set" inside the keyframes engine, but noticed that could have been more
+		# a problem that a solution.
+		# For lazyness I'm forcing the built-in animations to have this properties as relative
+		# instead of modifying (again) all of them xD
+		#
+		keyframes.relative = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 		ANIMA.add_custom_animation(animation_name, keyframes)
 
 		script.unreference()

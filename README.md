@@ -32,6 +32,24 @@ The ready to install version is available [here](https://github.com/ceceppa/anim
 
 Check out [documentation](https://anima.ceceppa.me/docs/), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
 
+
+## Differences between Anima and Godot Tween
+
+|                                                | Anima                                                      | Tween         |
+| ---------------------------------------------- | ---------------------------------------------------------- | ------------- |
+| Chaining                                       | support for sequential, parallel and concurrent animations | Only Godot 4  |
+| Easing                                         | 33 built-in, more can be added programmatically            | limited       |
+| Use Curve as easing                            | yes                                                        | no            |
+| Set Pivot point                                | yes (2D Only)                                              | no            |
+| Create and reuse custom animations             | 89 built-in, more can be added programmatically            | No            |
+| Animate elements in group or grids             | yes                                                        | No            |
+| Multiple distance formulas for Grid animations | yes                                                        | no            |
+| Loop                                           | Infinite, Times, and delayed loops                         | Infinite only |
+| Animate relative values                        | yes                                                        | Only Godot 4  |
+| Play/Loop backwards                            | yes                                                        | no            |
+| Dynamic values                                 | yes                                                        | no            |
+| CSS-Like animations                            | yes                                                        | no            |
+
 ## The Visual Animation Builder
 
 ## Built-in animations

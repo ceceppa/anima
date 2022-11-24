@@ -1,6 +1,5 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://demos/resources/Lato-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://demos/nodes/Popup.gd" type="Script" id=2]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
 
@@ -15,16 +14,6 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-
-[sub_resource type="DynamicFont" id=2]
-size = 32
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 24
-use_filter = true
-font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 content_margin_left = 16.0
@@ -89,7 +78,6 @@ margin_right = 576.0
 margin_bottom = 376.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 2 )
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 autowrap = true
 __meta__ = {
@@ -103,12 +91,11 @@ anchor_bottom = 0.869
 margin_bottom = 40.0
 
 [node name="Button" type="Button" parent="Popup/Panel/CenterContainer"]
-margin_left = 234.0
-margin_top = 13.0
-margin_right = 366.0
-margin_bottom = 75.0
+margin_left = 235.0
+margin_top = 16.0
+margin_right = 365.0
+margin_bottom = 73.0
 mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 5 )
 custom_styles/hover = SubResource( 3 )
 custom_styles/normal = SubResource( 4 )
 text = "Close Me"
@@ -117,6 +104,5 @@ __meta__ = {
 }
 
 [node name="ShowAllDemos" parent="." instance=ExtResource( 3 )]
-visible = false
 
 [connection signal="pressed" from="Popup/Panel/CenterContainer/Button" to="Popup" method="_on_Button_pressed"]

@@ -173,6 +173,9 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
 		var is_object = typeof(property_data.property) == TYPE_OBJECT
 
+		if value == null:
+			continue
+
 		if value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, animation_data)
 

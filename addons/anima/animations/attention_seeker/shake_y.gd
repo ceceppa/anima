@@ -11,4 +11,5 @@ var KEYFRAMES := {
 	100: {
 		y = 0
 	},
+	relative = ["y"]
 }

@@ -46,6 +46,7 @@ var _left_padding = 24.0 setget set_left_padding
 var _icon_color := Color.white
 var _ignore_toggle_mode := false
 var _disabled_icon_color = Color("#a0a0a0")
+var _override_draw_mode
 
 func _ready():
 	_box_style.corner_radius_bottom_left = BORDER_RADIUS
@@ -115,8 +116,10 @@ func _get_bg_color(draw_mode: int) -> Color:
 
 	return final_color
 
-func _refresh_button(draw_mode: int) -> void:
-	if draw_mode != _old_draw_mode:
+func _refresh_button(draw_mode: int, force := false) -> void:
+	var mode = draw_mode if _override_draw_mode == null else _override_draw_mode
+
+	if mode != _old_draw_mode or force:
 		var final_color: Color = _get_bg_color(draw_mode)
 
 		Anima.begin_single_shot(self) \

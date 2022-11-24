@@ -5619,13 +5619,13 @@ __anima_visual_editor_data = {
 "relative": false,
 "to": [ "0", "0" ]
 },
-"property_name": "size",
+"property_name": "scale",
 "property_type": 5
 } ],
 "delay": null,
 "duration": null,
 "grid": {
-"animation_type": 0,
+"animation_type": 9,
 "formula": 0,
 "items_delay": 0.05,
 "size": Vector2( 16, 27 ),

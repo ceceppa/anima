@@ -53,8 +53,8 @@ margin_right = 548.0
 margin_bottom = 183.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "Sequential and parallel animation"
-scene = "res://demos/nodes/SequenceAndParallel.tscn"
+text = "Dialog"
+scene = "res://demos/nodes/Popup.tscn"
 
 [node name="SequentialAnParallel2" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0

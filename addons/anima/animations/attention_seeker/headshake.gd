@@ -22,5 +22,6 @@ var KEYFRAMES := {
 		x = 0,
 		"rotate:y": 0
 	},
-	pivot = ANIMA.PIVOT.CENTER
+	pivot = ANIMA.PIVOT.CENTER,
+	relative = ["x"]
 }

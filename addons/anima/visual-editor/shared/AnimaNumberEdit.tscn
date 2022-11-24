@@ -24,5 +24,6 @@ align = 2
 script = ExtResource( 1 )
 type = 1
 
+[connection signal="gui_input" from="." to="." method="_on_NumberEdit_gui_input"]
 [connection signal="text_changed" from="." to="." method="_on_NumberEdit_text_changed"]
 [connection signal="type_changed" from="." to="." method="_on_NumberEdit_type_changed"]

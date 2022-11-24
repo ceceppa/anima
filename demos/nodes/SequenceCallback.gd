@@ -8,13 +8,13 @@ func _ready():
 	_animation.then({ node = $VBoxContainer/Button1, animation = "flash", duration = 1, on_completed = [funcref(self, '_on_button_completed'), [1]] })
 	_animation.then({ node = $VBoxContainer/Button2, animation = "tada", duration = 1, on_completed = [funcref(self, '_on_button_completed'), [2]] })
 	_animation.then({ node = $VBoxContainer/Button3, animation = "shakeX", duration = 1, on_completed = [funcref(self, '_on_button_completed'), [3]] })
-	_animation.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+	_animation.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
 
 	for i in range(1, 4):
 		var sprite = find_node('check' + str(i))
 		var anima = Anima.begin(sprite)
 
-		anima.then({ node = sprite, animation = 'jello', duration = 0.5, hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
+		anima.then({ node = sprite, animation = 'jello', duration = 0.5, hide_strategy = ANIMA.VISIBILITY.TRANSPARENT_ONLY })
 		_check_sprites.push_back(anima)
 
 func _on_Start_pressed():

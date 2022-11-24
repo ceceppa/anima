@@ -23,5 +23,6 @@ var KEYFRAMES := {
 		y = -4,
 		"scale:y": 1.02,
 	},
+	relative = ["x"]
 }
 

@@ -26,17 +26,19 @@ size_flags_vertical = 3
 
 [node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
-margin_right = 1083.0
+margin_right = 1024.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
 margin_top = 46.0
-margin_right = 1083.0
+margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
+margin_right = 1024.0
+margin_bottom = 554.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
