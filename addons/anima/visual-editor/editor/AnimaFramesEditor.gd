@@ -109,6 +109,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
+	node.set_meta("_data_index", key)
 	node.set_name("Frame" + str(key))
 
 	_add_component(node)

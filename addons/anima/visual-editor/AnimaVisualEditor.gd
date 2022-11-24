@@ -226,6 +226,7 @@ func _add_animation_for(node: Node, node_path: String) -> Node:
 	item.connect("select_animation", self, "_on_select_animation", [item])
 	item.connect("select_relative_property", self, "_on_select_relative_property", [item])
 	item.connect("select_easing", self, "_on_select_easing", [item])
+	item.set_meta("_data_index", item.get_index() - 1)
 
 	return item
 

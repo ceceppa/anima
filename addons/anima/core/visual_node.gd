@@ -337,6 +337,9 @@ func preview_animation(preview_info: Dictionary) -> void:
 			animations_data.frames[preview_info.frame_id].data[preview_info.animation_data_id].animations[preview_info.single_animation_id]
 		]
 
+	if single_animation_data.frames[0].data[0].animations.size() == 0:
+		return
+		
 	preview_button.pressed = true
 
 	var doit = _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
