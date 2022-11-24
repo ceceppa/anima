@@ -1,10 +1,17 @@
 tool
-extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
+extends "res://addons/anima/visual-editor/shared/AnimaMenuButton.gd"
 
 var _anima: AnimaNode
 
 func _ready():
 	_disabled_icon_color = Color("#ff8a8c")
+
+	set_items([
+		{ icon = "res://addons/anima/visual-editor/icons/Play.svg", label = "Play once" },
+		{ icon = "res://addons/anima/visual-editor/icons/PlayOnEdit.svg", label = "Play on animation change" }
+	])
+	
+	set_show_panel_on(12)
 
 func _on_Preview_toggled(button_pressed):
 	._on_Button_toggled(button_pressed)
@@ -25,3 +32,4 @@ func _on_Preview_toggled(button_pressed):
 	disabled = button_pressed
 
 	update()
+

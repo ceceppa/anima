@@ -12,5 +12,4 @@ position = Vector2( 490, 280 )
 texture = ExtResource( 2 )
 
 [node name="ShowAllDemos" parent="." instance=ExtResource( 3 )]
-visible = false
 anchor_right = 0.3

@@ -7,7 +7,7 @@ export (StyleBoxFlat) var test setget set_test
 var anima: AnimaNode 
 
 func _ready():
-	$AnimaVisualNode.play_animation("default")
+#	$AnimaVisualNode.play_animation("default")
 
 #	var anima: AnimaNode = Anima.begin_single_shot(self)
 
@@ -80,8 +80,8 @@ func _ready():
 #	).play_with_delay(2)
 	Anima.begin(self) \
 		.with(
-			Anima.Node($Button).anima_animation("pulse", 0.2)
-		).loop_with_delay(3.0)
+			Anima.Node($Button).anima_animation("headshake", 1)
+		).play()
 
 var _temp
 

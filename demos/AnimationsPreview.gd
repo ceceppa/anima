@@ -2,7 +2,7 @@ extends Control
 
 func _ready():
 	_setup_list()
-
+	
 func _setup_list() -> void:
 	var animations = AnimaAnimationsUtils.get_available_animations()
 	var base = AnimaAnimationsUtils.BASE_PATH
@@ -67,7 +67,7 @@ func _play_animation(node: Node, button: Button):
 	node.hide()
 
 	var anima = Anima.begin(clone, 'control_test')
-	anima.then( Anima.Node(clone).anima_animation(script_name, duration).debug() )
+	anima.then( Anima.Node(clone).anima_animation(script_name, duration) )
 	anima.play()
 	
 	yield(anima, "animation_completed")

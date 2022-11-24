@@ -29,5 +29,10 @@ func _on_easing_button_pressed(easing_value: int) -> void:
 	var logo_size = AnimaNodesProperties.get_size($Container/SpriteContainer/Anima)
 
 	var anima = Anima.begin(self, 'easings')
-	anima.then({node = $Container/SpriteContainer/Anima, property = "position", from = Vector2(100, 100), to = Vector2(size.x - logo_size.x - 100, 100), easing = easing_value, duration = 1})
+	anima.then(
+		Anima.Node($Container/SpriteContainer/Anima) \
+			.anima_position(Vector2(size.x - logo_size.x - 100, 100), 1) \
+			.anima_from(Vector2(100, 100)) \
+			.anima_easing(easing_value)
+		)
 	anima.play()

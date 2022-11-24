@@ -1,14 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://demos/resources/anima-preview.png" type="Texture" id=1]
 [ext_resource path="res://demos/AnimationsPreview.gd" type="Script" id=2]
-[ext_resource path="res://demos/resources/Lato-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=4]
-
-[sub_resource type="DynamicFont" id=1]
-size = 100
-use_filter = true
-font_data = ExtResource( 3 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.101961, 0.12549, 0.172549, 1 )
@@ -54,11 +48,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ControlTest" type="Label" parent="HBoxContainer/VBoxContainer/ControlContainer"]
-margin_left = 202.0
-margin_top = 67.0
-margin_right = 493.0
-margin_bottom = 188.0
-custom_fonts/font = SubResource( 1 )
+margin_left = 313.0
+margin_top = 115.0
+margin_right = 383.0
+margin_bottom = 140.0
 text = "Anima"
 
 [node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
@@ -170,6 +163,9 @@ one_shot = true
 [node name="ShowAllDemos" parent="." instance=ExtResource( 4 )]
 anchor_left = 0.3
 anchor_right = 0.3
+__meta__ = {
+"_editor_description_": ""
+}
 
 [connection signal="pressed" from="HBoxContainer/ScrollContainer/PanelContainer/ListContainer/VBoxContainer/ControlCheckbox" to="." method="_on_ControlCheckbox_pressed"]
 [connection signal="pressed" from="HBoxContainer/ScrollContainer/PanelContainer/ListContainer/VBoxContainer/SpriteCheckbox" to="." method="_on_SpriteCheckbox_pressed"]

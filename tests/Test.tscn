@@ -20,10 +20,10 @@ script = ExtResource( 1 )
 test = SubResource( 5 )
 
 [node name="Button" type="Button" parent="."]
-margin_left = 121.0
-margin_top = 286.0
-margin_right = 299.0
-margin_bottom = 338.0
+margin_left = 141.0
+margin_top = 190.0
+margin_right = 319.0
+margin_bottom = 242.0
 rect_pivot_offset = Vector2( 89, 26 )
 __meta__ = {
 "__initial_easing": "easing",

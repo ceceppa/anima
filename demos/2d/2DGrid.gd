@@ -69,16 +69,17 @@ func _init_balls() -> void:
 
 func _on_ball_pressed(from: Vector2) -> void:
 	var anima := Anima.begin(self)
-	
+	var formula = $HBoxContainer/Formula.get_selected_id()
+
 	anima.then(
 		Anima.Grid($Grid, Vector2(_columns, _rows), 0.05, ANIMA.GRID.FROM_POINT, from) \
-			.anima_distance_formula($HBoxContainer/Formula.get_selected_id()) \
+			.anima_distance_formula(formula) \
 			.anima_animation("grid_test_in", 0.6)
 	) \
 	.wait(0.2) \
 	.then(
 		Anima.Grid($Grid, Vector2(_columns, _rows), 0.05, ANIMA.GRID.FROM_POINT, from) \
-			.anima_distance_formula($HBoxContainer/Formula.get_selected_id()) \
+			.anima_distance_formula(formula) \
 			.anima_animation("grid_test_out", 0.3) \
 	) \
 	.play()

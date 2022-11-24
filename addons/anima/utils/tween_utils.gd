@@ -15,7 +15,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 
 	var meta_key = "_initial_relative_value_" + animation_data.property
 
-	if relative and node.has_meta(meta_key):
+	if relative and node.has_meta(meta_key + "_to"):
 		from = node.get_meta(meta_key + "_to")
 	elif animation_data.has('from'):
 		from = maybe_calculate_value(animation_data.from, animation_data)
@@ -29,7 +29,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if animation_data.has('to'):
 		var start = current_value if is_backwards_animation else from
 
-		if relative:
+		if relative and node.has_meta(meta_key):
 			start = node.get_meta(meta_key)
 
 		to = maybe_calculate_value(animation_data.to, animation_data)

@@ -107,7 +107,7 @@ func anima_size_y(size: float, duration = null) -> AnimaDeclarationForProperty:
 func anima_size_z(size: float, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "size:z", to = size, duration = duration })
 
-func anima_rotate(rotate: float, pivot: int, duration = null) -> AnimaDeclarationForProperty:
+func anima_rotate(rotate: float, pivot: int = ANIMA.PIVOT.CENTER, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "rotate", to = rotate, duration = duration, pivot = pivot })
 
 func anima_rotate3D(rotate: Vector3, duration = null) -> AnimaDeclarationForProperty:

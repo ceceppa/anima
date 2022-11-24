@@ -39,7 +39,6 @@ func _on_NumberEdit_text_changed(new_text: String):
 	if is_valid:
 		_old_text = new_text
 
-		emit_signal("changed")
 	else:
 		text = _old_text
 
@@ -75,3 +74,8 @@ func get_type() -> int:
 func _on_NumberEdit_type_changed(new_type):
 	if new_type != Type.STRING:
 		align = ALIGN_RIGHT
+
+
+func _on_NumberEdit_gui_input(event):
+	if event is InputEventKey and event.scancode == KEY_ENTER and event.pressed == false:
+		emit_signal("changed")

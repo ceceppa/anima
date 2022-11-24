@@ -28,34 +28,32 @@ func _ready():
 
 	$tile.free()
 
-	Anima.register_animation(self, 'gridAnimation')
+	AnimaAnimationsUtils.register_animation(\"gridAnimation\", gridAnimation())
 
-	var anima = Anima.begin($Grid)
-	anima.then({ group = $Grid, items_delay = 0.05, duration = 1, animation = 'gridAnimation' })
+	Anima.begin_single_shot($Grid) \\
+		.then(
+			Anima.Group($Grid, 0.05) \\
+				.anima_animation(\"gridAnimation\", 1) \\
+		) \\
+		.play_with_delay(0.5)
 
-	anima.play_with_delay(0.5)
-
-	yield(anima, \"animation_completed\")
-	print('yay, all done :)')
-
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
+func gridAnimation() -> Dictionary:
 	var size = self.rect_size
 	var center_x = (size.x / 2) - (_tile_size.x / 2)
 
-	var position_frames = [
-		{ to = Vector2(center_x, -100) },
-	]
-
-	var zooom_frames = [
-		{ from = Vector2(1, 1), to = Vector2(0, 0) },
-	]
-
-	var opacity = [
-		{ from = 1, to = 0 }
-	]
-
-	anima_tween.add_frames(data, \"scale\", zooom_frames)
-	anima_tween.add_frames(data, \"position\", position_frames)
+	return {
+		from = {
+			opacity = 1,
+			scale = Vector2(1, 1)
+		},
+		to = {
+			x = \"(../..:size:x / 2) - (:size:x / 2)\",
+			y = - 100,
+#			position = Vector2(center_x, - 100),
+			scale = Vector2(0, 0),
+			opacity = 0,
+		}
+	}
 
 "
 

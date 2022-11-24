@@ -34,7 +34,6 @@ func _init(_add_initial_values_callback: FuncRef, add_animtion_data_callback: Fu
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, meta_data_prefix: String) -> float:
 	var last_duration := 0.0
 	var relative_properties: Array = [] 
-	# "x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
 	var easing = full_keyframes_data.easing if full_keyframes_data.has("easing") else null
 
@@ -111,6 +110,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 				value += property_value
 
 		var data := { percentage = 0, value = value }
+		
 		if animation_data.has("initial_values") and animation_data.initial_values.has(property_to_animate):
 			data.value = animation_data.initial_values[property_to_animate]
 
@@ -134,8 +134,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary, met
 			if typeof(current_value) == TYPE_VECTOR2:
 				value = Vector2(value.x, value.y)
 
-#		if current_value != value and relative_properties.find(property_to_animate) < 0:
-#			data.initial_value = value
+		if current_value != value and relative_properties.find(property_to_animate) < 0:
+			data.initial_value = value
 
 	frame_keys.pop_front()
 
@@ -246,11 +246,12 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 			percentage_delay += (start_percentage/ 100.0) * duration
 
 		var from_value
+		var current_value = AnimaNodesProperties.get_property_value(node, animation_data, property_to_animate)
 
 		if previous_key_value.has(property_to_animate):
 			from_value = previous_key_value[property_to_animate].value
 		else:
-			from_value = AnimaNodesProperties.get_property_value(node, animation_data, property_to_animate)
+			from_value = current_value
 
 		var to_value = frame_data[property_to_animate]
 
@@ -279,8 +280,12 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		data.easing = easing
 		data.relative = relative
 
-		if not relative:
-			data.from = from_value
+		if relative:
+			var meta_key = "_initial_relative_value_" + property_name
+
+			data.node.set_meta(meta_key, current_value)
+
+		data.from = from_value
 
 		if property_name == "opacity":
 			data.easing = null

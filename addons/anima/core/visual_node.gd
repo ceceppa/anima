@@ -180,6 +180,7 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	var node_path: String = animation_data.node_path
 	var node: Node = source_node.get_node(node_path)
 
+
 	var anima_data = {
 		node = node,
 		__ignore_warning = true
@@ -241,9 +242,6 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 					
 					if value != null:
 						anima_data[key] = animation.property[key]
-
-	prints(anima_data)
-
 	anima_data._root_node = source_node
 
 	return anima_data

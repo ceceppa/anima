@@ -32,6 +32,9 @@ func _ready():
 
 	_update_title()
 
+	if _animation_name == "" and _property_name == "":
+		_title.pressed = true
+
 func get_data() -> Dictionary:
 	if _property_data == null:
 		_property_data = find_node("PropertyData")

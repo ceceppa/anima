@@ -16,6 +16,7 @@ bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
 [node name="Button" type="Button"]
 margin_right = 48.0
+rect_pivot_offset = Vector2( 24, 16.5 )
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 1 )
@@ -287,7 +288,10 @@ __meta__ = {
 "__initial_AnimaNode__anima_944680552210345459_scale": {
 "percentage": 0,
 "value": Vector2( 1, 1 )
-}
+},
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 
 [node name="Label" type="Label" parent="."]
