@@ -12,7 +12,8 @@
 [node name="AnimaVisualEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 1024, 600 )
+margin_right = -1024.0
+margin_bottom = -600.0
 rect_clip_content = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -36,8 +37,8 @@ custom_constants/margin_bottom = 48
 [node name="WarningLabel" type="Label" parent="MarginContainer"]
 margin_left = 48.0
 margin_top = 48.0
-margin_right = 976.0
-margin_bottom = 552.0
+margin_right = 49.0
+margin_bottom = 2770.0
 rect_pivot_offset = Vector2( 512, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 7
@@ -58,8 +59,8 @@ nodes_list_visible = true
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource( 6 )]
 
 [connection signal="add_node" from="FramesEditor" to="." method="_on_FramesEditor_add_node"]
+[connection signal="change_editor_position" from="FramesEditor" to="." method="_on_FramesEditor_change_editor_position"]
 [connection signal="highlight_node" from="FramesEditor" to="." method="_on_FramesEditor_highlight_node"]
-[connection signal="play_animation" from="FramesEditor" to="." method="_on_FramesEditor_play_animation"]
 [connection signal="preview_animation" from="FramesEditor" to="." method="_on_FramesEditor_preview_animation"]
 [connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
 [connection signal="select_node_property" from="FramesEditor" to="." method="_on_FramesEditor_select_node_property"]

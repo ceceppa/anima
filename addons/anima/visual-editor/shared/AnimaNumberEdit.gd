@@ -71,3 +71,7 @@ func set_type(new_type: int) -> void:
 
 func get_type() -> int:
 	return type
+
+func _on_NumberEdit_type_changed(new_type):
+	if new_type != Type.STRING:
+		align = ALIGN_RIGHT

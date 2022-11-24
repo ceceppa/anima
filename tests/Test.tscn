@@ -178,7 +178,7 @@ __anima_visual_editor_data = {
 "0": {
 "animation": {
 "default_duration": 0.3,
-"name": null,
+"name": "default",
 "visibility_strategy": 0
 },
 "frames": {
@@ -199,13 +199,26 @@ __anima_visual_editor_data = {
 },
 "property_name": "opacity",
 "property_type": 3
+}, {
+"animate_with": 0,
+"animation_name": "",
+"property": {
+"easing": [ "Linear", 0 ],
+"from": null,
+"initialValue": null,
+"pivot": 4,
+"relative": false,
+"to": [ "0", "0" ]
+},
+"property_name": "scale",
+"property_type": 5
 } ],
 "delay": null,
 "duration": null,
 "grid": {
 "animation_type": 9,
 "formula": 1,
-"items_delay": 0.05,
+"items_delay": 0.2,
 "size": Vector2( 3, 4 ),
 "start_point": Vector2( 0, 0 )
 },
@@ -254,6 +267,7 @@ __anima_visual_editor_data = {
 }
 }
 }
+_editor_position = 1
 
 [node name="GridContainer" type="GridContainer" parent="."]
 margin_left = 589.0
@@ -273,6 +287,7 @@ margin_bottom = 37.0
 rect_pivot_offset = Vector2( 18.5, 18.5 )
 text = "1"
 __meta__ = {
+"__initial_Button_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -301,6 +316,7 @@ __meta__ = {
 "percentage": 0,
 "value": 0
 },
+"__initial_Button2_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -313,6 +329,7 @@ margin_bottom = 37.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "3"
 __meta__ = {
+"__initial_Button3_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -325,6 +342,7 @@ margin_bottom = 37.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "4"
 __meta__ = {
+"__initial_Button4_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -337,6 +355,7 @@ margin_bottom = 82.0
 rect_pivot_offset = Vector2( 18.5, 18.5 )
 text = "5"
 __meta__ = {
+"__initial_Button5_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -350,6 +369,7 @@ margin_bottom = 82.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "6"
 __meta__ = {
+"__initial_Button6_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -363,6 +383,7 @@ margin_bottom = 82.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "7"
 __meta__ = {
+"__initial_Button7_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -376,6 +397,7 @@ margin_bottom = 82.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "8"
 __meta__ = {
+"__initial_Button8_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -388,6 +410,7 @@ margin_bottom = 127.0
 rect_pivot_offset = Vector2( 18.5, 18.5 )
 text = "9"
 __meta__ = {
+"__initial_Button9_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -401,6 +424,7 @@ margin_bottom = 127.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "10"
 __meta__ = {
+"__initial_Button10_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -414,6 +438,7 @@ margin_bottom = 127.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "11"
 __meta__ = {
+"__initial_Button11_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true
@@ -427,6 +452,7 @@ margin_bottom = 127.0
 rect_pivot_offset = Vector2( 25, 18.5 )
 text = "12"
 __meta__ = {
+"__initial_Button12_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
 "_visibility_strategy_reverted": true

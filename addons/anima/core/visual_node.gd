@@ -7,8 +7,7 @@ signal on_editor_position_changed(new_position)
 
 enum EDITOR_POSITION {
 	BOTTOM,
-	CANVAS_RIGHT,
-	DOCK_RIGHT
+	RIGHT,
 }
 
 enum USE {
@@ -147,12 +146,23 @@ func _play_animation_from_data(
 
 	_active_anima_node = anima
 
+	var anima_data = anima.get_animation_data()
+	for data in anima_data:
+		var node = data.node
+		var property_to_reset = data.property
+
+		if not _initial_values.has(node) or not _initial_values[node].has(property_to_reset):
+			if not _initial_values.has(node):
+				_initial_values[node] = {}
+
+			_initial_values[node][property_to_reset] = AnimaNodesProperties.get_property_value(node, { property = property_to_reset })
+
 	anima.play()
 
 	yield(anima, "animation_completed")
 
 	if reset_initial_values:
-		reset_scene(1.0)
+		yield(reset_scene(1.0), "completed")
 
 	emit_signal("animation_completed")
 
@@ -223,46 +233,33 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 				elif key == "easing":
 					anima_data.easing = animation.property.easing[1]
 				elif key == "from":
-					var from = animation.property.from
-
-					if from is String and from.find(":") >= 0:
-						anima_data.from = from
-					elif from is Array:
-						if from.size() == 2:
-							anima_data.from = Vector2(from[0], from[1])
-						else:
-							anima_data.from = Vector3(from[0], from[1], from[2])
-					else:
-						anima_data.from = float(from)
+					anima_data.from = _extract_value(animation.property.from)
 				elif key == "to":
-					var to = animation.property.to
-
-					if to is String and to.find(":") >= 0:
-						anima_data.from = to
-					elif to is Array:
-						if to.size() == 2:
-							anima_data.to = Vector2(to[0], to[1])
-						else:
-							anima_data.to = Vector3(to[0], to[1], to[2])
-					else:
-						anima_data.to = float(to)
+					anima_data.to = _extract_value(animation.property.to)
 				else:
 					var value = animation.property[key]
 					
 					if value != null:
 						anima_data[key] = animation.property[key]
 
-	for property in properties_to_reset:
-		if not _initial_values.has(node) or not _initial_values[node].has(property):
-			if not _initial_values.has(node):
-				_initial_values[node] = {}
-
-			_initial_values[node][property] = AnimaNodesProperties.get_property_value(node, { property = property })
-
+	prints(anima_data)
 
 	anima_data._root_node = source_node
 
 	return anima_data
+
+func _extract_value(value):
+	if value is String and value.find(":") >= 0:
+		return value
+	elif value is Array:
+		if value.size() == 2:
+			return Vector2(value[0], value[1])
+		else:
+			return Vector3(value[0], value[1], value[2])
+	elif value != null:
+		return float(value)
+
+	return null
 
 func reset_scene(clear_timeout: float):
 	if is_instance_valid(_active_anima_node) and not _active_anima_node.is_queued_for_deletion():
@@ -308,7 +305,7 @@ func set_editor_position(new_position: int) -> void:
 	emit_signal("on_editor_position_changed", new_position)
 
 func preview_animation(preview_info: Dictionary) -> void:
-	var animations_data: Dictionary = _get_animation_data_by_name(name)
+	var animations_data: Dictionary = _get_animation_data_by_name(preview_info.animation_name)
 
 	if animations_data.size() == 0:
 		printerr("The selected animation is empty") 
@@ -319,10 +316,14 @@ func preview_animation(preview_info: Dictionary) -> void:
 
 	var single_animation_data := {}
 	
-	single_animation_data.animation = animations_data.animation
-	single_animation_data.frames = {
-		0: animations_data.frames[preview_info.frame_id].duplicate()
-	}
+	if preview_info.has("frame_id"):
+		single_animation_data.animation = animations_data.animation
+
+		single_animation_data.frames = {
+			0: animations_data.frames[preview_info.frame_id].duplicate()
+		}
+	else:
+		single_animation_data = animations_data
 
 	if preview_info.has("animation_data_id"):
 		single_animation_data.frames.erase("data")
@@ -339,6 +340,7 @@ func preview_animation(preview_info: Dictionary) -> void:
 		]
 
 	preview_button.pressed = true
+
 	var doit = _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
 
 	yield(doit, "completed")

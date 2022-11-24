@@ -46,6 +46,7 @@ alignment = 2
 [node name="Title" parent="ActionsContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 margin_right = 903.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 451.5, 24.5 )
 custom_styles/normal = SubResource( 2 )
 text = "No animation defined"
@@ -466,7 +467,8 @@ size_flags_vertical = 3
 
 [node name="Preview" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 13 )]
 visible = false
-margin_right = 48.0
+margin_bottom = 49.0
+rect_pivot_offset = Vector2( 24, 24.5 )
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,
@@ -748,6 +750,7 @@ rect_min_size = Vector2( 8, 0 )
 [node name="PropertyOrAnimation" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 9 )]
 margin_left = 16.0
 margin_right = 65.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 49, 49 )
 rect_pivot_offset = Vector2( 24.5, 24.5 )
 hint_tooltip = "Set the type of animation to use"
@@ -766,6 +769,7 @@ transparent = true
 [node name="Remove" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 2 )]
 margin_left = 73.0
 margin_right = 121.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 icon = ExtResource( 7 )
 icon_align = 1
@@ -1050,6 +1054,8 @@ margin_bottom = 49.0
 
 [node name="BGColor" parent="Control" instance=ExtResource( 11 )]
 visible = false
+margin_right = 1024.0
+margin_bottom = 73.0
 size_flags_vertical = 3
 color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
@@ -1073,8 +1079,8 @@ margin_bottom = 61.0
 
 [node name="PropertyData" type="GridContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
-margin_right = 425.0
-margin_bottom = 341.0
+margin_right = 1000.0
+margin_bottom = 273.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 12
 custom_constants/hseparation = 12
@@ -1084,9 +1090,9 @@ __meta__ = {
 }
 
 [node name="From2" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 10.0
+margin_top = 4.0
 margin_right = 160.0
-margin_bottom = 35.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "From:"
@@ -1097,16 +1103,16 @@ __meta__ = {
 
 [node name="FromValue" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 6 )]
 margin_left = 172.0
-margin_right = 480.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 0, 45 )
+margin_right = 1000.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 414, 24.5 )
 type = 4
 
 [node name="To" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 67.0
+margin_top = 49.0
 margin_right = 160.0
-margin_bottom = 92.0
+margin_bottom = 74.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "To:"
@@ -1117,17 +1123,17 @@ __meta__ = {
 
 [node name="ToValue" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 6 )]
 margin_left = 172.0
-margin_top = 57.0
-margin_right = 480.0
-margin_bottom = 102.0
-rect_min_size = Vector2( 0, 45 )
+margin_top = 45.0
+margin_right = 1000.0
+margin_bottom = 78.0
+rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 414, 24.5 )
 type = 4
 
 [node name="Initial" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 124.0
+margin_top = 94.0
 margin_right = 160.0
-margin_bottom = 149.0
+margin_bottom = 119.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "Initial Value"
@@ -1138,18 +1144,18 @@ __meta__ = {
 
 [node name="InitialValue" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 6 )]
 margin_left = 172.0
-margin_top = 114.0
-margin_right = 480.0
-margin_bottom = 159.0
-rect_min_size = Vector2( 0, 45 )
+margin_top = 90.0
+margin_right = 1000.0
+margin_bottom = 123.0
+rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 414, 24.5 )
 label = "none"
 type = 4
 
 [node name="Relative" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 182.0
+margin_top = 146.0
 margin_right = 160.0
-margin_bottom = 207.0
+margin_bottom = 171.0
 rect_min_size = Vector2( 120, 0 )
 text = "Relative"
 __meta__ = {
@@ -1159,9 +1165,9 @@ __meta__ = {
 
 [node name="RelativeCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/PropertyData"]
 margin_left = 172.0
-margin_top = 171.0
-margin_right = 425.0
-margin_bottom = 219.0
+margin_top = 135.0
+margin_right = 1000.0
+margin_bottom = 183.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 text = "Relative value"
 __meta__ = {
@@ -1169,9 +1175,9 @@ __meta__ = {
 }
 
 [node name="Pivot" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 243.0
+margin_top = 199.0
 margin_right = 160.0
-margin_bottom = 268.0
+margin_bottom = 224.0
 rect_min_size = Vector2( 120, 0 )
 text = "Pivot"
 __meta__ = {
@@ -1182,14 +1188,14 @@ __meta__ = {
 [node name="PivotButton" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 8 )]
 anchor_right = 0.0
 margin_left = 172.0
-margin_top = 231.0
-margin_right = 425.0
-margin_bottom = 280.0
+margin_top = 195.0
+margin_right = 1000.0
+margin_bottom = 228.0
 
 [node name="Easing" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 304.0
+margin_top = 244.0
 margin_right = 160.0
-margin_bottom = 329.0
+margin_bottom = 269.0
 rect_min_size = Vector2( 160, 0 )
 text = "Easing"
 __meta__ = {
@@ -1199,9 +1205,9 @@ __meta__ = {
 
 [node name="EasingButton" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 2 )]
 margin_left = 172.0
-margin_top = 292.0
-margin_right = 425.0
-margin_bottom = 341.0
+margin_top = 240.0
+margin_right = 1000.0
+margin_bottom = 273.0
 rect_pivot_offset = Vector2( 126.5, 24.5 )
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
@@ -1480,6 +1486,7 @@ __meta__ = {
 
 [node name="SelectProperty" parent="MarginContainer/VBoxContainer" instance=ExtResource( 2 )]
 margin_right = 1000.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 212.5, 24.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3

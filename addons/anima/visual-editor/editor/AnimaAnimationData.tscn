@@ -51,6 +51,7 @@ color = Color( 0.113725, 0.207843, 0.341176, 1 )
 [node name="Title" parent="." instance=ExtResource( 9 )]
 anchor_right = 0.0
 margin_right = 1024.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 512, 24.5 )
 custom_styles/normal = SubResource( 21 )
 __meta__ = {
@@ -640,8 +641,7 @@ __meta__ = {
 },
 "__initial_Title__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 
 [node name="ActionsContainer" type="HBoxContainer" parent="Title"]
@@ -671,6 +671,8 @@ alignment = 1
 [node name="Preview" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource( 6 )]
 margin_left = 28.0
 margin_right = 76.0
+margin_bottom = 49.0
+rect_pivot_offset = Vector2( 24, 24.5 )
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,
@@ -939,8 +941,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview2__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="Label" type="Label" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer"]
@@ -953,6 +954,7 @@ rect_min_size = Vector2( 8, 0 )
 [node name="Time" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 100.0
 margin_right = 148.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Show animation duration and delay"
 toggle_mode = true
@@ -1230,14 +1232,14 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Time__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
 [node name="AnimateAs" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 156.0
 margin_right = 204.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Select how to animate the group of nodes"
 toggle_mode = true
@@ -1523,14 +1525,14 @@ __meta__ = {
 },
 "__initial_AnimateAs__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
 [node name="AddAnimation" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 212.0
 margin_right = 260.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 icon = ExtResource( 4 )
 icon_align = 1
@@ -1826,14 +1828,14 @@ __meta__ = {
 "value": Vector2( 1, 1 )
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
 [node name="Remove" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 268.0
 margin_right = 316.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Delete the current animation"
 icon = ExtResource( 7 )
@@ -2130,8 +2132,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__initial_Remove__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 style = 2
 transparent = true
@@ -2155,7 +2156,7 @@ custom_constants/separation = 24
 [node name="NodeOrGroup" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
 margin_right = 1000.0
-margin_bottom = 493.0
+margin_bottom = 429.0
 rect_min_size = Vector2( 0, 32 )
 rect_pivot_offset = Vector2( 500, 48.5 )
 
@@ -2167,6 +2168,7 @@ columns = 3
 
 [node name="AsNode" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridContainer" instance=ExtResource( 1 )]
 margin_right = 328.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 83, 49 )
 rect_pivot_offset = Vector2( 164, 24.5 )
 hint_tooltip = "Animates the single node only"
@@ -2451,6 +2453,7 @@ __meta__ = {
 [node name="AsGroup" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridContainer" instance=ExtResource( 1 )]
 margin_left = 336.0
 margin_right = 664.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 83, 49 )
 rect_pivot_offset = Vector2( 164, 24.5 )
 hint_tooltip = "Animates the direct children as group of nodes"
@@ -2736,6 +2739,7 @@ __meta__ = {
 [node name="AsGrid" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridContainer" instance=ExtResource( 1 )]
 margin_left = 672.0
 margin_right = 1000.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 83, 49 )
 rect_pivot_offset = Vector2( 164, 24.5 )
 hint_tooltip = "Animates the direct children as grid of nodes"
@@ -3023,14 +3027,14 @@ __meta__ = {
 visible = false
 margin_top = 57.0
 margin_right = 1000.0
-margin_bottom = 224.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 0, 24 )
 size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData"]
 margin_right = 1000.0
-margin_bottom = 167.0
+margin_bottom = 143.0
 custom_constants/margin_right = 24
 custom_constants/margin_top = 12
 custom_constants/margin_left = 24
@@ -3040,66 +3044,65 @@ custom_constants/margin_bottom = 12
 margin_left = 24.0
 margin_top = 12.0
 margin_right = 976.0
-margin_bottom = 155.0
+margin_bottom = 131.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
 [node name="LabelItemsDelay" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-margin_top = 10.0
+margin_top = 4.0
 margin_right = 171.0
-margin_bottom = 35.0
+margin_bottom = 29.0
 text = "Items delay (s):"
 
 [node name="ItemsDelay" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
 margin_left = 179.0
 margin_right = 952.0
-margin_bottom = 45.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
 text = "0.01"
-align = 2
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-margin_top = 59.0
+margin_top = 47.0
 margin_right = 171.0
-margin_bottom = 84.0
+margin_bottom = 72.0
 text = "Animation type:"
 
 [node name="AnimationGroupType" type="OptionButton" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
 margin_left = 179.0
-margin_top = 53.0
+margin_top = 41.0
 margin_right = 952.0
-margin_bottom = 90.0
+margin_bottom = 78.0
 text = "From Top"
 items = [ "From Top", null, false, 0, null, "From Bottom", null, false, 1, null, "From Center", null, false, 2, null, "Odds Only", null, false, 3, null, "Even Only", null, false, 4, null, "Random", null, false, 5, null, "Together", null, false, 6, null, "From Index", null, false, 7, null ]
 selected = 0
 
 [node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-margin_top = 108.0
+margin_top = 90.0
 margin_right = 171.0
-margin_bottom = 133.0
+margin_bottom = 115.0
 text = "Start point:"
 
 [node name="StartIndex" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer" instance=ExtResource( 14 )]
 margin_left = 179.0
-margin_top = 98.0
+margin_top = 86.0
 margin_right = 952.0
-margin_bottom = 143.0
+margin_bottom = 119.0
 text = "0"
-align = 2
 type = 0
 min_value = 0.0
 
 [node name="GridData" type="VBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup"]
 visible = false
-margin_top = 232.0
+margin_top = 208.0
 margin_right = 1000.0
-margin_bottom = 493.0
+margin_bottom = 429.0
 rect_pivot_offset = Vector2( 0, 24 )
 size_flags_horizontal = 3
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData"]
 margin_right = 1000.0
-margin_bottom = 261.0
+margin_bottom = 221.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 12
@@ -3107,43 +3110,44 @@ custom_constants/hseparation = 12
 columns = 2
 
 [node name="SizeLabel" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-margin_top = 12.0
+margin_top = 4.0
 margin_right = 185.0
-margin_bottom = 37.0
+margin_bottom = 29.0
 text = "Size:"
 
 [node name="Size" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
 margin_left = 197.0
 margin_right = 1000.0
-margin_bottom = 49.0
+margin_bottom = 33.0
 rect_pivot_offset = Vector2( -581, 118 )
 size_flags_horizontal = 3
 
 [node name="x" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size" instance=ExtResource( 14 )]
-margin_right = 351.0
-margin_bottom = 49.0
+margin_right = 144.0
+margin_bottom = 33.0
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size"]
-margin_left = 359.0
-margin_top = 12.0
-margin_right = 371.0
-margin_bottom = 37.0
+margin_left = 152.0
+margin_top = 4.0
+margin_right = 164.0
+margin_bottom = 29.0
 text = "x"
 
 [node name="y" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size" instance=ExtResource( 14 )]
-margin_left = 379.0
-margin_right = 731.0
-margin_bottom = 49.0
+margin_left = 172.0
+margin_right = 316.0
+margin_bottom = 33.0
 caret_blink = true
 caret_blink_speed = 0.5
 type = 2
 
 [node name="Button" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size" instance=ExtResource( 1 )]
-margin_left = 739.0
-margin_right = 803.0
+margin_left = 324.0
+margin_right = 388.0
+margin_bottom = 33.0
 hint_tooltip = "Get grid size"
 icon = ExtResource( 11 )
 icon_align = 1
@@ -3447,57 +3451,56 @@ __meta__ = {
 }
 
 [node name="LabelItemsDelay" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-margin_top = 71.0
+margin_top = 49.0
 margin_right = 185.0
-margin_bottom = 96.0
+margin_bottom = 74.0
 text = "Items delay (s):"
 
 [node name="ItemsDelay" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer" instance=ExtResource( 14 )]
 margin_left = 197.0
-margin_top = 61.0
+margin_top = 45.0
 margin_right = 1000.0
-margin_bottom = 106.0
+margin_bottom = 78.0
 text = "0.01"
-align = 2
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-margin_top = 124.0
+margin_top = 96.0
 margin_right = 185.0
-margin_bottom = 149.0
+margin_bottom = 121.0
 text = "Animation type:"
 
 [node name="AnimationGridType" type="OptionButton" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
 margin_left = 197.0
-margin_top = 118.0
+margin_top = 90.0
 margin_right = 1000.0
-margin_bottom = 155.0
+margin_bottom = 127.0
 text = "Together"
 items = [ "Together", null, false, 0, null, "Sequence Top Left", null, false, 1, null, "Sequence Bottom Right", null, false, 2, null, "Columns Odd", null, false, 3, null, "Columns Even", null, false, 4, null, "Rows Odd", null, false, 5, null, "Rows Even", null, false, 6, null, "Odd Items", null, false, 7, null, "Even Items", null, false, 8, null, "From Center", null, false, 9, null, "From Point", null, false, 10, null, "Random", null, false, 11, null ]
 selected = 0
 
 [node name="StartPoint" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-margin_top = 177.0
+margin_top = 143.0
 margin_right = 185.0
-margin_bottom = 202.0
+margin_bottom = 168.0
 text = "Start Point:"
 
 [node name="Vector2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
 margin_left = 197.0
-margin_top = 167.0
+margin_top = 139.0
 margin_right = 1000.0
-margin_bottom = 212.0
+margin_bottom = 172.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2"]
 margin_right = 397.0
-margin_bottom = 45.0
+margin_bottom = 33.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/X"]
 margin_right = 32.0
-margin_bottom = 45.0
+margin_bottom = 33.0
 rect_min_size = Vector2( 32, 32 )
 custom_styles/panel = SubResource( 20 )
 
@@ -3514,21 +3517,21 @@ valign = 1
 
 [node name="pointX" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/X" instance=ExtResource( 14 )]
 margin_left = 32.0
-margin_right = 397.0
-margin_bottom = 45.0
+margin_right = 176.0
+margin_bottom = 33.0
 caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="Y" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2"]
 margin_left = 405.0
 margin_right = 803.0
-margin_bottom = 45.0
+margin_bottom = 33.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/Y"]
 margin_right = 32.0
-margin_bottom = 45.0
+margin_bottom = 33.0
 rect_min_size = Vector2( 32, 32 )
 custom_styles/panel = SubResource( 20 )
 
@@ -3545,31 +3548,30 @@ valign = 1
 
 [node name="pointY" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/Y" instance=ExtResource( 14 )]
 margin_left = 32.0
-margin_right = 398.0
-margin_bottom = 45.0
+margin_right = 176.0
+margin_bottom = 33.0
 caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-margin_top = 230.0
+margin_top = 190.0
 margin_right = 185.0
-margin_bottom = 255.0
+margin_bottom = 215.0
 text = "Distance formula"
 
 [node name="DistanceFormula" type="OptionButton" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
 margin_left = 197.0
-margin_top = 224.0
+margin_top = 184.0
 margin_right = 1000.0
-margin_bottom = 261.0
+margin_bottom = 221.0
 text = "Euclidian"
 items = [ "Euclidian", null, false, 0, null, "Manhattan", null, false, 1, null, "Chebyshev", null, false, 2, null, "Row", null, false, 3, null, "Column", null, false, 4, null, "Diagonal", null, false, 5, null, "Invese Diagonal", null, false, 6, null ]
 selected = 0
 
 [node name="TimeContent" type="GridContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
-margin_top = 517.0
 margin_right = 1000.0
-margin_bottom = 627.0
+margin_bottom = 78.0
 rect_pivot_offset = Vector2( 500, 55 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -3583,9 +3585,9 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TimeContent"]
-margin_top = 12.0
+margin_top = 4.0
 margin_right = 132.0
-margin_bottom = 37.0
+margin_bottom = 29.0
 text = "Duration (s):"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -3594,15 +3596,16 @@ __meta__ = {
 [node name="Duration" parent="MarginContainer/VBoxContainer/TimeContent" instance=ExtResource( 5 )]
 margin_left = 144.0
 margin_right = 1000.0
-margin_bottom = 49.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 410, 24.5 )
 label = "default duration"
 show_relative_selector = false
 
 [node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TimeContent"]
-margin_top = 73.0
+margin_top = 49.0
 margin_right = 132.0
-margin_bottom = 98.0
+margin_bottom = 74.0
 text = "Delay (s):"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -3610,9 +3613,10 @@ __meta__ = {
 
 [node name="Delay" parent="MarginContainer/VBoxContainer/TimeContent" instance=ExtResource( 5 )]
 margin_left = 144.0
-margin_top = 61.0
+margin_top = 45.0
 margin_right = 1000.0
-margin_bottom = 110.0
+margin_bottom = 78.0
+rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 410, 24.5 )
 label = "none"
 show_relative_selector = false

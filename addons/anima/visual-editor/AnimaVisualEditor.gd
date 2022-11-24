@@ -5,7 +5,8 @@ signal switch_position
 signal connections_updated(new_list)
 signal visual_builder_updated
 signal highlight_node(node)
-signal play_animation(name)
+signal play_animation(animation_info)
+signal change_editor_position(new_position)
 
 onready var _frames_editor: Control = find_node("FramesEditor")
 onready var _nodes_window: WindowDialog = find_node("NodesWindow")
@@ -30,6 +31,7 @@ var _is_selecting_relative_property := false
 var _on_property_selected_action: int = PROPERTY_SELECTED_ACTION.ADD_NEW_ANIMATION
 var _source_animation_data_node: Node
 var _current_animation := "0"
+var _flow_direction := 0
 
 func _ready():
 	_frames_editor.hide()
@@ -77,14 +79,26 @@ func show() -> void:
 	.show()
 
 func update_flow_direction(new_direction: int) -> void:
+	_flow_direction = new_direction
 	$FramesEditor.update_flow_direction(new_direction)
+
+	if _flow_direction == 0:
+		rect_min_size.y = 420
 
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
-	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	if _frames_editor == null:
 		return
+
+#	if _flow_direction == 1:
+	visible = is_graph_edit_visible
+	_frames_editor.show()
+	_warning_label.hide()
+
+	return is_graph_edit_visible
+
+	var anima: AnimaNode = Anima.begin_single_shot(self)
 
 	anima.set_default_duration(0.3)
 
@@ -109,6 +123,7 @@ func _maybe_show_graph_edit() -> bool:
 		_warning_label.visible = true
 
 		anima.play()
+
 	elif _frames_editor.visible:
 		_frames_editor.visible = true
 		_warning_label.visible = true
@@ -228,16 +243,6 @@ func _on_AnimaNodeEditor_show_nodes_list(offset: Vector2, position: Vector2):
 func _on_AnimaNodeEditor_hide_nodes_list():
 	_nodes_window.hide()
 
-func _on_PlayAnimation_pressed():
-	var visual_node: Node = null #AnimaUI.get_selected_anima_visual_node()
-	var animation_id: int = _animation_selector.get_selected_id()
-	var name: String = _animation_selector.get_item_text(animation_id)
-	var speed = float(_animation_speed.text)
-
-	visual_node.play_animation(name, speed, true)
-
-	yield(visual_node, "animation_completed")
-
 func _on_animation_started(node: Node) -> void:
 	if node == null:
 		printerr("_on_animation_started: Node not found")
@@ -325,9 +330,6 @@ func _on_select_easing(source: Node) -> void:
 func _on_AnimaEasingsWindow_easing_selected(easing_name: String, easing_value: int):
 	_animation_source_node.set_easing(easing_name, easing_value)
 
-func _on_FramesEditor_play_animation(name: String):
-	emit_signal("play_animation", name)
-
 func _on_FramesEditor_select_node_property(source: Node, node_path: String):
 	_on_property_selected_action = PROPERTY_SELECTED_ACTION.UPDATE_ANIMATION
 	_source_animation_data_node = source
@@ -368,7 +370,13 @@ func _swap_frames(from: int, to: int) -> void:
 	_restore_data(data)
 
 func _on_FramesEditor_preview_animation(preview_info):
+	if not preview_info.has("animation_name"):
+		preview_info.animation_name = _frames_editor.get_selected_animation_name()
+
 	_anima_visual_node.preview_animation(preview_info)
 
 func refresh() -> void:
 	_restore_visual_editor_data()
+
+func _on_FramesEditor_change_editor_position(new_position):
+	emit_signal("change_editor_position", new_position)

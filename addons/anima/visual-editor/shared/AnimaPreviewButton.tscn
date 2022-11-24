@@ -5,7 +5,7 @@
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.gd" type="Script" id=3]
 
 [node name="Preview" instance=ExtResource( 1 )]
-rect_pivot_offset = Vector2( 24, 24.5 )
+rect_pivot_offset = Vector2( 24, 16.5 )
 toggle_mode = true
 icon = ExtResource( 2 )
 icon_align = 1

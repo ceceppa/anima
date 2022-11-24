@@ -92,7 +92,7 @@ func get_data() -> Dictionary:
 		if is_instance_valid(child) and not child.is_queued_for_deletion():
 			animations.push_back(child.get_data())
 
-	return  {
+	var data :=  {
 		node_path = _path,
 		duration = _duration.get_value(),
 		delay = _delay.get_value(),
@@ -111,6 +111,8 @@ func get_data() -> Dictionary:
 			formula = _distance_formula.get_selected_id(),
 		},
 	}
+
+	return data
 
 func restore_data(data: Dictionary) -> void:
 	_is_restoring = true

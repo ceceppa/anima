@@ -30,7 +30,7 @@ onready var _collapse_button = find_node("Collapse")
 onready var _frame_collapsed_title = find_node("FrameCollapsedTitle")
 
 var _source: Node
-var _final_width: float = 640 if OS.get_screen_dpi() > 100 else 460
+var _final_width: float = 640
 var _old_height: float
 var _is_animating := false
 
@@ -363,3 +363,7 @@ func _on_Preview_pressed():
 	}
 
 	emit_signal("preview_animation", preview_info)
+
+func update_size_x(value: float) -> void:
+	rect_min_size.x = value
+	rect_size.x = value

@@ -1,14 +1,28 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.gd" type="Script" id=1]
 
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.172549, 0.164706, 0.196078, 1 )
+border_width_bottom = 1
+border_color = Color( 0.831373, 0.945098, 0.956863, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.172549, 0.164706, 0.196078, 1 )
+border_width_bottom = 1
+border_color = Color( 0.831373, 0.945098, 0.956863, 0 )
+
 [node name="NumberEdit" type="LineEdit"]
-size_flags_horizontal = 3
-size_flags_vertical = 3
+margin_right = 164.0
+custom_styles/focus = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+align = 2
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 type = 1
 
 [connection signal="text_changed" from="." to="." method="_on_NumberEdit_text_changed"]
+[connection signal="type_changed" from="." to="." method="_on_NumberEdit_type_changed"]

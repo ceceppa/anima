@@ -111,6 +111,8 @@ func set_property_to_animate(name: String, type) -> void:
 	_property_name = name
 	_property_type = type
 
+	_property_data.show()
+
 	_set_property_type(type)
 
 	_update_title()
