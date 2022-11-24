@@ -12,20 +12,28 @@ signal select_animation
 signal highlight_node(node)
 signal select_relative_property
 signal select_easing
-signal play_animation(name)
 signal preview_animation(preview_info)
+signal change_editor_position(new_position)
 
 export (bool) var disable_animations := false
 
-onready var _frames_container = find_node("FramesContainer")
+onready var _frames_container1 = find_node("FramesContainer1")
+onready var _frames_container2 = find_node("FramesContainer2")
 onready var _anima_animation = find_node("AnimaAnimation")
 
 var _destination_frame: Control
 var _is_restoring_data := false
 var _animation_node_source: Node
+var _active_frames_container: Node
+var _flow_direction := 0
 
 func _ready():
 	_on_FramesEditor_resized()
+
+	if _active_frames_container == null:
+		_active_frames_container = _frames_container1
+
+	_active_frames_container.show()
 
 func add_animation_for(node: Node, node_path: String) -> Node:
 	var r: Node = _destination_frame.add_animation_for(node, node_path)
@@ -44,14 +52,14 @@ func restore_animation_data(data: Dictionary) -> void:
 	_anima_animation.restore_data(data)
 
 func clear() -> void:
-	for child in _frames_container.get_children():
+	for child in _active_frames_container.get_children():
 		child.animate_entrance_exit = false
 		child.queue_free()
 
 func select_frame(key) -> Node:
 	_destination_frame = null
 
-	for child in _frames_container.get_children():
+	for child in _active_frames_container.get_children():
 		if is_instance_valid(child) and child.get_meta("_key") == key:
 			_destination_frame = child
 
@@ -67,21 +75,12 @@ func set_is_restoring_data(is_restoring: bool) -> void:
 	_is_restoring_data = is_restoring
 
 func update_flow_direction(new_direction: int) -> void:
-	return
-	var flow_container = $AnimaRectangle/ScrollContainer.get_child(0)
-	var new_container = HBoxContainer.new() if new_direction == 0 else VBoxContainer.new()
+	_flow_direction = new_direction
 
-	print(new_direction)
-	for child in flow_container.get_children():
-		flow_container.remove_child(child)
-		new_container.add_child(child)
-
-	new_container.size_flags_horizontal = SIZE_EXPAND_FILL
-	new_container.size_flags_vertical = SIZE_EXPAND_FILL
-
-	flow_container.queue_free()
-	flow_container.queue_free()
-#	$AnimaRectangle/ScrollContainer.add_child(new_container)
+	_active_frames_container = _frames_container2 if new_direction == 1 else _frames_container1
+	_active_frames_container.show()
+	
+	_anima_animation.set_default_editor_position(new_direction)
 
 func _add_component(node: Node) -> void:
 	node.connect("frame_updated", self, "_emit_updated")
@@ -89,13 +88,13 @@ func _add_component(node: Node) -> void:
 
 	node.animate_entrance_exit = not disable_animations
 
-	_frames_container.add_child(node)
+	_active_frames_container.add_child(node)
 
 	node.animate_entrance_exit = true
 
 func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	if key < 0:
-		key = _frames_container.get_child_count()
+		key = _active_frames_container.get_child_count()
 
 	var node = FRAME_ANIMATION.instance()
 
@@ -118,7 +117,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 
 func _on_AnimaAddFrame_add_delay(key := -1):
 	if key < 0:
-		key = _frames_container.get_child_count()
+		key = _active_frames_container.get_child_count()
 
 	var node = FRAME_DELAY.instance()
 
@@ -144,8 +143,8 @@ func _emit_updated() -> void:
 		}
 	}
 
-	for index in _frames_container.get_child_count():
-		var child: Control = _frames_container.get_child(index)
+	for index in _active_frames_container.get_child_count():
+		var child: Control = _active_frames_container.get_child(index)
 
 		if not child.is_queued_for_deletion():
 			data["0"].frames[index] = child.get_data()
@@ -182,8 +181,8 @@ func _on_select_easing(source: Node) -> void:
 
 	emit_signal("select_easing")
 
-func _on_AnimaAnimation_play_animation(name: String):
-	emit_signal("play_animation", name)
+func _on_AnimaAnimation_play_animation(animation_info: Dictionary):
+	emit_signal("preview_animation", animation_info)
 
 func _on_frame_add_node(node_path, destination_frame) -> void:
 	_destination_frame = destination_frame
@@ -195,3 +194,16 @@ func _on_FramesEditor_resized():
 
 func _on_preview_animation(preview_info) -> void:
 	emit_signal("preview_animation",preview_info)
+
+func get_selected_animation_name() -> String:
+	return _anima_animation.get_selected_animation_name()
+
+func _on_FramesEditor_item_rect_changed():
+	if _flow_direction == 0:
+		return
+
+	for child in _frames_container2.get_children():
+		child.call_deferred("update_size_x", rect_size.x)
+
+func _on_AnimaAnimation_change_editor_position(new_position):
+	emit_signal("change_editor_position", new_position)

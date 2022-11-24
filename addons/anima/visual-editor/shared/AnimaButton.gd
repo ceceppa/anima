@@ -45,6 +45,7 @@ var _box_style := StyleBoxFlat.new()
 var _left_padding = 24.0 setget set_left_padding
 var _icon_color := Color.white
 var _ignore_toggle_mode := false
+var _disabled_icon_color = Color("#a0a0a0")
 
 func _ready():
 	_box_style.corner_radius_bottom_left = BORDER_RADIUS
@@ -103,7 +104,7 @@ func _get_bg_color(draw_mode: int) -> Color:
 		final_color = color.darkened(0.3)
 		final_opacity = 1
 	elif draw_mode == STATE.DISABLED:
-		_icon_color = Color("#666")
+		_icon_color = _disabled_icon_color
 		final_color = color
 		final_opacity = 0
 

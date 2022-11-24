@@ -26,11 +26,11 @@ size_flags_vertical = 3
 
 [node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
-margin_right = 1024.0
+margin_right = 1083.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
-margin_top = 57.0
-margin_right = 1024.0
+margin_top = 46.0
+margin_right = 1083.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -41,8 +41,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
-[node name="FramesContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
-margin_bottom = 543.0
+[node name="FramesContainer1" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
+margin_bottom = 554.0
+custom_constants/separation = 12
+
+[node name="FramesContainer2" type="VBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
+visible = false
+margin_left = 12.0
+margin_right = 12.0
+margin_bottom = 554.0
 custom_constants/separation = 12
 
 [node name="AnimaAddFrame" parent="." instance=ExtResource( 3 )]
@@ -52,8 +59,10 @@ margin_right = 1136.0
 margin_bottom = 459.0
 rect_pivot_offset = Vector2( 180, 288 )
 
+[connection signal="item_rect_changed" from="." to="." method="_on_FramesEditor_item_rect_changed"]
 [connection signal="resized" from="." to="." method="_on_FramesEditor_resized"]
 [connection signal="animation_updated" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
-[connection signal="play_animation" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_play_animation"]
+[connection signal="change_editor_position" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_change_editor_position"]
+[connection signal="preview_animation" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_preview_animation"]
 [connection signal="add_delay" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_delay"]
 [connection signal="add_frame" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_frame"]

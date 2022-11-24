@@ -78,6 +78,10 @@ func _ready():
 #			}
 #		}, 0.5)
 #	).play_with_delay(2)
+	Anima.begin(self) \
+		.with(
+			Anima.Node($Button).anima_animation("pulse", 0.2)
+		).loop_with_delay(3.0)
 
 var _temp
 

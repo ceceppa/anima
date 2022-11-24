@@ -147,6 +147,10 @@ Anima="*res://addons/anima/core/anima.gd"
 
 enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
 
+[global]
+
+font=false
+
 [gui]
 
 theme/use_hidpi=true

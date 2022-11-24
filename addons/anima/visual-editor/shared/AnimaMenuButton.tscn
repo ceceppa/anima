@@ -273,8 +273,7 @@ __meta__ = {
 "value": Vector2( 1, 1 )
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="PopupMenu" type="PopupMenu" parent="." index="1"]
