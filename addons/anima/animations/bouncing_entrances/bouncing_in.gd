@@ -3,7 +3,7 @@ var KEYFRAMES := {
 		easing = [0.215, 0.61, 0.355, 1],
 	},
 	0: {
-		opacit"translate:y": 0,
+		opacity = 0,
 		scale = Vector3(0.3, 0.3, 0.3)
 	},
 	20: {
@@ -13,17 +13,17 @@ var KEYFRAMES := {
 		scale = Vector3(0.9, 0.9, 0.9),
 	},
 	60: {
-		opacit"translate:y": 1,
+		opacity = 1,
 		scale = Vector3(1.03, 1.03, 1.03)
 	},
 	80: {
 		scale = Vector3(0.97, 0.97, 0.97)
 	},
 	100: {
-		opacit"translate:y": 1,
+		opacity = 1,
 		scale = Vector3.ONE
 	},
 	initial_values = {
-		opacit"translate:y": 0
+		opacity = 0
 	}
 }

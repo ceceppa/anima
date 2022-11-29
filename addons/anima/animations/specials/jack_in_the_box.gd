@@ -1,6 +1,6 @@
 var KEYFRAMES := {
 	0: {
-		opacit"translate:y": 0,
+		opacity = 0,
 		scale = Vector3(0.1, 0.1, 0.1),
 		rotation = 30,
 	},
@@ -11,7 +11,7 @@ var KEYFRAMES := {
 		rotation = 3,
 	},
 	100: {
-		opacit"translate:y": 1,
+		opacity = 1,
 		scale = Vector3.ONE
 	}
 }

@@ -124,7 +124,7 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			var to_value = next_frame_data.data[property] if next_frame_data != null else null
 			var from_value = current_frame_data.data[property]
 
-			if next_frame_data == null or to_value == from_value:
+			if next_frame_data == null or (typeof(to_value) == typeof(from_value) and to_value == from_value):
 				continue
 
 			var percentage = (next_frame_data.percentage - current_frame_data.percentage) / 100.0
@@ -138,9 +138,9 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			var easing = _get_reserved_property_value(current_frame_data, next_frame_data, "easing")
 			var pivot = _get_reserved_property_value(current_frame_data, next_frame_data, "pivot")
 
-			if keyframes_data.easing:
+			if keyframes_data.has("easing"):
 				frame_data.easing = keyframes_data.easing
-			if keyframes_data.pivot:
+			if keyframes_data.has("pivot"):
 				frame_data.pivot = keyframes_data.pivot
 
 			if easing:
