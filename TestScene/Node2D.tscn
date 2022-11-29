@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://logo.svg" type="Texture" id=1]
-[ext_resource path="res://tests/Node2D.gd" type="Script" id=2]
+[ext_resource path="res://TestScene/Node2D.gd" type="Script" id=2]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )

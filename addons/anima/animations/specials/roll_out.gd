@@ -2,11 +2,11 @@
 
 var KEYFRAMES := {
 	0: {
-		opacity = 1,
+		opacit"translate:y": 1,
 	},
 	100: {
-		opacity = 0,
-		x = ":size:x",
+		opacit"translate:y": 0,
+		"translate:x": ":size:x",
 		rotation = 120
 	}
 }

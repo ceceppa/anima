@@ -1,10 +1,10 @@
 var KEYFRAMES := {
   from = {
-	y = 0,
-	opacity = 1,
+	"translate:y": 0,
+	opacit"translate:y": 1,
   },
   to = {
-	y = "-:size:y",
-	opacity = 0,
+	"translate:y": "-:size:y",
+	opacit"translate:y": 0,
   }
 }

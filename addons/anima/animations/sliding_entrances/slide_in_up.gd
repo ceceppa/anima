@@ -1,8 +1,8 @@
 var KEYFRAMES := {
 	0: {
-		y = ":size:y"
+		"translate:y": ":size:y"
 	},
 	100: {
-		y = 0
+		"translate:y": 0
 	},
 }

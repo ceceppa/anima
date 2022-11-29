@@ -1,9 +1,9 @@
 var KEYFRAMES := {
 	0: {
-		opacity = 1,
+		opacit"translate:y": 1,
 	},
 	100: {
-		x = "-:size:x",
+		"translate:x": "-:size:x",
 		"skew:x": -30,
 	},
 	easing = ANIMA.EASING.EASE_IN
