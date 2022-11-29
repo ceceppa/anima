@@ -15,7 +15,6 @@ var _loop_strategy = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
-var _keyframes_engine := AnimaKeyframesEngine.new(funcref(self, '_apply_initial_values'), funcref(self, 'add_animation_data'))
 var _use_meta_values := true
 var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
 var _is_backwards_tween := false
@@ -33,8 +32,11 @@ func _init(play_mode: int):
 
 	_should_apply_initial_values = !_is_backwards_tween
 
+func _exit_tree():
+	for child in get_children():
+		child.free()
+
 func _ready():
-	connect("tween_started", self, '_on_tween_started')
 	connect("tween_completed", self, '_on_tween_completed')
 
 	#
@@ -83,8 +85,6 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	if animation_data.has("initial_value"):
 		animation_data.initial_values = {}
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
-
-	var ignore_initial_values = animation_data.has("_ignore_initial_values") and animation_data._ignore_initial_values
 
 	if animation_data.has("initial_values"):
 		if not animation_data.has("to"):
@@ -153,7 +153,32 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	add_child(object)
 
 	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
-		node.connect("tree_exiting", self, "_on_node_tree_exiting")
+		node.connect("tree_exiting", self, "_on_node_tree_exiting", [object])
+
+func _interpolate_method(source: Node, method: String, duration: float, tween_in: int, tween_out: int, wait_time: float) -> void:
+	interpolate_method(
+		source,
+		method,
+		0.0,
+		1.0,
+		duration,
+		tween_in,
+		tween_out,
+		wait_time
+	)
+
+func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
+	if animation_data.has("__debug"):
+		printt("add_event_frame", animation_data)
+
+	_interpolate_method(
+		AnimaEvent.new(animation_data, callback_key),
+		"execute_callback",
+		ANIMA.MINIMUM_DURATION,
+		Tween.TRANS_LINEAR,
+		Tween.TRANS_LINEAR,
+		animation_data._wait_time + animation_data.duration
+	)
 
 func _add_initial_values(animation_data: Dictionary) -> void:
 	if _animation_data.has("__debug"):
@@ -177,7 +202,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 			continue
 
 		if value is String:
-			value = AnimaTweenUtils.maybe_calculate_value(value, animation_data)
+			value = AnimaTweenUtils.calculate_dynamic_value(value, animation_data)
 
 		if is_rect2:
 			push_warning("not yet implemented")
@@ -324,7 +349,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 	return new_data
 
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIMA.VISIBILITY.IGNORE):
-	if not animation_data.has('_is_first_frame'):
+	if not animation_data.has('_is_first_frame') or not animation_data._is_first_frame:
 		return
 
 	var should_hide_nodes := false
@@ -358,10 +383,18 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIM
 	node.set_meta(VISIBILITY_STRATEGY_META_KEY, strategy)
 
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
-	if is_instance_valid(get_parent()):
-		return _keyframes_engine.add_frames(animation_data, full_keyframes_data, get_parent().name)
+	if not is_instance_valid(get_parent()):
+		return 0.0
 
-	return 0.0
+	var frames = AnimaKeyframesEngine.parse_frames(animation_data, full_keyframes_data)
+	var duration = animation_data.duration
+
+	for frame in frames:
+		duration = max(duration, frame._wait_time + frame.duration)
+
+		add_animation_data(frame)
+
+	return duration
 
 # We don't want the user to specify the from/to value as color
 # we animate opacity.
@@ -384,9 +417,7 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 
 	return value
 
-func _on_tween_completed(node, _ignore) -> void:
-	node.on_completed()
-
+func _on_tween_completed(_node, _ignore) -> void:
 	_tween_completed += 1
 
 	if _tween_completed >= _animation_data.size() and not is_queued_for_deletion():
@@ -397,8 +428,10 @@ func _on_tween_completed(node, _ignore) -> void:
 func _on_tween_started(node, _ignore) -> void:
 	node.on_started()
 
-func _on_node_tree_exiting() -> void:
+func _on_node_tree_exiting(anima_item: Node) -> void:
 	stop_all()
+
+	anima_item.free()
 
 class AnimatedItem extends Node:
 	var _node: Node
@@ -413,8 +446,43 @@ class AnimatedItem extends Node:
 	var _root_node: Node
 	var _property_data: Dictionary
 	var _easing_curve: Curve
+	var _visibility_applied := false
 
-	func on_started() -> void:
+	func set_animation_data(data: Dictionary, property_data: Dictionary, is_backwards_animation: bool) -> void:
+		_animation_data = data
+		_is_backwards_animation = is_backwards_animation
+
+		if property_data.has("callback"):
+			_callback = property_data.callback
+
+		if property_data.has("param"):
+			_callback_param = property_data.param
+
+		if property_data.has("property"):
+			_property = property_data.property
+
+		if data.has("easing") and data.easing is Curve:
+			_easing_curve = data.easing
+
+		_key = property_data.key if property_data.has("key") else null
+		_subKey = property_data.subkey if property_data.has("subkey") else null
+
+		_node = data.node
+		_node.remove_meta("_visibility_strategy_reverted")
+
+		if _animation_data.has("__debug"):
+			print("Using:")
+			printt("", property_data)
+			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
+			printt("", "AnimatedPropertyWithKeyItem:", self is AnimatedPropertyWithKeyItem)
+			printt("", "AnimatedPropertyWithSubKeyItem:", self is AnimatedPropertyWithSubKeyItem)
+			printt("", "AnimateObjectWithKey:", self is AnimateObjectWithKey)
+			printt("", "AnimateObjectWithSubKey:", self is AnimateObjectWithSubKey)
+			printt("", "AnimateRect2:", self is AnimateRect2)
+
+	func set_visibility_strategy() -> void:
+		_visibility_applied = true
+
 		var visibility_strategy = _node.get_meta(VISIBILITY_STRATEGY_META_KEY) if _node.has_meta(VISIBILITY_STRATEGY_META_KEY) else null
 
 		if _node.has_meta("_visibility_strategy_reverted") or visibility_strategy == null:
@@ -449,60 +517,10 @@ class AnimatedItem extends Node:
 		if should_restore_visibility:
 			_node.show()
 
-		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and \
-												_animation_data._is_first_frame and \
-												_animation_data.has('on_started')
-
-		if should_trigger_on_started:
-			_execute_callback(_animation_data.on_started)
-
-	func on_completed() -> void:
-		if _loop_strategy == ANIMA.LOOP_STRATEGY.RECALCULATE_RELATIVE_DATA:
-			_property_data.clear()
-
-		var should_trigger_on_completed = _animation_data.has('on_completed') and _animation_data.has('_is_last_frame')
-
-		if should_trigger_on_completed:
-			_execute_callback(_animation_data.on_completed)
-
-		var meta_key = "_initial_relative_value_" + _animation_data.property
-
-		if _animation_data._is_last_frame and _animation_data.node.has_meta(meta_key):
-			_animation_data.node.remove_meta(meta_key)
-
-	func set_animation_data(data: Dictionary, property_data: Dictionary, is_backwards_animation: bool) -> void:
-		_animation_data = data
-		_is_backwards_animation = is_backwards_animation
-
-		if property_data.has("callback"):
-			_callback = property_data.callback
-
-		if property_data.has("param"):
-			_callback_param = property_data.param
-
-		if property_data.has("property"):
-			_property = property_data.property
-
-		if data.has("easing") and data.easing is Curve:
-			_easing_curve = data.easing
-
-		_key = property_data.key if property_data.has("key") else null
-		_subKey = property_data.subkey if property_data.has("subkey") else null
-
-		_node = data.node
-		_node.remove_meta("_visibility_strategy_reverted")
-
-		if _animation_data.has("__debug"):
-			print("Using:")
-			printt("", property_data)
-			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
-			printt("", "AnimatedPropertyWithKeyItem:", self is AnimatedPropertyWithKeyItem)
-			printt("", "AnimatedPropertyWithSubKeyItem:", self is AnimatedPropertyWithSubKeyItem)
-			printt("", "AnimateObjectWithKey:", self is AnimateObjectWithKey)
-			printt("", "AnimateObjectWithSubKey:", self is AnimateObjectWithSubKey)
-			printt("", "AnimateRect2:", self is AnimateRect2)
-
 	func animate(elapsed: float) -> void:
+		if not _visibility_applied:
+			set_visibility_strategy()
+
 		if _property_data.size() == 0:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
 
@@ -564,21 +582,6 @@ class AnimatedItem extends Node:
 
 		return s.y
 
-	func _execute_callback(callback) -> void:
-		var fn: FuncRef
-		var args: Array = []
-
-		if callback is Array:
-			fn = callback[0]
-			args = callback[1]
-
-			if _is_backwards_animation:
-				args = callback[2]
-		else:
-			fn = callback
-
-		fn.call_funcv(args)
-
 class AnimatedPropertyItem extends AnimatedItem:
 	func apply_value(value) -> void:
 		_node.set(_property, value)
@@ -619,3 +622,37 @@ class AnimateRect2 extends AnimatedItem:
 
 	func apply_value(value: Rect2) -> void:
 		_node.set(_property, value)
+
+class AnimaEvent extends Node:
+	var _data: Dictionary
+	var _callback
+	var _is_backwards_animation := false
+	var _executed := false
+
+	func _init(animation_data: Dictionary, callback_key: String) -> void:
+		_callback = animation_data[callback_key]
+
+	func execute_callback(elapsed: float) -> void:
+		if elapsed < 1:
+			_executed = false
+
+			return
+
+		if _executed:
+			return
+
+		_executed = elapsed
+
+		var fn: FuncRef
+		var args: Array = []
+
+		if _callback is Array:
+			fn = _callback[0]
+			args = _callback[1]
+
+			if _is_backwards_animation:
+				args = _callback[2]
+		else:
+			fn = _callback
+
+		fn.call_funcv(args)

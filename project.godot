@@ -108,6 +108,16 @@ _global_script_classes=[ {
 "class": "AnimaVisualNode",
 "language": "GDScript",
 "path": "res://addons/anima/core/visual_node.gd"
+}, {
+"base": "Reference",
+"class": "GutHookScript",
+"language": "GDScript",
+"path": "res://addons/gut/hook_script.gd"
+}, {
+"base": "Node",
+"class": "GutTest",
+"language": "GDScript",
+"path": "res://addons/gut/test.gd"
 } ]
 _global_script_class_icons={
 "AnimaAnimationsUtils": "",
@@ -129,7 +139,9 @@ _global_script_class_icons={
 "AnimaStrings": "",
 "AnimaTween": "",
 "AnimaTweenUtils": "",
-"AnimaVisualNode": ""
+"AnimaVisualNode": "",
+"GutHookScript": "",
+"GutTest": ""
 }
 
 [application]
@@ -145,7 +157,7 @@ Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/anima/plugin.cfg", "res://addons/gut/plugin.cfg" )
 
 [global]
 

@@ -402,10 +402,10 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 	for node in nodes:
 		data.node = node
+		data._is_first_frame = true
 
-		if data.has("property") and not data.has("animation"):
-			data._is_first_frame = true
-			data._is_last_frame = true
+		if data.has("on_started"):
+			_anima_tween.add_event_frame(data, "on_started")
 
 		if data.has("animation"):
 			var keyframes = data.animation
@@ -416,7 +416,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 				if keyframes.size() == 0:
 					printerr('animation not found: %s' % data.animation)
 
-					return duration
+					continue
 
 			var real_duration = _anima_tween.add_frames(data, keyframes)
 
@@ -428,6 +428,9 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 		if are_multiple_nodes:
 			delay += data.items_delay
+
+		if data.has("on_completed"):
+			_anima_tween.add_event_frame(data, "on_completed")
 
 	return duration
 

@@ -1,14 +1,14 @@
 var KEYFRAMES := {
 	0: {
-		opacity = 0,
-		y = ":position:y + :size:y"
+		opacit"translate:y": 0,
+		"translate:y": ":position:y + :size:y"
 	},
 	100: {
-		opacity = 1,
-		y = ":position:y"
+		opacit"translate:y": 1,
+		"translate:y": ":position:y"
 	},
 	initial_values = {
-		opacity = 0,
+		opacit"translate:y": 0,
 	}
 }
 

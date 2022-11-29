@@ -1,10 +1,10 @@
 var KEYFRAMES := {
 	100: {
-		opacity = 0,
-		x = "-:size:x",
+		opacit"translate:y": 0,
+		"translate:x": "-:size:x",
 	}, 
 	0: {
-		opacity = 1,
-		x = 0
+		opacit"translate:y": 1,
+		"translate:x": 0
 	},
 }

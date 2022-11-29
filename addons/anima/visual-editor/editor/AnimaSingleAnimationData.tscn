@@ -448,8 +448,7 @@ __meta__ = {
 },
 "__initial_Title__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 style = 1
 node_to_toggle = NodePath("../../MarginContainer")
@@ -740,8 +739,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview2__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 show_panel_on = 12
 
@@ -766,8 +764,7 @@ __meta__ = {
 "__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_PropertyOrAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 transparent = true
 
@@ -1046,8 +1043,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__initial_Remove__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 style = 2
 transparent = true

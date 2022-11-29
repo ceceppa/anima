@@ -14,17 +14,25 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		animation_data.erase('to')
 
 	var meta_key = "_initial_relative_value_" + animation_data.property
+	var meta_key_last_relative_position = "_last_relative_value_" + animation_data.property
 
-	if relative and node.has_meta(meta_key + "_to"):
-		from = node.get_meta(meta_key + "_to")
-	elif animation_data.has('from'):
-		from = maybe_calculate_value(animation_data.from, animation_data)
-		from = _maybe_convert_from_deg_to_rad(node, animation_data, from)
-	else:
-		from = current_value
+	var calculated_from = current_value
+	
+	if animation_data.has("from"):
+		calculated_from = calculate_dynamic_value(animation_data.from, animation_data)
+		calculated_from = _maybe_convert_from_deg_to_rad(node, animation_data, calculated_from)
 
-		if relative:
-			node.set_meta(meta_key, from)
+	from = calculated_from
+
+	if relative:
+		if not node.has_meta(meta_key_last_relative_position):
+			node.set_meta(meta_key, current_value)
+
+			from = current_value + calculated_from
+		else:
+			var previous_end_position = node.get_meta(meta_key_last_relative_position)
+
+			from = previous_end_position
 
 	if animation_data.has('to'):
 		var start = current_value if is_backwards_animation else from
@@ -32,14 +40,14 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		if relative and node.has_meta(meta_key):
 			start = node.get_meta(meta_key)
 
-		to = maybe_calculate_value(animation_data.to, animation_data)
+		to = calculate_dynamic_value(animation_data.to, animation_data)
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, to)
 		to = _maybe_calculate_relative_value(relative, to, start)
 	else:
 		to = current_value
 
 	if relative:
-		node.set_meta(meta_key + "_to", to)
+		node.set_meta(meta_key_last_relative_position, to)
 
 	var pivot = animation_data.pivot if animation_data.has("pivot") else ANIMA.PIVOT.CENTER
 	if not node is Spatial and not node is CanvasModulate:
@@ -66,7 +74,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		diff = (to - from) * s
 	}
 
-static func maybe_calculate_value(value, animation_data: Dictionary):
+static func calculate_dynamic_value(value, animation_data: Dictionary):
 	var should_ignore = (not value is String and not value is Array) or (value is String and value.find(':') < 0)
 	if should_ignore:
 		return value
@@ -170,61 +178,3 @@ static func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionar
 		return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
 
 	return deg2rad(value)
-
-#
-# Flattens a possible key of percentages, example:
-#
-#  [0, 10, 20] => {...}
-#
-# becomes
-#
-# 0: {...},
-# 10: {...},
-# 20: {...},
-#
-# also replaces "from" with "0" and "to" with "100"
-#
-static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
-	var result := {}
-
-	for key in data:
-		var is_dictionary = data.has(key) and data[key] is Dictionary
-		var value: Dictionary = data[key].duplicate() if is_dictionary else {}
-
-		if not key is Array:
-			key = [key]
-
-		for percentage in key:
-			if percentage is String:
-				if percentage == "from":
-					percentage = 0
-				elif percentage == "to":
-					percentage = 100
-
-			if not result.has(percentage):
-				result[percentage] = {}
-
-			for k in value:
-				result[percentage][k] = value[k]
-
-	var frame_keys := []
-	
-	for key in result.keys():
-		if key is String:
-			continue
-
-		frame_keys.push_back(key)
-
-	frame_keys.sort()
-
-	# The 1st frame must have all the key set. If not the current value will be "forced"
-	var keys_to_insert := {}
-	for index in range(1, frame_keys.size()):
-		var frame_key = frame_keys[index]
-
-		for key in result[frame_key]:
-			if key != "easing" and not result[frame_keys[0]].has(key) and not keys_to_insert.has(key):
-				keys_to_insert[key] = "__current_value__"
-				result[frame_keys[0]][key] = null
-
-	return result

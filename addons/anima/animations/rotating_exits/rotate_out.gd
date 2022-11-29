@@ -1,9 +1,9 @@
 var KEYFRAMES := {
 	0: {
-		opacity = 1,
+		opacit"translate:y": 1,
 	},
 	100: {
 		rotation = 200,
-		opacity = 0,
+		opacit"translate:y": 0,
 	},
 }

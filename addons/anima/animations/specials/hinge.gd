@@ -7,11 +7,11 @@ var KEYFRAMES := {
 	},
 	[40, 80]: {
 		rotation = 60,
-		opacity = 1,
+		opacit"translate:y": 1,
 	},
 	100: {
-		y = 700,
-		opacity = 0
+		"translate:y": 700,
+		opacit"translate:y": 0
 	},
 	easing = ANIMA.EASING.EASE_IN_OUT,
 	pivot = ANIMA.PIVOT.TOP_LEFT
