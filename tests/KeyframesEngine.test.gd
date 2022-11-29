@@ -290,12 +290,12 @@ func test_converts_vector3_to_vector2_if_needed():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0 },
+		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0},
 	])
 	
 	node.free()
 
-func test_applies_the_global_pivot_and_easing():
+func test_applies_the_global_pivot():
 	var node := Control.new()
 
 	var output = AnimaKeyframesEngine.parse_frames(
@@ -308,11 +308,111 @@ func test_applies_the_global_pivot_and_easing():
 				scale = Vector3.ONE,
 			},
 			pivot = ANIMA.PIVOT.CENTER,
+		})
+
+	assert_eq_deep(output, [
+		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0, pivot = ANIMA.PIVOT.CENTER },
+	])
+	
+	node.free()
+
+func test_applies_the_global_easing():
+	var node := Control.new()
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 3 },
+		{
+			from = {
+				scale = Vector3.ZERO,
+			},
+			to = {
+				scale = Vector3.ONE,
+			},
 			easing = ANIMA.EASING.EASE_IN
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0, pivot = ANIMA.PIVOT.CENTER, easing = ANIMA.EASING.EASE_IN },
+		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0, easing = ANIMA.EASING.EASE_IN },
 	])
 	
+	node.free()
+
+func test_applies_the_global_initial_values():
+	var node := Control.new()
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 3 },
+		{
+			from = {
+				opacity = 0,
+				scale = Vector3.ZERO,
+			},
+			50: {
+				opacity = 1,
+			},
+			to = {
+				opacity = 0,
+				scale = Vector3.ONE,
+			},
+			initial_values = {
+				opacity = 0
+			}
+		})
+
+	assert_eq_deep(output, [
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 1.5, _wait_time = 0.0, initial_value = 0 },
+		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0 },
+		{ node = node, property = "opacity", from = 1, to = 0, duration = 1.5, _wait_time = 1.5 },
+	])
+	
+	node.free()
+
+func test_handles_skew():
+	var node := Control.new()
+
+	add_child(node)
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 3 },
+		{
+			from = {
+				skew = Vector2(10, -10),
+			},
+			to = {
+				skew = Vector2(-10, 10),
+			}
+		})
+
+	assert_eq_deep(output, [
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = 10.0 / 32.0, to = -10.0 / 32.0, property = "skew:x" },
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = -10.0 / 32.0, to = 10.0 / 32.0, property = "skew:y" },
+	])
+	node.free()
+
+func test_use_from_as_initial_value_if_different_from_current_one():
+	var node := Control.new()
+
+	add_child(node)
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 3 },
+		{
+			from = {
+				scale = Vector2(0.5, 0.5),
+			},
+			50: {
+				scale = Vector2(0.5, 0.5),
+			},
+			75: {
+				scale = Vector2(0.9, 0.9),
+			},
+			to = {
+				scale = Vector2.ZERO
+			}
+		})
+
+	assert_eq_deep(output, [
+		{ node = node, _wait_time = 1.5, duration = 0.75, from = Vector2(0.5, 0.5), to = Vector2(0.9, 0.9), property = "scale", initial_value = Vector2(0.5, 0.5) },
+		{ node = node, _wait_time = 2.25, duration = 0.75, from = Vector2(0.9, 0.9), to = Vector2.ZERO, property = "scale" },
+	])
 	node.free()

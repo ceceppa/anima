@@ -72,7 +72,15 @@ static func flatten_keyframes_data(data: Dictionary) -> Array:
 				keys_to_insert[key] += 1
 
 	for frame_key in frame_keys:
-		output.push_back({ percentage = frame_key, data = result[frame_key] })
+		var frame_data = result[frame_key]
+
+		if frame_data.has("skew"):
+			frame_data["skew:x"] = frame_data.skew.x / 32.0
+			frame_data["skew:y"] = frame_data.skew.y / 32.0
+
+			frame_data.erase("skew")
+
+		output.push_back({ percentage = frame_key, data = frame_data })
 
 	for key in keys_to_insert:
 		if keys_to_insert[key] == 1:
@@ -104,6 +112,9 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 	var all_frames = flatten_keyframes_data(keyframes_data)
 	var duration = animation_data.duration
 	var output := []
+	
+	var initial_values = keyframes_data.initial_values if keyframes_data.has("initial_values") else {}
+	var initial_values_applied := {}
 
 	if all_frames.size() == 1:
 		printerr("Invalid frame animation!")
@@ -112,6 +123,7 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 
 	var all_frames_size = all_frames.size()
 	var reserved_properties = ["easing", "pivot"]
+	var deferred_initial_values := {}
 
 	for index in all_frames.size() - 1:
 		var current_frame_data = all_frames[index]
@@ -125,6 +137,9 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			var from_value = current_frame_data.data[property]
 
 			if next_frame_data == null or (typeof(to_value) == typeof(from_value) and to_value == from_value):
+				if current_frame_data.percentage == 0:
+					deferred_initial_values[property] = from_value
+
 				continue
 
 			var percentage = (next_frame_data.percentage - current_frame_data.percentage) / 100.0
@@ -148,6 +163,11 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			if pivot:
 				frame_data.pivot = pivot
 
+			if initial_values.has(property) and not initial_values_applied.has(property):
+				frame_data.initial_value = initial_values[property]
+
+				initial_values_applied[property] = 1
+
 			if property.find("translate") >= 0:
 				property = property.replace("translate", "position")
 				frame_data.relative = true
@@ -160,6 +180,17 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 
 			if property_type != typeof(to_value) and typeof(to_value) == TYPE_VECTOR3:
 				to_value = Vector2(to_value.x, to_value.y)
+
+			var current_value = AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property)
+			if not frame_data.has("relative") and \
+				deferred_initial_values.has(property) and \
+				not initial_values_applied.has(property):
+				if from_value != null and from_value != current_value:
+					frame_data.initial_value = from_value
+
+					initial_values_applied[property] = 1
+
+				deferred_initial_values.erase(property)
 
 			frame_data.duration = frame_duration
 			frame_data.property = property

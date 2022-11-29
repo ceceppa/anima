@@ -1,0 +1,26 @@
+Godot Engine v3.5.1.stable.arch_linux - https://godotengine.org
+OpenGL ES 3.0 Renderer: NVIDIA GeForce RTX 3080 Ti/PCIe/SSE2
+Async. shader compilation: OFF
+ 
+
+
+ ---  Gut  ---
+[1m[INFO]:  [0musing [/home/ceceppa/.local/share/godot/app_userdata/Anima] for temporary output.
+Godot version:  3.5.1
+GUT version:  7.4.1
+[33m
+
+*** Run Summary ***
+[0m[32mAll tests passed
+[0m
+[33mTotals
+[0mScripts:          0
+Passing tests     0
+Failing tests     0
+Risky tests       0
+Pending:          0
+Asserts:          0 of 0 passed
+
+[31mNo tests ran
+[0m
+

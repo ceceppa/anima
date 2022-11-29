@@ -9,8 +9,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker test
+      - name: Anima Tests
         uses: ceceppa/godot-gut-ci@master
         with:
-          godot_version: 3.2.1 # uses godot 3.2.1
-          unit_test: res://tests
+          godot_version: 3.5.1
+          gut_params: -gdir=res://tests

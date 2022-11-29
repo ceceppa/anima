@@ -390,7 +390,15 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var duration = animation_data.duration
 
 	for frame in frames:
-		duration = max(duration, frame._wait_time + frame.duration)
+		var frame_duration = frame._wait_time + frame.duration
+
+		if full_keyframes_data.has("_duration"):
+			frame_duration = AnimaTweenUtils.calculate_dynamic_value(
+				full_keyframes_data._duration.replace("{duration}", animation_data.duration),
+				animation_data
+			)
+
+		duration = max(duration, frame_duration)
 
 		add_animation_data(frame)
 
