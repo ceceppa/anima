@@ -1,7 +1,6 @@
 .import
 *.import
 .DS_Store
-addons/gut
 .gut_editor_shortcuts.cfg
 .gut_editor_config.json
 .godot/shader_cache
