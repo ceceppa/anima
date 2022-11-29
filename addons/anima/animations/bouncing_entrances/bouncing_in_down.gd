@@ -3,12 +3,12 @@ var KEYFRAMES := {
 		easing = [0.215, 0.61, 0.355, 1],
 	},
 	0: {
-		opacit"translate:y": 0,
+		opacity = 0,
 		"translate:y": "- :size:y - :position:y",
 		"scale:y": 3,
 	},
 	60: {
-		opacit"translate:y": 1,
+		opacity = 1,
 		"translate:y": 25,
 		"scale:y": 0.9
 	},
@@ -25,6 +25,6 @@ var KEYFRAMES := {
 		"scale:y": 1.0
 	},
 	initial_values = {
-		opacit"translate:y": 0
+		opacity = 0
 	}
 }

@@ -1,12 +1,12 @@
 var KEYFRAMES := {
 	0: {
 		"translate:x": "-:size:x",
-		opacit"translate:y": 0,
+		opacity = 0,
 		"skew:x": 30,
 	},
 	60: {
 		"skew:x": -20,
-		opacit"translate:y": 1,
+		opacity = 1,
 	},
 	80: {
 		"skew:x": 5,
@@ -17,6 +17,6 @@ var KEYFRAMES := {
 	},
 	easing = ANIMA.EASING.EASE_OUT,
 	initial_values = {
-		opacit"translate:y": 0,
+		opacity = 0,
 	}
 }

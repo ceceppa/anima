@@ -1,8 +1,8 @@
 var KEYFRAMES := {
 	[0, 50, 100]: {
-		opacit"translate:y": 1,
+		opacity = 1,
 	},
 	[25, 75]: {
-		opacit"translate:y": 0
+		opacity = 0
 	}
 }
