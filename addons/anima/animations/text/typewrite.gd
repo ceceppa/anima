@@ -1,12 +1,12 @@
 var KEYFRAMES := {
 	0: {
-		visible_characters = 0,
+		percentage_visible = 0,
 	},
 	100: {
-		visible_characters = ":text:visible_characters",
+		percentage_visible = 1,
 	},
 	initial_values = {
-		visible_characters = 0,
+		percentage_visible = 0,
 	},
-	_duration = "{duration} * :text:visible_characters"
+	_duration = "{duration} * :text:length"
 }
