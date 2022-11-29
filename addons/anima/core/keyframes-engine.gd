@@ -125,6 +125,12 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 	var reserved_properties = ["easing", "pivot"]
 	var deferred_initial_values := {}
 
+	if keyframes_data.has("_duration"):
+		duration = AnimaTweenUtils.calculate_dynamic_value(
+			keyframes_data._duration.replace("{duration}", duration),
+			animation_data
+		)
+
 	for index in all_frames.size() - 1:
 		var current_frame_data = all_frames[index]
 
