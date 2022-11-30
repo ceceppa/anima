@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 ---
+import AnimaDeclaration from './_anima-declaration.mdx';
 
 # Anima.Group
 
@@ -71,3 +72,5 @@ So this is equivalent to:
 3. Fade in **Button2** and **Button6**
 2. Wait 1 second
 3. Fade in **Button1** and **Button7**
+
+<AnimaDeclaration />
