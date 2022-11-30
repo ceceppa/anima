@@ -1,14 +1,6 @@
----
-sidebar_position: 1
----
+## Methods
 
-# AnimaDeclaration
-
-AnimaDeclaration is used to tell Anima what kind of animation to peform for the given [Anima.Node](/docs/anima-declaration/anima-node), [Anima.Group](/docs/anima-declaration/anima-group) or [Anima.Grid](/docs/anima-declaration/anima-grid).
-
-Each of those classes exposes the following methods to specify how to animate the selected type.
-
-_NOTE_: For commodity, all the methods start with the `anima_` prefix. This allows us to filter out all the Godot default class methods:
+_NOTE_: For commodity, all the class methods start with the `anima_` prefix. This allows us to filter out all the Godot default class methods:
 
 ![AnimaDeclaration autocomplete](/img/anima_autocomplete.png)
 
@@ -39,6 +31,8 @@ Anim.Grid($node).anima_animation("fadeIn")
 ## anima_animation_frames
 
 Animates the Node/Group/Grid using a CSS-Style inline animation.
+
+_NOTE:_ For more info check the [Animation Keyframes tutorial](/tutorials/extras/animation-keyframes)
 
 ####  Syntax
 
@@ -151,7 +145,7 @@ The delay to use before starting the animation.
 ####  Syntax
 
 ```gdscript
-anima_delay(0.0)
+anima_delay(delay: float)
 ```
 
 :::tip
@@ -165,6 +159,24 @@ Anima.Node($node).anima_scale_x(0.8).anima_delay(0.5)
 
 # or
 Anima.Node($node).anima_scale_x(0.8).anima_delay(-0.5)
+```
+
+## anima_easing
+
+The easing to use to animate the node.
+
+_NOTE_: [List of available easings](/anima/constants#easings)
+
+####  Syntax
+
+```gdscript
+anima_easing(easing: int)
+```
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_scale_x(0.8).anima_easing(ANIMA.EASINGS.EASE_IN_OUT)
 ```
 
 ## anima_from
@@ -283,6 +295,24 @@ Anima.Node($node).anima_on_started(funcref(self, "do_something"), true, false)
 
 func do_something(is_forward) -> void:
     print(is_forward)
+```
+
+## anima_pivot
+
+The pivot point to use to animate the node.
+
+_NOTE_: [List of available pivot points](/anima/constants#pivot-points)
+
+####  Syntax
+
+```gdscript
+anima_pivot(easing: int)
+```
+
+####  Example
+
+```gdscript
+Anima.Node($node).anima_scale_x(0.8).anima_pivot(ANIMA.PIVOT.CENTER)
 ```
 
 ## anima_position
