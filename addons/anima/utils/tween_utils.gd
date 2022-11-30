@@ -16,19 +16,20 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	var meta_key = "_initial_relative_value_" + animation_data.property
 	var meta_key_last_relative_position = "_last_relative_value_" + animation_data.property
 
-	var calculated_from = current_value
+	var calculated_from = null
 	
 	if animation_data.has("from"):
 		calculated_from = calculate_dynamic_value(animation_data.from, animation_data)
 		calculated_from = _maybe_convert_from_deg_to_rad(node, animation_data, calculated_from)
 
-	from = calculated_from
+	from = _maybe_convert_from_deg_to_rad(node, animation_data, current_value)
 
 	if relative:
 		if not node.has_meta(meta_key_last_relative_position):
 			node.set_meta(meta_key, current_value)
 
-			from = current_value + calculated_from
+			if calculated_from:
+				from += calculated_from
 		else:
 			var previous_end_position = node.get_meta(meta_key_last_relative_position)
 
@@ -37,7 +38,13 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if animation_data.has('to'):
 		var start = current_value if is_backwards_animation else from
 
-		if relative and node.has_meta(meta_key):
+		#
+		# Translations created via keyframes behave slighly different from
+		# using `anima_position_relative`.
+		# Because keyframes-translations are relative to the node initial position,
+		# while anima_position_relative are relative to the previous "position"
+		#
+		if relative and animation_data.has("_is_translation") and node.has_meta(meta_key):
 			start = node.get_meta(meta_key)
 
 		to = calculate_dynamic_value(animation_data.to, animation_data)

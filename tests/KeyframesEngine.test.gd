@@ -177,9 +177,9 @@ func test_handles_translations():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, _wait_time = 0.0, duration = 3.0, from = 20, to = -20, property = "position:y", relative = true },
-		{ node = node, _wait_time = 0.0, duration = 3.0, from = 20, to = 0, property = "position:x", relative = true },
-		{ node = node, _wait_time = 0.0, duration = 3.0, from = Vector2(10, 10), to = Vector2(-10, -10), property = "position", relative = true }
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = 20, to = -20, property = "position:y", relative = true, _is_translation=true },
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = 20, to = 0, property = "position:x", relative = true, _is_translation=true },
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = Vector2(10, 10), to = Vector2(-10, -10), property = "position", relative = true, _is_translation=true }
 	])
 	node.free()
 
@@ -202,7 +202,7 @@ func test_ignore_equal_initial_and_final_values():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, _wait_time = 1.5, duration = 1.5, from = 20, to = 0, property = "position:x", relative = true },
+		{ node = node, _wait_time = 1.5, duration = 1.5, from = 20, to = 0, property = "position:x", relative = true, _is_translation=true },
 	])
 
 	node.free()
@@ -414,5 +414,50 @@ func test_use_from_as_initial_value_if_different_from_current_one():
 	assert_eq_deep(output, [
 		{ node = node, _wait_time = 1.5, duration = 0.75, from = Vector2(0.5, 0.5), to = Vector2(0.9, 0.9), property = "scale", initial_value = Vector2(0.5, 0.5) },
 		{ node = node, _wait_time = 2.25, duration = 0.75, from = Vector2(0.9, 0.9), to = Vector2.ZERO, property = "scale" },
+	])
+	node.free()
+
+func test_sets_as_relative_properties_starting_with_plus():
+	var node := Control.new()
+
+	add_child(node)
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 3 },
+		{
+			to = {
+				"+scale": Vector2.ONE,
+				"+rotation": 360,
+			}
+		})
+
+	assert_eq_deep(output, [
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = null, to = Vector2.ONE, property = "scale", relative = true },
+		{ node = node, _wait_time = 0.0, duration = 3.0, from = null, to = 360, property = "rotation", relative = true },
+	])
+	node.free()
+
+func test_handles_mixed_relative_stuff():
+	var node := Control.new()
+
+	add_child(node)
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 3 },
+		{
+			from = {
+				scale = Vector2.ZERO
+			},
+			50: {
+				scale = Vector2(0.5, 0.5),
+			},
+			to = {
+				"+scale": Vector2.ONE,
+			}
+		})
+
+	assert_eq_deep(output, [
+		{ node = node, _wait_time = 0.0, duration = 1.5, from = Vector2.ZERO, to = Vector2(0.5, 0.5), property = "scale" },
+		{ node = node, _wait_time = 1.5, duration = 1.5, from = Vector2(0.5, 0.5), to = Vector2.ONE, property = "scale", relative = true },
 	])
 	node.free()

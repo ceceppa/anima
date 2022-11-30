@@ -46,11 +46,11 @@ func _create_relative_declaration_with_easing(data: Dictionary) -> AnimaDeclarat
 
 	return c._init_me(_data)
 
-func anima_animation(animation: String, duration = null, ignore_initial_values := false) -> AnimaDeclarationForAnimation:
-	return _create_declaration_for_animation({ animation = animation, duration = duration, _ignore_initial_values = ignore_initial_values })
+func anima_animation(animation: String, duration = null) -> AnimaDeclarationForAnimation:
+	return _create_declaration_for_animation({ animation = animation, duration = duration })
 
-func anima_animation_frames(frames: Dictionary, duration = null, ignore_initial_values := false) -> AnimaDeclarationForAnimation:
-	return _create_declaration_for_animation({ animation = frames, duration = duration, _ignore_initial_values = ignore_initial_values })
+func anima_animation_frames(frames: Dictionary, duration = null) -> AnimaDeclarationForAnimation:
+	return _create_declaration_for_animation({ animation = frames, duration = duration })
 
 func anima_property(property: String, final_value = null, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = property, to = final_value, duration = duration })

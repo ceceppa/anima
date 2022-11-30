@@ -66,6 +66,9 @@ static func flatten_keyframes_data(data: Dictionary) -> Array:
 
 		for key in result[frame_key]:
 			if keys_to_ignore.find(key) < 0 and not result[0].has(key):
+				if key.begins_with("+") and result[0].has(key.substr(1)):
+					continue
+
 				if not keys_to_insert.has(key):
 					keys_to_insert[key] = 0
 
@@ -134,13 +137,28 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 	for index in all_frames.size() - 1:
 		var current_frame_data = all_frames[index]
 
-		for property in current_frame_data.data:
+		for property_name in current_frame_data.data:
+			var property: String = property_name
+			var frame_data = animation_data.duplicate()
+
+			if property.begins_with("+"):
+				property = property.substr(1)
+				frame_data.relative = true
+
 			if reserved_properties.find(property) >= 0:
 				continue
 
-			var next_frame_data = _find_next_value(property, all_frames.slice(index + 1, all_frames_size))
-			var to_value = next_frame_data.data[property] if next_frame_data != null else null
-			var from_value = current_frame_data.data[property]
+			var relative_property_name = "+" + property if not property.begins_with("+") else property
+			var next_frame_data = _find_next_value(all_frames.slice(index + 1, all_frames_size), property, relative_property_name)
+			var to_value = null
+			
+			if next_frame_data != null:
+				to_value = next_frame_data.data[property] if next_frame_data.data.has(property) else next_frame_data.data[relative_property_name]
+
+			if next_frame_data and next_frame_data.data.has(relative_property_name):
+				frame_data.relative = true
+
+			var from_value = current_frame_data.data[property] if current_frame_data.has(property) else current_frame_data.data[property_name]
 
 			if next_frame_data == null or (typeof(to_value) == typeof(from_value) and to_value == from_value):
 				if current_frame_data.percentage == 0:
@@ -155,7 +173,6 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			if animation_data.has("_wait_time"):
 				wait_time += animation_data._wait_time
 
-			var frame_data = animation_data.duplicate()
 			var easing = _get_reserved_property_value(current_frame_data, next_frame_data, "easing")
 			var pivot = _get_reserved_property_value(current_frame_data, next_frame_data, "pivot")
 
@@ -176,6 +193,7 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 
 			if property.find("translate") >= 0:
 				property = property.replace("translate", "position")
+				frame_data._is_translation = true
 				frame_data.relative = true
 
 			var property_value = AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property)
@@ -216,9 +234,9 @@ static func _get_reserved_property_value(current: Dictionary, next: Dictionary, 
 
 	return null
 
-static func _find_next_value(property: String, remaining_frames_data: Array):
+static func _find_next_value(remaining_frames_data: Array, property: String, relative_property_name: String):
 	for data in remaining_frames_data:
-		if data.data.has(property):
+		if data.data.has(property) or data.data.has(relative_property_name):
 			return data
 
 	return null
