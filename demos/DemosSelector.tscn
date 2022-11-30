@@ -92,7 +92,7 @@ margin_bottom = 373.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate Group"
-scene = "res://demos/Stagger.tscn"
+scene = "res://demos/2d/Stagger.tscn"
 
 [node name="2DGrid" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
@@ -102,7 +102,7 @@ margin_bottom = 373.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate 2D Grid"
-scene = "res://demos/2DGrid.tscn"
+scene = "res://demos/2d/2DGrid.tscn"
 
 [node name="3DRings" parent="Control" instance=ExtResource( 3 )]
 margin_top = 381.0
@@ -111,7 +111,7 @@ margin_bottom = 468.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Rings"
-scene = "res://demos/Rings.tscn"
+scene = "res://demos/3d/Rings.tscn"
 
 [node name="3DBoxes" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
@@ -121,7 +121,7 @@ margin_bottom = 468.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes"
-scene = "res://demos/3DBoxes.tscn"
+scene = "res://demos/3d/3DBoxes.tscn"
 
 [node name="3DBoxes - Backwards" parent="Control" instance=ExtResource( 3 )]
 margin_top = 476.0
@@ -130,7 +130,7 @@ margin_bottom = 563.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes - Backwards"
-scene = "res://demos/3DBoxesReverse.tscn"
+scene = "res://demos/3d/3DBoxesReverse.tscn"
 
 [node name="3D Grid" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
@@ -140,4 +140,4 @@ margin_bottom = 563.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Grid"
-scene = "res://demos/Grid.tscn"
+scene = "res://demos/3d/Grid.tscn"

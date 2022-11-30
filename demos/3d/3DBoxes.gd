@@ -1,10 +1,9 @@
-tool
 extends Spatial
 
 export (bool) var _play_backwards = false
 
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
-const TOTAL_BOXES := 20
+const TOTAL_BOXES := 0
 const DISTANCE := 0.3
 
 export var _test_me:= false setget set_test_me
@@ -22,7 +21,7 @@ func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
 	_reset_boxes_position($Node, start_position)
 
-	var anima: AnimaNode = Anima.begin($Node)
+	var anima := Anima.begin($Node)
 	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3).debug() )
 
 	if _play_backwards:
@@ -33,14 +32,14 @@ func _do_animation(loop:= true) -> void:
 		anima.loop()
 	else:
 		anima.play()
-#
-#	var ring: AnimaNode = Anima.begin($ring)
-#	ring.then( Anima.Node($ring).anima_animation('ring', 3) )
-#
-#	if _play_backwards:
-#		ring.loop_backwards()
-#	else:
-#		ring.loop()
+
+	var ring := Anima.begin($ring)
+	ring.then( Anima.Node($ring).anima_animation('ring', 3) )
+
+	if _play_backwards:
+		ring.loop_backwards()
+	else:
+		ring.loop()
 
 func _ring() -> Dictionary:
 	return { 
@@ -56,33 +55,32 @@ func _boxes_animation() -> Dictionary:
 	return {
 		from = {
 			scale = Vector3(0.1, 1, 1),
-			"shader_param:albedo": Color('#6b9eb1')
+			"shader_param:albedo": Color('#6b9eb1'),
 		},
 		30: {
 			"shader_param:albedo": Color('#e63946')
 		},
 		35: {
-			x = -28.117,
+			"+x": -28.117,
 			easing = ANIMA.EASING.EASE_OUT_QUAD,
 		},
 		40: {
-			x = 0,
+			"+x": 0,
 			"shader_param:albedo": Color('#e63946')
 		},
 		65: {
-			x = 0,
+			"+x": 0,
 			scale = Vector3(0.1, 1, 1)
 		},
 		85: {
 			scale = Vector3.ZERO,
 		},
 		to = {
-			x = -25.619,
+			"+x": -25.619,
 			easing = ANIMA.EASING.EASE_IN_CIRC,
-			"rotation:x": 360,
+			"+rotation:x": 360,
 			"shader_param:albedo": Color('#6b9eb1')
 		},
-		relative = ['x', 'rotation:x']
 	}
 
 func _init_reverse_boxes() -> void:
@@ -96,7 +94,7 @@ func _init_reverse_boxes() -> void:
 	_init_boxes(node)
 	_reset_boxes_position(node, DEFAULT_START_POSITION + Vector3(0, 0, 2))
 
-	var anima_reverse: AnimaNode = Anima.begin(node)
+	var anima_reverse := Anima.begin(node)
 	anima_reverse.then({ group = node, animation = '3dboxes', duration = 3, items_delay = 0.02 })
 
 	anima_reverse.loop_backwards()

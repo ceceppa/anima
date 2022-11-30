@@ -120,3 +120,32 @@ func test_relative_from_to_animation_with_multiple_frames():
 
 	node.free()
 
+func test_relative_x_animation() -> void:
+	var node := Sprite.new()
+
+	node.texture = load("res://demos/resources/cross.png")
+	node.set_position(Vector2(42, 42))
+
+	add_child(node)
+
+	var anima = Anima.begin_single_shot(self) \
+		.set_default_duration(0.15) \
+		.then( Anima.Node(node).anima_relative_position_x(100).anima_easing(ANIMA.EASING.EASE_IN_SINE) ) \
+		.with( Anima.Node(node).anima_rotate(360).anima_from(0).anima_easing(ANIMA.EASING.EASE_IN_SINE) ) \
+		\
+		.then( Anima.Node(node).anima_relative_position_y(100) ) \
+		.with( Anima.Node(node).anima_rotate(-360).anima_from(0) ) \
+		\
+		.then( Anima.Node(node).anima_relative_position_x(-100) ) \
+		.with( Anima.Node(node).anima_rotate(0).anima_from(360) ) \
+		\
+		.then( Anima.Node(node).anima_relative_position_y(-100).anima_easing(ANIMA.EASING.EASE_OUT_CIRC) ) \
+		.with( Anima.Node(node).anima_rotate(-360).anima_from(0).anima_easing(ANIMA.EASING.EASE_OUT_CIRC) ) \
+		\
+		.play()
+
+	yield(anima, "animation_completed")
+
+	assert_eq(node.position, Vector2(42, 42))
+
+	node.free()

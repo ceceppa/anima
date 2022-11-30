@@ -183,7 +183,6 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 
 	var anima_data = {
 		node = node,
-		__ignore_warning = true
 	}
 
 	if animation_data.duration:

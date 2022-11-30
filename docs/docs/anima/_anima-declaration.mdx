@@ -8,19 +8,18 @@ _NOTE_: For commodity, all the class methods start with the `anima_` prefix. Thi
 
 Animates the Node/Group/Grid using the given animation name.
 
-####  Syntax
+#### Syntax
 
 ```gdscript
-anima_animation(animation: String, duration: float, ignore_initial_values: bool )
+anima_animation(animation: String, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| animation | string | | The animation name |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-| ignore_initial_values | bool | false | If true does not apply the `initial_values` defined inside the animation |
+| Param     | Type   | Default | Description                                                                                     |
+| --------- | ------ | ------- | ----------------------------------------------------------------------------------------------- |
+| animation | string |         | The animation name                                                                              |
+| duration  | float  | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anim.Node($node).anima_animation("zoomIn")
@@ -34,19 +33,18 @@ Animates the Node/Group/Grid using a CSS-Style inline animation.
 
 _NOTE:_ For more info check the [Animation Keyframes tutorial](/tutorials/extras/animation-keyframes)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
-anima_animation_frames(animation: Dictionary, duration: float, ignore_initial_values: bool)
+anima_animation_frames(animation: Dictionary, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| animation | string | | The animation frames. See[Create a custom animation](docs/extend-anima/custom-animation) for more information about the syntax |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
-| ignore_initial_values | bool | false | If true does not apply the `initial_values` defined inside the animation |
+| Param     | Type   | Default | Description                                                                                                                    |
+| --------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| animation | string |         | The animation frames. See[Create a custom animation](docs/extend-anima/custom-animation) for more information about the syntax |
+| duration  | float  | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used                                |
 
-####  Example:
+#### Example:
 
 ```gdscript
 Anim.Node($node).anima_animation_frames({
@@ -66,21 +64,21 @@ Anim.Node($node).anima_animation_frames({
 
 ## anima_property
 
-Animates the given property. 
+Animates the given property.
 
 Compared to the other property specific fuctions, like `anima_position_x` this method allows us to specify a [dynamic value](/docs/docs/tutorial-extras/dynamic-value)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_property(property: String, final_value, duration)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| property | string | | The property to animate |
-| final_value | Variant | null | (Optional) The final value. If null, the current property value is used as final value |
-| duration | float | null | The animation duration (seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param       | Type    | Default | Description                                                                                  |
+| ----------- | ------- | ------- | -------------------------------------------------------------------------------------------- |
+| property    | string  |         | The property to animate                                                                      |
+| final_value | Variant | null    | (Optional) The final value. If null, the current property value is used as final value       |
+| duration    | float   | null    | The animation duration (seconds). If null, the [default duration](/docs/anima-node/) is used |
 
 The `property` parameter can be any node property that can be accessed, even exported variables. For example:
 
@@ -95,16 +93,16 @@ We can also specify the subkey of the Vector2, Vector3 or Rect2 we want to anima
 
 Anima also recognised these built-in property names:
 
-| property | description |
-|---|---|
-| x | This is equivalent to `position:x` or `rect_position:x` |
-| y | This is equivalent to `position:y` or `rect_position:x` |
-| z | This is equivalent to `position:z` or `rect_position:x` |
-| width | This is equivalent to `size:x` or `rect_size:x` |
-| height | This is equivalent to `size:y` or `rect_size:y` |
-| shared_param | This will call `set_shader_param` |
+| property     | description                                             |
+| ------------ | ------------------------------------------------------- |
+| x            | This is equivalent to `position:x` or `rect_position:x` |
+| y            | This is equivalent to `position:y` or `rect_position:x` |
+| z            | This is equivalent to `position:z` or `rect_position:x` |
+| width        | This is equivalent to `size:x` or `rect_size:x`         |
+| height       | This is equivalent to `size:y` or `rect_size:y`         |
+| shared_param | This will call `set_shader_param`                       |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_property("size:x").anima_from(100)
@@ -126,13 +124,13 @@ Anima.Node($Node2D).property("position:x", 100 )  # Animates position.x
 
 Tells anima that the final value is a relative one
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_as_relative()
 ```
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_x(0.8).anima_as_relative()
@@ -142,7 +140,7 @@ Anima.Node($node).anima_scale_x(0.8).anima_as_relative()
 
 The delay to use before starting the animation.
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_delay(delay: float)
@@ -152,7 +150,7 @@ anima_delay(delay: float)
 You can also use negative values to anticipate a sequential/parallel animation
 :::
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_x(0.8).anima_delay(0.5)
@@ -167,13 +165,13 @@ The easing to use to animate the node.
 
 _NOTE_: [List of available easings](/anima/constants#easings)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_easing(easing: int)
 ```
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_x(0.8).anima_easing(ANIMA.EASINGS.EASE_IN_OUT)
@@ -183,17 +181,17 @@ Anima.Node($node).anima_scale_x(0.8).anima_easing(ANIMA.EASINGS.EASE_IN_OUT)
 
 Set the initial value.
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_from(value: Variant)
 ```
 
-| Param | Type | Description |
-|---|---|---|
+| Param | Type    | Description                                                                                      |
+| ----- | ------- | ------------------------------------------------------------------------------------------------ |
 | value | Variant | The initial value. It can be a fixed or [dynamic](/docs/docs/tutorial-extras/dynamic-value) one. |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_property("x").anima_from(-100)
@@ -203,17 +201,17 @@ Anima.Node($node).anima_property("x").anima_from(-100)
 
 Fades in the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_fade_in(duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).fade_in(0.4)
@@ -223,17 +221,17 @@ Anima.Node($node).fade_in(0.4)
 
 Fades out the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_fade_out(duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).fade_out(0.4)
@@ -243,23 +241,28 @@ Anima.Node($node).fade_out(0.4)
 
 Callback to be triggered when the Node animation starts.
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_on_started(callback: Funcref | Callable, on_started_value, on_backwards_completed_value = null)
 ```
 
-| Param | Type | Required | Description |
-|---|---|---|---|
-| callback | Funcref/Callable<sup>*</sup> | yes | The callback to call when the Node animation is starts (or complete<sup>**</sup>) |
-| on_started_value | Variant | yes | The parameter to pass at the callback when the Node animation is played forward |
-| on_backwards_completed_value | Variant | no | The parameter to pass at the callback when the Node animation is played backwards |
+| Param                        | Type                          | Required | Description                                                                         |
+| ---------------------------- | ----------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| callback                     | Funcref/Callable<sup>\*</sup> | yes      | The callback to call when the Node animation is starts (or complete<sup>\*\*</sup>) |
+| on_started_value             | Variant                       | yes      | The parameter to pass at the callback when the Node animation is played forward     |
+| on_backwards_completed_value | Variant                       | no       | The parameter to pass at the callback when the Node animation is played backwards   |
 
-<b><sup>*</sup></b> In Godot4 Funcref are called Callable.
+<b>
+  <sup>*</sup>
+</b> In Godot4 Funcref are called Callable.
 <br />
-<b><sup>**</sup></b> When the animation is played backwards this event is triggered when the Node animation starts
+<b>
+  <sup>**</sup>
+</b> When the animation is played backwards this event is triggered when the
+Node animation starts
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_on_started(funcref(self, "do_something"), true, false)
@@ -272,23 +275,28 @@ func do_something(is_forward) -> void:
 
 Callback to be triggered when the Node animation completes.
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_on_completed(on_completed: FuncRef | Callable, on_completed_value, on_backwards_started_value = null)
 ```
 
-| Param | Type | Required | Description |
-|---|---|---|---|
-| callback | Funcref/Callable<sup>*</sup> | yes | The callback to call when the Node animation is completed (or started<sup>**</sup>) |
-| on_completed_value | Variant | yes | The parameter to pass at the callback when the Node animation is played forward |
-| on_backwards_started_value | Variant | no | The parameter to pass at the callback when the Node animation is played backwards |
+| Param                      | Type                          | Required | Description                                                                           |
+| -------------------------- | ----------------------------- | -------- | ------------------------------------------------------------------------------------- |
+| callback                   | Funcref/Callable<sup>\*</sup> | yes      | The callback to call when the Node animation is completed (or started<sup>\*\*</sup>) |
+| on_completed_value         | Variant                       | yes      | The parameter to pass at the callback when the Node animation is played forward       |
+| on_backwards_started_value | Variant                       | no       | The parameter to pass at the callback when the Node animation is played backwards     |
 
-<b><sup>*</sup></b> In Godot4 Funcref are called Callable.
+<b>
+  <sup>*</sup>
+</b> In Godot4 Funcref are called Callable.
 <br />
-<b><sup>**</sup></b> When the animation is played backwards this event is triggered when the Node animation starts
+<b>
+  <sup>**</sup>
+</b> When the animation is played backwards this event is triggered when the
+Node animation starts
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_on_started(funcref(self, "do_something"), true, false)
@@ -303,13 +311,13 @@ The pivot point to use to animate the node.
 
 _NOTE_: [List of available pivot points](/anima/constants#pivot-points)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_pivot(easing: int)
 ```
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_x(0.8).anima_pivot(ANIMA.PIVOT.CENTER)
@@ -319,18 +327,18 @@ Anima.Node($node).anima_scale_x(0.8).anima_pivot(ANIMA.PIVOT.CENTER)
 
 Animates the `x` and `y` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_position(position: Vector2, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| position | Vector2 |  | The final 2D position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| position | Vector2 |         | The final 2D position                                                                           |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_position(Vector2(100, 100))
@@ -341,18 +349,18 @@ Anima.Node($node).anima_position(Vector2(100, 100), 0.3) # duration - 0.3s
 
 Animates the `x`, `y` and `z` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_position3D(position: Vector3, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| position | Vector3 |  | The final 3D position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| position | Vector3 |         | The final 3D position                                                                           |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_position3D(Vector3(100, 100, 0))
@@ -362,18 +370,18 @@ Anima.Node($node).anima_position3D(Vector3(100, 100, 0))
 
 Animates the global `x` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_position_x(x: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| x | float |  | The global final `x` position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| x        | float |         | The global final `x` position                                                                   |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_position_x(100)
@@ -383,18 +391,18 @@ Anima.Node($node).anima_position_x(100)
 
 Animates the global `y` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_position_y(y: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| y | float |  | The global final `y` position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| y        | float |         | The global final `y` position                                                                   |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_position_y(100)
@@ -404,18 +412,18 @@ Anima.Node($node).anima_position_y(100)
 
 Animates the global `z` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_position_z(z: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| z | float |  | The global final `z` position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| z        | float |         | The global final `z` position                                                                   |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_position_z(-1)
@@ -425,18 +433,18 @@ Anima.Node($node).anima_position_z(-1)
 
 Animates the relative `x` and `y` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_relative_position(position: Vector2, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| position | Vector2 |  | The relative 2D position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| position | Vector2 |         | The relative 2D position                                                                        |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_relative_position(Vector2(100, 100))
@@ -446,18 +454,18 @@ Anima.Node($node).anima_relative_position(Vector2(100, 100))
 
 Animates the relative `x`, `y` and `z` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_relative_position3D(position: Vector3, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| position | Vector3 |  | The relative 3D position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| position | Vector3 |         | The relative 3D position                                                                        |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_relative_position3D(Vector3(100, 100, 0))
@@ -467,18 +475,18 @@ Anima.Node($node).anima_relative_position3D(Vector3(100, 100, 0))
 
 Animates the relative `x` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_relative_position_x(x: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| x | float |  | The relative `x` position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| x        | float |         | The relative `x` position                                                                       |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_relative_position_x(100)
@@ -488,18 +496,18 @@ Anima.Node($node).anima_relative_position_x(100)
 
 Animates the relative `y` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_relative_position_y(y: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| y | float |  | The relative `y` position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| y        | float |         | The relative `y` position                                                                       |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_relative_position_y(100)
@@ -509,40 +517,39 @@ Anima.Node($node).anima_relative_position_y(100)
 
 Animates the relative `z` position of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_relative_position_z(z: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| z | float |  | The relative `z` position |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| z        | float |         | The relative `z` position                                                                       |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_relative_position_z(-1)
 ```
 
-
 ## anima_rotate
 
 Animates the 2D rotate property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_rotate(rotate: Vector2, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate | Vector2 |  | The final rotate value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| rotate   | Vector2 |         | The final rotate value                                                                          |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_rotate(Vector2.ZERO)
@@ -552,18 +559,18 @@ Anima.Node($node).anima_rotate(Vector2.ZERO)
 
 Animates the 3D rotate property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_rotate3D(rotate: Vector3, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate | Vector3 |  | The final rotate value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| rotate   | Vector3 |         | The final rotate value                                                                          |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_rotate3D(Vector3(10, 0, -0.5))
@@ -573,18 +580,18 @@ Anima.Node($node).anima_rotate3D(Vector3(10, 0, -0.5))
 
 Animates the `x` rotate property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_rotate_x(rotate_x: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate_x | float |  | The final rotate `x` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| rotate_x | float |         | The final rotate `x` value                                                                      |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_rotate_x(0.8)
@@ -594,18 +601,18 @@ Anima.Node($node).anima_rotate_x(0.8)
 
 Animates the `y` rotate property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_rotate_y(rotate_y: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate_y | float |  | The final rotate `y` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| rotate_y | float |         | The final rotate `y` value                                                                      |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_rotate_y(0.8)
@@ -615,18 +622,18 @@ Anima.Node($node).anima_rotate_y(0.8)
 
 Animates the `z` rotate property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_rotate_z(rotate_z: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| rotate_z | float |  | The final rotate `z` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| rotate_z | float |         | The final rotate `z` value                                                                      |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_rotate_z(0.8)
@@ -636,18 +643,18 @@ Anima.Node($node).anima_rotate_z(0.8)
 
 Animates the 2D scale property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_scale(scale: Vector2, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| scale | Vector2 |  | The final scale value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| scale    | Vector2 |         | The final scale value                                                                           |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale(Vector2.ZERO)
@@ -657,18 +664,18 @@ Anima.Node($node).anima_scale(Vector2.ZERO)
 
 Animates the 3D scale property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_scale3D(scale: Vector3, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| scale | Vector3 |  | The final scale value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| scale    | Vector3 |         | The final scale value                                                                           |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale3D(Vector3(10, 0, -0.5))
@@ -678,18 +685,18 @@ Anima.Node($node).anima_scale3D(Vector3(10, 0, -0.5))
 
 Animates the `x` scale property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_scale_x(scale_x: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| scale_x | float |  | The final scale `x` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| scale_x  | float |         | The final scale `x` value                                                                       |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_x(0.8)
@@ -699,18 +706,18 @@ Anima.Node($node).anima_scale_x(0.8)
 
 Animates the `y` scale property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_scale_y(scale_y: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| scale_y | float |  | The final scale `y` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| scale_y  | float |         | The final scale `y` value                                                                       |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_y(0.8)
@@ -720,40 +727,39 @@ Anima.Node($node).anima_scale_y(0.8)
 
 Animates the `z` scale property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_scale_z(scale_z: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| scale_z | float |  | The final scale `z` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| scale_z  | float |         | The final scale `z` value                                                                       |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_scale_z(0.8)
 ```
 
-
 ## anima_size
 
 Animates the 2D size property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_size(size: Vector2, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| size | Vector2 |  | The final size value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| size     | Vector2 |         | The final size value                                                                            |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_size(Vector2.ZERO)
@@ -763,18 +769,18 @@ Anima.Node($node).anima_size(Vector2.ZERO)
 
 Animates the 3D size property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_size3D(size: Vector3, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| size | Vector3 |  | The final size value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type    | Default | Description                                                                                     |
+| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| size     | Vector3 |         | The final size value                                                                            |
+| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_size3D(Vector3(10, 0, -0.5))
@@ -784,18 +790,18 @@ Anima.Node($node).anima_size3D(Vector3(10, 0, -0.5))
 
 Animates the `x` size property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_size_x(size_x: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| size_x | float |  | The final size `x` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| size_x   | float |         | The final size `x` value                                                                        |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_size_x(0.8)
@@ -805,18 +811,18 @@ Anima.Node($node).anima_size_x(0.8)
 
 Animates the `y` size property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_size_y(size_y: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| size_y | float |  | The final size `y` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| size_y   | float |         | The final size `y` value                                                                        |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_size_y(0.8)
@@ -826,18 +832,18 @@ Anima.Node($node).anima_size_y(0.8)
 
 Animates the `z` size property of the given element(s)
 
-####  Syntax
+#### Syntax
 
 ```gdscript
 anima_size_z(size_z: float, duration: float)
 ```
 
-| Param | Type | Default | Description |
-|---|---|---|---|
-| size_z | float |  | The final size `z` value |
-| duration | float | null | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+| Param    | Type  | Default | Description                                                                                     |
+| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
+| size_z   | float |         | The final size `z` value                                                                        |
+| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
 
-####  Example
+#### Example
 
 ```gdscript
 Anima.Node($node).anima_size_z(0.8)

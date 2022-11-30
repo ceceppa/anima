@@ -60,16 +60,6 @@ func init_node(node: Node):
 func then(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
-		data.__ignore_warning = true
-	elif not data.has("__ignore_warning"):
-		printerr(
-			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
-			"\n",
-			"Visit https://ANIMA.ceceppa.me/docs/docs/anima-declaration for more info"
-		)
-		print_stack()
-		print(data)
-		print("\n")
 
 	data._wait_time = _total_animation_length
 
@@ -84,16 +74,6 @@ func then(data) -> AnimaNode:
 func with(data) -> AnimaNode:
 	if not data is Dictionary:
 		data = data.get_data()
-		data.__ignore_warning = true
-	elif not data.has("__ignore_warning"):
-		printerr(
-			"Passing data as Dictionary has been deprecated and will be removed in the future versions.",
-			"\n",
-			"Visit https://anima.ceceppa.me/docs/docs/anima-declaration for more info"
-		)
-		print(data)
-		print("\n")
-		print_stack()
 
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
@@ -123,7 +103,6 @@ func wait(seconds: float) -> AnimaNode:
 		from = 0.0,
 		to = 1.0,
 		duration = seconds,
-		__ignore_warning = true
 	})
 
 func skip(_ignore) -> AnimaNode:
