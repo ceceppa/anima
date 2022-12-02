@@ -135,3 +135,6 @@ func anima_rotate_y(y: float, duration = null) -> AnimaDeclarationForProperty:
 
 func anima_rotate_z(z: float, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "rotation:z", to = z, duration = duration })
+
+func anima_shader_param(param_name: String, to_value, duration = null) -> AnimaDeclarationForProperty:
+	return _create_declaration_with_easing({ property = "shader_param:" + param_name, to = to_value, duration = duration })

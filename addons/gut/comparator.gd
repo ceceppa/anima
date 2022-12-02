@@ -45,7 +45,7 @@ func simple(v1, v2, missing_string=''):
 		result.are_equal = v1 == v2
 
 	elif(_utils.are_datatypes_same(v1, v2)):
-		if typeof(v1) == TYPE_REAL:
+		if typeof(v1) == TYPE_REAL and v2 != null:
 			result.are_equal = round(v1 * 100) == round(v2 * 100)
 		else:
 			result.are_equal = v1 == v2

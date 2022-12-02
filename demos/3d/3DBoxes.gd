@@ -3,7 +3,7 @@ extends Spatial
 export (bool) var _play_backwards = false
 
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
-const TOTAL_BOXES := 0
+const TOTAL_BOXES := 20
 const DISTANCE := 0.3
 
 export var _test_me:= false setget set_test_me
@@ -21,8 +21,9 @@ func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
 	_reset_boxes_position($Node, start_position)
 
-	var anima := Anima.begin($Node)
-	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3).debug() )
+	var anima := Anima.begin($Node) \
+		.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
+#		.then( Anima.Group($Node, 0.02).anima_shader_param("albedo", Color("#6b9eb1")).anima_from(Color('#6b9eb1')).debug() )
 
 	if _play_backwards:
 		_init_reverse_boxes()
@@ -58,19 +59,20 @@ func _boxes_animation() -> Dictionary:
 			"shader_param:albedo": Color('#6b9eb1'),
 		},
 		30: {
-			"shader_param:albedo": Color('#e63946')
+			"shader_param:albedo": Color('#6b9eb1')
 		},
 		35: {
 			"+x": -28.117,
 			easing = ANIMA.EASING.EASE_OUT_QUAD,
 		},
 		40: {
-			"+x": 0,
-			"shader_param:albedo": Color('#e63946')
+			"shader_param:albedo": Color('#e63946'),
+			"+x": -28.117,
 		},
 		65: {
-			"+x": 0,
-			scale = Vector3(0.1, 1, 1)
+			"+x": -28.117,
+			scale = Vector3(0.1, 1, 1),
+			"shader_param:albedo": Color('#e63946')
 		},
 		85: {
 			scale = Vector3.ZERO,
@@ -79,7 +81,7 @@ func _boxes_animation() -> Dictionary:
 			"+x": -25.619,
 			easing = ANIMA.EASING.EASE_IN_CIRC,
 			"+rotation:x": 360,
-			"shader_param:albedo": Color('#6b9eb1')
+			"shader_param:albedo": Color.blue
 		},
 	}
 
