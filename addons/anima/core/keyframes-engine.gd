@@ -66,13 +66,18 @@ static func flatten_keyframes_data(data: Dictionary) -> Array:
 
 		for key in result[frame_key]:
 			if keys_to_ignore.find(key) < 0 and not result[0].has(key):
-				if key.begins_with("+") and result[0].has(key.substr(1)):
+				var is_relative_property: bool = key.begins_with("+")
+
+				if is_relative_property and result[0].has(key.substr(1)):
 					continue
 
 				if not keys_to_insert.has(key):
 					keys_to_insert[key] = 0
 
-				keys_to_insert[key] += 1
+				if not is_relative_property:
+					keys_to_insert[key] += 1
+				else:
+					keys_to_insert[key] = 1
 
 	for frame_key in frame_keys:
 		var frame_data = result[frame_key]

@@ -385,6 +385,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			material = node.material
 
 		return {
+			property = "shader_param",
 			callback = funcref(material, 'set_shader_param'),
 			param = p[1]
 		}

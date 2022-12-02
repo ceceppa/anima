@@ -11,7 +11,6 @@ var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "
 
 var _animation_data := []
 var _callbacks := {}
-var _loop_strategy = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
@@ -65,8 +64,6 @@ func do_apply_initial_values() -> void:
 	if _should_apply_initial_values:
 		for data in _initial_values:
 			_apply_initial_values(data)
-
-	_should_apply_initial_values = false
 
 func set_apply_initial_values(when) -> void:
 	_apply_initial_values_on = when
@@ -210,6 +207,8 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		elif is_object:
 			push_warning("not yet implemented")
 			pass
+		elif property_data.property == "shader_param":
+			property_data.callback.call_funcv([property_data.param, value])
 		elif property_data.has('subkey'):
 			node[property_data.property][property_data.key][property_data.subkey] = value
 		elif property_data.has('key'):
@@ -267,9 +266,6 @@ func clear_animations() -> void:
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
-
-func set_loop_strategy(strategy: int) -> void:
-	_loop_strategy = strategy
 
 func _reverse_animation(animation_data: Array, animation_length: float, default_duration: float):
 	clear_animations()
@@ -443,7 +439,6 @@ class AnimatedItem extends Node:
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
-	var _loop_strategy: int = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
 	var _property_data: Dictionary

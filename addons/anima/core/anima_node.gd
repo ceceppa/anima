@@ -179,13 +179,6 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if _anima_tween.get_animation_data().size() == 0:
 		return self
 
-	#
-	# If the user wants to play an animation with a delay, we still
-	# need to apply for the initial values
-	#
-	if mode != AnimaTween.PLAY_MODE.BACKWARDS:
-		_anima_tween.do_apply_initial_values()
-
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
@@ -295,6 +288,12 @@ func _do_play() -> void:
 			_anima_backwards_tween._reverse_animation(_anima_tween.get_animation_data(), _total_animation_length, _default_duration)
 
 		tween = _anima_backwards_tween
+	else:
+		#
+		# If the user wants to play an animation with a delay, we still
+		# need to apply for the initial values
+		#
+		_anima_tween.do_apply_initial_values()
 
 	tween.play(_play_speed)
 
@@ -308,12 +307,6 @@ func _do_play() -> void:
 		_current_play_mode = AnimaTween.PLAY_MODE.BACKWARDS
 	else:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
-
-func set_loop_strategy(strategy: int) -> AnimaNode:
-	_anima_tween.set_loop_strategy(strategy)
-	_anima_backwards_tween.set_loop_strategy(strategy)
-
-	return self
 
 func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
