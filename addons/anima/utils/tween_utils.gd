@@ -22,7 +22,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		calculated_from = calculate_dynamic_value(animation_data.from, animation_data)
 		calculated_from = _maybe_convert_from_deg_to_rad(node, animation_data, calculated_from)
 
-	from = _maybe_convert_from_deg_to_rad(node, animation_data, current_value)
+	from = current_value # _maybe_convert_from_deg_to_rad(node, animation_data, current_value)
 
 	if relative:
 		if not node.has_meta(meta_key_last_relative_position):

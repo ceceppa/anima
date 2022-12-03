@@ -31,12 +31,12 @@ mesh = SubResource( 2 )
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011 )
 environment = SubResource( 3 )
+current = true
 far = 8192.0
 
 [node name="Camera2" type="Camera" parent="."]
 transform = Transform( 0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011 )
 environment = SubResource( 3 )
-current = true
 fov = 101.1
 far = 8192.0
 

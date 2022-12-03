@@ -74,6 +74,9 @@ func _boxes_animation() -> Dictionary:
 			scale = Vector3(0.1, 1, 1),
 			"shader_param:albedo": Color('#e63946')
 		},
+		70: {
+			scale = Vector3(0.1, 1, 1),
+		},
 		85: {
 			scale = Vector3.ZERO,
 		},
@@ -81,7 +84,7 @@ func _boxes_animation() -> Dictionary:
 			"+x": -25.619,
 			easing = ANIMA.EASING.EASE_IN_CIRC,
 			"+rotation:x": 360,
-			"shader_param:albedo": Color.blue
+			"shader_param:albedo": Color('#6b9eb1')
 		},
 	}
 
@@ -104,9 +107,15 @@ func _init_reverse_boxes() -> void:
 func _init_boxes(parentNode: Node) -> void:
 	var box := parentNode.get_child(0)
 
+	box.remove_meta("_initial_relative_value_rotation:x")
+	box.remove_meta("_last_relative_value_rotation:x")
+
 	for i in TOTAL_BOXES:
 		var clone := box.duplicate()
 		clone.global_transform = box.global_transform
+
+		clone.remove_meta("_initial_relative_value_rotation:x")
+		clone.remove_meta("_last_relative_value_rotation:x")
 
 		parentNode.add_child(clone)
 

@@ -304,6 +304,9 @@ func set_editor_position(new_position: int) -> void:
 func preview_animation(preview_info: Dictionary) -> void:
 	var animations_data: Dictionary = _get_animation_data_by_name(preview_info.animation_name)
 
+	if _is_playing:
+		return
+
 	if animations_data.size() == 0:
 		printerr("The selected animation is empty") 
 
