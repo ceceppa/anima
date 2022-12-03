@@ -1,7 +1,7 @@
 extends "res://addons/gut/test.gd"
 
 func test_add_frames_returns_the_correct_length():
-	var tween := AnimaTween.new(AnimaTween.PLAY_MODE.NORMAL)
+	var tween := AnimaTween.new()
 	var node := Control.new()
 
 	add_child(tween)
@@ -28,7 +28,7 @@ func test_add_frames_returns_the_correct_length():
 	tween.free()
 
 func test_calculate_the_real_duration():
-	var tween := AnimaTween.new(AnimaTween.PLAY_MODE.NORMAL)
+	var tween := AnimaTween.new()
 	var node := Label.new()
 
 	node.text = "The quick brown fox jumps over the lazy dog"

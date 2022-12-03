@@ -7,7 +7,7 @@ signal animation_completed
 signal loop_started
 signal loop_completed
 
-var _anima_tween := AnimaTween.new(AnimaTween.PLAY_MODE.NORMAL)
+var _anima_tween := AnimaTween.new()
 var _timer := Timer.new()
 
 var _total_animation_length := 0.0
