@@ -1,6 +1,6 @@
 class_name AnimaTweenUtils
 
-static func calculate_from_and_to(animation_data: Dictionary, is_backwards_animation: bool) -> Dictionary:
+static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 	var node: Node = animation_data.node
 	var from
 	var to
@@ -36,7 +36,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 			from = previous_end_position
 
 	if animation_data.has('to'):
-		var start = current_value if is_backwards_animation else from
+		var start = from
 
 		#
 		# Translations created via keyframes behave slighly different from
@@ -60,8 +60,6 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if not node is Spatial and not node is CanvasModulate:
 		AnimaNodesProperties.set_2D_pivot(animation_data.node, pivot)
 
-	var s = -1.0 if is_backwards_animation and relative else 1.0
-
 	if from is Vector2 and to is Vector3:
 		to = Vector2(to.x, to.y)
 
@@ -78,7 +76,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 
 	return {
 		from = from,
-		diff = (to - from) * s
+		diff = to - from
 	}
 
 static func calculate_dynamic_value(value, animation_data: Dictionary):

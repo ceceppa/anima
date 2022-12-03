@@ -13,7 +13,7 @@ func test_it_works_if_calculated_value_is_null():
 		to = Color(0.019608,0.266667,0.368627,1)
 	}
 	
-	var output = AnimaTweenUtils.calculate_from_and_to(test_data, false)
+	var output = AnimaTweenUtils.calculate_from_and_to(test_data)
 
 	assert_typeof(output, TYPE_DICTIONARY)
 

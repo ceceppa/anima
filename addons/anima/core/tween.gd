@@ -16,8 +16,7 @@ var _tween_started := 0
 var _root_node: Node
 var _use_meta_values := true
 var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
-var _is_backwards_tween := false
-var _should_apply_initial_values: bool
+var _should_apply_initial_values := true
 var _initial_values := []
 
 enum PLAY_MODE {
@@ -25,11 +24,6 @@ enum PLAY_MODE {
 	BACKWARDS,
 	LOOP_IN_CIRCLE
 }
-
-func _init(play_mode: int):
-	_is_backwards_tween = play_mode != PLAY_MODE.NORMAL
-
-	_should_apply_initial_values = !_is_backwards_tween
 
 func _exit_tree():
 	for child in get_children():
@@ -128,10 +122,7 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	elif easing_points is Curve:
 		use_method = 'animate_with_curve'
 
-	var from := 1.0 if _is_backwards_tween else 0.0
-	var to := 1.0 - from
-
-	object.set_animation_data(animation_data, property_data, _is_backwards_tween)
+	object.set_animation_data(animation_data, property_data)
 
 	if animation_data.has("__debug"):
 		printt("use_method", use_method)
@@ -372,15 +363,13 @@ class AnimatedItem extends Node:
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
-	var _is_backwards_animation: bool = false
 	var _root_node: Node
 	var _property_data: Dictionary
 	var _easing_curve: Curve
 	var _visibility_applied := false
 
-	func set_animation_data(data: Dictionary, property_data: Dictionary, is_backwards_animation: bool) -> void:
+	func set_animation_data(data: Dictionary, property_data: Dictionary) -> void:
 		_animation_data = data
-		_is_backwards_animation = is_backwards_animation
 
 		if property_data.has("callback"):
 			_callback = property_data.callback
@@ -452,7 +441,7 @@ class AnimatedItem extends Node:
 			set_visibility_strategy()
 
 		if _property_data.size() == 0:
-			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
+			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data)
 
 			if _animation_data.has("__debug"):
 				printt("_property_data", _property_data)
@@ -543,7 +532,7 @@ class AnimatedCallbackWithParam extends AnimatedItem:
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:
 		if _property_data.size() == 0:
-			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
+			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data)
 
 		apply_value(Rect2(
 			_property_data.from.position + (_property_data.diff.position * elapsed),
@@ -556,7 +545,6 @@ class AnimateRect2 extends AnimatedItem:
 class AnimaEvent extends Node:
 	var _data: Dictionary
 	var _callback
-	var _is_backwards_animation := false
 	var _executed := false
 
 	func _init(animation_data: Dictionary, callback_key: String) -> void:
@@ -579,9 +567,6 @@ class AnimaEvent extends Node:
 		if _callback is Array:
 			fn = _callback[0]
 			args = _callback[1]
-
-			if _is_backwards_animation:
-				args = _callback[2]
 		else:
 			fn = _callback
 
