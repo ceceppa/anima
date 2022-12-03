@@ -319,6 +319,8 @@ __meta__ = {
 "__initial_Button2_scale": Vector2( 1, 1 ),
 "__visibility_strategy": 0,
 "_edit_lock_": true,
+"_initial_relative_value_position:x": 45.0,
+"_last_relative_value_position:x": 45.0,
 "_visibility_strategy_reverted": true
 }
 

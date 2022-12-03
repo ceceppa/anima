@@ -30,4 +30,6 @@ text = "Euclidian"
 items = [ "Euclidian", null, false, 0, null, "Manhattan", null, false, 1, null, "Chebyshev", null, false, 2, null, "ROW", null, false, 3, null, "COLUMN", null, false, 4, null, "DIAGONAL", null, false, 5, null ]
 selected = 0
 
+[node name="ShowAllDemos2" parent="." instance=ExtResource( 1 )]
+
 [connection signal="item_selected" from="HBoxContainer/Formula" to="." method="_on_OptionButton_item_selected"]

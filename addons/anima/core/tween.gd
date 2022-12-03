@@ -267,83 +267,6 @@ func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
 
-func _reverse_animation(animation_data: Array, animation_length: float, default_duration: float):
-	clear_animations()
-
-	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
-
-	for new_data in data:
-		add_animation_data(new_data)
-
-#
-# In order to flip "nested relative" animations we need to calculate what all the
-# property as it would be if the animation is played normally. Only then we can calculate
-# the correct relative positions, by also looking at the previous frames.
-# Otherwise we would end up with broken animations when animating the same property more than
-# once
-func _flip_animations(data: Array, animation_length: float, default_duration: float) -> Array:
-	var new_data := []
-	var previous_frames := {}
-	var length: float = animation_length
-
-	data.invert()
-	for animation in data:
-		if animation.has("_ignore_for_backwards"):
-			continue
-
-		var animation_data = animation.duplicate(true)
-
-		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
-		var wait_time: float = animation_data._wait_time
-		var node = animation_data.node
-		var new_wait_time: float = length - duration - wait_time
-		var property = animation_data.property
-		var is_relative = animation_data.has("relative") and animation_data.relative
-
-		if animation_data.has("initial_value"):
-			animation_data.erase("initial_value")
-
-		if animation_data.has("initial_values"):
-			animation_data.erase("initial_values")
-
-		if not is_relative:
-			var temp = animation_data.to
-			var meta_key: String = "__initial_" + node.name + "_" + str(animation_data.property) 
-
-			if animation_data.has("from"):
-				animation_data.to = animation_data.from
-			elif node.has_meta(meta_key):
-				animation_data.to = node.get_meta(meta_key)
-
-			animation_data.from = temp
-
-		animation_data._wait_time = max(ANIMA.MINIMUM_DURATION, new_wait_time)
-
-		var old_on_completed = animation_data.on_completed if animation_data.has("on_completed") else null
-		var erase_on_completed := true
-
-		if animation_data.has("on_started"):
-			animation_data.on_completed = animation_data.on_started
-			animation_data.erase("on_started")
-
-			erase_on_completed = false
-
-		if old_on_completed:
-			animation_data.on_started = old_on_completed
-
-			if erase_on_completed:
-				animation_data.erase('on_completed')
-
-		animation_data.erase("initial_values")
-		animation_data.erase("initial_value")
-		
-		if animation_data.has("easing") and animation_data.easing:
-			animation_data.easing = AnimaEasing.get_mirrored_easing(animation_data.easing)
-
-		new_data.push_back(animation_data)
-
-	return new_data
-
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIMA.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame') or not animation_data._is_first_frame:
 		return
@@ -391,6 +314,16 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 		duration = max(duration, frame_duration)
 
 		add_animation_data(frame)
+
+	return duration
+
+func get_duration() -> float:
+	var duration := 0.0
+
+	for data in _animation_data:
+		var data_duration = data._wait_time + data.duration
+
+		duration = max(duration, data_duration)
 
 	return duration
 

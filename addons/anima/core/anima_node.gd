@@ -8,7 +8,6 @@ signal loop_started
 signal loop_completed
 
 var _anima_tween := AnimaTween.new(AnimaTween.PLAY_MODE.NORMAL)
-var _anima_backwards_tween := AnimaTween.new(AnimaTween.PLAY_MODE.BACKWARDS)
 var _timer := Timer.new()
 
 var _total_animation_length := 0.0
@@ -49,10 +48,8 @@ func _ready():
 
 func init_node(node: Node):
 	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
-	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 
 	add_child(_anima_tween)
-	add_child(_anima_backwards_tween)
 
 	if node != self:
 		node.add_child(self)
@@ -126,7 +123,6 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> Ani
 		return self
 
 	_anima_tween.set_visibility_strategy(strategy)
-	_anima_backwards_tween.set_visibility_strategy(strategy)
 
 	if always_apply_on_play:
 		_apply_visibility_strategy_on_play = true
@@ -140,7 +136,6 @@ func clear() -> void:
 	stop()
 
 	_anima_tween.clear_animations()
-	_anima_backwards_tween.clear_animations()
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
@@ -202,7 +197,6 @@ func stop() -> AnimaNode:
 
 	if is_instance_valid(_anima_tween):
 		_anima_tween.stop_all()
-		_anima_backwards_tween.stop_all()
 
 	return self
 
@@ -282,20 +276,31 @@ func _do_play() -> void:
 
 	_loop_count += 1
 
-	var tween: AnimaTween = _anima_tween
 	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
-		if not _anima_backwards_tween.has_data():
-			_anima_backwards_tween._reverse_animation(_anima_tween.get_animation_data(), _total_animation_length, _default_duration)
+		var tween := Tween.new()
 
-		tween = _anima_backwards_tween
+		tween.name = name + "_backwards"
+
+		tween.interpolate_method(
+			self,
+			"_play_backwards",
+			_anima_tween.get_duration(),
+			0.0,
+			_anima_tween.get_duration()
+		)
+		
+		add_child(tween)
+		
+		tween.start()
+		
+		tween.connect("tween_all_completed", self, "_on_backwords_tween_complete", [tween])
 	else:
 		#
 		# If the user wants to play an animation with a delay, we still
 		# need to apply for the initial values
 		#
 		_anima_tween.do_apply_initial_values()
-
-	tween.play(_play_speed)
+		_anima_tween.play(_play_speed)
 
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
@@ -726,5 +731,14 @@ func _on_all_tween_completed() -> void:
 	if _should_loop:
 		_maybe_play()
 
+func _on_backwords_tween_complete(tween: Tween) -> void:
+	tween.queue_free()
+
+	_on_all_tween_completed()
+
 func get_animation_data() -> Array:
 	return _anima_tween.get_animation_data()
+
+func _play_backwards(time: float) -> void:
+	_anima_tween.seek(time)
+
