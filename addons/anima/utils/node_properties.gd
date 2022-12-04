@@ -10,7 +10,7 @@
 #
 class_name AnimaNodesProperties
 
-static func get_position(node: Node) -> Vector2:
+static func get_position(node: Node):
 	if node is Control:
 		return node.position
 	if node is Node2D:

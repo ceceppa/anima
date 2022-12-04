@@ -1,6 +1,6 @@
 extends Node3D
 
-@export (bool) var _play_backwards = false
+@export var _play_backwards := false
 
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
 const TOTAL_BOXES := 20
@@ -17,16 +17,14 @@ func _ready():
 	AnimaAnimationsUtils.register_animation('ring', _ring())
 
 	_init_boxes($Node)
-
-	if not Engine.editor_hint:
-		_do_animation()
+	_do_animation()
 
 func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
 	_reset_boxes_position($Node, start_position)
 
 	var anima := Anima.begin($Node) \
-		super.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
+		.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
 
 	if _play_backwards:
 		_init_reverse_boxes()
@@ -57,15 +55,15 @@ func _ring() -> Dictionary:
 
 func _boxes_animation() -> Dictionary:
 	return {
-		from = {
+		"from": {
 			scale = Vector3(0.1, 1, 1),
-			"shader_param:albedo": Color('#6b9eb1'),
+			"shader_param:albedo" = Color('#6b9eb1'),
 		},
 		30: {
-			"shader_param:albedo": Color('#6b9eb1')
+			"shader_param:albedo" = Color('#6b9eb1')
 		},
 		35: {
-			"+x": -28.117,
+			"+x" = -28.117,
 			easing = ANIMA.EASING.EASE_OUT_QUAD,
 		},
 		40: {
@@ -73,9 +71,9 @@ func _boxes_animation() -> Dictionary:
 			"+x": -28.117,
 		},
 		65: {
-			"+x": -28.117,
+			"+x" = -28.117,
 			scale = Vector3(0.1, 1, 1),
-			"shader_param:albedo": Color('#e63946')
+			"shader_param:albedo" = Color('#e63946')
 		},
 		70: {
 			scale = Vector3(0.1, 1, 1),
@@ -83,11 +81,11 @@ func _boxes_animation() -> Dictionary:
 		85: {
 			scale = Vector3.ZERO,
 		},
-		to = {
-			"+x": -25.619,
+		"to": {
+			"+x" = -25.619,
 			easing = ANIMA.EASING.EASE_IN_CIRC,
-			"+rotation:x": 360,
-			"shader_param:albedo": Color('#6b9eb1')
+			"+rotation:x" = 360,
+			"shader_param:albedo" = Color('#6b9eb1')
 		},
 	}
 

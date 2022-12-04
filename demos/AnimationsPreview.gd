@@ -20,7 +20,7 @@ func _setup_list() -> void:
 
 		var button := Button.new()
 		button.set_text(file.replace('_', ' ').capitalize())
-		button.set_text_alignment(Button.ALIGN_LEFT)
+		button.set_text_alignment(HORIZONTAL_ALIGNMENT_LEFT)
 		button.set_meta('script', file)
 		button.connect("pressed",Callable(self,'_on_animation_button_pressed').bind(button))
 
@@ -48,7 +48,7 @@ func create_new_header(text: String) -> PanelContainer:
 func _on_animation_button_pressed(button: Button) -> void:
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = $HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text.to_float()
 
 	_play_animation($HBoxContainer/VBoxContainer/ControlContainer/ControlTest, button)
 	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
@@ -56,7 +56,7 @@ func _on_animation_button_pressed(button: Button) -> void:
 func _play_animation(node: Node, button: Button):
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = $HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text.to_float()
 	var parent = node.get_parent()
 	var clone = node.duplicate()
 

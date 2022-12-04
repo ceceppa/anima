@@ -1,60 +1,58 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://tgawxk0uh3uk"]
 
-[ext_resource path="res://demos/3d/3DBoxes.gd" type="Script" id=1]
-[ext_resource path="res://demos/resources/ring.obj" type="ArrayMesh" id=2]
-[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
-[ext_resource path="res://tests/Box.tscn" type="PackedScene" id=4]
+[ext_resource type="Script" path="res://demos/3d/3DBoxes.gd" id="1"]
+[ext_resource type="ArrayMesh" uid="uid://chu2qdbithcns" path="res://demos/resources/ring.obj" id="2"]
+[ext_resource type="PackedScene" path="res://demos/components/ShowAllDemos.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://tests/Box.tscn" id="4"]
 
-[sub_resource type="StandardMaterial3D" id=1]
+[sub_resource type="StandardMaterial3D" id="1"]
 vertex_color_use_as_albedo = true
-albedo_color = Color( 0.717647, 0.72549, 0.733333, 1 )
+albedo_color = Color(0.717647, 0.72549, 0.733333, 1)
 
-[sub_resource type="PlaneMesh" id=2]
-material = SubResource( 1 )
-size = Vector2( 400, 400 )
+[sub_resource type="PlaneMesh" id="2"]
+material = SubResource("1")
+size = Vector2(400, 400)
 
-[sub_resource type="Environment" id=3]
-ambient_light_color = Color( 1, 1, 1, 1 )
-fog_enabled = true
-fog_depth_begin = 0.0
-fog_depth_end = 120.0
+[sub_resource type="Environment" id="3"]
+ambient_light_color = Color(1, 1, 1, 1)
 ssr_enabled = true
 ssr_max_steps = 128
+fog_enabled = true
 
 [node name="3DBoxes" type="Node3D"]
-script = ExtResource( 1 )
+script = ExtResource("1")
 _play_backwards = true
 
 [node name="Base" type="MeshInstance3D" parent="."]
-transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.78114, 0, -88.8639 )
-mesh = SubResource( 2 )
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.78114, 0, -88.8639)
+mesh = SubResource("2")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D( 0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011 )
-environment = SubResource( 3 )
+transform = Transform3D(0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011)
+environment = SubResource("3")
 current = true
 far = 8192.0
 
 [node name="Camera2" type="Camera3D" parent="."]
-transform = Transform3D( 0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011 )
-environment = SubResource( 3 )
+transform = Transform3D(0.899153, 0.263076, -0.349735, 0, 0.79915, 0.601132, 0.437634, -0.54051, 0.718558, -9.00037, 5.68232, 5.41011)
+environment = SubResource("3")
 fov = 101.1
 far = 8192.0
 
 [node name="Node" type="Node" parent="."]
 
-[node name="Box" parent="Node" instance=ExtResource( 4 )]
+[node name="Box" parent="Node" instance=ExtResource("4")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D( 0.743588, -0.340043, 0.575715, -0.279327, 0.624315, 0.729525, -0.607497, -0.703279, 0.36925, 8.69176, 28.6973, 10.7438 )
+transform = Transform3D(0.743588, -0.340043, 0.575715, -0.279327, 0.624315, 0.729525, -0.607497, -0.703279, 0.36925, 8.69176, 28.6973, 10.7438)
 light_energy = 0.71
 shadow_enabled = true
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
-extents = Vector3( 50, 7.26065, 28 )
+extents = Vector3(50, 7.26065, 28)
 
 [node name="ring" type="MeshInstance3D" parent="."]
-transform = Transform3D( 0.2, 0, 0, 0, -0.19369, -0.0498417, 0, 0.0498417, -0.19369, -7.69054, 0.421776, 3.32684 )
-mesh = ExtResource( 2 )
+transform = Transform3D(0.2, 0, 0, 0, -0.19369, -0.0498417, 0, 0.0498417, -0.19369, -7.69054, 0.421776, 3.32684)
+mesh = ExtResource("2")
 
-[node name="ShowAllDemos" parent="ring" instance=ExtResource( 3 )]
+[node name="ShowAllDemos" parent="ring" instance=ExtResource("3")]

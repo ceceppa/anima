@@ -15,10 +15,8 @@ script = ExtResource("2")
 
 [node name="ShowAllDemos" parent="." instance=ExtResource("1")]
 visible = false
-layout_mode = 0
 
 [node name="Label" parent="." instance=ExtResource("3")]
-layout_mode = 1
 anchors_preset = 15
 grow_horizontal = 2
 grow_vertical = 2
@@ -27,7 +25,6 @@ text = "Grid demo"
 [node name="Grid" type="Node" parent="."]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 40.0
@@ -35,12 +32,10 @@ grow_horizontal = 2
 alignment = 2
 
 [node name="Formula" type="OptionButton" parent="HBoxContainer"]
-layout_mode = 2
 offset_left = 1138.0
 offset_right = 1152.0
 offset_bottom = 40.0
 
 [node name="ShowAllDemos2" parent="." instance=ExtResource("1")]
-layout_mode = 0
 
 [connection signal="item_selected" from="HBoxContainer/Formula" to="." method="_on_OptionButton_item_selected"]
