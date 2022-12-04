@@ -140,7 +140,7 @@ Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/anima/plugin.cfg")
 
 [global]
 
