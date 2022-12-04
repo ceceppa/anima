@@ -32,7 +32,7 @@ static func begin_single_shot(node: Node, name: String = "_anima_") -> AnimaNode
 static func Node(node: Node) -> AnimaDeclarationNode:
 	return AnimaDeclarationNode.new(node)
 
-static func Nodes(nodes: Array, items_delay: float) -> AnimaDeclarationNodes:
+static func Nodes(nodes, items_delay: float) -> AnimaDeclarationNodes:
 	return AnimaDeclarationNodes.new(nodes, items_delay)
 
 static func Group(group: Node, items_delay: float, animation_type: int = ANIMA.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:

@@ -22,7 +22,7 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		calculated_from = calculate_dynamic_value(animation_data.from, animation_data)
 		calculated_from = _maybe_convert_from_deg_to_rad(node, animation_data, calculated_from)
 
-	from = current_value # _maybe_convert_from_deg_to_rad(node, animation_data, current_value)
+	from = _maybe_convert_from_deg_to_rad(node, animation_data, current_value)
 
 	if relative:
 		if not node.has_meta(meta_key_last_relative_position):
@@ -34,6 +34,8 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 			var previous_end_position = node.get_meta(meta_key_last_relative_position)
 
 			from = previous_end_position
+	elif calculated_from != null:
+		from = calculated_from
 
 	if animation_data.has('to'):
 		var start = from
@@ -64,8 +66,8 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		to = Vector2(to.x, to.y)
 
 	if animation_data.has("__debug"):
-		print("")
-		printt("Node Name:", animation_data.node.name, "property", animation_data.property, "from", from, "to", to, "current_value", current_value)
+		print("calculate_from_and_to")
+		printt("", "Node Name:", animation_data.node.name, "property", animation_data.property, "from", from, "to", to, "current_value", current_value)
 		printt("", animation_data)
 
 	if typeof(to) == TYPE_RECT2:

@@ -77,32 +77,7 @@ const _easing_mapping = {
 	EASING.EASE_IN_OUT_ELASTIC: 'ease_in_out_elastic',
 	EASING.EASE_IN_BOUNCE: 'ease_in_bounce',
 	EASING.EASE_OUT_BOUNCE: 'ease_out_bounce',
-	EASING.EASE_IN_OUT_BOUNCE: 'ease_in_out_bounce'
-}
-
-const MIRRORED_EASING := {
-	EASING.EASE_IN: EASING.EASE_OUT,
-	EASING.EASE_OUT: EASING.EASE_IN,
-	EASING.EASE_IN_SINE: EASING.EASE_OUT_SINE,
-	EASING.EASE_OUT_SINE: EASING.EASE_IN_SINE,
-	EASING.EASE_IN_QUAD: EASING.EASE_OUT_QUAD,
-	EASING.EASE_OUT_QUAD: EASING.EASE_IN_QUAD,
-	EASING.EASE_IN_CUBIC: EASING.EASE_OUT_CUBIC,
-	EASING.EASE_OUT_CUBIC: EASING.EASE_IN_CUBIC,
-	EASING.EASE_IN_QUART: EASING.EASE_OUT_QUART,
-	EASING.EASE_OUT_QUART: EASING.EASE_IN_QUART,
-	EASING.EASE_IN_QUINT: EASING.EASE_OUT_QUINT,
-	EASING.EASE_OUT_QUINT: EASING.EASE_IN_QUINT,
-	EASING.EASE_IN_EXPO: EASING.EASE_OUT_EXPO,
-	EASING.EASE_OUT_EXPO: EASING.EASE_IN_EXPO,
-	EASING.EASE_IN_CIRC: EASING.EASE_OUT_CIRC,
-	EASING.EASE_OUT_CIRC: EASING.EASE_IN_CIRC,
-	EASING.EASE_IN_BACK: EASING.EASE_OUT_BACK,
-	EASING.EASE_OUT_BACK: EASING.EASE_IN_BACK,
-	EASING.EASE_IN_ELASTIC: EASING.EASE_OUT_ELASTIC,
-	EASING.EASE_OUT_ELASTIC: EASING.EASE_IN_ELASTIC,
-	EASING.EASE_IN_BOUNCE: EASING.EASE_OUT_BOUNCE,
-	EASING.EASE_OUT_BOUNCE: EASING.EASE_IN_BOUNCE,
+	EASING.EASE_IN_OUT_BOUNCE: 'ease_in_out_bounce',
 }
 
 const _ELASTIC_C4: float = (2.0 * PI) / 3.0
@@ -114,6 +89,23 @@ static func get_easing_points(easing_name):
 
 	if _easing_mapping.has(easing_name):
 		return _easing_mapping[easing_name]
+
+	if easing_name is String and easing_name.find("spring") >= 0:
+		var params: Array = easing_name.replace("spring", "").replace("(", "").replace(")", "").split(",")
+
+		var mass = params[0]
+		if mass == null or mass == "":
+			mass = 1.0
+
+		var spring_params := {
+			fn = "__spring",
+			mass = float(mass),
+			stiffness = float(params[1]) if params.size() >= 2 else 100.0,
+			damping = float(params[2]) if params.size() >= 3 else 10.0,
+			velocity = float(params[3]) if params.size() >= 4 else 0.0,
+		}
+
+		return spring_params
 
 	printerr('Easing not found: ' + str(easing_name))
 
@@ -172,8 +164,21 @@ static func ease_in_out_bounce(elapsed: float) -> float:
 
 	return (1 + ease_out_bounce(2 * elapsed - 1)) / 2
 
-static func get_mirrored_easing(easing: int) -> int:
-	if MIRRORED_EASING.has(easing):
-		return MIRRORED_EASING[easing]
+static func spring(t: float, params: Dictionary):
+	var progress = t
+	var w0 = sqrt(params.stiffness / params.mass);
+	var velocity =  0 #minMax(is.und(params[3]) ? 0 : params[3], .1, 100);
+	var zeta = params.damping / (2 * sqrt(params.stiffness * params.mass))
+	var wd = w0 * sqrt(1 - zeta * zeta) if zeta < 1 else 0.0
+	var a = 1.0
+	var b = (zeta * w0 + -velocity) / wd if zeta < 1  else -velocity + w0
 
-	return easing
+	if zeta < 1:
+	  progress = exp(-progress * zeta * w0) * (a * cos(wd * progress) + b * sin(wd * progress))
+	else:
+	  progress = (a + b * progress) * exp(-progress * w0)
+
+	if t == 0 || t == 1:
+		return t
+
+	return 1 - progress

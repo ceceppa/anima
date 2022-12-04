@@ -2,20 +2,24 @@ class_name AnimaDeclarationNodes
 
 var _data: Dictionary
 
-func _init(nodes: Array, items_delay: float):
+func _init(nodes, items_delay: float):
 	_data.items_delay = items_delay
 
 	var the_nodes: Array
 
-	#
-	# Flattens the nodes
-	#
-	for node in nodes:
-		if node is Array:
-			for child in node:
-				the_nodes.push_back(child)
-		else:
-			the_nodes.push_back(node)
+	if nodes is Node:
+		for child in nodes.get_children():
+			the_nodes.push_back(child)
+	else:
+		#
+		# Flattens the nodes
+		#
+		for node in nodes:
+			if node is Array:
+				for child in node:
+					the_nodes.push_back(child)
+			else:
+				the_nodes.push_back(node)
 
 	_data.nodes = the_nodes
 

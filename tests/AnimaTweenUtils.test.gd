@@ -5,7 +5,6 @@ func test_it_works_if_calculated_value_is_null():
 
 	var test_data := {
 		_easing_points = null,
-		_is_first_frame = true,
 		_wait_time = 0,
 		duration = 0.15,
 		node = node,

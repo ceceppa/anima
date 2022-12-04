@@ -27,6 +27,7 @@ var _loop_delay := 0.0
 
 var __do_nothing := 0.0
 var _last_tween_data: Dictionary
+var _has_on_completed := false
 
 func _exit_tree():
 	if _anima_tween == null or not is_instance_valid(_anima_tween):
@@ -260,7 +261,7 @@ func _do_loop(times: int, mode: int, delay_between_loops: float = ANIMA.MINIMUM_
 
 	return self
 
-func get_length() -> float:
+func get_duration() -> float:
 	return _total_animation_length
 
 func set_root_node(node) -> void:
@@ -275,32 +276,28 @@ func _do_play() -> void:
 		play_mode = _current_play_mode
 
 	_loop_count += 1
+	_anima_tween.is_playing_backwards = false
+
+	var duration = _anima_tween.get_duration()
 
 	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
-		var tween := Tween.new()
-
-		tween.name = name + "_backwards"
-
-		tween.interpolate_method(
-			self,
-			"_play_backwards",
-			_anima_tween.get_duration(),
-			0.0,
-			_anima_tween.get_duration()
-		)
-		
-		add_child(tween)
-		
-		tween.start()
-		
-		tween.connect("tween_all_completed", self, "_on_backwords_tween_complete", [tween])
+		_anima_tween.is_playing_backwards = true
+		_tween_with_seek(duration, 0.0, duration, "_on_backwords_tween_complete")
 	else:
 		#
 		# If the user wants to play an animation with a delay, we still
 		# need to apply for the initial values
 		#
 		_anima_tween.do_apply_initial_values()
-		_anima_tween.play(_play_speed)
+
+		#
+		# There is a weird edge-case (maybe a bug in Godot) where if we add an interpolate_method
+		# to trigger the on_completed callback the animation is not fully played ¯\_(ツ)_/¯
+		# So, we can't use the normal play but need a hacky solution
+		if _has_on_completed:
+			_tween_with_seek(0.0, duration, duration, "_on_all_tween_completed")
+		else:
+			_anima_tween.play(_play_speed)
 
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
@@ -312,6 +309,25 @@ func _do_play() -> void:
 		_current_play_mode = AnimaTween.PLAY_MODE.BACKWARDS
 	else:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
+
+func _tween_with_seek(from: float, to: float, duration: float, method: String):
+	var tween := Tween.new()
+
+	tween.name = name + "_backwards"
+
+	tween.interpolate_method(
+		self,
+		"_play_backwards",
+		from,
+		to,
+		duration
+	)
+	
+	add_child(tween)
+	
+	tween.start()
+	
+	tween.connect("tween_all_completed", self, "_on_backwords_tween_complete", [tween])
 
 func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
@@ -377,9 +393,13 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 	data.erase("nodes")
 
-	for node in nodes:
+	for node_index in nodes.size():
+		var node = nodes[node_index]
 		data.node = node
 		data._is_first_frame = true
+
+		if are_multiple_nodes:
+			data._wait_time += data.items_delay * node_index
 
 		if data.has("on_started"):
 			_anima_tween.add_event_frame(data, "on_started")
@@ -388,14 +408,17 @@ func _setup_node_animation(data: Dictionary) -> float:
 			var keyframes = data.animation
 
 			if keyframes is String:
-				keyframes = AnimaAnimationsUtils.get_animation_keyframes(data.animation)
+				keyframes = AnimaAnimationsUtils.get_animation_keyframes(keyframes)
 
 				if keyframes.size() == 0:
-					printerr('animation not found: %s' % data.animation)
+					printerr('animation not found: %s' % keyframes)
 
 					continue
 
-			var real_duration = _anima_tween.add_frames(data, keyframes)
+			var the_data = data.duplicate()
+			the_data.erase("animation")
+
+			var real_duration = _anima_tween.add_frames(the_data, keyframes)
 
 			if real_duration > 0:
 				duration = real_duration
@@ -407,6 +430,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 			delay += data.items_delay
 
 		if data.has("on_completed"):
+			_has_on_completed = true
 			_anima_tween.add_event_frame(data, "on_completed")
 
 	return duration

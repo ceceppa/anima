@@ -23,7 +23,6 @@ func _do_animation(loop:= true) -> void:
 
 	var anima := Anima.begin($Node) \
 		.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
-#		.then( Anima.Group($Node, 0.02).anima_shader_param("albedo", Color("#6b9eb1")).anima_from(Color('#6b9eb1')).debug() )
 
 	if _play_backwards:
 		_init_reverse_boxes()

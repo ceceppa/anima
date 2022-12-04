@@ -5,10 +5,10 @@ var _check_sprites := []
 
 func _ready():
 	_animation = Anima.begin(self, 'sequence_callback') \
-	.then( Anima.Node($VBoxContainer/Button1).anima_animation("flash", 1).anima_on_completed(funcref(self, '_on_button_completed'), [1]) ) \
-	.then( Anima.Node($VBoxContainer/Button2).anima_animation("flash", 1).anima_on_completed(funcref(self, '_on_button_completed'), [2]) ) \
-	.then( Anima.Node($VBoxContainer/Button3).anima_animation("flash", 1).anima_on_completed(funcref(self, '_on_button_completed'), [3]) ) \
-	.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
+		.then( Anima.Node($VBoxContainer/Button1).anima_animation("flash", 1).anima_on_completed(self, '_on_button_completed', [1]) ) \
+		.then( Anima.Node($VBoxContainer/Button2).anima_animation("flash", 1).anima_on_completed(self, '_on_button_completed', [2]) ) \
+		.then( Anima.Node($VBoxContainer/Button3).anima_animation("flash", 1).anima_on_completed(self, '_on_button_completed', [3]) ) \
+		.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
 
 	for i in range(1, 4):
 		var sprite = find_node('check' + str(i))
@@ -35,10 +35,6 @@ func _on_Start_pressed():
 	_animation.play()
 
 func _on_button_completed(index: int) -> void:
-	if index > 0:
-		return
-
-#	print("index", index)
 	var label: Label = find_node('Label' + str(index))
 
 	var anima = Anima.begin(label)
