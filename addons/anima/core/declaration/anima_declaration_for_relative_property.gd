@@ -43,12 +43,12 @@ func anima_initial_value(value) -> AnimaDeclarationForRelativeProperty:
 
 	return self
 
-func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_completed_value = null) -> AnimaDeclarationForRelativeProperty:
-	.anima_on_started(on_started, on_started_value, on_backwards_completed_value)
+func anima_on_started(target: Object, method: String, on_started_value = null, on_backwards_completed_value = null) -> AnimaDeclarationForRelativeProperty:
+	.anima_on_started(target, method, on_started_value, on_backwards_completed_value)
 
 	return self
 
-func anima_on_completed(on_completed: FuncRef, on_completed_value, on_backwards_started_value = null) -> AnimaDeclarationForRelativeProperty:
-	.anima_on_completed(on_completed, on_completed_value, on_backwards_started_value)
+func anima_on_completed(target: Object, method: String, on_completed_value = null, on_backwards_started_value = null) -> AnimaDeclarationForRelativeProperty:
+	.anima_on_completed(target, method, on_completed_value, on_backwards_started_value)
 
 	return self

@@ -18,6 +18,7 @@ var _use_meta_values := true
 var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
 var _should_apply_initial_values := true
 var _initial_values := []
+var is_playing_backwards := false
 
 enum PLAY_MODE {
 	NORMAL,
@@ -121,24 +122,29 @@ func add_animation_data(animation_data: Dictionary) -> void:
 		use_method = 'animate_with_easing_funcref'
 	elif easing_points is Curve:
 		use_method = 'animate_with_curve'
+	elif easing_points is Dictionary:
+		use_method = 'animate_with_parameterized_easing'
+
+		if easing_points.fn.find("__") == 0:
+			animation_data._easing_points = funcref(AnimaEasing, "spring")
+		else:
+			animation_data._easing_points = easing_points.fn
+
+		animation_data._easing_params = easing_points
 
 	object.set_animation_data(animation_data, property_data)
 
 	if animation_data.has("__debug"):
 		printt("use_method", use_method)
 
-	interpolate_method(
+	_interpolate_method(
 		object,
 		use_method,
-		0.0,
-		1.0,
 		duration,
 		Tween.TRANS_LINEAR,
-		Tween.EASE_IN_OUT,
+		Tween.TRANS_LINEAR,
 		animation_data._wait_time
 	)
-
-	add_child(object)
 
 	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
 		node.connect("tree_exiting", self, "_on_node_tree_exiting", [object])
@@ -154,19 +160,26 @@ func _interpolate_method(source: Node, method: String, duration: float, tween_in
 		tween_out,
 		wait_time
 	)
+	
+	add_child(source)
 
 func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
 	if animation_data.has("__debug"):
 		printt("add_event_frame", animation_data)
 
+	var object := AnimaEvent.new(animation_data, callback_key, funcref(self, "get_is_playing_backwards"))
+
 	_interpolate_method(
-		AnimaEvent.new(animation_data, callback_key),
+		object,
 		"execute_callback",
 		ANIMA.MINIMUM_DURATION,
 		Tween.TRANS_LINEAR,
 		Tween.TRANS_LINEAR,
 		animation_data._wait_time + animation_data.duration
 	)
+
+func get_is_playing_backwards() -> bool:
+	return is_playing_backwards
 
 func _add_initial_values(animation_data: Dictionary) -> void:
 	if _animation_data.has("__debug"):
@@ -298,13 +311,19 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	var frames = AnimaKeyframesEngine.parse_frames(animation_data, full_keyframes_data)
 	var duration = animation_data.duration
+	var is_first_frame := true
+	var initial_wait_time = animation_data._wait_time if animation_data.has("_wait_time") else 0.0
 
 	for frame in frames:
 		var frame_duration = frame._wait_time + frame.duration
 
-		duration = max(duration, frame_duration)
+		duration = max(duration, frame_duration - initial_wait_time)
+
+		frame._is_first_frame = is_first_frame
 
 		add_animation_data(frame)
+
+		is_first_frame = false
 
 	return duration
 
@@ -346,9 +365,6 @@ func _on_tween_completed(_node, _ignore) -> void:
 		stop_all()
 
 		emit_signal("animation_completed")
-
-func _on_tween_started(node, _ignore) -> void:
-	node.on_started()
 
 func _on_node_tree_exiting(anima_item: Node) -> void:
 	stop_all()
@@ -481,6 +497,13 @@ class AnimatedItem extends Node:
 
 		animate(easing_elapsed)
 
+	func animate_with_parameterized_easing(elapsed: float) -> void:
+		var easing_callback = _animation_data._easing_points
+		var easing_params = _animation_data._easing_params
+		var easing_elapsed = easing_callback.call_func(elapsed, easing_params)
+
+		animate(easing_elapsed)
+
 	func animate_with_curve(elapsed: float) -> void:
 		var easing_elapsed = _easing_curve.interpolate(elapsed)
 
@@ -546,12 +569,18 @@ class AnimaEvent extends Node:
 	var _data: Dictionary
 	var _callback
 	var _executed := false
+	var _check_playing_backwards: FuncRef
 
-	func _init(animation_data: Dictionary, callback_key: String) -> void:
+	func _init(animation_data: Dictionary, callback_key: String, check_playing_backwards: FuncRef) -> void:
+		_data = animation_data
 		_callback = animation_data[callback_key]
+		_check_playing_backwards = check_playing_backwards
 
 	func execute_callback(elapsed: float) -> void:
-		if elapsed < 1:
+		if _data.has("__debug"):
+			prints("AnimaEvent", "elapsed", elapsed, "executed", _executed)
+
+		if elapsed >= 1:
 			_executed = false
 
 			return
@@ -559,14 +588,26 @@ class AnimaEvent extends Node:
 		if _executed:
 			return
 
-		_executed = elapsed
+		_executed = true
 
 		var fn: FuncRef
 		var args: Array = []
+		var is_playing_backwards = _check_playing_backwards.call_func()
 
 		if _callback is Array:
 			fn = _callback[0]
 			args = _callback[1]
+		elif _callback is Dictionary:
+			var target = _callback.target
+			var value = _callback.value if not is_playing_backwards else _callback.backwards_value
+			var method = _callback.method
+
+			if value is Array:
+				args = value
+			else:
+				args = [value]
+
+			fn = funcref(target, method)
 		else:
 			fn = _callback
 
