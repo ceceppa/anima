@@ -1,6 +1,6 @@
 var KEYFRAMES := {
 	0: {
-		"translate:x": 0,
+		"translate:x" = 0,
 		pivot = ANIMA.PIVOT.CENTER,
 	},
 	6.5: {
