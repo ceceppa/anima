@@ -8,10 +8,10 @@ __meta__ = {
 }
 
 [node name="AnimationLabel" type="Label" parent="."]
-margin_top = 6.0
-margin_right = 120.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 6.0
+offset_right = 120.0
+offset_bottom = 31.0
+minimum_size = Vector2( 120, 0 )
 text = "Animation:"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -19,10 +19,10 @@ __meta__ = {
 }
 
 [node name="AnimationButton" type="Button" parent="."]
-margin_left = 128.0
-margin_right = 1024.0
-margin_bottom = 37.0
-hint_tooltip = "Click here to select/change animation"
+offset_left = 128.0
+offset_right = 1024.0
+offset_bottom = 37.0
+tooltip_text = "Click here to select/change animation"
 size_flags_horizontal = 3
 text = "Select animation..."
 __meta__ = {

@@ -1,11 +1,11 @@
-tool
+@tool
 extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
 
 var anima_button = preload("res://addons/anima/visual-editor/shared/AnimaButton.tscn")
 
 signal item_selected(id)
 
-onready var _panel: PopupPanel = $PanelItems
+@onready var _panel: PopupPanel = $PanelItems
 
 enum SHOW_PANEL_ON {
 	HOVER,
@@ -13,7 +13,11 @@ enum SHOW_PANEL_ON {
 	CLICK
 }
 
-export (SHOW_PANEL_ON) var show_panel_on = SHOW_PANEL_ON.HOVER setget set_show_panel_on
+@export (SHOW_PANEL_ON) var show_panel_on = SHOW_PANEL_ON.HOVER :
+	get:
+		return show_panel_on # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_show_panel_on
 
 var _selected_id := 0
 var _items: Array
@@ -32,15 +36,15 @@ func set_items(items: Array) -> void:
 
 	for index in _items.size():
 		var item = _items[index]
-		var panel_item = anima_button.instance()
+		var panel_item = anima_button.instantiate()
 
 		panel_item.icon = load(item.icon)
 		panel_item.text = "  " + item.label
 		panel_item.align = ALIGN_LEFT
 
-		panel_item.connect("button_down", self, "_on_PopupMenu_id_pressed", [index])
-		panel_item.connect("mouse_entered", self, "_on_PopupPanel_mouse_entered")
-		panel_item.connect("mouse_exited", self, "_on_Button_mouse_exited")
+		panel_item.connect("button_down",Callable(self,"_on_PopupMenu_id_pressed").bind(index))
+		panel_item.connect("mouse_entered",Callable(self,"_on_PopupPanel_mouse_entered"))
+		panel_item.connect("mouse_exited",Callable(self,"_on_Button_mouse_exited"))
 
 		vbox.add_child(panel_item)
 
@@ -62,9 +66,9 @@ func get_selected_id() -> int:
 
 func _input(event):
 	if event is InputEventMouseButton:
-		if get_draw_mode() == DRAW_HOVER and show_panel_on == SHOW_PANEL_ON.RIGHT_CLICK and event.button_index == 2 and event.pressed == false:
+		if get_draw_mode() == DRAW_HOVER and show_panel_on == SHOW_PANEL_ON.RIGHT_CLICK and event.button_index == 2 and event.button_pressed == false:
 			_show_panel()
-		elif event.pressed == false:
+		elif event.button_pressed == false:
 			_panel.hide()
 
 func _on_Button_mouse_entered():
@@ -74,7 +78,7 @@ func _on_Button_mouse_entered():
 	_show_panel()
 
 func _show_panel() -> void:
-	_panel.set_position(get_global_position() + Vector2(0, rect_size.y))
+	_panel.set_position(get_global_position() + Vector2(0, size.y))
 	_panel.show()
 
 	_override_draw_mode = DRAW_HOVER
@@ -95,5 +99,5 @@ func _on_PopupPanel_hide():
 
 	_refresh_button(get_draw_mode(), true)
 
-func set_show_panel_on(on) -> void:
-	show_panel_on = on
+func set_show_panel_on(checked) -> void:
+	show_panel_on = checked

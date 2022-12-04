@@ -13,8 +13,12 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 	if animation_data.has("to") and animation_data.to == null:
 		animation_data.erase('to')
 
-	var meta_key = "_initial_relative_value_" + animation_data.property
-	var meta_key_last_relative_position = "_last_relative_value_" + animation_data.property
+	#
+	# Godot4 doesn't like a meta_key containing the symbol :
+	#
+	var property_name_for_meta = animation_data.property.replace(":", "_")
+	var meta_key = "_initial_relative_value_" + property_name_for_meta
+	var meta_key_last_relative_position = "_last_relative_value_" + property_name_for_meta
 
 	var calculated_from = null
 	
@@ -59,7 +63,7 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		node.set_meta(meta_key_last_relative_position, to)
 
 	var pivot = animation_data.pivot if animation_data.has("pivot") else ANIMA.PIVOT.CENTER
-	if not node is Spatial and not node is CanvasModulate:
+	if not node is Node3D and not node is CanvasModulate:
 		AnimaNodesProperties.set_2D_pivot(animation_data.node, pivot)
 
 	if from is Vector2 and to is Vector3:
@@ -110,7 +114,7 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 		var variables := []
 		var values := []
 
-		results.invert()
+		results.reverse()
 
 		for index in results.size():
 			var rm: RegExMatch = results[index]
@@ -129,7 +133,7 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 
 				return value
 
-			var property: String = PoolStringArray(info).join(":")
+			var property: String = ":".join(PackedStringArray(info))
 
 			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data, property)
 			var variable := char(65 + index)
@@ -137,8 +141,9 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 			variables.push_back(variable)
 			values.push_back(property_value)
 
-			single_formula.erase(rm.get_start(), rm.get_end() - rm.get_start())
-			single_formula = single_formula.insert(rm.get_start(), variable)
+#			single_formula.erase(rm.get_start(), rm.get_end() - rm.get_start())
+#			single_formula = single_formula.insert(rm.get_start(), variable)
+			single_formula = "%s%s%s" % [single_formula.substr(0, rm.get_start()), variable, single_formula.substr(rm.get_end())]
 
 		var expression := Expression.new()
 		expression.parse(single_formula, variables)
@@ -182,6 +187,6 @@ static func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionar
 		return value
 
 	if value is Vector3:
-		return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
+		return Vector3(deg_to_rad(value.x), deg_to_rad(value.y), deg_to_rad(value.z))
 
-	return deg2rad(value)
+	return deg_to_rad(value)

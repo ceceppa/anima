@@ -1,9 +1,9 @@
-tool
+@tool
 extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
 
-export (NodePath) var node_to_toggle
+@export (NodePath) var node_to_toggle
 
-onready var _icon_wrapper = find_node("IconWrapper")
+@onready var _icon_wrapper = find_child("IconWrapper")
 
 var _node_to_toggle: Node
 
@@ -46,5 +46,5 @@ func _on_AnimaToggleButton_toggled(button_pressed):
 
 func _maybe_set_icon_wrapper() -> void:
 	if not _icon_wrapper:
-		_icon_wrapper = find_node("IconWrapper")
+		_icon_wrapper = find_child("IconWrapper")
 

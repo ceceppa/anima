@@ -18,12 +18,12 @@ func with(anima_node: AnimaNode, delay := 0.0) -> void:
 
 func play() -> void:
 	for node_data in _nodes_data:
-		yield(_play(node_data), 'completed')
+		await _play(node_data).completed
 
 	emit_signal("completed")
 
 func play_with_delay(delay: float) -> void:
-	yield(get_tree().create_timer(delay), "timeout")
+	await get_tree().create_timer(delay).timeout
 
 	play()
 
@@ -41,4 +41,4 @@ func _play(nodes_data: Array) -> void:
 
 		max_duration = max(node.get_length() + delay, max_duration)
 
-	yield(get_tree().create_timer(max_duration), "timeout")
+	await get_tree().create_timer(max_duration).timeout

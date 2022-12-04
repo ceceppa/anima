@@ -1,4 +1,4 @@
-tool
+@tool
 extends VBoxContainer
 
 signal node_dragged(node_path)
@@ -33,10 +33,10 @@ func _on_AnimationsContainer_mouse_exited():
 
 func _highlight_me() -> void:
 	Anima.begin_single_shot(self) \
-		.with(
+		super.with(
 			Anima.Node($Control/ColorRect).anima_property("color", Color('00ffffff'), 0.15).anima_from(Color('0affffff'))
 		) \
-		.play_as_backwards_when(_is_dragging)
+		super.play_as_backwards_when(_is_dragging)
 
 func _on_AnimationsContainer_item_rect_changed():
-	$Control/ColorRect.rect_size = rect_size
+	$Control/ColorRect.size = size

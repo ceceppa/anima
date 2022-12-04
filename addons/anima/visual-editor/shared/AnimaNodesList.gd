@@ -1,13 +1,13 @@
-tool
+@tool
 extends VBoxContainer
 
 signal node_selected(node, path)
 signal close
 
-export (bool) var trigger_selected := false
+@export (bool) var trigger_selected := false
 
-onready var _search_filed: LineEdit = find_node("SearchField")
-onready var _nodes_list: Tree = find_node("NodesList")
+@onready var _search_filed: LineEdit = find_child("SearchField")
+@onready var _nodes_list: Tree = find_child("NodesList")
 
 var _start_node: Node
 var _search_text: String
@@ -20,7 +20,7 @@ func populate(root_node: Node):
 	_start_node = root_node
 
 	if _search_filed == null:
-		_search_filed = find_node("SearchField")
+		_search_filed = find_child("SearchField")
 
 	_retrieves_list_of_nodes()
 
@@ -50,7 +50,7 @@ func get_selected() -> String:
 		path.push_front(name)
 		selected = selected.get_parent()
 
-	return PoolStringArray(path).join("/")
+	return "/".join(PackedStringArray(path))
 
 func select_node(node: Node, emit_signal := false) -> void:
 	var root: TreeItem = _nodes_list.get_root()
@@ -87,7 +87,7 @@ func _select_node(tree_item: TreeItem, node_path: String, c = ""):
 
 func _retrieves_list_of_nodes() -> void:
 	if _nodes_list == null:
-		_nodes_list = find_node('NodesList')
+		_nodes_list = find_child('NodesList')
 
 	_nodes_list.clear()
 

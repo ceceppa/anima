@@ -57,7 +57,7 @@ static func get_animation_keyframes(animation_name: String) -> Dictionary:
 
 	var resource_file = _get_animation_script_with_path(animation_name)
 	if resource_file:
-		var script: Reference = load(resource_file).new()
+		var script: RefCounted = load(resource_file).new()
 		var keyframes: Dictionary = script.KEYFRAMES
 
 		#
@@ -106,9 +106,7 @@ static func _get_animations_list() -> Array:
 	return files
 
 static func _get_scripts_in_dir(path: String, files: Array = []) -> Array:
-	var dir = Directory.new()
-	if dir.open(path) != OK:
-		return files
+	var dir = DirAccess.open(path)
 
 	dir.list_dir_begin()
 	var file_name = dir.get_next()

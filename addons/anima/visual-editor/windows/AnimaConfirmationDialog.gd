@@ -1,6 +1,6 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 func _ready():
-	_final_size = rect_size
+	_final_size = size
 

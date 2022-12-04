@@ -1,12 +1,12 @@
-tool
+@tool
 extends VBoxContainer
 
 signal pivot_height_changed(new_size)
 signal pivot_point_selected
 
-onready var _pivot_points = find_node("PivotPoints")
-onready var _grid_container = find_node('GridContainer')
-onready var _point_button = find_node("PointButton")
+@onready var _pivot_points = find_child("PivotPoints")
+@onready var _grid_container = find_child('GridContainer')
+@onready var _point_button = find_child("PointButton")
 
 var _selected_pivot_point := 0
 
@@ -14,7 +14,7 @@ func _ready():
 	for child in _grid_container.get_children():
 		var button: Button = child
 
-		button.connect("pressed", self, "_on_pivot_button_pressed")
+		button.connect("pressed",Callable(self,"_on_pivot_button_pressed"))
 
 	_toggle_pivot_points()
 
@@ -43,7 +43,7 @@ func _on_pivot_button_pressed() -> void:
 
 			anima.then(
 				Anima.Node(button) \
-					.anima_animation("pulse", 0.5)
+					super.anima_animation("pulse", 0.5)
 			)
 			anima.play()
 
@@ -55,8 +55,8 @@ func set_value(value: int) -> void:
 	_selected_pivot_point= value
 
 	if _selected_pivot_point > 0:
-		_grid_container.get_child(_selected_pivot_point).pressed = true
-		_point_button.pressed = true
+		_grid_container.get_child(_selected_pivot_point).button_pressed = true
+		_point_button.button_pressed = true
 
 	_toggle_pivot_points()
 

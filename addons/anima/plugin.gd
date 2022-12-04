@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 enum EditorPosition { 
@@ -41,13 +41,13 @@ func _enter_tree():
 	_active_anima_editor = _anima_editor
 
 func _load_anima_editor(position: int):
-	var editor = load("res://addons/anima/visual-editor/AnimaVisualEditor.tscn").instance()
+	var editor = load("res://addons/anima/visual-editor/AnimaVisualEditor.tscn").instantiate()
 
-	editor.connect("switch_position", self, "_on_anima_editor_switch_position")
-	editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
-	editor.connect("highlight_node", self, '_on_highlight_node')
-	editor.connect("play_animation", self, '_on_play_animation')
-	editor.connect("change_editor_position", self, '_on_change_editor_position')
+	editor.connect("switch_position",Callable(self,"_on_anima_editor_switch_position"))
+	editor.connect("visual_builder_updated",Callable(self,'_on_visual_builder_updated'))
+	editor.connect("highlight_node",Callable(self,'_on_highlight_node'))
+	editor.connect("play_animation",Callable(self,'_on_play_animation'))
+	editor.connect("change_editor_position",Callable(self,'_on_change_editor_position'))
 
 	_add_anima_editor(editor, position)
 
@@ -89,13 +89,13 @@ func handles(object):
 		while root.get_parent():
 			var parent = root.get_parent()
 
-			if parent is Viewport:
+			if parent is SubViewport:
 				break
 
 			root = parent
 
 	if root:
-		object = root.find_node("AnimaVisualNode", false)
+		object = root.find_child("AnimaVisualNode", false)
 
 		if object:
 			is_anima_node = true
@@ -130,8 +130,8 @@ func set_anima_node(is_anima_node: bool, object) -> void:
 
 		_anima_visual_node = null
 
-	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed", self, "_on_editor_position_changed"):
-		_anima_visual_node.connect("on_editor_position_changed", self, "_on_editor_position_changed")
+	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed",Callable(self,"_on_editor_position_changed")):
+		_anima_visual_node.connect("on_editor_position_changed",Callable(self,"_on_editor_position_changed"))
 
 		_on_editor_position_changed(_anima_visual_node._editor_position)
 
@@ -142,7 +142,7 @@ func _on_editor_position_changed(new_position: int) -> void:
 	if new_position == 0:
 		_active_anima_editor = _anima_editor
 	else:
-		if _anima_visual_node.get_root_node() is Spatial:
+		if _anima_visual_node.get_root_node() is Node3D:
 			_active_anima_editor = _anima_editor_3d_right
 		else:
 			_active_anima_editor = _anima_editor_2d_right

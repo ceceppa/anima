@@ -7,7 +7,7 @@
 [node name="Button" type="Button"]
 anchor_right = 0.476
 anchor_bottom = 0.31
-margin_right = -0.424011
-margin_bottom = -9.0
+offset_right = -0.424011
+offset_bottom = -9.0
 custom_styles/hover = SubResource( 1 )
 script = ExtResource( 1 )

@@ -12,6 +12,4 @@ func _ready():
 				}
 			})
 		) \
-		.play_backwards_with_delay(0.5)
-
-
+		.play()

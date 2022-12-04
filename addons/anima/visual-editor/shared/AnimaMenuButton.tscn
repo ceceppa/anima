@@ -296,8 +296,8 @@ wait_time = 0.2
 one_shot = true
 
 [node name="PanelItems" type="PopupPanel" parent="." index="3"]
-margin_right = 16.0
-margin_bottom = 16.0
+offset_right = 16.0
+offset_bottom = 16.0
 custom_styles/panel = SubResource( 1 )
 
 [connection signal="mouse_entered" from="." to="." method="_on_Button_mouse_entered"]

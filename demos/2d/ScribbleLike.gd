@@ -4,7 +4,7 @@ var text = "Hello Godot!"
 var _is_test := false
 
 func _ready():
-	var container = find_node("HBoxContainer")
+	var container = find_child("HBoxContainer")
 
 	for letter_index in text.length():
 		var letter:String = text[letter_index]
@@ -17,12 +17,12 @@ func _ready():
 
 		container.add_child(letter_container)
 
-		letter_container.rect_min_size = single_letter.rect_size
+		letter_container.minimum_size = single_letter.size
 
 	Anima.begin(self) \
-		.then(
+		super.then(
 			Anima.Nodes(container, 0.01) \
-				.anima_animation_frames({
+				super.anima_animation_frames({
 					0: {
 						"translate:y": -40,
 						opacity = 0,

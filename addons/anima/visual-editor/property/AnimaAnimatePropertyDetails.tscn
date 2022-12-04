@@ -5,23 +5,23 @@
 
 [node name="PropertyValues" type="VBoxContainer"]
 anchor_right = 1.0
-margin_bottom = 336.0
+offset_bottom = 336.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PropertyContainer" type="GridContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 37.0
+offset_right = 1024.0
+offset_bottom = 37.0
 columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PropertyLabel" type="Label" parent="PropertyContainer"]
-margin_top = 6.0
-margin_right = 120.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 6.0
+offset_right = 120.0
+offset_bottom = 31.0
+minimum_size = Vector2( 120, 0 )
 text = "Property:"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -29,10 +29,10 @@ __meta__ = {
 }
 
 [node name="PropertyButton" type="Button" parent="PropertyContainer"]
-margin_left = 128.0
-margin_right = 1024.0
-margin_bottom = 37.0
-hint_tooltip = "Click here to select the property to animate"
+offset_left = 128.0
+offset_right = 1024.0
+offset_bottom = 37.0
+tooltip_text = "Click here to select the property to animate"
 size_flags_horizontal = 3
 text = "Select property..."
 __meta__ = {
@@ -40,9 +40,9 @@ __meta__ = {
 }
 
 [node name="Label1" type="Label" parent="."]
-margin_top = 45.0
-margin_right = 1024.0
-margin_bottom = 70.0
+offset_top = 45.0
+offset_right = 1024.0
+offset_bottom = 70.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Animate property:"
@@ -52,9 +52,9 @@ __meta__ = {
 }
 
 [node name="AnimateGrid" type="GridContainer" parent="."]
-margin_top = 78.0
-margin_right = 1024.0
-margin_bottom = 350.0
+offset_top = 78.0
+offset_right = 1024.0
+offset_bottom = 350.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -62,10 +62,10 @@ __meta__ = {
 }
 
 [node name="From" type="Label" parent="AnimateGrid"]
-margin_top = 12.0
-margin_right = 128.0
-margin_bottom = 37.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 12.0
+offset_right = 128.0
+offset_bottom = 37.0
+minimum_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "From:"
 __meta__ = {
@@ -74,16 +74,16 @@ __meta__ = {
 }
 
 [node name="FromValue" parent="AnimateGrid" instance=ExtResource( 4 )]
-margin_left = 136.0
-margin_right = 1024.0
-margin_bottom = 49.0
+offset_left = 136.0
+offset_right = 1024.0
+offset_bottom = 49.0
 type = 4
 
 [node name="To" type="Label" parent="AnimateGrid"]
-margin_top = 69.0
-margin_right = 128.0
-margin_bottom = 94.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 69.0
+offset_right = 128.0
+offset_bottom = 94.0
+minimum_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "To:"
 __meta__ = {
@@ -92,17 +92,17 @@ __meta__ = {
 }
 
 [node name="ToValue" parent="AnimateGrid" instance=ExtResource( 4 )]
-margin_left = 136.0
-margin_top = 57.0
-margin_right = 1024.0
-margin_bottom = 106.0
+offset_left = 136.0
+offset_top = 57.0
+offset_right = 1024.0
+offset_bottom = 106.0
 type = 4
 
 [node name="Initial" type="Label" parent="AnimateGrid"]
-margin_top = 126.0
-margin_right = 128.0
-margin_bottom = 151.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 126.0
+offset_right = 128.0
+offset_bottom = 151.0
+minimum_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "Initial Value"
 __meta__ = {
@@ -111,17 +111,17 @@ __meta__ = {
 }
 
 [node name="InitialValue" parent="AnimateGrid" instance=ExtResource( 4 )]
-margin_left = 136.0
-margin_top = 114.0
-margin_right = 1024.0
-margin_bottom = 163.0
+offset_left = 136.0
+offset_top = 114.0
+offset_right = 1024.0
+offset_bottom = 163.0
 type = 4
 
 [node name="Relative" type="Label" parent="AnimateGrid"]
-margin_top = 182.0
-margin_right = 128.0
-margin_bottom = 207.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 182.0
+offset_right = 128.0
+offset_bottom = 207.0
+minimum_size = Vector2( 120, 0 )
 text = "Relative"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -129,21 +129,21 @@ __meta__ = {
 }
 
 [node name="RelativeCheck" type="CheckBox" parent="AnimateGrid"]
-margin_left = 136.0
-margin_top = 171.0
-margin_right = 1024.0
-margin_bottom = 219.0
-hint_tooltip = "If true, the from and to value are applied according to the current node property value."
+offset_left = 136.0
+offset_top = 171.0
+offset_right = 1024.0
+offset_bottom = 219.0
+tooltip_text = "If true, the from and to value are applied according to the current node property value."
 text = "Relative value"
 __meta__ = {
 "_old_modulate": Color( 1, 1, 1, 0 )
 }
 
 [node name="Pivot" type="Label" parent="AnimateGrid"]
-margin_top = 237.0
-margin_right = 128.0
-margin_bottom = 262.0
-rect_min_size = Vector2( 120, 0 )
+offset_top = 237.0
+offset_right = 128.0
+offset_bottom = 262.0
+minimum_size = Vector2( 120, 0 )
 text = "Pivot"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -152,15 +152,15 @@ __meta__ = {
 
 [node name="PivotButton" parent="AnimateGrid" instance=ExtResource( 3 )]
 anchor_right = 0.0
-margin_left = 136.0
-margin_top = 227.0
-margin_right = 1024.0
-margin_bottom = 272.0
+offset_left = 136.0
+offset_top = 227.0
+offset_right = 1024.0
+offset_bottom = 272.0
 
 [node name="Label2" type="Label" parent="."]
-margin_top = 358.0
-margin_right = 1024.0
-margin_bottom = 383.0
+offset_top = 358.0
+offset_right = 1024.0
+offset_bottom = 383.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Easing:"
@@ -170,9 +170,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="."]
-margin_top = 391.0
-margin_right = 1024.0
-margin_bottom = 428.0
+offset_top = 391.0
+offset_right = 1024.0
+offset_bottom = 428.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -180,10 +180,10 @@ __meta__ = {
 }
 
 [node name="Easing" type="Label" parent="Easing"]
-margin_top = 6.0
-margin_right = 160.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 160, 0 )
+offset_top = 6.0
+offset_right = 160.0
+offset_bottom = 31.0
+minimum_size = Vector2( 160, 0 )
 text = "Easing"
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -191,9 +191,9 @@ __meta__ = {
 }
 
 [node name="EasingButton" type="Button" parent="Easing"]
-margin_left = 168.0
-margin_right = 1024.0
-margin_bottom = 37.0
+offset_left = 168.0
+offset_right = 1024.0
+offset_bottom = 37.0
 size_flags_horizontal = 3
 text = "Linear"
 __meta__ = {

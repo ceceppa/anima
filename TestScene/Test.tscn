@@ -20,11 +20,11 @@ script = ExtResource( 1 )
 test = SubResource( 5 )
 
 [node name="Button" type="Button" parent="."]
-margin_left = 141.0
-margin_top = 190.0
-margin_right = 319.0
-margin_bottom = 242.0
-rect_pivot_offset = Vector2( 89, 26 )
+offset_left = 141.0
+offset_top = 190.0
+offset_right = 319.0
+offset_bottom = 242.0
+pivot_offset = Vector2( 89, 26 )
 __meta__ = {
 "__initial_easing": "easing",
 "__initial_scale": Vector2( 1, 1 ),
@@ -34,11 +34,11 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
-margin_left = 183.0
-margin_top = 374.0
-margin_right = 223.0
-margin_bottom = 414.0
-rect_pivot_offset = Vector2( 20, 20 )
+offset_left = 183.0
+offset_top = 374.0
+offset_right = 223.0
+offset_bottom = 414.0
+pivot_offset = Vector2( 20, 20 )
 __meta__ = {
 "__initial_easing": "easing",
 "__initial_scale": Vector2( 1, 1 ),
@@ -48,11 +48,11 @@ __meta__ = {
 }
 
 [node name="Button1" type="Button" parent="Control"]
-margin_left = 117.0
-margin_top = -238.0
-margin_right = 233.0
-margin_bottom = -201.0
-rect_pivot_offset = Vector2( 58, 18.5 )
+offset_left = 117.0
+offset_top = -238.0
+offset_right = 233.0
+offset_bottom = -201.0
+pivot_offset = Vector2( 58, 18.5 )
 text = "Button 1"
 icon_align = 1
 __meta__ = {
@@ -66,17 +66,17 @@ __meta__ = {
 }
 
 [node name="Button3" type="Button" parent="Control"]
-margin_left = -1.0
-margin_top = 54.0
-margin_right = 11.0
-margin_bottom = 74.0
+offset_left = -1.0
+offset_top = 54.0
+offset_right = 11.0
+offset_bottom = 74.0
 
 [node name="Button4" type="Button" parent="Control"]
-margin_left = 340.0
-margin_top = -67.0
-margin_right = 771.001
-margin_bottom = 31.9997
-rect_pivot_offset = Vector2( 215.5, 49.4999 )
+offset_left = 340.0
+offset_top = -67.0
+offset_right = 771.001
+offset_bottom = 31.9997
+pivot_offset = Vector2( 215.5, 49.4999 )
 text = "Button 4"
 __meta__ = {
 "__initial_AnimaNode_default_rotate:y": {
@@ -93,30 +93,30 @@ __meta__ = {
 }
 
 [node name="Button5" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
+offset_left = -4.0
+offset_top = 126.0
+offset_right = 9.0
+offset_bottom = 146.0
 
 [node name="Button6" type="Button" parent="Control"]
-margin_left = 248.0
-margin_top = 160.0
-margin_right = 364.0
-margin_bottom = 197.0
+offset_left = 248.0
+offset_top = 160.0
+offset_right = 364.0
+offset_bottom = 197.0
 text = "Button 6"
 
 [node name="Button7" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 20.0
-margin_bottom = 163.0
+offset_left = -4.0
+offset_top = 126.0
+offset_right = 20.0
+offset_bottom = 163.0
 
 [node name="Button2" type="Button" parent="."]
-margin_left = 847.0
-margin_top = 21.0
-margin_right = 979.0
-margin_bottom = 58.0
-rect_pivot_offset = Vector2( 66, 18.5 )
+offset_left = 847.0
+offset_top = 21.0
+offset_right = 979.0
+offset_bottom = 58.0
+pivot_offset = Vector2( 66, 18.5 )
 text = "Do it"
 __meta__ = {
 "__initial_easing": "easing",
@@ -136,11 +136,11 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="Panel" parent="."]
-margin_left = -194.574
-margin_top = -24.5694
-margin_right = -5.57382
-margin_bottom = 79.4306
-rect_pivot_offset = Vector2( 94.5001, 52 )
+offset_left = -194.574
+offset_top = -24.5694
+offset_right = -5.57382
+offset_bottom = 79.4306
+pivot_offset = Vector2( 94.5001, 52 )
 custom_styles/panel = SubResource( 6 )
 __meta__ = {
 "__initial_easing": "easing",
@@ -270,11 +270,11 @@ __anima_visual_editor_data = {
 _editor_position = 1
 
 [node name="GridContainer" type="GridContainer" parent="."]
-margin_left = 589.0
-margin_top = 93.0
-margin_right = 800.0
-margin_bottom = 220.0
-rect_pivot_offset = Vector2( 105.5, 63.5 )
+offset_left = 589.0
+offset_top = 93.0
+offset_right = 800.0
+offset_bottom = 220.0
+pivot_offset = Vector2( 105.5, 63.5 )
 columns = 4
 __meta__ = {
 "__visibility_strategy": 0,
@@ -282,9 +282,9 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="GridContainer"]
-margin_right = 37.0
-margin_bottom = 37.0
-rect_pivot_offset = Vector2( 18.5, 18.5 )
+offset_right = 37.0
+offset_bottom = 37.0
+pivot_offset = Vector2( 18.5, 18.5 )
 text = "1"
 __meta__ = {
 "__initial_Button_scale": Vector2( 1, 1 ),
@@ -294,10 +294,10 @@ __meta__ = {
 }
 
 [node name="Button2" type="Button" parent="GridContainer"]
-margin_left = 45.0
-margin_right = 95.0
-margin_bottom = 37.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 45.0
+offset_right = 95.0
+offset_bottom = 37.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "2"
 __meta__ = {
 "__initial_AnimaNode__single_animation_rotate:y": {
@@ -325,10 +325,10 @@ __meta__ = {
 }
 
 [node name="Button3" type="Button" parent="GridContainer"]
-margin_left = 103.0
-margin_right = 153.0
-margin_bottom = 37.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 103.0
+offset_right = 153.0
+offset_bottom = 37.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "3"
 __meta__ = {
 "__initial_Button3_scale": Vector2( 1, 1 ),
@@ -338,10 +338,10 @@ __meta__ = {
 }
 
 [node name="Button4" type="Button" parent="GridContainer"]
-margin_left = 161.0
-margin_right = 211.0
-margin_bottom = 37.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 161.0
+offset_right = 211.0
+offset_bottom = 37.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "4"
 __meta__ = {
 "__initial_Button4_scale": Vector2( 1, 1 ),
@@ -351,10 +351,10 @@ __meta__ = {
 }
 
 [node name="Button5" type="Button" parent="GridContainer"]
-margin_top = 45.0
-margin_right = 37.0
-margin_bottom = 82.0
-rect_pivot_offset = Vector2( 18.5, 18.5 )
+offset_top = 45.0
+offset_right = 37.0
+offset_bottom = 82.0
+pivot_offset = Vector2( 18.5, 18.5 )
 text = "5"
 __meta__ = {
 "__initial_Button5_scale": Vector2( 1, 1 ),
@@ -364,11 +364,11 @@ __meta__ = {
 }
 
 [node name="Button6" type="Button" parent="GridContainer"]
-margin_left = 45.0
-margin_top = 45.0
-margin_right = 95.0
-margin_bottom = 82.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 45.0
+offset_top = 45.0
+offset_right = 95.0
+offset_bottom = 82.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "6"
 __meta__ = {
 "__initial_Button6_scale": Vector2( 1, 1 ),
@@ -378,11 +378,11 @@ __meta__ = {
 }
 
 [node name="Button7" type="Button" parent="GridContainer"]
-margin_left = 103.0
-margin_top = 45.0
-margin_right = 153.0
-margin_bottom = 82.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 103.0
+offset_top = 45.0
+offset_right = 153.0
+offset_bottom = 82.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "7"
 __meta__ = {
 "__initial_Button7_scale": Vector2( 1, 1 ),
@@ -392,11 +392,11 @@ __meta__ = {
 }
 
 [node name="Button8" type="Button" parent="GridContainer"]
-margin_left = 161.0
-margin_top = 45.0
-margin_right = 211.0
-margin_bottom = 82.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 161.0
+offset_top = 45.0
+offset_right = 211.0
+offset_bottom = 82.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "8"
 __meta__ = {
 "__initial_Button8_scale": Vector2( 1, 1 ),
@@ -406,10 +406,10 @@ __meta__ = {
 }
 
 [node name="Button9" type="Button" parent="GridContainer"]
-margin_top = 90.0
-margin_right = 37.0
-margin_bottom = 127.0
-rect_pivot_offset = Vector2( 18.5, 18.5 )
+offset_top = 90.0
+offset_right = 37.0
+offset_bottom = 127.0
+pivot_offset = Vector2( 18.5, 18.5 )
 text = "9"
 __meta__ = {
 "__initial_Button9_scale": Vector2( 1, 1 ),
@@ -419,11 +419,11 @@ __meta__ = {
 }
 
 [node name="Button10" type="Button" parent="GridContainer"]
-margin_left = 45.0
-margin_top = 90.0
-margin_right = 95.0
-margin_bottom = 127.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 45.0
+offset_top = 90.0
+offset_right = 95.0
+offset_bottom = 127.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "10"
 __meta__ = {
 "__initial_Button10_scale": Vector2( 1, 1 ),
@@ -433,11 +433,11 @@ __meta__ = {
 }
 
 [node name="Button11" type="Button" parent="GridContainer"]
-margin_left = 103.0
-margin_top = 90.0
-margin_right = 153.0
-margin_bottom = 127.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 103.0
+offset_top = 90.0
+offset_right = 153.0
+offset_bottom = 127.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "11"
 __meta__ = {
 "__initial_Button11_scale": Vector2( 1, 1 ),
@@ -447,11 +447,11 @@ __meta__ = {
 }
 
 [node name="Button12" type="Button" parent="GridContainer"]
-margin_left = 161.0
-margin_top = 90.0
-margin_right = 211.0
-margin_bottom = 127.0
-rect_pivot_offset = Vector2( 25, 18.5 )
+offset_left = 161.0
+offset_top = 90.0
+offset_right = 211.0
+offset_bottom = 127.0
+pivot_offset = Vector2( 25, 18.5 )
 text = "12"
 __meta__ = {
 "__initial_Button12_scale": Vector2( 1, 1 ),

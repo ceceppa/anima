@@ -2,7 +2,7 @@ class_name AnimaDeclarationNodes
 
 var _data: Dictionary
 
-func _init(nodes, items_delay: float):
+func _init(nodes,items_delay: float):
 	_data.items_delay = items_delay
 
 	var the_nodes: Array

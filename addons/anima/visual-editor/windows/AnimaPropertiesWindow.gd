@@ -1,34 +1,34 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal property_selected(node_path, property, property_type)
 
-onready var _property_search: LineEdit = find_node('PropertySearch')
-onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
+@onready var _property_search: LineEdit = find_child('PropertySearch')
+@onready var _nodes_list: VBoxContainer = find_child('AnimaNodesList')
 
-export (bool) var nodes_list_visible := false
+@export (bool) var nodes_list_visible := false
 
-var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
+var _animatable_properties := [{name = 'opacity', type = TYPE_FLOAT}]
 var _source_node: Node
 
 func _ready():
-	._ready()
+	super._ready()
 
 	_nodes_list.visible = nodes_list_visible
 
 func _on_popup_visible() -> void:
-	var list: VBoxContainer = find_node('AnimaNodesList')
+	var list: VBoxContainer = find_child('AnimaNodesList')
 
 #	list.select_node(_source_node)
 
 	if _property_search == null:
-		_property_search = find_node("PropertySearch")
+		_property_search = find_child("PropertySearch")
 
 	_property_search.clear()
 	_property_search.grab_focus()
 
 func show_nodes_list(show: bool) -> void:
-	var list: VBoxContainer = find_node('AnimaNodesList')
+	var list: VBoxContainer = find_child('AnimaNodesList')
 
 	list.visible = show
 
@@ -40,11 +40,11 @@ func _populate_animatable_properties_list(source_node: Node) -> void:
 	_source_node = source_node
 	_animatable_properties.clear()
 
-	_animatable_properties.push_back({name = 'opacity', type = TYPE_REAL})
+	_animatable_properties.push_back({name = 'opacity', type = TYPE_FLOAT})
 
 	var properties = source_node.get_property_list()
 	var properties_to_ignore := [
-		'pause_mode',
+		'process_mode',
 		'process_priority',
 		'light_mask',
 		'grow_horizontal',
@@ -64,17 +64,17 @@ func _populate_animatable_properties_list(source_node: Node) -> void:
 			property.type == TYPE_VECTOR2 or \
 			property.type == TYPE_VECTOR3 or \
 			property.type == TYPE_INT or \
-			property.type == TYPE_REAL or \
+			property.type == TYPE_FLOAT or \
 			property.type == TYPE_COLOR or \
 			property.type == TYPE_RECT2:
 			_animatable_properties.push_back({name = property.name.replace('rect_', ''), type = property.type})
 
-	_animatable_properties.sort_custom(PropertiesSorter, "sort_by_name")
+	_animatable_properties.sort_custom(Callable(PropertiesSorter,"sort_by_name"))
 
 	populate_tree()
 
 func populate_tree(filter: String = '') -> void:
-	var tree: Tree = find_node('PropertiesTree')
+	var tree: Tree = find_child('PropertiesTree')
 	tree.clear()
 	tree.set_hide_root(true)
 
@@ -109,8 +109,8 @@ func populate_tree(filter: String = '') -> void:
 			var sub = tree.create_item(item)
 
 			sub.set_text(0, sub_property)
-#			sub.set_icon(0, AnimaUI.get_godot_icon_for_type(TYPE_REAL))
-			sub.set_metadata(0, { type = TYPE_REAL })
+#			sub.set_icon(0, AnimaUI.get_godot_icon_for_type(TYPE_FLOAT))
+			sub.set_metadata(0, { type = TYPE_FLOAT })
 
 class PropertiesSorter:
 	static func sort_by_name(a: Dictionary, b: Dictionary) -> bool:
@@ -120,7 +120,7 @@ func _on_LineEdit_text_changed(new_text: String):
 	populate_tree(new_text)
 
 func _on_PropertiesTree_item_double_clicked():
-	var tree: Tree = find_node('PropertiesTree')
+	var tree: Tree = find_child('PropertiesTree')
 	var selected_item: TreeItem = tree.get_selected()
 	var parent = selected_item.get_parent()
 	var is_child: bool = parent.get_parent() != null
@@ -140,7 +140,7 @@ func _on_PropertiesTree_item_activated():
 
 func _on_AnimaNodesList_node_selected(node: Node, _path) -> void:
 	_populate_animatable_properties_list(node)
-	_on_LineEdit_text_changed(find_node("PropertySearch").text)
+	_on_LineEdit_text_changed(find_child("PropertySearch").text)
 
 func select_node(node: Node) -> void:
 	_nodes_list.select_node(node, true)

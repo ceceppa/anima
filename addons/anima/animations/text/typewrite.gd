@@ -5,8 +5,8 @@ var KEYFRAMES := {
 	100: {
 		percent_visible = 1,
 	},
-	initial_values = {
+	"initial_values": {
 		percent_visible = 0,
 	},
-	_duration = "{duration} * :text:length"
+	"_duration": "{duration} * :text:length"
 }

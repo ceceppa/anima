@@ -2,17 +2,17 @@
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/anima/visual-editor/icons/Remove.svg" type="Texture" id=3]
-[ext_resource path="res://addons/anima/visual-editor/icons/ArrowLeft.svg" type="Texture" id=4]
-[ext_resource path="res://addons/anima/visual-editor/icons/ArrowRight.svg" type="Texture" id=5]
+[ext_resource path="res://addons/anima/visual-editor/icons/Remove.svg" type="Texture2D" id=3]
+[ext_resource path="res://addons/anima/visual-editor/icons/ArrowLeft.svg" type="Texture2D" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/ArrowRight.svg" type="Texture2D" id=5]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaFrameDelay.gd" type="Script" id=7]
 
 [node name="AnimaFrameDelay" type="Control"]
 anchor_bottom = 1.0
-margin_right = 360.006
-rect_min_size = Vector2( 360, 0 )
-rect_pivot_offset = Vector2( 180, 300 )
-rect_clip_content = true
+offset_right = 360.006
+minimum_size = Vector2( 360, 0 )
+pivot_offset = Vector2( 180, 300 )
+clip_contents = true
 script = ExtResource( 7 )
 __meta__ = {
 "__initial_AnimaNode__anima_1345931492693841553_min_size:x": {
@@ -200,18 +200,18 @@ __meta__ = {
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 180, 300 )
+pivot_offset = Vector2( 180, 300 )
 __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
 
 [node name="AnimaRectangle" type="ColorRect" parent="CenterContainer"]
-margin_top = 200.0
-margin_right = 360.0
-margin_bottom = 400.0
-rect_min_size = Vector2( 360, 200 )
-rect_pivot_offset = Vector2( 180, 150 )
+offset_top = 200.0
+offset_right = 360.0
+offset_bottom = 400.0
+minimum_size = Vector2( 360, 200 )
+pivot_offset = Vector2( 180, 150 )
 color = Color( 0.0470588, 0.176471, 0.282353, 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/AnimaRectangle"]
@@ -221,35 +221,35 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ColorRect" type="ColorRect" parent="CenterContainer/AnimaRectangle/VBoxContainer"]
-margin_right = 360.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
+offset_right = 360.0
+offset_bottom = 49.0
+minimum_size = Vector2( 0, 49 )
 size_flags_horizontal = 3
 color = Color( 0.0784314, 0.364706, 0.627451, 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect"]
-margin_right = 360.0
-margin_bottom = 49.0
+offset_right = 360.0
+offset_bottom = 49.0
 
 [node name="Label2" type="Label" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer"]
-margin_right = 12.0
-margin_bottom = 25.0
-rect_min_size = Vector2( 12, 0 )
+offset_right = 12.0
+offset_bottom = 25.0
+minimum_size = Vector2( 12, 0 )
 size_flags_vertical = 2
 
 [node name="Label" type="Label" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer"]
-margin_left = 20.0
-margin_top = 12.0
-margin_right = 216.0
-margin_bottom = 37.0
+offset_left = 20.0
+offset_top = 12.0
+offset_right = 216.0
+offset_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "Delay"
 
 [node name="MoveLeft" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 224.0
-margin_right = 288.0
-hint_tooltip = "Move one frame left"
+offset_left = 224.0
+offset_right = 288.0
+tooltip_text = "Move one frame left"
 icon = ExtResource( 4 )
 icon_align = 1
 __meta__ = {
@@ -545,9 +545,9 @@ __meta__ = {
 }
 
 [node name="MoveRight" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 296.0
-margin_right = 360.0
-hint_tooltip = "Move one frame right"
+offset_left = 296.0
+offset_right = 360.0
+tooltip_text = "Move one frame right"
 icon = ExtResource( 5 )
 icon_align = 1
 __meta__ = {
@@ -851,23 +851,23 @@ __meta__ = {
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer"]
-margin_top = 57.0
-margin_right = 360.0
-margin_bottom = 200.0
+offset_top = 57.0
+offset_right = 360.0
+offset_bottom = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="DelayContent" type="VBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer"]
-margin_left = 59.0
-margin_top = 12.0
-margin_right = 301.0
-margin_bottom = 130.0
+offset_left = 59.0
+offset_top = 12.0
+offset_right = 301.0
+offset_bottom = 130.0
 custom_constants/separation = 24
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent"]
-margin_right = 242.0
-margin_bottom = 45.0
-rect_pivot_offset = Vector2( 121, 22.5 )
+offset_right = 242.0
+offset_bottom = 45.0
+pivot_offset = Vector2( 121, 22.5 )
 custom_constants/separation = 12
 __meta__ = {
 "__initial_AnimaNode__anima_1345931492693841553_opacity": {
@@ -1048,9 +1048,9 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent/HBoxContainer"]
-margin_top = 10.0
-margin_right = 66.0
-margin_bottom = 35.0
+offset_top = 10.0
+offset_right = 66.0
+offset_bottom = 35.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Delay:"
 align = 1
@@ -1059,19 +1059,19 @@ __meta__ = {
 }
 
 [node name="DelayValue" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 78.0
-margin_right = 242.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 160, 0 )
+offset_left = 78.0
+offset_right = 242.0
+offset_bottom = 45.0
+minimum_size = Vector2( 160, 0 )
 text = "0.0"
 align = 2
 placeholder_text = "0.0"
 
 [node name="DeleteContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent"]
-margin_top = 69.0
-margin_right = 242.0
-margin_bottom = 118.0
-rect_pivot_offset = Vector2( 121, 24.5 )
+offset_top = 69.0
+offset_right = 242.0
+offset_bottom = 118.0
+pivot_offset = Vector2( 121, 24.5 )
 custom_constants/separation = 24
 alignment = 1
 __meta__ = {
@@ -1254,9 +1254,9 @@ __meta__ = {
 }
 
 [node name="Delete" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent/DeleteContainer" instance=ExtResource( 1 )]
-margin_left = 43.0
-margin_right = 199.0
-rect_min_size = Vector2( 132, 49 )
+offset_left = 43.0
+offset_right = 199.0
+minimum_size = Vector2( 132, 49 )
 text = "Remove"
 icon = ExtResource( 3 )
 __meta__ = {

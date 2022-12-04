@@ -1,4 +1,4 @@
-tool
+@tool
 class_name AnimaNode
 extends Node
 
@@ -39,16 +39,16 @@ func _exit_tree():
 		child.free()
 
 func _ready():
-	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
+	if not _anima_tween.is_connected("animation_completed",Callable(self,"_on_all_tween_completed")):
 		init_node(self)
 
 	_timer.one_shot = true
-	_timer.connect("timeout", self, "_on_timer_completed")
+	_timer.connect("timeout",Callable(self,"_on_timer_completed"))
 
 	add_child(_timer)
 
 func init_node(node: Node):
-	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
+	_anima_tween.connect("animation_completed",Callable(self,'_on_all_tween_completed'))
 
 	add_child(_anima_tween)
 
@@ -168,7 +168,7 @@ func play_as_backwards_when(when: bool) -> AnimaNode:
 
 	return _play(AnimaTween.PLAY_MODE.NORMAL)
 
-func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
+func _play(mode: int, delay: float = 0.0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
 		return self
 
@@ -197,7 +197,7 @@ func stop() -> AnimaNode:
 	_loop_count = 0
 
 	if is_instance_valid(_anima_tween):
-		_anima_tween.stop_all()
+		_anima_tween.stop()
 
 	return self
 
@@ -311,23 +311,18 @@ func _do_play() -> void:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 func _tween_with_seek(from: float, to: float, duration: float, method: String):
-	var tween := Tween.new()
+	var tween := get_tree().create_tween()
 
-	tween.name = name + "_backwards"
-
-	tween.interpolate_method(
-		self,
-		"_play_backwards",
+	tween.tween_method(
+		_play_backwards,
 		from,
 		to,
 		duration
 	)
+
+	tween.play()
 	
-	add_child(tween)
-	
-	tween.start()
-	
-	tween.connect("tween_all_completed", self, "_on_backwords_tween_complete", [tween])
+	tween.connect("tween_all_completed",Callable(self,"_on_backwords_tween_complete").bind(tween))
 
 func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
@@ -341,7 +336,7 @@ func set_apply_initial_values(when: int) -> AnimaNode:
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
-		 data.duration = _default_duration
+		data.duration = _default_duration
 
 	if not data.has('property') and not data.has("animation"):
 		printerr('Please specify the property to animate or the animation to use!', data)
@@ -361,7 +356,7 @@ func _setup_animation(data: Dictionary) -> float:
 
 		return _setup_grid_animation(data)
 	elif not data.has("node"):
-		 data.node = self.get_parent()
+		data.node = self.get_parent()
 
 	if data.node == null:
 		printerr("Invalid node!")
@@ -372,9 +367,9 @@ func _setup_animation(data: Dictionary) -> float:
 	var meta_key: String = ""
 
 	if data.has("property"):
-		meta_key = "__initial_" + node.name + "_" + str(data.property) 
+		meta_key = "AnimaInitial%s%s" % [str(node.name).replace("-", "").replace(" ", ""), str(data.property).replace("_", "")]
 
-	if meta_key and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
+	if meta_key.length() > 0 and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
 		data.node.set_meta(meta_key, AnimaNodesProperties.get_property_value(node, data, data.property))
 
 	return _setup_node_animation(data)
@@ -494,7 +489,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 
 	for child in children:
 		# Skip current node :)
-		if '__do_nothing' in child or not (child is Spatial or child is CanvasItem):
+		if '__do_nothing' in child or not (child is Node3D or child is CanvasItem):
 			continue
 		elif animation_data.has('skip_hidden') and not child.is_visible():
 			continue
@@ -739,7 +734,7 @@ func _maybe_play() -> void:
 
 	if _loop_count > 0 or _should_loop:
 		if _loop_delay > 0:
-			yield(get_tree().create_timer(_loop_delay), "timeout")
+			await get_tree().create_timer(_loop_delay).timeout
 
 		_do_play()
 

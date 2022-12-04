@@ -1,12 +1,12 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal animation_selected(label, name)
 
-onready var _list_container = find_node('ListContainer')
-onready var _confirm_button = find_node('ConfirmButton')
-onready var _control_demo: Control = find_node('ControlTest')
-onready var _sprite_demo: CanvasItem = find_node('SpriteTest')
+@onready var _list_container = find_child('ListContainer')
+@onready var _confirm_button = find_child('ConfirmButton')
+@onready var _control_demo: Control = find_child('ControlTest')
+@onready var _sprite_demo: CanvasItem = find_child('SpriteTest')
 
 var _animation_name: String
 var _animation_script_name: String
@@ -22,7 +22,7 @@ func show_demo_by_type(node: Node) -> void:
 		_source_node = node
 
 func _ready():
-	._ready()
+	super._ready()
 
 	_setup_list()
 
@@ -36,7 +36,7 @@ func _setup_list() -> void:
 	var group = ButtonGroup.new()
 
 	for item in animations:
-		var category_and_file: PoolStringArray = item.replace(base, '').split('/')
+		var category_and_file: PackedStringArray = item.replace(base, '').split('/')
 		if category_and_file.size() < 2:
 			continue
 
@@ -50,11 +50,11 @@ func _setup_list() -> void:
 
 		var button := Button.new()
 		button.set_text(file.replace('_', ' ').capitalize())
-		button.set_text_align(Button.ALIGN_LEFT)
+		button.set_text_alignment(Button.ALIGN_LEFT)
 		button.set_meta('script', file)
 		button.toggle_mode = true
 		button.group = group
-		button.connect("pressed", self, '_on_animation_button_pressed', [button])
+		button.connect("pressed",Callable(self,'_on_animation_button_pressed').bind(button))
 
 		_list_container.add_child(button)
 		old_category = category
@@ -73,7 +73,7 @@ func _create_new_header(text: String) -> PanelContainer:
 	style.content_margin_bottom = 12
 	style.content_margin_right = 8
 
-	container.add_stylebox_override('panel', style)
+	container.add_theme_stylebox_override('panel', style)
 
 	return container
 
@@ -110,12 +110,12 @@ func _play_animation(node1: Node, node2: Node, animation_name: String) -> void:
 	$AnimaNode.then(
 		Anima.Node(node1).anima_animation(animation_name, 0.5)
 	)\
-	.with(
+	super.with(
 		Anima.Node(node2).anima_animation(animation_name, 0.5)
 	)\
-	.play()
+	super.play()
 
-	yield($AnimaNode, "animation_completed")
+	await $AnimaNode.animation_completed
 
 	if $Timer.is_stopped():
 		$Timer.start()

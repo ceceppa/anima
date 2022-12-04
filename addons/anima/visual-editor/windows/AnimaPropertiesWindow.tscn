@@ -3,16 +3,16 @@
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaPropertiesWindow.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture" id=4]
-[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=5]
+[ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture2D" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture2D" id=5]
 
-[node name="PropertiesWindow" type="WindowDialog"]
+[node name="PropertiesWindow" type="Window"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 24.0
-margin_right = -8.0
-margin_bottom = -6.0
+offset_left = 8.0
+offset_top = 24.0
+offset_right = -8.0
+offset_bottom = -6.0
 input_pass_on_modal_close_click = false
 window_title = "Select the property to animate"
 script = ExtResource( 1 )
@@ -27,16 +27,16 @@ __meta__ = {
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_constants/margin_right = 16
-custom_constants/margin_top = 16
-custom_constants/margin_left = 16
-custom_constants/margin_bottom = 16
+custom_constants/offset_right = 16
+custom_constants/offset_top = 16
+custom_constants/offset_left = 16
+custom_constants/offset_bottom = 16
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 992.0
-margin_bottom = 554.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 992.0
+offset_bottom = 554.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -45,16 +45,16 @@ __meta__ = {
 visible = false
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 260.0
-margin_bottom = 538.0
-rect_min_size = Vector2( 260, 0 )
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 260.0
+offset_bottom = 538.0
+minimum_size = Vector2( 260, 0 )
 trigger_selected = true
 
 [node name="ProperiesContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-margin_right = 976.0
-margin_bottom = 538.0
+offset_right = 976.0
+offset_bottom = 538.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -62,26 +62,26 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ProperiesContainer"]
-margin_right = 976.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 32 )
+offset_right = 976.0
+offset_bottom = 49.0
+minimum_size = Vector2( 0, 32 )
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer"]
-margin_top = 12.0
-margin_right = 101.0
-margin_bottom = 37.0
+offset_top = 12.0
+offset_right = 101.0
+offset_bottom = 37.0
 text = "Property:"
 
 [node name="PropertySearch" type="LineEdit" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer"]
-margin_left = 109.0
-margin_right = 868.0
-margin_bottom = 49.0
+offset_left = 109.0
+offset_right = 868.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 placeholder_text = "Search property..."
 
 [node name="Clear" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 876.0
-margin_right = 932.0
+offset_left = 876.0
+offset_right = 932.0
 text = "Clear"
 __meta__ = {
 "__initial_AnimaNode__anima_1080271746666121704__button_bg": {
@@ -328,23 +328,23 @@ __meta__ = {
 }
 
 [node name="PropertiesTree" type="Tree" parent="MarginContainer/HBoxContainer/ProperiesContainer"]
-margin_top = 57.0
-margin_right = 976.0
-margin_bottom = 481.0
+offset_top = 57.0
+offset_right = 976.0
+offset_bottom = 481.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 hide_root = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ProperiesContainer"]
-margin_top = 489.0
-margin_right = 976.0
-margin_bottom = 538.0
+offset_top = 489.0
+offset_right = 976.0
+offset_bottom = 538.0
 custom_constants/separation = 24
 alignment = 2
 
 [node name="ConfirmProperty" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2" instance=ExtResource( 2 )]
-margin_left = 641.0
-margin_right = 826.0
+offset_left = 641.0
+offset_right = 826.0
 text = "Select property"
 icon = ExtResource( 5 )
 __meta__ = {
@@ -591,8 +591,8 @@ __meta__ = {
 }
 
 [node name="Close" parent="MarginContainer/HBoxContainer/ProperiesContainer/HBoxContainer2" instance=ExtResource( 2 )]
-margin_left = 874.0
-margin_right = 952.0
+offset_left = 874.0
+offset_right = 952.0
 text = "Close"
 icon = ExtResource( 4 )
 __meta__ = {

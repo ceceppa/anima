@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/anima/visual-editor/shared/AnimaMenuButton.gd"
 
 var _anima: AnimaNode
@@ -8,13 +8,13 @@ func _ready():
 
 	set_items([
 		{ icon = "res://addons/anima/visual-editor/icons/Play.svg", label = "Play once" },
-		{ icon = "res://addons/anima/visual-editor/icons/PlayOnEdit.svg", label = "Play on animation change" }
+		{ icon = "res://addons/anima/visual-editor/icons/PlayOnEdit.svg", label = "Play checked animation change" }
 	])
 	
 	set_show_panel_on(12)
 
 func _on_Preview_toggled(button_pressed):
-	._on_Button_toggled(button_pressed)
+	super._on_Button_toggled(button_pressed)
 
 	var icon_name = "Wait.svg" if button_pressed else "Play.svg"
 
@@ -22,10 +22,10 @@ func _on_Preview_toggled(button_pressed):
 
 	if button_pressed:
 		_anima = Anima.begin(self, "zoom_icon") \
-			.with(
+			super.with(
 				Anima.Node(self).anima_animation("pulse", 0.7)
 			) \
-			.loop_with_delay(0.5)
+			super.loop_with_delay(0.5)
 	else:
 		_anima.stop()
 

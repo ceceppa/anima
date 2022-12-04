@@ -2,8 +2,8 @@
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture" id=3]
-[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture2D" id=3]
+[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture2D" id=4]
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 48.0
@@ -22,9 +22,9 @@ bg_color = Color( 0.270588, 0.482353, 0.615686, 1 )
 
 [node name="AnimaToggleButton" instance=ExtResource( 1 )]
 anchor_right = 1.0
-margin_right = -988.0
-rect_min_size = Vector2( 36, 49 )
-rect_pivot_offset = Vector2( 44, 24.5 )
+offset_right = -988.0
+minimum_size = Vector2( 36, 49 )
+pivot_offset = Vector2( 44, 24.5 )
 size_flags_horizontal = 3
 custom_styles/normal = SubResource( 2 )
 toggle_mode = true
@@ -416,12 +416,12 @@ align = 0
 
 [node name="IconWrapper" type="Label" parent="." index="1"]
 visible = false
-margin_right = 48.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 32, 32 )
+offset_right = 48.0
+offset_bottom = 48.0
+minimum_size = Vector2( 32, 32 )
 custom_styles/normal = SubResource( 1 )
 
-[node name="LeftIcon" type="Sprite" parent="IconWrapper" index="0"]
+[node name="LeftIcon" type="Sprite2D" parent="IconWrapper" index="0"]
 position = Vector2( 16, 16 )
 texture = ExtResource( 4 )
 centered = false

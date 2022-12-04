@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=1]
-[ext_resource path="res://demos/resources/ball.png" type="Texture" id=2]
+[ext_resource path="res://demos/resources/ball.png" type="Texture2D" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Control
@@ -9,7 +9,7 @@ script/source = "extends Control
 var _tile_size: Vector2
 
 func _ready():
-	var size = self.rect_size
+	var size = self.size
 	_tile_size = $tile.texture.get_size()
 
 	var max_y = ceil(size.y / _tile_size.y) + 1
@@ -31,14 +31,14 @@ func _ready():
 	AnimaAnimationsUtils.register_animation(\"gridAnimation\", gridAnimation())
 
 	Anima.begin_single_shot($Grid) \\
-		.then(
+		super.then(
 			Anima.Group($Grid, 0.05) \\
-				.anima_animation(\"gridAnimation\", 1) \\
+				super.anima_animation(\"gridAnimation\", 1) \\
 		) \\
-		.play_with_delay(0.5)
+		super.play_with_delay(0.5)
 
 func gridAnimation() -> Dictionary:
-	var size = self.rect_size
+	var size = self.size
 	var center_x = (size.x / 2) - (_tile_size.x / 2)
 
 	return {
@@ -62,7 +62,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = SubResource( 1 )
 
-[node name="tile" type="Sprite" parent="."]
+[node name="tile" type="Sprite2D" parent="."]
 texture = ExtResource( 2 )
 
 [node name="Grid" type="Node" parent="."]

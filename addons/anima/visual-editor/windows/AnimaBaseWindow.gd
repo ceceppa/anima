@@ -1,19 +1,19 @@
-tool
-extends WindowDialog
+@tool
+extends Window
 
 var _final_size := Vector2(1024, 600)
 
 func _ready():
-	if not is_connected("popup_hide", self, "_on_hide"):
-		connect("popup_hide", self, "_on_hide")
+	if not is_connected("popup_hide",Callable(self,"_on_hide")):
+		connect("popup_hide",Callable(self,"_on_hide"))
 
-	rect_clip_content = false
+	clip_contents = false
 
 func _play(backwards := false) -> AnimaNode:
 	var anima = Anima.begin_single_shot(self)
 	anima.then(
 		Anima.Node(self) \
-			.anima_animation_frames({
+			super.anima_animation_frames({
 				0: {
 					size = Vector2(_final_size.x, 0),
 					opacity = 0,
@@ -44,11 +44,11 @@ func _play(backwards := false) -> AnimaNode:
 	return anima
 
 func popup_centered(size := Vector2.ZERO) -> void:
-	rect_scale = Vector2.ONE
-	rect_size = _final_size
-	rect_min_size = Vector2(_final_size.x, 0)
+	scale = Vector2.ONE
+	size = _final_size
+	minimum_size = Vector2(_final_size.x, 0)
 
-	.popup_centered(rect_size)
+	super.popup_centered(size)
 
 	_play()
 
@@ -60,6 +60,6 @@ func _on_popup_visible() -> void:
 func _on_hide() -> void:
 	show()
 
-	yield(_play(true), 'animation_completed')
+	await _play(true).animation_completed
 
 	hide()

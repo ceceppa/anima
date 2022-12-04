@@ -12,9 +12,9 @@
 [node name="AnimaVisualEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1024.0
-margin_bottom = -600.0
-rect_clip_content = true
+offset_right = -1024.0
+offset_bottom = -600.0
+clip_contents = true
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 2 )
@@ -29,17 +29,17 @@ anchor_bottom = 1.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/margin_right = 48
-custom_constants/margin_top = 48
-custom_constants/margin_left = 48
-custom_constants/margin_bottom = 48
+custom_constants/offset_right = 48
+custom_constants/offset_top = 48
+custom_constants/offset_left = 48
+custom_constants/offset_bottom = 48
 
 [node name="WarningLabel" type="Label" parent="MarginContainer"]
-margin_left = 48.0
-margin_top = 48.0
-margin_right = 49.0
-margin_bottom = 2770.0
-rect_pivot_offset = Vector2( 512, 300 )
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 49.0
+offset_bottom = 2770.0
+pivot_offset = Vector2( 512, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 7
 text = "Please add an AnimaVisualNode to the current scene to use the Visual Animation Builder"
@@ -48,7 +48,7 @@ valign = 1
 autowrap = true
 
 [node name="NodesWindow" parent="." instance=ExtResource( 1 )]
-popup_exclusive = false
+exclusive = false
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 4 )]
 window_title = "Select the node and property to animate"

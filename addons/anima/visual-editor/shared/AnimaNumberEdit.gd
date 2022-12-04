@@ -1,4 +1,4 @@
-tool
+@tool
 extends LineEdit
 
 signal changed
@@ -16,9 +16,13 @@ const REG_EX = {
 	Type.STRING: ".*",
 }
 
-export (Type) var type setget set_type
-export (float) var min_value = -999.90
-export (float) var max_value = 999.99
+@export (Type) var type :
+	get:
+		return type # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_type
+@export (float) var min_value = -999.90
+@export (float) var max_value = 999.99
 
 var _regex := RegEx.new()
 
@@ -42,7 +46,7 @@ func _on_NumberEdit_text_changed(new_text: String):
 	else:
 		text = _old_text
 
-		set_cursor_position(text.length())
+		set_caret_column(text.length())
 
 func get_value():
 	if type == Type.STRING:
@@ -77,5 +81,5 @@ func _on_NumberEdit_type_changed(new_type):
 
 
 func _on_NumberEdit_gui_input(event):
-	if event is InputEventKey and event.scancode == KEY_ENTER and event.pressed == false:
+	if event is InputEventKey and event.scancode == KEY_ENTER and event.button_pressed == false:
 		emit_signal("changed")

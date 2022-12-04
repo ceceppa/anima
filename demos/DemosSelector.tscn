@@ -1,142 +1,137 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://d1i1o1gtesk7g"]
 
-[ext_resource path="res://demos/DemosSelector.gd" type="Script" id=2]
-[ext_resource path="res://demos/components/Button.tscn" type="PackedScene" id=3]
+[ext_resource type="Script" path="res://demos/DemosSelector.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://xiwomqecqilw" path="res://demos/components/Button.tscn" id="3"]
 
 [node name="DemoSelector" type="VBoxContainer"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_constants/separation = 12
-script = ExtResource( 2 )
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2")
 
 [node name="Label" type="Label" parent="."]
-margin_right = 1024.0
-margin_bottom = 25.0
+offset_right = 1152.0
+offset_bottom = 26.0
 text = "Please select a demo"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Control" type="GridContainer" parent="."]
-margin_top = 37.0
-margin_right = 1024.0
-margin_bottom = 600.0
-rect_pivot_offset = Vector2( -138.904, 76.5687 )
+offset_top = 30.0
+offset_right = 1152.0
+offset_bottom = 648.0
+pivot_offset = Vector2(-138.904, 76.5687)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Animations" parent="Control" instance=ExtResource( 3 )]
-margin_right = 548.0
-margin_bottom = 88.0
+[node name="Animations" parent="Control" instance=ExtResource("3")]
+offset_right = 574.0
+offset_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Built-in animations"
 scene = "res://demos/AnimationsPreview.tscn"
 
-[node name="Easings" parent="Control" instance=ExtResource( 3 )]
-margin_left = 556.0
-margin_right = 1024.0
-margin_bottom = 88.0
+[node name="Easings" parent="Control" instance=ExtResource("3")]
+offset_left = 578.0
+offset_right = 1152.0
+offset_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Built-in easings"
 scene = "res://demos/Easings.tscn"
 
-[node name="SequentialAnParallel" parent="Control" instance=ExtResource( 3 )]
-margin_top = 96.0
-margin_right = 548.0
-margin_bottom = 183.0
+[node name="SequentialAnParallel" parent="Control" instance=ExtResource("3")]
+offset_top = 104.0
+offset_right = 574.0
+offset_bottom = 204.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Dialog"
 scene = "res://demos/nodes/Popup.tscn"
 
-[node name="SequentialAnParallel2" parent="Control" instance=ExtResource( 3 )]
-margin_left = 556.0
-margin_top = 96.0
-margin_right = 1024.0
-margin_bottom = 183.0
+[node name="SequentialAnParallel2" parent="Control" instance=ExtResource("3")]
+offset_left = 578.0
+offset_top = 104.0
+offset_right = 1152.0
+offset_bottom = 204.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequential with paralel animation"
 scene = "res://demos/nodes/SequenceWithParallel.tscn"
 
-[node name="SequentialAnParallel3" parent="Control" instance=ExtResource( 3 )]
-margin_top = 191.0
-margin_right = 548.0
-margin_bottom = 278.0
+[node name="SequentialAnParallel3" parent="Control" instance=ExtResource("3")]
+offset_top = 208.0
+offset_right = 574.0
+offset_bottom = 308.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequential with paralel animation - Backwards"
 scene = "res://demos/nodes/SequenceWithParallelBackwards.tscn"
 
-[node name="ButtonCallbacks" parent="Control" instance=ExtResource( 3 )]
-margin_left = 556.0
-margin_top = 191.0
-margin_right = 1024.0
-margin_bottom = 278.0
+[node name="ButtonCallbacks" parent="Control" instance=ExtResource("3")]
+offset_left = 578.0
+offset_top = 208.0
+offset_right = 1152.0
+offset_bottom = 308.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequence animation and callbacks"
 scene = "res://demos/nodes/SequenceCallback.tscn"
 
-[node name="Group" parent="Control" instance=ExtResource( 3 )]
-margin_top = 286.0
-margin_right = 548.0
-margin_bottom = 373.0
+[node name="Group" parent="Control" instance=ExtResource("3")]
+offset_top = 312.0
+offset_right = 574.0
+offset_bottom = 412.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate Group"
 scene = "res://demos/2d/Stagger.tscn"
 
-[node name="2DGrid" parent="Control" instance=ExtResource( 3 )]
-margin_left = 556.0
-margin_top = 286.0
-margin_right = 1024.0
-margin_bottom = 373.0
+[node name="2DGrid" parent="Control" instance=ExtResource("3")]
+offset_left = 578.0
+offset_top = 312.0
+offset_right = 1152.0
+offset_bottom = 412.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate 2D Grid"
 scene = "res://demos/2d/2DGrid.tscn"
 
-[node name="3DRings" parent="Control" instance=ExtResource( 3 )]
-margin_top = 381.0
-margin_right = 548.0
-margin_bottom = 468.0
+[node name="3DRings" parent="Control" instance=ExtResource("3")]
+offset_top = 416.0
+offset_right = 574.0
+offset_bottom = 515.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Rings"
 scene = "res://demos/3d/Rings.tscn"
 
-[node name="3DBoxes" parent="Control" instance=ExtResource( 3 )]
-margin_left = 556.0
-margin_top = 381.0
-margin_right = 1024.0
-margin_bottom = 468.0
+[node name="3DBoxes" parent="Control" instance=ExtResource("3")]
+offset_left = 578.0
+offset_top = 416.0
+offset_right = 1152.0
+offset_bottom = 515.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes"
 scene = "res://demos/3d/3DBoxes.tscn"
 
-[node name="3DBoxes - Backwards" parent="Control" instance=ExtResource( 3 )]
-margin_top = 476.0
-margin_right = 548.0
-margin_bottom = 563.0
+[node name="3DBoxes - Backwards" parent="Control" instance=ExtResource("3")]
+offset_top = 519.0
+offset_right = 574.0
+offset_bottom = 618.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes - Backwards"
 scene = "res://demos/3d/3DBoxesReverse.tscn"
 
-[node name="3D Grid" parent="Control" instance=ExtResource( 3 )]
-margin_left = 556.0
-margin_top = 476.0
-margin_right = 1024.0
-margin_bottom = 563.0
+[node name="3D Grid" parent="Control" instance=ExtResource("3")]
+offset_left = 578.0
+offset_top = 519.0
+offset_right = 1152.0
+offset_bottom = 618.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Grid"

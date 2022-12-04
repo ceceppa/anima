@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 signal frame_deleted
@@ -8,9 +8,9 @@ signal move_one_right
 
 const FINAL_WIDTH := 360.0
 
-export var animate_entrance_exit := true
+@export var animate_entrance_exit := true
 
-onready var _delay = find_node("DelayValue")
+@onready var _delay = find_child("DelayValue")
 
 func _ready():
 	if animate_entrance_exit:
@@ -26,7 +26,7 @@ func get_data() -> Dictionary:
 
 func restore_data(data: Dictionary) -> void:
 	if _delay == null:
-		_delay = find_node("DelayValue")
+		_delay = find_child("DelayValue")
 
 	_delay.set_value(data.delay)
 
@@ -37,7 +37,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	anima.then(
 		Anima.Node(self) \
-			.anima_animation_frames({
+			super.anima_animation_frames({
 				from = {
 					"size:x": 0,
 					"min_size:x": 0,
@@ -50,11 +50,11 @@ func _animate_me(backwards := false) -> AnimaNode:
 			})
 	)
 	anima.with(
-		Anima.Node(find_node("CenterContainer")).anima_fade_in().anima_initial_value(0)
+		Anima.Node(find_child("CenterContainer")).anima_fade_in().anima_initial_value(0)
 	)
 	anima.with(
-		Anima.Group(find_node("DelayContent"), 0.05) \
-			.anima_animation_frames({
+		Anima.Group(find_child("DelayContent"), 0.05) \
+			super.anima_animation_frames({
 				from = {
 					y = 40,
 					opacity = 0,
@@ -79,7 +79,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 func _on_Delete_pressed():
 	if animate_entrance_exit:
-		yield(_animate_me(true), "animation_completed")
+		await _animate_me(true).animation_completed
 
 	queue_free()
 	emit_signal("frame_deleted")
@@ -93,7 +93,7 @@ func set_has_next(has: bool) -> void:
 	_maybe_set_visible("MoveRight", has)
 
 func _maybe_set_visible(node_name: String, visible: bool) -> void:
-	var node = find_node(node_name)
+	var node = find_child(node_name)
 
 	if node:
 		node.visible = visible

@@ -3,5 +3,5 @@
 [resource]
 bake_interval = 115.97
 _data = {
-"points": PoolVector2Array(  )
+"points": PackedVector2Array(  )
 }
