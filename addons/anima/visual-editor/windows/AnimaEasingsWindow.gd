@@ -1,13 +1,13 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal easing_selected(easing_name, easing_value)
 
-onready var _anima_logo: Sprite = find_node('Anima')
-onready var _base_button: Button = find_node('BaseButton')
-onready var _grid_in: GridContainer = find_node('GridIn')
-onready var _grid_out: GridContainer = find_node('GridOut')
-onready var _grid_in_out: GridContainer = find_node('GridInOut')
+@onready var _anima_logo: Sprite2D = find_child('Anima')
+@onready var _base_button: Button = find_child('BaseButton')
+@onready var _grid_in: GridContainer = find_child('GridIn')
+@onready var _grid_out: GridContainer = find_child('GridOut')
+@onready var _grid_in_out: GridContainer = find_child('GridInOut')
 
 var _logo_origin: Vector2
 var _easing: int = ANIMA.EASING.LINEAR
@@ -21,7 +21,7 @@ func _ready():
 		var text = easing_name
 
 		button.show()
-		button.connect("pressed", self, '_on_easing_button_pressed', [button, easing_value])
+		button.connect("pressed",Callable(self,'_on_easing_button_pressed').bind(button, easing_value))
 
 		if easing_name.find('_IN_OUT_') > 0 or easing_name == 'EASE_IN_OUT':
 			text = text.replace('EASE_IN_OUT_', '')
@@ -36,7 +36,7 @@ func _ready():
 		button.text = text.replace('_', ' ').capitalize()
 
 func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
-	var size = self.rect_size
+	var size = self.size
 	var logo_size = AnimaNodesProperties.get_size(_anima_logo)
 
 	if _logo_origin == Vector2.ZERO:
@@ -46,20 +46,20 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 	anima1.set_single_shot(true)
 	anima1.then(
 		Anima.Node(button) \
-			.anima_animation("pulse", 0.5)
+			super.anima_animation("pulse", 0.5)
 	)
 	anima1.play()
 
 	var anima2 = Anima.begin(self, 'easings')
-	var to: Vector2 = Vector2(rect_position.x + size.x - logo_size.x - 50, _logo_origin.y)
+	var to: Vector2 = Vector2(position.x + size.x - logo_size.x - 50, _logo_origin.y)
 
 	anima2.set_single_shot(true)
 	anima2.then(
 		Anima.Node(_anima_logo) \
-		.anima_property("position", 1) \
-		.anima_from(_logo_origin) \
-		.anima_to(to) \
-		.anima_easing(easing_value)
+		super.anima_property("position", 1) \
+		super.anima_from(_logo_origin) \
+		super.anima_to(to) \
+		super.anima_easing(easing_value)
 	)
 	anima2.play()
 

@@ -2,7 +2,7 @@ extends Control
 
 const Y_INCREMENT := 90
 
-onready var _start_position = $ball.position
+@onready var _start_position = $ball.position
 var _anima: AnimaNode
 
 func _ready():
@@ -13,13 +13,13 @@ func _ready():
 	_anima = Anima.begin(self)
 
 func _init_balls() -> void:
-	var ball: Sprite = $ball
+	var ball: Sprite2D = $ball
 
 	for child in $Node.get_children():
 		$Node.remove_child(child)
 
 	for i in 5:
-		var clone: Sprite = ball.duplicate()
+		var clone: Sprite2D = ball.duplicate()
 
 		clone.position = _start_position
 		clone.position.y += Y_INCREMENT * i

@@ -8,10 +8,13 @@ var _rows: int
 var _columns: int
 
 func _ready() -> void:
+	for distance in ANIMA.DISTANCE.keys():
+		$HBoxContainer/Formula.add_item(distance)
+
 	AnimaAnimationsUtils.register_animation('grid_test_in', {
 		from = {
 			scale = Vector2.ONE,
-			modulate = Color.white,
+			modulate = Color.WHITE,
 		},
 		to = {
 			scale = Vector2.ZERO,
@@ -26,16 +29,16 @@ func _ready() -> void:
 		},
 		to = {
 			scale = Vector2.ONE,
-			modulate = Color.white
+			modulate = Color.WHITE
 		}
 	})
 
 	_init_balls()
 
 func _init_balls() -> void:
-	var ball = BALL_ITEM.instance()
+	var ball = BALL_ITEM.instantiate()
 	
-	var window_size := OS.get_window_size()
+	var window_size := size
 	var ball_size: Vector2 = ball.get_size()
 	
 	var columns = floor(window_size.x / ball_size.x) - 6
@@ -49,8 +52,8 @@ func _init_balls() -> void:
 	var gap_x = (window_size.x - (ball_size.x * columns)) / columns
 	var gap_y = (available_height - (ball_size.y * rows)) / rows
 
-	ball.rect_position.x = gap_x / 8
-	ball.rect_position.y = FIRST_BALL_Y
+	ball.position.x = gap_x / 8
+	ball.position.y = FIRST_BALL_Y
 	
 	_rows = rows
 	_columns = columns
@@ -59,13 +62,13 @@ func _init_balls() -> void:
 		for row in rows:
 			var clone = ball.duplicate()
 
-			clone.rect_position = ball.rect_position
-			clone.rect_position.x = ball.rect_position.x + (column * ball_size.x + gap_x * column)
-			clone.rect_position.y = ball.rect_position.y + (row  * ball_size.y + gap_y * row)
+			clone.position = ball.position
+			clone.position.x = ball.position.x + (column * ball_size.x + gap_x * column)
+			clone.position.y = ball.position.y + (row  * ball_size.y + gap_y * row)
 
 			$Grid.add_child(clone)
 
-			clone.connect('pressed', self, '_on_ball_pressed', [Vector2(column, row)])
+			clone.connect('pressed',Callable(self,'_on_ball_pressed').bind(Vector2(column, row)))
 
 func _on_ball_pressed(from: Vector2) -> void:
 	var anima := Anima.begin(self)

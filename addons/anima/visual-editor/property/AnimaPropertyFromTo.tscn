@@ -1,11 +1,11 @@
 [gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaLinkedFieldButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/visual-editor/icons/Clear.svg" type="Texture" id=2]
+[ext_resource path="res://addons/anima/visual-editor/icons/Clear.svg" type="Texture2D" id=2]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture2D" id=4]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture" id=6]
+[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture2D" id=6]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=8]
 
@@ -14,7 +14,7 @@ bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
 
 [sub_resource type="Image" id=5]
 data = {
-"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"data": PackedByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
 "format": "RGBA8",
 "height": 16,
 "mipmaps": false,
@@ -28,10 +28,10 @@ image = SubResource( 5 )
 size = Vector2( 16, 16 )
 
 [node name="PropertyFromTo" type="Control"]
-margin_right = 288.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
-rect_pivot_offset = Vector2( 0, 40.5 )
+offset_right = 288.0
+offset_bottom = 49.0
+minimum_size = Vector2( 0, 49 )
+pivot_offset = Vector2( 0, 40.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 3 )
@@ -39,14 +39,14 @@ script = ExtResource( 3 )
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -16.0
+offset_bottom = -16.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CurrentValue" parent="HBoxContainer" instance=ExtResource( 7 )]
-margin_right = 288.0
-margin_bottom = 33.0
-rect_pivot_offset = Vector2( 96, 24.5 )
+offset_right = 288.0
+offset_bottom = 33.0
+pivot_offset = Vector2( 96, 24.5 )
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -247,9 +247,9 @@ visible = false
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 45 )
-rect_scale = Vector2( 1.5, 1.5 )
-rect_pivot_offset = Vector2( 154, 40.5 )
+minimum_size = Vector2( 0, 45 )
+scale = Vector2( 1.5, 1.5 )
+pivot_offset = Vector2( 154, 40.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -258,21 +258,21 @@ __meta__ = {
 
 [node name="Rect2" type="VBoxContainer" parent="CustomValue"]
 visible = false
-margin_right = 252.0
-margin_bottom = 204.0
+offset_right = 252.0
+offset_bottom = 204.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_right = 252.0
-margin_bottom = 45.0
+offset_right = 252.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/X"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/X/Panel"]
@@ -289,32 +289,32 @@ __meta__ = {
 }
 
 [node name="x" parent="CustomValue/Rect2/X" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="RelativeRect2X" parent="CustomValue/Rect2/X" instance=ExtResource( 1 )]
-margin_left = 212.0
-margin_right = 252.0
-margin_bottom = 45.0
+offset_left = 212.0
+offset_right = 252.0
+offset_bottom = 45.0
 icon = SubResource( 4 )
 linked_field = NodePath("../x")
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_top = 53.0
-margin_right = 252.0
-margin_bottom = 98.0
+offset_top = 53.0
+offset_right = 252.0
+offset_bottom = 98.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/Y"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/Y/Panel"]
@@ -331,32 +331,32 @@ __meta__ = {
 }
 
 [node name="y" parent="CustomValue/Rect2/Y" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="RelativeRect2Y" parent="CustomValue/Rect2/Y" instance=ExtResource( 1 )]
-margin_left = 212.0
-margin_right = 252.0
-margin_bottom = 45.0
+offset_left = 212.0
+offset_right = 252.0
+offset_bottom = 45.0
 icon = SubResource( 4 )
 linked_field = NodePath("../y")
 
 [node name="W" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_top = 106.0
-margin_right = 252.0
-margin_bottom = 151.0
+offset_top = 106.0
+offset_right = 252.0
+offset_bottom = 151.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/W"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/W/Panel"]
@@ -373,32 +373,32 @@ __meta__ = {
 }
 
 [node name="w" parent="CustomValue/Rect2/W" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="RelativeRect2W" parent="CustomValue/Rect2/W" instance=ExtResource( 1 )]
-margin_left = 212.0
-margin_right = 252.0
-margin_bottom = 45.0
+offset_left = 212.0
+offset_right = 252.0
+offset_bottom = 45.0
 icon = SubResource( 4 )
 linked_field = NodePath("../w")
 
 [node name="H" type="HBoxContainer" parent="CustomValue/Rect2"]
-margin_top = 159.0
-margin_right = 252.0
-margin_bottom = 204.0
+offset_top = 159.0
+offset_right = 252.0
+offset_bottom = 204.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/H"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/H/Panel"]
@@ -415,38 +415,38 @@ __meta__ = {
 }
 
 [node name="h" parent="CustomValue/Rect2/H" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="RelativeRect2H" parent="CustomValue/Rect2/H" instance=ExtResource( 1 )]
-margin_left = 212.0
-margin_right = 252.0
-margin_bottom = 45.0
+offset_left = 212.0
+offset_right = 252.0
+offset_bottom = 45.0
 icon = SubResource( 4 )
 linked_field = NodePath("../h")
 
 [node name="Vector3" type="VBoxContainer" parent="CustomValue"]
 visible = false
-margin_right = 200.0
-margin_bottom = 151.0
+offset_right = 200.0
+offset_bottom = 151.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector3"]
-margin_right = 200.0
-margin_bottom = 45.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/X"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/X/Panel"]
@@ -462,25 +462,25 @@ __meta__ = {
 }
 
 [node name="x" parent="CustomValue/Vector3/X" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector3"]
-margin_top = 53.0
-margin_right = 200.0
-margin_bottom = 98.0
+offset_top = 53.0
+offset_right = 200.0
+offset_bottom = 98.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Y"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/Y/Panel"]
@@ -496,25 +496,25 @@ __meta__ = {
 }
 
 [node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="Z" type="HBoxContainer" parent="CustomValue/Vector3"]
-margin_top = 106.0
-margin_right = 200.0
-margin_bottom = 151.0
+offset_top = 106.0
+offset_right = 200.0
+offset_bottom = 151.0
 size_flags_horizontal = 3
 custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Z"]
-margin_right = 24.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 24, 0 )
+offset_right = 24.0
+offset_bottom = 45.0
+minimum_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/Z/Panel"]
@@ -530,30 +530,30 @@ __meta__ = {
 }
 
 [node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource( 5 )]
-margin_left = 36.0
-margin_right = 200.0
-margin_bottom = 45.0
+offset_left = 36.0
+offset_right = 200.0
+offset_bottom = 45.0
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="Vector2" type="VBoxContainer" parent="CustomValue"]
 visible = false
-margin_right = 480.0
-margin_bottom = 49.0
+offset_right = 480.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector2"]
-margin_right = 236.0
-margin_bottom = 49.0
+offset_right = 236.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/X"]
-margin_right = 32.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 32, 32 )
+offset_right = 32.0
+offset_bottom = 49.0
+minimum_size = Vector2( 32, 32 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector2/X/Panel"]
@@ -568,32 +568,32 @@ align = 1
 valign = 1
 
 [node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 5 )]
-margin_left = 32.0
-margin_right = 196.0
-margin_bottom = 49.0
+offset_left = 32.0
+offset_right = 196.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="RelativeVector2X" parent="CustomValue/Vector2/X" instance=ExtResource( 1 )]
-margin_left = 196.0
-margin_right = 236.0
-margin_bottom = 49.0
+offset_left = 196.0
+offset_right = 236.0
+offset_bottom = 49.0
 icon = SubResource( 4 )
 linked_field = NodePath("../x")
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
-margin_left = 244.0
-margin_right = 480.0
-margin_bottom = 49.0
+offset_left = 244.0
+offset_right = 480.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/Y"]
-margin_right = 32.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 32, 32 )
+offset_right = 32.0
+offset_bottom = 49.0
+minimum_size = Vector2( 32, 32 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector2/Y/Panel"]
@@ -608,52 +608,52 @@ align = 1
 valign = 1
 
 [node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 5 )]
-margin_left = 32.0
-margin_right = 196.0
-margin_bottom = 49.0
+offset_left = 32.0
+offset_right = 196.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 2
 
 [node name="RelativeVector2Y" parent="CustomValue/Vector2/Y" instance=ExtResource( 1 )]
-margin_left = 196.0
-margin_right = 236.0
-margin_bottom = 49.0
+offset_left = 196.0
+offset_right = 236.0
+offset_bottom = 49.0
 icon = SubResource( 4 )
 linked_field = NodePath("../y")
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
-margin_bottom = 49.0
+offset_bottom = 49.0
 size_flags_horizontal = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 type = 0
 
 [node name="Real" parent="CustomValue" instance=ExtResource( 5 )]
 visible = false
-margin_bottom = 45.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 text = "0"
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="FreeText" type="LineEdit" parent="CustomValue"]
 visible = false
-margin_left = 172.0
-margin_right = 336.0
-margin_bottom = 45.0
+offset_left = 172.0
+offset_right = 336.0
+offset_bottom = 45.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource( 7 )]
-margin_left = 172.0
-margin_right = 236.0
-rect_min_size = Vector2( 40, 49 )
-rect_pivot_offset = Vector2( 20, 24.5 )
-hint_tooltip = "Select relative property"
+offset_left = 172.0
+offset_right = 236.0
+minimum_size = Vector2( 40, 49 )
+pivot_offset = Vector2( 20, 24.5 )
+tooltip_text = "Select relative property"
 icon = ExtResource( 6 )
 icon_align = 1
 __meta__ = {
@@ -845,11 +845,11 @@ __meta__ = {
 }
 
 [node name="ClearButton" parent="CustomValue" instance=ExtResource( 7 )]
-margin_left = 244.0
-margin_right = 308.0
-rect_min_size = Vector2( 40, 49 )
-rect_pivot_offset = Vector2( 20, 24.5 )
-hint_tooltip = "Clear value"
+offset_left = 244.0
+offset_right = 308.0
+minimum_size = Vector2( 40, 49 )
+pivot_offset = Vector2( 20, 24.5 )
+tooltip_text = "Clear value"
 icon = ExtResource( 2 )
 icon_align = 1
 __meta__ = {
@@ -1043,11 +1043,11 @@ style = 1
 
 [node name="ConfirmButton" parent="CustomValue" instance=ExtResource( 7 )]
 visible = false
-margin_left = 218.0
-margin_right = 258.0
-rect_min_size = Vector2( 40, 49 )
-rect_pivot_offset = Vector2( 20, 24.5 )
-hint_tooltip = "Confirm value"
+offset_left = 218.0
+offset_right = 258.0
+minimum_size = Vector2( 40, 49 )
+pivot_offset = Vector2( 20, 24.5 )
+tooltip_text = "Confirm value"
 icon = ExtResource( 4 )
 icon_align = 1
 __meta__ = {

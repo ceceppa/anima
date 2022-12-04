@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 func _ready():
 	var grid_size := Vector2(10, 6)
@@ -152,7 +152,7 @@ func _ready():
 
 func _checkboard(grid_size: Vector2) -> void:
 	var dark = $Main/Dark
-	var light = $Main/Light
+	var light = $Main/Light3D
 	var cube_light = $Main/Cube2
 	var cube_dark = $Main/Cube
 	

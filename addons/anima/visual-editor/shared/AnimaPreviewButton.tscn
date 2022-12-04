@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaMenuButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/visual-editor/icons/Play.svg" type="Texture" id=2]
+[ext_resource path="res://addons/anima/visual-editor/icons/Play.svg" type="Texture2D" id=2]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.gd" type="Script" id=3]
 
 [node name="Preview" instance=ExtResource( 1 )]
-margin_bottom = 33.0
+offset_bottom = 33.0
 icon = ExtResource( 2 )
 icon_align = 1
 expand_icon = true

@@ -1,4 +1,4 @@
-tool
+@tool
 extends ColorRect
 
 enum STYLE {
@@ -17,25 +17,33 @@ var COLORS := {
 	STYLE.BACKGROUND: Color("#1a304f"),
 }
 
-export (STYLE) var style = STYLE.PRIMARY setget set_bg_style
-export (float) var adjust_size := 0.0 setget set_adjust_size
+@export (STYLE) var style = STYLE.PRIMARY :
+	get:
+		return style # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_bg_style
+@export (float) var adjust_size := 0.0 :
+	get:
+		return adjust_size # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_adjust_size
 
 func _ready():
 	if get_child_count() == 0:
 		return
 
-	get_child(0).connect("resized", self, "_on_resized")
-	connect("resized", self, "_on_resized")
+	get_child(0).connect("resized",Callable(self,"_on_resized"))
+	connect("resized",Callable(self,"_on_resized"))
 
 	_on_resized()
 
 func _on_resized() -> void:
-	rect_min_size = Vector2.ZERO
+	minimum_size = Vector2.ZERO
 
 	if get_child_count() > 0:
-		var child_size = get_child(0).rect_size
+		var child_size = get_child(0).size
 
-		rect_min_size = child_size
+		minimum_size = child_size
 
 func set_bg_style(new_style: int) -> void:
 	style = new_style

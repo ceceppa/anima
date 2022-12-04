@@ -1,5 +1,5 @@
-tool
-extends Spatial
+@tool
+extends Node3D
 
 func _ready():
 	if $Group1.get_child_count() == 1:
@@ -17,12 +17,12 @@ func _ready():
 	_setup_animation($Group2, 'ring2')
 	_setup_animation($Group3, 'ring3')
 
-func _setup_animation(group: Spatial, animation_name: String) -> void:
+func _setup_animation(group: Node3D, animation_name: String) -> void:
 	var anima := Anima.begin(group)
 	anima.then({ group = group, animation = animation_name, duration = 5.0, items_delay = 0.05 })
 	anima.loop()
 
-func _add_rings(parent: Spatial, mesh, scale_value: float = 0.05) -> void:
+func _add_rings(parent: Node3D, mesh, scale_value: float = 0.05) -> void:
 	for index in 10:
 		var ring = mesh.duplicate()
 		var p = float(index + 1) / 100

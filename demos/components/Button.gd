@@ -1,9 +1,11 @@
 extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
 
-export (String) var scene = ''
+@export var scene: String = ''
 
 func _ready():
-	connect("pressed", self, "_on_ButtonAnimations_pressed")
+	super._ready()
+
+	connect("pressed",Callable(self,"_on_ButtonAnimations_pressed"))
 
 func _on_ButtonAnimations_pressed():
-	get_tree().change_scene(scene)
+	get_tree().change_scene_to_file(scene)

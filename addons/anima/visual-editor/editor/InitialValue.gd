@@ -1,7 +1,7 @@
-tool
+@tool
 extends MarginContainer
 
-onready var value = find_node("Value")
+@onready var value = find_child("Value")
 
 signal updated
 signal removed
@@ -13,10 +13,10 @@ func _ready():
 	value.set_show_relative_selector(false)
 
 func set_data(node: Node, path: String, property, property_type: int) -> void:
-	var label: Label = find_node("Label")
+	var label: Label = find_child("Label")
 
 	if value == null:
-		value = find_node("Value")
+		value = find_child("Value")
 
 	label.text = node.name + ":" + property
 
@@ -42,7 +42,7 @@ func set_value(the_value) -> void:
 	value.set_value(the_value)
 	
 	# I have no idea isn't hidden in first place
-	value.find_node("RelativeSelectorButton").hide()
+	value.find_child("RelativeSelectorButton").hide()
 
 func _on_PropertyFromTo_value_updated():
 	emit_signal("updated")

@@ -1,5 +1,5 @@
 class_name AnimaAwaitableAddChild
-extends Reference
+extends RefCounted
 
 static func add_child(parent: Node, node: Node) -> AwaitableAddChild:
 	return AwaitableAddChild.new(parent, node)
@@ -7,7 +7,7 @@ static func add_child(parent: Node, node: Node) -> AwaitableAddChild:
 class AwaitableAddChild:
 	signal finished(result)
 	
-	func _init(parent: Node, node: Node) -> void:
+	func _init(parent: Node,node: Node):
 		print("adding")
 		call_deferred("add_child", parent, node)
 	

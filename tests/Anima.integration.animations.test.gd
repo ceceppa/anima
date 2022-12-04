@@ -6,7 +6,7 @@ func test_multiple_fade_in():
 	var node3 = Control.new()
 
 	var anima = Anima.begin(self, 'sequence_callback') \
-		.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
+		super.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
 
 	anima.then( Anima.Node(node1).anima_animation("flash", 1 ) )
 	

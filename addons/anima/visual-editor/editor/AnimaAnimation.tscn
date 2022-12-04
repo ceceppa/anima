@@ -5,37 +5,37 @@
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimation.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/visual-editor/icons/PositionRight.svg" type="Texture" id=6]
-[ext_resource path="res://addons/anima/visual-editor/icons/PositionBottom.svg" type="Texture" id=7]
-[ext_resource path="res://addons/anima/visual-editor/icons/Visibility.svg" type="Texture" id=8]
-[ext_resource path="res://addons/anima/visual-editor/icons/Time.svg" type="Texture" id=9]
+[ext_resource path="res://addons/anima/visual-editor/icons/PositionRight.svg" type="Texture2D" id=6]
+[ext_resource path="res://addons/anima/visual-editor/icons/PositionBottom.svg" type="Texture2D" id=7]
+[ext_resource path="res://addons/anima/visual-editor/icons/Visibility.svg" type="Texture2D" id=8]
+[ext_resource path="res://addons/anima/visual-editor/icons/Time.svg" type="Texture2D" id=9]
 
 [node name="AnimaAnimation" type="HBoxContainer"]
 anchor_right = 1.0
-margin_right = -413.0
-margin_bottom = 38.0
-rect_min_size = Vector2( 0, 38 )
+offset_right = -413.0
+offset_bottom = 38.0
+minimum_size = Vector2( 0, 38 )
 size_flags_horizontal = 3
 custom_constants/separation = 0
 script = ExtResource( 3 )
 
 [node name="Control" type="Control" parent="."]
-margin_bottom = 38.0
+offset_bottom = 38.0
 
 [node name="BGColor" parent="Control" instance=ExtResource( 2 )]
-margin_right = 611.0
-margin_bottom = 38.0
+offset_right = 611.0
+offset_bottom = 38.0
 color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
 
 [node name="Positions" type="HBoxContainer" parent="."]
-margin_right = 108.0
-margin_bottom = 38.0
+offset_right = 108.0
+offset_bottom = 38.0
 custom_constants/separation = 12
 
 [node name="PositionBottom" parent="Positions" instance=ExtResource( 4 )]
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+offset_bottom = 38.0
+pivot_offset = Vector2( 24, 19 )
 icon = ExtResource( 7 )
 icon_align = 1
 expand_icon = true
@@ -313,10 +313,10 @@ style = 3
 transparent = true
 
 [node name="PositionRight" parent="Positions" instance=ExtResource( 4 )]
-margin_left = 60.0
-margin_right = 108.0
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+offset_left = 60.0
+offset_right = 108.0
+offset_bottom = 38.0
+pivot_offset = Vector2( 24, 19 )
 icon = ExtResource( 6 )
 icon_align = 1
 expand_icon = true
@@ -593,17 +593,17 @@ style = 3
 transparent = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 108.0
-margin_right = 611.0
-margin_bottom = 38.0
+offset_left = 108.0
+offset_right = 611.0
+offset_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 alignment = 2
 
 [node name="PositionBottom2" parent="HBoxContainer" instance=ExtResource( 4 )]
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+offset_bottom = 38.0
+pivot_offset = Vector2( 24, 19 )
 disabled = true
 icon = ExtResource( 8 )
 icon_align = 1
@@ -882,19 +882,19 @@ style = 3
 transparent = true
 
 [node name="VisibilityStrategy" type="OptionButton" parent="HBoxContainer"]
-margin_left = 60.0
-margin_right = 191.0
-margin_bottom = 38.0
-hint_tooltip = "Set the visibility styrategy"
+offset_left = 60.0
+offset_right = 191.0
+offset_bottom = 38.0
+tooltip_text = "Set the visibility styrategy"
 text = "Ignore"
 items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
 selected = 0
 
 [node name="PositionBottom3" parent="HBoxContainer" instance=ExtResource( 4 )]
-margin_left = 203.0
-margin_right = 251.0
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+offset_left = 203.0
+offset_right = 251.0
+offset_bottom = 38.0
+pivot_offset = Vector2( 24, 19 )
 disabled = true
 icon = ExtResource( 9 )
 icon_align = 1
@@ -1174,23 +1174,23 @@ style = 3
 transparent = true
 
 [node name="DefaultDuration" parent="HBoxContainer" instance=ExtResource( 5 )]
-margin_left = 263.0
-margin_right = 407.0
-margin_bottom = 38.0
-hint_tooltip = "Sets the default duration"
+offset_left = 263.0
+offset_right = 407.0
+offset_bottom = 38.0
+tooltip_text = "Sets the default duration"
 
 [node name="Label4" type="Label" parent="HBoxContainer"]
-margin_left = 419.0
-margin_top = 6.0
-margin_right = 443.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 24, 0 )
+offset_left = 419.0
+offset_top = 6.0
+offset_right = 443.0
+offset_bottom = 31.0
+minimum_size = Vector2( 24, 0 )
 
 [node name="Preview" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 455.0
-margin_right = 503.0
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+offset_left = 455.0
+offset_right = 503.0
+offset_bottom = 38.0
+pivot_offset = Vector2( 24, 19 )
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,

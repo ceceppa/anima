@@ -12,13 +12,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 87.0
+offset_right = 1024.0
+offset_bottom = 87.0
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 autowrap = true
 
 [node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 95.0
-margin_right = 1024.0
-margin_bottom = 132.0
+offset_top = 95.0
+offset_right = 1024.0
+offset_bottom = 132.0
 text = "Close Me"

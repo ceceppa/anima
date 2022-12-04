@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 const FRAME_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaFrameAnimation.tscn")
@@ -15,11 +15,11 @@ signal select_easing
 signal preview_animation(preview_info)
 signal change_editor_position(new_position)
 
-export (bool) var disable_animations := false
+@export (bool) var disable_animations := false
 
-onready var _frames_container1 = find_node("FramesContainer1")
-onready var _frames_container2 = find_node("FramesContainer2")
-onready var _anima_animation = find_node("AnimaAnimation")
+@onready var _frames_container1 = find_child("FramesContainer1")
+@onready var _frames_container2 = find_child("FramesContainer2")
+@onready var _anima_animation = find_child("AnimaAnimation")
 
 var _destination_frame: Control
 var _is_restoring_data := false
@@ -47,7 +47,7 @@ func set_relative_property(node_path: String, property: String) -> void:
 
 func restore_animation_data(data: Dictionary) -> void:
 	if _anima_animation == null:
-		_anima_animation = find_node("AnimaAnimation")
+		_anima_animation = find_child("AnimaAnimation")
 
 	_anima_animation.restore_data(data)
 
@@ -83,8 +83,8 @@ func update_flow_direction(new_direction: int) -> void:
 	_anima_animation.set_default_editor_position(new_direction)
 
 func _add_component(node: Node) -> void:
-	node.connect("frame_updated", self, "_emit_updated")
-	node.connect("frame_deleted", self, "_emit_updated")
+	node.connect("frame_updated",Callable(self,"_emit_updated"))
+	node.connect("frame_deleted",Callable(self,"_emit_updated"))
 
 	node.animate_entrance_exit = not disable_animations
 
@@ -96,16 +96,16 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	if key < 0:
 		key = _active_frames_container.get_child_count()
 
-	var node = FRAME_ANIMATION.instance()
+	var node = FRAME_ANIMATION.instantiate()
 
-	node.connect("highlight_node", self, "_on_highlight_node")
-	node.connect("select_animation", self, "_on_select_animation", [node])
-	node.connect("select_relative_property", self, "_on_select_relative_property", [node])
-	node.connect("select_node_property", self, "_on_select_node_property")
-	node.connect("select_easing", self, "_on_select_easing", [node])
-	node.connect("select_node", self, "_on_frame_select_node", [node])
-	node.connect("add_node", self, "_on_frame_add_node", [node])
-	node.connect("preview_animation", self, "_on_preview_animation")
+	node.connect("highlight_node",Callable(self,"_on_highlight_node"))
+	node.connect("select_animation",Callable(self,"_on_select_animation").bind(node))
+	node.connect("select_relative_property",Callable(self,"_on_select_relative_property").bind(node))
+	node.connect("select_node_property",Callable(self,"_on_select_node_property"))
+	node.connect("select_easing",Callable(self,"_on_select_easing").bind(node))
+	node.connect("select_node",Callable(self,"_on_frame_select_node").bind(node))
+	node.connect("add_node",Callable(self,"_on_frame_add_node").bind(node))
+	node.connect("preview_animation",Callable(self,"_on_preview_animation"))
 
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
@@ -120,7 +120,7 @@ func _on_AnimaAddFrame_add_delay(key := -1):
 	if key < 0:
 		key = _active_frames_container.get_child_count()
 
-	var node = FRAME_DELAY.instance()
+	var node = FRAME_DELAY.instantiate()
 
 	node.set_meta("_key", key)
 
@@ -191,7 +191,7 @@ func _on_frame_add_node(node_path, destination_frame) -> void:
 	emit_signal("add_node", node_path)
 
 func _on_FramesEditor_resized():
-	$AnimaAddFrame.update_position(rect_size)
+	$AnimaAddFrame.update_position(size)
 
 func _on_preview_animation(preview_info) -> void:
 	emit_signal("preview_animation",preview_info)
@@ -204,7 +204,7 @@ func _on_FramesEditor_item_rect_changed():
 		return
 
 	for child in _frames_container2.get_children():
-		child.call_deferred("update_size_x", rect_size.x)
+		child.call_deferred("update_size_x", size.x)
 
 func _on_AnimaAnimation_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)

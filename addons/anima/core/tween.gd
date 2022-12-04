@@ -1,7 +1,7 @@
-tool
+@tool
 
 class_name AnimaTween
-extends Tween
+extends Node
 
 signal animation_completed
 
@@ -11,14 +11,14 @@ var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "
 
 var _animation_data := []
 var _callbacks := {}
-var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
 var _use_meta_values := true
-var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
+var _apply_initial_values_on: int = 0 #ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
 var _should_apply_initial_values := true
 var _initial_values := []
 var is_playing_backwards := false
+var _tween: Tween
 
 enum PLAY_MODE {
 	NORMAL,
@@ -26,13 +26,23 @@ enum PLAY_MODE {
 	LOOP_IN_CIRCLE
 }
 
+func _enter_tree():
+	var tree: SceneTree = get_tree()
+
+	if tree:
+		_tween = tree.create_tween()
+
+		_tween.set_parallel(true)
+		_tween.pause()
+
+		_tween.connect("loop_finished", _on_tween_completed)
+		_tween.connect("finished", _on_tween_completed)
+		
 func _exit_tree():
 	for child in get_children():
 		child.free()
 
 func _ready():
-	connect("tween_completed", self, '_on_tween_completed')
-
 	#
 	# By default Godot runs interpolate_property animation runs only once
 	# this means that if you try to play again it won't work.
@@ -45,15 +55,20 @@ func _ready():
 	# repeat loop.
 	# So, once all the animations are completed (_tween_completed == _animation_data.size())
 	# we pause the tween, and next time we call play again we resume it and it works...
-	# There is no need to recreating anything on each "loop"
-	set_repeat(true)
+	# There is no need to recreating anything checked each "loop"
+	set_loops(0)
+
+func set_loops(loops: int) -> void:
+	_tween.set_loops(loops)
+
+func set_repeat(repeat) -> void:
+	if !repeat:
+		set_loops(1)
 
 func play(play_speed: float):
-	set_speed_scale(play_speed)
+	_tween.set_speed_scale(play_speed)
 
-	_tween_completed = 0
-
-	resume_all()
+	_tween.play()
 
 func do_apply_initial_values() -> void:
 	if _should_apply_initial_values:
@@ -87,7 +102,7 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	var easing_points
 
 	if animation_data.has("easing") and not animation_data.easing == null:
-		if animation_data.easing is FuncRef or animation_data.easing is Array:
+		if animation_data.easing is Callable or animation_data.easing is Array:
 			easing_points = animation_data.easing
 		elif animation_data.easing is Curve:
 			easing_points = animation_data.easing
@@ -118,7 +133,7 @@ func add_animation_data(animation_data: Dictionary) -> void:
 		use_method = 'animate_with_easing'
 	elif easing_points is String:
 		use_method = 'animate_with_anima_easing'
-	elif easing_points is FuncRef:
+	elif easing_points is Callable:
 		use_method = 'animate_with_easing_funcref'
 	elif easing_points is Curve:
 		use_method = 'animate_with_curve'
@@ -126,7 +141,7 @@ func add_animation_data(animation_data: Dictionary) -> void:
 		use_method = 'animate_with_parameterized_easing'
 
 		if easing_points.fn.find("__") == 0:
-			animation_data._easing_points = funcref(AnimaEasing, "spring")
+			animation_data._easing_points = Callable(AnimaEasing, "spring")
 		else:
 			animation_data._easing_points = easing_points.fn
 
@@ -146,20 +161,18 @@ func add_animation_data(animation_data: Dictionary) -> void:
 		animation_data._wait_time
 	)
 
-	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
-		node.connect("tree_exiting", self, "_on_node_tree_exiting", [object])
+	if not node.is_connected("tree_exiting",Callable(self,"_on_node_tree_exiting")):
+		node.connect("tree_exiting",Callable(self,"_on_node_tree_exiting").bind(object))
 
 func _interpolate_method(source: Node, method: String, duration: float, tween_in: int, tween_out: int, wait_time: float) -> void:
-	interpolate_method(
-		source,
-		method,
+	var callable := Callable(source, method)
+
+	_tween.tween_method(
+		callable,
 		0.0,
 		1.0,
 		duration,
-		tween_in,
-		tween_out,
-		wait_time
-	)
+	).set_delay(wait_time)
 	
 	add_child(source)
 
@@ -167,7 +180,7 @@ func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
 	if animation_data.has("__debug"):
 		printt("add_event_frame", animation_data)
 
-	var object := AnimaEvent.new(animation_data, callback_key, funcref(self, "get_is_playing_backwards"))
+	var object := AnimaEvent.new(animation_data, callback_key, get_is_playing_backwards)
 
 	_interpolate_method(
 		object,
@@ -212,7 +225,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 			push_warning("not yet implemented")
 			pass
 		elif property_data.property == "shader_param":
-			property_data.callback.call_funcv([property_data.param, value])
+			property_data.callback.callv([property_data.param, value])
 		elif property_data.has('subkey'):
 			node[property_data.property][property_data.key][property_data.subkey] = value
 		elif property_data.has('key'):
@@ -257,9 +270,15 @@ func get_animations_count() -> int:
 func has_data() -> bool:
 	return _animation_data.size() > 0
 
+func stop() -> void:
+	_tween.stop()
+
 func clear_animations() -> void:
-	remove_all()
-	reset_all()
+	_tween.stop()
+	_tween.kill()
+	
+	if is_inside_tree():
+		_enter_tree()
 
 	for child in get_children():
 		child.queue_free()
@@ -270,6 +289,10 @@ func clear_animations() -> void:
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
+
+func seek(value: float) -> void:
+#	_tween.seek(value)
+	pass
 
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIMA.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame') or not animation_data._is_first_frame:
@@ -358,22 +381,17 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 
 	return value
 
-func _on_tween_completed(_node, _ignore) -> void:
-	_tween_completed += 1
+func _on_tween_completed(_ignore = null) -> void:
+	_tween.stop()
 
-	if _tween_completed >= _animation_data.size() and not is_queued_for_deletion():
-		stop_all()
-
-		emit_signal("animation_completed")
+	emit_signal("animation_completed")
 
 func _on_node_tree_exiting(anima_item: Node) -> void:
-	stop_all()
-
 	anima_item.free()
 
 class AnimatedItem extends Node:
 	var _node: Node
-	var _callback: FuncRef
+	var _callback: Callable
 	var _callback_param
 	var _property
 	var _key
@@ -486,26 +504,26 @@ class AnimatedItem extends Node:
 
 	func animate_with_anima_easing(elapsed: float) -> void:
 		var easing_points_function = _animation_data._easing_points
-		var easing_callback = funcref(AnimaEasing, easing_points_function)
-		var easing_elapsed = easing_callback.call_func(elapsed)
+		var easing_callback = Callable(AnimaEasing, easing_points_function)
+		var easing_elapsed = easing_callback.call(elapsed)
 
 		animate(easing_elapsed)
 
 	func animate_with_easing_funcref(elapsed: float) -> void:
 		var easing_callback = _animation_data._easing_points
-		var easing_elapsed = easing_callback.call_func(elapsed)
+		var easing_elapsed = easing_callback.call(elapsed)
 
 		animate(easing_elapsed)
 
 	func animate_with_parameterized_easing(elapsed: float) -> void:
 		var easing_callback = _animation_data._easing_points
 		var easing_params = _animation_data._easing_params
-		var easing_elapsed = easing_callback.call_func(elapsed, easing_params)
+		var easing_elapsed = easing_callback.call(elapsed, easing_params)
 
 		animate(easing_elapsed)
 
 	func animate_with_curve(elapsed: float) -> void:
-		var easing_elapsed = _easing_curve.interpolate(elapsed)
+		var easing_elapsed = _easing_curve.sample(elapsed)
 
 		animate(easing_elapsed)
 
@@ -513,14 +531,14 @@ class AnimatedItem extends Node:
 		animate(elapsed)
 
 	func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:
-		var q0 = p0.linear_interpolate(p1, t)
-		var q1 = p1.linear_interpolate(p2, t)
-		var q2 = p2.linear_interpolate(p3, t)
+		var q0 = p0.lerp(p1, t)
+		var q1 = p1.lerp(p2, t)
+		var q2 = p2.lerp(p3, t)
 
-		var r0 = q0.linear_interpolate(q1, t)
-		var r1 = q1.linear_interpolate(q2, t)
+		var r0 = q0.lerp(q1, t)
+		var r1 = q1.lerp(q2, t)
 
-		var s = r0.linear_interpolate(r1, t)
+		var s = r0.lerp(r1, t)
 
 		return s.y
 
@@ -550,7 +568,7 @@ class AnimatedCallback extends AnimatedItem:
 
 class AnimatedCallbackWithParam extends AnimatedItem:
 	func apply_value(value) -> void:
-		_callback.call_funcv([_callback_param, value])
+		_callback.callv([_callback_param, value])
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:
@@ -569,9 +587,9 @@ class AnimaEvent extends Node:
 	var _data: Dictionary
 	var _callback
 	var _executed := false
-	var _check_playing_backwards: FuncRef
+	var _check_playing_backwards: Callable
 
-	func _init(animation_data: Dictionary, callback_key: String, check_playing_backwards: FuncRef) -> void:
+	func _init(animation_data: Dictionary,callback_key: String,check_playing_backwards: Callable):
 		_data = animation_data
 		_callback = animation_data[callback_key]
 		_check_playing_backwards = check_playing_backwards
@@ -590,9 +608,9 @@ class AnimaEvent extends Node:
 
 		_executed = true
 
-		var fn: FuncRef
+		var fn: Callable
 		var args: Array = []
-		var is_playing_backwards = _check_playing_backwards.call_func()
+		var is_playing_backwards = _check_playing_backwards.call()
 
 		if _callback is Array:
 			fn = _callback[0]
@@ -607,8 +625,8 @@ class AnimaEvent extends Node:
 			else:
 				args = [value]
 
-			fn = funcref(target, method)
+			fn = Callable(target, method)
 		else:
 			fn = _callback
 
-		fn.call_funcv(args)
+		fn.callv(args)

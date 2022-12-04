@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 signal switch_position
@@ -8,11 +8,11 @@ signal highlight_node(node)
 signal play_animation(animation_info)
 signal change_editor_position(new_position)
 
-onready var _frames_editor: Control = find_node("FramesEditor")
-onready var _nodes_window: WindowDialog = find_node("NodesWindow")
-onready var _warning_label = find_node("WarningLabel")
-onready var _animation_selector: OptionButton = find_node("AnimationSelector")
-onready var _animation_speed: LineEdit = find_node("AnimationSpeed")
+@onready var _frames_editor: Control = find_child("FramesEditor")
+@onready var _nodes_window: Window = find_child("NodesWindow")
+@onready var _warning_label = find_child("WarningLabel")
+@onready var _animation_selector: OptionButton = find_child("AnimationSelector")
+@onready var _animation_speed: LineEdit = find_child("AnimationSpeed")
 
 const VISUAL_EDITOR_FADE_DURATION := 0.1
 
@@ -55,8 +55,8 @@ func set_anima_node(node: Node) -> void:
 
 	_anima_visual_node_path = node.get_path()
 
-	if not node.is_connected("tree_exited", self, "_on_anima_visual_node_deleted"):
-		node.connect("tree_exited", self, "_on_anima_visual_node_deleted")
+	if not node.is_connected("tree_exited",Callable(self,"_on_anima_visual_node_deleted")):
+		node.connect("tree_exited",Callable(self,"_on_anima_visual_node_deleted"))
 
 	_anima_visual_node = node
 
@@ -76,14 +76,14 @@ func _restore_visual_editor_data() -> void:
 	_is_restoring_data = false
 
 func show() -> void:
-	.show()
+	super.show()
 
 func update_flow_direction(new_direction: int) -> void:
 	_flow_direction = new_direction
 	$FramesEditor.update_flow_direction(new_direction)
 
 	if _flow_direction == 0:
-		rect_min_size.y = 420
+		minimum_size.y = 420
 
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
@@ -130,7 +130,7 @@ func _maybe_show_graph_edit() -> bool:
 
 		anima.play_backwards_with_speed(1.3)
 
-	yield(anima, "animation_completed")
+	await anima.animation_completed
 
 	if _frames_editor:
 		_frames_editor.visible = is_graph_edit_visible
@@ -172,9 +172,9 @@ func _restore_data(data: Dictionary) -> void:
 		var the_frame = _frames_editor.select_frame(frame_key)
 		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
 
-		if not the_frame.is_connected("move_one_left", self, "_on_frame_move_one_left"):
-			the_frame.connect("move_one_left", self, "_on_frame_move_one_left", [key_index])
-			the_frame.connect("move_one_right", self, "_on_frame_move_one_right", [key_index])
+		if not the_frame.is_connected("move_one_left",Callable(self,"_on_frame_move_one_left")):
+			the_frame.connect("move_one_left",Callable(self,"_on_frame_move_one_left").bind(key_index))
+			the_frame.connect("move_one_right",Callable(self,"_on_frame_move_one_right").bind(key_index))
 
 		_frames_editor.set_frame_name(frame_name)
 
@@ -205,7 +205,7 @@ func _restore_data(data: Dictionary) -> void:
 
 				var node: Node = _anima_visual_node.get_root_node().get_node(value.node_path)
 				
-				yield(get_tree(), "idle_frame")
+				await get_tree().idle_frame
 
 				var item: Node = _add_animation_for(node, value.node_path)
 
@@ -223,9 +223,9 @@ func _restore_data(data: Dictionary) -> void:
 func _add_animation_for(node: Node, node_path: String) -> Node:
 	var item: Node = _frames_editor.add_animation_for(node, node_path)
 
-	item.connect("select_animation", self, "_on_select_animation", [item])
-	item.connect("select_relative_property", self, "_on_select_relative_property", [item])
-	item.connect("select_easing", self, "_on_select_easing", [item])
+	item.connect("select_animation",Callable(self,"_on_select_animation").bind(item))
+	item.connect("select_relative_property",Callable(self,"_on_select_relative_property").bind(item))
+	item.connect("select_easing",Callable(self,"_on_select_easing").bind(item))
 	item.set_meta("_data_index", item.get_index() - 1)
 
 	return item

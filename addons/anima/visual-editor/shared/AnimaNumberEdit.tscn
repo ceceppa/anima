@@ -17,7 +17,7 @@ border_width_bottom = 1
 border_color = Color( 0.831373, 0.945098, 0.956863, 0 )
 
 [node name="NumberEdit" type="LineEdit"]
-margin_right = 164.0
+offset_right = 164.0
 custom_styles/focus = SubResource( 1 )
 custom_styles/normal = SubResource( 2 )
 align = 2

@@ -29,7 +29,7 @@ func test_bounce_animation():
 
 func test_3d_boxes():
 	var frames = load("res://demos/3d/3DBoxes.gd").new()
-	var box_scene = load("res://tests/Box.tscn").instance()
+	var box_scene = load("res://tests/Box.tscn").instantiate()
 
 	add_child(box_scene)
 

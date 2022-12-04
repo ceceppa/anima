@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 signal value_updated
@@ -8,26 +8,62 @@ signal finished
 
 enum TYPES {
 	INT = TYPE_INT,
-	REAL = TYPE_REAL,
+	REAL = TYPE_FLOAT,
 	VECTOR2 = TYPE_VECTOR2,
 	VECTOR3 = TYPE_VECTOR3,
 	STRING = TYPE_STRING
 }
 
-onready var _current_value: Button = find_node("CurrentValue")
-onready var _custom_value: HBoxContainer = find_node('CustomValue')
-onready var _delete_button: Button = find_node('DeleteButton')
-onready var _relative_selector: Button = find_node('RelativeSelectorButton')
+@onready var _current_value: Button = find_child("CurrentValue")
+@onready var _custom_value: HBoxContainer = find_child('CustomValue')
+@onready var _delete_button: Button = find_child('DeleteButton')
+@onready var _relative_selector: Button = find_child('RelativeSelectorButton')
 
-export (String) var label = 'current value' setget set_label
-export (TYPES) var type = TYPES.INT setget set_type
-export (bool) var can_clear_custom_value := true setget set_can_clear_custom_value
-export (bool) var show_relative_selector := true setget set_show_relative_selector
-export (bool) var can_edit_value := true setget set_can_edit_value
-export (bool) var show_confirm_button := false setget set_show_confirm_button
-export (bool) var disabled := false setget set_disabled
-export (bool) var transparent := false setget set_transparent
-export (Color) var font_color := Color.white setget set_font_color
+@export (String) var label = 'current value' :
+	get:
+		return label # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_label
+@export (TYPES) var type = TYPES.INT :
+	get:
+		return type # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_type
+@export (bool) var can_clear_custom_value := true :
+	get:
+		return can_clear_custom_value # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_can_clear_custom_value
+@export (bool) var show_relative_selector := true :
+	get:
+		return show_relative_selector # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_show_relative_selector
+@export (bool) var can_edit_value := true :
+	get:
+		return can_edit_value # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_can_edit_value
+@export (bool) var show_confirm_button := false :
+	get:
+		return show_confirm_button # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_show_confirm_button
+@export (bool) var disabled := false :
+	get:
+		return disabled # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_disabled
+@export (bool) var transparent := false :
+	get:
+		return transparent # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_transparent
+@export (Color) var font_color := Color.WHITE :
+	get:
+		return font_color # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_font_color
 
 const MIN_SIZE := 30.0
 
@@ -50,8 +86,8 @@ func _ready():
 	]
 
 	for button in relative_buttons:
-		if not button.is_connected("pressed", self, "_on_RelativeSelectorButton_pressed"):
-			button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
+		if not button.is_connected("pressed",Callable(self,"_on_RelativeSelectorButton_pressed")):
+			button.connect("pressed",Callable(self,"_on_RelativeSelectorButton_pressed").bind(button))
 
 	set_label(label)
 	set_type(type)
@@ -66,7 +102,7 @@ func set_type(the_type: int) -> void:
 	type = the_type
 
 	var node_name: String = 'FreeText'
-	var custom_value = find_node('CustomValue')
+	var custom_value = find_child('CustomValue')
 
 	if custom_value == null:
 		return
@@ -82,7 +118,7 @@ func set_type(the_type: int) -> void:
 	match type:
 		TYPE_INT:
 			node_name = 'Number'
-		TYPE_REAL:
+		TYPE_FLOAT:
 			node_name = 'Real'
 		TYPE_VECTOR2:
 			node_name = 'Vector2'
@@ -99,17 +135,17 @@ func set_type(the_type: int) -> void:
 			printerr('set_type: unsupported type' + str(type))
 
 	if _relative_selector == null:
-		_relative_selector = find_node('RelativeSelectorButton')
+		_relative_selector = find_child('RelativeSelectorButton')
 
 	_relative_selector.visible = show_global_relative
 
-	_input_visible = find_node(node_name)
+	_input_visible = find_child(node_name)
 	_input_visible.show()
 
 func set_can_clear_custom_value(can_clear: bool) -> void:
 	can_clear_custom_value = can_clear
 
-	var clear_button = find_node('ClearButton')
+	var clear_button = find_child('ClearButton')
 	clear_button.visible = can_clear_custom_value
 
 func set_can_edit_value(can_edit: bool) -> void:
@@ -120,7 +156,7 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 		return
 
 	if _custom_value == null:
-		_custom_value = find_node('CustomValue')
+		_custom_value = find_child('CustomValue')
 
 	_should_return_null_value = false
 
@@ -131,45 +167,45 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 
 	anima.then(
 		Anima.Node(_current_value) \
-			.anima_scale(Vector2(0.5, 0.5)) \
-			.anima_from(Vector2.ONE) \
-			.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
+			super.anima_scale(Vector2(0.5, 0.5)) \
+			super.anima_from(Vector2.ONE) \
+			super.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
 	)
 	anima.with(
 		Anima.Node(_current_value).anima_fade_out()
 	)
 	anima.with(
 		Anima.Node(_custom_value) \
-			.anima_scale(Vector2.ONE) \
-			.anima_from(Vector2(1.5, 1.5)) \
-			.anima_easing(ANIMA.EASING.EASE_OUT_BACK) \
-			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
-			.anima_initial_value(Vector2(1.5, 1.5))
+			super.anima_scale(Vector2.ONE) \
+			super.anima_from(Vector2(1.5, 1.5)) \
+			super.anima_easing(ANIMA.EASING.EASE_OUT_BACK) \
+			super.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
+			super.anima_initial_value(Vector2(1.5, 1.5))
 	)
 	anima.with(
 		Anima.Node(_custom_value).anima_fade_in().anima_initial_value(0.0)
 	)
 
-	var height: float = max(38, _input_visible.rect_size.y)
+	var height: float = max(38, _input_visible.size.y)
 
 	anima.with(
 		Anima.Node(self) \
-			.anima_property("min_size:y") \
-			.anima_to(height)
+			super.anima_property("min_size:y") \
+			super.anima_to(height)
 	)
 	anima.with(
 		Anima.Node(self) \
-			.anima_property("size:y") \
-			.anima_to(height)
+			super.anima_property("size:y") \
+			super.anima_to(height)
 	)
 
 	_custom_value.show()
-	_custom_value.rect_size.y = height
+	_custom_value.size.y = height
 
 	if mode == AnimaTween.PLAY_MODE.NORMAL:
 		anima.play()
 		
-		yield(anima, "animation_completed")
+		await anima.animation_completed
 
 		if is_inside_tree() and _input_visible.is_visible_in_tree():
 			_grab_focus(_input_visible)
@@ -202,18 +238,18 @@ func set_placeholder(value) -> void:
 		var fields = ['x', 'y'] if t == TYPE_VECTOR2 else ['x', 'y', 'z']
 		
 		for field in fields:
-			var l: LineEdit = _input_visible.find_node(field)
-			var label: Label = l.get_parent().find_node("Label")
+			var l: LineEdit = _input_visible.find_child(field)
+			var label: Label = l.get_parent().find_child("Label")
 			var v: String = str(value[field])
 
 			l.placeholder_text = v
-			label.hint_tooltip = "Current value: " + v
+			label.tooltip_text = "Current value: " + v
 	elif typeof(value) == TYPE_RECT2:
 		var fields = ['x', 'y', 'w', 'h']
 		
 		for field in fields:
-			var l: LineEdit = _input_visible.find_node(field)
-			var label: Label = l.get_parent().find_node("Label")
+			var l: LineEdit = _input_visible.find_child(field)
+			var label: Label = l.get_parent().find_child("Label")
 			var v: String = ""
 			
 			if field == "x" or field == "y":
@@ -224,7 +260,7 @@ func set_placeholder(value) -> void:
 				v = str(value.size.y)
 
 			l.placeholder_text = v
-			label.hint_tooltip = "Current value: " + v
+			label.tooltip_text = "Current value: " + v
 	else:
 		_input_visible.placeholder_text = str(value)
 
@@ -244,26 +280,26 @@ func set_value(value, animate := true) -> void:
 			_input_visible.text = s
 
 	elif _input_visible.name == 'Vector2':
-		var x: LineEdit = _input_visible.find_node('x')
-		var y: LineEdit = _input_visible.find_node('y')
+		var x: LineEdit = _input_visible.find_child('x')
+		var y: LineEdit = _input_visible.find_child('y')
 
 		if value is Array:
 			x.text = str(value[0])
 			y.text = str(value[1])
 	elif _input_visible.name == 'Vector3':
-		var x: LineEdit = _input_visible.find_node('x')
-		var y: LineEdit = _input_visible.find_node('y')
-		var z: LineEdit = _input_visible.find_node('z')
+		var x: LineEdit = _input_visible.find_child('x')
+		var y: LineEdit = _input_visible.find_child('y')
+		var z: LineEdit = _input_visible.find_child('z')
 
 		if value is Array:
 			x.text = str(value[0])
 			y.text = str(value[1])
 			z.text = str(value[2])
 	elif _input_visible.name == 'Rect2':
-		var x: LineEdit = _input_visible.find_node('x')
-		var y: LineEdit = _input_visible.find_node('y')
-		var w: LineEdit = _input_visible.find_node('w')
-		var h: LineEdit = _input_visible.find_node('h')
+		var x: LineEdit = _input_visible.find_child('x')
+		var y: LineEdit = _input_visible.find_child('y')
+		var w: LineEdit = _input_visible.find_child('w')
+		var h: LineEdit = _input_visible.find_child('h')
 
 		if value is Array:
 			x.text = str(value[0])
@@ -298,21 +334,21 @@ func get_value():
 
 		return text
 	elif _input_visible.name == 'Vector2':
-		var x: LineEdit = _input_visible.find_node('x')
-		var y: LineEdit = _input_visible.find_node('y')
+		var x: LineEdit = _input_visible.find_child('x')
+		var y: LineEdit = _input_visible.find_child('y')
 
 		return [x.get_value(), y.get_value()]
 	elif _input_visible.name == 'Vector3':
-		var x: LineEdit = _input_visible.find_node('x')
-		var y: LineEdit = _input_visible.find_node('y')
-		var z: LineEdit = _input_visible.find_node('z')
+		var x: LineEdit = _input_visible.find_child('x')
+		var y: LineEdit = _input_visible.find_child('y')
+		var z: LineEdit = _input_visible.find_child('z')
 
 		return [x.get_value(), y.get_value(), z.get_value()]
 	elif _input_visible.name == 'Rect2':
-		var x: LineEdit = _input_visible.find_node('x')
-		var y: LineEdit = _input_visible.find_node('y')
-		var w: LineEdit = _input_visible.find_node('w')
-		var h: LineEdit = _input_visible.find_node('h')
+		var x: LineEdit = _input_visible.find_child('x')
+		var y: LineEdit = _input_visible.find_child('y')
+		var w: LineEdit = _input_visible.find_child('w')
+		var h: LineEdit = _input_visible.find_child('h')
 
 		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
@@ -320,7 +356,7 @@ func set_label(new_label: String) -> void:
 	label = new_label
 
 	if not _current_value:
-		_current_value = find_node("CurrentValue")
+		_current_value = find_child("CurrentValue")
 
 	_current_value.set_text(label)
 
@@ -330,7 +366,7 @@ func get_label() -> String:
 func set_show_relative_selector(relative_button: bool) -> void:
 	show_relative_selector = relative_button
 	
-	var button: Button = find_node("RelativeSelectorButton")
+	var button: Button = find_child("RelativeSelectorButton")
 	button.visible = show_relative_selector
 
 func _on_CurrentValue_pressed():
@@ -366,16 +402,16 @@ func set_show_confirm_button(show: bool) -> void:
 	$CustomValue/ConfirmButton.visible = show
 
 func _on_CurrentValue_item_rect_changed():
-	if _current_value.rect_size.y > rect_size.y:
-		rect_min_size.y = _current_value.rect_size.y
+	if _current_value.size.y > size.y:
+		minimum_size.y = _current_value.size.y
 
 func _on_PropertyFromTo_item_rect_changed():
-	$CustomValue.rect_min_size.x = 0
-	$CustomValue.rect_size.x = rect_size.x
+	$CustomValue.minimum_size.x = 0
+	$CustomValue.size.x = size.x
 
-	rect_size.x = max($CustomValue.rect_size.x, rect_size.x)
+	size.x = max($CustomValue.size.x, size.x)
 
-	$HBoxContainer.rect_size.x = rect_size.x
+	$HBoxContainer.size.x = size.x
 
 func _on_ConfirmButton_pressed():
 	var label = get_value()
@@ -394,14 +430,14 @@ func set_transparent(t: bool) -> void:
 	transparent = t
 
 	if transparent:
-		$HBoxContainer/CurrentValue.add_stylebox_override("normal", StyleBoxEmpty.new())
+		$HBoxContainer/CurrentValue.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 	else:
-		$HBoxContainer/CurrentValue.remove_stylebox_override("normal")
+		$HBoxContainer/CurrentValue.remove_theme_stylebox_override("normal")
 
 func set_font_color(c: Color) -> void:
 	font_color = c
 
-	$HBoxContainer/CurrentValue.add_color_override("font_color", font_color)
+	$HBoxContainer/CurrentValue.add_theme_color_override("font_color", font_color)
 
 func _on_CustomValue_item_rect_changed():
-	$HBoxContainer.rect_size.x = $CustomValue.rect_size.x
+	$HBoxContainer.size.x = $CustomValue.size.x

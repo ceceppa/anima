@@ -1,4 +1,4 @@
-tool
+@tool
 extends VBoxContainer
 
 const SINGLE_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaSingleAnimationData.tscn")
@@ -13,20 +13,20 @@ signal highlight_node(node)
 signal select_node_property(node_path)
 signal preview_animation(preview_info)
 
-onready var _title = find_node("Title")
-onready var _node_or_group = find_node("NodeOrGroup")
-onready var _group_data = find_node("GroupData")
-onready var _grid_data = find_node("GridData")
-onready var _animations_container = find_node("AnimationsContainer")
-onready var _animation_group_type = find_node("AnimationGroupType")
-onready var _animation_grid_type = find_node("AnimationGridType")
-onready var _animation_type_icon = find_node("AnimationTypeIcon")
-onready var _background_rect = find_node("Background")
-onready var _distance_formula = find_node("DistanceFormula")
+@onready var _title = find_child("Title")
+@onready var _node_or_group = find_child("NodeOrGroup")
+@onready var _group_data = find_child("GroupData")
+@onready var _grid_data = find_child("GridData")
+@onready var _animations_container = find_child("AnimationsContainer")
+@onready var _animation_group_type = find_child("AnimationGroupType")
+@onready var _animation_grid_type = find_child("AnimationGridType")
+@onready var _animation_type_icon = find_child("AnimationTypeIcon")
+@onready var _background_rect = find_child("Background")
+@onready var _distance_formula = find_child("DistanceFormula")
 
-onready var _duration = find_node("Duration")
-onready var _delay = find_node("Delay")
-onready var _timer = find_node("Timer")
+@onready var _duration = find_child("Duration")
+@onready var _delay = find_child("Delay")
+@onready var _timer = find_child("Timer")
 
 var _path: String
 var _source_node: Node
@@ -37,7 +37,7 @@ var _source_instance: Node
 var _is_playing := false
 
 func _ready():
-	margin_right = 0
+	offset_right = 0
 
 	_node_or_group.hide()
 	_group_data.hide()
@@ -48,9 +48,9 @@ func _enter_tree():
 
 func _populate_combos() -> void:
 	if _distance_formula == null:
-		_distance_formula = find_node("DistanceFormula")
-		_animation_group_type = find_node("AnimationGroupType")
-		_animation_grid_type = find_node("AnimationGridType")
+		_distance_formula = find_child("DistanceFormula")
+		_animation_group_type = find_child("AnimationGroupType")
+		_animation_grid_type = find_child("AnimationGridType")
 
 	_populate_combo(_distance_formula, ANIMA.DISTANCE.keys())
 	_populate_combo(_animation_group_type, ANIMA.GROUP.keys())
@@ -72,19 +72,19 @@ func set_data(node: Node, path: String, toggle_title := true):
 	_path = path
 	_source_node = node
 
-	var animate_as = find_node("AnimateAs")
+	var animate_as = find_child("AnimateAs")
 	animate_as.visible = node.get_child_count() > 1
-	animate_as.get_parent().rect_size.x = 0
+	animate_as.get_parent().size.x = 0
 
 	if toggle_title:
 		_maybe_toggle_title()
 
 func _maybe_toggle_title() -> void:
-	_title.pressed = _animations_container.get_child_count() == 0
+	_title.button_pressed = _animations_container.get_child_count() == 0
 
 func get_data() -> Dictionary:
 	if _animations_container == null:
-		_animations_container = find_node("AnimationsContainer")
+		_animations_container = find_child("AnimationsContainer")
 
 	var animations := []
 
@@ -99,15 +99,15 @@ func get_data() -> Dictionary:
 		animate_as = _animate_as,
 		animations = animations,
 		group = {
-			items_delay = float(_group_data.find_node("ItemsDelay").get_value()),
+			items_delay = float(_group_data.find_child("ItemsDelay").get_value()),
 			animation_type = _animation_group_type.get_selected_id(),
-			start_index = int(_group_data.find_node("StartIndex").get_value())
+			start_index = int(_group_data.find_child("StartIndex").get_value())
 		},
 		grid = {
-			size = Vector2(_grid_data.find_node("x").get_value(), _grid_data.find_node("y").get_value()),
-			items_delay = float(_grid_data.find_node("ItemsDelay").get_value()),
+			size = Vector2(_grid_data.find_child("x").get_value(), _grid_data.find_child("y").get_value()),
+			items_delay = float(_grid_data.find_child("ItemsDelay").get_value()),
 			animation_type = _animation_grid_type.get_selected_id(),
-			start_point = Vector2(_grid_data.find_node("pointX").get_value(), _grid_data.find_node("pointY").get_value()),
+			start_point = Vector2(_grid_data.find_child("pointX").get_value(), _grid_data.find_child("pointY").get_value()),
 			formula = _distance_formula.get_selected_id(),
 		},
 	}
@@ -119,16 +119,16 @@ func restore_data(data: Dictionary) -> void:
 
 	$MarginContainer/VBoxContainer/NoAnimationsWarning.visible = not $MarginContainer/VBoxContainer/AnimationsContainer.get_child_count()
 
-	var button = _node_or_group.find_node("GridContainer").get_child(data.animate_as)
-	button.pressed = true
-	find_node("AnimateAs").icon = button.icon
+	var button = _node_or_group.find_child("GridContainer").get_child(data.animate_as)
+	button.button_pressed = true
+	find_child("AnimateAs").icon = button.icon
 
-	find_node("Duration").set_value(data.duration)
-	find_node("Delay").set_value(data.delay)
+	find_child("Duration").set_value(data.duration)
+	find_child("Delay").set_value(data.delay)
 
 	if data.has("group"):
-		_group_data.find_node("ItemsDelay").set_value(data.group.items_delay)
-		_group_data.find_node("StartIndex").set_value(data.group.start_index)
+		_group_data.find_child("ItemsDelay").set_value(data.group.items_delay)
+		_group_data.find_child("StartIndex").set_value(data.group.start_index)
 
 		var type = data.group.animation_type
 		for index in _animation_group_type.get_item_count():
@@ -144,11 +144,11 @@ func restore_data(data: Dictionary) -> void:
 	if data.has("grid"):
 		var size = data.grid.size
 
-		_grid_data.find_node("ItemsDelay").set_value(data.grid.items_delay)
-		_grid_data.find_node("pointX").set_value(data.grid.start_point.x)
-		_grid_data.find_node("pointY").set_value(data.grid.start_point.y)
-		_grid_data.find_node("x").set_value(size.x)
-		_grid_data.find_node("y").set_value(size.y)
+		_grid_data.find_child("ItemsDelay").set_value(data.grid.items_delay)
+		_grid_data.find_child("pointX").set_value(data.grid.start_point.x)
+		_grid_data.find_child("pointY").set_value(data.grid.start_point.y)
+		_grid_data.find_child("x").set_value(size.x)
+		_grid_data.find_child("y").set_value(size.y)
 
 		_animation_grid_type.select(data.grid.animation_type)
 		_on_AnimationGridType_item_selected(data.grid.animation_type)
@@ -222,17 +222,17 @@ func _emit_updated():
 	emit_signal("updated")
 
 func _maybe_show_group_data() -> void:
-	var animate_as_group: ButtonGroup = _node_or_group.find_node("AsNode").group
+	var animate_as_group: ButtonGroup = _node_or_group.find_child("AsNode").group
 	var selected_button = animate_as_group.get_pressed_button()
 	var selected_button_index = selected_button.get_index()
 
 	if _group_data == null:
-		_group_data = find_node("GroupData")
-		_grid_data = find_node("GridData")
+		_group_data = find_child("GroupData")
+		_grid_data = find_child("GridData")
 
 	_grid_data.visible = selected_button_index == AnimaVisualNode.ANIMATE_AS.GRID
 	_group_data.visible = selected_button_index == AnimaVisualNode.ANIMATE_AS.GROUP
-	find_node("AnimateAs").icon = selected_button.icon
+	find_child("AnimateAs").icon = selected_button.icon
 
 	_animate_as = selected_button_index
 
@@ -248,29 +248,29 @@ func _update_me():
 	emit_signal("updated")
 
 func _on_AnimationType_item_selected(index: int):
-	_group_data.find_node("StartIndex").visible = index == ANIMA.GROUP.FROM_INDEX
-	_group_data.find_node("ItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
-	_group_data.find_node("LabelItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
+	_group_data.find_child("StartIndex").visible = index == ANIMA.GROUP.FROM_INDEX
+	_group_data.find_child("ItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
+	_group_data.find_child("LabelItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
 
 	_emit_updated()
 
 func _on_AnimationGridType_item_selected(index):
-	_grid_data.find_node("StartPoint").visible = index == ANIMA.GRID.FROM_POINT
-	_grid_data.find_node("Vector2").visible = index == ANIMA.GRID.FROM_POINT
-	_grid_data.find_node("ItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
-	_grid_data.find_node("LabelItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
+	_grid_data.find_child("StartPoint").visible = index == ANIMA.GRID.FROM_POINT
+	_grid_data.find_child("Vector2").visible = index == ANIMA.GRID.FROM_POINT
+	_grid_data.find_child("ItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
+	_grid_data.find_child("LabelItemsDelay").visible = index != ANIMA.GROUP.TOGETHER
 
 	_emit_updated()
 
 
 func _on_AnimaAnimationData_item_rect_changed():
 	if _background_rect:
-		_background_rect.rect_size = rect_size
+		_background_rect.size = size
 
 	if not _title:
-		_title = find_node("Title")
+		_title = find_child("Title")
 
-	_title.find_node("ActionsContainer").rect_size.x = rect_size.x
+	_title.find_child("ActionsContainer").size.x = size.x
 
 func _on_PropertyFromTo_value_updated():
 	_emit_updated()
@@ -285,21 +285,21 @@ func _on_Button_pressed():
 
 	size.x = floor(_source_node.get_child_count() / size.y)
 
-	_grid_data.find_node("x").set_value(size.x)
-	_grid_data.find_node("y").set_value(size.y)
+	_grid_data.find_child("x").set_value(size.x)
+	_grid_data.find_child("y").set_value(size.y)
 
 	_emit_updated()
 
 func _on_AddAnimation_pressed():
-	var instance = SINGLE_ANIMATION.instance()
+	var instance = SINGLE_ANIMATION.instantiate()
 
-	instance.connect("select_property_to_animate", self, "_on_select_property_to_animate", [instance])
-	instance.connect("updated", self, "_emit_updated")
-	instance.connect("select_relative_property", self, "_on_select_relative_property")
-	instance.connect("select_easing", self, "_on_select_easing", [instance])
-	instance.connect("tree_exited", self, "_toggle_add_message")
-	instance.connect("select_animation", self, "_on_select_animation", [instance])
-	instance.connect("preview_animation", self, "_on_single_animation_preview")
+	instance.connect("select_property_to_animate",Callable(self,"_on_select_property_to_animate").bind(instance))
+	instance.connect("updated",Callable(self,"_emit_updated"))
+	instance.connect("select_relative_property",Callable(self,"_on_select_relative_property"))
+	instance.connect("select_easing",Callable(self,"_on_select_easing").bind(instance))
+	instance.connect("tree_exited",Callable(self,"_toggle_add_message"))
+	instance.connect("select_animation",Callable(self,"_on_select_animation").bind(instance))
+	instance.connect("preview_animation",Callable(self,"_on_single_animation_preview"))
 	instance.set_meta("_data_index", _animations_container.get_child_count())
 
 	_animations_container.add_child(instance)
@@ -312,16 +312,16 @@ func _on_AddAnimation_pressed():
 	return instance
 
 func _on_Time_toggled(button_pressed):
-	find_node("TimeContent").visible = button_pressed
+	find_child("TimeContent").visible = button_pressed
 
 	if button_pressed:
-		_title.pressed = true
+		_title.button_pressed = true
 
 func _on_AnimateAs_toggled(button_pressed):
-	find_node("NodeOrGroup").visible = button_pressed
+	find_child("NodeOrGroup").visible = button_pressed
 
 	if button_pressed:
-		_title.pressed = true
+		_title.button_pressed = true
 
 func _on_Remove_pressed():
 	$ConfirmationDialog.popup_centered()
@@ -366,7 +366,7 @@ func _on_single_animation_preview(preview_data: Dictionary) -> void:
 func _on_Preview_pressed():
 	var preview_data = {
 		animation_data_id = _get_data_index(),
-		preview_button = find_node("Preview")
+		preview_button = find_child("Preview")
 	}
 
 	emit_signal("preview_animation", preview_data)

@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 var _is_collapsed_mode := true
@@ -13,12 +13,12 @@ func _ready():
 
 func _animate_add(mode:int) -> void:
 	Anima.begin_single_shot(self) \
-	.then(
+	super.then(
 		Anima.Node($AddButton).anima_scale(Vector2(1.2, 1.2), 0.15)
 	) \
-	.with(
+	super.with(
 		Anima.Group($ButtonsContainer, 0.05) \
-			.anima_animation_frames({
+			super.anima_animation_frames({
 				from = {
 					x = "../../AddButton:position:x - ../../AddButton:size:x",
 					y = "../../AddButton:position:y",
@@ -37,7 +37,7 @@ func _animate_add(mode:int) -> void:
 				easing = ANIMA.EASING.EASE_OUT_BACK
 			}, 0.3)
 	) \
-	.play_as_backwards_when(mode == AnimaTween.PLAY_MODE.BACKWARDS)
+	super.play_as_backwards_when(mode == AnimaTween.PLAY_MODE.BACKWARDS)
 
 func _on_Animation_pressed():
 	_on_Timer_timeout()
@@ -68,4 +68,4 @@ func _on_mouse_exited():
 	$Timer.start()
 
 func update_position(parent_size: Vector2):
-	rect_position = parent_size - $AddButton.rect_size - Vector2(200, 92)
+	position = parent_size - $AddButton.size - Vector2(200, 92)

@@ -1,12 +1,16 @@
-extends Spatial
+extends Node3D
 
-export (bool) var _play_backwards = false
+@export (bool) var _play_backwards = false
 
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
 const TOTAL_BOXES := 20
 const DISTANCE := 0.3
 
-export var _test_me:= false setget set_test_me
+@export var _test_me:= false :
+	get:
+		return _test_me # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_test_me
 
 func _ready():
 	AnimaAnimationsUtils.register_animation('3dboxes', _boxes_animation())
@@ -22,7 +26,7 @@ func _do_animation(loop:= true) -> void:
 	_reset_boxes_position($Node, start_position)
 
 	var anima := Anima.begin($Node) \
-		.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
+		super.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
 
 	if _play_backwards:
 		_init_reverse_boxes()
@@ -124,7 +128,7 @@ func _reset_boxes_position(parentNode: Node, start_position: Vector3) -> void:
 
 	for i in parentNode.get_child_count():
 		var box = parentNode.get_child(i)
-		if not box is MeshInstance:
+		if not box is MeshInstance3D:
 			continue
 
 		box.global_transform.origin = start_position + Vector3(DISTANCE, 0, 0) * i

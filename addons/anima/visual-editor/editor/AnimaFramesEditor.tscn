@@ -7,7 +7,7 @@
 [node name="FramesEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 512, 300 )
+pivot_offset = Vector2( 512, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -15,7 +15,7 @@ script = ExtResource( 1 )
 [node name="AnimaRectangle" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 512, 300 )
+pivot_offset = Vector2( 512, 300 )
 color = Color( 0.0235294, 0.0745098, 0.117647, 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="AnimaRectangle"]
@@ -26,40 +26,40 @@ size_flags_vertical = 3
 
 [node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
-margin_right = 1024.0
+offset_right = 1024.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
-margin_top = 46.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 46.0
+offset_right = 1024.0
+offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
-margin_right = 1024.0
-margin_bottom = 554.0
+offset_right = 1024.0
+offset_bottom = 554.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="FramesContainer1" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
-margin_bottom = 554.0
+offset_bottom = 554.0
 custom_constants/separation = 12
 
 [node name="FramesContainer2" type="VBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
 visible = false
-margin_left = 12.0
-margin_right = 12.0
-margin_bottom = 554.0
+offset_left = 12.0
+offset_right = 12.0
+offset_bottom = 554.0
 custom_constants/separation = 12
 
 [node name="AnimaAddFrame" parent="." instance=ExtResource( 3 )]
-margin_left = 776.0
-margin_top = 459.0
-margin_right = 1136.0
-margin_bottom = 459.0
-rect_pivot_offset = Vector2( 180, 288 )
+offset_left = 776.0
+offset_top = 459.0
+offset_right = 1136.0
+offset_bottom = 459.0
+pivot_offset = Vector2( 180, 288 )
 
 [connection signal="item_rect_changed" from="." to="." method="_on_FramesEditor_item_rect_changed"]
 [connection signal="resized" from="." to="." method="_on_FramesEditor_resized"]

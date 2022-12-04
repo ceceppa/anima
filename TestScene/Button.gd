@@ -1,4 +1,4 @@
-tool
+@tool
 extends Button
 
 var MAPPED_STYLEBOXES := {

@@ -42,53 +42,53 @@ enum EASING {
 	EASE_IN_OUT_BOUNCE,
 }
 
-const _easing_mapping = {
-	EASING.LINEAR: null,
-	EASING.EASE: [0.25, 0.1, 0.25, 1],
-	EASING.EASE_IN_OUT: [0.42, 0, 0.58, 1],
-	EASING.EASE_IN: [0.42, 0, 1, 1],
-	EASING.EASE_OUT: [0, 0, 0.58, 1],
-	EASING.EASE_IN_SINE: [0, 0, 1, .5],
-	EASING.EASE_OUT_SINE: [0.61, 1, 0.88, 1],
-	EASING.EASE_IN_OUT_SINE: [0.37, 0, 0.63, 1],
-	EASING.EASE_IN_QUAD: [0.11, 0, 0.5, 0],
-	EASING.EASE_OUT_QUAD: [0.5, 1.0, 0.89, 1],
-	EASING.EASE_IN_OUT_QUAD: [0.45, 0, 0.55, 1],
-	EASING.EASE_IN_CUBIC: [0.32, 0, 0.67, 0],
-	EASING.EASE_OUT_CUBIC: [0.33, 1, 0.68, 1],
-	EASING.EASE_IN_OUT_CUBIC: [0.65, 0, 0.35, 1],
-	EASING.EASE_IN_QUART: [0.5, 0, 0.75, 0],
-	EASING.EASE_OUT_QUART: [0.25, 1, 0.5, 1],
-	EASING.EASE_IN_OUT_QUART: [0.76, 0, 0.24, 1],
-	EASING.EASE_IN_QUINT: [0.64, 0, 0.78, 0],
-	EASING.EASE_OUT_QUINT: [0.22, 1, 0.36, 1],
-	EASING.EASE_IN_OUT_QUINT: [0.83, 0, 0.17, 1],
-	EASING.EASE_IN_EXPO: [0.7, 0, 0.84, 0],
-	EASING.EASE_OUT_EXPO: [0.16, 1, 0.3, 1],
-	EASING.EASE_IN_OUT_EXPO: [0.87, 0, 0.13, 1],
-	EASING.EASE_IN_CIRC: [0.55, 0, 0.1, 0.45],
-	EASING.EASE_OUT_CIRC: [0, 0.55, 0.45, 1],
-	EASING.EASE_IN_OUT_CIRC: [0.85, 0, 0.15, 1],
-	EASING.EASE_IN_BACK: [0.36, 0, 0.66, -0.56],
-	EASING.EASE_OUT_BACK: [0.36, 1.56, 0.64, 1],
-	EASING.EASE_IN_OUT_BACK: [0.68, -0.6, 0.32, 1.6],
-	EASING.EASE_IN_ELASTIC: 'ease_in_elastic',
-	EASING.EASE_OUT_ELASTIC: 'ease_out_elastic',
-	EASING.EASE_IN_OUT_ELASTIC: 'ease_in_out_elastic',
-	EASING.EASE_IN_BOUNCE: 'ease_in_bounce',
-	EASING.EASE_OUT_BOUNCE: 'ease_out_bounce',
-	EASING.EASE_IN_OUT_BOUNCE: 'ease_in_out_bounce',
-}
-
 const _ELASTIC_C4: float = (2.0 * PI) / 3.0
 const _ELASTIC_C5: float = (2.0 * PI) / 4.5
 
 static func get_easing_points(easing_name):
-	if typeof(easing_name) == TYPE_REAL:
+	var mapping = {
+		EASING.LINEAR: null,
+		EASING.EASE: [0.25, 0.1, 0.25, 1],
+		EASING.EASE_IN_OUT: [0.42, 0, 0.58, 1],
+		EASING.EASE_IN: [0.42, 0, 1, 1],
+		EASING.EASE_OUT: [0, 0, 0.58, 1],
+		EASING.EASE_IN_SINE: [0, 0, 1, .5],
+		EASING.EASE_OUT_SINE: [0.61, 1, 0.88, 1],
+		EASING.EASE_IN_OUT_SINE: [0.37, 0, 0.63, 1],
+		EASING.EASE_IN_QUAD: [0.11, 0, 0.5, 0],
+		EASING.EASE_OUT_QUAD: [0.5, 1.0, 0.89, 1],
+		EASING.EASE_IN_OUT_QUAD: [0.45, 0, 0.55, 1],
+		EASING.EASE_IN_CUBIC: [0.32, 0, 0.67, 0],
+		EASING.EASE_OUT_CUBIC: [0.33, 1, 0.68, 1],
+		EASING.EASE_IN_OUT_CUBIC: [0.65, 0, 0.35, 1],
+		EASING.EASE_IN_QUART: [0.5, 0, 0.75, 0],
+		EASING.EASE_OUT_QUART: [0.25, 1, 0.5, 1],
+		EASING.EASE_IN_OUT_QUART: [0.76, 0, 0.24, 1],
+		EASING.EASE_IN_QUINT: [0.64, 0, 0.78, 0],
+		EASING.EASE_OUT_QUINT: [0.22, 1, 0.36, 1],
+		EASING.EASE_IN_OUT_QUINT: [0.83, 0, 0.17, 1],
+		EASING.EASE_IN_EXPO: [0.7, 0, 0.84, 0],
+		EASING.EASE_OUT_EXPO: [0.16, 1, 0.3, 1],
+		EASING.EASE_IN_OUT_EXPO: [0.87, 0, 0.13, 1],
+		EASING.EASE_IN_CIRC: [0.55, 0, 0.1, 0.45],
+		EASING.EASE_OUT_CIRC: [0, 0.55, 0.45, 1],
+		EASING.EASE_IN_OUT_CIRC: [0.85, 0, 0.15, 1],
+		EASING.EASE_IN_BACK: [0.36, 0, 0.66, -0.56],
+		EASING.EASE_OUT_BACK: [0.36, 1.56, 0.64, 1],
+		EASING.EASE_IN_OUT_BACK: [0.68, -0.6, 0.32, 1.6],
+		EASING.EASE_IN_ELASTIC: 'ease_in_elastic',
+		EASING.EASE_OUT_ELASTIC: 'ease_out_elastic',
+		EASING.EASE_IN_OUT_ELASTIC: 'ease_in_out_elastic',
+		EASING.EASE_IN_BOUNCE: 'ease_in_bounce',
+		EASING.EASE_OUT_BOUNCE: 'ease_out_bounce',
+		EASING.EASE_IN_OUT_BOUNCE: 'ease_in_out_bounce'
+	}
+
+	if typeof(easing_name) == TYPE_FLOAT:
 		easing_name = int(easing_name)
 
-	if _easing_mapping.has(easing_name):
-		return _easing_mapping[easing_name]
+	if mapping.has(easing_name):
+		return mapping[easing_name]
 
 	if easing_name is String and easing_name.find("spring") >= 0:
 		var params: Array = easing_name.replace("spring", "").replace("(", "").replace(")", "").split(",")
@@ -106,10 +106,9 @@ static func get_easing_points(easing_name):
 		}
 
 		return spring_params
-
 	printerr('Easing not found: ' + str(easing_name))
 
-	return _easing_mapping[EASING.LINEAR]
+	return mapping[EASING.LINEAR]
 
 static func ease_in_elastic(elapsed: float) -> float:
 	if elapsed == 0:
@@ -174,9 +173,9 @@ static func spring(t: float, params: Dictionary):
 	var b = (zeta * w0 + -velocity) / wd if zeta < 1  else -velocity + w0
 
 	if zeta < 1:
-	  progress = exp(-progress * zeta * w0) * (a * cos(wd * progress) + b * sin(wd * progress))
+		progress = exp(-progress * zeta * w0) * (a * cos(wd * progress) + b * sin(wd * progress))
 	else:
-	  progress = (a + b * progress) * exp(-progress * w0)
+		progress = (a + b * progress) * exp(-progress * w0)
 
 	if t == 0 || t == 1:
 		return t

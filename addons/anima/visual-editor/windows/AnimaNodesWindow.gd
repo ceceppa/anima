@@ -1,12 +1,12 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal node_selected(node, path)
 
-onready var _anima_nodes_list: VBoxContainer = find_node('AnimaNodesList')
+@onready var _anima_nodes_list: VBoxContainer = find_child('AnimaNodesList')
 
 func _ready():
-	._ready()
+	super._ready()
 
 func populate_nodes_list(root_node: Node) -> void:
 	_anima_nodes_list.populate(root_node)
@@ -17,17 +17,17 @@ func populate_nodes_list(root_node: Node) -> void:
 #
 #	anima.then(
 #		Anima.Node(self) \
-#			.anima_scale(Vector2.ONE, 0.3) \
-#			.anima_from(Vector2.ZERO) \
-#			.anima_easing(ANIMA.EASING.EASE_IN_OUT_BACK)
+#			super.anima_scale(Vector2.ONE, 0.3) \
+#			super.anima_from(Vector2.ZERO) \
+#			super.anima_easing(ANIMA.EASING.EASE_IN_OUT_BACK)
 #	)
 #	anima.with(
 #		Anima.Node(self) \
-#			.anima_fade_in() \
-#			.anima_initial_value(0)
+#			super.anima_fade_in() \
+#			super.anima_initial_value(0)
 #	)
 #
-#	.show()
+#	super.show()
 #
 #	_anima_nodes_list.populate()
 #

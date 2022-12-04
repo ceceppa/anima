@@ -20,9 +20,9 @@ func _setup_list() -> void:
 
 		var button := Button.new()
 		button.set_text(file.replace('_', ' ').capitalize())
-		button.set_text_align(Button.ALIGN_LEFT)
+		button.set_text_alignment(Button.ALIGN_LEFT)
 		button.set_meta('script', file)
-		button.connect("pressed", self, '_on_animation_button_pressed', [button])
+		button.connect("pressed",Callable(self,'_on_animation_button_pressed').bind(button))
 
 		$HBoxContainer/ScrollContainer/PanelContainer/ListContainer.add_child(button)
 		old_category = category
@@ -41,7 +41,7 @@ func create_new_header(text: String) -> PanelContainer:
 	style.content_margin_bottom = 12
 	style.content_margin_right = 8
 
-	container.add_stylebox_override('panel', style)
+	container.add_theme_stylebox_override('panel', style)
 
 	return container
 
@@ -70,7 +70,7 @@ func _play_animation(node: Node, button: Button):
 	anima.then( Anima.Node(clone).anima_animation(script_name, duration) )
 	anima.play()
 	
-	yield(anima, "animation_completed")
+	await anima.animation_completed
 
 	if $Timer.is_stopped():
 		$Timer.start()

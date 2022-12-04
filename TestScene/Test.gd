@@ -2,7 +2,11 @@ extends Control
 
 const Test := {}
 
-export (StyleBoxFlat) var test setget set_test
+@export (StyleBoxFlat) var test :
+	get:
+		return test # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_test
 
 var anima: AnimaNode 
 
@@ -13,8 +17,8 @@ func _ready():
 
 #	anima.then(
 #		Anima.Node($RichTextLabel) \
-#			.anima_animation("typewrite") \
-#			.anima_duration(0.3)
+#			super.anima_animation("typewrite") \
+#			super.anima_duration(0.3)
 #	)
 #	anima.with({
 #		property = "opacity",
@@ -23,8 +27,8 @@ func _ready():
 #	})
 #	anima.then(
 #		Anima.Node($Button) \
-#		.anima_duration(0.3) \
-#		.anima_animation(
+#		super.anima_duration(0.3) \
+#		super.anima_animation(
 #			{
 #				0: {
 #					y = -20,
@@ -44,42 +48,42 @@ func _ready():
 	
 #	anima.with(
 #		Anima.Group($Control) \
-#			.anima_animation("zoomIn") \
-#			.anima_sequence_type(ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT) \
-#			.anima_items_delay(1)
+#			super.anima_animation("zoomIn") \
+#			super.anima_sequence_type(ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT) \
+#			super.anima_items_delay(1)
 #	)
 #
 #	anima.then(
 #		Anima.Node($AnimaRectangle) \
-#			.anima_property("Rectangle/FillColor") \
-#			.anima_from(Color.transparent) \
-#			.anima_to(Color.yellow) \
-#			.anima_duration(1)
+#			super.anima_property("Rectangle/FillColor") \
+#			super.anima_from(Color.TRANSPARENT) \
+#			super.anima_to(Color.YELLOW) \
+#			super.anima_duration(1)
 #	)
-#	$AnimaRectangle.set("Rectangle/FillColor", Color.yellow)
+#	$AnimaRectangle.set("Rectangle/FillColor", Color.YELLOW)
 #	anima.play_with_delay(0.5)
 #
-#	yield(anima, "animation_completed")
+#	await anima.animation_completed
 #
-#	yield(get_tree().create_timer(1), "timeout")
+#	await get_tree().create_timer(1).timeout
 #
-#	print_stray_nodes()
+#	print_orphan_nodes()
 #	print_tree_pretty()
 #
 
-#		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 0.5)) \
+#		super.then(Anima.Node($CanvasModulate).anima_property("color", Color.REBECCA_PURPLE, 0.5)) \
 #	anima = Anima.begin(self) \
-#		.then(Anima.Node($CanvasModulate).anima_animation_frames({
+#		super.then(Anima.Node($CanvasModulate).anima_animation_frames({
 #			to = {
-#				color = Color.rebeccapurple
+#				color = Color.REBECCA_PURPLE
 #			},
 #			initial_values = {
-#				color = Color.yellow
+#				color = Color.YELLOW
 #			}
 #		}, 0.5)
 #	).play_with_delay(2)
 	Anima.begin(self) \
-		.with(
+		super.with(
 			Anima.Node($Button).anima_animation("headshake", 1)
 		).play()
 
@@ -104,7 +108,7 @@ func _on_v_changed() -> void:
 
 func set_test(v: StyleBoxFlat) -> void:
 	test = v
-	v.connect("changed", self, "_on_v_changed")
+	v.connect("changed",Callable(self,"_on_v_changed"))
 
 func _on_Button_pressed():
 	var button_size := 178

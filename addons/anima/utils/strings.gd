@@ -1,7 +1,7 @@
 class_name AnimaStrings
 
 static func from_camel_to_snack_case(string:String) -> String:
-	var result = PoolStringArray()
+	var result = PackedStringArray()
 	var is_first_char = true
 
 	for character in string:
@@ -12,5 +12,5 @@ static func from_camel_to_snack_case(string:String) -> String:
 
 		is_first_char = false
 
-	return result.join('').replace(' ', '_')
+	return ''.join(result).replace(' ', '_')
 

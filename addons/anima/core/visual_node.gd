@@ -1,4 +1,4 @@
-tool
+@tool
 class_name AnimaVisualNode
 extends Node
 
@@ -21,8 +21,12 @@ enum ANIMATE_AS {
 	GRID
 }
 
-export (Dictionary) var __anima_visual_editor_data = {}
-export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM setget set_editor_position
+@export (Dictionary) var __anima_visual_editor_data = {}
+@export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM :
+	get:
+		return _editor_position # TODOConverter40 Non existent get function 
+	set(mod_value):
+		mod_value  # TODOConverter40 Copy here content of set_editor_position
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode
@@ -53,7 +57,7 @@ func get_animations_list() -> Array:
 
 func play_animation(name: String, speed: float = 1.0, reset_initial_values := false) -> void:
 	var result = reset_scene(0.0)
-	yield(result, "completed")
+	await result.completed
 
 	var animations_data: Dictionary = _get_animation_data_by_name(name)
 
@@ -159,10 +163,10 @@ func _play_animation_from_data(
 
 	anima.play()
 
-	yield(anima, "animation_completed")
+	await anima.animation_completed
 
 	if reset_initial_values:
-		yield(reset_scene(1.0), "completed")
+		await reset_scene(1.0).completed
 
 	emit_signal("animation_completed")
 
@@ -262,15 +266,15 @@ func reset_scene(clear_timeout: float):
 	if is_instance_valid(_active_anima_node) and not _active_anima_node.is_queued_for_deletion():
 		_active_anima_node.stop()
 	else:
-		return yield(get_tree(), "idle_frame")
+		return await get_tree().idle_frame
 
 	_active_anima_node = null
 
-	yield(get_tree().create_timer(clear_timeout), "timeout")
+	await get_tree().create_timer(clear_timeout).timeout
 
 	# reset node initial values
 	if _initial_values.size() == 0:
-		return yield(get_tree(), "idle_frame")
+		return await get_tree().idle_frame
 
 	for node in _initial_values:
 		var initial_values: Dictionary = _initial_values[node]
@@ -294,7 +298,7 @@ func reset_scene(clear_timeout: float):
 
 	_initial_values.clear()
 
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 
 func set_editor_position(new_position: int) -> void:
 	_editor_position = new_position
@@ -342,10 +346,10 @@ func preview_animation(preview_info: Dictionary) -> void:
 	if single_animation_data.frames[0].data[0].animations.size() == 0:
 		return
 		
-	preview_button.pressed = true
+	preview_button.button_pressed = true
 
 	var doit = _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
 
-	yield(doit, "completed")
+	await doit.completed
 
-	preview_button.pressed = false
+	preview_button.button_pressed = false
