@@ -82,14 +82,15 @@ func update_flow_direction(new_direction: int) -> void:
 	_flow_direction = new_direction
 	$FramesEditor.update_flow_direction(new_direction)
 
-	if _flow_direction == 0:
-		minimum_size.y = 420
+#	if _flow_direction == 0:
+#		minimum_size.y = 420
+	pass
 
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
 
 	if _frames_editor == null:
-		return
+		return false
 
 #	if _flow_direction == 1:
 	visible = is_graph_edit_visible

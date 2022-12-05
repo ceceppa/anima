@@ -15,7 +15,7 @@ signal select_easing
 signal preview_animation(preview_info)
 signal change_editor_position(new_position)
 
-@export (bool) var disable_animations := false
+@export var disable_animations := false
 
 @onready var _frames_container1 = find_child("FramesContainer1")
 @onready var _frames_container2 = find_child("FramesContainer2")

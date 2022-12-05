@@ -6,7 +6,7 @@ signal property_selected(node_path, property, property_type)
 @onready var _property_search: LineEdit = find_child('PropertySearch')
 @onready var _nodes_list: VBoxContainer = find_child('AnimaNodesList')
 
-@export (bool) var nodes_list_visible := false
+@export var nodes_list_visible := false
 
 var _animatable_properties := [{name = 'opacity', type = TYPE_FLOAT}]
 var _source_node: Node

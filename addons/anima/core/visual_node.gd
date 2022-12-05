@@ -21,12 +21,15 @@ enum ANIMATE_AS {
 	GRID
 }
 
-@export (Dictionary) var __anima_visual_editor_data = {}
-@export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM :
+@export var __anima_visual_editor_data := {}
+@export var _editor_position := EDITOR_POSITION.BOTTOM :
 	get:
 		return _editor_position # TODOConverter40 Non existent get function 
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_editor_position
+		_editor_position = mod_value  # TODOConverter40 Copy here content of set_editor_position
+
+		emit_signal("on_editor_position_changed", _editor_position)
+
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode
@@ -56,7 +59,7 @@ func get_animations_list() -> Array:
 	return []
 
 func play_animation(name: String, speed: float = 1.0, reset_initial_values := false) -> void:
-	var result = reset_scene(0.0)
+	var result = await reset_scene(0.0)
 	await result.completed
 
 	var animations_data: Dictionary = _get_animation_data_by_name(name)
@@ -166,7 +169,7 @@ func _play_animation_from_data(
 	await anima.animation_completed
 
 	if reset_initial_values:
-		await reset_scene(1.0).completed
+		await reset_scene(1.0)
 
 	emit_signal("animation_completed")
 
@@ -348,8 +351,6 @@ func preview_animation(preview_info: Dictionary) -> void:
 		
 	preview_button.button_pressed = true
 
-	var doit = _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
-
-	await doit.completed
+	await _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
 
 	preview_button.button_pressed = false

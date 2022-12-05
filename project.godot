@@ -103,6 +103,11 @@ _global_script_classes=[{
 "class": &"AnimaTweenUtils",
 "language": &"GDScript",
 "path": "res://addons/anima/utils/tween_utils.gd"
+}, {
+"base": "Node",
+"class": &"AnimaVisualNode",
+"language": &"GDScript",
+"path": "res://addons/anima/core/visual_node.gd"
 }]
 _global_script_class_icons={
 "AnimaAnimationsUtils": "",
@@ -123,7 +128,8 @@ _global_script_class_icons={
 "AnimaPropertyList": "",
 "AnimaStrings": "",
 "AnimaTween": "",
-"AnimaTweenUtils": ""
+"AnimaTweenUtils": "",
+"AnimaVisualNode": ""
 }
 
 [application]

@@ -13,13 +13,13 @@ func _ready():
 
 func _animate_add(mode:int) -> void:
 	Anima.begin_single_shot(self) \
-	super.then(
+	.then(
 		Anima.Node($AddButton).anima_scale(Vector2(1.2, 1.2), 0.15)
 	) \
-	super.with(
+	.with(
 		Anima.Group($ButtonsContainer, 0.05) \
-			super.anima_animation_frames({
-				from = {
+			.anima_animation_frames({
+				"from": {
 					x = "../../AddButton:position:x - ../../AddButton:size:x",
 					y = "../../AddButton:position:y",
 					scale = Vector2.ZERO,
@@ -28,16 +28,16 @@ func _animate_add(mode:int) -> void:
 				70: {
 					opacity = 1,
 				},
-				to = {
+				"to": {
 					x = "../../AddButton:position:x - :size:x - 10",
 					y = "../../AddButton:position:y + 40 * (((:index % 2) * 2) - 1) - 20",
 					scale = Vector2.ONE,
 				},
-				pivot = ANIMA.PIVOT.CENTER,
-				easing = ANIMA.EASING.EASE_OUT_BACK
+				"pivot": ANIMA.PIVOT.CENTER,
+				"easing": ANIMA.EASING.EASE_OUT_BACK
 			}, 0.3)
 	) \
-	super.play_as_backwards_when(mode == AnimaTween.PLAY_MODE.BACKWARDS)
+	.play_as_backwards_when(mode == AnimaTween.PLAY_MODE.BACKWARDS)
 
 func _on_Animation_pressed():
 	_on_Timer_timeout()

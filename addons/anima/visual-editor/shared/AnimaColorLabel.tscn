@@ -1,13 +1,13 @@
-[gd_scene format=2]
+[gd_scene format=3 uid="uid://16gwtyuvekwj"]
 
 [node name="AnimaColorLabel" type="ColorRect"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.584314, 0.592157, 0.760784, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+color = Color(0.584314, 0.592157, 0.760784, 1)
 
 [node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

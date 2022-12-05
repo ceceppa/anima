@@ -16,13 +16,20 @@ const REG_EX = {
 	Type.STRING: ".*",
 }
 
-@export (Type) var type :
+@export var type: Type :
 	get:
 		return type # TODOConverter40 Non existent get function 
-	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_type
-@export (float) var min_value = -999.90
-@export (float) var max_value = 999.99
+	set(new_type):
+		type = new_type
+
+		var regex: String = REG_EX[type]
+
+		_regex.compile(regex)
+
+		emit_signal("type_changed", type)
+
+@export var min_value := -999.90
+@export var max_value := 999.99
 
 var _regex := RegEx.new()
 
@@ -52,7 +59,7 @@ func get_value():
 	if type == Type.STRING:
 		return text
 
-	var value := float(text)
+	var value := text.to_float()
 	value = clamp(abs(value), min_value, max_value)
 
 	if type == Type.INTEGER:
@@ -63,22 +70,12 @@ func get_value():
 func set_value(value) -> void:
 	text = str(value)
 
-func set_type(new_type: int) -> void:
-	type = new_type
-
-	var regex: String = REG_EX[type]
-
-	_regex.compile(regex)
-
-	emit_signal("type_changed", new_type)
-
 func get_type() -> int:
 	return type
 
 func _on_NumberEdit_type_changed(new_type):
 	if new_type != Type.STRING:
-		align = ALIGN_RIGHT
-
+		alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 func _on_NumberEdit_gui_input(event):
 	if event is InputEventKey and event.scancode == KEY_ENTER and event.button_pressed == false:
