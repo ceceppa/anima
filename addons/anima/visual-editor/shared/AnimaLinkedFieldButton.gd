@@ -1,4 +1,4 @@
 @tool
 extends Button
 
-@export (NodePath) var linked_field
+@export var linked_field: NodePath

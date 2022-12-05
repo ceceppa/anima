@@ -17,12 +17,14 @@ var COLORS := {
 	STYLE.BACKGROUND: Color("#1a304f"),
 }
 
-@export (STYLE) var style = STYLE.PRIMARY :
+@export var style := STYLE.PRIMARY :
 	get:
 		return style # TODOConverter40 Non existent get function 
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_bg_style
-@export (float) var adjust_size := 0.0 :
+		style = mod_value
+
+		color = COLORS[style]
+@export var adjust_size := 0.0 :
 	get:
 		return adjust_size # TODOConverter40 Non existent get function 
 	set(mod_value):
@@ -38,12 +40,12 @@ func _ready():
 	_on_resized()
 
 func _on_resized() -> void:
-	minimum_size = Vector2.ZERO
+#	minimum_size = Vector2.ZERO
 
 	if get_child_count() > 0:
 		var child_size = get_child(0).size
 
-		minimum_size = child_size
+#		minimum_size = child_size
 
 func set_bg_style(new_style: int) -> void:
 	style = new_style

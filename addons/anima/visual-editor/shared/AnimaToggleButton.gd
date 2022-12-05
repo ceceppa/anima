@@ -1,7 +1,7 @@
 @tool
 extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
 
-@export (NodePath) var node_to_toggle
+@export var node_to_toggle: NodePath
 
 @onready var _icon_wrapper = find_child("IconWrapper")
 
@@ -16,7 +16,7 @@ func _ready():
 	toggle_mode = true
 	_ignore_toggle_mode = true
 
-	if node_to_toggle != "":
+	if node_to_toggle != null:
 		_node_to_toggle = get_node(node_to_toggle)
 
 		return
@@ -28,7 +28,7 @@ func _ready():
 
 	_node_to_toggle = get_parent().get_child(get_index() + 1)
 
-	set_left_padding(48)
+	_left_padding = 48
 
 func _on_AnimaToggleButton_toggled(button_pressed):
 	var path := "res://addons/anima/visual-editor/icons/Closed.svg"

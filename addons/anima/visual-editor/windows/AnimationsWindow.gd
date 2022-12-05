@@ -110,10 +110,10 @@ func _play_animation(node1: Node, node2: Node, animation_name: String) -> void:
 	$AnimaNode.then(
 		Anima.Node(node1).anima_animation(animation_name, 0.5)
 	)\
-	super.with(
-		Anima.Node(node2).anima_animation(animation_name, 0.5)
-	)\
-	super.play()
+		.with(
+			Anima.Node(node2).anima_animation(animation_name, 0.5)
+		)\
+		.play()
 
 	await $AnimaNode.animation_completed
 

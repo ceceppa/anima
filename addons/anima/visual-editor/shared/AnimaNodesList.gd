@@ -4,7 +4,7 @@ extends VBoxContainer
 signal node_selected(node, path)
 signal close
 
-@export (bool) var trigger_selected := false
+@export var trigger_selected := false
 
 @onready var _search_filed: LineEdit = find_child("SearchField")
 @onready var _nodes_list: Tree = find_child("NodesList")
@@ -58,7 +58,7 @@ func select_node(node: Node, emit_signal := false) -> void:
 	if node == null:
 		return
 
-	var element = _select_node(root.get_children(), node.get_path())
+	var element = _select_node(root.get_children()[0], node.get_path())
 
 	if element:
 		element.select(0)
@@ -76,7 +76,7 @@ func _select_node(tree_item: TreeItem, node_path: String, c = ""):
 		var subchild = tree_item.get_children()
 		
 		if subchild:
-			var found = _select_node(subchild, node_path)
+			var found = _select_node(subchild[0], node_path)
 
 			if found:
 				return found

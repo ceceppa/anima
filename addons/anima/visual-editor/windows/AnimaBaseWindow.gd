@@ -7,32 +7,29 @@ func _ready():
 	if not is_connected("popup_hide",Callable(self,"_on_hide")):
 		connect("popup_hide",Callable(self,"_on_hide"))
 
-	clip_contents = false
-
 func _play(backwards := false) -> AnimaNode:
 	var anima = Anima.begin_single_shot(self)
 	anima.then(
 		Anima.Node(self) \
-			super.anima_animation_frames({
+			.anima_animation_frames({
 				0: {
 					size = Vector2(_final_size.x, 0),
 					opacity = 0,
 					pivot = ANIMA.PIVOT.CENTER,
 				},
 				10: {
-					y = 100,
+					"translate:y" = 100,
 					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 				},
 				100: {
 					size = _final_size,
 					opacity = 1,
-					y = 0,
+					"translate:y" = 0,
 					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 				},
-				initial_values = {
+				"initial_values": {
 					opacity = 0,
 				},
-				relative = ["y"]
 			}, 0.3)
 	)
 	
@@ -43,10 +40,10 @@ func _play(backwards := false) -> AnimaNode:
 
 	return anima
 
-func popup_centered(size := Vector2.ZERO) -> void:
-	scale = Vector2.ONE
+func popup_centered(size := Vector2i.ZERO) -> void:
+#	scale = Vector2i.ONE
 	size = _final_size
-	minimum_size = Vector2(_final_size.x, 0)
+#	minimum_size = Vector2i(_final_size.x, 0)
 
 	super.popup_centered(size)
 

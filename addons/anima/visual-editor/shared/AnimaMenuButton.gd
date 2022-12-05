@@ -13,7 +13,7 @@ enum SHOW_PANEL_ON {
 	CLICK
 }
 
-@export (SHOW_PANEL_ON) var show_panel_on = SHOW_PANEL_ON.HOVER :
+@export var show_panel_on := SHOW_PANEL_ON.HOVER :
 	get:
 		return show_panel_on # TODOConverter40 Non existent get function 
 	set(mod_value):
@@ -40,7 +40,7 @@ func set_items(items: Array) -> void:
 
 		panel_item.icon = load(item.icon)
 		panel_item.text = "  " + item.label
-		panel_item.align = ALIGN_LEFT
+		panel_item.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 		panel_item.connect("button_down",Callable(self,"_on_PopupMenu_id_pressed").bind(index))
 		panel_item.connect("mouse_entered",Callable(self,"_on_PopupPanel_mouse_entered"))
@@ -68,7 +68,7 @@ func _input(event):
 	if event is InputEventMouseButton:
 		if get_draw_mode() == DRAW_HOVER and show_panel_on == SHOW_PANEL_ON.RIGHT_CLICK and event.button_index == 2 and event.button_pressed == false:
 			_show_panel()
-		elif event.button_pressed == false:
+		elif event.pressed == false:
 			_panel.hide()
 
 func _on_Button_mouse_entered():
