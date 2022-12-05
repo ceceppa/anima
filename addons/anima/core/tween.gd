@@ -16,7 +16,6 @@ var _tween_started := 0
 var _root_node: Node
 var _use_meta_values := true
 var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
-var _should_apply_initial_values := true
 var _initial_values := []
 var is_playing_backwards := false
 
@@ -56,9 +55,8 @@ func play(play_speed: float):
 	resume_all()
 
 func do_apply_initial_values() -> void:
-	if _should_apply_initial_values:
-		for data in _initial_values:
-			_apply_initial_values(data)
+	for data in _initial_values:
+		_apply_initial_values(data)
 
 func set_apply_initial_values(when) -> void:
 	_apply_initial_values_on = when
@@ -148,6 +146,9 @@ func add_animation_data(animation_data: Dictionary) -> void:
 
 	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
 		node.connect("tree_exiting", self, "_on_node_tree_exiting", [object])
+
+	if animation_data.has("initial_values") and _apply_initial_values_on == ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION:
+		_apply_initial_values(animation_data)
 
 func _interpolate_method(source: Node, method: String, duration: float, tween_in: int, tween_out: int, wait_time: float) -> void:
 	interpolate_method(

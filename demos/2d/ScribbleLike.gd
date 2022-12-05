@@ -36,4 +36,4 @@ func _ready():
 						opacity = 0,
 					},
 				}, 1) \
-		).play()
+		).play_with_delay(0.5)
