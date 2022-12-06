@@ -13,6 +13,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cokme"]
 
 [node name="Button" type="Button"]
+custom_minimum_size = Vector2(49, 49)
 offset_right = 48.0
 pivot_offset = Vector2(24, 16.5)
 mouse_default_cursor_shape = 2

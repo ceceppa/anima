@@ -19,16 +19,18 @@ var COLORS := {
 
 @export var style := STYLE.PRIMARY :
 	get:
-		return style # TODOConverter40 Non existent get function 
+		return style
 	set(mod_value):
 		style = mod_value
 
 		color = COLORS[style]
 @export var adjust_size := 0.0 :
 	get:
-		return adjust_size # TODOConverter40 Non existent get function 
+		return adjust_size
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_adjust_size
+		adjust_size = mod_value
+
+		_on_resized()
 
 func _ready():
 	if get_child_count() == 0:
@@ -39,20 +41,16 @@ func _ready():
 
 	_on_resized()
 
-func _on_resized() -> void:
-	custom_minimum_size = Vector2.ZERO
+var _can = true
 
+func _on_resized() -> void:
 	if get_child_count() > 0:
 		var child_size = get_child(0).size
 
-		custom_minimum_size = child_size
+		if child_size != size:
+			custom_minimum_size = child_size
 
 func set_bg_style(new_style: int) -> void:
 	style = new_style
 
 	color = COLORS[style]
-
-func set_adjust_size(adjust: float) -> void:
-	adjust_size = adjust
-
-	_on_resized()
