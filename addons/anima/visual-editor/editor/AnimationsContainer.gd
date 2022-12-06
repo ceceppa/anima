@@ -33,10 +33,10 @@ func _on_AnimationsContainer_mouse_exited():
 
 func _highlight_me() -> void:
 	Anima.begin_single_shot(self) \
-		super.with(
+		.with(
 			Anima.Node($Control/ColorRect).anima_property("color", Color('00ffffff'), 0.15).anima_from(Color('0affffff'))
 		) \
-		super.play_as_backwards_when(_is_dragging)
+		.play_as_backwards_when(_is_dragging)
 
 func _on_AnimationsContainer_item_rect_changed():
 	$Control/ColorRect.size = size

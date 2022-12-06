@@ -14,3 +14,7 @@ static func from_camel_to_snack_case(string:String) -> String:
 
 	return ''.join(result).replace(' ', '_')
 
+
+static func sanitize_meta_key(string: String) -> String:
+	return string.replace("-", "").replace(" ", "").replace("_", "").replace("@", "")
+	

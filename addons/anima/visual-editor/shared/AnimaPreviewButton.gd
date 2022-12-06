@@ -12,6 +12,8 @@ func _ready():
 	])
 	
 	set_show_panel_on(12)
+	
+	custom_minimum_size = Vector2(32, 32)
 
 func _on_Preview_toggled(button_pressed):
 	super._on_Button_toggled(button_pressed)

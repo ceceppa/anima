@@ -1,15 +1,18 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://d0w50l7lbbkh5"]
 
-[ext_resource path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" type="PackedScene" id=2]
+[ext_resource type="Script" path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.gd" id="1"]
+[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" id="2"]
 
 [node name="NodesWindow" type="Window"]
-modulate = Color( 1, 1, 1, 0 )
-offset_right = -0.280029
-offset_bottom = -3.05176e-05
-minimum_size = Vector2( 260, 320 )
 exclusive = true
-script = ExtResource( 1 )
+script = ExtResource("1")
 
-[node name="AnimaNodesList" parent="." instance=ExtResource( 2 )]
+[node name="AnimaNodesList" parent="." instance=ExtResource("2")]
+anchors_preset = 15
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 trigger_selected = true

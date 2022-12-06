@@ -55,8 +55,8 @@ func set_anima_node(node: Node) -> void:
 
 	_anima_visual_node_path = node.get_path()
 
-	if not node.is_connected("tree_exited",Callable(self,"_on_anima_visual_node_deleted")):
-		node.connect("tree_exited",Callable(self,"_on_anima_visual_node_deleted"))
+	if not node.tree_entered.is_connected(_on_anima_visual_node_deleted):
+		node.tree_exited.connect(_on_anima_visual_node_deleted)
 
 	_anima_visual_node = node
 
@@ -69,6 +69,7 @@ func _restore_visual_editor_data() -> void:
 	_scene_root_node = _anima_visual_node.get_root_node()
 
 	_nodes_window.populate_nodes_list(_scene_root_node)
+
 	$PropertiesWindow.populate(_scene_root_node)
 
 	_restore_data(data)
@@ -169,53 +170,53 @@ func _restore_data(data: Dictionary) -> void:
 			_frames_editor._on_AnimaAddFrame_add_delay(frame_key)
 		else:
 			pass
-
-		var the_frame = _frames_editor.select_frame(frame_key)
-		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
-
-		if not the_frame.is_connected("move_one_left",Callable(self,"_on_frame_move_one_left")):
-			the_frame.connect("move_one_left",Callable(self,"_on_frame_move_one_left").bind(key_index))
-			the_frame.connect("move_one_right",Callable(self,"_on_frame_move_one_right").bind(key_index))
-
-		_frames_editor.set_frame_name(frame_name)
-
-		if frame_data.has("duration") and frame_data.duration != null:
-			_frames_editor.set_frame_duration(frame_data.duration)
-
-		if not frame_data.has("data"):
-			frame_data.data = {}
-
-		the_frame.set_has_previous(key_index > 0)
-		the_frame.set_has_next(key_index < total_frames)
-		the_frame.set_meta("_data_index", key_index)
-
-		for data_index in frame_data.data.size():
-			var value = frame_data.data[data_index]
-
-			if value is String:
-				if the_frame.has_method("restore_data"):
-					the_frame.restore_data(frame_data.data)
-				
-				continue
-
-			if value and value.has("node_path"):
-				if _anima_visual_node == null:
-					_frames_editor.clear()
-
-					break
-
-				var node: Node = _anima_visual_node.get_root_node().get_node(value.node_path)
-				
-				await get_tree().idle_frame
-
-				var item: Node = _add_animation_for(node, value.node_path)
-
-				item.set_meta("_data_index", data_index)
-				item.restore_data(value)
+#
+#		var the_frame = _frames_editor.select_frame(frame_key)
+#		var frame_name: String = frame_data.name if frame_data.has("name") and frame_data.name else "Frame " + str(index)
+#
+#		if not the_frame.is_connected("move_one_left",Callable(self,"_on_frame_move_one_left")):
+#			the_frame.connect("move_one_left",Callable(self,"_on_frame_move_one_left").bind(key_index))
+#			the_frame.connect("move_one_right",Callable(self,"_on_frame_move_one_right").bind(key_index))
+#
+#		_frames_editor.set_frame_name(frame_name)
+#
+#		if frame_data.has("duration") and frame_data.duration != null:
+#			_frames_editor.set_frame_duration(frame_data.duration)
+#
+#		if not frame_data.has("data"):
+#			frame_data.data = {}
+#
+#		the_frame.set_has_previous(key_index > 0)
+#		the_frame.set_has_next(key_index < total_frames)
+#		the_frame.set_meta("_data_index", key_index)
+#
+#		for data_index in frame_data.data.size():
+#			var value = frame_data.data[data_index]
+#
+#			if value is String:
+#				if the_frame.has_method("restore_data"):
+#					the_frame.restore_data(frame_data.data)
+#
+#				continue
+#
+#			if value and value.has("node_path"):
+#				if _anima_visual_node == null:
+#					_frames_editor.clear()
+#
+#					break
+#
+#				var node: Node = _anima_visual_node.get_root_node().get_node(value.node_path)
+#
+#				await get_tree().idle_frame
+#
+#				var item: Node = _add_animation_for(node, value.node_path)
+#
+#				item.set_meta("_data_index", data_index)
+#				item.restore_data(value)
 
 		# TODO: Restore collapse
-		if frame_data.has("collapsed") and frame_data.collapsed:
-			the_frame.collapse()
+#		if frame_data.has("collapsed") and frame_data.collapsed:
+#			the_frame.collapse()
 
 		key_index += 1
 

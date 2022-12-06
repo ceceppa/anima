@@ -37,7 +37,7 @@ func _enter_tree():
 
 		_tween.connect("loop_finished", _on_tween_completed)
 		_tween.connect("finished", _on_tween_completed)
-		
+
 func _exit_tree():
 	for child in get_children():
 		child.free()
@@ -67,7 +67,6 @@ func set_repeat(repeat) -> void:
 
 func play(play_speed: float):
 	_tween.set_speed_scale(play_speed)
-
 	_tween.play()
 
 func do_apply_initial_values() -> void:
@@ -78,7 +77,7 @@ func do_apply_initial_values() -> void:
 func set_apply_initial_values(when) -> void:
 	_apply_initial_values_on = when
 
-func add_animation_data(animation_data: Dictionary) -> void:
+func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMAL) -> void:
 	var index: String
 
 	_animation_data.push_back(animation_data)
@@ -182,14 +181,15 @@ func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
 
 	var object := AnimaEvent.new(animation_data, callback_key, get_is_playing_backwards)
 
-	_interpolate_method(
-		object,
-		"execute_callback",
-		ANIMA.MINIMUM_DURATION,
-		Tween.TRANS_LINEAR,
-		Tween.TRANS_LINEAR,
-		animation_data._wait_time + animation_data.duration
-	)
+	_tween.tween_callback(object.execute_callback)
+#	_interpolate_method(
+#		object,
+#		"execute_callback",
+#		ANIMA.MINIMUM_DURATION,
+#		Tween.TRANS_LINEAR,
+#		Tween.TRANS_LINEAR,
+#		animation_data._wait_time + animation_data.duration
+#	)
 
 func get_is_playing_backwards() -> bool:
 	return is_playing_backwards
@@ -291,6 +291,7 @@ func set_visibility_strategy(strategy: int) -> void:
 		_apply_visibility_strategy(animation_data, strategy)
 
 func seek(value: float) -> void:
+#	_tween.custom_step(value)
 #	_tween.seek(value)
 	pass
 
@@ -359,7 +360,7 @@ func get_duration() -> float:
 		duration = max(duration, data_duration)
 
 	return duration
-
+	
 # We don't want the user to specify the from/to value as color
 # we animate opacity.
 # So this function converts the "from = #" -> Color(.., .., .., #)
@@ -630,3 +631,80 @@ class AnimaEvent extends Node:
 			fn = _callback
 
 		fn.callv(args)
+
+func reverse_animation(from_tween, default_duration: float):
+	var animation_data = from_tween.get_animation_data()
+	var animation_length = from_tween.get_duration()
+
+	clear_animations()
+
+	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
+
+	for new_data in data:
+		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
+
+#
+# In order to flip "nested relative" animations we need to calculate what all the
+# property as it would be if the animation is played normally. Only then we can calculate
+# the correct relative positions, by also looking at the previous frames.
+# Otherwise we would end up with broken animations when animating the same property more than
+# once
+func _flip_animations(data: Array, animation_length: float, default_duration: float) -> Array:
+	var new_data := []
+	var previous_frames := {}
+	var length: float = animation_length
+
+	data.reverse()
+	for animation in data:
+		if animation.has("_ignore_for_backwards"):
+			continue
+
+		var animation_data = animation.duplicate(true)
+
+		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
+		var wait_time: float = animation_data._wait_time
+		var node = animation_data.node
+		var new_wait_time: float = length - duration - wait_time
+		var property = animation_data.property
+		var is_relative = animation_data.has("relative") and animation_data.relative
+
+		if animation_data.has("initial_value"):
+			animation_data.erase("initial_value")
+
+		if animation_data.has("initial_values"):
+			animation_data.erase("initial_values")
+
+		if not is_relative:
+			var temp = animation_data.to
+
+			if animation_data.has("from"):
+				animation_data.to = animation_data.from
+
+			animation_data.from = temp
+
+		animation_data._wait_time = max(ANIMA.MINIMUM_DURATION, new_wait_time)
+
+		var old_on_completed = animation_data.on_completed if animation_data.has("on_completed") else null
+		var erase_on_completed := true
+
+		if animation_data.has("on_started"):
+			animation_data.on_completed = animation_data.on_started
+			animation_data.erase("on_started")
+
+			erase_on_completed = false
+
+		if old_on_completed:
+			animation_data.on_started = old_on_completed
+
+			if erase_on_completed:
+				animation_data.erase('on_completed')
+
+		animation_data.erase("initial_values")
+		animation_data.erase("initial_value")
+		
+		if animation_data.has("easing") and animation_data.easing:
+			animation_data.easing = AnimaEasing.get_mirrored_easing(animation_data.easing)
+
+		new_data.push_back(animation_data)
+
+	return new_data

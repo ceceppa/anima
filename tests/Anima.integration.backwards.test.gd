@@ -13,7 +13,7 @@ func test_simple_backwards():
 	node.size = Vector2(100, 10)
 
 	var anima := Anima.begin(self) \
-		super.with(
+		.with(
 			Anima.Node(node).anima_animation_frames({
 				0: {
 					"translate:x": "-:size:x",
@@ -23,7 +23,7 @@ func test_simple_backwards():
 				}
 			})
 		) \
-		super.play()
+		.play()
 
 	await anima.animation_completed
 
@@ -54,9 +54,9 @@ func test_on_started():
 	_on_callback_called_params = "__not_called__"
 
 	var anima = Anima.begin_single_shot(self) \
-		super.set_default_duration(0.15) \
-		super.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback", null, "backwards") ) \
-		super.play_backwards()
+		.set_default_duration(0.15) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(_on_callback, null, "backwards") ) \
+		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)
 
@@ -77,9 +77,9 @@ func test_on_started_multiple_params():
 	_on_callback_called_params = "__not_called__"
 
 	var anima = Anima.begin_single_shot(self) \
-		super.set_default_duration(0.15) \
-		super.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback_two_params", null, [42, "ciao"]) ) \
-		super.play_backwards()
+		.set_default_duration(0.15) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback_two_params", null, [42, "ciao"]) ) \
+		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)
 
@@ -100,9 +100,9 @@ func test_on_completed():
 	_on_callback_called_params = "__not_called__"
 
 	var anima = Anima.begin_single_shot(self) \
-		super.set_default_duration(0.15) \
-		super.then( Anima.Node(node).anima_fade_in(1).anima_on_completed(self, "_on_callback", null, "completed-backwards") ) \
-		super.play_backwards()
+		.set_default_duration(0.15) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_completed(self, "_on_callback", null, "completed-backwards") ) \
+		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)
 
@@ -123,9 +123,9 @@ func test_on_completed_multiple_params():
 	_on_callback_called_params = "__not_called__"
 
 	var anima = Anima.begin_single_shot(self) \
-		super.set_default_duration(0.15) \
-		super.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback_two_params", null, [":)", "yay"]) ) \
-		super.play_backwards()
+		.set_default_duration(0.15) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback_two_params", null, [":)", "yay"]) ) \
+		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)
 

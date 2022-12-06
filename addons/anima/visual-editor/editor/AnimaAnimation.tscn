@@ -1,1466 +1,182 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=10 format=3 uid="uid://b6bafk5upjotw"]
 
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimation.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=4]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/visual-editor/icons/PositionRight.svg" type="Texture2D" id=6]
-[ext_resource path="res://addons/anima/visual-editor/icons/PositionBottom.svg" type="Texture2D" id=7]
-[ext_resource path="res://addons/anima/visual-editor/icons/Visibility.svg" type="Texture2D" id=8]
-[ext_resource path="res://addons/anima/visual-editor/icons/Time.svg" type="Texture2D" id=9]
+[ext_resource type="PackedScene" uid="uid://ft6vmcsjvmin" path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" id="2"]
+[ext_resource type="Script" path="res://addons/anima/visual-editor/editor/AnimaAnimation.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://b0n4ipyle1o1l" path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://kqofkpm5383g" path="res://addons/anima/visual-editor/icons/PositionRight.svg" id="6"]
+[ext_resource type="Texture2D" uid="uid://8fjk4tmbu23e" path="res://addons/anima/visual-editor/icons/PositionBottom.svg" id="7"]
+[ext_resource type="Texture2D" uid="uid://bl2nharrwdkjr" path="res://addons/anima/visual-editor/icons/Visibility.svg" id="8"]
+[ext_resource type="Texture2D" uid="uid://6fn4xn4l5x35" path="res://addons/anima/visual-editor/icons/Time.svg" id="9"]
 
 [node name="AnimaAnimation" type="HBoxContainer"]
-anchor_right = 1.0
-offset_right = -413.0
+offset_right = 366.0
 offset_bottom = 38.0
-minimum_size = Vector2( 0, 38 )
 size_flags_horizontal = 3
-custom_constants/separation = 0
-script = ExtResource( 3 )
+script = ExtResource("3")
 
 [node name="Control" type="Control" parent="."]
+layout_mode = 2
+anchors_preset = 0
 offset_bottom = 38.0
 
-[node name="BGColor" parent="Control" instance=ExtResource( 2 )]
-offset_right = 611.0
+[node name="BGColor" parent="Control" instance=ExtResource("2")]
+layout_mode = 0
+offset_right = 398.0
 offset_bottom = 38.0
-color = Color( 0.101961, 0.188235, 0.309804, 1 )
+color = Color(0.101961, 0.188235, 0.309804, 1)
 style = 4
 
 [node name="Positions" type="HBoxContainer" parent="."]
-offset_right = 108.0
+layout_mode = 2
+offset_left = 4.0
+offset_right = 8.0
 offset_bottom = 38.0
-custom_constants/separation = 12
 
-[node name="PositionBottom" parent="Positions" instance=ExtResource( 4 )]
+[node name="PositionBottom" parent="Positions" instance=ExtResource("4")]
+layout_mode = 2
+offset_right = 0.0
 offset_bottom = 38.0
-pivot_offset = Vector2( 24, 19 )
-icon = ExtResource( 7 )
-icon_align = 1
+pivot_offset = Vector2(0, 19)
+icon = ExtResource("7")
 expand_icon = true
-__meta__ = {
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionRight2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
-}
 style = 3
 transparent = true
+metadata/AnimaInitialPositionBottombuttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
+metadata/__visibility_strategy = 0
+metadata/_visibility_strategy_reverted = true
 
-[node name="PositionRight" parent="Positions" instance=ExtResource( 4 )]
-offset_left = 60.0
-offset_right = 108.0
+[node name="PositionRight" parent="Positions" instance=ExtResource("4")]
+layout_mode = 2
+offset_left = 4.0
+offset_right = 4.0
 offset_bottom = 38.0
-pivot_offset = Vector2( 24, 19 )
-icon = ExtResource( 6 )
-icon_align = 1
+pivot_offset = Vector2(0, 19)
+icon = ExtResource("6")
 expand_icon = true
-__meta__ = {
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionRight__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
-}
 style = 3
 transparent = true
+metadata/AnimaInitialPositionRightbuttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
+metadata/__visibility_strategy = 0
+metadata/_visibility_strategy_reverted = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_left = 108.0
-offset_right = 611.0
+layout_mode = 2
+offset_left = 12.0
+offset_right = 398.0
 offset_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 12
 alignment = 2
 
-[node name="PositionBottom2" parent="HBoxContainer" instance=ExtResource( 4 )]
+[node name="PositionBottom2" parent="HBoxContainer" instance=ExtResource("4")]
+layout_mode = 2
+offset_right = 0.0
 offset_bottom = 38.0
-pivot_offset = Vector2( 24, 19 )
+pivot_offset = Vector2(0, 19)
 disabled = true
-icon = ExtResource( 8 )
-icon_align = 1
+icon = ExtResource("8")
 expand_icon = true
-__meta__ = {
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionRight2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
-}
 style = 3
 transparent = true
+metadata/AnimaInitialPositionBottom2buttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
+metadata/__visibility_strategy = 0
+metadata/_visibility_strategy_reverted = true
 
 [node name="VisibilityStrategy" type="OptionButton" parent="HBoxContainer"]
-offset_left = 60.0
-offset_right = 191.0
+layout_mode = 2
+offset_left = 4.0
+offset_right = 270.0
 offset_bottom = 38.0
 tooltip_text = "Set the visibility styrategy"
-text = "Ignore"
-items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
+item_count = 24
 selected = 0
+popup/item_0/text = "IGNORE"
+popup/item_0/id = 0
+popup/item_1/text = "HIDDEN_ONLY"
+popup/item_1/id = 1
+popup/item_2/text = "TRANSPARENT_ONLY"
+popup/item_2/id = 2
+popup/item_3/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_3/id = 3
+popup/item_4/text = "IGNORE"
+popup/item_4/id = 4
+popup/item_5/text = "HIDDEN_ONLY"
+popup/item_5/id = 5
+popup/item_6/text = "TRANSPARENT_ONLY"
+popup/item_6/id = 6
+popup/item_7/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_7/id = 7
+popup/item_8/text = "IGNORE"
+popup/item_8/id = 8
+popup/item_9/text = "HIDDEN_ONLY"
+popup/item_9/id = 9
+popup/item_10/text = "TRANSPARENT_ONLY"
+popup/item_10/id = 10
+popup/item_11/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_11/id = 11
+popup/item_12/text = "IGNORE"
+popup/item_12/id = 12
+popup/item_13/text = "HIDDEN_ONLY"
+popup/item_13/id = 13
+popup/item_14/text = "TRANSPARENT_ONLY"
+popup/item_14/id = 14
+popup/item_15/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_15/id = 15
+popup/item_16/text = "IGNORE"
+popup/item_16/id = 16
+popup/item_17/text = "HIDDEN_ONLY"
+popup/item_17/id = 17
+popup/item_18/text = "TRANSPARENT_ONLY"
+popup/item_18/id = 18
+popup/item_19/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_19/id = 19
+popup/item_20/text = "IGNORE"
+popup/item_20/id = 20
+popup/item_21/text = "HIDDEN_ONLY"
+popup/item_21/id = 21
+popup/item_22/text = "TRANSPARENT_ONLY"
+popup/item_22/id = 22
+popup/item_23/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_23/id = 23
 
-[node name="PositionBottom3" parent="HBoxContainer" instance=ExtResource( 4 )]
-offset_left = 203.0
-offset_right = 251.0
+[node name="PositionBottom3" parent="HBoxContainer" instance=ExtResource("4")]
+layout_mode = 2
+offset_left = 274.0
+offset_right = 274.0
 offset_bottom = 38.0
-pivot_offset = Vector2( 24, 19 )
+pivot_offset = Vector2(0, 19)
 disabled = true
-icon = ExtResource( 9 )
-icon_align = 1
+icon = ExtResource("9")
 expand_icon = true
-__meta__ = {
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom3__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionRight2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
-}
 style = 3
 transparent = true
+metadata/AnimaInitialPositionBottom3buttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
+metadata/__visibility_strategy = 0
+metadata/_visibility_strategy_reverted = true
 
-[node name="DefaultDuration" parent="HBoxContainer" instance=ExtResource( 5 )]
-offset_left = 263.0
-offset_right = 407.0
+[node name="DefaultDuration" parent="HBoxContainer" instance=ExtResource("5")]
+layout_mode = 2
+offset_left = 278.0
+offset_right = 345.0
 offset_bottom = 38.0
 tooltip_text = "Sets the default duration"
 
 [node name="Label4" type="Label" parent="HBoxContainer"]
-offset_left = 419.0
-offset_top = 6.0
-offset_right = 443.0
-offset_bottom = 31.0
-minimum_size = Vector2( 24, 0 )
+layout_mode = 2
+offset_left = 349.0
+offset_top = 7.0
+offset_right = 350.0
+offset_bottom = 30.0
 
-[node name="Preview" parent="HBoxContainer" instance=ExtResource( 1 )]
-offset_left = 455.0
-offset_right = 503.0
+[node name="Preview" parent="HBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 354.0
+offset_right = 386.0
 offset_bottom = 38.0
-pivot_offset = Vector2( 24, 19 )
-__meta__ = {
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0
-}
-show_panel_on = 12
+pivot_offset = Vector2(24, 19)
 
 [connection signal="resized" from="." to="." method="_on_AnimaAnimation_resized"]
 [connection signal="pressed" from="Positions/PositionBottom" to="." method="_on_PositionBottom_pressed"]

@@ -37,7 +37,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	anima.then(
 		Anima.Node(self) \
-			super.anima_animation_frames({
+			.anima_animation_frames({
 				from = {
 					"size:x": 0,
 					"min_size:x": 0,
@@ -54,7 +54,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 	)
 	anima.with(
 		Anima.Group(find_child("DelayContent"), 0.05) \
-			super.anima_animation_frames({
+			.anima_animation_frames({
 				from = {
 					y = 40,
 					opacity = 0,

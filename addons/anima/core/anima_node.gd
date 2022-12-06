@@ -8,6 +8,7 @@ signal loop_started
 signal loop_completed
 
 var _anima_tween := AnimaTween.new()
+var _anima_reverse_tween := AnimaTween.new()
 var _timer := Timer.new()
 
 var _total_animation_length := 0.0
@@ -48,9 +49,10 @@ func _ready():
 	add_child(_timer)
 
 func init_node(node: Node):
-	_anima_tween.connect("animation_completed",Callable(self,'_on_all_tween_completed'))
+	_anima_tween.animation_completed.connect(_on_all_tween_completed)
 
 	add_child(_anima_tween)
+	add_child(_anima_reverse_tween)
 
 	if node != self:
 		node.add_child(self)
@@ -276,13 +278,19 @@ func _do_play() -> void:
 		play_mode = _current_play_mode
 
 	_loop_count += 1
-	_anima_tween.is_playing_backwards = false
 
+	var tween: AnimaTween = _anima_tween
 	var duration = _anima_tween.get_duration()
 
 	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
-		_anima_tween.is_playing_backwards = true
-		_tween_with_seek(duration, 0.0, duration, "_on_backwords_tween_complete")
+		_anima_reverse_tween.is_playing_backwards = true
+
+		if not _anima_reverse_tween.has_data():
+			_anima_reverse_tween.reverse_animation(_anima_tween, _default_duration)
+
+		tween = _anima_reverse_tween
+#		_anima_tween.is_playing_backwards = true
+#		_tween_with_seek(duration, 0.0, duration, "_on_backwords_tween_complete")
 	else:
 		#
 		# If the user wants to play an animation with a delay, we still
@@ -294,10 +302,11 @@ func _do_play() -> void:
 		# There is a weird edge-case (maybe a bug in Godot) where if we add an interpolate_method
 		# to trigger the on_completed callback the animation is not fully played ¯\_(ツ)_/¯
 		# So, we can't use the normal play but need a hacky solution
-		if _has_on_completed:
-			_tween_with_seek(0.0, duration, duration, "_on_all_tween_completed")
-		else:
-			_anima_tween.play(_play_speed)
+#		if _has_on_completed:
+#			_tween_with_seek(0.0, duration, duration, "_on_all_tween_completed")
+#		else:
+
+	tween.play(_play_speed)
 
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
@@ -321,8 +330,8 @@ func _tween_with_seek(from: float, to: float, duration: float, method: String):
 	)
 
 	tween.play()
-	
-	tween.connect("tween_all_completed",Callable(self,"_on_backwords_tween_complete").bind(tween))
+
+#	tween.connect("tween_all_completed",Callable(self,"_on_backwords_tween_complete").bind(tween))
 
 func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
@@ -367,7 +376,7 @@ func _setup_animation(data: Dictionary) -> float:
 	var meta_key: String = ""
 
 	if data.has("property"):
-		meta_key = "AnimaInitial%s%s" % [str(node.name).replace("-", "").replace(" ", ""), str(data.property).replace("_", "")]
+		meta_key = AnimaStrings.sanitize_meta_key("AnimaInitial%s%s" % [str(node.name), str(data.property)])
 
 	if meta_key.length() > 0 and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
 		data.node.set_meta(meta_key, AnimaNodesProperties.get_property_value(node, data, data.property))

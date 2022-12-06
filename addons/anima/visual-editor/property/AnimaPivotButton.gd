@@ -43,7 +43,7 @@ func _on_pivot_button_pressed() -> void:
 
 			anima.then(
 				Anima.Node(button) \
-					super.anima_animation("pulse", 0.5)
+					.anima_animation("pulse", 0.5)
 			)
 			anima.play()
 

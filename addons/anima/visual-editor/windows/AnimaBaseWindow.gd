@@ -4,8 +4,8 @@ extends Window
 var _final_size := Vector2(1024, 600)
 
 func _ready():
-	if not is_connected("popup_hide",Callable(self,"_on_hide")):
-		connect("popup_hide",Callable(self,"_on_hide"))
+	if not is_connected("close_requested",Callable(self,"_on_hide")):
+		connect("close_requested",Callable(self,"_on_hide"))
 
 func _play(backwards := false) -> AnimaNode:
 	var anima = Anima.begin_single_shot(self)

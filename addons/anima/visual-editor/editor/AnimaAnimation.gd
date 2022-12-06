@@ -12,6 +12,12 @@ signal change_editor_position(new_position)
 
 var _is_restoring_data := false
 
+func _enter_tree():
+	_visibility_strategy = find_child("VisibilityStrategy")
+
+	for item in ANIMA.VISIBILITY.keys():
+		_visibility_strategy.add_item(item)
+
 func _ready():
 	_on_AnimaAnimation_resized()
 
@@ -39,7 +45,6 @@ func restore_data(data: Dictionary) -> void:
 	if data.default_duration == null:
 		data.default_duration = ANIMA.DEFAULT_DURATION
 
-#	_animation_name.set_value(data.name)
 	_visibility_strategy.select(data.visibility_strategy)
 	_default_duration.set_value(data.default_duration)
 

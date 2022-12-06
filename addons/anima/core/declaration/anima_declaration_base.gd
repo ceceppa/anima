@@ -37,7 +37,7 @@ func anima_initial_value(initial_value):
 
 	_data.initial_values = values
 
-func anima_on_started(target: Object, method: String, on_started_value = null, on_backwards_completed_value = null):
+func anima_on_started(target: Callable, on_started_value = null, on_backwards_completed_value = null):
 	if typeof(on_started_value) != TYPE_ARRAY:
 		on_started_value = [on_started_value]
 
@@ -46,15 +46,13 @@ func anima_on_started(target: Object, method: String, on_started_value = null, o
 
 	_data.on_started = { 
 		target = target,
-		method = method,
 		value = on_started_value,
 		backwards_value = on_backwards_completed_value
 	}
 
-func anima_on_completed(target: Object, method: String, on_completed_value = null, on_backwards_completed_value = null):
+func anima_on_completed(target: Callable, on_completed_value = null, on_backwards_completed_value = null):
 	_data.on_completed = { 
 		target = target,
-		method = method,
 		value = on_completed_value,
 		backwards_value = on_backwards_completed_value
 	}
