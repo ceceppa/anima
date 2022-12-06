@@ -40,12 +40,12 @@ func _ready():
 	_on_resized()
 
 func _on_resized() -> void:
-#	minimum_size = Vector2.ZERO
+	custom_minimum_size = Vector2.ZERO
 
 	if get_child_count() > 0:
 		var child_size = get_child(0).size
 
-#		minimum_size = child_size
+		custom_minimum_size = child_size
 
 func set_bg_style(new_style: int) -> void:
 	style = new_style

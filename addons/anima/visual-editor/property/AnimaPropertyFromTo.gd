@@ -19,51 +19,51 @@ enum TYPES {
 @onready var _delete_button: Button = find_child('DeleteButton')
 @onready var _relative_selector: Button = find_child('RelativeSelectorButton')
 
-@export (String) var label = 'current value' :
+@export var label := 'current value' :
 	get:
-		return label # TODOConverter40 Non existent get function 
+		return label
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_label
-@export (TYPES) var type = TYPES.INT :
+		set_label(mod_value)
+@export var type := TYPES.INT :
 	get:
-		return type # TODOConverter40 Non existent get function 
+		return type
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_type
-@export (bool) var can_clear_custom_value := true :
+		set_type(mod_value)
+@export var can_clear_custom_value := true :
 	get:
-		return can_clear_custom_value # TODOConverter40 Non existent get function 
+		return can_clear_custom_value
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_can_clear_custom_value
-@export (bool) var show_relative_selector := true :
+		set_can_clear_custom_value(mod_value)
+@export var show_relative_selector := true :
 	get:
-		return show_relative_selector # TODOConverter40 Non existent get function 
+		return show_relative_selector
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_show_relative_selector
-@export (bool) var can_edit_value := true :
+		set_show_relative_selector(mod_value)
+@export var can_edit_value := true :
 	get:
-		return can_edit_value # TODOConverter40 Non existent get function 
+		return can_edit_value
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_can_edit_value
-@export (bool) var show_confirm_button := false :
+		set_can_edit_value(mod_value)
+@export var show_confirm_button := false :
 	get:
-		return show_confirm_button # TODOConverter40 Non existent get function 
+		return show_confirm_button
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_show_confirm_button
-@export (bool) var disabled := false :
+		set_show_confirm_button(mod_value)
+@export var disabled := false :
 	get:
-		return disabled # TODOConverter40 Non existent get function 
+		return disabled
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_disabled
-@export (bool) var transparent := false :
+		set_disabled(mod_value)
+@export var transparent := false :
 	get:
-		return transparent # TODOConverter40 Non existent get function 
+		return transparent
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_transparent
-@export (Color) var font_color := Color.WHITE :
+		set_transparent(mod_value)
+@export var font_color := Color.WHITE :
 	get:
-		return font_color # TODOConverter40 Non existent get function 
+		return font_color
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_font_color
+		set_font_color(mod_value)
 
 const MIN_SIZE := 30.0
 
@@ -151,7 +151,7 @@ func set_can_clear_custom_value(can_clear: bool) -> void:
 func set_can_edit_value(can_edit: bool) -> void:
 	can_edit_value = can_edit
 
-func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
+func _animate_custom_value(mode: int, signal_to_emit = "") -> AnimaNode:
 	if _input_visible == null:
 		return
 
@@ -167,20 +167,20 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 
 	anima.then(
 		Anima.Node(_current_value) \
-			super.anima_scale(Vector2(0.5, 0.5)) \
-			super.anima_from(Vector2.ONE) \
-			super.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
+			.anima_scale(Vector2(0.5, 0.5)) \
+			.anima_from(Vector2.ONE) \
+			.anima_easing(ANIMA.EASING.EASE_OUT_BACK)
 	)
 	anima.with(
 		Anima.Node(_current_value).anima_fade_out()
 	)
 	anima.with(
 		Anima.Node(_custom_value) \
-			super.anima_scale(Vector2.ONE) \
-			super.anima_from(Vector2(1.5, 1.5)) \
-			super.anima_easing(ANIMA.EASING.EASE_OUT_BACK) \
-			super.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
-			super.anima_initial_value(Vector2(1.5, 1.5))
+			.anima_scale(Vector2.ONE) \
+			.anima_from(Vector2(1.5, 1.5)) \
+			.anima_easing(ANIMA.EASING.EASE_OUT_BACK) \
+			.anima_on_started(_handle_custom_value_visibility, true, false) \
+			.anima_initial_value(Vector2(1.5, 1.5))
 	)
 	anima.with(
 		Anima.Node(_custom_value).anima_fade_in().anima_initial_value(0.0)
@@ -190,13 +190,13 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 
 	anima.with(
 		Anima.Node(self) \
-			super.anima_property("min_size:y") \
-			super.anima_to(height)
+			.anima_property("min_size:y") \
+			.anima_to(height)
 	)
 	anima.with(
 		Anima.Node(self) \
-			super.anima_property("size:y") \
-			super.anima_to(height)
+			.anima_property("size:y") \
+			.anima_to(height)
 	)
 
 	_custom_value.show()
@@ -214,7 +214,7 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 
 		_should_return_null_value = true
 
-	if signal_to_emit != null:
+	if signal_to_emit != "":
 		emit_signal(signal_to_emit)
 
 	return anima
@@ -330,7 +330,7 @@ func get_value():
 		var text: String = _input_visible.text
 
 		if type != TYPE_STRING:
-			return float(text)
+			return text.to_float()
 
 		return text
 	elif _input_visible.name == 'Vector2':
@@ -403,7 +403,7 @@ func set_show_confirm_button(show: bool) -> void:
 
 func _on_CurrentValue_item_rect_changed():
 	if _current_value.size.y > size.y:
-		minimum_size.y = _current_value.size.y
+		custom_minimum_size.y = _current_value.size.y
 
 func _on_PropertyFromTo_item_rect_changed():
 	$CustomValue.minimum_size.x = 0

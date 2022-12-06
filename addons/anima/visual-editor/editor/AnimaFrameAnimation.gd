@@ -18,12 +18,12 @@ signal move_one_left
 signal move_one_right
 signal preview_animation(preview_info)
 
-@export (bool) var animate_entrance_exit := true
-@export (bool) var is_initial_frame := false :
+@export var animate_entrance_exit := true
+@export var is_initial_frame := false :
 	get:
 		return is_initial_frame # TODOConverter40 Non existent get function 
 	set(mod_value):
-		mod_value  # TODOConverter40 Copy here content of set_is_initial_frame
+		set_is_initial_frame(mod_value)
 
 const _DO_NOT_ANIMATE_KEY = '_do_not_animate'
 
@@ -39,12 +39,13 @@ var _old_height: float
 var _is_animating := false
 
 func _ready():
+	return
 	$Rectangle.size.x = _final_width
 
 	if animate_entrance_exit:
 		_animate_me()
 	else:
-		minimum_size.x = _final_width
+		custom_minimum_size.x = _final_width
 
 	set_is_initial_frame(is_initial_frame)
 	_on_DefaultFrameDuration_toggled(false)
@@ -126,7 +127,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	anima.with(
 		Anima.Node(self) \
-			super.anima_animation_frames({
+			.anima_animation_frames({
 				from = {
 					"min_size:x": 0,
 					"size:x": 0,
@@ -145,12 +146,12 @@ func _animate_me(backwards := false) -> AnimaNode:
 				}
 			})
 	) \
-	super.with(
+	.with(
 		Anima.Nodes([
 			get_node("Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer").get_children(),
 			get_node("Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer").get_children()
 		], 0.05) \
-		super.anima_animation_frames({
+		.anima_animation_frames({
 			from = {
 				scale = Vector2(0.1, 0.1),
 				opacity = 0,
@@ -164,9 +165,9 @@ func _animate_me(backwards := false) -> AnimaNode:
 				opacity = 0,
 			}
 		}) \
-		super.anima_delay(0.1) 
+		.anima_delay(0.1) 
 	) \
-	super.skip(
+	.skip(
 		Anima.Node($Collapse).anima_fade_in().anima_initial_value(0)
 	)
 
@@ -249,19 +250,19 @@ func _on_Collapse_toggled(toggled: bool) -> void:
 
 	anima.then(
 		Anima.Node(_collapse_button) \
-			super.anima_animation_frames({
+			.anima_animation_frames({
 				to = {
 					x = 0,
 					y = 0,
-					"size:y": "..:size:y",
+					"size:y" = "..:size:y",
 					easing = ANIMA.EASING.EASE_IN_EXPO,
 				},
 				relative = []
 			})
 	) \
-	super.with(
+	.with(
 		Anima.Node(self) \
-			super.anima_animation_frames({
+			.anima_animation_frames({
 				to = {
 					"min_size:x": _collapse_button.size.x,
 					"size:x": _collapse_button.size.x,
@@ -269,16 +270,16 @@ func _on_Collapse_toggled(toggled: bool) -> void:
 				easing = ANIMA.EASING.EASE_IN_EXPO
 			})
 	) \
-	super.skip(
+	.skip(
 		Anima.Node(_collapse_button.get_child(0)).anima_rotate(180, ANIMA.PIVOT.CENTER)
 	) \
-	super.with(
+	.with(
 		Anima.Node(_collapse_button.get_child(0)).anima_fade_out()
 	) \
-	super.with(
+	.with(
 		Anima.Node($Rectangle).anima_fade_out()
 	) \
-	super.then(
+	.then(
 		Anima.Node(_frame_collapsed_title.get_child(0)).anima_animation_frames({
 			from = {
 				opacity = 0,
@@ -305,7 +306,7 @@ func _on_Collapse_toggled(toggled: bool) -> void:
 
 	_is_animating = false
 
-	$Rectangle.minimum_size.x = _final_width
+	$Rectangle.custom_minimum_size.x = _final_width
 	$Rectangle.size.x = _final_width
 
 	if can_emit_signal:
@@ -347,7 +348,7 @@ func _on_AnimationsContainer_node_dragged(node_path: String) -> void:
 
 func _on_ConfirmationDialog_confirmed():
 	if animate_entrance_exit:
-		await _animate_me(true).completed
+		await _animate_me(true)
 
 	queue_free()
 	emit_signal("frame_deleted")
@@ -369,5 +370,5 @@ func _on_Preview_pressed():
 	emit_signal("preview_animation", preview_info)
 
 func update_size_x(value: float) -> void:
-	minimum_size.x = value
+	custom_minimum_size.x = value
 	size.x = value

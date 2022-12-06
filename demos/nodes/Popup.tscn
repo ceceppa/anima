@@ -1,71 +1,25 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://ce8j3heneunuj"]
 
-[ext_resource path="res://demos/nodes/Popup.gd" type="Script" id=2]
-[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.235294, 0.235294, 0.235294, 1 )
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color( 0.0745098, 0.0745098, 0.0745098, 1 )
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id=3]
-content_margin_left = 16.0
-content_margin_right = 16.0
-content_margin_top = 16.0
-content_margin_bottom = 16.0
-bg_color = Color( 0.0941176, 0.160784, 0.172549, 1 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0, 0, 0, 1 )
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id=4]
-content_margin_left = 16.0
-content_margin_right = 16.0
-content_margin_top = 16.0
-content_margin_bottom = 16.0
-bg_color = Color( 0.258824, 0.376471, 0.403922, 1 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0, 0, 0, 1 )
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+[ext_resource type="Script" path="res://demos/nodes/Popup.gd" id="2"]
+[ext_resource type="PackedScene" path="res://demos/components/ShowAllDemos.tscn" id="3"]
 
 [node name="Node" type="Node"]
 
 [node name="Popup" type="CenterContainer" parent="."]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="Panel" type="Panel" parent="Popup"]
-offset_left = 212.0
-offset_top = 100.0
-offset_right = 812.0
-offset_bottom = 500.0
-minimum_size = Vector2( 600, 400 )
-custom_styles/panel = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_minimum_size = Vector2(600, 400)
+offset_left = 276.0
+offset_top = 124.0
+offset_right = 876.0
+offset_bottom = 524.0
 
 [node name="MarginContainer" type="MarginContainer" parent="Popup/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 12.0
@@ -79,30 +33,23 @@ offset_bottom = 376.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+autowrap_mode = 3
 
 [node name="CenterContainer" type="CenterContainer" parent="Popup/Panel"]
+anchors_preset = -1
 anchor_top = 0.745
 anchor_right = 1.0
 anchor_bottom = 0.869
 offset_bottom = 40.0
 
 [node name="Button" type="Button" parent="Popup/Panel/CenterContainer"]
-offset_left = 235.0
-offset_top = 16.0
-offset_right = 365.0
-offset_bottom = 73.0
+offset_left = 261.0
+offset_top = 29.0
+offset_right = 339.0
+offset_bottom = 60.0
 mouse_default_cursor_shape = 2
-custom_styles/hover = SubResource( 3 )
-custom_styles/normal = SubResource( 4 )
 text = "Close Me"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="ShowAllDemos" parent="." instance=ExtResource( 3 )]
+[node name="ShowAllDemos" parent="." instance=ExtResource("3")]
 
 [connection signal="pressed" from="Popup/Panel/CenterContainer/Button" to="Popup" method="_on_Button_pressed"]

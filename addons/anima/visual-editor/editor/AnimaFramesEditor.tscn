@@ -1,70 +1,87 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://dn5hkst7ms3t5"]
 
-[ext_resource path="res://addons/anima/visual-editor/editor/AnimaFramesEditor.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/visual-editor/editor/AnimaAnimation.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/anima/visual-editor/editor/AnimaAddFrame.tscn" type="PackedScene" id=3]
+[ext_resource type="Script" path="res://addons/anima/visual-editor/editor/AnimaFramesEditor.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://b6bafk5upjotw" path="res://addons/anima/visual-editor/editor/AnimaAnimation.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/editor/AnimaAddFrame.tscn" id="3"]
 
 [node name="FramesEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-pivot_offset = Vector2( 512, 300 )
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(512, 300)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="AnimaRectangle" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-pivot_offset = Vector2( 512, 300 )
-color = Color( 0.0235294, 0.0745098, 0.117647, 1 )
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(512, 300)
+color = Color(0.0235294, 0.0745098, 0.117647, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="AnimaRectangle"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource( 2 )]
+[node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource("2")]
+layout_mode = 2
+anchors_preset = 0
 anchor_right = 0.0
-offset_right = 1024.0
+offset_right = 1152.0
+offset_bottom = 31.0
+grow_horizontal = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
-offset_top = 46.0
-offset_right = 1024.0
-offset_bottom = 600.0
+layout_mode = 2
+offset_top = 35.0
+offset_right = 1152.0
+offset_bottom = 648.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
-offset_right = 1024.0
-offset_bottom = 554.0
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 613.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 12
 
 [node name="FramesContainer1" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
-offset_bottom = 554.0
-custom_constants/separation = 12
+layout_mode = 2
+offset_bottom = 613.0
 
 [node name="FramesContainer2" type="VBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
 visible = false
+layout_mode = 2
 offset_left = 12.0
 offset_right = 12.0
 offset_bottom = 554.0
-custom_constants/separation = 12
 
-[node name="AnimaAddFrame" parent="." instance=ExtResource( 3 )]
-offset_left = 776.0
-offset_top = 459.0
-offset_right = 1136.0
-offset_bottom = 459.0
-pivot_offset = Vector2( 180, 288 )
+[node name="AnimaAddFrame" parent="." instance=ExtResource("3")]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 904.0
+offset_top = 507.0
+offset_right = 1264.0
+offset_bottom = 507.0
+pivot_offset = Vector2(180, 288)
 
 [connection signal="item_rect_changed" from="." to="." method="_on_FramesEditor_item_rect_changed"]
 [connection signal="resized" from="." to="." method="_on_FramesEditor_resized"]
 [connection signal="animation_updated" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
 [connection signal="change_editor_position" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_change_editor_position"]
 [connection signal="preview_animation" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_preview_animation"]
-[connection signal="add_delay" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_delay"]
-[connection signal="add_frame" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_frame"]

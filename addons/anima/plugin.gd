@@ -76,7 +76,7 @@ func _remove_anima_editor() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_RIGHT, _anima_editor_2d_right)
 	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_RIGHT, _anima_editor_3d_right)
 
-func handles(object):
+func _handles(object):
 	var is_anima_node = object.has_meta("__anima_visual_node")
 	var root: Node
 
@@ -112,7 +112,6 @@ func handles(object):
 	return is_anima_node
 
 func set_anima_node(is_anima_node: bool, object) -> void:
-
 	if is_anima_node and object and _anima_visual_node != object:
 		var old_active_editor = _active_anima_editor
 
@@ -120,20 +119,18 @@ func set_anima_node(is_anima_node: bool, object) -> void:
 
 		_on_editor_position_changed(_anima_visual_node._editor_position)
 
-		_active_anima_editor.set_anima_node(object)
-		_active_anima_editor.show()
-
 		if old_active_editor != _active_anima_editor:
 			old_active_editor.hide()
 	elif not is_anima_node:
-		_active_anima_editor.set_anima_node(null)
-
-		_anima_visual_node = null
-
-	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed",Callable(self,"_on_editor_position_changed")):
-		_anima_visual_node.connect("on_editor_position_changed",Callable(self,"_on_editor_position_changed"))
-
-		_on_editor_position_changed(_anima_visual_node._editor_position)
+		pass
+#		_active_anima_editor.set_anima_node(null)
+#
+#		_anima_visual_node = null
+#
+#	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed",Callable(self,"_on_editor_position_changed")):
+#		_anima_visual_node.connect("on_editor_position_changed",Callable(self,"_on_editor_position_changed"))
+#
+#		_on_editor_position_changed(_anima_visual_node._editor_position)
 
 func _on_editor_position_changed(new_position: int) -> void:
 	_anima_editor.hide()

@@ -110,6 +110,58 @@ static func get_easing_points(easing_name):
 
 	return mapping[EASING.LINEAR]
 
+static func get_mirrored_easing(easing_name):
+	var mapping = {
+		EASING.EASE_IN: EASING.EASE_OUT,
+		EASING.EASE_OUT: EASING.EASE_IN,
+		EASING.EASE_IN_SINE: EASING.EASE_OUT_SINE,
+		EASING.EASE_OUT_SINE: EASING.EASE_IN_SINE,
+		EASING.EASE_IN_QUAD: EASING.EASE_OUT_QUAD,
+		EASING.EASE_OUT_QUAD: EASING.EASE_IN_QUAD,
+		EASING.EASE_IN_CUBIC: EASING.EASE_OUT_CUBIC,
+		EASING.EASE_OUT_CUBIC: EASING.EASE_IN_CUBIC,
+		EASING.EASE_IN_QUART: EASING.EASE_OUT_QUART,
+		EASING.EASE_OUT_QUART: EASING.EASE_IN_QUART,
+		EASING.EASE_IN_QUINT: EASING.EASE_OUT_QUINT,
+		EASING.EASE_OUT_QUINT: EASING.EASE_IN_QUINT,
+		EASING.EASE_IN_EXPO: EASING.EASE_OUT_EXPO,
+		EASING.EASE_OUT_EXPO: EASING.EASE_IN_EXPO,
+		EASING.EASE_IN_CIRC: EASING.EASE_OUT_CIRC,
+		EASING.EASE_OUT_CIRC: EASING.EASE_IN_CIRC,
+		EASING.EASE_IN_BACK: EASING.EASE_OUT_BACK,
+		EASING.EASE_OUT_BACK: EASING.EASE_IN_BACK,
+		EASING.EASE_IN_ELASTIC: EASING.EASE_OUT_ELASTIC,
+		EASING.EASE_OUT_ELASTIC: EASING.EASE_IN_ELASTIC,
+		EASING.EASE_IN_BOUNCE: EASING.EASE_OUT_BOUNCE,
+		EASING.EASE_OUT_BOUNCE: EASING.EASE_IN_BOUNCE,
+	}
+
+	if typeof(easing_name) == TYPE_FLOAT:
+		easing_name = int(easing_name)
+
+	if mapping.has(easing_name):
+		return mapping[easing_name]
+
+	if easing_name is String and easing_name.find("spring") >= 0:
+		var params: Array = easing_name.replace("spring", "").replace("(", "").replace(")", "").split(",")
+
+		var mass = params[0]
+		if mass == null or mass == "":
+			mass = 1.0
+
+		var spring_params := {
+			fn = "__spring",
+			mass = float(mass),
+			stiffness = float(params[1]) if params.size() >= 2 else 100.0,
+			damping = float(params[2]) if params.size() >= 3 else 10.0,
+			velocity = float(params[3]) if params.size() >= 4 else 0.0,
+		}
+
+		return spring_params
+	printerr('Easing not found: ' + str(easing_name))
+
+	return mapping[EASING.LINEAR]
+
 static func ease_in_elastic(elapsed: float) -> float:
 	if elapsed == 0:
 		return 0.0

@@ -2,7 +2,7 @@ extends Control
 
 const Test := {}
 
-@export (StyleBoxFlat) var test :
+@export var test: StyleBoxFlat :
 	get:
 		return test # TODOConverter40 Non existent get function 
 	set(mod_value):
@@ -17,8 +17,8 @@ func _ready():
 
 #	anima.then(
 #		Anima.Node($RichTextLabel) \
-#			super.anima_animation("typewrite") \
-#			super.anima_duration(0.3)
+#			.anima_animation("typewrite") \
+#			.anima_duration(0.3)
 #	)
 #	anima.with({
 #		property = "opacity",
@@ -27,8 +27,8 @@ func _ready():
 #	})
 #	anima.then(
 #		Anima.Node($Button) \
-#		super.anima_duration(0.3) \
-#		super.anima_animation(
+#		.anima_duration(0.3) \
+#		.anima_animation(
 #			{
 #				0: {
 #					y = -20,
@@ -48,17 +48,17 @@ func _ready():
 	
 #	anima.with(
 #		Anima.Group($Control) \
-#			super.anima_animation("zoomIn") \
-#			super.anima_sequence_type(ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT) \
-#			super.anima_items_delay(1)
+#			.anima_animation("zoomIn") \
+#			.anima_sequence_type(ANIMA.GRID.SEQUENCE_BOTTOM_RIGHT) \
+#			.anima_items_delay(1)
 #	)
 #
 #	anima.then(
 #		Anima.Node($AnimaRectangle) \
-#			super.anima_property("Rectangle/FillColor") \
-#			super.anima_from(Color.TRANSPARENT) \
-#			super.anima_to(Color.YELLOW) \
-#			super.anima_duration(1)
+#			.anima_property("Rectangle/FillColor") \
+#			.anima_from(Color.TRANSPARENT) \
+#			.anima_to(Color.YELLOW) \
+#			.anima_duration(1)
 #	)
 #	$AnimaRectangle.set("Rectangle/FillColor", Color.YELLOW)
 #	anima.play_with_delay(0.5)
@@ -71,9 +71,9 @@ func _ready():
 #	print_tree_pretty()
 #
 
-#		super.then(Anima.Node($CanvasModulate).anima_property("color", Color.REBECCA_PURPLE, 0.5)) \
+#		.then(Anima.Node($CanvasModulate).anima_property("color", Color.REBECCA_PURPLE, 0.5)) \
 #	anima = Anima.begin(self) \
-#		super.then(Anima.Node($CanvasModulate).anima_animation_frames({
+#		.then(Anima.Node($CanvasModulate).anima_animation_frames({
 #			to = {
 #				color = Color.REBECCA_PURPLE
 #			},
@@ -83,7 +83,7 @@ func _ready():
 #		}, 0.5)
 #	).play_with_delay(2)
 	Anima.begin(self) \
-		super.with(
+		.with(
 			Anima.Node($Button).anima_animation("headshake", 1)
 		).play()
 

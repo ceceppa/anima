@@ -18,7 +18,7 @@ func set_data(node: Node, path: String, property, property_type: int) -> void:
 	if value == null:
 		value = find_child("Value")
 
-	label.text = node.name + ":" + property
+	label.text = node.name #+ ":" + property
 
 	value.set_type(property_type)
 

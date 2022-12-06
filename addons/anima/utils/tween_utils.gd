@@ -24,9 +24,8 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 	
 	if animation_data.has("from"):
 		calculated_from = calculate_dynamic_value(animation_data.from, animation_data)
-		calculated_from = _maybe_convert_from_deg_to_rad(node, animation_data, calculated_from)
 
-	from = _maybe_convert_from_deg_to_rad(node, animation_data, current_value)
+	from = current_value
 
 	if relative:
 		if not node.has_meta(meta_key_last_relative_position):
@@ -54,7 +53,6 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 			start = node.get_meta(meta_key)
 
 		to = calculate_dynamic_value(animation_data.to, animation_data)
-		to = _maybe_convert_from_deg_to_rad(node, animation_data, to)
 		to = _maybe_calculate_relative_value(relative, to, start)
 	else:
 		to = current_value
@@ -181,12 +179,3 @@ static func _maybe_calculate_relative_value(relative, value, current_node_value)
 		return value
 
 	return value + current_node_value
-
-static func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionary, value):
-	if animation_data.property is Object or animation_data.property.find('rotation') < 0:
-		return value
-
-	if value is Vector3:
-		return Vector3(deg_to_rad(value.x), deg_to_rad(value.y), deg_to_rad(value.z))
-
-	return deg_to_rad(value)

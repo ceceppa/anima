@@ -79,16 +79,6 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/anima/utils/node_properties.gd"
 }, {
-"base": "Node",
-"class": &"AnimaPlayer",
-"language": &"GDScript",
-"path": "res://addons/anima/core/player.gd"
-}, {
-"base": "Object",
-"class": &"AnimaPropertyList",
-"language": &"GDScript",
-"path": "res://addons/anima/utils/anima_properties_list.gd"
-}, {
 "base": "RefCounted",
 "class": &"AnimaStrings",
 "language": &"GDScript",
@@ -108,6 +98,21 @@ _global_script_classes=[{
 "class": &"AnimaVisualNode",
 "language": &"GDScript",
 "path": "res://addons/anima/core/visual_node.gd"
+}, {
+"base": "RefCounted",
+"class": &"GutHookScript",
+"language": &"GDScript",
+"path": "res://addons/gut/hook_script.gd"
+}, {
+"base": "RefCounted",
+"class": &"GutStringUtils",
+"language": &"GDScript",
+"path": "res://addons/gut/strutils.gd"
+}, {
+"base": "Node",
+"class": &"GutTest",
+"language": &"GDScript",
+"path": "res://addons/gut/test.gd"
 }]
 _global_script_class_icons={
 "AnimaAnimationsUtils": "",
@@ -124,12 +129,13 @@ _global_script_class_icons={
 "AnimaKeyframesEngine": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
-"AnimaPlayer": "",
-"AnimaPropertyList": "",
 "AnimaStrings": "",
 "AnimaTween": "",
 "AnimaTweenUtils": "",
-"AnimaVisualNode": ""
+"AnimaVisualNode": "",
+"GutHookScript": "",
+"GutStringUtils": "",
+"GutTest": ""
 }
 
 [application]
@@ -140,13 +146,12 @@ config/features=PackedStringArray("4.0")
 
 [autoload]
 
-AnimaCostants="*res://addons/anima/core/constants.gd"
 ANIMA="*res://addons/anima/core/constants.gd"
 Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/anima/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/anima/plugin.cfg")
 
 [global]
 

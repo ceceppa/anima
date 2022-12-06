@@ -1,104 +1,79 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://msev8vell781"]
 
-[ext_resource path="res://TestScene/Test.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
+[ext_resource type="Script" path="res://TestScene/Test.gd" id="1"]
+[ext_resource type="Script" path="res://addons/anima/core/visual_node.gd" id="2"]
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id="5"]
 
-[sub_resource type="StyleBoxFlat" id=6]
-corner_radius_top_left = 100
-corner_radius_top_right = 100
-corner_detail = 18
-
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id="7"]
 resource_name = "New Anim"
 
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rtd54"]
+_data = {
+"New Anim": SubResource("7")
+}
+
 [node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
-test = SubResource( 5 )
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+test = SubResource("5")
 
 [node name="Button" type="Button" parent="."]
+layout_mode = 0
 offset_left = 141.0
 offset_top = 190.0
 offset_right = 319.0
 offset_bottom = 242.0
-pivot_offset = Vector2( 89, 26 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__initialy": 366.23,
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
+pivot_offset = Vector2(89, 26)
 
 [node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 0
 offset_left = 183.0
 offset_top = 374.0
 offset_right = 223.0
 offset_bottom = 414.0
-pivot_offset = Vector2( 20, 20 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
-}
+pivot_offset = Vector2(20, 20)
 
 [node name="Button1" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = 117.0
 offset_top = -238.0
 offset_right = 233.0
 offset_bottom = -201.0
-pivot_offset = Vector2( 58, 18.5 )
+pivot_offset = Vector2(58, 18.5)
 text = "Button 1"
-icon_align = 1
-__meta__ = {
-"__initial_AnimaNode_default_y": {
-"percentage": 0,
-"value": -238.0
-},
-"__visibility_strategy": 0,
-"_initial_relative_value_y_to": -238.0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button3" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = -1.0
 offset_top = 54.0
 offset_right = 11.0
 offset_bottom = 74.0
 
 [node name="Button4" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = 340.0
 offset_top = -67.0
 offset_right = 771.001
 offset_bottom = 31.9997
-pivot_offset = Vector2( 215.5, 49.4999 )
+pivot_offset = Vector2(215.5, 49.4999)
 text = "Button 4"
-__meta__ = {
-"__initial_AnimaNode_default_rotate:y": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_default_x": {
-"percentage": 0,
-"value": 340.0
-},
-"__visibility_strategy": 0,
-"_initial_relative_value_x_to": 340.0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button5" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = -4.0
 offset_top = 126.0
 offset_right = 9.0
 offset_bottom = 146.0
 
 [node name="Button6" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = 248.0
 offset_top = 160.0
 offset_right = 364.0
@@ -106,74 +81,42 @@ offset_bottom = 197.0
 text = "Button 6"
 
 [node name="Button7" type="Button" parent="Control"]
+layout_mode = 0
 offset_left = -4.0
 offset_top = 126.0
 offset_right = 20.0
 offset_bottom = 163.0
 
 [node name="Button2" type="Button" parent="."]
+layout_mode = 0
 offset_left = 847.0
 offset_top = 21.0
 offset_right = 979.0
 offset_bottom = 58.0
-pivot_offset = Vector2( 66, 18.5 )
+pivot_offset = Vector2(66, 18.5)
 text = "Do it"
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
 autostart = true
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": "scale",
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="ColorRect" type="Panel" parent="."]
+layout_mode = 0
 offset_left = -194.574
 offset_top = -24.5694
 offset_right = -5.57382
 offset_bottom = 79.4306
-pivot_offset = Vector2( 94.5001, 52 )
-custom_styles/panel = SubResource( 6 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
+pivot_offset = Vector2(94.5001, 52)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-"anims/New Anim" = SubResource( 7 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": "scale",
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+libraries = {
+"": SubResource("AnimationLibrary_rtd54")
 }
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0
-}
 
 [node name="AnimaVisualNode" type="Node" parent="."]
-script = ExtResource( 2 )
-__meta__ = {
-"__anima_visual_node": true,
-"__initial_easing": "easing",
-"__initial_scale": "scale",
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
+script = ExtResource("2")
 __anima_visual_editor_data = {
 "0": {
 "animation": {
@@ -184,13 +127,13 @@ __anima_visual_editor_data = {
 "frames": {
 0: {
 "collapsed": false,
-"data": [ {
+"data": [{
 "animate_as": 2,
-"animations": [ {
+"animations": [{
 "animate_with": 0,
 "animation_name": "",
 "property": {
-"easing": [ "EaseOutBack", 27 ],
+"easing": ["EaseOutBack", 27],
 "from": 0.0,
 "initialValue": null,
 "pivot": -1,
@@ -203,24 +146,24 @@ __anima_visual_editor_data = {
 "animate_with": 0,
 "animation_name": "",
 "property": {
-"easing": [ "Linear", 0 ],
+"easing": ["Linear", 0],
 "from": null,
 "initialValue": null,
 "pivot": 4,
 "relative": false,
-"to": [ "0", "0" ]
+"to": ["0", "0"]
 },
 "property_name": "scale",
 "property_type": 5
-} ],
+}],
 "delay": null,
 "duration": null,
 "grid": {
 "animation_type": 9,
 "formula": 1,
 "items_delay": 0.2,
-"size": Vector2( 3, 4 ),
-"start_point": Vector2( 0, 0 )
+"size": Vector2(3, 4),
+"start_point": Vector2(0, 0)
 },
 "group": {
 "animation_type": 0,
@@ -230,11 +173,11 @@ __anima_visual_editor_data = {
 "node_path": "GridContainer"
 }, {
 "animate_as": 0,
-"animations": [ {
+"animations": [{
 "animate_with": 1,
 "animation_name": "wobble",
 "property": {
-"easing": [ "Linear", 0 ],
+"easing": ["Linear", 0],
 "from": null,
 "initialValue": null,
 "pivot": 0,
@@ -243,15 +186,15 @@ __anima_visual_editor_data = {
 },
 "property_name": "",
 "property_type": 0
-} ],
+}],
 "delay": null,
 "duration": null,
 "grid": {
 "animation_type": 0,
 "formula": 0,
 "items_delay": 0.01,
-"size": Vector2( 0, 0 ),
-"start_point": Vector2( 0, 0 )
+"size": Vector2(0, 0),
+"start_point": Vector2(0, 0)
 },
 "group": {
 "animation_type": 0,
@@ -259,7 +202,7 @@ __anima_visual_editor_data = {
 "start_index": 0
 },
 "node_path": "GridContainer/Button2"
-} ],
+}],
 "duration": null,
 "name": "Frame0",
 "type": "frame"
@@ -268,197 +211,117 @@ __anima_visual_editor_data = {
 }
 }
 _editor_position = 1
+metadata/__anima_visual_node = true
 
 [node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 0
 offset_left = 589.0
 offset_top = 93.0
 offset_right = 800.0
 offset_bottom = 220.0
-pivot_offset = Vector2( 105.5, 63.5 )
+pivot_offset = Vector2(105.5, 63.5)
 columns = 4
-__meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button" type="Button" parent="GridContainer"]
-offset_right = 37.0
-offset_bottom = 37.0
-pivot_offset = Vector2( 18.5, 18.5 )
+layout_mode = 2
+offset_right = 18.0
+offset_bottom = 31.0
+pivot_offset = Vector2(18.5, 18.5)
 text = "1"
-__meta__ = {
-"__initial_Button_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button2" type="Button" parent="GridContainer"]
-offset_left = 45.0
-offset_right = 95.0
-offset_bottom = 37.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 22.0
+offset_right = 49.0
+offset_bottom = 31.0
+pivot_offset = Vector2(25, 18.5)
 text = "2"
-__meta__ = {
-"__initial_AnimaNode__single_animation_rotate:y": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__single_animation_x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_default_rotate:y": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_default_x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_Button2_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_initial_relative_value_position:x": 45.0,
-"_last_relative_value_position:x": 45.0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button3" type="Button" parent="GridContainer"]
-offset_left = 103.0
-offset_right = 153.0
-offset_bottom = 37.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 53.0
+offset_right = 80.0
+offset_bottom = 31.0
+pivot_offset = Vector2(25, 18.5)
 text = "3"
-__meta__ = {
-"__initial_Button3_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button4" type="Button" parent="GridContainer"]
-offset_left = 161.0
-offset_right = 211.0
-offset_bottom = 37.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 84.0
+offset_right = 111.0
+offset_bottom = 31.0
+pivot_offset = Vector2(25, 18.5)
 text = "4"
-__meta__ = {
-"__initial_Button4_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button5" type="Button" parent="GridContainer"]
-offset_top = 45.0
-offset_right = 37.0
-offset_bottom = 82.0
-pivot_offset = Vector2( 18.5, 18.5 )
+layout_mode = 2
+offset_top = 35.0
+offset_right = 18.0
+offset_bottom = 66.0
+pivot_offset = Vector2(18.5, 18.5)
 text = "5"
-__meta__ = {
-"__initial_Button5_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button6" type="Button" parent="GridContainer"]
-offset_left = 45.0
-offset_top = 45.0
-offset_right = 95.0
-offset_bottom = 82.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 22.0
+offset_top = 35.0
+offset_right = 49.0
+offset_bottom = 66.0
+pivot_offset = Vector2(25, 18.5)
 text = "6"
-__meta__ = {
-"__initial_Button6_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button7" type="Button" parent="GridContainer"]
-offset_left = 103.0
-offset_top = 45.0
-offset_right = 153.0
-offset_bottom = 82.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 53.0
+offset_top = 35.0
+offset_right = 80.0
+offset_bottom = 66.0
+pivot_offset = Vector2(25, 18.5)
 text = "7"
-__meta__ = {
-"__initial_Button7_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button8" type="Button" parent="GridContainer"]
-offset_left = 161.0
-offset_top = 45.0
-offset_right = 211.0
-offset_bottom = 82.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 84.0
+offset_top = 35.0
+offset_right = 111.0
+offset_bottom = 66.0
+pivot_offset = Vector2(25, 18.5)
 text = "8"
-__meta__ = {
-"__initial_Button8_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button9" type="Button" parent="GridContainer"]
-offset_top = 90.0
-offset_right = 37.0
-offset_bottom = 127.0
-pivot_offset = Vector2( 18.5, 18.5 )
+layout_mode = 2
+offset_top = 70.0
+offset_right = 18.0
+offset_bottom = 101.0
+pivot_offset = Vector2(18.5, 18.5)
 text = "9"
-__meta__ = {
-"__initial_Button9_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button10" type="Button" parent="GridContainer"]
-offset_left = 45.0
-offset_top = 90.0
-offset_right = 95.0
-offset_bottom = 127.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 22.0
+offset_top = 70.0
+offset_right = 49.0
+offset_bottom = 101.0
+pivot_offset = Vector2(25, 18.5)
 text = "10"
-__meta__ = {
-"__initial_Button10_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button11" type="Button" parent="GridContainer"]
-offset_left = 103.0
-offset_top = 90.0
-offset_right = 153.0
-offset_bottom = 127.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 53.0
+offset_top = 70.0
+offset_right = 80.0
+offset_bottom = 101.0
+pivot_offset = Vector2(25, 18.5)
 text = "11"
-__meta__ = {
-"__initial_Button11_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button12" type="Button" parent="GridContainer"]
-offset_left = 161.0
-offset_top = 90.0
-offset_right = 211.0
-offset_bottom = 127.0
-pivot_offset = Vector2( 25, 18.5 )
+layout_mode = 2
+offset_left = 84.0
+offset_top = 70.0
+offset_right = 111.0
+offset_bottom = 101.0
+pivot_offset = Vector2(25, 18.5)
 text = "12"
-__meta__ = {
-"__initial_Button12_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_lock_": true,
-"_visibility_strategy_reverted": true
-}
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
