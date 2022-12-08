@@ -18,79 +18,61 @@ script = ExtResource("3")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
-anchors_preset = 0
-offset_bottom = 38.0
 
 [node name="BGColor" parent="Control" instance=ExtResource("2")]
 layout_mode = 0
-offset_right = 398.0
-offset_bottom = 38.0
+offset_right = 611.0
+offset_bottom = 49.0
 color = Color(0.101961, 0.188235, 0.309804, 1)
 style = 4
 
 [node name="Positions" type="HBoxContainer" parent="."]
 layout_mode = 2
-offset_left = 4.0
-offset_right = 8.0
-offset_bottom = 38.0
 
 [node name="PositionBottom" parent="Positions" instance=ExtResource("4")]
 layout_mode = 2
-offset_right = 0.0
-offset_bottom = 38.0
-pivot_offset = Vector2(0, 19)
 icon = ExtResource("7")
-expand_icon = true
+icon_alignment = 1
 style = 3
 transparent = true
 metadata/AnimaInitialPositionBottombuttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/__visibility_strategy = 0
+metadata/AnimaInitialPositionBottom_button_bg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/_visibility_strategy_reverted = true
 
 [node name="PositionRight" parent="Positions" instance=ExtResource("4")]
 layout_mode = 2
-offset_left = 4.0
-offset_right = 4.0
-offset_bottom = 38.0
-pivot_offset = Vector2(0, 19)
 icon = ExtResource("6")
-expand_icon = true
+icon_alignment = 1
 style = 3
 transparent = true
 metadata/AnimaInitialPositionRightbuttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/__visibility_strategy = 0
+metadata/AnimaInitialPositionRight_button_bg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/_visibility_strategy_reverted = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-offset_left = 12.0
-offset_right = 398.0
-offset_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 2
 
 [node name="PositionBottom2" parent="HBoxContainer" instance=ExtResource("4")]
 layout_mode = 2
-offset_right = 0.0
-offset_bottom = 38.0
-pivot_offset = Vector2(0, 19)
 disabled = true
 icon = ExtResource("8")
-expand_icon = true
+icon_alignment = 1
 style = 3
 transparent = true
 metadata/AnimaInitialPositionBottom2buttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/__visibility_strategy = 0
+metadata/AnimaInitialPositionBottom2_button_bg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/_visibility_strategy_reverted = true
 
 [node name="VisibilityStrategy" type="OptionButton" parent="HBoxContainer"]
 layout_mode = 2
-offset_left = 4.0
-offset_right = 270.0
-offset_bottom = 38.0
 tooltip_text = "Set the visibility styrategy"
-item_count = 24
+item_count = 28
 selected = 0
 popup/item_0/text = "IGNORE"
 popup/item_0/id = 0
@@ -140,43 +122,37 @@ popup/item_22/text = "TRANSPARENT_ONLY"
 popup/item_22/id = 22
 popup/item_23/text = "HIDDEN_AND_TRANSPARENT"
 popup/item_23/id = 23
+popup/item_24/text = "IGNORE"
+popup/item_24/id = 24
+popup/item_25/text = "HIDDEN_ONLY"
+popup/item_25/id = 25
+popup/item_26/text = "TRANSPARENT_ONLY"
+popup/item_26/id = 26
+popup/item_27/text = "HIDDEN_AND_TRANSPARENT"
+popup/item_27/id = 27
 
 [node name="PositionBottom3" parent="HBoxContainer" instance=ExtResource("4")]
 layout_mode = 2
-offset_left = 274.0
-offset_right = 274.0
-offset_bottom = 38.0
-pivot_offset = Vector2(0, 19)
 disabled = true
 icon = ExtResource("9")
-expand_icon = true
+icon_alignment = 1
 style = 3
 transparent = true
 metadata/AnimaInitialPositionBottom3buttonbg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/__visibility_strategy = 0
+metadata/AnimaInitialPositionBottom3_button_bg = Color(0.0196078, 0.266667, 0.368627, 1)
 metadata/_visibility_strategy_reverted = true
 
 [node name="DefaultDuration" parent="HBoxContainer" instance=ExtResource("5")]
 layout_mode = 2
-offset_left = 278.0
-offset_right = 345.0
-offset_bottom = 38.0
 tooltip_text = "Sets the default duration"
 
 [node name="Label4" type="Label" parent="HBoxContainer"]
 layout_mode = 2
-offset_left = 349.0
-offset_top = 7.0
-offset_right = 350.0
-offset_bottom = 30.0
 
 [node name="Preview" parent="HBoxContainer" instance=ExtResource("1")]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(49, 49)
 layout_mode = 2
-offset_left = 354.0
-offset_right = 386.0
-offset_bottom = 38.0
-pivot_offset = Vector2(24, 19)
 
 [connection signal="resized" from="." to="." method="_on_AnimaAnimation_resized"]
 [connection signal="pressed" from="Positions/PositionBottom" to="." method="_on_PositionBottom_pressed"]

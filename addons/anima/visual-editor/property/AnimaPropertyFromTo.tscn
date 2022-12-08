@@ -1,638 +1,318 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=3 uid="uid://clpg7gw31nuec"]
 
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaLinkedFieldButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/anima/visual-editor/icons/Clear.svg" type="Texture2D" id=2]
-[ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture2D" id=4]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture2D" id=6]
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=7]
-[ext_resource path="res://addons/anima/core/anima_node.gd" type="Script" id=8]
+[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaLinkedFieldButton.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://c5vnfnf6q8yth" path="res://addons/anima/visual-editor/icons/Clear.svg" id="2"]
+[ext_resource type="Script" path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://cp7pqarr0tfkx" path="res://addons/anima/visual-editor/icons/Check.svg" id="4"]
+[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://dm5w18ahowsc0" path="res://addons/anima/visual-editor/icons/Property.svg" id="6"]
+[ext_resource type="PackedScene" uid="uid://b0n4ipyle1o1l" path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" id="7"]
+[ext_resource type="Script" path="res://addons/anima/core/anima_node.gd" id="8"]
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
-
-[sub_resource type="Image" id=5]
+[sub_resource type="Image" id="Image_d8gb0"]
 data = {
-"data": PackedByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 201, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 224, 224, 224, 255, 224, 224, 224, 255, 222, 222, 222, 199, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 200, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 200, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 221, 221, 221, 60, 223, 223, 223, 202, 223, 223, 223, 201, 221, 221, 221, 60, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 "format": "RGBA8",
 "height": 16,
 "mipmaps": false,
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id=4]
-flags = 0
-flags = 0
-image = SubResource( 5 )
-size = Vector2( 16, 16 )
+[sub_resource type="ImageTexture" id="4"]
+image = SubResource("Image_d8gb0")
 
 [node name="PropertyFromTo" type="Control"]
+layout_mode = 3
+anchors_preset = 0
 offset_right = 288.0
 offset_bottom = 49.0
-minimum_size = Vector2( 0, 49 )
-pivot_offset = Vector2( 0, 40.5 )
+pivot_offset = Vector2(0, 40.5)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 3 )
+script = ExtResource("3")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -16.0
+offset_top = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CurrentValue" parent="HBoxContainer" instance=ExtResource( 7 )]
+[node name="CurrentValue" parent="HBoxContainer" instance=ExtResource("7")]
 offset_right = 288.0
-offset_bottom = 33.0
-pivot_offset = Vector2( 96, 24.5 )
-mouse_default_cursor_shape = 1
+offset_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+mouse_default_cursor_shape = 1
 text = "current value"
 flat = true
-__meta__ = {
-"__initial_AnimaNode__anima_1014441018145550415__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1014441018145550415_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1014441018145550415_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1046497882451588867__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1046497882451588867_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1172035618843594727__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1172035618843594727_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_118540672383365918__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_118540672383365918_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1202920097238041504__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1202920097238041504_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1202920097238041504_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_128324864638817041__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_128324864638817041_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1394061166447875977__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1394061166447875977_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1394061166447875977_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1419115733788789062__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1419115733788789062_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1419115733788789062_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_18699869178103244__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_18699869178103244_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_189134762616888763__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_189134762616888763_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_422649353643516113__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_422649353643516113_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_44189857887221794__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_44189857887221794_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_44189857887221794_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_464764718130447205__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_464764718130447205_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_464764718130447205_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_62616667639486076__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_62616667639486076_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_648279015778426147__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_648279015778426147_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_648279015778426147_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_765873150730818604__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_765873150730818604_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_785789382055248657__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_785789382055248657_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_809466269676416748__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_809466269676416748_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_96307527408182526__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_96307527408182526_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_96307527408182526_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"_editor_description_": ""
-}
 style = 1
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
 visible = false
-modulate = Color( 1, 1, 1, 0 )
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-minimum_size = Vector2( 0, 45 )
-scale = Vector2( 1.5, 1.5 )
-pivot_offset = Vector2( 154, 40.5 )
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(154, 40.5)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Rect2" type="VBoxContainer" parent="CustomValue"]
 visible = false
-offset_right = 252.0
-offset_bottom = 204.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Rect2"]
-offset_right = 252.0
-offset_bottom = 45.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/X"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/X/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
+mouse_filter = 1
 text = "x"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="x" parent="CustomValue/Rect2/X" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="x" parent="CustomValue/Rect2/X" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
-[node name="RelativeRect2X" parent="CustomValue/Rect2/X" instance=ExtResource( 1 )]
-offset_left = 212.0
-offset_right = 252.0
-offset_bottom = 45.0
-icon = SubResource( 4 )
+[node name="RelativeRect2X" parent="CustomValue/Rect2/X" instance=ExtResource("1")]
+icon = SubResource("4")
+icon_alignment = 1
 linked_field = NodePath("../x")
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Rect2"]
-offset_top = 53.0
-offset_right = 252.0
-offset_bottom = 98.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/Y"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/Y/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
+mouse_filter = 1
 text = "y"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="y" parent="CustomValue/Rect2/Y" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="y" parent="CustomValue/Rect2/Y" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
-[node name="RelativeRect2Y" parent="CustomValue/Rect2/Y" instance=ExtResource( 1 )]
-offset_left = 212.0
-offset_right = 252.0
-offset_bottom = 45.0
-icon = SubResource( 4 )
+[node name="RelativeRect2Y" parent="CustomValue/Rect2/Y" instance=ExtResource("1")]
+icon = SubResource("4")
+icon_alignment = 1
 linked_field = NodePath("../y")
 
 [node name="W" type="HBoxContainer" parent="CustomValue/Rect2"]
-offset_top = 106.0
-offset_right = 252.0
-offset_bottom = 151.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/W"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/W/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.415686, 0.368627, 0.6, 1 )
+mouse_filter = 1
 text = "w"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="w" parent="CustomValue/Rect2/W" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="w" parent="CustomValue/Rect2/W" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
-[node name="RelativeRect2W" parent="CustomValue/Rect2/W" instance=ExtResource( 1 )]
-offset_left = 212.0
-offset_right = 252.0
-offset_bottom = 45.0
-icon = SubResource( 4 )
+[node name="RelativeRect2W" parent="CustomValue/Rect2/W" instance=ExtResource("1")]
+icon = SubResource("4")
+icon_alignment = 1
 linked_field = NodePath("../w")
 
 [node name="H" type="HBoxContainer" parent="CustomValue/Rect2"]
-offset_top = 159.0
-offset_right = 252.0
-offset_bottom = 204.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Rect2/H"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Rect2/H/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.415686, 0.368627, 0.6, 1 )
+mouse_filter = 1
 text = "h"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="h" parent="CustomValue/Rect2/H" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="h" parent="CustomValue/Rect2/H" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
-[node name="RelativeRect2H" parent="CustomValue/Rect2/H" instance=ExtResource( 1 )]
-offset_left = 212.0
-offset_right = 252.0
-offset_bottom = 45.0
-icon = SubResource( 4 )
+[node name="RelativeRect2H" parent="CustomValue/Rect2/H" instance=ExtResource("1")]
+icon = SubResource("4")
+icon_alignment = 1
 linked_field = NodePath("../h")
 
 [node name="Vector3" type="VBoxContainer" parent="CustomValue"]
 visible = false
-offset_right = 200.0
-offset_bottom = 151.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector3"]
-offset_right = 200.0
-offset_bottom = 45.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/X"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/X/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
 text = "x"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="x" parent="CustomValue/Vector3/X" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="x" parent="CustomValue/Vector3/X" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector3"]
-offset_top = 53.0
-offset_right = 200.0
-offset_bottom = 98.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Y"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/Y/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
 text = "y"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
 [node name="Z" type="HBoxContainer" parent="CustomValue/Vector3"]
-offset_top = 106.0
-offset_right = 200.0
-offset_bottom = 151.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Z"]
-offset_right = 24.0
-offset_bottom = 45.0
-minimum_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/Z/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.415686, 0.368627, 0.6, 1 )
 text = "z"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource( 5 )]
-offset_left = 36.0
-offset_right = 200.0
-offset_bottom = 45.0
+[node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource("5")]
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
 [node name="Vector2" type="VBoxContainer" parent="CustomValue"]
 visible = false
-offset_right = 480.0
-offset_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector2"]
-offset_right = 236.0
-offset_bottom = 49.0
 size_flags_horizontal = 3
-custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/X"]
-offset_right = 32.0
-offset_bottom = 49.0
-minimum_size = Vector2( 32, 32 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector2/X/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
+mouse_filter = 1
 text = "x"
-align = 1
-valign = 1
 
-[node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 5 )]
-offset_left = 32.0
-offset_right = 196.0
-offset_bottom = 49.0
+[node name="x" parent="CustomValue/Vector2/X" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
-[node name="RelativeVector2X" parent="CustomValue/Vector2/X" instance=ExtResource( 1 )]
-offset_left = 196.0
-offset_right = 236.0
-offset_bottom = 49.0
-icon = SubResource( 4 )
+[node name="RelativeVector2X" parent="CustomValue/Vector2/X" instance=ExtResource("1")]
+icon = SubResource("4")
+icon_alignment = 1
 linked_field = NodePath("../x")
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
-offset_left = 244.0
-offset_right = 480.0
-offset_bottom = 49.0
 size_flags_horizontal = 3
-custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/Y"]
-offset_right = 32.0
-offset_bottom = 49.0
-minimum_size = Vector2( 32, 32 )
-custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector2/Y/Panel"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 7
-custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
+mouse_filter = 1
 text = "y"
-align = 1
-valign = 1
 
-[node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 5 )]
-offset_left = 32.0
-offset_right = 196.0
-offset_bottom = 49.0
+[node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource("5")]
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
-[node name="RelativeVector2Y" parent="CustomValue/Vector2/Y" instance=ExtResource( 1 )]
-offset_left = 196.0
-offset_right = 236.0
-offset_bottom = 49.0
-icon = SubResource( 4 )
+[node name="RelativeVector2Y" parent="CustomValue/Vector2/Y" instance=ExtResource("1")]
+icon = SubResource("4")
+icon_alignment = 1
 linked_field = NodePath("../y")
 
-[node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
-offset_bottom = 49.0
+[node name="Number" parent="CustomValue" instance=ExtResource("5")]
 size_flags_horizontal = 3
+alignment = 2
 caret_blink = true
 caret_blink_interval = 0.5
 type = 0
 
-[node name="Real" parent="CustomValue" instance=ExtResource( 5 )]
+[node name="Real" parent="CustomValue" instance=ExtResource("5")]
 visible = false
-offset_bottom = 45.0
 size_flags_horizontal = 3
 text = "0"
 caret_blink = true
@@ -640,606 +320,30 @@ caret_blink_interval = 0.5
 
 [node name="FreeText" type="LineEdit" parent="CustomValue"]
 visible = false
-offset_left = 172.0
-offset_right = 336.0
-offset_bottom = 45.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource( 7 )]
-offset_left = 172.0
-offset_right = 236.0
-minimum_size = Vector2( 40, 49 )
-pivot_offset = Vector2( 20, 24.5 )
+[node name="RelativeSelectorButton" parent="CustomValue" instance=ExtResource("7")]
 tooltip_text = "Select relative property"
-icon = ExtResource( 6 )
-icon_align = 1
-__meta__ = {
-"__initial_AnimaNode__anima_1051768885626456543__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1051768885626456543_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1081785286790930664__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1081785286790930664_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1081785286790930664_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_114847595052069458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_114847595052069458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_114847595052069458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1161649156149763916__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1161649156149763916_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1268400931279730469__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1268400931279730469_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1268400931279730469_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1306100985651443848__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1306100985651443848_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1307148313650181152__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1307148313650181152_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1312605985350511963__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1312605985350511963_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1451158089863060547__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1451158089863060547_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1451158089863060547_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1546940354701865234__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1546940354701865234_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1587721614314442871__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1587721614314442871_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_494467966621994629__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_494467966621994629_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_590050087356832886__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_590050087356832886_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_590050087356832886_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_657050753570362427__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_657050753570362427_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_657050753570362427_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_719773648351920166__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_719773648351920166_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_719773648351920166_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_833720857399238037__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_833720857399238037_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_889361162936641113__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_889361162936641113_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_926060885944299805__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_926060885944299805_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_926060885944299805_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_998117266794699219__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_998117266794699219_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"_editor_description_": ""
-}
+icon = ExtResource("6")
+icon_alignment = 1
 
-[node name="ClearButton" parent="CustomValue" instance=ExtResource( 7 )]
-offset_left = 244.0
-offset_right = 308.0
-minimum_size = Vector2( 40, 49 )
-pivot_offset = Vector2( 20, 24.5 )
+[node name="ClearButton" parent="CustomValue" instance=ExtResource("7")]
 tooltip_text = "Clear value"
-icon = ExtResource( 2 )
-icon_align = 1
-__meta__ = {
-"__initial_AnimaNode__anima_1004628049937195801__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1004628049937195801_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1032423545612789307__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1032423545612789307_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1212383672440035645__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1212383672440035645_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1212383672440035645_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1315080266764573975__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1315080266764573975_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1315080266764573975_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1399386351466780518__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1399386351466780518_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1399386351466780518_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1411284518084726074__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1411284518084726074_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1420756633515148926__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1420756633515148926_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1420756633515148926_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1634095819332792236__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1634095819332792236_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1634095819332792236_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1635145543048361816__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_1635145543048361816_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_230800824395782318__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_230800824395782318_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_243122121282749329__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_243122121282749329_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_40529447952590858__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_40529447952590858_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_464939552512883118__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_464939552512883118_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_632210150135413208__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_632210150135413208_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_652503240390866089__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_652503240390866089_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_662520870655614868__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_662520870655614868_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_662520870655614868_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_722831873915951294__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_722831873915951294_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_785919416932637573__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_785919416932637573_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_785919416932637573_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_83067773902615707__button_bg": {
-"percentage": 0,
-"value": Color( 0.215686, 0.254902, 0.25098, 1 )
-},
-"__initial_AnimaNode__anima_83067773902615707_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_83067773902615707_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"_editor_description_": ""
-}
+icon = ExtResource("2")
+icon_alignment = 1
 style = 1
 
-[node name="ConfirmButton" parent="CustomValue" instance=ExtResource( 7 )]
+[node name="ConfirmButton" parent="CustomValue" instance=ExtResource("7")]
 visible = false
-offset_left = 218.0
-offset_right = 258.0
-minimum_size = Vector2( 40, 49 )
-pivot_offset = Vector2( 20, 24.5 )
 tooltip_text = "Confirm value"
-icon = ExtResource( 4 )
-icon_align = 1
-__meta__ = {
-"__initial_AnimaNode__anima_110058832145571582__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_110058832145571582_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1146741417574743652__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1146741417574743652_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_118338048585262085__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_118338048585262085_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_118338048585262085_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_124048735319653549__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_124048735319653549_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_124048735319653549_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1272839985066247803__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1272839985066247803_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1272839985066247803_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1485406564899532471__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1485406564899532471_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_28918851040063739__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_28918851040063739_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_435531694377409607__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_435531694377409607_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_508610660556259216__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_508610660556259216_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_521100605626568054__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_521100605626568054_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_579480199471437256__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_579480199471437256_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_579480199471437256_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_722515293212712769__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_722515293212712769_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_776853832511085571__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_776853832511085571_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_776853832511085571_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_950339360209650391__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_950339360209650391_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_950339360209650391_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_977113655293316162__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_977113655293316162_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_979077788926711914__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_979077788926711914_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_979077788926711914_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_991431728118088135__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_991431728118088135_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_995575574272117554__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_995575574272117554_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_995575574272117554_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_996011424711316406__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_996011424711316406_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"_editor_description_": ""
-}
+icon = ExtResource("4")
+icon_alignment = 1
 
 [node name="AnimaNode" type="Node" parent="."]
-script = ExtResource( 8 )
+script = ExtResource("8")
 
 [connection signal="item_rect_changed" from="." to="." method="_on_PropertyFromTo_item_rect_changed"]
 [connection signal="pressed" from="HBoxContainer/CurrentValue" to="." method="_on_CurrentValue_pressed"]

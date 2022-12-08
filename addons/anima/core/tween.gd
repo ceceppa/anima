@@ -59,7 +59,8 @@ func _ready():
 	set_loops(0)
 
 func set_loops(loops: int) -> void:
-	_tween.set_loops(loops)
+	if _tween:
+		_tween.set_loops(loops)
 
 func set_repeat(repeat) -> void:
 	if !repeat:
@@ -166,6 +167,9 @@ func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMA
 func _interpolate_method(source: Node, method: String, duration: float, tween_in: int, tween_out: int, wait_time: float) -> void:
 	var callable := Callable(source, method)
 
+	if not _tween:
+		return
+
 	_tween.tween_method(
 		callable,
 		0.0,
@@ -179,20 +183,11 @@ func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
 	if animation_data.has("__debug"):
 		printt("add_event_frame", animation_data)
 
-	var object := AnimaEvent.new(animation_data, callback_key, get_is_playing_backwards)
+	var object := AnimaEvent.new(animation_data, callback_key, is_playing_backwards)
 
-	_tween.tween_callback(object.execute_callback)
-#	_interpolate_method(
-#		object,
-#		"execute_callback",
-#		ANIMA.MINIMUM_DURATION,
-#		Tween.TRANS_LINEAR,
-#		Tween.TRANS_LINEAR,
-#		animation_data._wait_time + animation_data.duration
-#	)
+	_tween.tween_callback(object.execute_callback).set_delay(animation_data._wait_time + animation_data.duration)
 
-func get_is_playing_backwards() -> bool:
-	return is_playing_backwards
+	add_child(object)
 
 func _add_initial_values(animation_data: Dictionary) -> void:
 	if _animation_data.has("__debug"):
@@ -588,45 +583,30 @@ class AnimaEvent extends Node:
 	var _data: Dictionary
 	var _callback
 	var _executed := false
-	var _check_playing_backwards: Callable
+	var _is_playing_backwards: bool
 
-	func _init(animation_data: Dictionary,callback_key: String,check_playing_backwards: Callable):
+	func _init(animation_data: Dictionary,callback_key: String, is_playing_backwards: bool):
 		_data = animation_data
 		_callback = animation_data[callback_key]
-		_check_playing_backwards = check_playing_backwards
+		_is_playing_backwards = is_playing_backwards
 
-	func execute_callback(elapsed: float) -> void:
-		if _data.has("__debug"):
-			prints("AnimaEvent", "elapsed", elapsed, "executed", _executed)
-
-		if elapsed >= 1:
-			_executed = false
-
-			return
-
-		if _executed:
-			return
-
-		_executed = true
-
+	func execute_callback():
 		var fn: Callable
 		var args: Array = []
-		var is_playing_backwards = _check_playing_backwards.call()
 
 		if _callback is Array:
 			fn = _callback[0]
 			args = _callback[1]
 		elif _callback is Dictionary:
-			var target = _callback.target
-			var value = _callback.value if not is_playing_backwards else _callback.backwards_value
-			var method = _callback.method
+			var value = _callback.value if not _is_playing_backwards else _callback.backwards_value
+
+			fn = _callback.target
 
 			if value is Array:
 				args = value
 			else:
 				args = [value]
 
-			fn = Callable(target, method)
 		else:
 			fn = _callback
 
@@ -641,7 +621,13 @@ func reverse_animation(from_tween, default_duration: float):
 	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
 
 	for new_data in data:
+		if new_data.has("on_started"):
+			add_event_frame(new_data, "on_started")
+
 		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
+
+		if new_data.has("on_completed"):
+			add_event_frame(new_data, "on_completed")
 
 #
 # In order to flip "nested relative" animations we need to calculate what all the

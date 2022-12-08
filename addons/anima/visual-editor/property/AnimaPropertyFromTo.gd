@@ -22,48 +22,64 @@ enum TYPES {
 @export var label := 'current value' :
 	get:
 		return label
-	set(mod_value):
-		set_label(mod_value)
+	set(new_label):
+		label = new_label
+
+		set_label(label)
 @export var type := TYPES.INT :
 	get:
 		return type
-	set(mod_value):
-		set_type(mod_value)
+	set(the_type):
+		type = the_type
+
+		set_type(type)
 @export var can_clear_custom_value := true :
 	get:
 		return can_clear_custom_value
-	set(mod_value):
-		set_can_clear_custom_value(mod_value)
+	set(can_clear):
+		can_clear_custom_value = can_clear
+
+		set_can_clear_custom_value(can_clear_custom_value)
 @export var show_relative_selector := true :
 	get:
 		return show_relative_selector
-	set(mod_value):
-		set_show_relative_selector(mod_value)
+	set(relative_button):
+		show_relative_selector = relative_button
+		
+		set_show_relative_selector(show_relative_selector)
 @export var can_edit_value := true :
 	get:
 		return can_edit_value
-	set(mod_value):
-		set_can_edit_value(mod_value)
+	set(can_edit):
+		can_edit_value = can_edit
 @export var show_confirm_button := false :
 	get:
 		return show_confirm_button
-	set(mod_value):
-		set_show_confirm_button(mod_value)
+	set(show):
+		show_confirm_button = show
+
+		set_show_confirm_button(show_confirm_button)
 @export var disabled := false :
 	get:
 		return disabled
-	set(mod_value):
-		set_disabled(mod_value)
+	set(is_disabled):
+		disabled = is_disabled
+		
+		set_disabled(disabled)
 @export var transparent := false :
 	get:
 		return transparent
-	set(mod_value):
-		set_transparent(mod_value)
+	set(t):
+		transparent = t
+
+		set_transparent(transparent)
 @export var font_color := Color.WHITE :
 	get:
 		return font_color
-	set(mod_value):
-		set_font_color(mod_value)
+	set(c):
+		font_color = c
+
+		set_font_color(font_color)
 
 const MIN_SIZE := 30.0
 
@@ -95,12 +111,10 @@ func _ready():
 	set_can_clear_custom_value(can_clear_custom_value)
 	set_disabled(disabled)
 	set_show_confirm_button(show_confirm_button)
-	
+
 	_on_PropertyFromTo_item_rect_changed()
 
 func set_type(the_type: int) -> void:
-	type = the_type
-
 	var node_name: String = 'FreeText'
 	var custom_value = find_child('CustomValue')
 
@@ -143,13 +157,8 @@ func set_type(the_type: int) -> void:
 	_input_visible.show()
 
 func set_can_clear_custom_value(can_clear: bool) -> void:
-	can_clear_custom_value = can_clear
-
 	var clear_button = find_child('ClearButton')
 	clear_button.visible = can_clear_custom_value
-
-func set_can_edit_value(can_edit: bool) -> void:
-	can_edit_value = can_edit
 
 func _animate_custom_value(mode: int, signal_to_emit = "") -> AnimaNode:
 	if _input_visible == null:
@@ -190,7 +199,7 @@ func _animate_custom_value(mode: int, signal_to_emit = "") -> AnimaNode:
 
 	anima.with(
 		Anima.Node(self) \
-			.anima_property("min_size:y") \
+			.anima_property("custom_minimum_size:y") \
 			.anima_to(height)
 	)
 	anima.with(
@@ -204,7 +213,7 @@ func _animate_custom_value(mode: int, signal_to_emit = "") -> AnimaNode:
 
 	if mode == AnimaTween.PLAY_MODE.NORMAL:
 		anima.play()
-		
+
 		await anima.animation_completed
 
 		if is_inside_tree() and _input_visible.is_visible_in_tree():
@@ -236,7 +245,7 @@ func set_placeholder(value) -> void:
 	var t = typeof(value)
 	if t == TYPE_VECTOR2 or t == TYPE_VECTOR3:
 		var fields = ['x', 'y'] if t == TYPE_VECTOR2 else ['x', 'y', 'z']
-		
+
 		for field in fields:
 			var l: LineEdit = _input_visible.find_child(field)
 			var label: Label = l.get_parent().find_child("Label")
@@ -246,12 +255,12 @@ func set_placeholder(value) -> void:
 			label.tooltip_text = "Current value: " + v
 	elif typeof(value) == TYPE_RECT2:
 		var fields = ['x', 'y', 'w', 'h']
-		
+
 		for field in fields:
 			var l: LineEdit = _input_visible.find_child(field)
 			var label: Label = l.get_parent().find_child("Label")
 			var v: String = ""
-			
+
 			if field == "x" or field == "y":
 				v = str(value.position[field])
 			elif field == "w":
@@ -326,7 +335,7 @@ func get_value():
 	if _input_visible is LineEdit:
 		if _input_visible.has_method('get_value'):
 			return _input_visible.get_value()
-		
+
 		var text: String = _input_visible.text
 
 		if type != TYPE_STRING:
@@ -353,8 +362,6 @@ func get_value():
 		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
 func set_label(new_label: String) -> void:
-	label = new_label
-
 	if not _current_value:
 		_current_value = find_child("CurrentValue")
 
@@ -364,8 +371,6 @@ func get_label() -> String:
 	return _current_value.text
 
 func set_show_relative_selector(relative_button: bool) -> void:
-	show_relative_selector = relative_button
-	
 	var button: Button = find_child("RelativeSelectorButton")
 	button.visible = show_relative_selector
 
@@ -393,12 +398,9 @@ func _on_RelativeSelectorButton_pressed(source: Button):
 	emit_signal("select_relative_property")
 
 func set_disabled(is_disabled: bool) -> void:
-	disabled = is_disabled
-
 	_current_value.disabled = is_disabled
 
 func set_show_confirm_button(show: bool) -> void:
-	show_confirm_button = show
 	$CustomValue/ConfirmButton.visible = show
 
 func _on_CurrentValue_item_rect_changed():
@@ -406,7 +408,7 @@ func _on_CurrentValue_item_rect_changed():
 		custom_minimum_size.y = _current_value.size.y
 
 func _on_PropertyFromTo_item_rect_changed():
-	$CustomValue.minimum_size.x = 0
+	$CustomValue.custom_minimum_size.x = 0
 	$CustomValue.size.x = size.x
 
 	size.x = max($CustomValue.size.x, size.x)
@@ -427,16 +429,12 @@ func _on_CurrentValueBorderless_pressed():
 	_on_CurrentValue_pressed()
 
 func set_transparent(t: bool) -> void:
-	transparent = t
-
 	if transparent:
 		$HBoxContainer/CurrentValue.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 	else:
 		$HBoxContainer/CurrentValue.remove_theme_stylebox_override("normal")
 
 func set_font_color(c: Color) -> void:
-	font_color = c
-
 	$HBoxContainer/CurrentValue.add_theme_color_override("font_color", font_color)
 
 func _on_CustomValue_item_rect_changed():
