@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://crs4il5x8baqc"]
+[gd_scene load_steps=3 format=3 uid="uid://crs4il5x8baqc"]
 
 [ext_resource type="Script" path="res://TestScene/Control.gd" id="1"]
+[ext_resource type="Script" path="res://addons/anima/core/visual_node.gd" id="2_eog8b"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,8 +13,14 @@ grow_vertical = 2
 script = ExtResource("1")
 
 [node name="Label" type="Label" parent="."]
+layout_mode = 0
 offset_left = 441.0
 offset_top = 163.0
 offset_right = 481.0
 offset_bottom = 188.0
 text = "Test me"
+
+[node name="AnimaVisualNode" type="Node" parent="."]
+script = ExtResource("2_eog8b")
+__anima_visual_editor_data = {}
+metadata/__anima_visual_node = true

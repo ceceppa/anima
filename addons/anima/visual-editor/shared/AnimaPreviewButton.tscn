@@ -5,19 +5,23 @@
 [ext_resource type="Script" path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.gd" id="3"]
 
 [node name="Preview" instance=ExtResource("1")]
+custom_minimum_size = Vector2(32, 32)
 offset_bottom = 33.0
 icon = ExtResource("2")
-expand_icon = true
+icon_alignment = 1
 script = ExtResource("3")
 transparent = true
+
+[node name="Label" parent="." index="0"]
+layout_mode = 3
 
 [node name="PanelItems" parent="." index="2"]
 size = Vector2i(278, 100)
 
 [connection signal="pressed" from="." to="." method="_on_Button_pressed"]
-[connection signal="button_down" from="PanelItems/@@25464/Button" to="PanelItems/@@25464/Button" method="_on_Button_button_down"]
-[connection signal="button_up" from="PanelItems/@@25464/Button" to="PanelItems/@@25464/Button" method="_on_Button_button_up"]
-[connection signal="toggled" from="PanelItems/@@25464/Button" to="PanelItems/@@25464/Button" method="_on_Button_toggled"]
-[connection signal="button_down" from="PanelItems/@@25464/@Button@25463" to="PanelItems/@@25464/@Button@25463" method="_on_Button_button_down"]
-[connection signal="button_up" from="PanelItems/@@25464/@Button@25463" to="PanelItems/@@25464/@Button@25463" method="_on_Button_button_up"]
-[connection signal="toggled" from="PanelItems/@@25464/@Button@25463" to="PanelItems/@@25464/@Button@25463" method="_on_Button_toggled"]
+[connection signal="button_down" from="PanelItems/@@47098/Button" to="PanelItems/@@47098/Button" method="_on_Button_button_down"]
+[connection signal="button_up" from="PanelItems/@@47098/Button" to="PanelItems/@@47098/Button" method="_on_Button_button_up"]
+[connection signal="toggled" from="PanelItems/@@47098/Button" to="PanelItems/@@47098/Button" method="_on_Button_toggled"]
+[connection signal="button_down" from="PanelItems/@@47098/@Button@47097" to="PanelItems/@@47098/@Button@47097" method="_on_Button_button_down"]
+[connection signal="button_up" from="PanelItems/@@47098/@Button@47097" to="PanelItems/@@47098/@Button@47097" method="_on_Button_button_up"]
+[connection signal="toggled" from="PanelItems/@@47098/@Button@47097" to="PanelItems/@@47098/@Button@47097" method="_on_Button_toggled"]

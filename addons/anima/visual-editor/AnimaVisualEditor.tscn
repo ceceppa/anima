@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c52121pqtjyxn"]
 
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.tscn" id="1"]
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/editor/AnimaFramesEditor.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://d0w50l7lbbkh5" path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://dn5hkst7ms3t5" path="res://addons/anima/visual-editor/editor/AnimaFramesEditor.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://addons/anima/visual-editor/windows/AnimationsWindow.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://addons/anima/visual-editor/windows/AnimaPropertiesWindow.tscn" id="4"]
 [ext_resource type="Script" path="res://addons/anima/visual-editor/AnimaVisualEditor.gd" id="5"]
@@ -25,9 +25,6 @@ script = ExtResource("5")
 [node name="FramesEditor" parent="." instance=ExtResource("2")]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -42,9 +39,6 @@ mouse_filter = 2
 
 [node name="WarningLabel" type="Label" parent="MarginContainer"]
 layout_mode = 2
-offset_right = 1152.0
-offset_bottom = 648.0
-pivot_offset = Vector2(512, 300)
 size_flags_horizontal = 3
 size_flags_vertical = 7
 text = "Please add an AnimaVisualNode to the current scene to use the Visual Animation Builder"
@@ -57,7 +51,6 @@ exclusive = false
 
 [node name="PropertiesWindow" parent="." instance=ExtResource("4")]
 visible = false
-window_title = "Select the node and property to animate"
 nodes_list_visible = true
 
 [node name="AnimationsWindow" parent="." instance=ExtResource("3")]

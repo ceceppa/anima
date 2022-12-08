@@ -186,7 +186,7 @@ func _on_PropertyButton_pressed():
 	emit_signal("select_property")
 
 func _on_AnimaAnimationData_mouse_entered():
-	if _source_node == null and Engine.editor_hint:
+	if _source_node == null and Engine.is_editor_hint():
 		printerr("_on_AnimaAnimationData_mouse_entered: _source_node is null")
 
 		return

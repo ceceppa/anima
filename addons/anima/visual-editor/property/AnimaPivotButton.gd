@@ -19,7 +19,7 @@ func _ready():
 	_toggle_pivot_points()
 
 func _toggle_pivot_points() -> void:
-	_pivot_points.visible = _point_button.pressed
+	_pivot_points.visible = _point_button.button_pressed
 
 	emit_signal("pivot_point_selected")
 

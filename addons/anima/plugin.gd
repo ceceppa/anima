@@ -122,15 +122,14 @@ func set_anima_node(is_anima_node: bool, object) -> void:
 		if old_active_editor != _active_anima_editor:
 			old_active_editor.hide()
 	elif not is_anima_node:
-		pass
-#		_active_anima_editor.set_anima_node(null)
-#
-#		_anima_visual_node = null
-#
-#	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed",Callable(self,"_on_editor_position_changed")):
-#		_anima_visual_node.connect("on_editor_position_changed",Callable(self,"_on_editor_position_changed"))
-#
-#		_on_editor_position_changed(_anima_visual_node._editor_position)
+		_active_anima_editor.set_anima_node(null)
+
+		_anima_visual_node = null
+
+	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed",Callable(self,"_on_editor_position_changed")):
+		_anima_visual_node.connect("on_editor_position_changed",Callable(self,"_on_editor_position_changed"))
+
+		_on_editor_position_changed(_anima_visual_node._editor_position)
 
 func _on_editor_position_changed(new_position: int) -> void:
 	_anima_editor.hide()

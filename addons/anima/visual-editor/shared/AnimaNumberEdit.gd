@@ -78,5 +78,5 @@ func _on_NumberEdit_type_changed(new_type):
 		alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 func _on_NumberEdit_gui_input(event):
-	if event is InputEventKey and event.scancode == KEY_ENTER and event.button_pressed == false:
+	if event is InputEventKey and event.keycode == KEY_ENTER and event.pressed == false:
 		emit_signal("changed")

@@ -42,15 +42,15 @@ func _animate_add(mode:int) -> void:
 func _on_Animation_pressed():
 	_on_Timer_timeout()
 	
-	emit_signal("add_frame")
+	add_frame.emit()
 
 func _on_Delay_pressed():
 	_on_Timer_timeout()
 
-	emit_signal("add_delay")
+	add_delay.emit()
 
 func _on_Event_pressed():
-	emit_signal("add_event")
+	add_event.emit()
 
 func _on_AddButton_mouse_entered():
 	$Timer.stop()
@@ -59,7 +59,8 @@ func _on_AddButton_mouse_entered():
 		_animate_add(AnimaTween.PLAY_MODE.NORMAL)
 
 func _on_Timer_timeout():
-	_animate_add(AnimaTween.PLAY_MODE.BACKWARDS)
+	if $ButtonsContainer.get_child(0).modulate.a == 1:
+		_animate_add(AnimaTween.PLAY_MODE.BACKWARDS)
 
 func _on_mouse_entered():
 	$Timer.stop()
