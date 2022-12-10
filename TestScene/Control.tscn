@@ -22,5 +22,26 @@ text = "Test me"
 
 [node name="AnimaVisualNode" type="Node" parent="."]
 script = ExtResource("2_eog8b")
-__anima_visual_editor_data = {}
+__anima_visual_editor_data = {
+"0": {
+"animation": {
+"default_duration": 0.0,
+"name": "default",
+"visibility_strategy": 0
+},
+"frames": {
+0: {
+"collapsed": ,
+"data": [],
+"duration": null,
+"name": "Frame0",
+"type": "frame"
+}
+}
+}
+}
+_editor_position = 1
 metadata/__anima_visual_node = true
+
+[node name="Window" type="Window" parent="."]
+popup_window = true

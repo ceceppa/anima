@@ -12,10 +12,6 @@ signal close
 var _start_node: Node
 var _search_text: String
 
-func _ready():
-	if trigger_selected:
-		$ButtonsContainer.hide()
-
 func populate(root_node: Node):
 	_start_node = root_node
 

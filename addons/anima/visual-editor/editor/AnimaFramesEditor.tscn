@@ -70,4 +70,5 @@ pivot_offset = Vector2(180, 288)
 [connection signal="animation_updated" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
 [connection signal="change_editor_position" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_change_editor_position"]
 [connection signal="preview_animation" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_preview_animation"]
-[connection signal="add_frame" from="AnimaAddFrame" to="." method="_on_anima_add_frame_add_frame"]
+[connection signal="add_delay" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_delay"]
+[connection signal="add_frame" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_frame"]

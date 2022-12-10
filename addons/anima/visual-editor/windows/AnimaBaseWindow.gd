@@ -3,6 +3,12 @@ extends Window
 
 var _final_size := Vector2(1024, 600)
 
+func _init():
+	popup_window = false
+	transient = true
+	exclusive = true
+	always_on_top = true
+
 func _ready():
 	if not is_connected("close_requested",Callable(self,"_on_hide")):
 		connect("close_requested",Callable(self,"_on_hide"))
@@ -14,7 +20,7 @@ func _play(backwards := false) -> AnimaNode:
 			.anima_animation_frames({
 				0: {
 					size = Vector2(_final_size.x, 0),
-					opacity = 0,
+#					opacity = 0,
 					pivot = ANIMA.PIVOT.CENTER,
 				},
 				10: {
@@ -23,13 +29,13 @@ func _play(backwards := false) -> AnimaNode:
 				},
 				100: {
 					size = _final_size,
-					opacity = 1,
+#					opacity = 1,
 					"translate:y" = 0,
 					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 				},
-				"initial_values": {
-					opacity = 0,
-				},
+#				"initial_values": {
+#					opacity = 0,
+#				},
 			}, 0.3)
 	)
 	
@@ -47,7 +53,7 @@ func popup_centered(size := Vector2i.ZERO) -> void:
 
 	super.popup_centered(size)
 
-	_play()
+#	_play()
 
 	_on_popup_visible()
 
@@ -55,8 +61,8 @@ func _on_popup_visible() -> void:
 	pass
 
 func _on_hide() -> void:
-	show()
-
-	await _play(true).animation_completed
+#	show()
+#
+#	await _play(true).animation_completed
 
 	hide()

@@ -11,9 +11,9 @@
 class_name AnimaNodesProperties
 
 static func get_position(node: Node):
-	if node is Control:
+	if node is Control or node is Window:
 		return node.position
-	if node is Node2D:
+	elif node is Node2D:
 		return node.global_position
 
 	return node.global_transform.origin
@@ -40,6 +40,9 @@ static func get_rotation(node: Node):
 
 static func set_2D_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
+
+	if node is Window:
+		pass
 
 	match pivot:
 		ANIMA.PIVOT.TOP_CENTER:
@@ -214,7 +217,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 static func map_property_to_godot_property(node: Node, property: String) -> Dictionary:
 	match property:
 		"x", "position:x":
-			if node is Control:
+			if node is Control or node is Window:
 				return {
 					property = "position",
 					key = "x",
@@ -226,7 +229,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				subkey = "x"
 			}
 		"y", "position:y":
-			if node is Control:
+			if node is Control or node is Window:
 				return {
 					property = "position",
 					key = "y",
@@ -238,7 +241,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				subkey = "y"
 			}
 		"width":
-			if node is Control:
+			if node is Control or node is Window:
 				return {
 					property = "size",
 					key = "x",
@@ -249,7 +252,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				key = "x",
 			}
 		"height":
-			if node is Control:
+			if node is Control or node is Window:
 				return {
 					property = "size",
 					key = "y",
@@ -260,7 +263,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				key = "y",
 			}
 		"z", "position:z":
-			if node is Control:
+			if node is Control or node is Window:
 				printerr('position:z is not supported by Control nodes')
 
 			return {
@@ -269,7 +272,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				subkey = "z"
 			}
 		"position":
-			if node is Control:
+			if node is Control or node is Window:
 				return {
 					property = "position"
 				}

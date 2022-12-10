@@ -1,16 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://c52121pqtjyxn"]
+[gd_scene load_steps=8 format=3 uid="uid://dps7843eyqfas"]
 
 [ext_resource type="PackedScene" uid="uid://d0w50l7lbbkh5" path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dn5hkst7ms3t5" path="res://addons/anima/visual-editor/editor/AnimaFramesEditor.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://addons/anima/visual-editor/windows/AnimationsWindow.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/windows/AnimaPropertiesWindow.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ciabx0i3sybvb" path="res://addons/anima/visual-editor/windows/AnimaPropertiesWindow.tscn" id="4"]
 [ext_resource type="Script" path="res://addons/anima/visual-editor/AnimaVisualEditor.gd" id="5"]
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/windows/AnimaEasingsWindow.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://b2fh7k6r0x3fv" path="res://addons/anima/visual-editor/windows/AnimaEasingsWindow.tscn" id="6"]
 
 [sub_resource type="Theme" id="2"]
 
 [node name="AnimaVisualEditor" type="Control"]
 clip_contents = true
+custom_minimum_size = Vector2(0, 300)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -49,12 +50,22 @@ vertical_alignment = 1
 visible = false
 exclusive = false
 
-[node name="PropertiesWindow" parent="." instance=ExtResource("4")]
-visible = false
-nodes_list_visible = true
-
 [node name="AnimationsWindow" parent="." instance=ExtResource("3")]
 visible = false
+script = null
 
 [node name="AnimaEasingsWindow" parent="." instance=ExtResource("6")]
 visible = false
+transient = true
+exclusive = true
+always_on_top = true
+
+[node name="PropertiesWindow" parent="." instance=ExtResource("4")]
+visible = false
+
+[connection signal="add_node" from="FramesEditor" to="." method="_on_FramesEditor_add_node"]
+[connection signal="change_editor_position" from="FramesEditor" to="." method="_on_FramesEditor_change_editor_position"]
+[connection signal="preview_animation" from="FramesEditor" to="." method="_on_FramesEditor_preview_animation"]
+[connection signal="select_node" from="FramesEditor" to="." method="_on_FramesEditor_select_node"]
+[connection signal="select_node_property" from="FramesEditor" to="." method="_on_FramesEditor_select_node_property"]
+[connection signal="visual_builder_updated" from="FramesEditor" to="." method="_on_FramesEditor_visual_builder_updated"]

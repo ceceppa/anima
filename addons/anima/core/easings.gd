@@ -158,9 +158,8 @@ static func get_mirrored_easing(easing_name):
 		}
 
 		return spring_params
-	printerr('Easing not found: ' + str(easing_name))
 
-	return mapping[EASING.LINEAR]
+	return null
 
 static func ease_in_elastic(elapsed: float) -> float:
 	if elapsed == 0:

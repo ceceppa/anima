@@ -78,6 +78,7 @@ func _on_Button_mouse_entered():
 	_show_panel()
 
 func _show_panel() -> void:
+	return
 	_panel.set_position(get_global_position() + Vector2(0, size.y))
 	_panel.show()
 

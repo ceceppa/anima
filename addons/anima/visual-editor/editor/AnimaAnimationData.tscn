@@ -1,21 +1,21 @@
 [gd_scene load_steps=17 format=3 uid="uid://wvqqretcfqrj"]
 
 [ext_resource type="PackedScene" uid="uid://b0n4ipyle1o1l" path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://6fn4xn4l5x35" path="res://addons/anima/visual-editor/icons/Time.svg" id="2"]
+[ext_resource type="Texture2D" uid="uid://d0qlv53uepyct" path="res://addons/anima/visual-editor/icons/Time.svg" id="2"]
 [ext_resource type="Script" path="res://addons/anima/visual-editor/editor/AnimaAnimationData.gd" id="3"]
-[ext_resource type="Texture2D" uid="uid://bwnkq6to2s4d5" path="res://addons/anima/visual-editor/icons/Collapse.svg" id="3_rqq76"]
-[ext_resource type="Texture2D" uid="uid://4ekgttxdsjrg" path="res://addons/anima/visual-editor/icons/Add.svg" id="4"]
+[ext_resource type="Texture2D" uid="uid://cqurgog24wpcy" path="res://addons/anima/visual-editor/icons/Collapse.svg" id="3_rqq76"]
+[ext_resource type="Texture2D" uid="uid://bju8rr6noawkk" path="res://addons/anima/visual-editor/icons/Add.svg" id="4"]
 [ext_resource type="PackedScene" uid="uid://clpg7gw31nuec" path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://ft6vmcsjvmin" path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" id="6"]
-[ext_resource type="Texture2D" uid="uid://dqatjs683ap0s" path="res://addons/anima/visual-editor/icons/Remove.svg" id="7"]
+[ext_resource type="Texture2D" uid="uid://cl8k2ftslm54b" path="res://addons/anima/visual-editor/icons/Remove.svg" id="7"]
 [ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" id="8"]
 [ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaToggleButton.tscn" id="9"]
 [ext_resource type="PackedScene" uid="uid://cmonshd1g6kmo" path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.tscn" id="10"]
-[ext_resource type="Texture2D" uid="uid://cmcq6dldmmac3" path="res://addons/anima/visual-editor/icons/Reload.svg" id="11"]
-[ext_resource type="Texture2D" uid="uid://lavbfm0vqmt1" path="res://addons/anima/visual-editor/icons/Node.svg" id="12"]
-[ext_resource type="Texture2D" uid="uid://c6xs0ops187ch" path="res://addons/anima/visual-editor/icons/Grid.svg" id="13"]
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" id="14"]
-[ext_resource type="Texture2D" uid="uid://cwrl1uamthp1e" path="res://addons/anima/visual-editor/icons/Group.svg" id="15"]
+[ext_resource type="Texture2D" uid="uid://l50vwhid3cj7" path="res://addons/anima/visual-editor/icons/Reload.svg" id="11"]
+[ext_resource type="Texture2D" uid="uid://d3aqag4pava8w" path="res://addons/anima/visual-editor/icons/Node.svg" id="12"]
+[ext_resource type="Texture2D" uid="uid://utg48dndm6s" path="res://addons/anima/visual-editor/icons/Grid.svg" id="13"]
+[ext_resource type="PackedScene" uid="uid://c5he3gfv2lyib" path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" id="14"]
+[ext_resource type="Texture2D" uid="uid://5fbyb5mfkab5" path="res://addons/anima/visual-editor/icons/Group.svg" id="15"]
 
 [node name="AnimaAnimationData" type="VBoxContainer"]
 anchors_preset = 15
@@ -28,24 +28,26 @@ size_flags_horizontal = 3
 script = ExtResource("3")
 
 [node name="Control" type="Control" parent="."]
-layout_mode = 2
+layout_mode = 3
+anchors_preset = 0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 1
 
 [node name="Background" type="ColorRect" parent="Control"]
-layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 mouse_filter = 1
 color = Color(0.113725, 0.207843, 0.341176, 1)
 
 [node name="Title" parent="." instance=ExtResource("9")]
-layout_mode = 2
+anchor_right = 0.0
+offset_top = 4.0
+offset_right = 1152.0
+offset_bottom = 53.0
 icon = ExtResource("3_rqq76")
 
 [node name="ActionsContainer" type="HBoxContainer" parent="Title"]
-layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 49.0
 size_flags_horizontal = 3
@@ -54,12 +56,13 @@ alignment = 2
 
 [node name="TitleActionsBg" parent="Title/ActionsContainer" instance=ExtResource("8")]
 custom_minimum_size = Vector2(266, 49)
-layout_mode = 2
+offset_left = 886.0
+offset_right = 1152.0
+offset_bottom = 49.0
 color = Color(0.329412, 0.329412, 0.0313726, 1)
 style = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Title/ActionsContainer/TitleActionsBg"]
-layout_mode = 0
 offset_right = 249.0
 offset_bottom = 49.0
 size_flags_horizontal = 3
@@ -69,13 +72,20 @@ alignment = 1
 
 [node name="Preview" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource("6")]
 custom_minimum_size = Vector2(49, 49)
-layout_mode = 2
+offset_right = 49.0
+offset_bottom = 49.0
 
 [node name="Label" type="Label" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer"]
-layout_mode = 2
+offset_left = 53.0
+offset_top = 13.0
+offset_right = 54.0
+offset_bottom = 36.0
 
 [node name="Time" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource("1")]
-layout_mode = 2
+offset_left = 58.0
+offset_right = 107.0
+offset_bottom = 49.0
+pivot_offset = Vector2(24.5, 24.5)
 tooltip_text = "Show animation duration and delay"
 toggle_mode = true
 icon = ExtResource("2")
@@ -86,7 +96,10 @@ metadata/__visibility_strategy = 0
 metadata/_visibility_strategy_reverted = true
 
 [node name="AnimateAs" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource("1")]
-layout_mode = 2
+offset_left = 111.0
+offset_right = 160.0
+offset_bottom = 49.0
+pivot_offset = Vector2(24.5, 24.5)
 tooltip_text = "Select how to animate the group of nodes"
 toggle_mode = true
 icon = ExtResource("12")
@@ -97,7 +110,10 @@ metadata/__visibility_strategy = 0
 metadata/_visibility_strategy_reverted = true
 
 [node name="AddAnimation" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource("1")]
-layout_mode = 2
+offset_left = 164.0
+offset_right = 213.0
+offset_bottom = 49.0
+pivot_offset = Vector2(24.5, 24.5)
 icon = ExtResource("4")
 icon_alignment = 1
 transparent = true
@@ -106,7 +122,10 @@ metadata/__visibility_strategy = 0
 metadata/_visibility_strategy_reverted = true
 
 [node name="Remove" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer" instance=ExtResource("1")]
-layout_mode = 2
+offset_left = 217.0
+offset_right = 266.0
+offset_bottom = 49.0
+pivot_offset = Vector2(24.5, 24.5)
 tooltip_text = "Delete the current animation"
 icon = ExtResource("7")
 icon_alignment = 1
@@ -117,21 +136,21 @@ metadata/__visibility_strategy = 0
 metadata/_visibility_strategy_reverted = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 2
+offset_top = 57.0
+offset_right = 1152.0
+offset_bottom = 110.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 53.0
 
 [node name="NodeOrGroup" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
-layout_mode = 2
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup"]
-layout_mode = 2
 columns = 3
 
 [node name="AsNode" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridContainer" instance=ExtResource("1")]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tooltip_text = "Animates the single node only"
@@ -141,7 +160,6 @@ text = "Node"
 icon = ExtResource("12")
 
 [node name="AsGroup" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridContainer" instance=ExtResource("1")]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tooltip_text = "Animates the direct children as group of nodes"
@@ -151,7 +169,6 @@ text = "Group"
 icon = ExtResource("15")
 
 [node name="AsGrid" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridContainer" instance=ExtResource("1")]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tooltip_text = "Animates the direct children as grid of nodes"
@@ -162,33 +179,28 @@ icon = ExtResource("13")
 
 [node name="GroupData" type="VBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup"]
 visible = false
-layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData"]
-layout_mode = 2
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer"]
-layout_mode = 2
+offset_right = 274.0
+offset_bottom = 101.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
 [node name="LabelItemsDelay" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-layout_mode = 2
 text = "Items delay (s):"
 
 [node name="ItemsDelay" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer" instance=ExtResource("14")]
-layout_mode = 2
 size_flags_horizontal = 3
 text = "0.01"
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-layout_mode = 2
 text = "Animation type:"
 
 [node name="AnimationGroupType" type="OptionButton" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-layout_mode = 2
 item_count = 8
 selected = 0
 popup/item_0/text = "From Top"
@@ -209,11 +221,9 @@ popup/item_7/text = "From Index"
 popup/item_7/id = 7
 
 [node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer"]
-layout_mode = 2
 text = "Start point:"
 
 [node name="StartIndex" parent="MarginContainer/VBoxContainer/NodeOrGroup/GroupData/MarginContainer/GridContainer" instance=ExtResource("14")]
-layout_mode = 2
 text = "0"
 alignment = 2
 type = 0
@@ -221,58 +231,46 @@ min_value = 0.0
 
 [node name="GridData" type="VBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup"]
 visible = false
-layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData"]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
 [node name="SizeLabel" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 text = "Size:"
 
 [node name="Size" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="x" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size" instance=ExtResource("14")]
-layout_mode = 2
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size"]
-layout_mode = 2
 text = "x"
 
 [node name="y" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size" instance=ExtResource("14")]
-layout_mode = 2
 caret_blink = true
 caret_blink_interval = 0.5
 type = 2
 
 [node name="Button" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Size" instance=ExtResource("1")]
-layout_mode = 2
 tooltip_text = "Get grid size"
 icon = ExtResource("11")
 
 [node name="LabelItemsDelay" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 text = "Items delay (s):"
 
 [node name="ItemsDelay" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer" instance=ExtResource("14")]
-layout_mode = 2
 text = "0.01"
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 text = "Animation type:"
 
 [node name="AnimationGridType" type="OptionButton" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 item_count = 12
 selected = 0
 popup/item_0/text = "Together"
@@ -301,23 +299,18 @@ popup/item_11/text = "Random"
 popup/item_11/id = 11
 
 [node name="StartPoint" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 text = "Start Point:"
 
 [node name="Vector2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2"]
-layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/X"]
-layout_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/X/Panel"]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -329,19 +322,15 @@ mouse_filter = 1
 text = "x"
 
 [node name="pointX" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/X" instance=ExtResource("14")]
-layout_mode = 2
 caret_blink = true
 caret_blink_interval = 0.5
 
 [node name="Y" type="HBoxContainer" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2"]
-layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/Y"]
-layout_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/Y/Panel"]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -353,16 +342,13 @@ mouse_filter = 1
 text = "y"
 
 [node name="pointY" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer/Vector2/Y" instance=ExtResource("14")]
-layout_mode = 2
 caret_blink = true
 caret_blink_interval = 0.5
 
 [node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 text = "Distance formula"
 
 [node name="DistanceFormula" type="OptionButton" parent="MarginContainer/VBoxContainer/NodeOrGroup/GridData/GridContainer"]
-layout_mode = 2
 item_count = 6
 selected = 0
 popup/item_0/text = "Euclidian"
@@ -380,34 +366,32 @@ popup/item_5/id = 5
 
 [node name="TimeContent" type="GridContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
 [node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TimeContent"]
-layout_mode = 2
 text = "Duration (s):"
 
 [node name="Duration" parent="MarginContainer/VBoxContainer/TimeContent" instance=ExtResource("5")]
-layout_mode = 2
 label = "default duration"
 show_relative_selector = false
 
 [node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TimeContent"]
-layout_mode = 2
 text = "Delay (s):"
 
 [node name="Delay" parent="MarginContainer/VBoxContainer/TimeContent" instance=ExtResource("5")]
-layout_mode = 2
 label = "none"
 show_relative_selector = false
 
 [node name="AnimationsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
+offset_right = 1152.0
 
 [node name="NoAnimationsWarning" parent="MarginContainer/VBoxContainer" instance=ExtResource("1")]
-layout_mode = 2
+offset_top = 4.0
+offset_right = 1152.0
+offset_bottom = 53.0
+pivot_offset = Vector2(576, 24.5)
 text = "Click here or press the \"+\" button to add an animation"
 transparent = true
 metadata/AnimaInitialNoAnimationsWarning_button_bg = Color(0.0196078, 0.266667, 0.368627, 1)

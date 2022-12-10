@@ -72,6 +72,7 @@ func _restore_visual_editor_data() -> void:
 
 	$PropertiesWindow.populate(_scene_root_node)
 
+	prints("restoring", data)
 	_restore_data(data)
 
 	_is_restoring_data = false
