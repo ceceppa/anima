@@ -12,125 +12,94 @@ grow_vertical = 2
 script = ExtResource("2")
 
 [node name="Label" type="Label" parent="."]
-offset_right = 1152.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Please select a demo"
 
 [node name="Control" type="GridContainer" parent="."]
-offset_top = 30.0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
 [node name="Animations" parent="Control" instance=ExtResource("3")]
-offset_right = 574.0
-offset_bottom = 100.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Built-in animations"
 scene = "res://demos/AnimationsPreview.tscn"
 
 [node name="Easings" parent="Control" instance=ExtResource("3")]
-offset_left = 578.0
-offset_right = 1152.0
-offset_bottom = 100.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Built-in easings"
 scene = "res://demos/Easings.tscn"
 
 [node name="SequentialAnParallel" parent="Control" instance=ExtResource("3")]
-offset_top = 104.0
-offset_right = 574.0
-offset_bottom = 204.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Dialog"
 scene = "res://demos/nodes/Popup.tscn"
 
 [node name="SequentialAnParallel2" parent="Control" instance=ExtResource("3")]
-offset_left = 578.0
-offset_top = 104.0
-offset_right = 1152.0
-offset_bottom = 204.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequential with paralel animation"
 scene = "res://demos/nodes/SequenceWithParallel.tscn"
 
 [node name="SequentialAnParallel3" parent="Control" instance=ExtResource("3")]
-offset_top = 208.0
-offset_right = 574.0
-offset_bottom = 308.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequential with paralel animation - Backwards"
 scene = "res://demos/nodes/SequenceWithParallelBackwards.tscn"
 
 [node name="ButtonCallbacks" parent="Control" instance=ExtResource("3")]
-offset_left = 578.0
-offset_top = 208.0
-offset_right = 1152.0
-offset_bottom = 308.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequence animation and callbacks"
 scene = "res://demos/nodes/SequenceCallback.tscn"
 
 [node name="Group" parent="Control" instance=ExtResource("3")]
-offset_top = 312.0
-offset_right = 574.0
-offset_bottom = 412.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate Group"
 scene = "res://demos/2d/Stagger.tscn"
 
 [node name="2DGrid" parent="Control" instance=ExtResource("3")]
-offset_left = 578.0
-offset_top = 312.0
-offset_right = 1152.0
-offset_bottom = 412.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate 2D Grid"
 scene = "res://demos/2d/2DGrid.tscn"
 
 [node name="3DRings" parent="Control" instance=ExtResource("3")]
-offset_top = 416.0
-offset_right = 574.0
-offset_bottom = 515.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Rings"
 scene = "res://demos/3d/Rings.tscn"
 
 [node name="3DBoxes" parent="Control" instance=ExtResource("3")]
-offset_left = 578.0
-offset_top = 416.0
-offset_right = 1152.0
-offset_bottom = 515.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes"
 scene = "res://demos/3d/3DBoxes.tscn"
 
 [node name="3DBoxes - Backwards" parent="Control" instance=ExtResource("3")]
-offset_top = 519.0
-offset_right = 574.0
-offset_bottom = 618.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes - Backwards"
 scene = "res://demos/3d/3DBoxesReverse.tscn"
 
 [node name="3D Grid" parent="Control" instance=ExtResource("3")]
-offset_left = 578.0
-offset_top = 519.0
-offset_right = 1152.0
-offset_bottom = 618.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Grid"

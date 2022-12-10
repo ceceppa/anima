@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/anima/visual-editor/editor/AnimaFramesEditor.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://b6bafk5upjotw" path="res://addons/anima/visual-editor/editor/AnimaAnimation.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/editor/AnimaAddFrame.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bxjfps33caurm" path="res://addons/anima/visual-editor/editor/AnimaAddFrame.tscn" id="3"]
 
 [node name="FramesEditor" type="Control"]
 layout_mode = 3
@@ -38,45 +38,30 @@ size_flags_vertical = 3
 
 [node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource("2")]
 layout_mode = 2
-anchors_preset = 0
-anchor_right = 0.0
-offset_right = 1152.0
-offset_bottom = 31.0
-grow_horizontal = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
 layout_mode = 2
-offset_top = 35.0
-offset_right = 1152.0
-offset_bottom = 648.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
 layout_mode = 2
-offset_right = 1152.0
-offset_bottom = 613.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FramesContainer1" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
 layout_mode = 2
-offset_bottom = 613.0
 
 [node name="FramesContainer2" type="VBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
-offset_left = 12.0
-offset_right = 12.0
-offset_bottom = 554.0
 
 [node name="AnimaAddFrame" parent="." instance=ExtResource("3")]
 layout_mode = 1
-anchors_preset = 0
-offset_left = 904.0
+offset_left = 903.0
 offset_top = 507.0
-offset_right = 1264.0
+offset_right = 1263.0
 offset_bottom = 507.0
 pivot_offset = Vector2(180, 288)
 
@@ -85,3 +70,4 @@ pivot_offset = Vector2(180, 288)
 [connection signal="animation_updated" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
 [connection signal="change_editor_position" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_change_editor_position"]
 [connection signal="preview_animation" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_preview_animation"]
+[connection signal="add_frame" from="AnimaAddFrame" to="." method="_on_anima_add_frame_add_frame"]
