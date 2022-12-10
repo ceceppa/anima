@@ -44,7 +44,7 @@ func _load_anima_editor(position: int):
 	var editor = load("res://addons/anima/visual-editor/AnimaVisualEditor.tscn").instantiate()
 
 	editor.connect("switch_position",Callable(self,"_on_anima_editor_switch_position"))
-	editor.connect("visual_builder_updated",Callable(self,'_on_visual_builder_updated'))
+	editor.connect("visual_builder_updated", _on_visual_builder_updated)
 	editor.connect("highlight_node",Callable(self,'_on_highlight_node'))
 	editor.connect("play_animation",Callable(self,'_on_play_animation'))
 	editor.connect("change_editor_position",Callable(self,'_on_change_editor_position'))
@@ -147,6 +147,7 @@ func _on_editor_position_changed(new_position: int) -> void:
 	_active_anima_editor.show()
 
 func _on_visual_builder_updated(data: Dictionary) -> void:
+	prints("updating visual builder data", data, _anima_visual_node)
 	if not _anima_visual_node:
 		return
 

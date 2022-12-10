@@ -103,3 +103,8 @@ func _on_MoveRight_pressed():
 
 func _on_MoveLeft_pressed():
 	emit_signal("move_one_left")
+
+
+func update_size_x(value: float) -> void:
+	custom_minimum_size.x = value
+	size.x = value

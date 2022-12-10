@@ -1,14 +1,15 @@
 [gd_scene load_steps=3 format=3 uid="uid://d0w50l7lbbkh5"]
 
 [ext_resource type="Script" path="res://addons/anima/visual-editor/windows/AnimaNodesWindow.gd" id="1"]
-[ext_resource type="PackedScene" path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bo8gn4suik0el" path="res://addons/anima/visual-editor/shared/AnimaNodesList.tscn" id="2"]
 
 [node name="NodesWindow" type="Window"]
+transient = true
 exclusive = true
+always_on_top = true
 script = ExtResource("1")
 
 [node name="AnimaNodesList" parent="." instance=ExtResource("2")]
-anchors_preset = 15
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
