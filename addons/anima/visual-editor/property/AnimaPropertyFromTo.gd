@@ -143,7 +143,7 @@ func _animate_custom_value(mode: int, signal_to_emit = null) -> AnimaNode:
 			.anima_scale(Vector2.ONE) \
 			.anima_from(Vector2(1.5, 1.5)) \
 			.anima_easing(ANIMA.EASING.EASE_OUT_BACK) \
-			.anima_on_started(funcref(self, '_handle_custom_value_visibility'), true, false) \
+			.anima_on_started(self, '_handle_custom_value_visibility', true, false) \
 			.anima_initial_value(Vector2(1.5, 1.5))
 	)
 	anima.with(
