@@ -208,3 +208,6 @@ func _on_FramesEditor_item_rect_changed():
 
 func _on_AnimaAnimation_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)
+
+func _on_anima_add_frame_add_frame():
+	pass # Replace with function body.
