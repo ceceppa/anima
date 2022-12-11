@@ -120,7 +120,7 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 
 			
 			if source == '' or source == '.':
-				source_node = animation_data.node
+				source_node = animation_data.node if root == null else root
 			else:
 				source_node = root.get_node(source)
 

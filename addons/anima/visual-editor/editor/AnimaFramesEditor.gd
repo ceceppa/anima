@@ -110,6 +110,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 	node.set_is_initial_frame(is_initial_frame)
 	node.set_meta("_key", key)
 	node.set_meta("_data_index", key)
+	node.set_title_as_toggable(_flow_direction == 1)
 	node.set_name("Frame" + str(key))
 
 	_add_component(node)
@@ -204,7 +205,7 @@ func _on_FramesEditor_item_rect_changed():
 		return
 
 	for child in _frames_container2.get_children():
-		child.call_deferred("update_size_x", rect_size.x)
+		child.call_deferred("update_size_x", rect_size.x - 24)
 
 func _on_AnimaAnimation_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)

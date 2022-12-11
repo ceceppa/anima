@@ -31,7 +31,6 @@ func restore_data(data: Dictionary) -> void:
 	_delay.set_value(data.delay)
 
 func _animate_me(backwards := false) -> AnimaNode:
-
 	var anima: AnimaNode = Anima.begin_single_shot(self)
 	anima.set_default_duration(0.3)
 
@@ -56,11 +55,11 @@ func _animate_me(backwards := false) -> AnimaNode:
 		Anima.Group(find_node("DelayContent"), 0.05) \
 			.anima_animation_frames({
 				from = {
-					y = 40,
+					"translate:y": 40,
 					opacity = 0,
 				},
 				to = {
-					y = 0,
+					"translate:y": 0,
 					opacity = 1,
 					easing = ANIMA.EASING.EASE_OUT_BACK
 				},

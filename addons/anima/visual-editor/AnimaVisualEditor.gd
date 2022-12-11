@@ -189,15 +189,19 @@ func _restore_data(data: Dictionary) -> void:
 		the_frame.set_meta("_data_index", key_index)
 
 		for data_index in frame_data.data.size():
-			var value = frame_data.data[data_index]
+			var the_data = frame_data.data
+			var value = the_data[data_index] if the_data is Array else the_data
 
 			if value is String:
+				frame_data.data._root_node = _scene_root_node
 				if the_frame.has_method("restore_data"):
 					the_frame.restore_data(frame_data.data)
 				
 				continue
 
 			if value and value.has("node_path"):
+				value._root_node = _scene_root_node
+
 				if _anima_visual_node == null:
 					_frames_editor.clear()
 

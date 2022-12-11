@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=2]
@@ -7,11 +7,17 @@
 [ext_resource path="res://addons/anima/visual-editor/icons/ArrowRight.svg" type="Texture" id=5]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaFrameDelay.gd" type="Script" id=7]
 
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
 [node name="AnimaFrameDelay" type="Control"]
-anchor_bottom = 1.0
-margin_right = 360.006
-rect_min_size = Vector2( 360, 0 )
-rect_pivot_offset = Vector2( 180, 300 )
+margin_right = 360.155
+rect_min_size = Vector2( 0, 240 )
+rect_pivot_offset = Vector2( 180, 512 )
 rect_clip_content = true
 script = ExtResource( 7 )
 __meta__ = {
@@ -200,16 +206,16 @@ __meta__ = {
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 180, 300 )
+rect_pivot_offset = Vector2( 180, 512 )
 __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
 
 [node name="AnimaRectangle" type="ColorRect" parent="CenterContainer"]
-margin_top = 200.0
+margin_top = 20.0
 margin_right = 360.0
-margin_bottom = 400.0
+margin_bottom = 220.0
 rect_min_size = Vector2( 360, 200 )
 rect_pivot_offset = Vector2( 180, 150 )
 color = Color( 0.0470588, 0.176471, 0.282353, 1 )
@@ -233,22 +239,23 @@ margin_bottom = 49.0
 
 [node name="Label2" type="Label" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer"]
 margin_right = 12.0
-margin_bottom = 25.0
+margin_bottom = 14.0
 rect_min_size = Vector2( 12, 0 )
 size_flags_vertical = 2
 
 [node name="Label" type="Label" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer"]
-margin_left = 20.0
-margin_top = 12.0
-margin_right = 216.0
-margin_bottom = 37.0
+margin_left = 16.0
+margin_top = 17.0
+margin_right = 224.0
+margin_bottom = 31.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "Delay"
 
 [node name="MoveLeft" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 224.0
-margin_right = 288.0
+margin_left = 228.0
+margin_right = 292.0
+margin_bottom = 49.0
 hint_tooltip = "Move one frame left"
 icon = ExtResource( 4 )
 icon_align = 1
@@ -547,6 +554,7 @@ __meta__ = {
 [node name="MoveRight" parent="CenterContainer/AnimaRectangle/VBoxContainer/ColorRect/HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 296.0
 margin_right = 360.0
+margin_bottom = 49.0
 hint_tooltip = "Move one frame right"
 icon = ExtResource( 5 )
 icon_align = 1
@@ -851,23 +859,23 @@ __meta__ = {
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer"]
-margin_top = 57.0
+margin_top = 53.0
 margin_right = 360.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="DelayContent" type="VBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer"]
-margin_left = 59.0
-margin_top = 12.0
-margin_right = 301.0
-margin_bottom = 130.0
+margin_left = 74.0
+margin_top = 26.0
+margin_right = 286.0
+margin_bottom = 121.0
 custom_constants/separation = 24
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent"]
-margin_right = 242.0
-margin_bottom = 45.0
-rect_pivot_offset = Vector2( 121, 22.5 )
+margin_right = 212.0
+margin_bottom = 22.0
+rect_pivot_offset = Vector2( 106, 11 )
 custom_constants/separation = 12
 __meta__ = {
 "__initial_AnimaNode__anima_1345931492693841553_opacity": {
@@ -1048,9 +1056,9 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent/HBoxContainer"]
-margin_top = 10.0
-margin_right = 66.0
-margin_bottom = 35.0
+margin_top = 4.0
+margin_right = 40.0
+margin_bottom = 18.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Delay:"
 align = 1
@@ -1059,19 +1067,18 @@ __meta__ = {
 }
 
 [node name="DelayValue" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 78.0
-margin_right = 242.0
-margin_bottom = 45.0
+margin_left = 52.0
+margin_right = 212.0
+margin_bottom = 22.0
 rect_min_size = Vector2( 160, 0 )
 text = "0.0"
-align = 2
 placeholder_text = "0.0"
 
 [node name="DeleteContainer" type="HBoxContainer" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent"]
-margin_top = 69.0
-margin_right = 242.0
-margin_bottom = 118.0
-rect_pivot_offset = Vector2( 121, 24.5 )
+margin_top = 46.0
+margin_right = 212.0
+margin_bottom = 95.0
+rect_pivot_offset = Vector2( 106, 24.5 )
 custom_constants/separation = 24
 alignment = 1
 __meta__ = {
@@ -1254,9 +1261,11 @@ __meta__ = {
 }
 
 [node name="Delete" parent="CenterContainer/AnimaRectangle/VBoxContainer/CenterContainer/DelayContent/DeleteContainer" instance=ExtResource( 1 )]
-margin_left = 43.0
-margin_right = 199.0
+margin_left = 35.0
+margin_right = 177.0
+margin_bottom = 49.0
 rect_min_size = Vector2( 132, 49 )
+custom_styles/normal = SubResource( 1 )
 text = "Remove"
 icon = ExtResource( 3 )
 __meta__ = {

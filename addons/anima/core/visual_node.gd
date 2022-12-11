@@ -113,26 +113,27 @@ func _play_animation_from_data(
 		anima.set_default_duration(frame_default_duration)
 
 		for animation in frame_data.data:
-			var data: Dictionary = _create_animation_data(animation)
+			for single_animation in animation.animations:
+				var data: Dictionary = _create_animation_data(animation, single_animation)
 
-			data._wait_time = start_time #animation.start_time
-#			data.__debug = "---"
+				data._wait_time = start_time #animation.start_time
+	#			data.__debug = "---"
 
-			if not timeline_debug.has(data._wait_time):
-				timeline_debug[data._wait_time] = []
+				if not timeline_debug.has(data._wait_time):
+					timeline_debug[data._wait_time] = []
 
-			var what = data.property if data.has("property") else data.animation
+				var what = data.property if data.has("property") else data.animation
 
-			var duration = data.duration if data.has("duration") else frame_default_duration
-			var delay = data.delay if data.has("delay") else 0.0
+				var duration = data.duration if data.has("duration") else frame_default_duration
+				var delay = data.delay if data.has("delay") else 0.0
 
-			timeline_debug[data._wait_time].push_back({ 
-				duration = duration,
-				delay = delay,
-				what = what,
-			})
+				timeline_debug[data._wait_time].push_back({ 
+					duration = duration,
+					delay = delay,
+					what = what,
+				})
 
-			anima.with(data)
+				anima.with(data)
 
 		start_time += frame_default_duration + 0.1
 
@@ -175,7 +176,7 @@ func stop() -> void:
 	_active_anima_node.stop()
 	reset_scene(1.0)
 
-func _create_animation_data(animation_data: Dictionary) -> Dictionary:
+func _create_animation_data(animation_data: Dictionary, animation: Dictionary) -> Dictionary:
 	var source_node: Node = get_root_node()
 	var node_path: String = animation_data.node_path
 	var node: Node = source_node.get_node(node_path)
@@ -212,47 +213,51 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 	# Default properties to reset to their initial value when the animation preview is completed
 	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
-	for animation in animation_data.animations:
-		if animation.animate_with == USE.ANIMATION:
-			anima_data.animation = animation.animation_name
-		else:
-			var node_name: String = node.name
-			var property: String = animation.property_name
+	if animation.animate_with == USE.ANIMATION:
+		anima_data.animation = animation.animation_name
+	else:
+		var node_name: String = node.name
+		var property: String = animation.property_name
 
-			properties_to_reset.clear()
-			properties_to_reset.push_back(property)
+		properties_to_reset.clear()
+		properties_to_reset.push_back(property)
 
-			anima_data.property = property
+		anima_data.property = property
+		anima_data._root_node = source_node
 
-			for key in animation.property:
-				if key == 'pivot':
-					var pivot = animation.property.pivot
+		for key in animation.property:
+			if key == 'pivot':
+				var pivot = animation.property.pivot
 
-					if pivot >= 0:
-						anima_data.pivot = pivot
-				elif key == "easing":
-					anima_data.easing = animation.property.easing[1]
-				elif key == "from":
-					anima_data.from = _extract_value(animation.property.from)
-				elif key == "to":
-					anima_data.to = _extract_value(animation.property.to)
-				else:
-					var value = animation.property[key]
-					
-					if value != null:
-						anima_data[key] = animation.property[key]
-	anima_data._root_node = source_node
+				if pivot >= 0:
+					anima_data.pivot = pivot
+			elif key == "easing":
+				anima_data.easing = animation.property.easing[1]
+			elif key == "from":
+				anima_data.from = _extract_value(anima_data, animation.property.from)
+			elif key == "to":
+				anima_data.to = _extract_value(anima_data, animation.property.to)
+			else:
+				var value = animation.property[key]
+				
+				if value != null:
+					anima_data[key] = animation.property[key]
 
 	return anima_data
 
-func _extract_value(value):
+func _extract_value(data: Dictionary, value):
 	if value is String and value.find(":") >= 0:
 		return value
 	elif value is Array:
+		var calculated_values := []
+
+		for v in value:
+			calculated_values.push_back(AnimaTweenUtils.calculate_dynamic_value(v, data))
+
 		if value.size() == 2:
-			return Vector2(value[0], value[1])
+			return Vector2(calculated_values[0], calculated_values[1])
 		else:
-			return Vector3(value[0], value[1], value[2])
+			return Vector3(calculated_values[0], calculated_values[1], calculated_values[2])
 	elif value != null:
 		return float(value)
 

@@ -42,6 +42,9 @@ func _populate_animatable_properties_list(source_node: Node) -> void:
 
 	_animatable_properties.push_back({name = 'opacity', type = TYPE_REAL})
 
+	if source_node is Sprite:
+		_animatable_properties.push_back({name = 'size', type = TYPE_VECTOR2})
+
 	var properties = source_node.get_property_list()
 	var properties_to_ignore := [
 		'pause_mode',

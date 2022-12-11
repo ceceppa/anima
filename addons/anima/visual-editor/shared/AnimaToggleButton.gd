@@ -19,6 +19,7 @@ func _ready():
 	if node_to_toggle != "":
 		_node_to_toggle = get_node(node_to_toggle)
 
+		pressed = _node_to_toggle.visible
 		return
 
 	var parent: Node = get_parent()

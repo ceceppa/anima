@@ -37,6 +37,8 @@ func set_items(items: Array) -> void:
 		panel_item.icon = load(item.icon)
 		panel_item.text = "  " + item.label
 		panel_item.align = ALIGN_LEFT
+		panel_item.rect_min_size.y = 49
+		panel_item._update_padding()
 
 		panel_item.connect("button_down", self, "_on_PopupMenu_id_pressed", [index])
 		panel_item.connect("mouse_entered", self, "_on_PopupPanel_mouse_entered")

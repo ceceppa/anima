@@ -228,10 +228,13 @@ func set_placeholder(value) -> void:
 	else:
 		_input_visible.placeholder_text = str(value)
 
-func set_initial_value(value) -> void:
-	set_value(value, false)
+func set_calculated_value(value) -> void:
+	pass
 
-func set_value(value, animate := true) -> void:
+func set_initial_value(value) -> void:
+	set_value(value, null, false)
+
+func set_value(value, calculated_value = null, animate := true) -> void:
 	if value == null or _input_visible == null:
 		return
 
@@ -250,6 +253,10 @@ func set_value(value, animate := true) -> void:
 		if value is Array:
 			x.text = str(value[0])
 			y.text = str(value[1])
+
+		if calculated_value:
+			x.hint_tooltip = str(calculated_value.x)
+			y.hint_tooltip = str(calculated_value.y)
 	elif _input_visible.name == 'Vector3':
 		var x: LineEdit = _input_visible.find_node('x')
 		var y: LineEdit = _input_visible.find_node('y')
@@ -279,7 +286,11 @@ func set_relative_value(value: String) -> void:
 		_input_visible.text = value
 
 	var linked_node: LineEdit = _relative_source.get_node(_relative_source.linked_field)
-	linked_node.text = value
+
+	if linked_node.text:
+		linked_node.text = linked_node.text + value
+	else:
+		linked_node.text = value
 
 	emit_signal("value_updated")
 
