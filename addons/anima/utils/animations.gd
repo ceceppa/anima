@@ -14,7 +14,7 @@ static func _deregister_animation(animation_name: String) -> void:
 	ANIMA._custom_animations.erase(animation_name)
 
 static func get_available_animations() -> Array:
-	var animations_list := ANIMA.get_animations_list()
+	var animations_list: Array = ANIMA.get_animations_list()
 
 	if animations_list.size() == 0:
 		var list = _get_animations_list()
@@ -50,7 +50,7 @@ static func get_available_animation_by_category() -> Dictionary:
 	return result
 
 static func get_animation_keyframes(animation_name: String) -> Dictionary:
-	var custom_animations := ANIMA.get_custom_animations()
+	var custom_animations: Dictionary = ANIMA.get_custom_animations()
 
 	if custom_animations.has(animation_name):
 		return custom_animations[animation_name]

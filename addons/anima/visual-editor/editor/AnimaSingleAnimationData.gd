@@ -38,6 +38,7 @@ func _ready():
 func get_data() -> Dictionary:
 	if _property_data == null:
 		_property_data = find_node("PropertyData")
+		_property_or_animation = find_node("PropertyOrAnimation")
 
 	var easing_value = ANIMA.EASING.LINEAR
 	var easing_button: Button = _property_data.find_node("EasingButton")

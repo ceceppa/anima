@@ -145,7 +145,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 		Anima.Nodes([
 			get_node("Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer").get_children(),
 			get_node("Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer").get_children()
-		], 0.05) \
+		], 0.02) \
 		.anima_animation_frames({
 			from = {
 				scale = Vector2(0.1, 0.1),
@@ -154,13 +154,13 @@ func _animate_me(backwards := false) -> AnimaNode:
 			to = {
 				scale = Vector2.ONE,
 				opacity = 1,
-				easing = ANIMA.EASING.EASE_OUT_BACK
+				easing = ANIMA.EASING.SPRING
 			},
 			initial_values = {
 				opacity = 0,
 			}
 		}) \
-		.anima_delay(0.1) 
+		.anima_delay(0.1)
 	) \
 	.skip(
 		Anima.Node($Collapse).anima_fade_in().anima_initial_value(0)
