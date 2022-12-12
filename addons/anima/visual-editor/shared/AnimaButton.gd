@@ -177,12 +177,16 @@ func set_left_padding(padding: float) -> void:
 
 func _update_padding() -> void:
 	var normal_style_box = get_stylebox("normal").duplicate()
+	var lp = _left_padding
 
 	if _label == null:
 		_label = find_node("_label")
 
-	if normal_style_box and _left_padding != 24:
-		normal_style_box.content_margin_left = _left_padding
+	if icon and text:
+		lp = max(48, _left_padding)
+
+	if normal_style_box and lp != 24:
+		normal_style_box.content_margin_left = lp
 		normal_style_box.content_margin_right = PADDING
 
 		add_stylebox_override("normal", normal_style_box)
@@ -195,10 +199,10 @@ func _update_padding() -> void:
 
 		add_stylebox_override("normal", normal_style_box)
 
-	if _label and _left_padding != 24:
+	if _label and lp != 24:
 		var label_style_box = _label.get_stylebox("normal").duplicate()
 
-		label_style_box.content_margin_left = _left_padding
+		label_style_box.content_margin_left = lp
 		label_style_box.content_margin_right = PADDING
 
 		_label.add_stylebox_override("normal", label_style_box)

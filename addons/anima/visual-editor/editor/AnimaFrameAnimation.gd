@@ -2,7 +2,6 @@ tool
 extends Control
 
 onready var ANIMATION_DATA = preload("res://addons/anima/visual-editor/editor/AnimaAnimationData.tscn")
-onready var INITIAL_DATA = preload("res://addons/anima/visual-editor/editor/InitialValue.tscn")
 
 signal frame_deleted
 signal select_node
@@ -24,7 +23,7 @@ export (bool) var is_initial_frame := false setget set_is_initial_frame
 const _DO_NOT_ANIMATE_KEY = '_do_not_animate'
 
 onready var _animations_container = find_node("AnimationsContainer")
-onready var _frame_name = find_node("FrameName")
+onready var _frame_name
 onready var _duration = find_node("Duration")
 onready var _collapse_button = find_node("Collapse")
 onready var _frame_collapsed_title = find_node("FrameCollapsedTitle")
@@ -35,7 +34,7 @@ var _old_height: float
 var _is_animating := false
 
 func _ready():
-	$Rectangle.rect_size.x = _final_width
+	$ContentContainer/Rectangle.rect_size.x = _final_width
 
 	if animate_entrance_exit:
 		_animate_me()
@@ -61,14 +60,20 @@ func get_data() -> Dictionary:
 	return data
 
 func set_name(name: String) -> void:
-	if _frame_name == null:
-		_frame_name = find_node("FrameName")
-
 	if is_initial_frame:
 		name = "Initial Frame"
 
 	_frame_name.set_text(name)
 
+func set_title_as_toggable(toggable: bool) -> void:
+	if toggable:
+		_frame_name = find_node("ToggableFrameName")
+	else:
+		_frame_name = find_node("StaticFrameName")
+
+	find_node("StaticFrameName").visible = not toggable
+	find_node("ToggableFrameName").visible = toggable
+	
 func set_has_previous(has: bool) -> void:
 	_maybe_set_visible("MoveLeft", has)
 
@@ -89,7 +94,7 @@ func clear() -> void:
 		child.queue_free()
 
 func add_animation_for(node: Node, path: String) -> Node:
-	var animation_item: Node = INITIAL_DATA.instance() if is_initial_frame else ANIMATION_DATA.instance() 
+	var animation_item: Node = ANIMATION_DATA.instance() 
 
 	_animations_container.add_child(animation_item)
 
@@ -143,9 +148,9 @@ func _animate_me(backwards := false) -> AnimaNode:
 	) \
 	.with(
 		Anima.Nodes([
-			get_node("Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer").get_children(),
-			get_node("Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer").get_children()
-		], 0.05) \
+			find_node("MoveContainer").get_children(),
+			find_node("ActionsContainer").get_children()
+		], 0.01) \
 		.anima_animation_frames({
 			from = {
 				scale = Vector2(0.1, 0.1),
@@ -154,13 +159,13 @@ func _animate_me(backwards := false) -> AnimaNode:
 			to = {
 				scale = Vector2.ONE,
 				opacity = 1,
-				easing = ANIMA.EASING.EASE_OUT_BACK
+				easing = ANIMA.EASING.SPRING
 			},
 			initial_values = {
 				opacity = 0,
 			}
 		}) \
-		.anima_delay(0.1) 
+		.anima_delay(0.1)
 	) \
 	.skip(
 		Anima.Node($Collapse).anima_fade_in().anima_initial_value(0)
@@ -174,7 +179,7 @@ func _animate_me(backwards := false) -> AnimaNode:
 
 	yield(anima, "animation_completed")
 
-	rect_clip_content = false
+#	rect_clip_content = false
 
 	return anima
 
@@ -272,7 +277,7 @@ func _on_Collapse_toggled(toggled: bool) -> void:
 		Anima.Node(_collapse_button.get_child(0)).anima_fade_out()
 	) \
 	.with(
-		Anima.Node($Rectangle).anima_fade_out()
+		Anima.Node($ContentContainer/Rectangle).anima_fade_out()
 	) \
 	.then(
 		Anima.Node(_frame_collapsed_title.get_child(0)).anima_animation_frames({
@@ -301,8 +306,8 @@ func _on_Collapse_toggled(toggled: bool) -> void:
 
 	_is_animating = false
 
-	$Rectangle.rect_min_size.x = _final_width
-	$Rectangle.rect_size.x = _final_width
+	$ContentContainer/Rectangle.rect_min_size.x = _final_width
+	$ContentContainer/Rectangle.rect_size.x = _final_width
 
 	if can_emit_signal:
 		emit_signal("frame_updated")
@@ -367,3 +372,6 @@ func _on_Preview_pressed():
 func update_size_x(value: float) -> void:
 	rect_min_size.x = value
 	rect_size.x = value
+
+func _on_Duration_value_updated():
+	emit_signal("frame_updated")

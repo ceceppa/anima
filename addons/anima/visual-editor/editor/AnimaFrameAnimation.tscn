@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/icons/Add.svg" type="Texture" id=2]
@@ -13,1266 +13,35 @@
 [ext_resource path="res://addons/anima/visual-editor/icons/ArrowRight.svg" type="Texture" id=11]
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=13]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.tscn" type="PackedScene" id=14]
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 content_margin_left = 24.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.239216, 0.235294, 0.254902, 0.223529 )
-
-[node name="FrameAnimation" type="Control"]
-anchor_bottom = 1.0
-margin_right = 640.0
+[node name="FrameAnimation" type="VBoxContainer"]
+anchor_right = 1.0
 rect_min_size = Vector2( 640, 0 )
-rect_pivot_offset = Vector2( 177.655, 300 )
+rect_pivot_offset = Vector2( 241.708, 512 )
+rect_clip_content = true
 size_flags_horizontal = 3
-size_flags_vertical = 3
 script = ExtResource( 8 )
-__meta__ = {
-"__initial_AnimaNode__anima_1008468818767414795_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1008468818767414795_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1017703555166972778_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1017703555166972778_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1028833934280039429_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1028833934280039429_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1099195529046120972_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1099195529046120972_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1103457635638320312_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1103457635638320312_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1103457635638320312_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_11039776801767614_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_11039776801767614_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1112958303014154541_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1112958303014154541_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1126960226380768555_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1126960226380768555_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1128494095738860596_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1128494095738860596_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1128494095738860596_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_120264886241205542_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_120264886241205542_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_120264886241205542_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1212135766654370605_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1212135766654370605_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_121402798346761377_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_121402798346761377_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_12204352382565979_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_12204352382565979_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1227651311504070557_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1227651311504070557_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1227651311504070557_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1241493570390042725_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1241493570390042725_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1261523401675066895_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1261523401675066895_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1282028860210720459_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1282028860210720459_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1294354167276769775_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1294354167276769775_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1294354167276769775_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1294354167276769775_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1345373788895726807_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1345373788895726807_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1345373788895726807_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1350990840131473877_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1350990840131473877_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1350990840131473877_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_136575583953026416_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_136575583953026416_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_136575583953026416_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1368978691961202881_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1368978691961202881_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1368978691961202881_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_138064103885865295_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_138064103885865295_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_138064103885865295_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1381612034837237549_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1381612034837237549_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1428827249401152832_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1428827249401152832_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1428827249401152832_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1430090888734970215_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1430090888734970215_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1430090888734970215_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438485657415978271_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438485657415978271_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438485657415978271_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438934821015980469_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438934821015980469_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438934821015980469_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1442190096143858398_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1442190096143858398_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_144327782773642181_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_144327782773642181_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_144327782773642181_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_145399067181142627_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_145399067181142627_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_145399067181142627_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1469501515833438232_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1469501515833438232_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1469501515833438232_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1504371451638076904_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1504371451638076904_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1511850511547543213_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1511850511547543213_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1513890928676061035_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1513890928676061035_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1513890928676061035_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1521164224294978271_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1521164224294978271_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1521164224294978271_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1532074472657876221_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1532074472657876221_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1537156440163195557_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1537156440163195557_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1537156440163195557_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1541450790213930908_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1541450790213930908_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1541450790213930908_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1560694873826660889_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1560694873826660889_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1560694873826660889_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1570426223302575195_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1570426223302575195_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1577081970017578613_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1577081970017578613_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1587800505530282715_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1587800505530282715_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1592546757151655762_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1592546757151655762_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1592546757151655762_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_159732713505552399_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_159732713505552399_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1612210921045161865_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1612210921045161865_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1612210921045161865_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1614025544715623535_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1614025544715623535_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1620659440863824707_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1620659440863824707_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1620659440863824707_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1624087745962825684_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1624087745962825684_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_163771126229899292_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_163771126229899292_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_163771126229899292_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1664967955750375977_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1664967955750375977_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_177810031564697144_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_177810031564697144_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_177810031564697144_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_226852948033148895_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_226852948033148895_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_226852948033148895_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_226905560061324677_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_226905560061324677_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_226905560061324677_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_226905560061324677_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_260268915206246948_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_260268915206246948_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_270466082757681946_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_270466082757681946_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_270466082757681946_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_278625510151360474_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_278625510151360474_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_298442492293619568_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_298442492293619568_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_298442492293619568_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_307728139955172852_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_307728139955172852_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_307728139955172852_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_316081377414259583_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_316081377414259583_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_355052228149067505_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_355052228149067505_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_35597028348114679_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_35597028348114679_opacity": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_35597028348114679_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_360883328001961304_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_360883328001961304_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_360883328001961304_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_37592315991220752_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_37592315991220752_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_37592315991220752_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_385148382330404602_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_385148382330404602_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_390662659884294189_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_390662659884294189_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_390662659884294189_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_428502566085884949_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_428502566085884949_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_429288820476025146_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_429288820476025146_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_435908492857643921_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_435908492857643921_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_435908492857643921_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_47630818264205681_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_47630818264205681_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_47630818264205681_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_47940942052849823_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_47940942052849823_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_484738954076670532_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_484738954076670532_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_485206419843854492_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_485206419843854492_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_485206419843854492_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_501979620296218872_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_501979620296218872_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_501979620296218872_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_515452563733756653_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_515452563733756653_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_515452563733756653_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_524139361409296326_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_524139361409296326_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_524139361409296326_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_55068251480552856_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_55068251480552856_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_551094622060110352_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_551094622060110352_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_551094622060110352_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_554372948661119751_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_554372948661119751_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_554372948661119751_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_572381661227295654_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_572381661227295654_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_572381661227295654_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_598836416825575195_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_598836416825575195_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_598836416825575195_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_62106134348017688_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_62106134348017688_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_62106134348017688_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623676688524852417_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623676688524852417_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623823321142196289_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623823321142196289_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623823321142196289_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_632533073532960571_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_632533073532960571_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_636992708492127319_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_636992708492127319_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_636992708492127319_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_642092558486683105_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_642092558486683105_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_665504558791907593_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_665504558791907593_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_665504558791907593_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_683279069767642578_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_683279069767642578_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_683279069767642578_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_702660688472813965_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_702660688472813965_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_723758260139349365_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_723758260139349365_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_738095600850806763_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_738095600850806763_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_7578777992079647_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_7578777992079647_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_774686557512039185_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_774686557512039185_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_775915309253784302_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_775915309253784302_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_775915309253784302_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_793646894581563232_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_793646894581563232_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_840164826947106201_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_840164826947106201_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_856649950749489014_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_856649950749489014_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_892263310548911743_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_892263310548911743_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_892263310548911743_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_900236012396742676_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_900236012396742676_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_9022227272877359_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_9022227272877359_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_9022227272877359_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_907134349279058594_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_907134349279058594_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_907134349279058594_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_914724680338359131_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_914724680338359131_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_914724680338359131_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_92577015025821875_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_92577015025821875_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_92577015025821875_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_92901668142374292_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_92901668142374292_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_930493483312385986_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_930493483312385986_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_930493483312385986_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_940079707774192139_min_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_940079707774192139_size:x": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_975149067728068848_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_975149067728068848_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_anima1170406314985598389_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_anima1170406314985598389_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_anima701885194459611694_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_anima701885194459611694_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_anima_min_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode_anima_size:x": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_min_size:x": {
-"percentage": 0,
-"value": 640.0
-},
-"__initial_size:x": {
-"percentage": 0,
-"value": 640.0
-},
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
-[node name="Rectangle" type="ColorRect" parent="."]
-anchor_bottom = 1.0
+[node name="Control" type="Control" parent="."]
 margin_right = 640.0
-rect_min_size = Vector2( 460, 0 )
+
+[node name="Rectangle" type="ColorRect" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 460, 1000 )
 rect_pivot_offset = Vector2( 320, 300 )
 color = Color( 0.0470588, 0.176471, 0.282353, 1 )
 __meta__ = {
@@ -1280,9 +49,10 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="ContentContainer" type="VBoxContainer" parent="Rectangle"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="ContentContainer" type="VBoxContainer" parent="."]
+margin_top = 4.0
+margin_right = 640.0
+margin_bottom = 53.0
 rect_pivot_offset = Vector2( 320, 300 )
 custom_constants/separation = 0
 __meta__ = {
@@ -1290,7 +60,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="Rectangle" type="ColorRect" parent="Rectangle/ContentContainer"]
+[node name="Rectangle" type="ColorRect" parent="ContentContainer"]
 margin_right = 640.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
@@ -1309,27 +79,27 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/Rectangle"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentContainer/Rectangle"]
 anchor_right = 1.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 206, 24.5 )
 size_flags_horizontal = 3
 custom_constants/separation = 2
 
-[node name="AnimaActionsBGColor" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 1 )]
+[node name="AnimaActionsBGColor" parent="ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 1 )]
 margin_right = 48.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 48, 49 )
 color = Color( 0.484706, 0.48, 0.567059, 1 )
 style = 3
 
-[node name="MoveContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor"]
+[node name="MoveContainer" type="HBoxContainer" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor"]
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 2
 alignment = 1
 
-[node name="MoveLeft" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer" instance=ExtResource( 4 )]
+[node name="MoveLeft" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer" instance=ExtResource( 4 )]
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 24, 24.5 )
@@ -1973,10 +743,12 @@ __meta__ = {
 style = 1
 transparent = true
 
-[node name="MoveRight" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer" instance=ExtResource( 4 )]
+[node name="MoveRight" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor/MoveContainer" instance=ExtResource( 4 )]
 visible = false
+modulate = Color( 1, 1, 1, 0.996153 )
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
+rect_scale = Vector2( 0.996537, 0.996537 )
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Move one frame right"
 size_flags_horizontal = 3
@@ -2720,7 +1492,396 @@ __meta__ = {
 style = 1
 transparent = true
 
-[node name="FrameName" type="Label" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer"]
+[node name="ToggableFrameName" parent="ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 14 )]
+visible = false
+anchor_right = 0.0
+margin_left = 50.0
+margin_right = 215.0
+margin_bottom = 49.0
+rect_pivot_offset = Vector2( 82.5, 24.5 )
+custom_styles/normal = SubResource( 4 )
+__meta__ = {
+"__initial_AnimaNode__anima_1026196471787050537__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1026196471787050537_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1056402680315762695__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1056402680315762695_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_109803321239006958__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_109803321239006958_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1164710052494656006__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1164710052494656006_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1172432457717881836__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1172432457717881836_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1220601623298447021__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1220601623298447021_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_12306626339638588__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_12306626339638588_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1243208455671268555__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1243208455671268555_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1250071303453626953__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1250071303453626953_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1341957785818118652__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1341957785818118652_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1400230915018180176__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1400230915018180176_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1414308794679974609__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1414308794679974609_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1499315795561348633__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1499315795561348633_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1499315795561348633_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1559048323069540771__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1559048323069540771_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1576996096148994385__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1576996096148994385_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_166565200350604126__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_166565200350604126_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_166565200350604126_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_176350233777164154__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_176350233777164154_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_182479716706684784__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_182479716706684784_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_25251814383807316__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_29394051146191687__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_29394051146191687_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_299396143331480713__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_299396143331480713_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_323625228606728149__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_323625228606728149_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_349292019378698608__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_349292019378698608_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_349292019378698608_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_385854207902823364__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_385854207902823364_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_45382050488086261__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_45382050488086261_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_45812480747103516__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_45812480747103516_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_489041539162971741__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_489041539162971741_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_489041539162971741_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_671673069936997192__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_671673069936997192_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_67208459753343536__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_67208459753343536_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_678982245694211792__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_678982245694211792_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_700715562397729492__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_700715562397729492_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_742588546206223999__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_742588546206223999_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_79387114539008313__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_79387114539008313_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_840222092318510498__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_840222092318510498_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_847502603284283447__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_847502603284283447_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_847502603284283447_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_850985943251460938__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_850985943251460938_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_856636816732041748__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_856636816732041748_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_856636816732041748_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_881551837120315918__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_881551837120315918_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_919919446918478271__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_919919446918478271_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_924718081509536987__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_924718081509536987_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_951881673607589478__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_951881673607589478_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_951881673607589478_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_957953657316389038__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_957953657316389038_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaToggleButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_FrameName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_ToggableFrameName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0,
+"_editor_description_": ""
+}
+node_to_toggle = NodePath("../../../../MarginContainer")
+
+[node name="StaticFrameName" type="Label" parent="ContentContainer/Rectangle/HBoxContainer"]
 margin_left = 50.0
 margin_right = 382.0
 margin_bottom = 49.0
@@ -2730,32 +1891,21 @@ size_flags_vertical = 3
 custom_styles/normal = SubResource( 3 )
 valign = 1
 
-[node name="FrameName1" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 9 )]
-visible = false
-margin_left = 12.0
-margin_right = 388.0
-rect_pivot_offset = Vector2( 142, 19 )
-mouse_default_cursor_shape = 1
-type = 4
-show_relative_selector = false
-show_confirm_button = true
-transparent = true
-
-[node name="AnimaActionsBGColor2" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 1 )]
+[node name="AnimaActionsBGColor2" parent="ContentContainer/Rectangle/HBoxContainer" instance=ExtResource( 1 )]
 margin_left = 384.0
 margin_right = 640.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 256, 49 )
 color = Color( 0.0117647, 0.145098, 0.203922, 1 )
 
-[node name="ActionsContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2"]
+[node name="ActionsContainer" type="HBoxContainer" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2"]
 margin_left = 2.0
 margin_right = 212.0
 margin_bottom = 49.0
 custom_constants/separation = 1
 alignment = 1
 
-[node name="Preview" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 13 )]
+[node name="Preview" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 13 )]
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 __meta__ = {
@@ -3145,7 +2295,7 @@ __meta__ = {
 }
 show_panel_on = 12
 
-[node name="Label" type="Label" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer"]
+[node name="Label" type="Label" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer"]
 margin_left = 49.0
 margin_top = 8.0
 margin_right = 61.0
@@ -3399,7 +2549,7 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="DefaultFrameDuration" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
+[node name="DefaultFrameDuration" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
 margin_left = 62.0
 margin_right = 126.0
 margin_bottom = 49.0
@@ -4259,7 +3409,7 @@ __meta__ = {
 }
 transparent = true
 
-[node name="AddAnimation" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
+[node name="AddAnimation" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
 margin_left = 127.0
 margin_right = 191.0
 margin_bottom = 49.0
@@ -5858,7 +5008,7 @@ __meta__ = {
 }
 transparent = true
 
-[node name="Delete" parent="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
+[node name="Delete" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
 margin_left = 192.0
 margin_right = 256.0
 margin_bottom = 49.0
@@ -7457,10 +6607,10 @@ __meta__ = {
 }
 transparent = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Rectangle/ContentContainer"]
-margin_top = 49.0
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_top = 57.0
 margin_right = 640.0
-margin_bottom = 600.0
+margin_bottom = 150.0
 rect_pivot_offset = Vector2( 320, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -7482,11 +6632,11 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="ContentContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer"]
+[node name="ContentContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 628.0
-margin_bottom = 539.0
+margin_bottom = 81.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
@@ -7494,7 +6644,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DurationContainer" type="MarginContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
+[node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
 margin_right = 616.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
@@ -7505,22 +6655,22 @@ __meta__ = {
 "__initial_opacity": 1.0
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ContentContainer/DurationContainer"]
 margin_top = 12.0
 margin_right = 616.0
 margin_bottom = 45.0
 custom_constants/separation = 12
 
-[node name="GridContainer" type="HBoxContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer/VBoxContainer"]
+[node name="GridContainer" type="HBoxContainer" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer"]
 margin_right = 616.0
 margin_bottom = 33.0
 rect_pivot_offset = Vector2( 259.281, -180.348 )
 custom_constants/separation = 24
 
-[node name="Label" type="Label" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer"]
-margin_top = 4.0
-margin_right = 101.0
-margin_bottom = 29.0
+[node name="Label" type="Label" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer"]
+margin_top = 9.0
+margin_right = 59.0
+margin_bottom = 23.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Duration:"
 align = 1
@@ -7528,40 +6678,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Duration" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 9 )]
-margin_left = 125.0
+[node name="Duration" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 9 )]
+margin_left = 83.0
 margin_right = 616.0
 margin_bottom = 33.0
 rect_min_size = Vector2( 0, 33 )
 label = "animation default"
+type = 3
 show_relative_selector = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer"]
-margin_top = 69.0
-margin_right = 616.0
-margin_bottom = 527.0
-rect_pivot_offset = Vector2( 175, 157.5 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/bg = SubResource( 2 )
-follow_focus = true
-scroll_horizontal_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimationsContainer" parent="Rectangle/ContentContainer/MarginContainer/ContentContainer/ScrollContainer" instance=ExtResource( 6 )]
+[node name="AnimationsContainer" parent="MarginContainer/ContentContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
+margin_top = 69.0
 margin_right = 616.0
-margin_bottom = 458.0
+margin_bottom = 69.0
 
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 visible = false
 margin_left = 578.0
-margin_top = 539.0
+margin_top = 89.0
 margin_right = 626.0
-margin_bottom = 588.0
+margin_bottom = 138.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true
@@ -8283,11 +7421,11 @@ __meta__ = {
 }
 
 [node name="FrameCollapsedTitle" type="Control" parent="."]
-margin_top = 600.0
-margin_right = 600.0
-margin_bottom = 649.0
+visible = false
+margin_top = 154.0
+margin_right = 640.0
+margin_bottom = 203.0
 rect_min_size = Vector2( 0, 49 )
-rect_rotation = -90.0
 mouse_filter = 2
 __meta__ = {
 "_edit_lock_": true
@@ -8311,11 +7449,11 @@ Do you want to continue?"
 
 [connection signal="gui_input" from="." to="." method="_on_FrameAnimation_gui_input"]
 [connection signal="item_rect_changed" from="." to="." method="_on_FrameAnimation_item_rect_changed"]
-[connection signal="confirmed" from="Rectangle/ContentContainer/Rectangle/HBoxContainer/FrameName1" to="." method="_on_FrameName_confirmed"]
-[connection signal="pressed" from="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/Preview" to="." method="_on_Preview_pressed"]
-[connection signal="toggled" from="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/DefaultFrameDuration" to="." method="_on_DefaultFrameDuration_toggled"]
-[connection signal="pressed" from="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]
-[connection signal="pressed" from="Rectangle/ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/Delete" to="." method="_on_Delete_pressed"]
-[connection signal="node_dragged" from="Rectangle/ContentContainer/MarginContainer/ContentContainer/ScrollContainer/AnimationsContainer" to="." method="_on_AnimationsContainer_node_dragged"]
+[connection signal="pressed" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/Preview" to="." method="_on_Preview_pressed"]
+[connection signal="toggled" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/DefaultFrameDuration" to="." method="_on_DefaultFrameDuration_toggled"]
+[connection signal="pressed" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]
+[connection signal="pressed" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/Delete" to="." method="_on_Delete_pressed"]
+[connection signal="value_updated" from="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer/Duration" to="." method="_on_Duration_value_updated"]
+[connection signal="node_dragged" from="MarginContainer/ContentContainer/AnimationsContainer" to="." method="_on_AnimationsContainer_node_dragged"]
 [connection signal="toggled" from="Collapse" to="." method="_on_Collapse_toggled"]
 [connection signal="confirmed" from="ConfirmationDialog" to="." method="_on_ConfirmationDialog_confirmed"]

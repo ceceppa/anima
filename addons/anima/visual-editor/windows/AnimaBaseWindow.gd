@@ -20,19 +20,18 @@ func _play(backwards := false) -> AnimaNode:
 					pivot = ANIMA.PIVOT.CENTER,
 				},
 				10: {
-					y = 100,
+					"translate:y": 100,
 					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 				},
 				100: {
 					size = _final_size,
 					opacity = 1,
-					y = 0,
+					"translate:y": 0,
 					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 				},
 				initial_values = {
 					opacity = 0,
 				},
-				relative = ["y"]
 			}, 0.3)
 	)
 	

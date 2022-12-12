@@ -26,25 +26,25 @@ size_flags_vertical = 3
 
 [node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
-margin_right = 1024.0
+margin_right = 600.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
-margin_top = 46.0
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_top = 42.0
+margin_right = 600.0
+margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
-margin_right = 1024.0
-margin_bottom = 554.0
+margin_right = 600.0
+margin_bottom = 982.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="FramesContainer1" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
-margin_bottom = 554.0
+margin_bottom = 982.0
 custom_constants/separation = 12
 
 [node name="FramesContainer2" type="VBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
@@ -55,10 +55,10 @@ margin_bottom = 554.0
 custom_constants/separation = 12
 
 [node name="AnimaAddFrame" parent="." instance=ExtResource( 3 )]
-margin_left = 776.0
-margin_top = 459.0
-margin_right = 1136.0
-margin_bottom = 459.0
+margin_left = 352.0
+margin_top = 883.0
+margin_right = 712.0
+margin_bottom = 883.0
 rect_pivot_offset = Vector2( 180, 288 )
 
 [connection signal="item_rect_changed" from="." to="." method="_on_FramesEditor_item_rect_changed"]

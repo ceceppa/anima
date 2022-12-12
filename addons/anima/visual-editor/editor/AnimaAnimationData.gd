@@ -5,7 +5,6 @@ const SINGLE_ANIMATION = preload("res://addons/anima/visual-editor/editor/AnimaS
 
 signal select_animation
 signal select_easing
-signal value_updated
 signal select_relative_property
 signal updated
 signal removed
@@ -160,6 +159,8 @@ func restore_data(data: Dictionary) -> void:
 			var animation = data.animations[animation_id]
 			var item = _on_AddAnimation_pressed()
 
+			animation.node = _source_node
+			animation._root_node = data._root_node
 			item.set_meta("_data_index", animation_id)
 			item.restore_data(animation)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaSingleAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
@@ -22,8 +22,29 @@ content_margin_top = 12.0
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
@@ -38,7 +59,7 @@ custom_constants/separation = 0
 script = ExtResource( 1 )
 
 [node name="ActionsContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 49.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
@@ -46,9 +67,9 @@ alignment = 2
 
 [node name="Title" parent="ActionsContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
-margin_right = 903.0
+margin_right = 487.0
 margin_bottom = 49.0
-rect_pivot_offset = Vector2( 451.5, 24.5 )
+rect_pivot_offset = Vector2( 243.5, 24.5 )
 custom_styles/normal = SubResource( 2 )
 pressed = true
 text = "No animation defined"
@@ -448,16 +469,17 @@ __meta__ = {
 },
 "__initial_Title__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 style = 1
 node_to_toggle = NodePath("../../MarginContainer")
 
 [node name="ColorRect" parent="ActionsContainer" instance=ExtResource( 11 )]
-margin_left = 903.0
-margin_right = 1024.0
+margin_left = 487.0
+margin_right = 600.0
 margin_bottom = 49.0
-rect_min_size = Vector2( 121, 49 )
+rect_min_size = Vector2( 113, 49 )
 color = Color( 0.0196078, 0.380392, 0.329412, 1 )
 style = 2
 
@@ -739,19 +761,20 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview2__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 show_panel_on = 12
 
 [node name="Label" type="Label" parent="ActionsContainer/ColorRect/HBoxContainer"]
-margin_top = 12.0
+margin_top = 17.0
 margin_right = 8.0
-margin_bottom = 37.0
+margin_bottom = 31.0
 rect_min_size = Vector2( 8, 0 )
 
 [node name="PropertyOrAnimation" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 9 )]
-margin_left = 16.0
-margin_right = 65.0
+margin_left = 12.0
+margin_right = 61.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 49, 49 )
 rect_pivot_offset = Vector2( 24.5, 24.5 )
@@ -764,13 +787,14 @@ __meta__ = {
 "__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_PropertyOrAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 transparent = true
 
 [node name="Remove" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 73.0
-margin_right = 121.0
+margin_left = 65.0
+margin_right = 113.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 icon = ExtResource( 7 )
@@ -1043,27 +1067,28 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__initial_Remove__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 style = 2
 transparent = true
 
 [node name="Control" type="Control" parent="."]
 margin_top = 49.0
-margin_right = 1024.0
+margin_right = 600.0
 margin_bottom = 49.0
 
 [node name="BGColor" parent="Control" instance=ExtResource( 11 )]
-margin_right = 1024.0
-margin_bottom = 73.0
+margin_right = 600.0
+margin_bottom = 64.0
 size_flags_vertical = 3
 color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_top = 49.0
-margin_right = 1024.0
-margin_bottom = 122.0
+margin_right = 600.0
+margin_bottom = 113.0
 size_flags_horizontal = 3
 custom_constants/margin_right = 12
 custom_constants/margin_top = 12
@@ -1073,13 +1098,13 @@ custom_constants/margin_bottom = 12
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 1012.0
-margin_bottom = 61.0
+margin_right = 588.0
+margin_bottom = 52.0
 
 [node name="PropertyData" type="GridContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
-margin_right = 1000.0
-margin_bottom = 273.0
+margin_right = 576.0
+margin_bottom = 263.0
 size_flags_horizontal = 3
 custom_constants/vseparation = 12
 custom_constants/hseparation = 12
@@ -1089,9 +1114,9 @@ __meta__ = {
 }
 
 [node name="From2" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 4.0
+margin_top = 9.0
 margin_right = 160.0
-margin_bottom = 29.0
+margin_bottom = 23.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "From:"
@@ -1102,16 +1127,16 @@ __meta__ = {
 
 [node name="FromValue" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 6 )]
 margin_left = 172.0
-margin_right = 1000.0
+margin_right = 576.0
 margin_bottom = 33.0
 rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 414, 24.5 )
 type = 4
 
 [node name="To" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 49.0
+margin_top = 54.0
 margin_right = 160.0
-margin_bottom = 74.0
+margin_bottom = 68.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "To:"
@@ -1123,16 +1148,16 @@ __meta__ = {
 [node name="ToValue" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 6 )]
 margin_left = 172.0
 margin_top = 45.0
-margin_right = 1000.0
+margin_right = 576.0
 margin_bottom = 78.0
 rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 414, 24.5 )
 type = 4
 
 [node name="Initial" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 94.0
+margin_top = 99.0
 margin_right = 160.0
-margin_bottom = 119.0
+margin_bottom = 113.0
 rect_min_size = Vector2( 120, 0 )
 mouse_filter = 1
 text = "Initial Value"
@@ -1144,7 +1169,7 @@ __meta__ = {
 [node name="InitialValue" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 6 )]
 margin_left = 172.0
 margin_top = 90.0
-margin_right = 1000.0
+margin_right = 576.0
 margin_bottom = 123.0
 rect_min_size = Vector2( 0, 33 )
 rect_pivot_offset = Vector2( 414, 24.5 )
@@ -1152,9 +1177,9 @@ label = "none"
 type = 4
 
 [node name="Relative" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 146.0
+margin_top = 140.0
 margin_right = 160.0
-margin_bottom = 171.0
+margin_bottom = 154.0
 rect_min_size = Vector2( 120, 0 )
 text = "Relative"
 __meta__ = {
@@ -1165,8 +1190,8 @@ __meta__ = {
 [node name="RelativeCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/PropertyData"]
 margin_left = 172.0
 margin_top = 135.0
-margin_right = 1000.0
-margin_bottom = 183.0
+margin_right = 576.0
+margin_bottom = 159.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 text = "Relative value"
 __meta__ = {
@@ -1174,9 +1199,9 @@ __meta__ = {
 }
 
 [node name="Pivot" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 199.0
+margin_top = 180.0
 margin_right = 160.0
-margin_bottom = 224.0
+margin_bottom = 194.0
 rect_min_size = Vector2( 120, 0 )
 text = "Pivot"
 __meta__ = {
@@ -1187,14 +1212,14 @@ __meta__ = {
 [node name="PivotButton" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 8 )]
 anchor_right = 0.0
 margin_left = 172.0
-margin_top = 195.0
-margin_right = 1000.0
-margin_bottom = 228.0
+margin_top = 171.0
+margin_right = 576.0
+margin_bottom = 203.0
 
 [node name="Easing" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
-margin_top = 244.0
+margin_top = 219.0
 margin_right = 160.0
-margin_bottom = 269.0
+margin_bottom = 233.0
 rect_min_size = Vector2( 160, 0 )
 text = "Easing"
 __meta__ = {
@@ -1204,12 +1229,13 @@ __meta__ = {
 
 [node name="EasingButton" parent="MarginContainer/VBoxContainer/PropertyData" instance=ExtResource( 2 )]
 margin_left = 172.0
-margin_top = 240.0
-margin_right = 1000.0
-margin_bottom = 273.0
+margin_top = 215.0
+margin_right = 576.0
+margin_bottom = 237.0
 rect_pivot_offset = Vector2( 126.5, 24.5 )
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
+custom_styles/normal = SubResource( 3 )
 text = "Linear"
 icon = ExtResource( 5 )
 __meta__ = {
@@ -1483,9 +1509,14 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
+margin_top = 249.0
+margin_right = 160.0
+margin_bottom = 263.0
+
 [node name="SelectProperty" parent="MarginContainer/VBoxContainer" instance=ExtResource( 2 )]
-margin_right = 1000.0
-margin_bottom = 49.0
+margin_right = 576.0
+margin_bottom = 40.0
 rect_pivot_offset = Vector2( 212.5, 24.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1493,8 +1524,8 @@ custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 1 )
 custom_styles/focus = SubResource( 1 )
 custom_styles/disabled = SubResource( 1 )
-custom_styles/normal = SubResource( 1 )
-text = "Select property to animate..."
+custom_styles/normal = SubResource( 4 )
+text = " (change...)"
 icon = ExtResource( 4 )
 __meta__ = {
 "__initial_AnimaNode__anima_1048367706193059814__button_bg": {
@@ -2326,7 +2357,7 @@ custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 1 )
 custom_styles/focus = SubResource( 1 )
 custom_styles/disabled = SubResource( 1 )
-custom_styles/normal = SubResource( 1 )
+custom_styles/normal = SubResource( 5 )
 text = "Select animation to use"
 icon = ExtResource( 10 )
 __meta__ = {

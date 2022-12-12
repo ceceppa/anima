@@ -75,7 +75,9 @@ func _on_NumberEdit_type_changed(new_type):
 	if new_type != Type.STRING:
 		align = ALIGN_RIGHT
 
-
 func _on_NumberEdit_gui_input(event):
 	if event is InputEventKey and event.scancode == KEY_ENTER and event.pressed == false:
 		emit_signal("changed")
+
+func _on_NumberEdit_focus_exited():
+	emit_signal("changed")

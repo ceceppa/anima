@@ -12,7 +12,7 @@ func _ready():
 		child.modulate.a = 0
 
 func _animate_add(mode:int) -> void:
-	Anima.begin_single_shot(self) \
+	var anima := Anima.begin_single_shot(self) \
 	.then(
 		Anima.Node($AddButton).anima_scale(Vector2(1.2, 1.2), 0.15)
 	) \
@@ -38,6 +38,13 @@ func _animate_add(mode:int) -> void:
 			}, 0.3)
 	) \
 	.play_as_backwards_when(mode == AnimaTween.PLAY_MODE.BACKWARDS)
+
+	yield(anima, "animation_completed")
+
+	var mouse_filter = MOUSE_FILTER_STOP if $ButtonsContainer/Animation.modulate.a > 0 else MOUSE_FILTER_IGNORE
+	
+	for button in $ButtonsContainer.get_children():
+		button.mouse_filter = mouse_filter
 
 func _on_Animation_pressed():
 	_on_Timer_timeout()

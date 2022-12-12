@@ -15,6 +15,7 @@ onready var _select_animation = find_node("SelectAnimation")
 onready var _animate_property = find_node("AnimateProperty")
 onready var _title = find_node("Title")
 onready var _property_or_animation = find_node("PropertyOrAnimation")
+onready var _select_property_button = find_node("SelectProperty")
 
 var _property_name = ""
 var _property_type = TYPE_NIL
@@ -38,6 +39,7 @@ func _ready():
 func get_data() -> Dictionary:
 	if _property_data == null:
 		_property_data = find_node("PropertyData")
+		_property_or_animation = find_node("PropertyOrAnimation")
 
 	var easing_value = ANIMA.EASING.LINEAR
 	var easing_button: Button = _property_data.find_node("EasingButton")
@@ -70,12 +72,13 @@ func restore_data(data: Dictionary) -> void:
 
 	if _property_data == null:
 		_property_data = find_node("PropertyData")
+		_select_property_button = find_node("SelectProperty")
 
 	set_property_to_animate(data.property_name, data.property_type)
 
-	_property_data.find_node("FromValue").set_value(data.property.from)
-	_property_data.find_node("ToValue").set_value(data.property.to)
-	_property_data.find_node("InitialValue").set_value(data.property.initialValue)
+	_property_data.find_node("FromValue").set_value(data.property.from, AnimaTweenUtils.calculate_dynamic_value(data.property.from, data))
+	_property_data.find_node("ToValue").set_value(data.property.to, AnimaTweenUtils.calculate_dynamic_value(data.property.to, data))
+	_property_data.find_node("InitialValue").set_value(data.property.initialValue, AnimaTweenUtils.calculate_dynamic_value(data.property.initialValue, data))
 	_property_data.find_node("RelativeCheck").pressed = data.property.relative
 	_property_data.find_node("PivotButton").set_value(data.property.pivot)
 
@@ -123,7 +126,7 @@ func set_property_to_animate(name: String, type) -> void:
 	_emit_node_update()
 
 func _update_title() -> void:
-	var title = "(no animation)"
+	var title = "(no animation defined)"
 	var id = find_node("PropertyOrAnimation").get_selected_id()
 	var show_preview := false
 
@@ -134,6 +137,7 @@ func _update_title() -> void:
 		title = "Animation: " + _animation_name
 		show_preview = true
 
+	_select_property_button.text = _property_name + " (change...)"
 	find_node("Preview").visible = show_preview
 	_title.set_text(title)
 
@@ -147,7 +151,7 @@ func _on_SelectProperty_pressed():
 
 func _on_PropertyOrAnimation_item_selected(id):
 	_property_data.visible = id == 0 and _property_name != ""
-	find_node("SelectProperty").visible = id == 0
+	_select_property_button.visible = id == 0
 	_select_animation.visible = id == 1
 
 	_update_title()
@@ -198,5 +202,4 @@ func _on_MarginContainer_visibility_changed():
 	find_node("BGColor").visible = $MarginContainer.visible
 
 func _on_Preview_pressed():
-	print(get_meta("_data_index"))
 	emit_signal("preview_animation", { preview_button = find_node("Preview"), single_animation_id = get_meta("_data_index") })

@@ -40,6 +40,7 @@ enum EASING {
 	EASE_IN_BOUNCE,
 	EASE_OUT_BOUNCE,
 	EASE_IN_OUT_BOUNCE,
+	SPRING
 }
 
 const _easing_mapping = {
@@ -78,6 +79,7 @@ const _easing_mapping = {
 	EASING.EASE_IN_BOUNCE: 'ease_in_bounce',
 	EASING.EASE_OUT_BOUNCE: 'ease_out_bounce',
 	EASING.EASE_IN_OUT_BOUNCE: 'ease_in_out_bounce',
+	EASING.SPRING: 'spring'
 }
 
 const _ELASTIC_C4: float = (2.0 * PI) / 3.0
@@ -87,11 +89,13 @@ static func get_easing_points(easing_name):
 	if typeof(easing_name) == TYPE_REAL:
 		easing_name = int(easing_name)
 
-	if _easing_mapping.has(easing_name):
-		return _easing_mapping[easing_name]
+	var easing_value = null
 
-	if easing_name is String and easing_name.find("spring") >= 0:
-		var params: Array = easing_name.replace("spring", "").replace("(", "").replace(")", "").split(",")
+	if _easing_mapping.has(easing_name):
+		easing_value = _easing_mapping[easing_name]
+
+	if easing_value is String and easing_value.find("spring") >= 0:
+		var params: Array = easing_value.replace("spring", "").replace("(", "").replace(")", "").split(",")
 
 		var mass = params[0]
 		if mass == null or mass == "":
@@ -106,6 +110,9 @@ static func get_easing_points(easing_name):
 		}
 
 		return spring_params
+
+	if _easing_mapping.has(easing_name):
+		return easing_value
 
 	printerr('Easing not found: ' + str(easing_name))
 

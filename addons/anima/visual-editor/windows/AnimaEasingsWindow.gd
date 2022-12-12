@@ -21,7 +21,7 @@ func _ready():
 		var text = easing_name
 
 		button.show()
-		button.connect("pressed", self, '_on_easing_button_pressed', [button, easing_value])
+		button.connect("pressed", self, '_on_easing_button_pressed', [button, easing_name, easing_value])
 
 		if easing_name.find('_IN_OUT_') > 0 or easing_name == 'EASE_IN_OUT':
 			text = text.replace('EASE_IN_OUT_', '')
@@ -35,7 +35,7 @@ func _ready():
 
 		button.text = text.replace('_', ' ').capitalize()
 
-func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
+func _on_easing_button_pressed(button: Button, easing_name, easing_value) -> void:
 	var size = self.rect_size
 	var logo_size = AnimaNodesProperties.get_size(_anima_logo)
 
@@ -64,7 +64,7 @@ func _on_easing_button_pressed(button: Button, easing_value: int) -> void:
 	anima2.play()
 
 	_easing = easing_value
-	_easing_name = "Ease" + button.get_parent().get_parent().name + button.text
+	_easing_name = easing_name
 
 func _on_ConfirmButton_pressed():
 	emit_signal("easing_selected", _easing_name, _easing)
