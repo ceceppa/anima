@@ -13,7 +13,7 @@ export var animate_entrance_exit := true
 onready var _delay = find_node("DelayValue")
 
 func _ready():
-	if animate_entrance_exit:
+	if animate_entrance_exit and false:
 		_animate_me()
 
 func get_data() -> Dictionary:

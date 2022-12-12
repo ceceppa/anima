@@ -36,7 +36,7 @@ var _is_animating := false
 func _ready():
 	$ContentContainer/Rectangle.rect_size.x = _final_width
 
-	if animate_entrance_exit:
+	if animate_entrance_exit and false:
 		_animate_me()
 	else:
 		rect_min_size.x = _final_width

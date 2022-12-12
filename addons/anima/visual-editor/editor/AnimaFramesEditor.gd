@@ -131,6 +131,8 @@ func _on_AnimaAddFrame_add_delay(key := -1):
 
 	_emit_updated()
 
+	return node
+
 func _on_frame_select_node(node: Node) -> void:
 	_destination_frame = node
 
@@ -207,7 +209,8 @@ func _on_FramesEditor_item_rect_changed():
 		return
 
 	for child in _frames_container2.get_children():
-		child.call_deferred("update_size_x", rect_size.x - 24)
+		if child.has_method("update_size_x"):
+			child.call_deferred("update_size_x", rect_size.x - 24)
 
 func _on_AnimaAnimation_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)

@@ -662,8 +662,7 @@ __meta__ = {
 },
 "__initial_Title__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 
 [node name="ActionsContainer" type="HBoxContainer" parent="Title"]
@@ -963,8 +962,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview2__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="Label" type="Label" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer"]
@@ -1255,8 +1253,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Time__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
@@ -1549,8 +1546,7 @@ __meta__ = {
 },
 "__initial_AnimateAs__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
@@ -1853,8 +1849,7 @@ __meta__ = {
 "value": Vector2( 1, 1 )
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
@@ -2158,8 +2153,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__initial_Remove__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 style = 2
 transparent = true
@@ -3927,8 +3921,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_NoAnimationsWarning__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 

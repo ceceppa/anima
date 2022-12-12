@@ -37,8 +37,7 @@ rect_clip_content = true
 size_flags_horizontal = 3
 script = ExtResource( 8 )
 __meta__ = {
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="Control" type="Control" parent="."]
@@ -745,8 +744,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_MoveLeft__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 style = 1
 transparent = true
@@ -1494,8 +1492,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_MoveRight__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 style = 1
 transparent = true
@@ -1887,8 +1884,7 @@ __meta__ = {
 "__initial_FrameName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_ToggableFrameName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 node_to_toggle = NodePath("../../../../MarginContainer")
 
@@ -2302,8 +2298,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview2__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="Label" type="Label" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer"]
@@ -2557,8 +2552,7 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 0.1, 0.1 )
 },
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="DefaultFrameDuration" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer" instance=ExtResource( 4 )]
@@ -3417,8 +3411,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_DefaultFrameDuration__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
 
@@ -5017,8 +5010,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 transparent = true
 
@@ -6617,15 +6609,14 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Delete__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 transparent = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_top = 57.0
 margin_right = 640.0
-margin_bottom = 142.0
+margin_bottom = 211.0
 rect_pivot_offset = Vector2( 320, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -6651,7 +6642,7 @@ __meta__ = {
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 628.0
-margin_bottom = 73.0
+margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
@@ -6660,7 +6651,6 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
-visible = false
 margin_right = 616.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
@@ -6706,15 +6696,16 @@ show_relative_selector = false
 [node name="AnimationsContainer" parent="MarginContainer/ContentContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
+margin_top = 69.0
 margin_right = 616.0
-margin_bottom = 61.0
+margin_bottom = 130.0
 
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 visible = false
 margin_left = 578.0
-margin_top = 81.0
+margin_top = 150.0
 margin_right = 626.0
-margin_bottom = 130.0
+margin_bottom = 199.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true

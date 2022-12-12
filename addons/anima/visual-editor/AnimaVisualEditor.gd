@@ -158,6 +158,7 @@ func _restore_data(data: Dictionary) -> void:
 	for frame_key in animation.frames:
 		var frame_data = animation.frames[frame_key]
 		var index: int = int(frame_key)
+		var the_item
 
 		if frame_data == null:
 			continue
@@ -165,7 +166,7 @@ func _restore_data(data: Dictionary) -> void:
 		if frame_data.type == "frame":
 			_frames_editor._on_AnimaAddFrame_add_frame(frame_key)
 		elif frame_data.type == "delay":
-			_frames_editor._on_AnimaAddFrame_add_delay(frame_key)
+			the_item = _frames_editor._on_AnimaAddFrame_add_delay(frame_key)
 		else:
 			pass
 
@@ -215,6 +216,8 @@ func _restore_data(data: Dictionary) -> void:
 
 				item.set_meta("_data_index", data_index)
 				item.restore_data(value)
+			elif value.has("delay"):
+				the_item.restore_data(value)
 
 		# TODO: Restore collapse
 		if frame_data.has("collapsed") and frame_data.collapsed:
