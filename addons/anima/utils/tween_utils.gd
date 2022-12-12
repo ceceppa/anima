@@ -82,7 +82,7 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 	}
 
 static func calculate_dynamic_value(value, animation_data: Dictionary):
-	var should_ignore = (not value is String and not value is Array) or (value is String and value.find(':') < 0)
+	var should_ignore = (not value is String and not value is Array) or not animation_data.has("node")
 	if should_ignore:
 		return value
 
@@ -183,5 +183,8 @@ static func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionar
 
 	if value is Vector3:
 		return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
+
+	if not value is float:
+		value = float(value)
 
 	return deg2rad(value)

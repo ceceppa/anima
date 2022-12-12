@@ -96,7 +96,7 @@ func clear() -> void:
 func add_animation_for(node: Node, path: String) -> Node:
 	var animation_item: Node = ANIMATION_DATA.instance() 
 
-	_animations_container.add_child(animation_item)
+	_animations_container.add_child_below_node(_animations_container.get_child(_animations_container.get_child_count() - 2), animation_item)
 
 	animation_item.connect("updated", self, "_on_animation_data_updated")
 	animation_item.connect("removed", self, "_on_animation_data_removed")
@@ -125,6 +125,9 @@ func _animate_me(backwards := false) -> AnimaNode:
 	anima.set_default_duration(0.3)
 	anima.set_apply_initial_values(ANIMA.APPLY_INITIAL_VALUES.ON_PLAY)
 
+	if get_parent().name == "FramesContainer2":
+		_final_width = get_parent().rect_size.x
+	
 	anima.with(
 		Anima.Node(self) \
 			.anima_animation_frames({

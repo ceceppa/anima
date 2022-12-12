@@ -6,6 +6,8 @@
 
 [node name="Preview" instance=ExtResource( 1 )]
 margin_bottom = 33.0
+rect_pivot_offset = Vector2( 24, 16.5 )
+toggle_mode = true
 icon = ExtResource( 2 )
 icon_align = 1
 expand_icon = true
@@ -278,13 +280,13 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 transparent = true
-show_panel_on = 1
+show_panel_on = 12
 
 [connection signal="pressed" from="." to="." method="_on_Button_pressed"]
+[connection signal="toggled" from="." to="." method="_on_Preview_toggled"]
 [connection signal="button_down" from="PanelItems/VBoxContainer/Button" to="PanelItems/VBoxContainer/Button" method="_on_Button_button_down"]
 [connection signal="button_up" from="PanelItems/VBoxContainer/Button" to="PanelItems/VBoxContainer/Button" method="_on_Button_button_up"]
 [connection signal="toggled" from="PanelItems/VBoxContainer/Button" to="PanelItems/VBoxContainer/Button" method="_on_Button_toggled"]

@@ -966,7 +966,6 @@ __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
-show_panel_on = 12
 
 [node name="Label" type="Label" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer"]
 margin_left = 90.0

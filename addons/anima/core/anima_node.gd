@@ -533,6 +533,7 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 	elif start_from == ANIMA.GROUP.FROM_BOTTOM:
 		start_point = Vector2(children.size(), 0)
 
+	var is_group = start_point.x == 1
 	var use_forumla = animation_data.distance_formula if animation_data.has("distance_formula") else ANIMA.DISTANCE.EUCLIDIAN
 	var row := 0
 	var column := 0
@@ -557,6 +558,9 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 				var sum: int = start_point.x + start_point.y
 
 				distance = abs((row + column) - sum)
+
+			if is_group:
+				distance = floor(distance) - 1
 
 			nodes.push_back({ node = item, delay_index = distance })
 

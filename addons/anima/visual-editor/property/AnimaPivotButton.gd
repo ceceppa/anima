@@ -8,7 +8,7 @@ onready var _pivot_points = find_node("PivotPoints")
 onready var _grid_container = find_node('GridContainer')
 onready var _point_button = find_node("PointButton")
 
-var _selected_pivot_point := 0
+var _selected_pivot_point := -1
 
 func _ready():
 	for child in _grid_container.get_children():

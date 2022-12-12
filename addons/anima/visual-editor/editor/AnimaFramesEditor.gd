@@ -51,6 +51,8 @@ func restore_animation_data(data: Dictionary) -> void:
 
 	_anima_animation.restore_data(data)
 
+	_on_FramesEditor_item_rect_changed()
+
 func clear() -> void:
 	for child in _active_frames_container.get_children():
 		child.animate_entrance_exit = false

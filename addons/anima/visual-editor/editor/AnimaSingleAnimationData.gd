@@ -33,8 +33,8 @@ func _ready():
 
 	_update_title()
 
-	if _animation_name == "" and _property_name == "":
-		_title.pressed = true
+#	if _animation_name == "" and _property_name == "":
+	_title.pressed = _property_data.visible
 
 func get_data() -> Dictionary:
 	if _property_data == null:

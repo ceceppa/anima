@@ -110,14 +110,14 @@ func _play_animation_from_data(
 		if frame_default_duration == null:
 			frame_default_duration = default_duration
 
-		anima.set_default_duration(frame_default_duration)
+		anima.set_default_duration(float(frame_default_duration))
 
 		for animation in frame_data.data:
 			for single_animation in animation.animations:
 				var data: Dictionary = _create_animation_data(animation, single_animation)
 
 				data._wait_time = start_time #animation.start_time
-	#			data.__debug = "---"
+#				data.__debug = "---"
 
 				if not timeline_debug.has(data._wait_time):
 					timeline_debug[data._wait_time] = []
@@ -135,7 +135,7 @@ func _play_animation_from_data(
 
 				anima.with(data)
 
-		start_time += frame_default_duration + 0.1
+		start_time += float(frame_default_duration) + 0.1
 
 	var keys = timeline_debug.keys()
 	keys.sort()
@@ -143,7 +143,7 @@ func _play_animation_from_data(
 	for k in keys:
 		for d in timeline_debug[k]:
 			var s: float = k + d.delay
-			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + d.duration, "s => ", d.what)
+			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + float(d.duration), "s => ", d.what)
 
 	_active_anima_node = anima
 
@@ -159,7 +159,7 @@ func _play_animation_from_data(
 			_initial_values[node][property_to_reset] = AnimaNodesProperties.get_property_value(node, { property = property_to_reset })
 
 	anima.play()
-
+	
 	yield(anima, "animation_completed")
 
 	if reset_initial_values:
@@ -181,16 +181,15 @@ func _create_animation_data(animation_data: Dictionary, animation: Dictionary) -
 	var node_path: String = animation_data.node_path
 	var node: Node = source_node.get_node(node_path)
 
-
 	var anima_data = {
 		node = node,
 	}
 
 	if animation_data.duration:
-		anima_data.duration = animation_data.duration
+		anima_data.duration = float(animation_data.duration)
 
 	if animation_data.delay:
-		anima_data.delay = animation_data.delay
+		anima_data.delay = float(animation_data.delay)
 
 	if animation_data.has("animate_as"):
 		if animation_data.animate_as == ANIMATE_AS.GROUP:
@@ -198,7 +197,7 @@ func _create_animation_data(animation_data: Dictionary, animation: Dictionary) -
 			anima_data.group = node
 
 			anima_data.items_delay = animation_data.group.items_delay
-			anima_data.animation_type = animation_data.group.animation_type
+			anima_data.animation_type = ANIMA.GROUP.values()[animation_data.group.animation_type]
 			anima_data.start_index = animation_data.group.start_index
 		elif animation_data.animate_as == ANIMATE_AS.GRID:
 			anima_data.erase("node")
@@ -246,8 +245,8 @@ func _create_animation_data(animation_data: Dictionary, animation: Dictionary) -
 	return anima_data
 
 func _extract_value(data: Dictionary, value):
-	if value is String and value.find(":") >= 0:
-		return value
+	if value is String:
+		return AnimaTweenUtils.calculate_dynamic_value(value, data)
 	elif value is Array:
 		var calculated_values := []
 

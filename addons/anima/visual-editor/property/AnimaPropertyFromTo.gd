@@ -80,10 +80,6 @@ func set_type(the_type: int) -> void:
 	var show_global_relative := true
 
 	match type:
-		TYPE_INT:
-			node_name = 'Number'
-		TYPE_REAL:
-			node_name = 'Real'
 		TYPE_VECTOR2:
 			node_name = 'Vector2'
 			show_global_relative = false
@@ -93,10 +89,8 @@ func set_type(the_type: int) -> void:
 		TYPE_RECT2:
 			node_name = "Rect2"
 			show_global_relative = false
-		TYPE_STRING:
-			node_name = 'FreeText'
 		_:
-			printerr('set_type: unsupported type' + str(type))
+			node_name = 'FreeText'
 
 	if _relative_selector == null:
 		_relative_selector = find_node('RelativeSelectorButton')
@@ -302,12 +296,7 @@ func get_value():
 		if _input_visible.has_method('get_value'):
 			return _input_visible.get_value()
 		
-		var text: String = _input_visible.text
-
-		if type != TYPE_STRING:
-			return float(text)
-
-		return text
+		return _input_visible.text
 	elif _input_visible.name == 'Vector2':
 		var x: LineEdit = _input_visible.find_node('x')
 		var y: LineEdit = _input_visible.find_node('y')

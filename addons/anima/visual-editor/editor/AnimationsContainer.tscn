@@ -5,6 +5,7 @@
 [node name="AnimationsContainer" type="VBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
@@ -17,11 +18,17 @@ mouse_filter = 2
 [node name="ColorRect" type="ColorRect" parent="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = 1024.0
+margin_bottom = 1073.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 1, 1, 1, 0 )
+
+[node name="Label" type="Label" parent="."]
+margin_top = 12.0
+margin_right = 600.0
+margin_bottom = 61.0
+rect_min_size = Vector2( 0, 49 )
 
 [connection signal="item_rect_changed" from="." to="." method="_on_AnimationsContainer_item_rect_changed"]
 [connection signal="mouse_exited" from="." to="." method="_on_AnimationsContainer_mouse_exited"]

@@ -224,6 +224,11 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 					property = "rect_position",
 					key = "x",
 				}
+			elif node is Sprite:
+				return {
+					property = "position",
+					key = "x",
+				}
 
 			return {
 				property = "global_transform",
@@ -234,6 +239,11 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			if node is Control:
 				return {
 					property = "rect_position",
+					key = "y",
+				}
+			elif node is Sprite:
+				return {
+					property = "position",
 					key = "y",
 				}
 

@@ -179,7 +179,7 @@ func _restore_data(data: Dictionary) -> void:
 		_frames_editor.set_frame_name(frame_name)
 
 		if frame_data.has("duration") and frame_data.duration != null:
-			_frames_editor.set_frame_duration(frame_data.duration)
+			_frames_editor.set_frame_duration(float(frame_data.duration))
 
 		if not frame_data.has("data"):
 			frame_data.data = {}
