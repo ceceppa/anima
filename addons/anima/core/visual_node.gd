@@ -100,6 +100,9 @@ func _play_animation_from_data(
 	for frame_id in animations_data.frames.keys():
 		var frame_data = animations_data.frames[frame_id]
 
+		if frame_data.has("_skip") and frame_data._skip:
+			continue
+
 		if frame_data.type == "delay":
 			start_time += frame_data.data.delay
 
@@ -114,6 +117,9 @@ func _play_animation_from_data(
 
 		for animation in frame_data.data:
 			for single_animation in animation.animations:
+				if single_animation.has("_skip") and single_animation._skip:
+					continue
+
 				var data: Dictionary = _create_animation_data(animation, single_animation)
 
 				data._wait_time = start_time #animation.start_time
@@ -139,11 +145,11 @@ func _play_animation_from_data(
 
 	var keys = timeline_debug.keys()
 	keys.sort()
-
-	for k in keys:
-		for d in timeline_debug[k]:
-			var s: float = k + d.delay
-			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + float(d.duration), "s => ", d.what)
+#
+#	for k in keys:
+#		for d in timeline_debug[k]:
+#			var s: float = k + d.delay
+#			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + float(d.duration), "s => ", d.what)
 
 	_active_anima_node = anima
 

@@ -14,7 +14,7 @@
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.tscn" type="PackedScene" id=14]
-[ext_resource path="res://addons/anima/visual-editor/icons/Collapse.svg" type="Texture" id=15]
+[ext_resource path="res://addons/anima/visual-editor/icons/Expand.svg" type="Texture" id=15]
 
 [sub_resource type="StyleBoxFlat" id=4]
 content_margin_left = 48.0
@@ -35,6 +35,7 @@ rect_min_size = Vector2( 640, 0 )
 rect_pivot_offset = Vector2( 248.464, 71 )
 rect_clip_content = true
 size_flags_horizontal = 3
+custom_constants/separation = 0
 script = ExtResource( 8 )
 __meta__ = {
 "__visibility_strategy": 0
@@ -56,9 +57,8 @@ __meta__ = {
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="."]
-margin_top = 4.0
 margin_right = 640.0
-margin_bottom = 53.0
+margin_bottom = 49.0
 rect_pivot_offset = Vector2( 320, 300 )
 custom_constants/separation = 0
 __meta__ = {
@@ -744,7 +744,8 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_MoveLeft__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 style = 1
 transparent = true
@@ -1492,7 +1493,8 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_MoveRight__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 style = 1
 transparent = true
@@ -1884,7 +1886,8 @@ __meta__ = {
 "__initial_FrameName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_ToggableFrameName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 node_to_toggle = NodePath("../../../../MarginContainer")
 
@@ -1916,6 +1919,7 @@ alignment = 1
 modulate = Color( 1, 1, 1, 0.992011 )
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
+hint_tooltip = "Preview Frame Animation"
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,
@@ -2298,8 +2302,16 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview2__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Play.svg",
+"label": "Can play Animation"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/Skip.svg",
+"label": "Skip Animation"
+} ]
 
 [node name="Label" type="Label" parent="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer"]
 modulate = Color( 1, 1, 1, 0.982566 )
@@ -3411,7 +3423,8 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_DefaultFrameDuration__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 transparent = true
 
@@ -5010,7 +5023,8 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 transparent = true
 
@@ -6609,14 +6623,15 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Delete__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
-transparent = true
+style = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_top = 57.0
+margin_top = 49.0
 margin_right = 640.0
-margin_bottom = 211.0
+margin_bottom = 203.0
 rect_pivot_offset = Vector2( 320, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -6651,7 +6666,6 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
-visible = false
 margin_right = 616.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
@@ -6704,9 +6718,9 @@ margin_bottom = 130.0
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 visible = false
 margin_left = 578.0
-margin_top = 150.0
+margin_top = 142.0
 margin_right = 626.0
-margin_bottom = 199.0
+margin_bottom = 191.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true
@@ -7456,6 +7470,8 @@ Do you want to continue?"
 
 [connection signal="gui_input" from="." to="." method="_on_FrameAnimation_gui_input"]
 [connection signal="item_rect_changed" from="." to="." method="_on_FrameAnimation_item_rect_changed"]
+[connection signal="pressed" from="ContentContainer/Rectangle/HBoxContainer/ToggableFrameName" to="." method="_on_ToggableFrameName_pressed"]
+[connection signal="item_selected" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/Preview" to="." method="_on_Preview_item_selected"]
 [connection signal="pressed" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/Preview" to="." method="_on_Preview_pressed"]
 [connection signal="toggled" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/DefaultFrameDuration" to="." method="_on_DefaultFrameDuration_toggled"]
 [connection signal="pressed" from="ContentContainer/Rectangle/HBoxContainer/AnimaActionsBGColor2/ActionsContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]

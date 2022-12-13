@@ -291,6 +291,8 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 show_panel_on = 0
+_items = [  ]
+update_on_selected = true
 
 [node name="Timer" type="Timer" parent="." index="2"]
 wait_time = 0.2

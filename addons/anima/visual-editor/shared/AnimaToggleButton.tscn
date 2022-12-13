@@ -406,7 +406,8 @@ __meta__ = {
 },
 "__initial_AnimaToggleButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 node_to_toggle = NodePath("")
 

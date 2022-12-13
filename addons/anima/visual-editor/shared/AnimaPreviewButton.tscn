@@ -280,16 +280,23 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 transparent = true
-show_panel_on = 12
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Play.svg",
+"label": "Can play Animation"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/Skip.svg",
+"label": "Skip Animation"
+} ]
 
 [connection signal="pressed" from="." to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="." to="." method="_on_Preview_toggled"]
-[connection signal="button_down" from="PanelItems/VBoxContainer/Button" to="PanelItems/VBoxContainer/Button" method="_on_Button_button_down"]
-[connection signal="button_up" from="PanelItems/VBoxContainer/Button" to="PanelItems/VBoxContainer/Button" method="_on_Button_button_up"]
-[connection signal="toggled" from="PanelItems/VBoxContainer/Button" to="PanelItems/VBoxContainer/Button" method="_on_Button_toggled"]
-[connection signal="button_down" from="PanelItems/VBoxContainer/Button2" to="PanelItems/VBoxContainer/Button2" method="_on_Button_button_down"]
-[connection signal="button_up" from="PanelItems/VBoxContainer/Button2" to="PanelItems/VBoxContainer/Button2" method="_on_Button_button_up"]
-[connection signal="toggled" from="PanelItems/VBoxContainer/Button2" to="PanelItems/VBoxContainer/Button2" method="_on_Button_toggled"]
+[connection signal="button_down" from="PanelItems/VBoxContainer2/Button" to="PanelItems/VBoxContainer2/Button" method="_on_Button_button_down"]
+[connection signal="button_up" from="PanelItems/VBoxContainer2/Button" to="PanelItems/VBoxContainer2/Button" method="_on_Button_button_up"]
+[connection signal="toggled" from="PanelItems/VBoxContainer2/Button" to="PanelItems/VBoxContainer2/Button" method="_on_Button_toggled"]
+[connection signal="button_down" from="PanelItems/VBoxContainer2/Button2" to="PanelItems/VBoxContainer2/Button2" method="_on_Button_button_down"]
+[connection signal="button_up" from="PanelItems/VBoxContainer2/Button2" to="PanelItems/VBoxContainer2/Button2" method="_on_Button_button_up"]
+[connection signal="toggled" from="PanelItems/VBoxContainer2/Button2" to="PanelItems/VBoxContainer2/Button2" method="_on_Button_toggled"]

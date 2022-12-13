@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" type="PackedScene" id=2]
@@ -7,10 +7,20 @@
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/visual-editor/icons/PositionRight.svg" type="Texture" id=6]
 [ext_resource path="res://addons/anima/visual-editor/icons/PositionBottom.svg" type="Texture" id=7]
-[ext_resource path="res://addons/anima/visual-editor/icons/Visibility.svg" type="Texture" id=8]
-[ext_resource path="res://addons/anima/visual-editor/icons/Time.svg" type="Texture" id=9]
+[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture" id=8]
+[ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture" id=9]
+[ext_resource path="res://addons/anima/visual-editor/shared/AnimaMenuButton.tscn" type="PackedScene" id=10]
+[ext_resource path="res://addons/anima/visual-editor/icons/Add.svg" type="Texture" id=11]
+[ext_resource path="res://addons/anima/visual-editor/icons/Expand.svg" type="Texture" id=12]
 
-[node name="AnimaAnimation" type="HBoxContainer"]
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[node name="AnimaAnimation" type="VBoxContainer"]
 anchor_right = 1.0
 margin_right = -413.0
 margin_bottom = 38.0
@@ -20,22 +30,29 @@ custom_constants/separation = 0
 script = ExtResource( 3 )
 
 [node name="Control" type="Control" parent="."]
-margin_bottom = 38.0
+margin_right = 479.0
 
 [node name="BGColor" parent="Control" instance=ExtResource( 2 )]
-margin_right = 611.0
-margin_bottom = 38.0
+margin_right = 479.0
 color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
 
-[node name="Positions" type="HBoxContainer" parent="."]
-margin_right = 108.0
-margin_bottom = 38.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_right = 479.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 38 )
+size_flags_vertical = 3
+custom_constants/separation = 24
+
+[node name="Positions" type="HBoxContainer" parent="HBoxContainer2"]
+margin_right = 235.0
+margin_bottom = 40.0
 custom_constants/separation = 12
 
-[node name="PositionBottom" parent="Positions" instance=ExtResource( 4 )]
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+[node name="PositionBottom" parent="HBoxContainer2/Positions" instance=ExtResource( 4 )]
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 24, 20 )
+hint_tooltip = "Dock bottom"
 icon = ExtResource( 7 )
 icon_align = 1
 expand_icon = true
@@ -307,16 +324,18 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_PositionBottom__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_PositionRight2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 style = 3
 transparent = true
 
-[node name="PositionRight" parent="Positions" instance=ExtResource( 4 )]
+[node name="PositionRight" parent="HBoxContainer2/Positions" instance=ExtResource( 4 )]
 margin_left = 60.0
 margin_right = 108.0
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 24, 20 )
+hint_tooltip = "Dock right"
 icon = ExtResource( 6 )
 icon_align = 1
 expand_icon = true
@@ -587,25 +606,314 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_PositionRight__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 style = 3
 transparent = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 108.0
-margin_right = 611.0
-margin_bottom = 38.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/separation = 12
-alignment = 2
+[node name="Add" parent="HBoxContainer2/Positions" instance=ExtResource( 10 )]
+margin_left = 120.0
+margin_right = 235.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 57.5, 20 )
+custom_styles/normal = SubResource( 1 )
+text = "Add"
+icon = ExtResource( 11 )
+__meta__ = {
+"__initial_Add__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1089089038415726807_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1109358829504410889_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1109358829504410889_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1184046554139278564_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1199797368124862305_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1199797368124862305_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1340607361553487793_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1441945957727123779_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1441945957727123779_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_164700612275147168__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_164700612275147168_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1658482992875293945_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1663072209510023438_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_215925900549246643__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_215925900549246643_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_244386363034037598__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_244386363034037598_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_359789769654524719__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_359789769654524719_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_447088250819550293__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_447088250819550293_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_447088250819550293_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_503159164245518066__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_503159164245518066_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_503159164245518066_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_541279795408501465__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_541279795408501465_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_611141024203869141_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_625146128990218994__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_625146128990218994_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_647142782613271851__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_647142782613271851_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_698052055760981323__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_698052055760981323_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_807775977158753784__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_807775977158753784_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_8113687285780011__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_8113687285780011_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_838497898335865356__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_838497898335865356_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_838497898335865356_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_840572761080846802_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_871971128971702881__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_871971128971702881_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_871971128971702881_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_944680552210345459__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_944680552210345459_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_944680552210345459_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0
+}
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Animation.svg",
+"label": "Add Animation"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/Delay.svg",
+"label": "Add Delay"
+} ]
+update_on_selected = false
 
-[node name="PositionBottom2" parent="HBoxContainer" instance=ExtResource( 4 )]
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
-disabled = true
-icon = ExtResource( 8 )
+[node name="AnimaActionsBGColor" parent="HBoxContainer2" instance=ExtResource( 2 )]
+margin_left = 259.0
+margin_right = 359.0
+rect_min_size = Vector2( 100, 40 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2/AnimaActionsBGColor"]
+margin_left = 4.0
+margin_right = 104.0
+margin_bottom = 40.0
+
+[node name="ExpandAll" parent="HBoxContainer2/AnimaActionsBGColor/HBoxContainer" instance=ExtResource( 4 )]
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 24, 20 )
+hint_tooltip = "Expand All"
+icon = ExtResource( 12 )
 icon_align = 1
 expand_icon = true
 __meta__ = {
@@ -873,29 +1181,21 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionRight2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_CollapseAll2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
+"__initial_ExpandAll__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 style = 3
 transparent = true
 
-[node name="VisibilityStrategy" type="OptionButton" parent="HBoxContainer"]
-margin_left = 60.0
-margin_right = 191.0
-margin_bottom = 38.0
-hint_tooltip = "Set the visibility styrategy"
-text = "Ignore"
-items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
-selected = 0
-
-[node name="PositionBottom3" parent="HBoxContainer" instance=ExtResource( 4 )]
-margin_left = 203.0
-margin_right = 251.0
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
-disabled = true
+[node name="CollapseAll" parent="HBoxContainer2/AnimaActionsBGColor/HBoxContainer" instance=ExtResource( 4 )]
+margin_left = 52.0
+margin_right = 100.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 24, 20 )
+hint_tooltip = "Collapse All"
 icon = ExtResource( 9 )
 icon_align = 1
 expand_icon = true
@@ -1164,33 +1464,36 @@ __meta__ = {
 "percentage": 0,
 "value": Vector2( 1, 1 )
 },
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionBottom3__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_PositionRight2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_CollapseAll__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 style = 3
 transparent = true
 
-[node name="DefaultDuration" parent="HBoxContainer" instance=ExtResource( 5 )]
-margin_left = 263.0
-margin_right = 407.0
-margin_bottom = 38.0
-hint_tooltip = "Sets the default duration"
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2"]
+margin_left = 383.0
+margin_right = 479.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+alignment = 2
 
-[node name="Label4" type="Label" parent="HBoxContainer"]
-margin_left = 419.0
-margin_top = 6.0
-margin_right = 443.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 24, 0 )
+[node name="ToggleExtra" parent="HBoxContainer2/HBoxContainer" instance=ExtResource( 4 )]
+margin_bottom = 40.0
+toggle_mode = true
+icon = ExtResource( 8 )
+icon_align = 1
+expand_icon = true
+style = 3
 
-[node name="Preview" parent="HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 455.0
-margin_right = 503.0
-margin_bottom = 38.0
-rect_pivot_offset = Vector2( 24, 19 )
+[node name="Preview" parent="HBoxContainer2/HBoxContainer" instance=ExtResource( 1 )]
+margin_left = 48.0
+margin_right = 96.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 24, 20 )
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,
@@ -1460,11 +1763,85 @@ __meta__ = {
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0
 }
-show_panel_on = 12
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Play.svg",
+"label": "Play once"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/PlayOnEdit.svg",
+"label": "Play on animation change"
+} ]
+
+[node name="Extra" parent="." instance=ExtResource( 2 )]
+visible = false
+margin_top = 38.0
+margin_right = 335.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 416, 54 )
+size_flags_horizontal = 3
+color = Color( 0.0196078, 0.380392, 0.329412, 1 )
+style = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Extra"]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_constants/margin_right = 12
+custom_constants/margin_top = 8
+custom_constants/margin_left = 12
+custom_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Extra/MarginContainer"]
+margin_left = 12.0
+margin_top = 8.0
+margin_right = 404.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 0, 38 )
+
+[node name="Label2" type="Label" parent="Extra/MarginContainer/HBoxContainer"]
+margin_top = 12.0
+margin_right = 114.0
+margin_bottom = 26.0
+text = "Visibility Strategy:"
+
+[node name="VisibilityStrategy" type="OptionButton" parent="Extra/MarginContainer/HBoxContainer"]
+margin_left = 118.0
+margin_right = 188.0
+margin_bottom = 38.0
+hint_tooltip = "Set the visibility strategy"
+text = "Ignore"
+items = [ "Ignore", null, false, 0, null, "Hidden", null, false, 1, null, "Transparent", null, false, 2, null, "Hidden & Transparent", null, false, 3, null ]
+selected = 0
+
+[node name="Label3" type="Label" parent="Extra/MarginContainer/HBoxContainer"]
+margin_left = 192.0
+margin_top = 12.0
+margin_right = 204.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 12, 0 )
+
+[node name="Label" type="Label" parent="Extra/MarginContainer/HBoxContainer"]
+margin_left = 208.0
+margin_top = 12.0
+margin_right = 334.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 12, 0 )
+text = "Default duration (s):"
+
+[node name="DefaultDuration" parent="Extra/MarginContainer/HBoxContainer" instance=ExtResource( 5 )]
+margin_left = 338.0
+margin_right = 392.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 54, 0 )
+hint_tooltip = "Sets the default duration"
+caret_blink = true
+caret_blink_speed = 0.5
 
 [connection signal="resized" from="." to="." method="_on_AnimaAnimation_resized"]
-[connection signal="pressed" from="Positions/PositionBottom" to="." method="_on_PositionBottom_pressed"]
-[connection signal="pressed" from="Positions/PositionRight" to="." method="_on_PositionRight_pressed"]
-[connection signal="item_selected" from="HBoxContainer/VisibilityStrategy" to="." method="_on_VisibilityStrategy_item_selected"]
-[connection signal="changed" from="HBoxContainer/DefaultDuration" to="." method="_on_DefaultDuration_changed"]
-[connection signal="pressed" from="HBoxContainer/Preview" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="HBoxContainer2/Positions/PositionBottom" to="." method="_on_PositionBottom_pressed"]
+[connection signal="pressed" from="HBoxContainer2/Positions/PositionRight" to="." method="_on_PositionRight_pressed"]
+[connection signal="item_selected" from="HBoxContainer2/Positions/Add" to="." method="_on_Add_item_selected"]
+[connection signal="pressed" from="HBoxContainer2/AnimaActionsBGColor/HBoxContainer/ExpandAll" to="." method="_on_ExpandAll_pressed"]
+[connection signal="pressed" from="HBoxContainer2/AnimaActionsBGColor/HBoxContainer/CollapseAll" to="." method="_on_CollapseAll_pressed"]
+[connection signal="toggled" from="HBoxContainer2/HBoxContainer/ToggleExtra" to="." method="_on_ToggleExtra_toggled"]
+[connection signal="pressed" from="HBoxContainer2/HBoxContainer/Preview" to="." method="_on_PlayButton_pressed"]
+[connection signal="item_selected" from="Extra/MarginContainer/HBoxContainer/VisibilityStrategy" to="." method="_on_VisibilityStrategy_item_selected"]
+[connection signal="changed" from="Extra/MarginContainer/HBoxContainer/DefaultDuration" to="." method="_on_DefaultDuration_changed"]

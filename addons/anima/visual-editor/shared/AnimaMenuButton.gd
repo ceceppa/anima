@@ -5,7 +5,7 @@ var anima_button = preload("res://addons/anima/visual-editor/shared/AnimaButton.
 
 signal item_selected(id)
 
-onready var _panel: PopupPanel = $PanelItems
+onready var _panel: PopupPanel = find_node("PanelItems")
 
 enum SHOW_PANEL_ON {
 	HOVER,
@@ -16,7 +16,12 @@ enum SHOW_PANEL_ON {
 export (SHOW_PANEL_ON) var show_panel_on = SHOW_PANEL_ON.HOVER setget set_show_panel_on
 
 var _selected_id := 0
-var _items: Array
+export (Array) var _items setget set_items
+export (bool) var update_on_selected := true
+
+func _ready():
+	if _items.size() > 0 and _panel.get_child_count() == 0:
+		set_items(_items)
 
 func _on_Button_pressed():
 	if show_panel_on == SHOW_PANEL_ON.CLICK:
@@ -25,6 +30,10 @@ func _on_Button_pressed():
 func set_items(items: Array) -> void:
 	_items = items
 
+	if _panel == null:
+		return
+
+	
 	if _panel.get_child_count() > 0:
 		_panel.get_child(0).queue_free()
 
@@ -57,7 +66,8 @@ func _on_PopupMenu_id_pressed(id):
 func set_selected_id(id) -> void:
 	_selected_id = id
 
-	icon = load(_items[_selected_id].icon)
+	if update_on_selected:
+		icon = load(_items[_selected_id].icon)
 
 func get_selected_id() -> int:
 	return _selected_id
@@ -77,8 +87,10 @@ func _on_Button_mouse_entered():
 
 func _show_panel() -> void:
 	_panel.set_position(get_global_position() + Vector2(0, rect_size.y))
+
 	_panel.show()
 
+	_panel.mouse_filter = MOUSE_FILTER_STOP
 	_override_draw_mode = DRAW_HOVER
 
 	$Timer.stop()

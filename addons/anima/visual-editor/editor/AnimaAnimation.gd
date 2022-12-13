@@ -4,6 +4,10 @@ extends Control
 signal animation_updated
 signal preview_animation(preview_info)
 signal change_editor_position(new_position)
+signal add_delay
+signal add_frame
+signal expand_all
+signal collapse_all
 
 onready var _animation_name: Control = find_node("AnimationName")
 onready var _visibility_strategy: OptionButton = find_node("VisibilityStrategy")
@@ -89,3 +93,18 @@ func _on_PositionBottom_pressed():
 
 func _on_PositionRight_pressed():
 	emit_signal("change_editor_position", AnimaVisualNode.EDITOR_POSITION.RIGHT)
+
+func _on_Add_item_selected(id):
+	if id == 0:
+		emit_signal("add_frame")
+	else:
+		emit_signal("add_delay")
+
+func _on_ToggleExtra_toggled(button_pressed):
+	$Extra.visible = button_pressed
+
+func _on_ExpandAll_pressed():
+	emit_signal("expand_all")
+
+func _on_CollapseAll_pressed():
+	emit_signal("collapse_all")

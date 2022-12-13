@@ -214,3 +214,15 @@ func _on_FramesEditor_item_rect_changed():
 
 func _on_AnimaAnimation_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)
+
+func _on_AnimaAnimation_collapse_all():
+	_set_child_as_collapsed(true)
+
+func _on_AnimaAnimation_expand_all():
+	_set_child_as_collapsed(false)
+
+func _set_child_as_collapsed(collapsed: bool) -> void:
+	for child in _active_frames_container.get_children():
+		if child.has_method("set_collapsed"):
+			child.call_deferred("set_collapsed", collapsed)
+

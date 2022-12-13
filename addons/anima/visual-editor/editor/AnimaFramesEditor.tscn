@@ -27,9 +27,10 @@ size_flags_vertical = 3
 [node name="AnimaAnimation" parent="AnimaRectangle/VBoxContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 margin_right = 600.0
+margin_bottom = 40.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AnimaRectangle/VBoxContainer"]
-margin_top = 42.0
+margin_top = 44.0
 margin_right = 600.0
 margin_bottom = 1024.0
 size_flags_horizontal = 3
@@ -38,13 +39,13 @@ follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
 margin_right = 600.0
-margin_bottom = 982.0
+margin_bottom = 980.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
 
 [node name="FramesContainer1" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
-margin_bottom = 982.0
+margin_bottom = 980.0
 custom_constants/separation = 12
 
 [node name="FramesContainer2" type="VBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer/HBoxContainer"]
@@ -55,6 +56,7 @@ margin_bottom = 554.0
 custom_constants/separation = 12
 
 [node name="AnimaAddFrame" parent="." instance=ExtResource( 3 )]
+visible = false
 margin_left = 352.0
 margin_top = 883.0
 margin_right = 712.0
@@ -63,8 +65,12 @@ rect_pivot_offset = Vector2( 180, 288 )
 
 [connection signal="item_rect_changed" from="." to="." method="_on_FramesEditor_item_rect_changed"]
 [connection signal="resized" from="." to="." method="_on_FramesEditor_resized"]
+[connection signal="add_delay" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAddFrame_add_delay"]
+[connection signal="add_frame" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAddFrame_add_frame"]
 [connection signal="animation_updated" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_animation_updated"]
 [connection signal="change_editor_position" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_change_editor_position"]
+[connection signal="collapse_all" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_collapse_all"]
+[connection signal="expand_all" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_AnimaAnimation_expand_all"]
 [connection signal="preview_animation" from="AnimaRectangle/VBoxContainer/AnimaAnimation" to="." method="_on_preview_animation"]
 [connection signal="add_delay" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_delay"]
 [connection signal="add_frame" from="AnimaAddFrame" to="." method="_on_AnimaAddFrame_add_frame"]

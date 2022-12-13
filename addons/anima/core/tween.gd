@@ -112,6 +112,10 @@ func add_animation_data(animation_data: Dictionary) -> void:
 	var object: Node = _get_animated_object_item(property_data)
 	var use_method: String = "animate_linear"
 
+	# Needed for the spring animations generated via the animation builder
+	if easing_points is String and easing_points == "spring":
+		 easing_points = AnimaEasing.get_easing_points("spring")
+
 	if easing_points is Array:
 		use_method = 'animate_with_easing'
 	elif easing_points is String:
@@ -125,6 +129,7 @@ func add_animation_data(animation_data: Dictionary) -> void:
 
 		if easing_points.fn.find("__") == 0:
 			animation_data._easing_points = funcref(AnimaEasing, "spring")
+			use_method = 'animate_with_parameterized_easing'
 		else:
 			animation_data._easing_points = easing_points.fn
 
@@ -369,6 +374,11 @@ func _on_tween_completed(_node, _ignore) -> void:
 
 func _on_node_tree_exiting(anima_item: Node) -> void:
 	stop_all()
+
+	if Engine.editor_hint:
+		for meta in anima_item.get_meta_list():
+			if meta.find("AnimaNode__anima") >= 0:
+				anima_item.remove_meta(meta)
 
 	anima_item.free()
 

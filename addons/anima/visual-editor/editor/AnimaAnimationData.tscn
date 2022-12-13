@@ -964,6 +964,13 @@ __meta__ = {
 "__initial_Preview__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0
 }
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Play.svg",
+"label": "Play once"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/PlayOnEdit.svg",
+"label": "Play on animation change"
+} ]
 
 [node name="Label" type="Label" parent="Title/ActionsContainer/TitleActionsBg/HBoxContainer"]
 margin_left = 90.0

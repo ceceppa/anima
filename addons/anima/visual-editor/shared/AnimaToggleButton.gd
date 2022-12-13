@@ -35,7 +35,7 @@ func _on_AnimaToggleButton_toggled(button_pressed):
 	var path := "res://addons/anima/visual-editor/icons/Closed.svg"
 
 	if button_pressed:
-		path = "res://addons/anima/visual-editor/icons/Collapse.svg"
+		path = "res://addons/anima/visual-editor/icons/Expand.svg"
 
 	set('icon', load(path))
 

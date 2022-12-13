@@ -187,7 +187,14 @@ func _restore_data(data: Dictionary) -> void:
 
 		the_frame.set_has_previous(key_index > 0)
 		the_frame.set_has_next(key_index < total_frames)
+
+		if the_frame.has_method("set_can_play") and frame_data.has("_skip"):
+			the_frame.set_can_play(frame_data._skip)
+
 		the_frame.set_meta("_data_index", key_index)
+
+		if frame_data.has("_collapsed"):
+			the_frame.set_collapsed(frame_data._collapsed)
 
 		for data_index in frame_data.data.size():
 			var the_data = frame_data.data

@@ -16,6 +16,7 @@ onready var _animate_property = find_node("AnimateProperty")
 onready var _title = find_node("Title")
 onready var _property_or_animation = find_node("PropertyOrAnimation")
 onready var _select_property_button = find_node("SelectProperty")
+onready var _preview_button = find_node("Preview")
 
 var _property_name = ""
 var _property_type = TYPE_NIL
@@ -52,6 +53,7 @@ func get_data() -> Dictionary:
 		property_type = _property_type,
 		property_name = _property_name,
 		animate_with = _property_or_animation.get_selected_id(),
+		_skip = _preview_button.get_selected_id() != 0,
 		property = {
 			from = _property_data.find_node("FromValue").get_value(),
 			to = _property_data.find_node("ToValue").get_value(),
@@ -75,6 +77,9 @@ func restore_data(data: Dictionary) -> void:
 		_select_property_button = find_node("SelectProperty")
 
 	set_property_to_animate(data.property_name, data.property_type)
+	
+	if data.has("_skip") and data._skip:
+		_preview_button.set_selected_id(1)
 
 	_property_data.find_node("FromValue").set_value(data.property.from, AnimaTweenUtils.calculate_dynamic_value(data.property.from, data))
 	_property_data.find_node("ToValue").set_value(data.property.to, AnimaTweenUtils.calculate_dynamic_value(data.property.to, data))
@@ -138,7 +143,7 @@ func _update_title() -> void:
 		show_preview = true
 
 	_select_property_button.text = _property_name + " (change...)"
-	find_node("Preview").visible = show_preview
+	_preview_button.visible = show_preview
 	_title.set_text(title)
 
 func _set_property_type(property_type) -> void:
@@ -203,3 +208,7 @@ func _on_MarginContainer_visibility_changed():
 
 func _on_Preview_pressed():
 	emit_signal("preview_animation", { preview_button = find_node("Preview"), single_animation_id = get_meta("_data_index") })
+
+
+func _on_Preview_item_selected(id):
+	emit_signal("updated")

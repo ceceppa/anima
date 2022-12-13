@@ -787,6 +787,13 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 transparent = true
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Property.svg",
+"label": "Animate proeprty"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/Animation.svg",
+"label": "Use existing animation"
+} ]
 
 [node name="Remove" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 2 )]
 margin_left = 65.0
@@ -3179,6 +3186,7 @@ __meta__ = {
 [node name="ConfirmationDialog" parent="." instance=ExtResource( 12 )]
 dialog_text = "Are you sure you want to remove the Node(s) animation?"
 
+[connection signal="item_selected" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_item_selected"]
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_pressed"]
 [connection signal="item_selected" from="ActionsContainer/ColorRect/HBoxContainer/PropertyOrAnimation" to="." method="_on_PropertyOrAnimation_item_selected"]
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Remove" to="." method="_on_Remove_pressed"]

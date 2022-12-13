@@ -27,6 +27,7 @@ onready var _frame_name
 onready var _duration = find_node("Duration")
 onready var _collapse_button = find_node("Collapse")
 onready var _frame_collapsed_title = find_node("FrameCollapsedTitle")
+onready var _preview_button = find_node("Preview")
 
 var _source: Node
 var _final_width: float = 640
@@ -36,10 +37,7 @@ var _is_animating := false
 func _ready():
 	$ContentContainer/Rectangle.rect_size.x = _final_width
 
-	if animate_entrance_exit and false:
-		_animate_me()
-	else:
-		rect_min_size.x = _final_width
+	rect_min_size.x = _final_width
 
 	set_is_initial_frame(is_initial_frame)
 	_on_DefaultFrameDuration_toggled(false)
@@ -50,7 +48,8 @@ func get_data() -> Dictionary:
 		duration = _duration.get_value(),
 		type = "frame",
 		data = [],
-		collapsed = _collapse_button.pressed
+		_collapsed = not _frame_name.pressed,
+		_skip = _preview_button.get_selected_id() != 0
 	}
 
 	for child in _animations_container.get_children():
@@ -73,7 +72,10 @@ func set_title_as_toggable(toggable: bool) -> void:
 
 	find_node("StaticFrameName").visible = not toggable
 	find_node("ToggableFrameName").visible = toggable
-	
+
+func set_collapsed(collapsed) -> void:
+	_frame_name.pressed = not collapsed
+
 func set_has_previous(has: bool) -> void:
 	_maybe_set_visible("MoveLeft", has)
 
@@ -92,6 +94,10 @@ func set_duration(duration: float) -> void:
 func clear() -> void:
 	for child in _animations_container.get_children():
 		child.queue_free()
+
+func set_can_play(skip: bool) -> void:
+	if skip:
+		_preview_button.set_selected_id(1)
 
 func add_animation_for(node: Node, path: String) -> Node:
 	var animation_item: Node = ANIMATION_DATA.instance() 
@@ -118,73 +124,6 @@ func add_animation_for(node: Node, path: String) -> Node:
 func collapse() -> void:
 	_collapse_button.set_meta(_DO_NOT_ANIMATE_KEY, true)
 	_collapse_button.pressed = true
-
-func _animate_me(backwards := false) -> AnimaNode:
-	var anima: AnimaNode = Anima.begin_single_shot(self)
-	
-	anima.set_default_duration(0.3)
-	anima.set_apply_initial_values(ANIMA.APPLY_INITIAL_VALUES.ON_PLAY)
-
-	if get_parent().name == "FramesContainer2":
-		_final_width = get_parent().rect_size.x
-	
-	anima.with(
-		Anima.Node(self) \
-			.anima_animation_frames({
-				from = {
-					"min_size:x": 0,
-					"size:x": 0,
-					"opacity": 0,
-				},
-				to = {
-					"min_size:x": _final_width,
-					"size:x": _final_width,
-					"opacity": 1,
-				},
-				easing = ANIMA.EASING.EASE_OUT_BACK,
-				initial_values = {
-					"min_size:x": 0,
-					"size:x": 0,
-					"opacity": 0,
-				}
-			})
-	) \
-	.with(
-		Anima.Nodes([
-			find_node("MoveContainer").get_children(),
-			find_node("ActionsContainer").get_children()
-		], 0.01) \
-		.anima_animation_frames({
-			from = {
-				scale = Vector2(0.1, 0.1),
-				opacity = 0,
-			},
-			to = {
-				scale = Vector2.ONE,
-				opacity = 1,
-				easing = ANIMA.EASING.SPRING
-			},
-			initial_values = {
-				opacity = 0,
-			}
-		}) \
-		.anima_delay(0.1)
-	) \
-	.skip(
-		Anima.Node($Collapse).anima_fade_in().anima_initial_value(0)
-	)
-
-
-	if backwards:
-		anima.play_backwards_with_speed(1.5)
-	else:
-		anima.play()
-
-	yield(anima, "animation_completed")
-
-#	rect_clip_content = false
-
-	return anima
 
 func set_is_initial_frame(new_is_initial_frame: bool):
 	is_initial_frame = new_is_initial_frame
@@ -350,9 +289,6 @@ func _on_AnimationsContainer_node_dragged(node_path: String) -> void:
 	emit_signal("add_node", node_path)
 
 func _on_ConfirmationDialog_confirmed():
-	if animate_entrance_exit:
-		yield(_animate_me(true), "completed")
-
 	queue_free()
 	emit_signal("frame_deleted")
 
@@ -365,16 +301,24 @@ func _on_preview_animation(preview_info: Dictionary) -> void:
 	emit_signal("preview_animation", preview_info)
 
 func _on_Preview_pressed():
+	if _preview_button.get_selected_id() != 0:
+		return
+
 	var preview_info := {
 		frame_id = _get_data_index(),
-		preview_button = find_node("Preview")
+		preview_button = _preview_button
 	}
 
 	emit_signal("preview_animation", preview_info)
 
 func update_size_x(value: float) -> void:
-	rect_min_size.x = value
 	rect_size.x = value
 
 func _on_Duration_value_updated():
+	emit_signal("frame_updated")
+
+func _on_Preview_item_selected(id):
+	emit_signal("frame_updated")
+
+func _on_ToggableFrameName_pressed():
 	emit_signal("frame_updated")
