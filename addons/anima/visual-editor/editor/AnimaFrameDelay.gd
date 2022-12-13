@@ -41,10 +41,24 @@ func _on_Delete_pressed():
 func _on_DelayValue_changed():
 	emit_signal("frame_updated")
 
-func set_has_previous(has: bool) -> void:
+func set_has_previous(has: bool, direction: int) -> void:
+	var icon = "res://addons/anima/visual-editor/icons/MoveLeft.svg" if direction == 0 else "res://addons/anima/visual-editor/icons/MoveUp.svg"
+	var tip = "left" if direction == 0 else "up"
+
+	var node = find_node("MoveLeft")
+	node.icon = load(icon)
+	node.hint_tooltip = "Move one frame " + tip
+
 	_maybe_set_visible("MoveLeft", has)
 
-func set_has_next(has: bool) -> void:
+func set_has_next(has: bool, direction: int) -> void:
+	var icon = "res://addons/anima/visual-editor/icons/MoveRight.svg" if direction == 0 else "res://addons/anima/visual-editor/icons/MoveDown.svg"
+	var tip = "right" if direction == 0 else "down"
+
+	var node = find_node("MoveRight")
+	node.icon = load(icon)
+	node.hint_tooltip = "Move one frame " + tip
+
 	_maybe_set_visible("MoveRight", has)
 
 func _maybe_set_visible(node_name: String, visible: bool) -> void:

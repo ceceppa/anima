@@ -47,12 +47,12 @@ size_flags_vertical = 3
 custom_constants/separation = 0
 
 [node name="MoveLeft" parent="AnimaActionsBGColor/HBoxContainer" instance=ExtResource( 1 )]
-margin_right = 64.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 32, 24.5 )
 hint_tooltip = "Move one frame left"
 icon = ExtResource( 4 )
 icon_align = 1
+expand_icon = true
 __meta__ = {
 "__initial_AnimaNode__anima_1074496749805345459__button_bg": {
 "percentage": 0,
@@ -351,13 +351,14 @@ __meta__ = {
 transparent = true
 
 [node name="MoveRight" parent="AnimaActionsBGColor/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 64.0
-margin_right = 128.0
+margin_left = 48.0
+margin_right = 96.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 32, 24.5 )
 hint_tooltip = "Move one frame right"
 icon = ExtResource( 5 )
 icon_align = 1
+expand_icon = true
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,
@@ -665,7 +666,7 @@ transparent = true
 
 [node name="ToggleButton" parent="AnimaActionsBGColor/HBoxContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
-margin_left = 128.0
+margin_left = 96.0
 margin_right = 328.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 100, 24.5 )

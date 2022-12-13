@@ -185,8 +185,8 @@ func _restore_data(data: Dictionary) -> void:
 		if not frame_data.has("data"):
 			frame_data.data = {}
 
-		the_frame.set_has_previous(key_index > 0)
-		the_frame.set_has_next(key_index < total_frames)
+		the_frame.set_has_previous(key_index > 0, _flow_direction)
+		the_frame.set_has_next(key_index < total_frames, _flow_direction)
 
 		if the_frame.has_method("set_can_play") and frame_data.has("_skip"):
 			the_frame.set_can_play(frame_data._skip)
