@@ -441,6 +441,75 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		property = property
 	}
 
+static func extract_shader_params(shader_code: String):
+	var regex = RegEx.new()
+	regex.compile("uniform\\s+(\\w+)\\s+(\\w+):?([^=]*).([^;]*)")
+
+	var uniform_values: Array = regex.search_all(shader_code)
+	var result := []
+
+	for index in uniform_values.size():
+		var rm: RegExMatch = uniform_values[index]
+		var pieces: Array = rm.strings
+		var type = _extract_type_from_shader_uniform(pieces[1].strip_edges())
+		var default = _extract_value_from_shader_uniform(pieces[4].strip_edges())
+		
+		result.push_back({
+			type = type,
+			name = pieces[2],
+			default = default
+		})
+
+	return result
+
+static func _extract_type_from_shader_uniform(uniform_type: String) -> int:
+	var type = TYPE_REAL
+
+	match uniform_type:
+		"float":
+			type = TYPE_REAL
+		"int":
+			type = TYPE_INT
+		"vec2":
+			type = TYPE_VECTOR2
+		"vec3":
+			type = TYPE_VECTOR3
+		"vec4":
+			type = TYPE_COLOR
+
+	return type
+
+static func _extract_value_from_shader_uniform(shader_value: String):
+	var regex = RegEx.new()
+	
+	regex.compile("\\((.*)\\)")
+
+	var regex_result = regex.search_all(shader_value)
+	var values_in_parenthesis: Array
+
+	if regex_result.size() > 0:
+		values_in_parenthesis = regex_result[0].strings[1].split(",")
+
+	if shader_value.find("vec2") >= 0:
+		if values_in_parenthesis.size() > 1:
+			return Vector2(float(values_in_parenthesis[0]), float(values_in_parenthesis[1]))
+		else:
+			return Vector2(float(values_in_parenthesis[0]), float(values_in_parenthesis[0]))
+
+	if shader_value.find("vec3") >= 0:
+		if values_in_parenthesis.size() > 1:
+			return Vector3(float(values_in_parenthesis[0]), float(values_in_parenthesis[1]), float(values_in_parenthesis[2]))
+		else:
+			return Vector3(float(values_in_parenthesis[0]), float(values_in_parenthesis[0]), float(values_in_parenthesis[0]))
+
+	if shader_value.find("vec4") >= 0:
+		if values_in_parenthesis.size() > 1:
+			return Color(float(values_in_parenthesis[0]), float(values_in_parenthesis[1]), float(values_in_parenthesis[2]), float(values_in_parenthesis[3]))
+		else:
+			return Color(float(values_in_parenthesis[0]), float(values_in_parenthesis[0]), float(values_in_parenthesis[0]), float(values_in_parenthesis[0]))
+
+	return float(shader_value)
+
 #
 # Allow calling "tr" from a static function
 #

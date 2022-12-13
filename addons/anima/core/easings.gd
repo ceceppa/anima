@@ -94,8 +94,8 @@ static func get_easing_points(easing_name):
 	if _easing_mapping.has(easing_name):
 		easing_value = _easing_mapping[easing_name]
 
-	if easing_value is String and easing_value.find("spring") >= 0:
-		var params: Array = easing_value.replace("spring", "").replace("(", "").replace(")", "").split(",")
+	if easing_name is String and easing_name.find("spring") >= 0:
+		var params: Array = easing_name.replace("spring", "").replace("(", "").replace(")", "").split(",")
 
 		var mass = params[0]
 		if mass == null or mass == "":

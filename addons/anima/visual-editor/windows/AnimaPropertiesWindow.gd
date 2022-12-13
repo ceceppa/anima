@@ -45,6 +45,10 @@ func _populate_animatable_properties_list(source_node: Node) -> void:
 	if source_node is Sprite:
 		_animatable_properties.push_back({name = 'size', type = TYPE_VECTOR2})
 
+		if source_node.material.shader is Shader:
+			var shader_params = AnimaNodesProperties.extract_shader_params(source_node.material.shader.code)
+			_animatable_properties.push_back({ name = "shader_param", type = TYPE_DICTIONARY, properties = shader_params })
+
 	var properties = source_node.get_property_list()
 	var properties_to_ignore := [
 		'pause_mode',
@@ -84,8 +88,11 @@ func populate_tree(filter: String = '') -> void:
 	var root_item = tree.create_item()
 	root_item.set_text(0, "Available properties")
 	root_item.set_selectable(0, false)
+	
+	_add_animatable_properties(tree, root_item, _animatable_properties, filter)
 
-	for animatable_property in _animatable_properties:
+func _add_animatable_properties(tree: Tree, root_item: TreeItem, animatable_properties: Array, filter: String):
+	for animatable_property in animatable_properties:
 		var name = animatable_property.name
 		var is_visible = filter.strip_edges().length() == 0 or name.to_lower().find(filter.to_lower().strip_edges()) >= 0
 
@@ -107,6 +114,8 @@ func populate_tree(filter: String = '') -> void:
 			sub_properties = ['r', 'g', 'b', 'a']
 		elif animatable_property.type == TYPE_RECT2:
 			sub_properties = ['x', 'y', 'w', 'h']
+		elif animatable_property.type == TYPE_DICTIONARY:
+			_add_animatable_properties(tree, item, animatable_property.properties, filter)
 
 		for sub_property in sub_properties:
 			var sub = tree.create_item(item)

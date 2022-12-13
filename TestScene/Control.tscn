@@ -1,11 +1,26 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://TestScene/Control.gd" type="Script" id=1]
+[ext_resource path="res://demos/resources/anima-preview.png" type="Texture" id=2]
+[ext_resource path="res://tests/Control.gdshader" type="Shader" id=3]
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 3 )
+shader_param/speed = 10.0
+shader_param/v2 = Vector2( 1.3, 0.3 )
+shader_param/v2_1 = Vector2( 1.3, 1.3 )
+shader_param/v3 = Vector3( 1.9, 1.9, 1.9 )
+shader_param/v3_1 = Vector3( 1.3, 3, 0.5 )
+shader_param/c = Color( 1, 1, 1, 1 )
+shader_param/c_1 = Plane( 1.3, 3, 0.5, 0 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Label" type="Label" parent="."]
 margin_left = 441.0
@@ -13,3 +28,8 @@ margin_top = 163.0
 margin_right = 481.0
 margin_bottom = 188.0
 text = "Test me"
+
+[node name="Anima-preview" type="Sprite" parent="."]
+material = SubResource( 2 )
+position = Vector2( 451, 255 )
+texture = ExtResource( 2 )

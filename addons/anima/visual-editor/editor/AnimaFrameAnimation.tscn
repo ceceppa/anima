@@ -6651,6 +6651,7 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
+visible = false
 margin_right = 616.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
