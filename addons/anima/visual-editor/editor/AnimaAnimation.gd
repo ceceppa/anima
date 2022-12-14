@@ -108,3 +108,7 @@ func _on_ExpandAll_pressed():
 
 func _on_CollapseAll_pressed():
 	emit_signal("collapse_all")
+
+
+func _on_Preview_play_preview():
+	emit_signal("preview_animation", { preview_button = find_node("Preview"), name = "default" })

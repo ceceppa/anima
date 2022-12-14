@@ -75,6 +75,7 @@ func _on_MoveLeft_pressed():
 
 func update_size_x(value: float) -> void:
 	rect_size.x = value
+	$Control/BG.rect_size = rect_size
 
 func _on_ToggleButton_pressed():
 	emit_signal("frame_updated")

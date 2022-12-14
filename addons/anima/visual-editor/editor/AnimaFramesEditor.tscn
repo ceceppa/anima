@@ -38,8 +38,6 @@ size_flags_vertical = 3
 follow_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AnimaRectangle/VBoxContainer/ScrollContainer"]
-margin_right = 600.0
-margin_bottom = 980.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12

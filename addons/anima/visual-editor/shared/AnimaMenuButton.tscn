@@ -18,7 +18,7 @@ shadow_size = 2
 shadow_offset = Vector2( 2, 2 )
 
 [node name="MenuButton" instance=ExtResource( 1 )]
-rect_pivot_offset = Vector2( 24, 11 )
+margin_right = 0.0
 script = ExtResource( 2 )
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
@@ -294,15 +294,16 @@ show_panel_on = 0
 _items = [  ]
 update_on_selected = true
 
-[node name="Timer" type="Timer" parent="." index="2"]
+[node name="Timer" type="Timer" parent="." index="1"]
 wait_time = 0.2
 one_shot = true
 
-[node name="PanelItems" type="PopupPanel" parent="." index="3"]
+[node name="PanelItems" type="PopupPanel" parent="." index="2"]
 margin_right = 16.0
 margin_bottom = 16.0
 custom_styles/panel = SubResource( 1 )
 
 [connection signal="mouse_entered" from="." to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_Button_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_Button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

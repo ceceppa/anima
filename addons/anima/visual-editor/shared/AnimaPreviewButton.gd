@@ -1,40 +1,40 @@
 tool
-extends "res://addons/anima/visual-editor/shared/AnimaMenuButton.gd"
+extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
+
+signal play_preview
+signal skip_changed
 
 var _anima: AnimaNode
+var skip := false setget set_skip
+var _stop_funcref: FuncRef
 
-func _ready():
-	_disabled_icon_color = Color("#ff8a8c")
+func _on_Preview_pressed():
+	if Input.is_physical_key_pressed(KEY_CONTROL):
+		set_skip(not skip)
 
-	set_items([
-		{ icon = "res://addons/anima/visual-editor/icons/Play.svg", label = "Can play Animation" },
-		{ icon = "res://addons/anima/visual-editor/icons/Skip.svg", label = "Skip Animation" }
-#		{ icon = "res://addons/anima/visual-editor/icons/PlayOnEdit.svg", label = "Play on animation change" }
-	])
-
-func _on_Preview_toggled(button_pressed):
-	._on_Button_toggled(button_pressed)
-
-	toggle_mode = _selected_id == 0
-
-	if _selected_id != 0:
-		pressed = false
+	if skip:
 		return
 
-	var icon_name = "Wait.svg" if button_pressed else "Play.svg"
+	if _stop_funcref:
+		_stop_funcref.call_func()
+
+		return
+
+	emit_signal("play_preview")
+
+func set_skip(s: bool) -> void:
+	if s != skip:
+		emit_signal("skip_changed")
+
+	skip = s
+	
+	var svg_name := "Play.svg" if not skip else "Skip.svg"
+
+	icon = load("res://addons/anima/visual-editor/icons/" + svg_name)
+
+func set_is_playing(playing: bool, stop_funcref = null) -> void:
+	var icon_name = "Stop.svg" if playing else "Play.svg"
 
 	icon = load("res://addons/anima/visual-editor/icons/" + icon_name)
 
-	if button_pressed:
-		_anima = Anima.begin(self, "zoom_icon") \
-			.with(
-				Anima.Node(self).anima_animation("pulse", 0.7)
-			) \
-			.loop_with_delay(0.5)
-	else:
-		_anima.stop()
-
-	disabled = button_pressed
-
-	update()
-
+	_stop_funcref = stop_funcref

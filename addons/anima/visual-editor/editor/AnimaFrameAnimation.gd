@@ -23,22 +23,17 @@ export (bool) var is_initial_frame := false setget set_is_initial_frame
 const _DO_NOT_ANIMATE_KEY = '_do_not_animate'
 
 onready var _animations_container = find_node("AnimationsContainer")
-onready var _frame_name
+onready var _frame_name = find_node("FrameName")
 onready var _duration = find_node("Duration")
 onready var _collapse_button = find_node("Collapse")
 onready var _frame_collapsed_title = find_node("FrameCollapsedTitle")
 onready var _preview_button = find_node("Preview")
 
 var _source: Node
-var _final_width: float = 640
 var _old_height: float
 var _is_animating := false
 
 func _ready():
-	$ContentContainer/Rectangle.rect_size.x = _final_width
-
-	rect_min_size.x = _final_width
-
 	set_is_initial_frame(is_initial_frame)
 	_on_DefaultFrameDuration_toggled(false)
 
@@ -49,7 +44,7 @@ func get_data() -> Dictionary:
 		type = "frame",
 		data = [],
 		_collapsed = not _frame_name.pressed,
-		_skip = _preview_button.get_selected_id() != 0
+		_skip = _preview_button.skip
 	}
 
 	for child in _animations_container.get_children():
@@ -62,16 +57,10 @@ func set_name(name: String) -> void:
 	if is_initial_frame:
 		name = "Initial Frame"
 
+	if _frame_name == null:
+		_frame_name = find_node("FrameName")
+
 	_frame_name.set_text(name)
-
-func set_title_as_toggable(toggable: bool) -> void:
-	if toggable:
-		_frame_name = find_node("ToggableFrameName")
-	else:
-		_frame_name = find_node("StaticFrameName")
-
-	find_node("StaticFrameName").visible = not toggable
-	find_node("ToggableFrameName").visible = toggable
 
 func set_collapsed(collapsed) -> void:
 	_frame_name.pressed = not collapsed
@@ -144,7 +133,6 @@ func set_is_initial_frame(new_is_initial_frame: bool):
 	is_initial_frame = new_is_initial_frame
 
 	find_node("DurationContainer").visible = !is_initial_frame
-	find_node("Delete").visible = !is_initial_frame
 
 func set_relative_property(node_path: String, property: String) -> void:
 	_source.set_relative_propert(node_path, property)
@@ -263,9 +251,6 @@ func _on_Collapse_toggled(toggled: bool) -> void:
 
 	_is_animating = false
 
-	$ContentContainer/Rectangle.rect_min_size.x = _final_width
-	$ContentContainer/Rectangle.rect_size.x = _final_width
-
 	if can_emit_signal:
 		emit_signal("frame_updated")
 	else:
@@ -315,10 +300,19 @@ func _on_preview_animation(preview_info: Dictionary) -> void:
 
 	emit_signal("preview_animation", preview_info)
 
-func _on_Preview_pressed():
-	if _preview_button.get_selected_id() != 0:
-		return
+func update_size_x(value: float) -> void:
+	rect_size.x = value
 
+func _on_Duration_value_updated():
+	emit_signal("frame_updated")
+
+func _on_ToggableFrameName_pressed():
+	emit_signal("frame_updated")
+
+func _on_Preview_skip_changed():
+	emit_signal("frame_updated")
+
+func _on_Preview_play_preview():
 	var preview_info := {
 		frame_id = _get_data_index(),
 		preview_button = _preview_button
@@ -326,14 +320,18 @@ func _on_Preview_pressed():
 
 	emit_signal("preview_animation", preview_info)
 
-func update_size_x(value: float) -> void:
-	rect_size.x = value
+func set_title_as_toggable(toggable: bool) -> void:
+	pass
 
-func _on_Duration_value_updated():
-	emit_signal("frame_updated")
+func _on_MenuButton_item_selected(id):
+	if id == 0:
+		_on_DefaultFrameDuration_toggled(not find_node("DurationContainer").visible)
+	elif id == 2:
+		emit_signal("move_one_left")
+	elif id == 3:
+		emit_signal("move_one_right")
+	else:
+		_on_Delete_pressed()
 
-func _on_Preview_item_selected(id):
-	emit_signal("frame_updated")
-
-func _on_ToggableFrameName_pressed():
-	emit_signal("frame_updated")
+func _on_Button_pressed():
+	find_node("DurationContainer").hide()

@@ -352,10 +352,19 @@ func preview_animation(preview_info: Dictionary) -> void:
 	if single_animation_data.frames[0].data[0].animations.size() == 0:
 		return
 		
-	preview_button.pressed = true
+	preview_button.set_is_playing(true, funcref(self, "_stop_preview"))
 
 	var doit = _play_animation_from_data("_single_animation", single_animation_data, 1.0, true)
 
 	yield(doit, "completed")
 
-	preview_button.pressed = false
+	preview_button.set_is_playing(false)
+
+func _stop_preview():
+	print(_active_anima_node)
+
+	if _active_anima_node:
+		_active_anima_node.stop()
+		
+		_active_anima_node.emit_signal("animation_completed")
+

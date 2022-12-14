@@ -88,8 +88,6 @@ func _input(_event):
 	if draw_mode != _old_draw_mode:
 		_refresh_button(draw_mode)
 
-	_old_draw_mode = draw_mode
-
 func _get_bg_color(draw_mode: int) -> Color:
 	var color: Color = COLORS[style]
 
@@ -122,11 +120,16 @@ func _refresh_button(draw_mode: int, force := false) -> void:
 	if mode != _old_draw_mode or force:
 		var final_color: Color = _get_bg_color(draw_mode)
 
-		Anima.begin_single_shot(self) \
-			.with(
-				Anima.Node(self).anima_property("_button_bg", final_color, 0.15)
-			) \
-			.play()
+		if not is_inside_tree():
+			_button_bg = final_color
+		else:
+			Anima.begin_single_shot(self) \
+				.with(
+					Anima.Node(self).anima_property("_button_bg", final_color, 0.15)
+				) \
+				.play()
+
+	_old_draw_mode = draw_mode
 
 func set_button_style(new_style: int) -> void:
 	style = new_style
@@ -218,4 +221,4 @@ func set_transparent(t: bool) -> void:
 	
 	_old_draw_mode = -1
 	
-	_refresh_button(get_draw_mode())
+	_refresh_button(get_draw_mode(), true)

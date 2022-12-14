@@ -16,7 +16,8 @@ bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
 [node name="Button" type="Button"]
 margin_right = 48.0
-rect_pivot_offset = Vector2( 24, 16.5 )
+margin_bottom = 22.0
+rect_pivot_offset = Vector2( 24, 11 )
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 1 )

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaSingleAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" type="PackedScene" id=11]
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=13]
+[ext_resource path="res://addons/anima/visual-editor/icons/Closed.svg" type="Texture" id=14]
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 48.0
@@ -70,7 +71,9 @@ margin_right = 487.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 243.5, 24.5 )
 custom_styles/normal = SubResource( 2 )
+pressed = false
 text = "No animation defined"
+icon = ExtResource( 14 )
 __meta__ = {
 "__initial_AnimaNode__anima_1026196471787050537__button_bg": {
 "percentage": 0,
@@ -466,8 +469,7 @@ __meta__ = {
 },
 "__initial_Title__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 style = 1
 node_to_toggle = NodePath("../../MarginContainer")
@@ -783,8 +785,7 @@ __meta__ = {
 "__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_PropertyOrAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 transparent = true
 _items = [ {
@@ -1070,8 +1071,7 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
 "__initial_Remove__button_bg": Color( 0.270588, 0, 0.0117647, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 style = 2
 transparent = true
@@ -1510,8 +1510,7 @@ __meta__ = {
 },
 "__initial_EasingButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": "",
-"_visibility_strategy_reverted": true
+"_editor_description_": ""
 }
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PropertyData"]
@@ -2346,8 +2345,7 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_SelectProperty__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="SelectAnimation" parent="MarginContainer/VBoxContainer" instance=ExtResource( 2 )]
@@ -3179,14 +3177,12 @@ __meta__ = {
 "value": 1.0
 },
 "__initial_SelectAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+"__visibility_strategy": 0
 }
 
 [node name="ConfirmationDialog" parent="." instance=ExtResource( 12 )]
 dialog_text = "Are you sure you want to remove the Node(s) animation?"
 
-[connection signal="item_selected" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_item_selected"]
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_pressed"]
 [connection signal="item_selected" from="ActionsContainer/ColorRect/HBoxContainer/PropertyOrAnimation" to="." method="_on_PropertyOrAnimation_item_selected"]
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Remove" to="." method="_on_Remove_pressed"]

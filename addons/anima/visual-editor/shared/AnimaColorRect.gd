@@ -30,13 +30,13 @@ func _ready():
 	_on_resized()
 
 func _on_resized() -> void:
-	rect_min_size = Vector2.ZERO
+#	rect_min_size = Vector2.ZERO
 
 	if get_child_count() > 0:
 		var child_size = get_child(0).rect_size
 
 		rect_min_size = child_size
-
+	
 func set_bg_style(new_style: int) -> void:
 	style = new_style
 

@@ -41,17 +41,22 @@ func set_items(items: Array) -> void:
 
 	for index in _items.size():
 		var item = _items[index]
-		var panel_item = anima_button.instance()
+		var panel_item
 
-		panel_item.icon = load(item.icon)
-		panel_item.text = "  " + item.label
-		panel_item.align = ALIGN_LEFT
-		panel_item.rect_min_size.y = 49
-		panel_item._update_padding()
+		if item is String:
+			panel_item = HSeparator.new()
+		else:
+			panel_item = anima_button.instance()
 
-		panel_item.connect("button_down", self, "_on_PopupMenu_id_pressed", [index])
-		panel_item.connect("mouse_entered", self, "_on_PopupPanel_mouse_entered")
-		panel_item.connect("mouse_exited", self, "_on_Button_mouse_exited")
+			panel_item.icon = load(item.icon)
+			panel_item.text = "  " + item.label
+			panel_item.align = ALIGN_LEFT
+			panel_item.rect_min_size.y = 49
+			panel_item._update_padding()
+
+			panel_item.connect("button_down", self, "_on_PopupMenu_id_pressed", [index])
+			panel_item.connect("mouse_entered", self, "_on_PopupPanel_mouse_entered")
+			panel_item.connect("mouse_exited", self, "_on_Button_mouse_exited")
 
 		vbox.add_child(panel_item)
 
@@ -99,7 +104,10 @@ func _on_Button_mouse_exited():
 	$Timer.start()
 
 func _on_Timer_timeout():
+	_override_draw_mode = null
 	_panel.hide()
+	
+	_refresh_button(get_draw_mode(), true)
 
 func _on_PopupPanel_mouse_entered():
 	$Timer.stop()

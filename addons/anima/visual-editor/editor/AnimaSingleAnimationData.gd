@@ -53,7 +53,7 @@ func get_data() -> Dictionary:
 		property_type = _property_type,
 		property_name = _property_name,
 		animate_with = _property_or_animation.get_selected_id(),
-		_skip = _preview_button.get_selected_id() != 0,
+		_skip = _preview_button.skip,
 		property = {
 			from = _property_data.find_node("FromValue").get_value(),
 			to = _property_data.find_node("ToValue").get_value(),
@@ -78,8 +78,8 @@ func restore_data(data: Dictionary) -> void:
 
 	set_property_to_animate(data.property_name, data.property_type)
 	
-	if data.has("_skip") and data._skip:
-		_preview_button.set_selected_id(1)
+	if data.has("_skip"):
+		_preview_button.set_skip(data._skip)
 
 	_property_data.find_node("FromValue").set_value(data.property.from, AnimaTweenUtils.calculate_dynamic_value(data.property.from, data))
 	_property_data.find_node("ToValue").set_value(data.property.to, AnimaTweenUtils.calculate_dynamic_value(data.property.to, data))
