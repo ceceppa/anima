@@ -10,12 +10,12 @@ signal frame_updated
 signal select_animation
 signal select_easing
 signal select_relative_property
-signal highlight_node(node)
 signal preview_frame
 signal select_node_property(source, node_path)
 signal move_one_left
 signal move_one_right
 signal preview_animation(preview_info)
+signal highlight_nodes(nodes)
 
 export (bool) var animate_entrance_exit := true
 export (bool) var is_initial_frame := false setget set_is_initial_frame
@@ -32,6 +32,7 @@ onready var _preview_button = find_node("Preview")
 var _source: Node
 var _old_height: float
 var _is_animating := false
+var _can_toggle := true
 
 func _ready():
 	set_is_initial_frame(is_initial_frame)
@@ -66,31 +67,17 @@ func set_collapsed(collapsed) -> void:
 	_frame_name.pressed = not collapsed
 
 func set_has_previous(has: bool, direction: int) -> void:
-	var icon = "res://addons/anima/visual-editor/icons/MoveLeft.svg" if direction == 0 else "res://addons/anima/visual-editor/icons/MoveUp.svg"
-	var tip = "left" if direction == 0 else "up"
-
-	var node = find_node("MoveLeft")
-	node.icon = load(icon)
-	node.hint_tooltip = "Move one frame " + tip
-
-	_maybe_set_visible("MoveLeft", has)
+	pass
 
 func set_has_next(has: bool, direction: int) -> void:
-	var icon = "res://addons/anima/visual-editor/icons/MoveRight.svg" if direction == 0 else "res://addons/anima/visual-editor/icons/MoveDown.svg"
-	var tip = "right" if direction == 0 else "down"
-
-	var node = find_node("MoveRight")
-	node.icon = load(icon)
-	node.hint_tooltip = "Move one frame " + tip
-
-	_maybe_set_visible("MoveRight", has)
-
+	pass
 
 func _maybe_set_visible(node_name: String, visible: bool) -> void:
-	var node = find_node(node_name)
-
-	if node:
-		node.visible = visible
+	pass
+#	var node = find_node(node_name)
+#
+#	if node:
+#		node.visible = visible
 
 func set_duration(duration: float) -> void:
 	_duration.set_value(duration)
@@ -112,7 +99,7 @@ func add_animation_for(node: Node, path: String) -> Node:
 	animation_item.connect("removed", self, "_on_animation_data_removed")
 
 	if not is_initial_frame:
-		animation_item.connect("highlight_node", self, "_on_highlight_node")
+		animation_item.connect("highlight_nodes", self, "_on_highlight_node")
 
 	if animation_item.has_signal("select_animation"):
 		animation_item.connect("select_animation", self, "_on_select_animation", [animation_item])
@@ -162,8 +149,8 @@ func _on_select_animation(source: Node) -> void:
 func _on_select_node_property(source: Node, path: String) -> void:
 	emit_signal("select_node_property", source, path)
 
-func _on_highlight_node(source: Node) -> void:
-	emit_signal("highlight_node", source)
+func _on_highlight_node(source: Array) -> void:
+	emit_signal("highlight_nodes", source)
 
 func selected_animation(label, name) -> void:
 	_source.selected_animation(label, name)
@@ -300,14 +287,13 @@ func _on_preview_animation(preview_info: Dictionary) -> void:
 
 	emit_signal("preview_animation", preview_info)
 
-func update_size_x(value: float) -> void:
-	rect_min_size.x = value
-	rect_size.x = value
-
 func _on_Duration_value_updated():
 	emit_signal("frame_updated")
 
 func _on_ToggableFrameName_pressed():
+	if not _can_toggle:
+		return
+
 	emit_signal("frame_updated")
 
 func _on_Preview_skip_changed():
@@ -322,9 +308,25 @@ func _on_Preview_play_preview():
 	emit_signal("preview_animation", preview_info)
 
 func set_title_as_toggable(toggable: bool) -> void:
-	pass
+	if _frame_name == null:
+		_frame_name = find_node("FrameName")
 
-func _on_MenuButton_item_selected(id):
+	_frame_name.disabled = not toggable
+
+	if not toggable:
+		_frame_name.pressed = true
+		_frame_name._on_AnimaToggleButton_toggled(true)
+		rect_min_size.x = 600
+	else:
+		rect_min_size = Vector2.ZERO
+
+func _on_Button_pressed():
+	find_node("DurationContainer").hide()
+
+func _on_NoAnimationsWarning_pressed():
+	emit_signal("select_node")
+
+func _on_OptionsMenu_item_selected(id):
 	if id == 0:
 		_on_DefaultFrameDuration_toggled(not find_node("DurationContainer").visible)
 	elif id == 2:
@@ -334,8 +336,11 @@ func _on_MenuButton_item_selected(id):
 	else:
 		_on_Delete_pressed()
 
-func _on_Button_pressed():
-	find_node("DurationContainer").hide()
+func _on_FrameName_mouse_entered():
+	var nodes := []
 
-func _on_NoAnimationsWarning_pressed():
-	emit_signal("select_node")
+	for child in _animations_container.get_children():
+		if "_source_node" in child:
+			nodes.push_back(child._source_node)
+
+	emit_signal("highlight_nodes", nodes)

@@ -45,7 +45,7 @@ func _load_anima_editor(position: int):
 
 	editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
-	editor.connect("highlight_node", self, '_on_highlight_node')
+	editor.connect("highlight_nodes", self, '_on_highlight_nodes')
 	editor.connect("play_animation", self, '_on_play_animation')
 	editor.connect("change_editor_position", self, '_on_change_editor_position')
 
@@ -162,15 +162,24 @@ func _on_visual_builder_updated(data: Dictionary) -> void:
 	undo_redo.add_undo_method(self, "_undo_visual_editor_data", current_data)
 	undo_redo.commit_action()
 
-func _on_highlight_node(node_to_highlight: Node) -> void:
+func _on_highlight_nodes(nodes_to_highlight: Array) -> void:
 	var selection := get_editor_interface().get_selection()
 	var nodes := selection.get_selected_nodes()
 
-	if nodes.size() == 1 and nodes[0] == node_to_highlight:
-		return
+	if nodes.size() == nodes_to_highlight.size():
+		var total := 0
+
+		for node_index in nodes.size():
+			if nodes[node_index] == nodes_to_highlight[node_index]:
+				total += 1
+
+		if total == nodes.size():
+			return
 
 	selection.clear()
-	selection.add_node(node_to_highlight)
+	
+	for node in nodes_to_highlight:
+		selection.add_node(node)
 
 func _undo_visual_editor_data(previous_data) -> void:
 	_anima_visual_node.__anima_visual_editor_data = previous_data

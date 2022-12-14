@@ -4,7 +4,7 @@ extends Control
 signal switch_position
 signal connections_updated(new_list)
 signal visual_builder_updated
-signal highlight_node(node)
+signal highlight_nodes(nodes)
 signal play_animation(animation_info)
 signal change_editor_position(new_position)
 
@@ -248,6 +248,7 @@ func _on_GraphEdit_hide_nodes_list():
 	_nodes_window.hide()
 
 func _on_NodesPopup_node_selected(node: Node, path: String):
+	_add_animation_for(node, path)
 	_nodes_window.hide()
 
 func _on_AnimaNodeEditor_show_nodes_list(offset: Vector2, position: Vector2):
@@ -315,8 +316,8 @@ func _on_anima_visual_node_deleted() -> void:
 
 	_maybe_show_graph_edit()
 
-func _on_FramesEditor_highlight_node(node: Node):
-	emit_signal("highlight_node", node)
+func _on_FramesEditor_highlight_node(nodes):
+	emit_signal("highlight_nodes", nodes)
 
 func _on_select_animation(source: Node) -> void:
 	_animation_source_node = source

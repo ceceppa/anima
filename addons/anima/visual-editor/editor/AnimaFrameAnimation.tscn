@@ -1,18 +1,15 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://addons/anima/visual-editor/shared/AnimaColorRect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/visual-editor/icons/Tools.svg" type="Texture" id=1]
 [ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimationsContainer.tscn" type="PackedScene" id=6]
-[ext_resource path="res://addons/anima/visual-editor/icons/ArrowLeft.svg" type="Texture" id=7]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaFrameAnimation.gd" type="Script" id=8]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/anima/visual-editor/icons/CollapseLeft.svg" type="Texture" id=10]
-[ext_resource path="res://addons/anima/visual-editor/icons/ArrowRight.svg" type="Texture" id=11]
 [ext_resource path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaPreviewButton.tscn" type="PackedScene" id=13]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaToggleButton.tscn" type="PackedScene" id=14]
-[ext_resource path="res://addons/anima/visual-editor/icons/Property.svg" type="Texture" id=16]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaMenuButton.tscn" type="PackedScene" id=17]
 
 [sub_resource type="StyleBoxFlat" id=4]
@@ -22,16 +19,10 @@ content_margin_top = 12.0
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="StyleBoxFlat" id=5]
-content_margin_left = 48.0
-content_margin_right = 24.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
-
 [node name="FrameAnimation" type="VBoxContainer"]
 anchor_right = 1.0
 margin_bottom = 203.0
+rect_min_size = Vector2( 460, 0 )
 rect_pivot_offset = Vector2( 248.464, 71 )
 rect_clip_content = true
 size_flags_horizontal = 3
@@ -75,9 +66,9 @@ custom_constants/separation = 12
 
 [node name="FrameName" parent="ContentContainer/HBoxContainer" instance=ExtResource( 14 )]
 anchor_right = 0.0
-margin_right = 456.0
+margin_right = 479.0
 margin_bottom = 49.0
-rect_pivot_offset = Vector2( 271.5, 24.5 )
+rect_pivot_offset = Vector2( 228, 24.5 )
 custom_styles/normal = SubResource( 4 )
 __meta__ = {
 "__initial_AnimaNode__anima_1026196471787050537__button_bg": {
@@ -462,7 +453,7 @@ __meta__ = {
 node_to_toggle = NodePath("../../../MarginContainer")
 
 [node name="ActionsContainer" type="HBoxContainer" parent="ContentContainer/HBoxContainer"]
-margin_left = 468.0
+margin_left = 491.0
 margin_right = 600.0
 margin_bottom = 49.0
 custom_constants/separation = 12
@@ -474,7 +465,10 @@ margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Preview Frame Animation
 
-Control+Click to Skip/Unskip"
+CLICK: Plays this animation only
+CTRL + SHIFT: Skip/Unskip
+ALT + CLICK: Plays animation until this point
+CTRL + CLICK: Plays animation from this point"
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
 "percentage": 0,
@@ -860,1425 +854,289 @@ __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
+allow_modifiers = true
 
-[node name="AnimaActionsBGColor" parent="ContentContainer/HBoxContainer/ActionsContainer" instance=ExtResource( 1 )]
-visible = false
+[node name="OptionsMenu" parent="ContentContainer/HBoxContainer/ActionsContainer" instance=ExtResource( 17 )]
 margin_left = 60.0
-margin_right = 108.0
+margin_right = 109.0
 margin_bottom = 49.0
-rect_min_size = Vector2( 48, 49 )
-color = Color( 0.484706, 0.48, 0.567059, 1 )
+rect_min_size = Vector2( 49, 49 )
+rect_pivot_offset = Vector2( 24, 24.5 )
+icon = ExtResource( 1 )
+icon_align = 1
+expand_icon = true
+__meta__ = {
+"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1089089038415726807_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1109358829504410889_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1109358829504410889_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1184046554139278564_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1199797368124862305_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1199797368124862305_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1340607361553487793_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1441945957727123779_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1441945957727123779_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_164700612275147168__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_164700612275147168_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1658482992875293945_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1663072209510023438_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_215925900549246643__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_215925900549246643_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_244386363034037598__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_244386363034037598_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_359789769654524719__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_359789769654524719_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_447088250819550293__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_447088250819550293_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_447088250819550293_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_503159164245518066__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_503159164245518066_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_503159164245518066_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_541279795408501465__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_541279795408501465_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_611141024203869141_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_625146128990218994__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_625146128990218994_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_647142782613271851__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_647142782613271851_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_698052055760981323__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_698052055760981323_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_807775977158753784__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_807775977158753784_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_8113687285780011__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_8113687285780011_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_838497898335865356__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_838497898335865356_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_838497898335865356_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_840572761080846802_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_871971128971702881__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_871971128971702881_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_871971128971702881_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_944680552210345459__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_944680552210345459_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_944680552210345459_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_MenuButton2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
+"__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
+}
 style = 3
-
-[node name="MoveContainer" type="HBoxContainer" parent="ContentContainer/HBoxContainer/ActionsContainer/AnimaActionsBGColor"]
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/separation = 2
-alignment = 1
-
-[node name="MoveLeft" parent="ContentContainer/HBoxContainer/ActionsContainer/AnimaActionsBGColor/MoveContainer" instance=ExtResource( 4 )]
-modulate = Color( 1, 1, 1, 0.996077 )
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
-rect_pivot_offset = Vector2( 24, 24.5 )
-hint_tooltip = "Move one frame left"
-size_flags_horizontal = 3
-icon = ExtResource( 7 )
-icon_align = 1
-expand_icon = true
-__meta__ = {
-"__initial_AnimaNode__anima_1043372911830108887__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1043372911830108887_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1094758892090873779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1103457635638320312_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1103457635638320312_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1128494095738860596_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1128494095738860596_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_120264886241205542_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_120264886241205542_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1227651311504070557_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1227651311504070557_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1345373788895726807_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1345373788895726807_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1350990840131473877_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1350990840131473877_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_136585121216363037__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1368978691961202881_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1368978691961202881_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_138064103885865295_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_138064103885865295_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1387765784291578613__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1387765784291578613_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1410567724095265381__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1410567724095265381_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1424127282837099609__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1424127282837099609_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1438934821015980469_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438934821015980469_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_145399067181142627_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_145399067181142627_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1464481862965067627_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1464481862965067627_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1469501515833438232_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1469501515833438232_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1541450790213930908_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1541450790213930908_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1612210921045161865_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1612210921045161865_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1620659440863824707_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1620659440863824707_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_163771126229899292_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_163771126229899292_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_177810031564697144_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_177810031564697144_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_341284009160764526__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_341284009160764526_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_35597028348114679_opacity": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_35597028348114679_scale": {
-"initial_value": Vector2( 0.1, 0.1 ),
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_360883328001961304_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_360883328001961304_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_37592315991220752_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_37592315991220752_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_524139361409296326_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_524139361409296326_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_536016267074674316__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_536016267074674316_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_554372948661119751_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_554372948661119751_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_588171747432353271__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_588171747432353271_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_598836416825575195_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_598836416825575195_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_623823321142196289_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623823321142196289_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_651058916681594849__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_651058916681594849_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_664515848074184814__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_664515848074184814_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_665504558791907593_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_665504558791907593_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_683279069767642578_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_683279069767642578_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_729630655517566284__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_729630655517566284_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_755342601197501831__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_755342601197501831_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_76431045782055893__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_76431045782055893_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_788862986348891602__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_788862986348891602_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_877901794141741577__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_877901794141741577_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_892263310548911743_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_892263310548911743_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_9022227272877359_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_9022227272877359_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_914724680338359131_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_914724680338359131_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_930493483312385986_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_930493483312385986_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_MoveLeft__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0,
-"_editor_description_": ""
-}
-style = 1
-transparent = true
-
-[node name="MoveRight" parent="ContentContainer/HBoxContainer/ActionsContainer/AnimaActionsBGColor/MoveContainer" instance=ExtResource( 4 )]
-visible = false
-modulate = Color( 1, 1, 1, 0.996153 )
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
-rect_scale = Vector2( 0.996537, 0.996537 )
-rect_pivot_offset = Vector2( 24, 24.5 )
-hint_tooltip = "Move one frame right"
-size_flags_horizontal = 3
-size_flags_vertical = 3
-icon = ExtResource( 11 )
-icon_align = 1
-expand_icon = true
-__meta__ = {
-"__initial_AnimaNode__anima_1024321756567031372__button_bg": {
-"percentage": 0,
-"value": Color( 0.290196, 0.290196, 0.290196, 0.8 )
-},
-"__initial_AnimaNode__anima_1030728920033870605__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1030728920033870605_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1056311292669447998__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1056311292669447998_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1061705232802277588__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1089089038415726807_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1103457635638320312_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1103457635638320312_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1109358829504410889_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1109358829504410889_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_1128494095738860596_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1128494095738860596_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1152067977949031982__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1184046554139278564_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1199797368124862305_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1199797368124862305_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_120264886241205542_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_120264886241205542_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1227651311504070557_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1227651311504070557_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1340607361553487793_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1345373788895726807_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1345373788895726807_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1350990840131473877_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1350990840131473877_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1368978691961202881_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1368978691961202881_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_138064103885865295_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_138064103885865295_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1381889630241808594__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1391302257984127686__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1391302257984127686_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1424127282837099609__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1424127282837099609_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1438934821015980469_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1438934821015980469_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1441945957727123779_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1441945957727123779_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_145399067181142627_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_145399067181142627_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1464481862965067627_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1464481862965067627_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1469501515833438232_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1469501515833438232_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1541450790213930908_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1541450790213930908_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1567591073451868408__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_160404382886786377__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1612210921045161865_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1612210921045161865_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_1613241358582679443__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1620659440863824707_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_1620659440863824707_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_163771126229899292_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_163771126229899292_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_164700612275147168__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_164700612275147168_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1658482992875293945_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_1663072209510023438_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_169010832928290588__button_bg": {
-"percentage": 0,
-"value": Color( 0.662745, 0.662745, 0.662745, 1 )
-},
-"__initial_AnimaNode__anima_177810031564697144_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_177810031564697144_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_215925900549246643__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_215925900549246643_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_220470708923562347__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_220470708923562347_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_244386363034037598__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_244386363034037598_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_272276812959769318__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_302944379195416199__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_312208415607893799__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_353191859189922241__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_35597028348114679_opacity": {
-"initial_value": 0,
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_35597028348114679_scale": {
-"initial_value": Vector2( 0.1, 0.1 ),
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_359789769654524719__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_359789769654524719_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_360883328001961304_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_360883328001961304_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_368010918330608215__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_371595224346902283__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_371595224346902283_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_37592315991220752_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_37592315991220752_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_379517235088973206__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_381012511622680237__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_381012511622680237_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_443080097083125122__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_447088250819550293_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_447088250819550293_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_454360864891194458_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_454360864891194458_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_483128354922343933__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_493794522266337036__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_493794522266337036_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_503159164245518066_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_503159164245518066_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_522631852387192261__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_522631852387192261_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_524139361409296326_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_524139361409296326_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_541279795408501465__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_541279795408501465_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_554372948661119751_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_554372948661119751_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_58368465779361664__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_587905973295427002__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_587905973295427002_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_598836416825575195_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_598836416825575195_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_611141024203869141__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_611141024203869141_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_611141024203869141_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_623823321142196289_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_623823321142196289_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_625146128990218994__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_625146128990218994_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_647142782613271851__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_647142782613271851_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_665504558791907593_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_665504558791907593_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_678365734837525391__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_683279069767642578_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_683279069767642578_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_687637744867040405__button_bg": {
-"percentage": 0,
-"value": Color( 0.662745, 0.662745, 0.662745, 1 )
-},
-"__initial_AnimaNode__anima_692085499654112915__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_698052055760981323_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_707411895283663818__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_723743628898275269__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_745737787991892822__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_745737787991892822_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_766901733234754028__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_766901733234754028_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_774037851557249634_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_774037851557249634_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_802835010916887573__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_807775977158753784_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_8113687285780011__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_8113687285780011_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_837561436808861206__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_838497898335865356_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_838497898335865356_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_840572761080846802_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_840572761080846802_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_854770250130153076__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_854770250130153076_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_871971128971702881_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_871971128971702881_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_876787078978051392__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_892263310548911743_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_892263310548911743_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_9022227272877359_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_9022227272877359_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_914724680338359131_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_914724680338359131_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_930493483312385986_opacity": {
-"percentage": 0,
-"value": 0
-},
-"__initial_AnimaNode__anima_930493483312385986_scale": {
-"percentage": 0,
-"value": Vector2( 0.1, 0.1 )
-},
-"__initial_AnimaNode__anima_944680552210345459__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_944680552210345459_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_944680552210345459_scale": {
-"percentage": 0,
-"value": Vector2( 1, 1 )
-},
-"__initial_AnimaNode__anima_9587732811860939__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_9587732811860939_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_AnimaNode__anima_976834250785062378__button_bg": {
-"percentage": 0,
-"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
-},
-"__initial_AnimaNode__anima_976834250785062378_opacity": {
-"percentage": 0,
-"value": 1.0
-},
-"__initial_Button__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__initial_MoveRight__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0,
-"_editor_description_": ""
-}
-style = 1
-transparent = true
-
-[node name="MenuButton" parent="ContentContainer/HBoxContainer/ActionsContainer" instance=ExtResource( 17 )]
-margin_left = 60.0
-margin_right = 132.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 0, 49 )
-rect_pivot_offset = Vector2( 36, 24.5 )
-custom_styles/normal = SubResource( 5 )
-icon = ExtResource( 16 )
-icon_align = 1
-expand_icon = true
 transparent = true
 show_panel_on = 2
 _items = [ {
@@ -2294,12 +1152,11 @@ _items = [ {
 "icon": "res://addons/anima/visual-editor/icons/Remove.svg",
 "label": "Remove frame"
 } ]
-update_on_selected = false
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_top = 49.0
 margin_right = 600.0
-margin_bottom = 237.0
+margin_bottom = 203.0
 rect_pivot_offset = Vector2( 320, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -2325,7 +1182,7 @@ __meta__ = {
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 588.0
-margin_bottom = 176.0
+margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
@@ -2334,6 +1191,7 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
+visible = false
 margin_right = 576.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
@@ -2390,14 +1248,14 @@ transparent = true
 [node name="AnimationsContainer" parent="MarginContainer/ContentContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 69.0
 margin_right = 576.0
-margin_bottom = 130.0
+margin_bottom = 70.0
 
 [node name="NoAnimationsWarning" parent="MarginContainer/ContentContainer" instance=ExtResource( 4 )]
-margin_top = 142.0
+margin_top = 82.0
 margin_right = 576.0
-margin_bottom = 164.0
+margin_bottom = 130.0
+rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 288, 11 )
 text = "Select or drag here the node to animate"
 __meta__ = {
@@ -2667,16 +1525,17 @@ __meta__ = {
 },
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_NoAnimationsWarning__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
 }
 transparent = true
 
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 visible = false
 margin_left = 578.0
-margin_top = 176.0
+margin_top = 142.0
 margin_right = 626.0
-margin_bottom = 225.0
+margin_bottom = 191.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true
@@ -3380,7 +2239,8 @@ __meta__ = {
 },
 "__initial_Collapse__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__visibility_strategy": 0,
-"_editor_description_": ""
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
 }
 
 [node name="IconCollapse" type="Control" parent="Collapse"]
@@ -3426,10 +2286,11 @@ Do you want to continue?"
 
 [connection signal="gui_input" from="." to="." method="_on_FrameAnimation_gui_input"]
 [connection signal="item_rect_changed" from="." to="." method="_on_FrameAnimation_item_rect_changed"]
+[connection signal="mouse_entered" from="ContentContainer/HBoxContainer/FrameName" to="." method="_on_FrameName_mouse_entered"]
 [connection signal="pressed" from="ContentContainer/HBoxContainer/FrameName" to="." method="_on_ToggableFrameName_pressed"]
 [connection signal="play_preview" from="ContentContainer/HBoxContainer/ActionsContainer/Preview" to="." method="_on_Preview_play_preview"]
 [connection signal="skip_changed" from="ContentContainer/HBoxContainer/ActionsContainer/Preview" to="." method="_on_Preview_skip_changed"]
-[connection signal="item_selected" from="ContentContainer/HBoxContainer/ActionsContainer/MenuButton" to="." method="_on_MenuButton_item_selected"]
+[connection signal="item_selected" from="ContentContainer/HBoxContainer/ActionsContainer/OptionsMenu" to="." method="_on_OptionsMenu_item_selected"]
 [connection signal="value_updated" from="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer/Duration" to="." method="_on_Duration_value_updated"]
 [connection signal="pressed" from="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer/Button" to="." method="_on_Button_pressed"]
 [connection signal="node_dragged" from="MarginContainer/ContentContainer/AnimationsContainer" to="." method="_on_AnimationsContainer_node_dragged"]

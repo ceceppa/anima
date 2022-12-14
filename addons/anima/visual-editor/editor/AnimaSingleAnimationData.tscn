@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaSingleAnimationData.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=2]
@@ -29,6 +29,13 @@ content_margin_top = 4.0
 content_margin_bottom = 4.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_left = 48.0
+content_margin_right = 24.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 24.0
 content_margin_right = 24.0
@@ -36,14 +43,14 @@ content_margin_top = 12.0
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=5]
 content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=6]
 content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 12.0
@@ -67,7 +74,7 @@ alignment = 2
 
 [node name="Title" parent="ActionsContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
-margin_right = 488.0
+margin_right = 495.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 243.5, 24.5 )
 custom_styles/normal = SubResource( 2 )
@@ -475,20 +482,22 @@ style = 1
 node_to_toggle = NodePath("../../MarginContainer")
 
 [node name="ColorRect" parent="ActionsContainer" instance=ExtResource( 11 )]
-margin_left = 488.0
+margin_left = 495.0
 margin_right = 600.0
 margin_bottom = 49.0
-rect_min_size = Vector2( 112, 49 )
+rect_min_size = Vector2( 105, 49 )
 color = Color( 0.0196078, 0.380392, 0.329412, 1 )
 style = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ActionsContainer/ColorRect"]
 margin_left = 2.0
 margin_right = 107.0
+margin_bottom = 49.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Preview" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 13 )]
+visible = false
 margin_bottom = 49.0
 rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 24, 24.5 )
@@ -765,15 +774,14 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="ActionsContainer/ColorRect/HBoxContainer"]
-margin_left = 52.0
 margin_top = 17.0
-margin_right = 60.0
+margin_right = 8.0
 margin_bottom = 31.0
 rect_min_size = Vector2( 8, 0 )
 
 [node name="Remove" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 64.0
-margin_right = 112.0
+margin_left = 12.0
+margin_right = 60.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 icon = ExtResource( 7 )
@@ -1090,6 +1098,7 @@ margin_bottom = -12.0
 rect_min_size = Vector2( 49, 49 )
 rect_pivot_offset = Vector2( 73, 24.5 )
 hint_tooltip = "Set the type of animation to use"
+custom_styles/normal = SubResource( 3 )
 text = "Animation type"
 icon = ExtResource( 4 )
 __meta__ = {
@@ -1243,7 +1252,7 @@ margin_bottom = 237.0
 rect_pivot_offset = Vector2( 126.5, 24.5 )
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
-custom_styles/normal = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
 text = "Linear"
 icon = ExtResource( 5 )
 __meta__ = {
@@ -1531,7 +1540,7 @@ custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 1 )
 custom_styles/focus = SubResource( 1 )
 custom_styles/disabled = SubResource( 1 )
-custom_styles/normal = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
 text = " (change...)"
 icon = ExtResource( 4 )
 __meta__ = {
@@ -2363,7 +2372,7 @@ custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 1 )
 custom_styles/focus = SubResource( 1 )
 custom_styles/disabled = SubResource( 1 )
-custom_styles/normal = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
 text = "Select animation to use"
 icon = ExtResource( 10 )
 __meta__ = {

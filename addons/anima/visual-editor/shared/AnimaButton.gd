@@ -105,7 +105,7 @@ func _get_bg_color(draw_mode: int) -> Color:
 	elif draw_mode == STATE.DISABLED:
 		_icon_color = _disabled_icon_color
 		final_color = color
-		final_opacity = 0
+		final_opacity = 1
 
 	final_color.a = final_opacity
 
@@ -155,6 +155,8 @@ func _set(property, value):
 	
 	if property == "disabled":
 		var mode = DRAW_DISABLED if value else DRAW_NORMAL
+		
+		mouse_default_cursor_shape = Control.CURSOR_ARROW if value else Control.CURSOR_POINTING_HAND
 
 #		_refresh_button(mode)
 

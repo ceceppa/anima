@@ -9,7 +9,7 @@ signal select_node
 signal select_node_property(source, node_path)
 signal visual_builder_updated(data)
 signal select_animation
-signal highlight_node(node)
+signal highlight_nodes(nodes)
 signal select_relative_property
 signal select_easing
 signal preview_animation(preview_info)
@@ -28,8 +28,6 @@ var _active_frames_container: Node
 var _flow_direction := 0
 
 func _ready():
-	_on_FramesEditor_resized()
-
 	if _active_frames_container == null:
 		_active_frames_container = _frames_container1
 
@@ -50,8 +48,6 @@ func restore_animation_data(data: Dictionary) -> void:
 		_anima_animation = find_node("AnimaAnimation")
 
 	_anima_animation.restore_data(data)
-
-	_on_FramesEditor_item_rect_changed()
 
 func clear() -> void:
 	for child in _active_frames_container.get_children():
@@ -76,11 +72,11 @@ func set_frame_duration(duration: float) -> void:
 func set_is_restoring_data(is_restoring: bool) -> void:
 	_is_restoring_data = is_restoring
 	
-	if not is_restoring:
-		_on_FramesEditor_item_rect_changed()
-
 func update_flow_direction(new_direction: int) -> void:
 	_flow_direction = new_direction
+
+	_frames_container1.hide()
+	_frames_container2.hide()
 
 	_active_frames_container = _frames_container2 if new_direction == 1 else _frames_container1
 	_active_frames_container.show()
@@ -103,7 +99,7 @@ func _on_AnimaAddFrame_add_frame(key := -1, is_initial_frame := false):
 
 	var node = FRAME_ANIMATION.instance()
 
-	node.connect("highlight_node", self, "_on_highlight_node")
+	node.connect("highlight_nodes", self, "_on_highlight_node")
 	node.connect("select_animation", self, "_on_select_animation", [node])
 	node.connect("select_relative_property", self, "_on_select_relative_property", [node])
 	node.connect("select_node_property", self, "_on_select_node_property")
@@ -163,8 +159,8 @@ func _emit_updated() -> void:
 func _on_AnimaAnimation_animation_updated():
 	_emit_updated()
 
-func _on_highlight_node(source: Node) -> void:
-	emit_signal("highlight_node", source)
+func _on_highlight_node(source) -> void:
+	emit_signal("highlight_nodes", source)
 
 func _on_select_animation(source: Node) -> void:
 	_animation_node_source = source
@@ -198,25 +194,11 @@ func _on_frame_add_node(node_path, destination_frame) -> void:
 
 	emit_signal("add_node", node_path)
 
-func _on_FramesEditor_resized():
-	$AnimaAddFrame.update_position(rect_size)
-
 func _on_preview_animation(preview_info) -> void:
 	emit_signal("preview_animation",preview_info)
 
 func get_selected_animation_name() -> String:
 	return _anima_animation.get_selected_animation_name()
-
-func _on_FramesEditor_item_rect_changed():
-	if _flow_direction == 0:
-		return
-
-	if _frames_container2 == null:
-		_frames_container2 = find_node("FramesContainer2")
-
-	for child in _frames_container2.get_children():
-		if child.has_method("update_size_x"):
-			child.call_deferred("update_size_x", rect_size.x - 24)
 
 func _on_AnimaAnimation_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)

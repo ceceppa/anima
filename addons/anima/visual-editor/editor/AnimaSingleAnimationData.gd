@@ -6,7 +6,7 @@ signal select_easing
 signal select_relative_property(source)
 signal updated
 signal removed
-signal highlight_node(node)
+signal highlight_nodes(nodes)
 signal select_property_to_animate
 signal preview_animation(data)
 

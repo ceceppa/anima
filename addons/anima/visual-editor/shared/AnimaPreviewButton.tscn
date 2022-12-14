@@ -7,6 +7,11 @@
 [node name="Preview" instance=ExtResource( 1 )]
 margin_bottom = 33.0
 rect_pivot_offset = Vector2( 24, 16.5 )
+hint_tooltip = "Preview Frame Animation
+
+CLICK: Plays this animation only
+CTRL + SHIFT: Skip/Unskip
+"
 icon = ExtResource( 2 )
 icon_align = 1
 expand_icon = true
@@ -283,5 +288,6 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 transparent = true
+allow_modifiers = false
 
 [connection signal="pressed" from="." to="." method="_on_Preview_pressed"]

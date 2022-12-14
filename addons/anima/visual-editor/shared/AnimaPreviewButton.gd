@@ -4,12 +4,14 @@ extends "res://addons/anima/visual-editor/shared/AnimaButton.gd"
 signal play_preview
 signal skip_changed
 
+export (bool) var allow_modifiers := false
+
 var _anima: AnimaNode
 var skip := false setget set_skip
 var _stop_funcref: FuncRef
 
 func _on_Preview_pressed():
-	if Input.is_physical_key_pressed(KEY_CONTROL):
+	if Input.is_physical_key_pressed(KEY_SHIFT):
 		set_skip(not skip)
 
 	if skip:

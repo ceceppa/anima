@@ -27,6 +27,7 @@ export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM setget s
 var _initial_values := {}
 var _active_anima_node: AnimaNode
 var _is_playing := false
+var _reset_scene_timeout := 1.0
 
 func _init():
 	set_meta("__anima_visual_node", true)
@@ -145,11 +146,12 @@ func _play_animation_from_data(
 
 	var keys = timeline_debug.keys()
 	keys.sort()
-#
-#	for k in keys:
-#		for d in timeline_debug[k]:
-#			var s: float = k + d.delay
-#			print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + float(d.duration), "s => ", d.what)
+
+	if Engine.editor_hint:
+		for k in keys:
+			for d in timeline_debug[k]:
+				var s: float = k + d.delay
+				print(".".repeat(s * 10), "▒".repeat(float(d.duration) * 10), " --> ", "from: ", s, "s to: ", s + float(d.duration), "s => ", d.what)
 
 	_active_anima_node = anima
 
@@ -169,18 +171,11 @@ func _play_animation_from_data(
 	yield(anima, "animation_completed")
 
 	if reset_initial_values:
-		yield(reset_scene(1.0), "completed")
+		yield(reset_scene(_reset_scene_timeout), "completed")
 
 	emit_signal("animation_completed")
 
 	_is_playing = false
-
-func stop() -> void:
-	if _active_anima_node == null:
-		return
-
-	_active_anima_node.stop()
-	reset_scene(1.0)
 
 func _create_animation_data(animation_data: Dictionary, animation: Dictionary) -> Dictionary:
 	var source_node: Node = get_root_node()
@@ -303,6 +298,7 @@ func reset_scene(clear_timeout: float):
 			node.remove_meta("_old_modulate")
 
 	_initial_values.clear()
+	_reset_scene_timeout = 1.0
 
 	yield(get_tree(), "idle_frame")
 
@@ -323,15 +319,37 @@ func preview_animation(preview_info: Dictionary) -> void:
 		return
 
 	var preview_button: Button = preview_info.preview_button
+	var allow_modifiers: bool = preview_info.preview_button.allow_modifiers
+
+	var is_alt_pressed = Input.is_key_pressed(KEY_ALT)
+	var is_ctrl_pressed = Input.is_key_pressed(KEY_CONTROL)
+
+	var play_until_frame = allow_modifiers and is_alt_pressed and not is_ctrl_pressed
+	var play_from_frame = allow_modifiers and is_ctrl_pressed and not is_alt_pressed
+	var play_single_frame = play_from_frame == false and play_until_frame == false
 
 	var single_animation_data := {}
 	
 	if preview_info.has("frame_id"):
 		single_animation_data.animation = animations_data.animation
 
-		single_animation_data.frames = {
-			0: animations_data.frames[preview_info.frame_id].duplicate()
-		}
+		if play_single_frame:
+			single_animation_data.frames = {
+				0: animations_data.frames[preview_info.frame_id].duplicate()
+			}
+		else:
+			single_animation_data.frames = {}
+			
+			var frames := []
+			var keys: Array = animations_data.frames.keys()
+
+			if play_until_frame:
+				frames = keys.slice(0, preview_info.frame_id)
+			else:
+				frames = keys.slice(preview_info.frame_id, keys.size())
+
+			for k in frames.size():
+				single_animation_data.frames[k] = animations_data.frames[frames[k]].duplicate()
 	else:
 		single_animation_data = animations_data
 
@@ -361,10 +379,9 @@ func preview_animation(preview_info: Dictionary) -> void:
 	preview_button.set_is_playing(false)
 
 func _stop_preview():
-	print(_active_anima_node)
-
 	if _active_anima_node:
 		_active_anima_node.stop()
-		
+		_reset_scene_timeout = 0.0
+
 		_active_anima_node.emit_signal("animation_completed")
 

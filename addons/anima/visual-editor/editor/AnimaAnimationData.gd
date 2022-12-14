@@ -8,7 +8,7 @@ signal select_easing
 signal select_relative_property
 signal updated
 signal removed
-signal highlight_node(node)
+signal highlight_nodes(nodes)
 signal select_node_property(node_path)
 signal preview_animation(preview_info)
 
@@ -187,7 +187,7 @@ func _on_AnimaAnimationData_mouse_entered():
 
 		return
 
-	emit_signal("highlight_node", _source_node)
+	emit_signal("highlight_nodes", [_source_node])
 
 func _on_Title_toggled(button_pressed):
 	$Content.visible = button_pressed
@@ -363,3 +363,9 @@ func _on_Preview_pressed():
 	}
 
 	emit_signal("preview_animation", preview_data)
+
+func _on_OptionButton_item_selected(id):
+	if id == 0:
+		_on_Time_toggled(true)
+	else:
+		_on_Remove_pressed()

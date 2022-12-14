@@ -12,4 +12,6 @@ popup_exclusive = true
 script = ExtResource( 1 )
 
 [node name="AnimaNodesList" parent="." instance=ExtResource( 2 )]
-trigger_selected = true
+
+[connection signal="close" from="AnimaNodesList" to="." method="_on_AnimaNodesList_close"]
+[connection signal="node_selected" from="AnimaNodesList" to="." method="_on_AnimaNodesList_node_selected"]
