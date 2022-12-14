@@ -116,8 +116,6 @@ func get_data() -> Dictionary:
 func restore_data(data: Dictionary) -> void:
 	_is_restoring = true
 
-	$MarginContainer/VBoxContainer/NoAnimationsWarning.visible = not $MarginContainer/VBoxContainer/AnimationsContainer.get_child_count()
-
 	var button = _node_or_group.find_node("GridContainer").get_child(data.animate_as)
 	button.pressed = true
 	find_node("AnimateAs").icon = button.icon
@@ -168,9 +166,6 @@ func restore_data(data: Dictionary) -> void:
 	_maybe_show_group_data()
 
 	_is_restoring = false
-
-func _toggle_add_message() -> void:
-	$MarginContainer/VBoxContainer/NoAnimationsWarning.visible = not $MarginContainer/VBoxContainer/AnimationsContainer.get_child_count()
 
 func set_relative_property(node_path: String, property: String) -> void:
 	_relative_source.set_relative_value(node_path + ":" + property)
@@ -298,14 +293,11 @@ func _on_AddAnimation_pressed():
 	instance.connect("updated", self, "_emit_updated")
 	instance.connect("select_relative_property", self, "_on_select_relative_property")
 	instance.connect("select_easing", self, "_on_select_easing", [instance])
-	instance.connect("tree_exited", self, "_toggle_add_message")
 	instance.connect("select_animation", self, "_on_select_animation", [instance])
 	instance.connect("preview_animation", self, "_on_single_animation_preview")
 	instance.set_meta("_data_index", _animations_container.get_child_count())
 
 	_animations_container.add_child(instance)
-
-	_toggle_add_message()
 
 	if not _is_restoring:
 		emit_signal("updated")

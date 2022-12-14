@@ -74,6 +74,7 @@ func _on_MoveLeft_pressed():
 	emit_signal("move_one_left")
 
 func update_size_x(value: float) -> void:
+	rect_min_size.x = value
 	rect_size.x = value
 	$Control/BG.rect_size = rect_size
 

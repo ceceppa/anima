@@ -75,6 +75,9 @@ func set_frame_duration(duration: float) -> void:
 
 func set_is_restoring_data(is_restoring: bool) -> void:
 	_is_restoring_data = is_restoring
+	
+	if not is_restoring:
+		_on_FramesEditor_item_rect_changed()
 
 func update_flow_direction(new_direction: int) -> void:
 	_flow_direction = new_direction
@@ -207,6 +210,9 @@ func get_selected_animation_name() -> String:
 func _on_FramesEditor_item_rect_changed():
 	if _flow_direction == 0:
 		return
+
+	if _frames_container2 == null:
+		_frames_container2 = find_node("FramesContainer2")
 
 	for child in _frames_container2.get_children():
 		if child.has_method("update_size_x"):

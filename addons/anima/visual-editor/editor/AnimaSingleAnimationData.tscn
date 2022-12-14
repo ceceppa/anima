@@ -67,7 +67,7 @@ alignment = 2
 
 [node name="Title" parent="ActionsContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
-margin_right = 487.0
+margin_right = 488.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 243.5, 24.5 )
 custom_styles/normal = SubResource( 2 )
@@ -475,10 +475,10 @@ style = 1
 node_to_toggle = NodePath("../../MarginContainer")
 
 [node name="ColorRect" parent="ActionsContainer" instance=ExtResource( 11 )]
-margin_left = 487.0
+margin_left = 488.0
 margin_right = 600.0
 margin_bottom = 49.0
-rect_min_size = Vector2( 113, 49 )
+rect_min_size = Vector2( 112, 49 )
 color = Color( 0.0196078, 0.380392, 0.329412, 1 )
 style = 2
 
@@ -489,8 +489,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Preview" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 13 )]
-visible = false
 margin_bottom = 49.0
+rect_min_size = Vector2( 0, 49 )
 rect_pivot_offset = Vector2( 24, 24.5 )
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {
@@ -765,40 +765,15 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="ActionsContainer/ColorRect/HBoxContainer"]
+margin_left = 52.0
 margin_top = 17.0
-margin_right = 8.0
+margin_right = 60.0
 margin_bottom = 31.0
 rect_min_size = Vector2( 8, 0 )
 
-[node name="PropertyOrAnimation" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 9 )]
-margin_left = 12.0
-margin_right = 61.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 49, 49 )
-rect_pivot_offset = Vector2( 24.5, 24.5 )
-hint_tooltip = "Set the type of animation to use"
-icon = ExtResource( 4 )
-icon_align = 1
-expand_icon = true
-__meta__ = {
-"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__initial_PropertyOrAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
-"__visibility_strategy": 0,
-"_editor_description_": ""
-}
-transparent = true
-_items = [ {
-"icon": "res://addons/anima/visual-editor/icons/Property.svg",
-"label": "Animate proeprty"
-}, {
-"icon": "res://addons/anima/visual-editor/icons/Animation.svg",
-"label": "Use existing animation"
-} ]
-
 [node name="Remove" parent="ActionsContainer/ColorRect/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 65.0
-margin_right = 113.0
+margin_left = 64.0
+margin_right = 112.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 icon = ExtResource( 7 )
@@ -1084,7 +1059,7 @@ margin_bottom = 49.0
 [node name="BGColor" parent="Control" instance=ExtResource( 11 )]
 visible = false
 margin_right = 600.0
-margin_bottom = 64.0
+margin_bottom = 125.0
 size_flags_vertical = 3
 color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
@@ -1104,7 +1079,35 @@ custom_constants/margin_bottom = 12
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 588.0
-margin_bottom = 52.0
+margin_bottom = 113.0
+custom_constants/separation = 12
+
+[node name="PropertyOrAnimation" parent="MarginContainer/VBoxContainer" instance=ExtResource( 9 )]
+margin_left = 489.0
+margin_top = -61.0
+margin_right = 538.0
+margin_bottom = -12.0
+rect_min_size = Vector2( 49, 49 )
+rect_pivot_offset = Vector2( 73, 24.5 )
+hint_tooltip = "Set the type of animation to use"
+text = "Animation type"
+icon = ExtResource( 4 )
+__meta__ = {
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_PropertyOrAnimation__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0,
+"_editor_description_": "",
+"_visibility_strategy_reverted": true
+}
+show_panel_on = 2
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Property.svg",
+"label": "Animate proeprty"
+}, {
+"icon": "res://addons/anima/visual-editor/icons/Animation.svg",
+"label": "Use existing animation"
+} ]
 
 [node name="PropertyData" type="GridContainer" parent="MarginContainer/VBoxContainer"]
 visible = false
@@ -3184,10 +3187,10 @@ __meta__ = {
 dialog_text = "Are you sure you want to remove the Node(s) animation?"
 
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_pressed"]
-[connection signal="item_selected" from="ActionsContainer/ColorRect/HBoxContainer/PropertyOrAnimation" to="." method="_on_PropertyOrAnimation_item_selected"]
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Remove" to="." method="_on_Remove_pressed"]
 [connection signal="item_rect_changed" from="MarginContainer" to="." method="_on_MarginContainer_item_rect_changed"]
 [connection signal="visibility_changed" from="MarginContainer" to="." method="_on_MarginContainer_visibility_changed"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/PropertyOrAnimation" to="." method="_on_PropertyOrAnimation_item_selected"]
 [connection signal="select_relative_property" from="MarginContainer/VBoxContainer/PropertyData/FromValue" to="." method="_on_FromValue_select_relative_property"]
 [connection signal="value_updated" from="MarginContainer/VBoxContainer/PropertyData/FromValue" to="." method="_emit_node_update"]
 [connection signal="select_relative_property" from="MarginContainer/VBoxContainer/PropertyData/ToValue" to="." method="_on_ToValue_select_relative_property"]
