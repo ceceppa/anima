@@ -3195,7 +3195,7 @@ __meta__ = {
 [node name="ConfirmationDialog" parent="." instance=ExtResource( 12 )]
 dialog_text = "Are you sure you want to remove the Node(s) animation?"
 
-[connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_pressed"]
+[connection signal="play_preview" from="ActionsContainer/ColorRect/HBoxContainer/Preview" to="." method="_on_Preview_play_preview"]
 [connection signal="pressed" from="ActionsContainer/ColorRect/HBoxContainer/Remove" to="." method="_on_Remove_pressed"]
 [connection signal="item_rect_changed" from="MarginContainer" to="." method="_on_MarginContainer_item_rect_changed"]
 [connection signal="visibility_changed" from="MarginContainer" to="." method="_on_MarginContainer_visibility_changed"]

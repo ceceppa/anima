@@ -625,7 +625,7 @@ dialog_text = "Are you sure you want to delete all the animations for the Node?"
 [connection signal="item_rect_changed" from="." to="." method="_on_AnimaAnimationData_item_rect_changed"]
 [connection signal="mouse_entered" from="." to="." method="_on_AnimaAnimationData_mouse_entered"]
 [connection signal="mouse_entered" from="Title" to="." method="_on_Title_mouse_entered"]
-[connection signal="pressed" from="Title/ActionsContainer/TitleActionsBg/HBoxContainer/Preview" to="." method="_on_Preview_pressed"]
+[connection signal="play_preview" from="Title/ActionsContainer/TitleActionsBg/HBoxContainer/Preview" to="." method="_on_Preview_play_preview"]
 [connection signal="toggled" from="Title/ActionsContainer/TitleActionsBg/HBoxContainer/Time" to="." method="_on_Time_toggled"]
 [connection signal="toggled" from="Title/ActionsContainer/TitleActionsBg/HBoxContainer/AnimateAs" to="." method="_on_AnimateAs_toggled"]
 [connection signal="pressed" from="Title/ActionsContainer/TitleActionsBg/HBoxContainer/AddAnimation" to="." method="_on_AddAnimation_pressed"]

@@ -356,16 +356,16 @@ func _on_single_animation_preview(preview_data: Dictionary) -> void:
 
 	emit_signal("preview_animation", preview_data)
 
-func _on_Preview_pressed():
+func _on_OptionButton_item_selected(id):
+	if id == 0:
+		_on_Time_toggled(true)
+	else:
+		_on_Remove_pressed()
+
+func _on_Preview_play_preview():
 	var preview_data = {
 		animation_data_id = _get_data_index(),
 		preview_button = find_node("Preview")
 	}
 
 	emit_signal("preview_animation", preview_data)
-
-func _on_OptionButton_item_selected(id):
-	if id == 0:
-		_on_Time_toggled(true)
-	else:
-		_on_Remove_pressed()
