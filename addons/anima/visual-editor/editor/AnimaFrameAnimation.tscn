@@ -68,7 +68,7 @@ custom_constants/separation = 12
 anchor_right = 0.0
 margin_right = 479.0
 margin_bottom = 49.0
-rect_pivot_offset = Vector2( 228, 24.5 )
+rect_pivot_offset = Vector2( 239.5, 24.5 )
 custom_styles/normal = SubResource( 4 )
 __meta__ = {
 "__initial_AnimaNode__anima_1026196471787050537__button_bg": {
@@ -861,7 +861,7 @@ margin_left = 60.0
 margin_right = 109.0
 margin_bottom = 49.0
 rect_min_size = Vector2( 49, 49 )
-rect_pivot_offset = Vector2( 24, 24.5 )
+rect_pivot_offset = Vector2( 24.5, 24.5 )
 icon = ExtResource( 1 )
 icon_align = 1
 expand_icon = true
@@ -1133,6 +1133,7 @@ __meta__ = {
 "__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
 "__initial_MenuButton2__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__initial_MenuButton__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_OptionsMenu__button_bg": Color( 0.215686, 0.254902, 0.25098, 1 ),
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
@@ -1256,7 +1257,7 @@ margin_top = 82.0
 margin_right = 576.0
 margin_bottom = 130.0
 rect_min_size = Vector2( 0, 48 )
-rect_pivot_offset = Vector2( 288, 11 )
+rect_pivot_offset = Vector2( 288, 24 )
 text = "Select or drag here the node to animate"
 __meta__ = {
 "__initial_AnimaNode__anima_1089089038415726807__button_bg": {

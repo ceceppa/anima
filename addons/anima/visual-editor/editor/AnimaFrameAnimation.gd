@@ -344,3 +344,10 @@ func _on_FrameName_mouse_entered():
 			nodes.push_back(child._source_node)
 
 	emit_signal("highlight_nodes", nodes)
+
+func set_color(color: Color) -> void:
+	if _frame_name == null:
+		_frame_name = find_node("FrameName")
+
+	_frame_name._override_bg_color = color
+

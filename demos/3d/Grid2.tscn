@@ -1,0 +1,1270 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=1]
+
+[sub_resource type="CubeMesh" id=13]
+
+[sub_resource type="Shader" id=12]
+code = "shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : hint_color;
+uniform sampler2D texture_albedo : hint_albedo;
+uniform float specular;
+uniform float metallic;
+uniform float roughness : hint_range(0,1);
+uniform float point_size : hint_range(0,128);
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	albedo_tex *= COLOR;
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	METALLIC = metallic;
+	ROUGHNESS = roughness;
+	SPECULAR = specular;
+}
+"
+
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 12 )
+shader_param/albedo = Color( 0.419608, 0.619608, 0.694118, 1 )
+shader_param/specular = 0.36
+shader_param/metallic = 0.71
+shader_param/roughness = 0.0
+shader_param/point_size = 1.0
+shader_param/uv1_scale = Vector3( 1, 1, 1 )
+shader_param/uv1_offset = Vector3( 0, 0, 0 )
+shader_param/uv2_scale = Vector3( 1, 1, 1 )
+shader_param/uv2_offset = Vector3( 0, 0, 0 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.263772, 0.964585, 0, -0.964585, 0.263772, -0.00965166, 10.1152, 8.30107 )
+fov = 89.2
+
+[node name="Spatial" type="Spatial" parent="."]
+
+[node name="Cube" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube2" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube3" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube4" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube5" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube6" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube7" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube8" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube9" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube10" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, -7.40865 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube11" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube12" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube13" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube14" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube15" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube16" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube17" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube18" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube19" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube20" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, -5.32394 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube21" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube22" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube23" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube24" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube25" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube26" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube27" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube28" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube29" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube30" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, -3.28556 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube31" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube32" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube33" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube34" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube35" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube36" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube37" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube38" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube39" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube40" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, -1.22883 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube41" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube42" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube43" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube44" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube45" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube46" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube47" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube48" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube49" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube50" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 0.817945 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube51" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube52" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube53" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube54" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube55" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube56" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube57" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube58" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube59" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube60" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 2.86158 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube61" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube62" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube63" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube64" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube65" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube66" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube67" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube68" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube69" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube70" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 4.91168 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube71" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube72" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube73" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube74" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube75" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube76" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube77" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube78" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube79" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube80" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 6.99486 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube81" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube82" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube83" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube84" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube85" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube86" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube87" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube88" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube89" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube90" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 9.07803 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube91" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube92" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube93" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube94" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube95" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube96" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube97" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube98" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube99" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube100" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 11.1281 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube101" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -8.54881, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube102" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -6.48863, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube103" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -4.42001, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube104" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -2.35983, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube105" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, -0.290611, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube106" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 1.76956, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube107" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 3.83819, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube108" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 5.89836, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube109" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 7.99648, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="Cube110" type="MeshInstance" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.2, 4.61853e-14, 0, -9.23706e-15, 1, 10.0567, 0.269245, 13.1782 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 14 )
+__meta__ = {
+"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
+"__old_origin": Vector3( 0, 0, 0 ),
+"__old_transform": Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
+}
+
+[node name="AnimaVisualNode" type="Node" parent="."]
+script = ExtResource( 1 )
+__meta__ = {
+"__anima_visual_node": true
+}

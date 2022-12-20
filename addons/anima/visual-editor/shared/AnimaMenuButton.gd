@@ -16,6 +16,12 @@ enum SHOW_PANEL_ON {
 export (SHOW_PANEL_ON) var show_panel_on = SHOW_PANEL_ON.HOVER setget set_show_panel_on
 
 var _selected_id := 0
+
+#
+# Shortcuts only work if the popup menu is "opened", but we want to be
+# able to trigger them even if is not
+#
+var _shortcut_evevents := []
 export (Array) var _items setget set_items
 export (bool) var update_on_selected := true
 
@@ -57,6 +63,31 @@ func set_items(items: Array) -> void:
 			panel_item.connect("button_down", self, "_on_PopupMenu_id_pressed", [index])
 			panel_item.connect("mouse_entered", self, "_on_PopupPanel_mouse_entered")
 			panel_item.connect("mouse_exited", self, "_on_Button_mouse_exited")
+			
+			if item.has("shortcut"):
+				var shortcut := ShortCut.new()
+				var event : InputEventKey = InputEventKey.new()
+
+				for s in item.shortcut:
+					if s == KEY_ALT:
+						event.alt = true
+					elif s == KEY_CONTROL:
+						event.control = true
+					elif s == KEY_SHIFT:
+						event.shift = true
+					else:
+						if event.scancode != 0:
+							printerr("Shortcut scancode already defined!")
+							
+							continue
+
+						event.scancode = s
+
+				_shortcut_evevents.push_back({ event = event, id = index })
+				shortcut.set_shortcut(event)
+				
+				# We still set this to let Godot to shot the shortcut in the tooltip
+				panel_item.set_shortcut(shortcut)
 
 		vbox.add_child(panel_item)
 
@@ -81,8 +112,15 @@ func _input(event):
 	if event is InputEventMouseButton:
 		if get_draw_mode() == DRAW_HOVER and show_panel_on == SHOW_PANEL_ON.RIGHT_CLICK and event.button_index == 2 and event.pressed == false:
 			_show_panel()
-		elif event.pressed == false:
+		elif event.pressed == false and _panel:
 			_panel.hide()
+	elif event is InputEventKey and event.pressed:
+		_maybe_trigger_shortcut(event)
+
+func _maybe_trigger_shortcut(event: InputEventKey):
+	for s in _shortcut_evevents:
+		if event.shortcut_match(s.event):
+			_on_PopupMenu_id_pressed(s.id)
 
 func _on_Button_mouse_entered():
 	if show_panel_on != SHOW_PANEL_ON.HOVER:

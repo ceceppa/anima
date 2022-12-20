@@ -183,7 +183,8 @@ __anima_visual_editor_data = {
 },
 "frames": {
 0: {
-"collapsed": false,
+"_collapsed": true,
+"_skip": false,
 "data": [ {
 "_root_node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":0.0,"margin_top":0.0,"margin_right":0.0,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 0, 0 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","script":ExtResource( 1 ),"test":SubResource( 5 ))
 ,
@@ -191,6 +192,7 @@ __anima_visual_editor_data = {
 "animations": [ {
 "_root_node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":0.0,"margin_top":0.0,"margin_right":0.0,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 0, 0 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","script":ExtResource( 1 ),"test":SubResource( 5 ))
 ,
+"_skip": false,
 "animate_with": 0,
 "animation_name": "",
 "node": Object(GridContainer,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":0.0,"anchor_bottom":0.0,"margin_left":589.0,"margin_top":93.0,"margin_right":800.0,"margin_bottom":220.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 105.5, 63.5 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":1,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","columns":4,"script":null,"__meta__":{
@@ -200,17 +202,18 @@ __anima_visual_editor_data = {
 ,
 "property": {
 "easing": [ "EaseOutBack", 27 ],
-"from": 0.0,
+"from": "0",
 "initialValue": null,
 "pivot": -1,
 "relative": false,
-"to": 1.0
+"to": "1"
 },
 "property_name": "opacity",
 "property_type": 3
 }, {
 "_root_node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":0.0,"margin_top":0.0,"margin_right":0.0,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 0, 0 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","script":ExtResource( 1 ),"test":SubResource( 5 ))
 ,
+"_skip": false,
 "animate_with": 0,
 "animation_name": "",
 "node": Object(GridContainer,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":0.0,"anchor_bottom":0.0,"margin_left":589.0,"margin_top":93.0,"margin_right":800.0,"margin_bottom":220.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 105.5, 63.5 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":1,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","columns":4,"script":null,"__meta__":{
@@ -251,6 +254,7 @@ __anima_visual_editor_data = {
 "animations": [ {
 "_root_node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":0.0,"margin_top":0.0,"margin_right":0.0,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 0, 0 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","script":ExtResource( 1 ),"test":SubResource( 5 ))
 ,
+"_skip": false,
 "animate_with": 1,
 "animation_name": "wobble",
 "node": Object(Button,"_import_path":NodePath(""),"pause_mode":0,"physics_interpolation_mode":0,"unique_name_in_owner":false,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":0.0,"anchor_bottom":0.0,"margin_left":45.0,"margin_top":0.0,"margin_right":95.0,"margin_bottom":37.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 25, 18.5 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":2,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"theme_type_variation":"","disabled":false,"toggle_mode":false,"shortcut_in_tooltip":true,"pressed":false,"action_mode":1,"button_mask":1,"enabled_focus_mode":2,"keep_pressed_outside":false,"shortcut":null,"group":null,"text":"2","icon":null,"flat":false,"clip_text":false,"align":1,"icon_align":0,"expand_icon":false,"script":null,"__meta__":{
@@ -306,7 +310,7 @@ __anima_visual_editor_data = {
 "node_path": "GridContainer/Button2"
 } ],
 "duration": null,
-"name": "Frame0",
+"name": "",
 "type": "frame"
 }
 }

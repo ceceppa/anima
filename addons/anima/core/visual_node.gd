@@ -22,6 +22,7 @@ enum ANIMATE_AS {
 }
 
 export (Dictionary) var __anima_visual_editor_data = {}
+export (Dictionary) var _frame_editor_sizes = {}
 export (EDITOR_POSITION) var _editor_position := EDITOR_POSITION.BOTTOM setget set_editor_position
 
 var _initial_values := {}
@@ -385,3 +386,5 @@ func _stop_preview():
 
 		_active_anima_node.emit_signal("animation_completed")
 
+func seek(value: float) -> void:
+	pass

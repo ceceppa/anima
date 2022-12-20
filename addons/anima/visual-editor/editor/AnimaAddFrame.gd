@@ -20,8 +20,8 @@ func _animate_add(mode:int) -> void:
 		Anima.Group($ButtonsContainer, 0.05) \
 			.anima_animation_frames({
 				from = {
-					x = "../../AddButton:position:x - ../../AddButton:size:x",
-					y = "../../AddButton:position:y",
+#					x = "../../AddButton:position:x - ../../AddButton:size:x",
+#					y = "../../AddButton:position:y",
 					scale = Vector2.ZERO,
 					opacity = 0,
 				},
@@ -29,8 +29,8 @@ func _animate_add(mode:int) -> void:
 					opacity = 1,
 				},
 				to = {
-					x = "../../AddButton:position:x - :size:x - 10",
-					y = "../../AddButton:position:y + 40 * (((:index % 2) * 2) - 1) - 20",
+					x = "((:size:x / 2) + (../../AddButton:size:x / 2) + 24) * (((:index % 2) * 2) - 1)",
+#					y = "../../AddButton:position:y + 40 * (((:index % 2) * 2) - 1) - 20",
 					scale = Vector2.ONE,
 				},
 				pivot = ANIMA.PIVOT.CENTER,

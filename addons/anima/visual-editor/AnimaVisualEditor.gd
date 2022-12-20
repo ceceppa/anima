@@ -7,6 +7,7 @@ signal visual_builder_updated
 signal highlight_nodes(nodes)
 signal play_animation(animation_info)
 signal change_editor_position(new_position)
+signal update_visual_editor_size(new_size)
 
 onready var _frames_editor: Control = find_node("FramesEditor")
 onready var _nodes_window: WindowDialog = find_node("NodesWindow")
@@ -89,7 +90,7 @@ func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node != null
 
 	if _frames_editor == null:
-		return
+		return false
 
 #	if _flow_direction == 1:
 	visible = is_graph_edit_visible
@@ -139,6 +140,14 @@ func _maybe_show_graph_edit() -> bool:
 
 	return is_graph_edit_visible
 
+func restore_timeline(data: Dictionary) -> void:
+	return
+	var animation = data[_current_animation]
+
+#	$AnimaTimeline.update_timeline(animation)
+#	$AnimaTimeline.show()
+#	$MarginContainer.hide()
+	
 func _restore_data(data: Dictionary) -> void:
 	if not data.has(_current_animation):
 		_frames_editor.clear()
@@ -153,6 +162,7 @@ func _restore_data(data: Dictionary) -> void:
 	_frames_editor.restore_animation_data(animation.animation)
 
 	var key_index := 0
+	var frame_id := 0
 	var total_frames = animation.frames.keys().size() - 1
 
 	for frame_key in animation.frames:
@@ -164,7 +174,9 @@ func _restore_data(data: Dictionary) -> void:
 			continue
 
 		if frame_data.type == "frame":
-			_frames_editor._on_AnimaAddFrame_add_frame(frame_key)
+			_frames_editor._on_AnimaAddFrame_add_frame(frame_id, frame_key)
+
+			frame_id += 1
 		elif frame_data.type == "delay":
 			the_item = _frames_editor._on_AnimaAddFrame_add_delay(frame_key)
 		else:
@@ -396,3 +408,12 @@ func refresh() -> void:
 
 func _on_FramesEditor_change_editor_position(new_position):
 	emit_signal("change_editor_position", new_position)
+
+func _on_AnimaVisualEditor_resized():
+	if not _is_restoring_data:
+		emit_signal("update_visual_editor_size", rect_size)
+
+func _on_AnimaTimeline_seek(value):
+	if _anima_visual_node:
+		_anima_visual_node.seek(value)
+

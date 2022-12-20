@@ -9,7 +9,7 @@
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaMenuButton.tscn" type="PackedScene" id=9]
 [ext_resource path="res://addons/anima/visual-editor/icons/Tools.svg" type="Texture" id=10]
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 12.0
@@ -42,7 +42,7 @@ margin_right = 164.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 116, 24.5 )
 size_flags_vertical = 3
-custom_styles/normal = SubResource( 3 )
+custom_styles/normal = SubResource( 1 )
 text = "Delay:"
 __meta__ = {
 "__initial_AnimaNode__anima_1026196471787050537__button_bg": {

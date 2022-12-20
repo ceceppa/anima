@@ -47,6 +47,7 @@ var _icon_color := Color.white
 var _ignore_toggle_mode := false
 var _disabled_icon_color = Color("#a0a0a0")
 var _override_draw_mode
+var _override_bg_color: Color
 
 func _ready():
 	_box_style.corner_radius_bottom_left = BORDER_RADIUS
@@ -90,21 +91,24 @@ func _input(_event):
 
 func _get_bg_color(draw_mode: int) -> Color:
 	var color: Color = COLORS[style]
-
 	var final_color = color
+
+	if _override_bg_color:
+		final_color = _override_bg_color
+
 	var final_opacity = 0 if transparent else 1
 
 	_icon_color = Color.white
 
 	if draw_mode == STATE.HOVERED:
-		final_color = color.lightened(0.1)
+		final_color = final_color.lightened(0.2)
 		final_opacity = 1
 	elif draw_mode == STATE.PRESSED and not _ignore_toggle_mode:
-		final_color = color.darkened(0.3)
+		final_color = final_color.darkened(0.3)
 		final_opacity = 1
 	elif draw_mode == STATE.DISABLED:
 		_icon_color = _disabled_icon_color
-		final_color = color
+		final_color = final_color
 		final_opacity = 1
 
 	final_color.a = final_opacity

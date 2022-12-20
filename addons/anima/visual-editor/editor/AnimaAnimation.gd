@@ -4,8 +4,6 @@ extends Control
 signal animation_updated
 signal preview_animation(preview_info)
 signal change_editor_position(new_position)
-signal add_delay
-signal add_frame
 signal expand_all
 signal collapse_all
 
@@ -17,6 +15,14 @@ onready var _bg_color = find_node("BGColor")
 var _is_restoring_data := false
 
 func _ready():
+	$Extra.hide()
+
+	$HBoxContainer2/HBoxContainer/ToggleExtra.set_items([
+		{ label = "Animation Options", icon = "res://addons/anima/visual-editor/icons/Animation.svg" },
+		"---",
+		{ label = "Expand all", icon = "res://addons/anima/visual-editor/icons/Expand.svg", shortcut = [KEY_CONTROL, KEY_SHIFT, KEY_EQUAL] },
+		{ label = "Collapse all", icon = "res://addons/anima/visual-editor/icons/Closed.svg", shortcut = [KEY_CONTROL, KEY_SHIFT, KEY_MINUS] },
+	])
 	_on_AnimaAnimation_resized()
 
 func get_data() -> Dictionary:
@@ -94,15 +100,6 @@ func _on_PositionBottom_pressed():
 func _on_PositionRight_pressed():
 	emit_signal("change_editor_position", AnimaVisualNode.EDITOR_POSITION.RIGHT)
 
-func _on_Add_item_selected(id):
-	if id == 0:
-		emit_signal("add_frame")
-	else:
-		emit_signal("add_delay")
-
-func _on_ToggleExtra_toggled(button_pressed):
-	$Extra.visible = button_pressed
-
 func _on_ExpandAll_pressed():
 	emit_signal("expand_all")
 
@@ -112,3 +109,14 @@ func _on_CollapseAll_pressed():
 
 func _on_Preview_play_preview():
 	emit_signal("preview_animation", { preview_button = find_node("Preview"), name = "default" })
+
+func _on_ToggleExtra_item_selected(id):
+	if id == 0:
+		$Extra.show()
+	elif id == 2:
+		emit_signal("expand_all")
+	elif id == 3:
+		emit_signal("collapse_all")
+
+func _on_CloseExtra_pressed():
+	$Extra.hide()

@@ -48,6 +48,7 @@ func _load_anima_editor(position: int):
 	editor.connect("highlight_nodes", self, '_on_highlight_nodes')
 	editor.connect("play_animation", self, '_on_play_animation')
 	editor.connect("change_editor_position", self, '_on_change_editor_position')
+	editor.connect("update_visual_editor_size", self, '_on_update_frames_editor_size')
 
 	_add_anima_editor(editor, position)
 
@@ -120,11 +121,17 @@ func set_anima_node(is_anima_node: bool, object) -> void:
 
 		_on_editor_position_changed(_anima_visual_node._editor_position)
 
+		var size_index = _anima_visual_node._editor_position
+
+		if _anima_visual_node._frame_editor_sizes.has(size_index):
+			_active_anima_editor.rect_size = _anima_visual_node._frame_editor_sizes[size_index]
+
 		_active_anima_editor.set_anima_node(object)
 		_active_anima_editor.show()
 
 		if old_active_editor != _active_anima_editor:
 			old_active_editor.hide()
+
 	elif not is_anima_node:
 		_active_anima_editor.set_anima_node(null)
 
@@ -189,3 +196,29 @@ func _undo_visual_editor_data(previous_data) -> void:
 func _on_change_editor_position(new_position) -> void:
 	if _anima_visual_node:
 		_anima_visual_node._editor_position = new_position
+
+func _on_update_frames_editor_size(new_size: Vector2) -> void:
+	if not _anima_visual_node:
+		return
+
+	var size_index = _anima_visual_node._editor_position
+
+	if  not _anima_visual_node._frame_editor_sizes.has(size_index):
+		return
+
+	var data = _anima_visual_node._frame_editor_sizes
+	var current_size = _anima_visual_node._frame_editor_sizes[size_index]
+
+	if current_size == new_size:
+		return
+
+	_anima_visual_node._frame_editor_sizes[size_index] = new_size
+
+	var current_data: Dictionary = _anima_visual_node.__anima_visual_editor_data
+	var undo_redo = get_undo_redo() # Method of EditorPlugin.
+
+	undo_redo.create_action('Updated AnimaVisualNode')
+	undo_redo.add_do_property(_anima_visual_node, "_frame_editor_sizes", data)
+	undo_redo.add_undo_method(self, "_undo_visual_editor_data", current_data)
+	undo_redo.commit_action()
+	
