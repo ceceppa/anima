@@ -1,6 +1,6 @@
 extends "res://addons/gut/test.gd"
 
-func test_simple_backwards():
+func test_simple_backwards_with_dynamic_value():
 	var node := Control.new()
 	var cross := Sprite.new()
 

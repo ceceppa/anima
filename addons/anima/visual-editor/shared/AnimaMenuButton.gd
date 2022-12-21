@@ -39,7 +39,6 @@ func set_items(items: Array) -> void:
 	if _panel == null:
 		return
 
-	
 	if _panel.get_child_count() > 0:
 		_panel.get_child(0).queue_free()
 
@@ -51,6 +50,7 @@ func set_items(items: Array) -> void:
 
 		if item is String:
 			panel_item = HSeparator.new()
+			panel_item.mouse_filter = MOUSE_FILTER_PASS
 		else:
 			panel_item = anima_button.instance()
 
@@ -157,3 +157,6 @@ func _on_PopupPanel_hide():
 
 func set_show_panel_on(on) -> void:
 	show_panel_on = on
+
+func _on_PanelItems_mouse_entered():
+	$Timer.stop()

@@ -49,7 +49,12 @@ var _disabled_icon_color = Color("#a0a0a0")
 var _override_draw_mode
 var _override_bg_color: Color
 
+func _init():
+	set_process_unhandled_input(false)
+
 func _ready():
+	_old_draw_mode = get_draw_mode()
+
 	_box_style.corner_radius_bottom_left = BORDER_RADIUS
 	_box_style.corner_radius_bottom_right = BORDER_RADIUS
 	_box_style.corner_radius_top_left= BORDER_RADIUS
@@ -59,8 +64,11 @@ func _ready():
 	_set("align", align)
 
 	_update_padding()
-	_refresh_button(get_draw_mode())
+	update()
 
+func _enter_tree():
+	set_process_unhandled_input(true)
+	
 func _draw():
 	_box_style.bg_color = _button_bg
 
@@ -88,6 +96,12 @@ func _input(_event):
 
 	if draw_mode != _old_draw_mode:
 		_refresh_button(draw_mode)
+
+func set_bg_color_without_animation(color: Color) -> void:
+	_override_bg_color = color
+	_button_bg = color
+
+	update()
 
 func _get_bg_color(draw_mode: int) -> Color:
 	var color: Color = COLORS[style]
@@ -217,7 +231,8 @@ func _update_padding() -> void:
 		_label.add_stylebox_override("normal", label_style_box)
 
 func _on_Button_toggled(button_pressed):
-	_refresh_button(get_draw_mode())
+	if is_inside_tree():
+		_refresh_button(get_draw_mode())
 
 func _maybe_show_group_data():
 	pass # Replace with function body.
@@ -225,6 +240,6 @@ func _maybe_show_group_data():
 func set_transparent(t: bool) -> void:
 	transparent = t
 	
-	_old_draw_mode = -1
+#	_old_draw_mode = -1
 	
 	_refresh_button(get_draw_mode(), true)

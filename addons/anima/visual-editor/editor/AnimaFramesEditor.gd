@@ -26,6 +26,7 @@ var _is_restoring_data := false
 var _animation_node_source: Node
 var _active_frames_container: Node
 var _flow_direction := 0
+var _last_id := 0
 
 func _ready():
 	if _active_frames_container == null:
@@ -93,7 +94,7 @@ func _add_component(node: Node) -> void:
 
 	node.animate_entrance_exit = true
 
-func _on_AnimaAddFrame_add_frame(id: int, key := -1):
+func _on_AnimaAddFrame_add_frame(id: int = -1, key := -1):
 	if key < 0:
 		key = _active_frames_container.get_child_count()
 
@@ -108,11 +109,15 @@ func _on_AnimaAddFrame_add_frame(id: int, key := -1):
 	node.connect("add_node", self, "_on_frame_add_node", [node])
 	node.connect("preview_animation", self, "_on_preview_animation")
 
+	if id < 0:
+		id = _last_id + 1
+
 	var color_id = id
 	if color_id > ANIMA._FRAME_COLORS.size():
 		color_id = id % ANIMA._FRAME_COLORS.size()
 
 	node.set_color(ANIMA._FRAME_COLORS[color_id])
+
 	node.set_meta("_key", key)
 	node.set_meta("_data_index", key)
 	node.set_title_as_toggable(_flow_direction == 1)
@@ -121,6 +126,8 @@ func _on_AnimaAddFrame_add_frame(id: int, key := -1):
 	_add_component(node)
 
 	_emit_updated()
+
+	_last_id = id
 
 func _on_AnimaAddFrame_add_delay(key := -1):
 	if key < 0:
@@ -217,9 +224,3 @@ func _set_child_as_collapsed(collapsed: bool) -> void:
 	for child in _active_frames_container.get_children():
 		if child.has_method("set_collapsed"):
 			child.call_deferred("set_collapsed", collapsed)
-
-func _on_Add_item_selected(id):
-	if id == 0:
-		_on_AnimaAddFrame_add_frame(_active_frames_container.get_child_count())
-	else:
-		_on_AnimaAddFrame_add_delay()

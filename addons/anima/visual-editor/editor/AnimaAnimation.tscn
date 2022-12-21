@@ -23,15 +23,16 @@ custom_constants/separation = 0
 script = ExtResource( 3 )
 
 [node name="Control" type="Control" parent="."]
-margin_right = 804.0
+margin_right = 611.0
 
 [node name="BGColor" parent="Control" instance=ExtResource( 2 )]
 margin_right = 611.0
+margin_bottom = 38.0
 color = Color( 0.101961, 0.188235, 0.309804, 1 )
 style = 4
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
-margin_right = 804.0
+margin_right = 611.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 0, 38 )
 size_flags_vertical = 3
@@ -907,7 +908,7 @@ transparent = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2"]
 margin_left = 132.0
-margin_right = 804.0
+margin_right = 611.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -915,8 +916,8 @@ custom_constants/separation = 0
 alignment = 2
 
 [node name="Preview" parent="HBoxContainer2/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 576.0
-margin_right = 624.0
+margin_left = 383.0
+margin_right = 431.0
 margin_bottom = 38.0
 rect_pivot_offset = Vector2( 24, 20 )
 __meta__ = {
@@ -1474,8 +1475,8 @@ style = 3
 transparent = true
 
 [node name="ToggleExtra" parent="HBoxContainer2/HBoxContainer" instance=ExtResource( 10 )]
-margin_left = 624.0
-margin_right = 672.0
+margin_left = 431.0
+margin_right = 479.0
 margin_bottom = 38.0
 rect_pivot_offset = Vector2( 24, 19 )
 icon = ExtResource( 8 )
@@ -1753,9 +1754,22 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 transparent = true
+_items = [ {
+"icon": "res://addons/anima/visual-editor/icons/Animation.svg",
+"label": "Animation Options"
+}, "---", {
+"icon": "res://addons/anima/visual-editor/icons/Expand.svg",
+"label": "Expand all",
+"shortcut": [ 16777238, 16777237, 61 ]
+}, {
+"icon": "res://addons/anima/visual-editor/icons/Closed.svg",
+"label": "Collapse all",
+"shortcut": [ 16777238, 16777237, 45 ]
+} ]
 update_on_selected = false
 
 [node name="Extra" parent="." instance=ExtResource( 2 )]
+visible = false
 margin_top = 38.0
 margin_right = 804.0
 margin_bottom = 92.0

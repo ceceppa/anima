@@ -349,5 +349,10 @@ func set_color(color: Color) -> void:
 	if _frame_name == null:
 		_frame_name = find_node("FrameName")
 
-	_frame_name._override_bg_color = color
+	_frame_name.set_bg_color_without_animation(color)
 
+func _on_NameEditButton_pressed():
+	find_node("NameEditLine").show()
+	find_node("ConfirmName").show()
+	find_node("NameEditButton").hide()
+	

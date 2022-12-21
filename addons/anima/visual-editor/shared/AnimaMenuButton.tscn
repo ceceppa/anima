@@ -307,3 +307,4 @@ custom_styles/panel = SubResource( 1 )
 [connection signal="mouse_exited" from="." to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="." to="." method="_on_Button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="mouse_entered" from="PanelItems" to="." method="_on_PanelItems_mouse_entered"]

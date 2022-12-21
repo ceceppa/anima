@@ -1,5 +1,5 @@
 tool
-extends Control
+extends MarginContainer
 
 var _is_collapsed_mode := true
 
@@ -7,21 +7,24 @@ signal add_frame
 signal add_event
 signal add_delay
 
+onready var _buttons_container = find_node("ButtonsContainer")
+onready var _add_button = find_node("AddButton")
+
 func _ready():
-	for child in $ButtonsContainer.get_children():
+	for child in _buttons_container.get_children():
 		child.modulate.a = 0
 
 func _animate_add(mode:int) -> void:
 	var anima := Anima.begin_single_shot(self) \
 	.then(
-		Anima.Node($AddButton).anima_scale(Vector2(1.2, 1.2), 0.15)
+		Anima.Node(_add_button).anima_scale(Vector2(1.2, 1.2), 0.15)
 	) \
 	.with(
-		Anima.Group($ButtonsContainer, 0.05) \
+		Anima.Group(_buttons_container, 0.05) \
 			.anima_animation_frames({
 				from = {
-#					x = "../../AddButton:position:x - ../../AddButton:size:x",
-#					y = "../../AddButton:position:y",
+					x = 0,
+					y = 0,
 					scale = Vector2.ZERO,
 					opacity = 0,
 				},
@@ -29,8 +32,8 @@ func _animate_add(mode:int) -> void:
 					opacity = 1,
 				},
 				to = {
-					x = "((:size:x / 2) + (../../AddButton:size:x / 2) + 24) * (((:index % 2) * 2) - 1)",
-#					y = "../../AddButton:position:y + 40 * (((:index % 2) * 2) - 1) - 20",
+					x = "sin(:index * PI - PI / 2) * (:size:x / 1.5)",
+					y = "cos(:index * PI - PI / 2) * (:size:y / 2)",
 					scale = Vector2.ONE,
 				},
 				pivot = ANIMA.PIVOT.CENTER,
@@ -41,9 +44,9 @@ func _animate_add(mode:int) -> void:
 
 	yield(anima, "animation_completed")
 
-	var mouse_filter = MOUSE_FILTER_STOP if $ButtonsContainer/Animation.modulate.a > 0 else MOUSE_FILTER_IGNORE
+	var mouse_filter = MOUSE_FILTER_STOP if _buttons_container.get_child(0).modulate.a > 0 else MOUSE_FILTER_IGNORE
 	
-	for button in $ButtonsContainer.get_children():
+	for button in _buttons_container.get_children():
 		button.mouse_filter = mouse_filter
 
 func _on_Animation_pressed():
@@ -62,7 +65,7 @@ func _on_Event_pressed():
 func _on_AddButton_mouse_entered():
 	$Timer.stop()
 
-	if $ButtonsContainer/Animation.modulate.a < 1:
+	if _buttons_container.get_child(0).modulate.a < 1:
 		_animate_add(AnimaTween.PLAY_MODE.NORMAL)
 
 func _on_Timer_timeout():

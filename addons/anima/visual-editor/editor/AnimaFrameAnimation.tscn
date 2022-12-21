@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://addons/anima/visual-editor/icons/Tools.svg" type="Texture" id=1]
 [ext_resource path="res://addons/anima/visual-editor/icons/Close.svg" type="Texture" id=2]
+[ext_resource path="res://addons/anima/visual-editor/icons/Edit.svg" type="Texture" id=3]
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/visual-editor/icons/Check.svg" type="Texture" id=5]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimationsContainer.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/anima/visual-editor/editor/AnimaFrameAnimation.gd" type="Script" id=8]
 [ext_resource path="res://addons/anima/visual-editor/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=9]
@@ -19,6 +21,17 @@ content_margin_top = 12.0
 content_margin_bottom = 12.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
+[sub_resource type="StyleBoxFlat" id=5]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
 [node name="FrameAnimation" type="VBoxContainer"]
 anchor_right = 1.0
 margin_bottom = 203.0
@@ -33,7 +46,7 @@ __meta__ = {
 }
 
 [node name="Control" type="Control" parent="."]
-margin_right = 600.0
+margin_right = 1024.0
 
 [node name="Rectangle" type="ColorRect" parent="Control"]
 anchor_right = 1.0
@@ -48,7 +61,7 @@ __meta__ = {
 }
 
 [node name="ContentContainer" type="VBoxContainer" parent="."]
-margin_right = 600.0
+margin_right = 1024.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 320, 300 )
 custom_constants/separation = 0
@@ -58,7 +71,7 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ContentContainer"]
-margin_right = 600.0
+margin_right = 1024.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 206, 24.5 )
 size_flags_horizontal = 3
@@ -66,7 +79,7 @@ custom_constants/separation = 12
 
 [node name="FrameName" parent="ContentContainer/HBoxContainer" instance=ExtResource( 14 )]
 anchor_right = 0.0
-margin_right = 479.0
+margin_right = 903.0
 margin_bottom = 49.0
 rect_pivot_offset = Vector2( 239.5, 24.5 )
 custom_styles/normal = SubResource( 4 )
@@ -452,9 +465,316 @@ __meta__ = {
 }
 node_to_toggle = NodePath("../../../MarginContainer")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentContainer/HBoxContainer/FrameName"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+
+[node name="NameEditLine" type="LineEdit" parent="ContentContainer/HBoxContainer/FrameName/HBoxContainer"]
+visible = false
+margin_right = 847.0
+margin_bottom = 49.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ConfirmName" parent="ContentContainer/HBoxContainer/FrameName/HBoxContainer" instance=ExtResource( 4 )]
+visible = false
+margin_left = 855.0
+margin_right = 903.0
+margin_bottom = 49.0
+rect_pivot_offset = Vector2( 32, 24.5 )
+icon = ExtResource( 5 )
+icon_align = 1
+expand_icon = true
+__meta__ = {
+"__initial_AnimaNode__anima_1089089038415726807__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1089089038415726807_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1109358829504410889__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1109358829504410889_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1109358829504410889_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1184046554139278564__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1184046554139278564_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1199797368124862305__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1199797368124862305_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1199797368124862305_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_1340607361553487793__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1340607361553487793_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1441945957727123779__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1441945957727123779_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1441945957727123779_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_164700612275147168__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_164700612275147168_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1658482992875293945__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1658482992875293945_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_1663072209510023438__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_1663072209510023438_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_215925900549246643__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_215925900549246643_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_244386363034037598__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_244386363034037598_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_359789769654524719__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_359789769654524719_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_447088250819550293__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_447088250819550293_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_447088250819550293_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_454360864891194458_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_454360864891194458_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_503159164245518066__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_503159164245518066_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_503159164245518066_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_541279795408501465__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_541279795408501465_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_611141024203869141_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_611141024203869141_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_625146128990218994__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_625146128990218994_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_647142782613271851__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_647142782613271851_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_698052055760981323__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_698052055760981323_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_774037851557249634_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_774037851557249634_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_807775977158753784__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_807775977158753784_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_8113687285780011__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_8113687285780011_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_838497898335865356__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_838497898335865356_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_838497898335865356_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_840572761080846802_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_840572761080846802_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_871971128971702881__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_871971128971702881_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_871971128971702881_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_AnimaNode__anima_944680552210345459__button_bg": {
+"percentage": 0,
+"value": Color( 0.0196078, 0.266667, 0.368627, 1 )
+},
+"__initial_AnimaNode__anima_944680552210345459_opacity": {
+"percentage": 0,
+"value": 1.0
+},
+"__initial_AnimaNode__anima_944680552210345459_scale": {
+"percentage": 0,
+"value": Vector2( 1, 1 )
+},
+"__initial_Button__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__initial_ConfirmName__button_bg": Color( 0.0196078, 0.266667, 0.368627, 1 ),
+"__visibility_strategy": 0,
+"_visibility_strategy_reverted": true
+}
+transparent = true
+
+[node name="NameEditButton" parent="ContentContainer/HBoxContainer/FrameName/HBoxContainer" instance=ExtResource( 4 )]
+margin_left = 855.0
+margin_right = 903.0
+margin_bottom = 49.0
+rect_pivot_offset = Vector2( 24, 24.5 )
+custom_styles/normal = SubResource( 5 )
+icon = ExtResource( 3 )
+icon_align = 1
+expand_icon = true
+style = 4
+transparent = true
+
 [node name="ActionsContainer" type="HBoxContainer" parent="ContentContainer/HBoxContainer"]
-margin_left = 491.0
-margin_right = 600.0
+margin_left = 915.0
+margin_right = 1024.0
 margin_bottom = 49.0
 custom_constants/separation = 12
 alignment = 2
@@ -1156,8 +1476,8 @@ _items = [ {
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_top = 49.0
-margin_right = 600.0
-margin_bottom = 203.0
+margin_right = 1024.0
+margin_bottom = 263.0
 rect_pivot_offset = Vector2( 320, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1182,8 +1502,8 @@ __meta__ = {
 [node name="ContentContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 588.0
-margin_bottom = 142.0
+margin_right = 1012.0
+margin_bottom = 202.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
@@ -1192,8 +1512,7 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
-visible = false
-margin_right = 576.0
+margin_right = 1000.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
 size_flags_horizontal = 3
@@ -1205,20 +1524,20 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ContentContainer/DurationContainer"]
 margin_top = 12.0
-margin_right = 576.0
+margin_right = 1000.0
 margin_bottom = 45.0
 custom_constants/separation = 12
 
 [node name="GridContainer" type="HBoxContainer" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer"]
-margin_right = 576.0
+margin_right = 1000.0
 margin_bottom = 33.0
 rect_pivot_offset = Vector2( 259.281, -180.348 )
 custom_constants/separation = 24
 
 [node name="Label" type="Label" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer"]
-margin_top = 9.0
-margin_right = 59.0
-margin_bottom = 23.0
+margin_top = 4.0
+margin_right = 101.0
+margin_bottom = 29.0
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Duration:"
 align = 1
@@ -1227,8 +1546,8 @@ __meta__ = {
 }
 
 [node name="Duration" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 9 )]
-margin_left = 83.0
-margin_right = 504.0
+margin_left = 125.0
+margin_right = 928.0
 margin_bottom = 33.0
 rect_min_size = Vector2( 0, 33 )
 label = "animation default"
@@ -1236,10 +1555,9 @@ type = 3
 show_relative_selector = false
 
 [node name="Button" parent="MarginContainer/ContentContainer/DurationContainer/VBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 528.0
-margin_right = 576.0
+margin_left = 952.0
+margin_right = 1000.0
 margin_bottom = 33.0
-rect_pivot_offset = Vector2( 24, 16.5 )
 icon = ExtResource( 2 )
 icon_align = 1
 expand_icon = true
@@ -1249,13 +1567,14 @@ transparent = true
 [node name="AnimationsContainer" parent="MarginContainer/ContentContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 576.0
-margin_bottom = 70.0
+margin_top = 69.0
+margin_right = 1000.0
+margin_bottom = 130.0
 
 [node name="NoAnimationsWarning" parent="MarginContainer/ContentContainer" instance=ExtResource( 4 )]
-margin_top = 82.0
-margin_right = 576.0
-margin_bottom = 130.0
+margin_top = 142.0
+margin_right = 1000.0
+margin_bottom = 190.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 288, 24 )
 text = "Select or drag here the node to animate"
@@ -1534,9 +1853,9 @@ transparent = true
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 visible = false
 margin_left = 578.0
-margin_top = 142.0
+margin_top = 202.0
 margin_right = 626.0
-margin_bottom = 191.0
+margin_bottom = 251.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true
@@ -2289,6 +2608,7 @@ Do you want to continue?"
 [connection signal="item_rect_changed" from="." to="." method="_on_FrameAnimation_item_rect_changed"]
 [connection signal="mouse_entered" from="ContentContainer/HBoxContainer/FrameName" to="." method="_on_FrameName_mouse_entered"]
 [connection signal="pressed" from="ContentContainer/HBoxContainer/FrameName" to="." method="_on_ToggableFrameName_pressed"]
+[connection signal="pressed" from="ContentContainer/HBoxContainer/FrameName/HBoxContainer/NameEditButton" to="." method="_on_NameEditButton_pressed"]
 [connection signal="play_preview" from="ContentContainer/HBoxContainer/ActionsContainer/Preview" to="." method="_on_Preview_play_preview"]
 [connection signal="skip_changed" from="ContentContainer/HBoxContainer/ActionsContainer/Preview" to="." method="_on_Preview_skip_changed"]
 [connection signal="item_selected" from="ContentContainer/HBoxContainer/ActionsContainer/OptionsMenu" to="." method="_on_OptionsMenu_item_selected"]

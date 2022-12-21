@@ -7,21 +7,21 @@
 [ext_resource path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/visual-editor/icons/Add.svg" type="Texture" id=6]
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=5]
 content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 4.0
 content_margin_bottom = 4.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=6]
 content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 4.0
 content_margin_bottom = 4.0
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=7]
 content_margin_left = 48.0
 content_margin_right = 24.0
 content_margin_top = 4.0
@@ -39,25 +39,38 @@ corner_radius_top_right = 50
 corner_radius_bottom_right = 50
 corner_radius_bottom_left = 50
 
-[node name="CenterContainer" type="CenterContainer"]
-rect_min_size = Vector2( 360, 0 )
-mouse_filter = 2
+[node name="AnimaAddFrame" type="MarginContainer"]
+margin_right = 408.0
+margin_bottom = 73.0
+custom_constants/margin_right = 24
+custom_constants/margin_top = 12
+custom_constants/margin_left = 24
+custom_constants/margin_bottom = 12
 script = ExtResource( 2 )
 
-[node name="ButtonsContainer" type="Control" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="."]
+margin_left = 24.0
+margin_top = 12.0
+margin_right = 384.0
+margin_bottom = 68.0
+rect_min_size = Vector2( 360, 56 )
+mouse_filter = 2
+
+[node name="ButtonsContainer" type="Control" parent="CenterContainer"]
 margin_left = 60.0
+margin_top = 3.0
 margin_right = 300.0
-margin_bottom = 49.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 240, 49 )
 
-[node name="Animation" parent="ButtonsContainer" instance=ExtResource( 5 )]
+[node name="Animation" parent="CenterContainer/ButtonsContainer" instance=ExtResource( 5 )]
 modulate = Color( 1, 1, 1, 0 )
 margin_right = 240.0
 margin_bottom = 56.0
 rect_min_size = Vector2( 240, 49 )
 rect_pivot_offset = Vector2( 120, 24.5 )
 mouse_filter = 2
-custom_styles/normal = SubResource( 1 )
+custom_styles/normal = SubResource( 5 )
 text = "Animation"
 icon = ExtResource( 1 )
 __meta__ = {
@@ -226,14 +239,14 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="Delay" parent="ButtonsContainer" instance=ExtResource( 5 )]
+[node name="Delay" parent="CenterContainer/ButtonsContainer" instance=ExtResource( 5 )]
 modulate = Color( 1, 1, 1, 0 )
 margin_right = 240.0
 margin_bottom = 56.0
 rect_min_size = Vector2( 240, 49 )
 rect_pivot_offset = Vector2( 120, 24 )
 mouse_filter = 2
-custom_styles/normal = SubResource( 2 )
+custom_styles/normal = SubResource( 6 )
 text = "Delay"
 icon = ExtResource( 3 )
 __meta__ = {
@@ -403,7 +416,7 @@ __meta__ = {
 }
 style = 1
 
-[node name="Event" parent="ButtonsContainer" instance=ExtResource( 5 )]
+[node name="Event" parent="CenterContainer/ButtonsContainer" instance=ExtResource( 5 )]
 visible = false
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 160.0
@@ -412,7 +425,7 @@ margin_bottom = 216.0
 rect_min_size = Vector2( 240, 49 )
 rect_pivot_offset = Vector2( 120, 24 )
 mouse_filter = 2
-custom_styles/normal = SubResource( 3 )
+custom_styles/normal = SubResource( 7 )
 text = "Event"
 icon = ExtResource( 4 )
 __meta__ = {
@@ -581,10 +594,12 @@ __meta__ = {
 "_visibility_strategy_reverted": true
 }
 
-[node name="AddButton" parent="." instance=ExtResource( 5 )]
-margin_left = 156.0
+[node name="AddButton" parent="CenterContainer" instance=ExtResource( 5 )]
+margin_left = 155.0
+margin_top = 3.0
 margin_right = 204.0
-margin_bottom = 49.0
+margin_bottom = 52.0
+rect_min_size = Vector2( 49, 49 )
 rect_pivot_offset = Vector2( 24, 24.5 )
 custom_styles/normal = SubResource( 4 )
 icon = ExtResource( 6 )
@@ -860,20 +875,20 @@ __meta__ = {
 "__visibility_strategy": 0,
 "_visibility_strategy_reverted": true
 }
-style = 4
+transparent = true
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
 
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ButtonsContainer/Animation" to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="ButtonsContainer/Animation" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ButtonsContainer/Animation" to="." method="_on_Animation_pressed"]
-[connection signal="mouse_entered" from="ButtonsContainer/Delay" to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="ButtonsContainer/Delay" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ButtonsContainer/Delay" to="." method="_on_Delay_pressed"]
-[connection signal="pressed" from="ButtonsContainer/Event" to="." method="_on_Event_pressed"]
-[connection signal="mouse_entered" from="AddButton" to="." method="_on_AddButton_mouse_entered"]
-[connection signal="mouse_exited" from="AddButton" to="." method="_on_mouse_exited"]
+[connection signal="mouse_exited" from="CenterContainer" to="CenterContainer" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="CenterContainer/ButtonsContainer/Animation" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/ButtonsContainer/Animation" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/ButtonsContainer/Animation" to="." method="_on_Animation_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/ButtonsContainer/Delay" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/ButtonsContainer/Delay" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/ButtonsContainer/Delay" to="." method="_on_Delay_pressed"]
+[connection signal="pressed" from="CenterContainer/ButtonsContainer/Event" to="CenterContainer" method="_on_Event_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/AddButton" to="." method="_on_AddButton_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/AddButton" to="." method="_on_mouse_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
