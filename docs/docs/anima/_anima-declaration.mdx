@@ -4,7 +4,7 @@ _NOTE_: For commodity, all the class methods start with the `anima_` prefix. Thi
 
 ![AnimaDeclaration autocomplete](/img/anima_autocomplete.png)
 
-## anima_animation
+### anima_animation
 
 Animates the Node/Group/Grid using the given animation name.
 
@@ -27,7 +27,7 @@ Anim.Group($node).anima_animation("tada")
 Anim.Grid($node).anima_animation("fadeIn")
 ```
 
-## anima_animation_frames
+### anima_animation_frames
 
 Animates the Node/Group/Grid using a CSS-Style inline animation.
 
@@ -62,7 +62,7 @@ Anim.Node($node).anima_animation_frames({
 })
 ```
 
-## anima_property
+### anima_property
 
 Animates the given property.
 
@@ -120,23 +120,7 @@ Anima.Node($Control).property("position:x", 100 ) # Animates rect_position.x
 Anima.Node($Node2D).property("position:x", 100 )  # Animates position.x
 ```
 
-## anima_as_relative
-
-Tells anima that the final value is a relative one
-
-#### Syntax
-
-```gdscript
-anima_as_relative()
-```
-
-#### Example
-
-```gdscript
-Anima.Node($node).anima_scale_x(0.8).anima_as_relative()
-```
-
-## anima_delay
+### anima_delay
 
 The delay to use before starting the animation.
 
@@ -159,7 +143,7 @@ Anima.Node($node).anima_scale_x(0.8).anima_delay(0.5)
 Anima.Node($node).anima_scale_x(0.8).anima_delay(-0.5)
 ```
 
-## anima_easing
+### anima_easing
 
 The easing to use to animate the node.
 
@@ -177,7 +161,7 @@ anima_easing(easing: int)
 Anima.Node($node).anima_scale_x(0.8).anima_easing(ANIMA.EASINGS.EASE_IN_OUT)
 ```
 
-## anima_from
+### anima_from
 
 Set the initial value.
 
@@ -197,7 +181,7 @@ anima_from(value: Variant)
 Anima.Node($node).anima_property("x").anima_from(-100)
 ```
 
-## anima_fade_in
+### anima_fade_in
 
 Fades in the given element(s)
 
@@ -217,7 +201,7 @@ anima_fade_in(duration: float)
 Anima.Node($node).fade_in(0.4)
 ```
 
-## anima_fade_out
+### anima_fade_out
 
 Fades out the given element(s)
 
@@ -237,7 +221,7 @@ anima_fade_out(duration: float)
 Anima.Node($node).fade_out(0.4)
 ```
 
-## anima_on_started
+### anima_on_started
 
 Callback to be triggered when the Node animation starts.
 
@@ -271,7 +255,7 @@ func do_something(is_forward) -> void:
     print(is_forward)
 ```
 
-## anima_on_completed
+### anima_on_completed
 
 Callback to be triggered when the Node animation completes.
 
@@ -305,7 +289,7 @@ func do_something(is_forward) -> void:
     print(is_forward)
 ```
 
-## anima_pivot
+### anima_pivot
 
 The pivot point to use to animate the node.
 
@@ -323,7 +307,7 @@ anima_pivot(easing: int)
 Anima.Node($node).anima_scale_x(0.8).anima_pivot(ANIMA.PIVOT.CENTER)
 ```
 
-## anima_position
+### anima_position
 
 Animates the `x` and `y` position of the given element(s)
 
@@ -345,7 +329,7 @@ Anima.Node($node).anima_position(Vector2(100, 100))
 Anima.Node($node).anima_position(Vector2(100, 100), 0.3) # duration - 0.3s
 ```
 
-## anima_position3D
+### anima_position3D
 
 Animates the `x`, `y` and `z` position of the given element(s)
 
@@ -366,7 +350,7 @@ anima_position3D(position: Vector3, duration: float)
 Anima.Node($node).anima_position3D(Vector3(100, 100, 0))
 ```
 
-## anima_position_x
+### anima_position_x
 
 Animates the global `x` position of the given element(s)
 
@@ -387,7 +371,7 @@ anima_position_x(x: float, duration: float)
 Anima.Node($node).anima_position_x(100)
 ```
 
-## anima_position_y
+### anima_position_y
 
 Animates the global `y` position of the given element(s)
 
@@ -408,7 +392,7 @@ anima_position_y(y: float, duration: float)
 Anima.Node($node).anima_position_y(100)
 ```
 
-## anima_position_z
+### anima_position_z
 
 Animates the global `z` position of the given element(s)
 
@@ -429,7 +413,7 @@ anima_position_z(z: float, duration: float)
 Anima.Node($node).anima_position_z(-1)
 ```
 
-## anima_relative_position
+### anima_relative_position
 
 Animates the relative `x` and `y` position of the given element(s)
 
@@ -450,7 +434,7 @@ anima_relative_position(position: Vector2, duration: float)
 Anima.Node($node).anima_relative_position(Vector2(100, 100))
 ```
 
-## anima_relative_position3D
+### anima_relative_position3D
 
 Animates the relative `x`, `y` and `z` position of the given element(s)
 
@@ -471,7 +455,7 @@ anima_relative_position3D(position: Vector3, duration: float)
 Anima.Node($node).anima_relative_position3D(Vector3(100, 100, 0))
 ```
 
-## anima_relative_position_x
+### anima_relative_position_x
 
 Animates the relative `x` position of the given element(s)
 
@@ -492,7 +476,7 @@ anima_relative_position_x(x: float, duration: float)
 Anima.Node($node).anima_relative_position_x(100)
 ```
 
-## anima_relative_position_y
+### anima_relative_position_y
 
 Animates the relative `y` position of the given element(s)
 
@@ -513,7 +497,7 @@ anima_relative_position_y(y: float, duration: float)
 Anima.Node($node).anima_relative_position_y(100)
 ```
 
-## anima_relative_position_z
+### anima_relative_position_z
 
 Animates the relative `z` position of the given element(s)
 
@@ -534,7 +518,7 @@ anima_relative_position_z(z: float, duration: float)
 Anima.Node($node).anima_relative_position_z(-1)
 ```
 
-## anima_rotate
+### anima_rotate
 
 Animates the 2D rotate property of the given element(s)
 
@@ -555,7 +539,7 @@ anima_rotate(rotate: Vector2, duration: float)
 Anima.Node($node).anima_rotate(Vector2.ZERO)
 ```
 
-## anima_rotate3D
+### anima_rotate3D
 
 Animates the 3D rotate property of the given element(s)
 
@@ -576,7 +560,7 @@ anima_rotate3D(rotate: Vector3, duration: float)
 Anima.Node($node).anima_rotate3D(Vector3(10, 0, -0.5))
 ```
 
-## anima_rotate_x
+### anima_rotate_x
 
 Animates the `x` rotate property of the given element(s)
 
@@ -597,7 +581,7 @@ anima_rotate_x(rotate_x: float, duration: float)
 Anima.Node($node).anima_rotate_x(0.8)
 ```
 
-## anima_rotate_y
+### anima_rotate_y
 
 Animates the `y` rotate property of the given element(s)
 
@@ -618,7 +602,7 @@ anima_rotate_y(rotate_y: float, duration: float)
 Anima.Node($node).anima_rotate_y(0.8)
 ```
 
-## anima_rotate_z
+### anima_rotate_z
 
 Animates the `z` rotate property of the given element(s)
 
@@ -639,7 +623,7 @@ anima_rotate_z(rotate_z: float, duration: float)
 Anima.Node($node).anima_rotate_z(0.8)
 ```
 
-## anima_scale
+### anima_scale
 
 Animates the 2D scale property of the given element(s)
 
@@ -660,7 +644,7 @@ anima_scale(scale: Vector2, duration: float)
 Anima.Node($node).anima_scale(Vector2.ZERO)
 ```
 
-## anima_scale3D
+### anima_scale3D
 
 Animates the 3D scale property of the given element(s)
 
@@ -681,7 +665,7 @@ anima_scale3D(scale: Vector3, duration: float)
 Anima.Node($node).anima_scale3D(Vector3(10, 0, -0.5))
 ```
 
-## anima_scale_x
+### anima_scale_x
 
 Animates the `x` scale property of the given element(s)
 
@@ -702,7 +686,7 @@ anima_scale_x(scale_x: float, duration: float)
 Anima.Node($node).anima_scale_x(0.8)
 ```
 
-## anima_scale_y
+### anima_scale_y
 
 Animates the `y` scale property of the given element(s)
 
@@ -723,7 +707,7 @@ anima_scale_y(scale_y: float, duration: float)
 Anima.Node($node).anima_scale_y(0.8)
 ```
 
-## anima_scale_z
+### anima_scale_z
 
 Animates the `z` scale property of the given element(s)
 
@@ -744,7 +728,7 @@ anima_scale_z(scale_z: float, duration: float)
 Anima.Node($node).anima_scale_z(0.8)
 ```
 
-## anima_size
+### anima_size
 
 Animates the 2D size property of the given element(s)
 
@@ -765,7 +749,7 @@ anima_size(size: Vector2, duration: float)
 Anima.Node($node).anima_size(Vector2.ZERO)
 ```
 
-## anima_size3D
+### anima_size3D
 
 Animates the 3D size property of the given element(s)
 
@@ -786,7 +770,7 @@ anima_size3D(size: Vector3, duration: float)
 Anima.Node($node).anima_size3D(Vector3(10, 0, -0.5))
 ```
 
-## anima_size_x
+### anima_size_x
 
 Animates the `x` size property of the given element(s)
 
@@ -807,7 +791,7 @@ anima_size_x(size_x: float, duration: float)
 Anima.Node($node).anima_size_x(0.8)
 ```
 
-## anima_size_y
+### anima_size_y
 
 Animates the `y` size property of the given element(s)
 
@@ -828,7 +812,7 @@ anima_size_y(size_y: float, duration: float)
 Anima.Node($node).anima_size_y(0.8)
 ```
 
-## anima_size_z
+### anima_size_z
 
 Animates the `z` size property of the given element(s)
 

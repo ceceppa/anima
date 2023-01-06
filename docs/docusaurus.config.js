@@ -1,5 +1,6 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
+const inlineMarkdown = require('./src/remark/inline-markdown');
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
@@ -26,6 +27,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/ceceppa/anima/docs/',
           showLastUpdateTime: true,
+          remarkPlugins: [inlineMarkdown]
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -80,6 +82,10 @@ const config = {
             position: 'right',
           },
         ],
+      },
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 3,
       },
       footer: {
         style: 'dark',

@@ -8,7 +8,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Anima was designed to allow creatin powerful animations with few line of codes
+        Bring your animations to life with Anima's powerful, yet simple syntax.
       </>
     ),
   },
@@ -17,7 +17,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Anima has 89 Built-in animations and 39 different easing ready to use
+        Get creative with Anima's 89 built-in animations and 36 easing options.
       </>
     ),
   },
@@ -26,7 +26,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        <i>(coming soon)</i> Create and test animations directly from the Editor
+        Create and test animations directly from Godot's editor.
       </>
     ),
   },

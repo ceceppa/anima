@@ -4,27 +4,28 @@ sidebar_position: 1
 
 # Anima
 
-Once activated, the addon will add the Anima singleton class to your project.
-
-## Custom nodes
-
-Anima provides those two additional nodes:
-
-- [AnimaNode](/doc/anima-node.html), used to handle the setup of all the animations supported by the addon
-- [AnimaTween](/doc/anima-tween.html), is the custom Tween used that allows the magic to happen :)
+The `Anima` class is the starting point for creating an animation, and it returns the [AnimaNode](/doc/anima-node.html), which lets you specify the details of your animation.
 
 ## Syntax
 
 - [begin(node, animation_name, is_single_shot)](#begin)
 - [begin_single_shot(node, animation_name)](#begin_single_shot)
 
+### Example
+
+```gdscript
+Anima.begin(self, "my animation").then(...)
+
+// or
+
+Anima.begin_single_shot(self, "my animation").then(...)
+```
 
 ## Reference
 
 ### begin
 
-This method is used to programmatically add the AnimaNode to the scene as a child of the specified **node** one.
-It will return the AnimaNode added attached to the specified **node**.
+The `begin` method adds an AnimaNode as a child of the specified node and returns the instance of the new node added.
 
 #### Syntax
 ```gdscript
@@ -33,14 +34,11 @@ begin(node: Node, animation_name = 'Anima', is_single_shot := false) -> AnimaNod
 
 |Parameter|Type|Default|Description|
 |---|---|---|---|
-|node|Node||The node where to attache the AnimaNode generated during the process|
+|node|Node||The node where to attach the AnimaNode generated during the process|
 |animation_name|String|Anima|_(optional)_ The animation name.|
-|is_single_shot|bool|false|_(optional)_ If true automatically frees the AnimaNode created by the scene once the animation completes|
+|is_single_shot|bool|false|_(optional)_ If true, automatically removes the AnimaNode created once the animation completes|
 
-**NOTE**: Anytime this method is called `Anima` will check if an `AnimaNode` already exists with the given name and, if not, creates one.
-So, calling `begin` multiple times using the same name will result in reusing the same `AnimaNode` over and over.
-
-The node created is not freed by default once an animation has completed unless `is_singl_shot` is set to true.
+**NOTE**: It's important to remember that when you call the `begin` method, it checks if an `AnimaNode` with the given name already exists. If it doesn't, it will create one. So, calling `begin` multiple times with the same name results in reusing the same `AnimaNode` over and over.
 
 #### Example
 
@@ -52,7 +50,7 @@ var anima: AnimaNode = Anima.begin(self, 'my cool animation', true)
 
 ### begin_single_shot
 
-This method is syntax sugar for the `begin` one automatically sets `is_single_shot` to true.
+The `begin_single_shot` method is simply a shortcut for the `begin` method, with the parameter `is_single_shot` set to *true*. This method can be a convenient way to keep your Scene Tree clean, as it automatically destroys the [AnimaNode](/docs/anima-node/) once the animation has been completed.
 
 #### Syntax
 ```gdscript
