@@ -1,14 +1,12 @@
 # Anima
 
-Anima is an addon for Godot that allows you to easily create powerful UI animations
+Anima is an addon for Godot that makes it simple to create powerful and impressive UI animations
 
 ## Introduction
 
 ![Example of animation created with anima](https://anima.ceceppa.me/anima.gif)
 
-Creating UI animations in Godot using Tween can be a bit tedious, and Anima allows you doing that with few lines of code and a simple syntax.
-It has built-in about 89 animations and 33 easings, with the ability to easily add your own.
-You can also add your own with a CSS inspired syntax.
+If you've ever found creating UI animations in Godot using Tween to be a bit of a hassle, Anima is here to make your life easier. With just a few lines of code and a simple syntax, Anima allows you to create stunning animations with ease. And with a built-in library of 89 animations and 36 easings, plus the ability to add your own custom animations using a CSS-inspired syntax, the possibilities are endless.
 
 ### Table of Contents
 
