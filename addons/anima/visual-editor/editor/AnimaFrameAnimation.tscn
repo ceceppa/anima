@@ -42,7 +42,8 @@ size_flags_horizontal = 3
 custom_constants/separation = 0
 script = ExtResource( 8 )
 __meta__ = {
-"__visibility_strategy": 0
+"__visibility_strategy": 0,
+"_edit_group_": true
 }
 
 [node name="Control" type="Control" parent="."]
@@ -1477,7 +1478,7 @@ _items = [ {
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_top = 49.0
 margin_right = 1024.0
-margin_bottom = 263.0
+margin_bottom = 203.0
 rect_pivot_offset = Vector2( 320, 275.5 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1503,7 +1504,7 @@ __meta__ = {
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 1012.0
-margin_bottom = 202.0
+margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 12
@@ -1512,6 +1513,7 @@ __meta__ = {
 }
 
 [node name="DurationContainer" type="MarginContainer" parent="MarginContainer/ContentContainer"]
+visible = false
 margin_right = 1000.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( 218, 36.5 )
@@ -1567,14 +1569,13 @@ transparent = true
 [node name="AnimationsContainer" parent="MarginContainer/ContentContainer" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 69.0
 margin_right = 1000.0
-margin_bottom = 130.0
+margin_bottom = 70.0
 
 [node name="NoAnimationsWarning" parent="MarginContainer/ContentContainer" instance=ExtResource( 4 )]
-margin_top = 142.0
+margin_top = 82.0
 margin_right = 1000.0
-margin_bottom = 190.0
+margin_bottom = 130.0
 rect_min_size = Vector2( 0, 48 )
 rect_pivot_offset = Vector2( 288, 24 )
 text = "Select or drag here the node to animate"
@@ -1853,9 +1854,9 @@ transparent = true
 [node name="Collapse" parent="." instance=ExtResource( 4 )]
 visible = false
 margin_left = 578.0
-margin_top = 202.0
+margin_top = 142.0
 margin_right = 626.0
-margin_bottom = 251.0
+margin_bottom = 191.0
 rect_pivot_offset = Vector2( 24, 24.5 )
 hint_tooltip = "Remove the frame"
 toggle_mode = true
