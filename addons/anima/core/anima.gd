@@ -35,13 +35,22 @@ static func Node(node: Node) -> AnimaDeclarationNode:
 static func Nodes(nodes, items_delay: float) -> AnimaDeclarationNodes:
 	return AnimaDeclarationNodes.new(nodes, items_delay)
 
-static func Group(group: Node, items_delay: float, animation_type: int = ANIMA.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:
+static func Group(group: Node, items_delay: float = 0.01, animation_type: int = ANIMA.GROUP.FROM_TOP, point := 0) -> AnimaDeclarationGroup:
 	var c := AnimaDeclarationGroup.new()
 
 	return c._init_me(group, items_delay, animation_type, point)
 
-static func Grid(grid: Node, grid_size: Vector2, items_delay: float, animation_type: int = ANIMA.GROUP.FROM_TOP, point := Vector2.ZERO) -> AnimaDeclarationGrid:
+static func Grid(grid: Node, grid_size: Vector2 = Vector2(-1, -1), items_delay: float = 0.01, animation_type: int = ANIMA.GRID.FROM_CENTER, point := Vector2.ZERO) -> AnimaDeclarationGrid:
 	var c := AnimaDeclarationGrid.new()
+
+	if grid_size == Vector2(-1, -1):
+		if grid is GridContainer:
+			var cols = max(grid.columns, 1)
+			var rows = ceil(grid.get_child_count() / cols)
+
+			grid_size = Vector2(rows, cols)
+		else:
+			grid_size = Vector2(grid.get_child_count(), 1)
 
 	return c._init_me(grid, grid_size, items_delay, animation_type, point)
 

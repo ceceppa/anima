@@ -12,14 +12,15 @@ The `Anima.Grid` class is used to animate all the children of a "grid".
 Anima.Grid(grgrid: Node, grid_size: Vector2, items_delay: float, animation_type: int = GROUP.FROM_TOP, point := 0)
 ```
 
-| param | type | Default | Description |
-|---|---|---|---|
-| group | Node | | The node of whom children we want to animate |
-| grid_size | Vector2 | | The grid size |
-| items_delay | float | | The incremental delay to apply for each child of the group |
-| animation_type | [ANIMA.GRID](#animation-type) | ANIMA.GRID.FROM_TOP_RIGHT | The order to which animate the elements |
-| point | Vector2 | Vector2.ZERO | The starting point of the animation |
+| param          | type                          | Default                           | Description                                                |
+| -------------- | ----------------------------- | --------------------------------- | ---------------------------------------------------------- |
+| group          | Node                          |                                   | The node of whom children we want to animate               |
+| grid_size      | Vector2                       | Vector(row, size)[\*](#grid-size) | The grid size                                              |
+| items_delay    | float                         | 0.01                              | The incremental delay to apply for each child of the group |
+| animation_type | [ANIMA.GRID](#animation-type) | ANIMA.GRID.FROM_CENTER            | The order to which animate the elements                    |
+| point          | Vector2                       | Vector2.ZERO                      | The starting point of grid                                 |
 
+### \*Grid Size
 
 
 ## Methods
@@ -101,7 +102,7 @@ anima_property(property: String, final_value, duration)
 | Param       | Type    | Default | Description                                                                                  |
 | ----------- | ------- | ------- | -------------------------------------------------------------------------------------------- |
 | property    | string  |         | The property to animate                                                                      |
-| final_value | Variant | null    | (Optional) The final value. If null, the current property value is used as the final value       |
+| final_value | Variant | null    | (Optional) The final value. If null, the current property value is used as the final value   |
 | duration    | float   | null    | The animation duration (seconds). If null, the [default duration](/docs/anima-node/) is used |
 
 The `property` parameter can be any node property that can be accessed, even exported variables. For example:
