@@ -80,7 +80,7 @@ func _ready():
 #	).play_with_delay(2)
 	Anima.begin(self) \
 		.with(
-			Anima.Node($Button).anima_animation("headshake", 1)
+			Anima.Node($Ball).anima_animation("bounce", 1)
 		).play()
 
 var _temp

@@ -58,15 +58,19 @@ margin_bottom = 32.0
 transform = Transform( 1, 0, 0, 0, 0.851104, -0.524996, 0, 0.524996, 0.851104, 2.86848, -1.54898, -5.01402 )
 
 [node name="RingA" type="MeshInstance" parent="Group1"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+transform = Transform( 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0, 1.49012e-08, 0.1, 0, -0.831164, 0.512697 )
 mesh = ExtResource( 3 )
 material/0 = SubResource( 1 )
+__meta__ = {
+"_initial_relative_value_position:y": -1.54898,
+"_last_relative_value_position:y": -2.54898
+}
 
 [node name="Group2" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.851104, -0.524996, 0, 0.524996, 0.851104, -2.45209, -1.54898, -4.04415 )
 
 [node name="RingB" parent="Group2" instance=ExtResource( 2 )]
-transform = Transform( 0.1, 0, 0, 0, 0.1, -3.72529e-09, 0, 3.72529e-09, 0.1, 0, 0, 0 )
+transform = Transform( -0.0663412, -0.0748254, 0, 0.0748254, -0.0663412, 0, 0, 0, 0.1, 0, 0, 0 )
 
 [node name="Cube" parent="Group2/RingB" index="0"]
 material/0 = SubResource( 2 )
@@ -75,7 +79,7 @@ material/0 = SubResource( 2 )
 transform = Transform( 1, 0, 0, 0, 0.851104, -0.524996, 0, 0.524996, 0.851104, 0.0555201, -3.41441, -1.30531 )
 
 [node name="RingC" parent="Group3" instance=ExtResource( 5 )]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 3.72529e-09, 0, -3.72529e-09, 0.1, 0, 0, 0 )
+transform = Transform( -0.0953764, 0.0300557, 0, -0.0300557, -0.0953764, 0, 0, 0, 0.1, 0, 0, 0 )
 
 [node name="Cube" parent="Group3/RingC" index="0"]
 material/0 = SubResource( 3 )

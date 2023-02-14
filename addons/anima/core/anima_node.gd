@@ -8,8 +8,9 @@ signal loop_started
 signal loop_completed
 
 var _anima_tween := AnimaTween.new()
-var _timer := Timer.new()
 
+var _timer := Timer.new()
+var _anima_backwards_tween := AnimaTween.new(AnimaTween.PLAY_MODE.BACKWARDS)
 var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
 
@@ -49,8 +50,10 @@ func _ready():
 
 func init_node(node: Node):
 	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
+	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 
 	add_child(_anima_tween)
+	add_child(_anima_backwards_tween)
 
 	if node != self:
 		node.add_child(self)
@@ -124,6 +127,7 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> Ani
 		return self
 
 	_anima_tween.set_visibility_strategy(strategy)
+	_anima_backwards_tween.set_visibility_strategy(strategy)
 
 	if always_apply_on_play:
 		_apply_visibility_strategy_on_play = true
@@ -137,9 +141,11 @@ func clear() -> void:
 	stop()
 
 	_anima_tween.clear_animations()
+	_anima_backwards_tween.clear_animations()
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
+
 	_loop_delay = 0.0
 
 	_visibility_strategy = ANIMA.VISIBILITY.IGNORE
@@ -175,6 +181,11 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if _anima_tween.get_animation_data().size() == 0:
 		return self
 
+	# If the user wants to play an animation with a delay, we still
+	# need to apply for the initial values
+	#
+	if mode != AnimaTween.PLAY_MODE.BACKWARDS:
+																																																																																																																																																																	 _anima_tween.do_apply_initial_values()
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
@@ -185,7 +196,7 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 
 	_timer.wait_time = max(ANIMA.MINIMUM_DURATION, delay)
 	_timer.start()
-	
+
 	return self
 
 func _on_timer_completed() -> void:
@@ -198,6 +209,7 @@ func stop() -> AnimaNode:
 
 	if is_instance_valid(_anima_tween):
 		_anima_tween.stop_all()
+		_anima_backwards_tween.stop_all()
 
 	return self
 
@@ -322,11 +334,11 @@ func _tween_with_seek(from: float, to: float, duration: float, method: String):
 		to,
 		duration
 	)
-	
+
 	add_child(tween)
-	
+
 	tween.start()
-	
+
 	tween.connect("tween_all_completed", self, "_on_backwords_tween_complete", [tween])
 
 func set_default_duration(duration: float) -> AnimaNode:
@@ -372,7 +384,7 @@ func _setup_animation(data: Dictionary) -> float:
 	var meta_key: String = ""
 
 	if data.has("property"):
-		meta_key = "__initial_" + node.name + "_" + str(data.property) 
+		meta_key = "__initial_" + node.name + "_" + str(data.property)
 
 	if meta_key and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
 		data.node.set_meta(meta_key, AnimaNodesProperties.get_property_value(node, data, data.property))
@@ -437,7 +449,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var animation_type = ANIMA.GRID.SEQUENCE_TOP_LEFT
-	
+
 	if animation_data.has("animation_type"):
 		animation_type = animation_data.animation_type
 
@@ -486,7 +498,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 	var index := 0
 
 	var children: Array = grid_node.get_children()
-	
+
 	if shuffle:
 		randomize()
 

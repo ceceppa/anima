@@ -48,15 +48,14 @@ func create_new_header(text: String) -> PanelContainer:
 func _on_animation_button_pressed(button: Button) -> void:
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = float(find_node("DurationEdit").text)
 
-	_play_animation($HBoxContainer/VBoxContainer/ControlContainer/ControlTest, button)
-	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
+	_play_animation(find_node("ControlTest"), button, duration)
+	_play_animation(find_node("SpriteTest"), button, duration)
 
-func _play_animation(node: Node, button: Button):
+func _play_animation(node: Node, button: Button, duration: float):
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
 	var parent = node.get_parent()
 	var clone = node.duplicate()
 
@@ -66,7 +65,7 @@ func _play_animation(node: Node, button: Button):
 	clone.show()
 	node.hide()
 
-	var anima = Anima.begin(clone, 'control_test')
+	var anima = Anima.begin(node)
 	anima.then( Anima.Node(clone).anima_animation(script_name, duration) )
 	anima.play()
 	

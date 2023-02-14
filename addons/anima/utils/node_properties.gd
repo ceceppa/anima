@@ -14,7 +14,7 @@ static func get_position(node: Node) -> Vector2:
 	if node is Control:
 		return node.rect_position
 	if node is Node2D:
-		return node.global_position
+		return node.position
 
 	return node.global_transform.origin
 
