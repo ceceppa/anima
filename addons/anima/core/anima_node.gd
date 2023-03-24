@@ -1,4 +1,4 @@
-@tool
+tool
 class_name AnimaNode
 extends Node
 
@@ -8,9 +8,9 @@ signal loop_started
 signal loop_completed
 
 var _anima_tween := AnimaTween.new()
-var _anima_reverse_tween := AnimaTween.new()
-var _timer := Timer.new()
 
+var _timer := Timer.new()
+var _anima_backwards_tween := AnimaTween.new(AnimaTween.PLAY_MODE.BACKWARDS)
 var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
 
@@ -40,19 +40,20 @@ func _exit_tree():
 		child.free()
 
 func _ready():
-	if not _anima_tween.is_connected("animation_completed",Callable(self,"_on_all_tween_completed")):
+	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
 		init_node(self)
 
 	_timer.one_shot = true
-	_timer.connect("timeout",Callable(self,"_on_timer_completed"))
+	_timer.connect("timeout", self, "_on_timer_completed")
 
 	add_child(_timer)
 
 func init_node(node: Node):
-	_anima_tween.animation_completed.connect(_on_all_tween_completed)
+	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
+	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 
 	add_child(_anima_tween)
-	add_child(_anima_reverse_tween)
+	add_child(_anima_backwards_tween)
 
 	if node != self:
 		node.add_child(self)
@@ -126,6 +127,7 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> Ani
 		return self
 
 	_anima_tween.set_visibility_strategy(strategy)
+	_anima_backwards_tween.set_visibility_strategy(strategy)
 
 	if always_apply_on_play:
 		_apply_visibility_strategy_on_play = true
@@ -139,9 +141,11 @@ func clear() -> void:
 	stop()
 
 	_anima_tween.clear_animations()
+	_anima_backwards_tween.clear_animations()
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
+
 	_loop_delay = 0.0
 
 	_visibility_strategy = ANIMA.VISIBILITY.IGNORE
@@ -170,13 +174,18 @@ func play_as_backwards_when(when: bool) -> AnimaNode:
 
 	return _play(AnimaTween.PLAY_MODE.NORMAL)
 
-func _play(mode: int, delay: float = 0.0, speed := 1.0) -> AnimaNode:
+func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
 		return self
 
 	if _anima_tween.get_animation_data().size() == 0:
 		return self
 
+	# If the user wants to play an animation with a delay, we still
+	# need to apply for the initial values
+	#
+	if mode != AnimaTween.PLAY_MODE.BACKWARDS:
+																																																																																																																																																																	 _anima_tween.do_apply_initial_values()
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
@@ -187,7 +196,7 @@ func _play(mode: int, delay: float = 0.0, speed := 1.0) -> AnimaNode:
 
 	_timer.wait_time = max(ANIMA.MINIMUM_DURATION, delay)
 	_timer.start()
-	
+
 	return self
 
 func _on_timer_completed() -> void:
@@ -199,7 +208,8 @@ func stop() -> AnimaNode:
 	_loop_count = 0
 
 	if is_instance_valid(_anima_tween):
-		_anima_tween.stop()
+		_anima_tween.stop_all()
+		_anima_backwards_tween.stop_all()
 
 	return self
 
@@ -278,19 +288,13 @@ func _do_play() -> void:
 		play_mode = _current_play_mode
 
 	_loop_count += 1
+	_anima_tween.is_playing_backwards = false
 
-	var tween: AnimaTween = _anima_tween
 	var duration = _anima_tween.get_duration()
 
 	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
-		_anima_reverse_tween.is_playing_backwards = true
-
-		if not _anima_reverse_tween.has_data():
-			_anima_reverse_tween.reverse_animation(_anima_tween, _default_duration)
-
-		tween = _anima_reverse_tween
-#		_anima_tween.is_playing_backwards = true
-#		_tween_with_seek(duration, 0.0, duration, "_on_backwords_tween_complete")
+		_anima_tween.is_playing_backwards = true
+		_tween_with_seek(duration, 0.0, duration, "_on_backwords_tween_complete")
 	else:
 		#
 		# If the user wants to play an animation with a delay, we still
@@ -302,11 +306,10 @@ func _do_play() -> void:
 		# There is a weird edge-case (maybe a bug in Godot) where if we add an interpolate_method
 		# to trigger the on_completed callback the animation is not fully played ¯\_(ツ)_/¯
 		# So, we can't use the normal play but need a hacky solution
-#		if _has_on_completed:
-#			_tween_with_seek(0.0, duration, duration, "_on_all_tween_completed")
-#		else:
-
-	tween.play(_play_speed)
+		if _has_on_completed:
+			_tween_with_seek(0.0, duration, duration, "_on_all_tween_completed")
+		else:
+			_anima_tween.play(_play_speed)
 
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
@@ -320,18 +323,23 @@ func _do_play() -> void:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 func _tween_with_seek(from: float, to: float, duration: float, method: String):
-	var tween := get_tree().create_tween()
+	var tween := Tween.new()
 
-	tween.tween_method(
-		_play_backwards,
+	tween.name = name + "_backwards"
+
+	tween.interpolate_method(
+		self,
+		"_play_backwards",
 		from,
 		to,
 		duration
 	)
 
-	tween.play()
+	add_child(tween)
 
-#	tween.connect("tween_all_completed",Callable(self,"_on_backwords_tween_complete").bind(tween))
+	tween.start()
+
+	tween.connect("tween_all_completed", self, "_on_backwords_tween_complete", [tween])
 
 func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration
@@ -345,7 +353,7 @@ func set_apply_initial_values(when: int) -> AnimaNode:
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
-		data.duration = _default_duration
+		 data.duration = _default_duration
 
 	if not data.has('property') and not data.has("animation"):
 		printerr('Please specify the property to animate or the animation to use!', data)
@@ -365,7 +373,7 @@ func _setup_animation(data: Dictionary) -> float:
 
 		return _setup_grid_animation(data)
 	elif not data.has("node"):
-		data.node = self.get_parent()
+		 data.node = self.get_parent()
 
 	if data.node == null:
 		printerr("Invalid node!")
@@ -376,9 +384,9 @@ func _setup_animation(data: Dictionary) -> float:
 	var meta_key: String = ""
 
 	if data.has("property"):
-		meta_key = AnimaStrings.sanitize_meta_key("AnimaInitial%s%s" % [str(node.name), str(data.property)])
+		meta_key = "__initial_" + node.name + "_" + str(data.property)
 
-	if meta_key.length() > 0 and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
+	if meta_key and not data.has("from") and data.has("property") and not node.has_meta(meta_key):
 		data.node.set_meta(meta_key, AnimaNodesProperties.get_property_value(node, data, data.property))
 
 	return _setup_node_animation(data)
@@ -441,7 +449,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var animation_type = ANIMA.GRID.SEQUENCE_TOP_LEFT
-	
+
 	if animation_data.has("animation_type"):
 		animation_type = animation_data.animation_type
 
@@ -490,7 +498,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 	var index := 0
 
 	var children: Array = grid_node.get_children()
-	
+
 	if shuffle:
 		randomize()
 
@@ -498,7 +506,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 
 	for child in children:
 		# Skip current node :)
-		if '__do_nothing' in child or not (child is Node3D or child is CanvasItem):
+		if '__do_nothing' in child or not (child is Spatial or child is CanvasItem):
 			continue
 		elif animation_data.has('skip_hidden') and not child.is_visible():
 			continue
@@ -537,6 +545,7 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 	elif start_from == ANIMA.GROUP.FROM_BOTTOM:
 		start_point = Vector2(children.size(), 0)
 
+	var is_group = start_point.x == 1
 	var use_forumla = animation_data.distance_formula if animation_data.has("distance_formula") else ANIMA.DISTANCE.EUCLIDIAN
 	var row := 0
 	var column := 0
@@ -561,6 +570,9 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 				var sum: int = start_point.x + start_point.y
 
 				distance = abs((row + column) - sum)
+
+			if is_group:
+				distance = floor(distance) - 1
 
 			nodes.push_back({ node = item, delay_index = distance })
 
@@ -743,7 +755,7 @@ func _maybe_play() -> void:
 
 	if _loop_count > 0 or _should_loop:
 		if _loop_delay > 0:
-			await get_tree().create_timer(_loop_delay).timeout
+			yield(get_tree().create_timer(_loop_delay), "timeout")
 
 		_do_play()
 

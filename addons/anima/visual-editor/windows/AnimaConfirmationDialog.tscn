@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmonshd1g6kmo"]
-
-[ext_resource type="Script" path="res://addons/anima/visual-editor/windows/AnimaConfirmationDialog.gd" id="1"]
-
-[node name="AnimaConfirmationDialog" type="ConfirmationDialog"]
-script = ExtResource("1")

@@ -1,7 +1,7 @@
-@tool
+tool
 
 class_name AnimaTween
-extends Node
+extends Tween
 
 signal animation_completed
 
@@ -11,14 +11,15 @@ var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "
 
 var _animation_data := []
 var _callbacks := {}
+var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
 var _use_meta_values := true
-var _apply_initial_values_on: int = 0 #ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
-var _should_apply_initial_values := true
+var _apply_initial_values_on: int = ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION
+var _is_backwards_tween := false
+var _should_apply_initial_values: bool
 var _initial_values := []
 var is_playing_backwards := false
-var _tween: Tween
 
 enum PLAY_MODE {
 	NORMAL,
@@ -26,23 +27,18 @@ enum PLAY_MODE {
 	LOOP_IN_CIRCLE
 }
 
-func _enter_tree():
-	var tree: SceneTree = get_tree()
+func _init(play_mode: int = PLAY_MODE.NORMAL):
+	_is_backwards_tween = play_mode != PLAY_MODE.NORMAL
 
-	if tree:
-		_tween = tree.create_tween()
-
-		_tween.set_parallel(true)
-		_tween.pause()
-
-		_tween.connect("loop_finished", _on_tween_completed)
-		_tween.connect("finished", _on_tween_completed)
+	_should_apply_initial_values = !_is_backwards_tween
 
 func _exit_tree():
 	for child in get_children():
 		child.free()
 
 func _ready():
+	connect("tween_completed", self, '_on_tween_completed')
+
 	#
 	# By default Godot runs interpolate_property animation runs only once
 	# this means that if you try to play again it won't work.
@@ -55,30 +51,24 @@ func _ready():
 	# repeat loop.
 	# So, once all the animations are completed (_tween_completed == _animation_data.size())
 	# we pause the tween, and next time we call play again we resume it and it works...
-	# There is no need to recreating anything checked each "loop"
-	set_loops(0)
-
-func set_loops(loops: int) -> void:
-	if _tween:
-		_tween.set_loops(loops)
-
-func set_repeat(repeat) -> void:
-	if !repeat:
-		set_loops(1)
+	# There is no need to recreating anything on each "loop"
+	set_repeat(true)
 
 func play(play_speed: float):
-	_tween.set_speed_scale(play_speed)
-	_tween.play()
+	set_speed_scale(play_speed)
+
+	_tween_completed = 0
+
+	resume_all()
 
 func do_apply_initial_values() -> void:
-	if _should_apply_initial_values:
-		for data in _initial_values:
-			_apply_initial_values(data)
+	for data in _initial_values:
+		_apply_initial_values(data)
 
 func set_apply_initial_values(when) -> void:
 	_apply_initial_values_on = when
 
-func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMAL) -> void:
+func add_animation_data(animation_data: Dictionary) -> void:
 	var index: String
 
 	_animation_data.push_back(animation_data)
@@ -102,7 +92,7 @@ func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMA
 	var easing_points
 
 	if animation_data.has("easing") and not animation_data.easing == null:
-		if animation_data.easing is Callable or animation_data.easing is Array:
+		if animation_data.easing is FuncRef or animation_data.easing is Array:
 			easing_points = animation_data.easing
 		elif animation_data.easing is Curve:
 			easing_points = animation_data.easing
@@ -129,11 +119,15 @@ func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMA
 	var object: Node = _get_animated_object_item(property_data)
 	var use_method: String = "animate_linear"
 
+	# Needed for the spring animations generated via the animation builder
+	if easing_points is String and easing_points == "spring":
+		 easing_points = AnimaEasing.get_easing_points("spring")
+
 	if easing_points is Array:
 		use_method = 'animate_with_easing'
 	elif easing_points is String:
 		use_method = 'animate_with_anima_easing'
-	elif easing_points is Callable:
+	elif easing_points is FuncRef:
 		use_method = 'animate_with_easing_funcref'
 	elif easing_points is Curve:
 		use_method = 'animate_with_curve'
@@ -141,7 +135,8 @@ func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMA
 		use_method = 'animate_with_parameterized_easing'
 
 		if easing_points.fn.find("__") == 0:
-			animation_data._easing_points = Callable(AnimaEasing, "spring")
+			animation_data._easing_points = funcref(AnimaEasing, "spring")
+			use_method = 'animate_with_parameterized_easing'
 		else:
 			animation_data._easing_points = easing_points.fn
 
@@ -161,21 +156,23 @@ func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMA
 		animation_data._wait_time
 	)
 
-	if not node.is_connected("tree_exiting",Callable(self,"_on_node_tree_exiting")):
-		node.connect("tree_exiting",Callable(self,"_on_node_tree_exiting").bind(object))
+	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
+		node.connect("tree_exiting", self, "_on_node_tree_exiting", [object])
+
+	if animation_data.has("initial_values") and _apply_initial_values_on == ANIMA.APPLY_INITIAL_VALUES.ON_ANIMATION_CREATION:
+		_apply_initial_values(animation_data)
 
 func _interpolate_method(source: Node, method: String, duration: float, tween_in: int, tween_out: int, wait_time: float) -> void:
-	var callable := Callable(source, method)
-
-	if not _tween:
-		return
-
-	_tween.tween_method(
-		callable,
+	interpolate_method(
+		source,
+		method,
 		0.0,
 		1.0,
 		duration,
-	).set_delay(wait_time)
+		tween_in,
+		tween_out,
+		wait_time
+	)
 	
 	add_child(source)
 
@@ -183,11 +180,19 @@ func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
 	if animation_data.has("__debug"):
 		printt("add_event_frame", animation_data)
 
-	var object := AnimaEvent.new(animation_data, callback_key, is_playing_backwards)
+	var object := AnimaEvent.new(animation_data, callback_key, funcref(self, "get_is_playing_backwards"))
 
-	_tween.tween_callback(object.execute_callback).set_delay(animation_data._wait_time + animation_data.duration)
+	_interpolate_method(
+		object,
+		"execute_callback",
+		ANIMA.MINIMUM_DURATION,
+		Tween.TRANS_LINEAR,
+		Tween.TRANS_LINEAR,
+		animation_data._wait_time + animation_data.duration
+	)
 
-	add_child(object)
+func get_is_playing_backwards() -> bool:
+	return is_playing_backwards
 
 func _add_initial_values(animation_data: Dictionary) -> void:
 	if _animation_data.has("__debug"):
@@ -220,7 +225,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 			push_warning("not yet implemented")
 			pass
 		elif property_data.property == "shader_param":
-			property_data.callback.callv([property_data.param, value])
+			property_data.callback.call_funcv([property_data.param, value])
 		elif property_data.has('subkey'):
 			node[property_data.property][property_data.key][property_data.subkey] = value
 		elif property_data.has('key'):
@@ -265,15 +270,9 @@ func get_animations_count() -> int:
 func has_data() -> bool:
 	return _animation_data.size() > 0
 
-func stop() -> void:
-	_tween.stop()
-
 func clear_animations() -> void:
-	_tween.stop()
-	_tween.kill()
-	
-	if is_inside_tree():
-		_enter_tree()
+	remove_all()
+	reset_all()
 
 	for child in get_children():
 		child.queue_free()
@@ -285,10 +284,82 @@ func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
 
-func seek(value: float) -> void:
-#	_tween.custom_step(value)
-#	_tween.seek(value)
-	pass
+func _reverse_animation(animation_data: Array, animation_length: float, default_duration: float):
+	clear_animations()
+
+	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
+
+	for new_data in data:
+		add_animation_data(new_data)
+
+#
+# In order to flip "nested relative" animations we need to calculate what all the
+# property as it would be if the animation is played normally. Only then we can calculate
+# the correct relative positions, by also looking at the previous frames.
+# Otherwise we would end up with broken animations when animating the same property more than
+# once
+func _flip_animations(data: Array, animation_length: float, default_duration: float) -> Array:
+	var new_data := []
+	var previous_frames := {}
+	var length: float = animation_length
+
+	data.invert()
+	for animation in data:
+		if animation.has("_ignore_for_backwards"):
+			continue
+
+		var animation_data = animation.duplicate(true)
+
+		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
+		var wait_time: float = animation_data._wait_time
+		var node = animation_data.node
+		var new_wait_time: float = length - duration - wait_time
+		var property = animation_data.property
+		var is_relative = animation_data.has("relative") and animation_data.relative
+
+		if animation_data.has("initial_value"):
+			animation_data.erase("initial_value")
+
+		if animation_data.has("initial_values"):
+			animation_data.erase("initial_values")
+
+		if not is_relative:
+			var temp = animation_data.to
+			var meta_key: String = "__initial_" + node.name + "_" + str(animation_data.property) 
+
+			if animation_data.has("from"):
+				animation_data.to = animation_data.from
+			elif node.has_meta(meta_key):
+				animation_data.to = node.get_meta(meta_key)
+
+			animation_data.from = temp
+
+		animation_data._wait_time = max(ANIMA.MINIMUM_DURATION, new_wait_time)
+
+		var old_on_completed = animation_data.on_completed if animation_data.has("on_completed") else null
+		var erase_on_completed := true
+
+		if animation_data.has("on_started"):
+			animation_data.on_completed = animation_data.on_started
+			animation_data.erase("on_started")
+
+			erase_on_completed = false
+
+		if old_on_completed:
+			animation_data.on_started = old_on_completed
+
+			if erase_on_completed:
+				animation_data.erase('on_completed')
+
+		animation_data.erase("initial_values")
+		animation_data.erase("initial_value")
+		
+		if animation_data.has("easing") and animation_data.easing:
+			animation_data.easing = AnimaEasing.get_mirrored_easing(animation_data.easing)
+
+		new_data.push_back(animation_data)
+
+	return new_data
 
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIMA.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame') or not animation_data._is_first_frame:
@@ -355,7 +426,7 @@ func get_duration() -> float:
 		duration = max(duration, data_duration)
 
 	return duration
-	
+
 # We don't want the user to specify the from/to value as color
 # we animate opacity.
 # So this function converts the "from = #" -> Color(.., .., .., #)
@@ -377,17 +448,27 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 
 	return value
 
-func _on_tween_completed(_ignore = null) -> void:
-	_tween.stop()
+func _on_tween_completed(_node, _ignore) -> void:
+	_tween_completed += 1
 
-	emit_signal("animation_completed")
+	if _tween_completed >= _animation_data.size() and not is_queued_for_deletion():
+		stop_all()
+
+		emit_signal("animation_completed")
 
 func _on_node_tree_exiting(anima_item: Node) -> void:
+	stop_all()
+
+	if Engine.editor_hint:
+		for meta in anima_item.get_meta_list():
+			if meta.find("AnimaNode__anima") >= 0:
+				anima_item.remove_meta(meta)
+
 	anima_item.free()
 
 class AnimatedItem extends Node:
 	var _node: Node
-	var _callback: Callable
+	var _callback: FuncRef
 	var _callback_param
 	var _property
 	var _key
@@ -500,26 +581,26 @@ class AnimatedItem extends Node:
 
 	func animate_with_anima_easing(elapsed: float) -> void:
 		var easing_points_function = _animation_data._easing_points
-		var easing_callback = Callable(AnimaEasing, easing_points_function)
-		var easing_elapsed = easing_callback.call(elapsed)
+		var easing_callback = funcref(AnimaEasing, easing_points_function)
+		var easing_elapsed = easing_callback.call_func(elapsed)
 
 		animate(easing_elapsed)
 
 	func animate_with_easing_funcref(elapsed: float) -> void:
 		var easing_callback = _animation_data._easing_points
-		var easing_elapsed = easing_callback.call(elapsed)
+		var easing_elapsed = easing_callback.call_func(elapsed)
 
 		animate(easing_elapsed)
 
 	func animate_with_parameterized_easing(elapsed: float) -> void:
 		var easing_callback = _animation_data._easing_points
 		var easing_params = _animation_data._easing_params
-		var easing_elapsed = easing_callback.call(elapsed, easing_params)
+		var easing_elapsed = easing_callback.call_func(elapsed, easing_params)
 
 		animate(easing_elapsed)
 
 	func animate_with_curve(elapsed: float) -> void:
-		var easing_elapsed = _easing_curve.sample(elapsed)
+		var easing_elapsed = _easing_curve.interpolate(elapsed)
 
 		animate(easing_elapsed)
 
@@ -527,14 +608,14 @@ class AnimatedItem extends Node:
 		animate(elapsed)
 
 	func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:
-		var q0 = p0.lerp(p1, t)
-		var q1 = p1.lerp(p2, t)
-		var q2 = p2.lerp(p3, t)
+		var q0 = p0.linear_interpolate(p1, t)
+		var q1 = p1.linear_interpolate(p2, t)
+		var q2 = p2.linear_interpolate(p3, t)
 
-		var r0 = q0.lerp(q1, t)
-		var r1 = q1.lerp(q2, t)
+		var r0 = q0.linear_interpolate(q1, t)
+		var r1 = q1.linear_interpolate(q2, t)
 
-		var s = r0.lerp(r1, t)
+		var s = r0.linear_interpolate(r1, t)
 
 		return s.y
 
@@ -564,7 +645,7 @@ class AnimatedCallback extends AnimatedItem:
 
 class AnimatedCallbackWithParam extends AnimatedItem:
 	func apply_value(value) -> void:
-		_callback.callv([_callback_param, value])
+		_callback.call_funcv([_callback_param, value])
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:
@@ -583,114 +664,46 @@ class AnimaEvent extends Node:
 	var _data: Dictionary
 	var _callback
 	var _executed := false
-	var _is_playing_backwards: bool
+	var _check_playing_backwards: FuncRef
 
-	func _init(animation_data: Dictionary,callback_key: String, is_playing_backwards: bool):
+	func _init(animation_data: Dictionary, callback_key: String, check_playing_backwards: FuncRef) -> void:
 		_data = animation_data
 		_callback = animation_data[callback_key]
-		_is_playing_backwards = is_playing_backwards
+		_check_playing_backwards = check_playing_backwards
 
-	func execute_callback():
-		var fn: Callable
+	func execute_callback(elapsed: float) -> void:
+		if _data.has("__debug"):
+			prints("AnimaEvent", "elapsed", elapsed, "executed", _executed)
+
+		if elapsed >= 1:
+			_executed = false
+
+			return
+
+		if _executed:
+			return
+
+		_executed = true
+
+		var fn: FuncRef
 		var args: Array = []
+		var is_playing_backwards = _check_playing_backwards.call_func()
 
 		if _callback is Array:
 			fn = _callback[0]
 			args = _callback[1]
 		elif _callback is Dictionary:
-			var value = _callback.value if not _is_playing_backwards else _callback.backwards_value
-
-			fn = _callback.target
+			var target = _callback.target
+			var value = _callback.value if not is_playing_backwards else _callback.backwards_value
+			var method = _callback.method
 
 			if value is Array:
 				args = value
 			else:
 				args = [value]
 
+			fn = funcref(target, method)
 		else:
 			fn = _callback
 
-		fn.callv(args)
-
-func reverse_animation(from_tween, default_duration: float):
-	var animation_data = from_tween.get_animation_data()
-	var animation_length = from_tween.get_duration()
-
-	clear_animations()
-
-	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
-
-	for new_data in data:
-		if new_data.has("on_started"):
-			add_event_frame(new_data, "on_started")
-
-		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
-
-		if new_data.has("on_completed"):
-			add_event_frame(new_data, "on_completed")
-
-#
-# In order to flip "nested relative" animations we need to calculate what all the
-# property as it would be if the animation is played normally. Only then we can calculate
-# the correct relative positions, by also looking at the previous frames.
-# Otherwise we would end up with broken animations when animating the same property more than
-# once
-func _flip_animations(data: Array, animation_length: float, default_duration: float) -> Array:
-	var new_data := []
-	var previous_frames := {}
-	var length: float = animation_length
-
-	data.reverse()
-	for animation in data:
-		if animation.has("_ignore_for_backwards"):
-			continue
-
-		var animation_data = animation.duplicate(true)
-
-		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
-		var wait_time: float = animation_data._wait_time
-		var node = animation_data.node
-		var new_wait_time: float = length - duration - wait_time
-		var property = animation_data.property
-		var is_relative = animation_data.has("relative") and animation_data.relative
-
-		if animation_data.has("initial_value"):
-			animation_data.erase("initial_value")
-
-		if animation_data.has("initial_values"):
-			animation_data.erase("initial_values")
-
-		if not is_relative:
-			var temp = animation_data.to
-
-			if animation_data.has("from"):
-				animation_data.to = animation_data.from
-
-			animation_data.from = temp
-
-		animation_data._wait_time = max(ANIMA.MINIMUM_DURATION, new_wait_time)
-
-		var old_on_completed = animation_data.on_completed if animation_data.has("on_completed") else null
-		var erase_on_completed := true
-
-		if animation_data.has("on_started"):
-			animation_data.on_completed = animation_data.on_started
-			animation_data.erase("on_started")
-
-			erase_on_completed = false
-
-		if old_on_completed:
-			animation_data.on_started = old_on_completed
-
-			if erase_on_completed:
-				animation_data.erase('on_completed')
-
-		animation_data.erase("initial_values")
-		animation_data.erase("initial_value")
-		
-		if animation_data.has("easing") and animation_data.easing:
-			animation_data.easing = AnimaEasing.get_mirrored_easing(animation_data.easing)
-
-		new_data.push_back(animation_data)
-
-	return new_data
+		fn.call_funcv(args)
