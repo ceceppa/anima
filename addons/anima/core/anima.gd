@@ -1,11 +1,11 @@
-tool
+@tool
 extends Node
 
 var _animations_list := []
 var _custom_animations := {}
 
 static func begin(node: Node, name: String = '_anima_', single_shot := false) -> AnimaNode:
-	var node_name_suffix = str(OS.get_system_time_msecs() * randf()) if single_shot and name == "_anima_" else ""
+	var node_name_suffix = str(randf()) if single_shot and name == "_anima_" else ""
 	var node_name = 'AnimaNode_' + name + node_name_suffix
 	var anima_node: AnimaNode
 

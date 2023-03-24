@@ -111,7 +111,7 @@ const _ELASTIC_C4: float = (2.0 * PI) / 3.0
 const _ELASTIC_C5: float = (2.0 * PI) / 4.5
 
 static func get_easing_points(easing_name):
-	if typeof(easing_name) == TYPE_REAL:
+	if typeof(easing_name) == TYPE_FLOAT:
 		easing_name = int(easing_name)
 
 	var easing_value = null
@@ -206,9 +206,9 @@ static func spring(t: float, params: Dictionary):
 	var b = (zeta * w0 + -velocity) / wd if zeta < 1  else -velocity + w0
 
 	if zeta < 1:
-	  progress = exp(-progress * zeta * w0) * (a * cos(wd * progress) + b * sin(wd * progress))
+		progress = exp(-progress * zeta * w0) * (a * cos(wd * progress) + b * sin(wd * progress))
 	else:
-	  progress = (a + b * progress) * exp(-progress * w0)
+		progress = (a + b * progress) * exp(-progress * w0)
 
 	if t == 0 || t == 1:
 		return t

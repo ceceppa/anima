@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 enum PIVOT {
@@ -67,15 +67,15 @@ enum VALUES_IN {
 }
 
 const Align = {
-	LEFT = HALIGN_LEFT,
-	CENTER = HALIGN_CENTER,
-	RIGHT = HALIGN_RIGHT,
+	LEFT = HORIZONTAL_ALIGNMENT_LEFT,
+	CENTER =  HORIZONTAL_ALIGNMENT_CENTER,
+	RIGHT =  HORIZONTAL_ALIGNMENT_RIGHT,
 }
 
 const VAlign = {
-	TOP = VALIGN_TOP,
-	CENTER = VALIGN_CENTER,
-	BOTTOM = VALIGN_BOTTOM,
+	TOP = VERTICAL_ALIGNMENT_TOP,
+	CENTER = VERTICAL_ALIGNMENT_CENTER,
+	BOTTOM = VERTICAL_ALIGNMENT_BOTTOM,
 }
 
 enum RELATIVE_TO {
@@ -93,19 +93,6 @@ const EASING = AnimaEasing.EASING
 const DEFAULT_DURATION := 0.7
 const DEFAULT_ITEMS_DELAY := 0.05
 const MINIMUM_DURATION := 0.000001
-
-const _FRAME_COLORS := [
-	Color("#8B008B"),
-	Color("#4B0082"),
-	Color("#9400D3"),
-	Color("#7b4747"),
-	Color("#6B8E23"),
-	Color("#2E8B57"),
-	Color("#3CB371"),
-	Color("#20B2AA"),
-	Color("#006400"),
-	Color("#00008B"),
-]
 
 var _custom_animations := {}
 var _animations_list := []
