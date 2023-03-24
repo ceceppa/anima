@@ -1,4 +1,4 @@
-@tool
+tool
 extends EditorPlugin
 
 enum EditorPosition { 
@@ -41,13 +41,14 @@ func _enter_tree():
 	_active_anima_editor = _anima_editor
 
 func _load_anima_editor(position: int):
-	var editor = load("res://addons/anima/visual-editor/AnimaVisualEditor.tscn").instantiate()
+	var editor = load("res://addons/anima/visual-editor/AnimaVisualEditor.tscn").instance()
 
-	editor.connect("switch_position",Callable(self,"_on_anima_editor_switch_position"))
-	editor.connect("visual_builder_updated", _on_visual_builder_updated)
-	editor.connect("highlight_node",Callable(self,'_on_highlight_node'))
-	editor.connect("play_animation",Callable(self,'_on_play_animation'))
-	editor.connect("change_editor_position",Callable(self,'_on_change_editor_position'))
+	editor.connect("switch_position", self, "_on_anima_editor_switch_position")
+	editor.connect("visual_builder_updated", self, '_on_visual_builder_updated')
+	editor.connect("highlight_nodes", self, '_on_highlight_nodes')
+	editor.connect("play_animation", self, '_on_play_animation')
+	editor.connect("change_editor_position", self, '_on_change_editor_position')
+	editor.connect("update_visual_editor_size", self, '_on_update_frames_editor_size')
 
 	_add_anima_editor(editor, position)
 
@@ -76,7 +77,7 @@ func _remove_anima_editor() -> void:
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_RIGHT, _anima_editor_2d_right)
 	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_RIGHT, _anima_editor_3d_right)
 
-func _handles(object):
+func handles(object):
 	var is_anima_node = object.has_meta("__anima_visual_node")
 	var root: Node
 
@@ -89,13 +90,13 @@ func _handles(object):
 		while root.get_parent():
 			var parent = root.get_parent()
 
-			if parent is SubViewport:
+			if parent is Viewport:
 				break
 
 			root = parent
 
 	if root:
-		object = root.find_child("AnimaVisualNode", false)
+		object = root.find_node("AnimaVisualNode", false)
 
 		if object:
 			is_anima_node = true
@@ -112,6 +113,7 @@ func _handles(object):
 	return is_anima_node
 
 func set_anima_node(is_anima_node: bool, object) -> void:
+
 	if is_anima_node and object and _anima_visual_node != object:
 		var old_active_editor = _active_anima_editor
 
@@ -119,15 +121,24 @@ func set_anima_node(is_anima_node: bool, object) -> void:
 
 		_on_editor_position_changed(_anima_visual_node._editor_position)
 
+		var size_index = _anima_visual_node._editor_position
+
+		if _anima_visual_node._frame_editor_sizes.has(size_index):
+			_active_anima_editor.rect_size = _anima_visual_node._frame_editor_sizes[size_index]
+
+		_active_anima_editor.set_anima_node(object)
+		_active_anima_editor.show()
+
 		if old_active_editor != _active_anima_editor:
 			old_active_editor.hide()
+
 	elif not is_anima_node:
 		_active_anima_editor.set_anima_node(null)
 
 		_anima_visual_node = null
 
-	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed",Callable(self,"_on_editor_position_changed")):
-		_anima_visual_node.connect("on_editor_position_changed",Callable(self,"_on_editor_position_changed"))
+	if _anima_visual_node and not _anima_visual_node.is_connected("on_editor_position_changed", self, "_on_editor_position_changed"):
+		_anima_visual_node.connect("on_editor_position_changed", self, "_on_editor_position_changed")
 
 		_on_editor_position_changed(_anima_visual_node._editor_position)
 
@@ -138,7 +149,7 @@ func _on_editor_position_changed(new_position: int) -> void:
 	if new_position == 0:
 		_active_anima_editor = _anima_editor
 	else:
-		if _anima_visual_node.get_root_node() is Node3D:
+		if _anima_visual_node.get_root_node() is Spatial:
 			_active_anima_editor = _anima_editor_3d_right
 		else:
 			_active_anima_editor = _anima_editor_2d_right
@@ -147,7 +158,6 @@ func _on_editor_position_changed(new_position: int) -> void:
 	_active_anima_editor.show()
 
 func _on_visual_builder_updated(data: Dictionary) -> void:
-	prints("updating visual builder data", data, _anima_visual_node)
 	if not _anima_visual_node:
 		return
 
@@ -159,15 +169,24 @@ func _on_visual_builder_updated(data: Dictionary) -> void:
 	undo_redo.add_undo_method(self, "_undo_visual_editor_data", current_data)
 	undo_redo.commit_action()
 
-func _on_highlight_node(node_to_highlight: Node) -> void:
+func _on_highlight_nodes(nodes_to_highlight: Array) -> void:
 	var selection := get_editor_interface().get_selection()
 	var nodes := selection.get_selected_nodes()
 
-	if nodes.size() == 1 and nodes[0] == node_to_highlight:
-		return
+	if nodes.size() == nodes_to_highlight.size():
+		var total := 0
+
+		for node_index in nodes.size():
+			if nodes[node_index] == nodes_to_highlight[node_index]:
+				total += 1
+
+		if total == nodes.size():
+			return
 
 	selection.clear()
-	selection.add_node(node_to_highlight)
+	
+	for node in nodes_to_highlight:
+		selection.add_node(node)
 
 func _undo_visual_editor_data(previous_data) -> void:
 	_anima_visual_node.__anima_visual_editor_data = previous_data
@@ -177,3 +196,29 @@ func _undo_visual_editor_data(previous_data) -> void:
 func _on_change_editor_position(new_position) -> void:
 	if _anima_visual_node:
 		_anima_visual_node._editor_position = new_position
+
+func _on_update_frames_editor_size(new_size: Vector2) -> void:
+	if not _anima_visual_node:
+		return
+
+	var size_index = _anima_visual_node._editor_position
+
+	if  not _anima_visual_node._frame_editor_sizes.has(size_index):
+		return
+
+	var data = _anima_visual_node._frame_editor_sizes
+	var current_size = _anima_visual_node._frame_editor_sizes[size_index]
+
+	if current_size == new_size:
+		return
+
+	_anima_visual_node._frame_editor_sizes[size_index] = new_size
+
+	var current_data: Dictionary = _anima_visual_node.__anima_visual_editor_data
+	var undo_redo = get_undo_redo() # Method of EditorPlugin.
+
+	undo_redo.create_action('Updated AnimaVisualNode')
+	undo_redo.add_do_property(_anima_visual_node, "_frame_editor_sizes", data)
+	undo_redo.add_undo_method(self, "_undo_visual_editor_data", current_data)
+	undo_redo.commit_action()
+	

@@ -32,7 +32,7 @@ static func flatten_keyframes_data(data: Dictionary) -> Array:
 				elif percentage == "to":
 					percentage = 100
 
-			var is_valid_key = typeof(percentage) == TYPE_INT or typeof(percentage) == TYPE_FLOAT
+			var is_valid_key = typeof(percentage) == TYPE_INT or typeof(percentage) == TYPE_REAL
 
 			if not is_valid_key:
 				continue
@@ -135,7 +135,7 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 
 	if keyframes_data.has("_duration"):
 		duration = AnimaTweenUtils.calculate_dynamic_value(
-			keyframes_data._duration.replace("{duration}", str(duration)),
+			keyframes_data._duration.replace("{duration}", duration),
 			animation_data
 		)
 
