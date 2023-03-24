@@ -1,8 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://xiwomqecqilw"]
+[gd_scene load_steps=2 format=3 uid="uid://b3q76bpa0hm4m"]
 
-[ext_resource type="PackedScene" uid="uid://b0n4ipyle1o1l" path="res://addons/anima/visual-editor/shared/AnimaButton.tscn" id="1"]
 [ext_resource type="Script" path="res://demos/components/Button.gd" id="2"]
 
-[node name="Button" instance=ExtResource("1")]
+[node name="Button" type="Button"]
 script = ExtResource("2")
-scene = ""

@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://d1i1o1gtesk7g"]
+[gd_scene load_steps=3 format=3 uid="uid://b708odvrgvfvt"]
 
 [ext_resource type="Script" path="res://demos/DemosSelector.gd" id="2"]
-[ext_resource type="PackedScene" uid="uid://xiwomqecqilw" path="res://demos/components/Button.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://b3q76bpa0hm4m" path="res://demos/components/Button.tscn" id="3"]
 
 [node name="DemoSelector" type="VBoxContainer"]
 anchors_preset = 15
