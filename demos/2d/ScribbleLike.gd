@@ -32,7 +32,7 @@ func _ready():
 						opacity = 1,
 						easing = "spring(1, 80, 8)"
 					},
-					initial_values = {
+					"initial_values": {
 						opacity = 0,
 					},
 				}, 1) \

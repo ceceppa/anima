@@ -1,65 +1,25 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=12 format=3 uid="uid://cd03l78xekhxv"]
 
-[ext_resource path="res://demos/3d/Grid.gd" type="Script" id=1]
-[ext_resource path="res://demos/resources/new_opensimplexnoise.tres" type="OpenSimplexNoise" id=2]
-[ext_resource path="res://demos/components/ShowAllDemos.tscn" type="PackedScene" id=3]
+[ext_resource type="Script" path="res://demos/3d/Grid.gd" id="1"]
+[ext_resource type="PackedScene" path="res://demos/components/ShowAllDemos.tscn" id="3"]
 
-[sub_resource type="StandardMaterial3D" id=1]
+[sub_resource type="StandardMaterial3D" id="1"]
 vertex_color_use_as_albedo = true
-albedo_color = Color( 0.717647, 0.72549, 0.733333, 1 )
+albedo_color = Color(0.717647, 0.72549, 0.733333, 1)
 
-[sub_resource type="PlaneMesh" id=2]
-material = SubResource( 1 )
-size = Vector2( 400, 400 )
+[sub_resource type="PlaneMesh" id="2"]
+material = SubResource("1")
+size = Vector2(400, 400)
 
-[sub_resource type="Environment" id=3]
-ambient_light_color = Color( 1, 1, 1, 1 )
+[sub_resource type="Environment" id="3"]
+ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 3.74
-fog_enabled = true
-fog_depth_begin = 0.0
-fog_depth_end = 74.1
 tonemap_mode = 2
 ssr_max_steps = 128
 ssao_enabled = true
-ssao_quality = 2
+fog_enabled = true
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.768627, 0.768627, 0.768627, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0.219608, 0.219608, 0.219608, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 1, 1, 1, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.866667, 0.866667, 0.854902, 1 )
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[sub_resource type="Shader" id=7]
+[sub_resource type="Shader" id="7"]
 code = "shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
 uniform vec4 albedo : source_color;
@@ -88,106 +48,40 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id=8]
-shader = SubResource( 7 )
-shader_param/albedo = Color( 0.105882, 0.105882, 0.105882, 1 )
-shader_param/specular = 0.36
-shader_param/metallic = 0.71
-shader_param/roughness = 0.0
-shader_param/point_size = 1.0
-shader_param/uv1_scale = Vector3( 1, 1, 1 )
-shader_param/uv1_offset = Vector3( 0, 0, 0 )
-shader_param/uv2_scale = Vector3( 1, 1, 1 )
-shader_param/uv2_offset = Vector3( 0, 0, 0 )
+[sub_resource type="ShaderMaterial" id="8"]
+render_priority = 0
+shader = SubResource("7")
+shader_parameter/albedo = Color(0.105882, 0.105882, 0.105882, 1)
+shader_parameter/specular = 0.36
+shader_parameter/metallic = 0.71
+shader_parameter/roughness = 0.0
+shader_parameter/point_size = 1.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
 
-[sub_resource type="BoxMesh" id=9]
-material = SubResource( 8 )
-size = Vector3( 5, 0.2, 5 )
+[sub_resource type="BoxMesh" id="9"]
+material = SubResource("8")
+size = Vector3(5, 0.2, 5)
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = SubResource( 7 )
-shader_param/albedo = Color( 0.862745, 0.862745, 0.862745, 1 )
-shader_param/specular = 0.36
-shader_param/metallic = 0.71
-shader_param/roughness = 0.0
-shader_param/point_size = 1.0
-shader_param/uv1_scale = Vector3( 1, 1, 1 )
-shader_param/uv1_offset = Vector3( 0, 0, 0 )
-shader_param/uv2_scale = Vector3( 1, 1, 1 )
-shader_param/uv2_offset = Vector3( 0, 0, 0 )
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6t5hg"]
 
-[sub_resource type="BoxMesh" id=11]
+[sub_resource type="BoxMesh" id="11"]
 
-[sub_resource type="Shader" id=12]
-code = "shader_type spatial;
-render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
-uniform vec4 albedo : source_color;
-uniform sampler2D texture_albedo : source_color;
-uniform float specular;
-uniform float metallic;
-uniform float roughness : hint_range(0,1);
-uniform float point_size : hint_range(0,128);
-uniform vec3 uv1_scale;
-uniform vec3 uv1_offset;
-uniform vec3 uv2_scale;
-uniform vec3 uv2_offset;
-
-void vertex() {
-	UV=UV*uv1_scale.xy+uv1_offset.xy;
-}
-
-void fragment() {
-	vec2 base_uv = UV;
-	vec4 albedo_tex = texture(texture_albedo,base_uv);
-	albedo_tex *= COLOR;
-	ALBEDO = albedo.rgb * albedo_tex.rgb;
-	METALLIC = metallic;
-	ROUGHNESS = roughness;
-	SPECULAR = specular;
-}
-"
-
-[sub_resource type="ShaderMaterial" id=13]
-shader = SubResource( 12 )
-shader_param/albedo = Color( 0.419608, 0.619608, 0.694118, 1 )
-shader_param/specular = 0.36
-shader_param/metallic = 0.71
-shader_param/roughness = 0.0
-shader_param/point_size = 1.0
-shader_param/uv1_scale = Vector3( 1, 1, 1 )
-shader_param/uv1_offset = Vector3( 0, 0, 0 )
-shader_param/uv2_scale = Vector3( 1, 1, 1 )
-shader_param/uv2_offset = Vector3( 0, 0, 0 )
-
-[sub_resource type="BoxMesh" id=14]
-size = Vector3( 0.5, 0.5, 3 )
-
-[sub_resource type="NoiseTexture" id=15]
-noise = ExtResource( 2 )
-
-[sub_resource type="ShaderMaterial" id=16]
-shader = SubResource( 12 )
-shader_param/albedo = Color( 0.901961, 0.223529, 0.27451, 1 )
-shader_param/specular = 0.36
-shader_param/metallic = 0.71
-shader_param/roughness = 0.0
-shader_param/point_size = 1.0
-shader_param/uv1_scale = Vector3( 1, 1, 1 )
-shader_param/uv1_offset = Vector3( 0, 0, 0 )
-shader_param/uv2_scale = Vector3( 1, 1, 1 )
-shader_param/uv2_offset = Vector3( 0, 0, 0 )
-shader_param/texture_albedo = SubResource( 15 )
+[sub_resource type="BoxMesh" id="14"]
+size = Vector3(0.5, 0.5, 3)
 
 [node name="Grid" type="Node3D"]
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="Base" type="MeshInstance3D" parent="."]
-transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.13543, -0.213983, -88.9201 )
-mesh = SubResource( 2 )
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.13543, -0.213983, -88.9201)
+mesh = SubResource("2")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D( 0.823341, 0.34741, -0.448794, 0.0143215, 0.777791, 0.62836, 0.567366, -0.523782, 0.635412, -9.39514, 6.30094, 7.25923 )
-environment = SubResource( 3 )
+transform = Transform3D(0.823341, 0.34741, -0.448794, 0.0143215, 0.777791, 0.62836, 0.567366, -0.523782, 0.635412, -9.39514, 6.30094, 7.25923)
+environment = SubResource("3")
 current = true
 fov = 50.0
 size = 6396.47
@@ -196,48 +90,33 @@ far = 8192.0
 [node name="Grid" type="Node" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D( 0.743588, -0.340043, 0.575715, -0.279327, 0.624315, 0.729525, -0.607497, -0.703279, 0.36925, 8.69176, 28.6973, 10.7438 )
+transform = Transform3D(0.743588, -0.340043, 0.575715, -0.279327, 0.624315, 0.729525, -0.607497, -0.703279, 0.36925, 8.69176, 28.6973, 10.7438)
 light_energy = 3.03
 shadow_enabled = true
 
-[node name="ShowAllDemos" parent="." instance=ExtResource( 3 )]
+[node name="ShowAllDemos" parent="." instance=ExtResource("3")]
 offset_right = 142.0
 offset_bottom = 32.0
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
-custom_styles/normal = SubResource( 6 )
 
 [node name="Node" type="Node" parent="."]
 
 [node name="Main" type="Node" parent="."]
 
 [node name="Dark" type="MeshInstance3D" parent="Main"]
-transform = Transform3D( 1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0 )
-mesh = SubResource( 9 )
+transform = Transform3D(1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0)
+mesh = SubResource("9")
 
 [node name="Light3D" type="MeshInstance3D" parent="Main"]
-transform = Transform3D( 1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0 )
-mesh = SubResource( 9 )
-material/0 = SubResource( 10 )
+transform = Transform3D(1, 0, 0, 0, 1, -9.31323e-10, 0, 9.31323e-10, 1, 0, 0, 0)
+mesh = SubResource("9")
+surface_material_override/0 = SubResource("StandardMaterial3D_6t5hg")
 
 [node name="Cube" type="MeshInstance3D" parent="Main"]
-transform = Transform3D( 1, 0, 0, 0, 1, 4.61853e-14, 0, -4.61853e-14, 1, -4.975, 0.269245, -3 )
-mesh = SubResource( 11 )
-material/0 = SubResource( 13 )
-__meta__ = {
-"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
-"__old_origin": Vector3( 0, 0, 0 ),
-"__old_transform": Transform3D( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
-}
+transform = Transform3D(1, 0, 0, 0, 1, 4.61853e-14, 0, -4.61853e-14, 1, -4.975, 0.269245, -3)
+mesh = SubResource("11")
 
 [node name="Cube2" type="MeshInstance3D" parent="Main"]
-transform = Transform3D( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -4.975, 0.269245, -3 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 16 )
-__meta__ = {
-"__old_basis": Basis( 1, 0, 0, 0, 1, -6.11067e-13, 0, 6.11067e-13, 1 ),
-"__old_origin": Vector3( 0, 0, 0 ),
-"__old_transform": Transform3D( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
-}
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -4.975, 0.269245, -3)
+mesh = SubResource("14")
 
 [node name="Cubes" type="Node" parent="."]

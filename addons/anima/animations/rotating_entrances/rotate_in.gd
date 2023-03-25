@@ -7,7 +7,7 @@ var KEYFRAMES := {
 		rotation = 0,
 		opacity = 1,
 	},
-	initial_values = {
+	"initial_values": {
 		opacity = 0,
 	}
 }

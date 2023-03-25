@@ -5,12 +5,12 @@ var KEYFRAMES := {
 	},
 	20: {
 		"translate:x": 0,
-		scale = Vector2(0.7, 0.7),
-		opacity = 0.7
+		"scale": Vector2(0.7, 0.7),
+		"opacity": 0.7
 	},
 	100: {
 		"translate:x": ":size:x * 2",
-		scale = Vector2(0.7, 0.7),
-		opacity = 0.7
+		"scale": Vector2(0.7, 0.7),
+		"opacity": 0.7
 	}
 }

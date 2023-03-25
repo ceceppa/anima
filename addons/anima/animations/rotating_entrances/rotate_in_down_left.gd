@@ -7,8 +7,8 @@ var KEYFRAMES := {
 		rotation = 0,
 		opacity = 1,
 	},
-	pivot = ANIMA.PIVOT.BOTTOM_LEFT,
-	initial_values = {
+	"pivot": ANIMA.PIVOT.BOTTOM_LEFT,
+	"initial_values": {
 		opacity = 0,
 	}
 }

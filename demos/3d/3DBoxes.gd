@@ -84,7 +84,7 @@ func _boxes_animation() -> Dictionary:
 		"to": {
 			"+x" = -25.619,
 			easing = ANIMA.EASING.EASE_IN_CIRC,
-			"+rotation:x" = 360,
+			"+rotation:x" = TAU,
 			"shader_param:albedo" = Color('#6b9eb1')
 		},
 	}

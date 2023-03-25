@@ -35,5 +35,5 @@ func _draw():
 	var pos: Vector2 = Vector2($ball.offset.x + _ball_radius - 5.0, $ball.offset.y + _ball_radius - 5.0)
 	draw_arc(pos, _ball_radius * 1.1, 0, PI * 2, 360, color, 16.0, true)
 
-func get_size() -> Vector2:
+func get_ball_size() -> Vector2:
 	return $ball.texture.get_size() * $ball.scale

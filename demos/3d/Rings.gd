@@ -9,9 +9,9 @@ func _ready():
 	if $Group3.get_child_count() == 1:
 		_add_rings($Group3, $Group3/RingC, 0.06)
 
-	Anima.register_animation(self, 'ring1')
-	Anima.register_animation(self, 'ring2')
-	Anima.register_animation(self, 'ring3')
+	AnimaAnimationsUtils.register_animation("ring1", ring1_frames())
+	AnimaAnimationsUtils.register_animation("ring2", ring2_frames())
+	AnimaAnimationsUtils.register_animation("ring3", ring3_frames())
 
 	_setup_animation($Group1, 'ring1')
 	_setup_animation($Group2, 'ring2')
@@ -32,32 +32,45 @@ func _add_rings(parent: Node3D, mesh, scale_value: float = 0.05) -> void:
 
 		parent.add_child(ring)
 
-func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
-	var frames = [
-		{ percentage = 0, from = 0, easing = ANIMA.EASING.EASE_IN_CIRC },
-		{ percentage = 10, to = 0.5, easing = ANIMA.EASING.EASE_IN_OUT_CIRC },
-		{ percentage = 60, to = -1, easing = ANIMA.EASING.EASE_IN_CIRC },
-		{ percentage = 100, to = 0.5, easing = ANIMA.EASING.EASE_IN_OUT_BACK },
-	]
+func ring1_frames():
+	return {
+		0: {
+			"translate:y": 0,
+			"easing": ANIMA.EASING.EASE_IN_CIRC
+		},
+		10: {
+			"translate:y": 0.5,
+			"easing": ANIMA.EASING.EASE_IN_OUT_CIRC
+		},
+		60: {
+			"translate:y": -1,
+			"easing": ANIMA.EASING.EASE_IN_CIRC
+		},
+		100: {
+			"translate:y": 0,
+			"easing": ANIMA.EASING.EASE_IN_OUT_BACK
+		}
+	}
 
-	var rotate = [
-		{ from = Vector3(0, 0, 0), to = Vector3(0, 0, 180), easing = ANIMA.EASING.EASE_OUT_BACK }
-	]
+func ring2_frames():
+	return {
+		0: {
+			rotation = Vector3.ZERO,
+			easing = ANIMA.EASING.EASE_IN_CIRC
+		},
+		"to": {
+			rotation = Vector3(0, 0, PI * 2),
+			easing = ANIMA.EASING.EASE_OUT_BACK
+		}
+	}
 
-	var rotate2 = [
-		{ percentage = 0, from = Vector3(0, 0, 0), easing = ANIMA.EASING.EASE_IN_CIRC }, 
-		{ percentage = 100, to = Vector3(0, 0, 360), easing = ANIMA.EASING.EASE_OUT_BACK }
-	]
-
-	var rotate3 = [
-		{ from = Vector3(0, 0, 0), to = Vector3(360, 180, 180), easing = ANIMA.EASING.EASE_OUT_BACK }
-	]
-
-	if data.animation == 'ring1':
-		anima_tween.add_relative_frames(data, "y", frames)
-
-	if data.animation == 'ring2':
-		anima_tween.add_frames(data, "rotation", rotate2)
-
-	if data.animation == 'ring3':
-		anima_tween.add_frames(data, "rotation", rotate3)
+func ring3_frames():
+	return {
+		from = {
+			rotation = Vector3.ZERO,
+			easing = ANIMA.EASING.EASE_OUT_BACK
+		},
+		to = {
+			rotation = Vector3(0, 0, PI)
+		}
+	}

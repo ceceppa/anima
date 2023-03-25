@@ -7,7 +7,7 @@ func _ready():
 	anima.then({ node = cross, property = "X", to = 100, duration = 1, relative = true, easing = ANIMA.EASING.EASE_IN_SINE })
 	anima.with({ node = cross, property = "rotation", from = 0, to = 360, easing = ANIMA.EASING.EASE_IN_SINE })
 
-	anima.then({ node = cross, property = "Y", to = 100, duration = 1, relative = true })
+	anima.then({ node = cross, property = "y", to = 100, duration = 1, relative = true })
 	anima.with({ node = cross, property = "rotation", from = 0, to = -360 })
 
 	anima.then({ node = cross, property = "X", to = -100, duration = 1, relative = true })

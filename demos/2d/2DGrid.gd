@@ -39,7 +39,7 @@ func _init_balls() -> void:
 	var ball = BALL_ITEM.instantiate()
 	
 	var window_size := size
-	var ball_size: Vector2 = ball.get_size()
+	var ball_size: Vector2 = ball.get_ball_size()
 	
 	var columns = floor(window_size.x / ball_size.x) - 6
 	

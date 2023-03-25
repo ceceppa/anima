@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://de2dm72yugi4a"]
 
 [ext_resource type="Script" path="res://demos/3d/3DBoxes.gd" id="1"]
-[ext_resource type="ArrayMesh" uid="uid://chu2qdbithcns" path="res://demos/resources/ring.obj" id="2"]
+[ext_resource type="ArrayMesh" uid="uid://dsobcrphe0r56" path="res://demos/resources/ring.obj" id="2"]
 [ext_resource type="PackedScene" path="res://demos/components/ShowAllDemos.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://tests/Box.tscn" id="4"]
 
@@ -65,15 +65,15 @@ void fragment() {
 render_priority = 0
 shader = SubResource("Shader_2nbbr")
 shader_parameter/albedo = Color(1, 1, 1, 1)
-shader_parameter/metallic = 0.0
-shader_parameter/metallic_texture_channel = Plane(1, 0, 0, 0)
 shader_parameter/point_size = 1.0
 shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Plane(1, 0, 0, 0)
 shader_parameter/specular = 0.5
-shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/metallic = 0.0
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
-shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
 
 [node name="3DBoxes" type="Node3D"]
 script = ExtResource("1")
@@ -105,7 +105,7 @@ light_energy = 0.71
 shadow_enabled = true
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
-extents = Vector3(50, 7.26065, 28)
+size = Vector3(100, 14.5213, 56)
 
 [node name="ring" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.2, 0, 0, 0, -0.19369, -0.0498417, 0, 0.0498417, -0.19369, -7.69054, 0.421776, 3.32684)
