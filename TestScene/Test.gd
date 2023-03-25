@@ -39,7 +39,7 @@ func _ready():
 #					opacity = 1,
 #					easing = ANIMA.EASING.EASE_IN_OUT_BACK
 #				},
-#				initial_values = {
+#				"initial_values": {
 #					opacity = 0,
 #				}
 #			}
@@ -77,7 +77,7 @@ func _ready():
 #			to = {
 #				color = Color.REBECCA_PURPLE
 #			},
-#			initial_values = {
+#			"initial_values": {
 #				color = Color.YELLOW
 #			}
 #		}, 0.5)

@@ -6,5 +6,5 @@ var KEYFRAMES := {
 		rotation = -45,
 		opacity = 0,
 	},
-	pivot = ANIMA.PIVOT.BOTTOM_RIGHT
+	"pivot": ANIMA.PIVOT.BOTTOM_RIGHT
 }

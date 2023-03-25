@@ -99,7 +99,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 	if property is Object:
 		return property[animation_data.key]
 
-	match property:
+	match property.to_lower():
 		"x", "position:x":
 			var position = get_position(node)
 

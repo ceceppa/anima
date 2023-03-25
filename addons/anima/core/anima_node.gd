@@ -601,7 +601,7 @@ func _generate_animation_for_even_columns(animation_data: Dictionary) -> float:
 		rows.push_back(row)
 
 	for column in grid_size.y:
-		if column % 2 == 0:
+		if int(column) % 2 == 0:
 			columns.push_back(column)
 
 	return _generate_animation_for(rows, columns, animation_data)
@@ -615,7 +615,7 @@ func _generate_animation_for_odd_columns(animation_data: Dictionary) -> float:
 		rows.push_back(row)
 
 	for column in grid_size.y:
-		if column % 2 != 0:
+		if int(column) % 2 != 0:
 			columns.push_back(column)
 
 	return _generate_animation_for(rows, columns, animation_data)

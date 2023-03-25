@@ -354,7 +354,7 @@ func test_applies_the_global_initial_values():
 				opacity = 0,
 				scale = Vector3.ONE,
 			},
-			initial_values = {
+			"initial_values": {
 				opacity = 0
 			}
 		})

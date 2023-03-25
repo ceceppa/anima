@@ -94,7 +94,7 @@ func _ready():
 		grid_size = grid_size,
 		animation_type = ANIMA.GRID.ODD_ITEMS,
 		property = "rotation:y",
-		to = 90,
+		to = PI / 2,
 		relative = true,
 		duration = 0.3,
 		items_delay = 0
@@ -140,7 +140,7 @@ func _ready():
 		items_delay = 0,
 		animation_type = ANIMA.GRID.ODD_ITEMS,
 		property = "rotation:y",
-		to = 90,
+		to = PI / 2,
 		relative = true,
 		duration = 0.3
 	})
@@ -161,7 +161,7 @@ func _checkboard(grid_size: Vector2) -> void:
 	var odd = true
 
 	for i in grid_size.x:
-		odd = i % 2 != 0
+		odd = int(i) % 2 != 0
 
 		for j in grid_size.y:
 			var clone
