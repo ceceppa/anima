@@ -100,7 +100,7 @@ Anim.Node($node).anima_animation_frames({
 Animates the given property.
 
 :::info
-Compared to the other property specific functions, like `anima_position_x`, this method allows us to specify a [dynamic value](/docs/docs/tutorial-extras/dynamic-value)
+Compared to the other property specific functions, like `anima_position_x`, this method allows us to specify a [dynamic value](/docs/tutorial-extras/dynamic-value)
 :::
 
 #### Syntax
@@ -208,7 +208,7 @@ anima_from(value: Variant)
 
 | Param | Type    | Description                                                                                      |
 | ----- | ------- | ------------------------------------------------------------------------------------------------ |
-| value | Variant | The initial value. It can be a fixed or [dynamic](/docs/docs/tutorial-extras/dynamic-value) one. |
+| value | Variant | The initial value. It can be a fixed or [dynamic](/docs/tutorial-extras/dynamic-value) one. |
 
 #### Example
 

@@ -10,7 +10,7 @@ const config = {
   title: 'Anima',
   tagline: 'Animations are your friend',
   url: 'https://anima.ceceppa.me',
-  baseUrl: '/docs/',
+  baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
@@ -95,7 +95,7 @@ const config = {
             items: [
               {
                 label: 'Documentation',
-                to: '/docs/docs/intro',
+                to: '/docs/intro',
               },
               {
                 label: 'Tutorial',

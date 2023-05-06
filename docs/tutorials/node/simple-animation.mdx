@@ -37,11 +37,11 @@ func _ready():
 ```
 
 In this case I'm adding an AnimaNode by code, but you could manually add one to the scene; there is no difference and is completely up to you.
-Also, we can use either [begin](/docs/docs/anima/#begin) or [begin_single_shot](/docs/docs/anima/#begin_single_shot) without difference in how the animation is created/played. Is completely up to you to decide [which one suits your need](/docs/tutorials/basics/begin-vs-begin_single_shot).
+Also, we can use either [begin](/docs/anima/#begin) or [begin_single_shot](/docs/anima/#begin_single_shot) without difference in how the animation is created/played. Is completely up to you to decide [which one suits your need](/docs/tutorials/basics/begin-vs-begin_single_shot).
 
 ### The Panel
 
-Because we're animating a single node we're going to use the [Anima.Node](/docs/docs/anima/anima-node) utility class and its [anima_scale_y](/docs/docs/anima-declaration/#anima_scale_y) method:
+Because we're animating a single node we're going to use the [Anima.Node](/docs/anima/anima-node) utility class and its [anima_scale_y](/docs/anima-declaration/#anima_scale_y) method:
 
 ```gdscript
 .then( Anima.Node(self).anima_scale_y(1.0, 0.3).anima_from(0) )
@@ -61,7 +61,7 @@ As we said before the text is animated by using the built-in **typewrite** anima
 .then( Anima.Node($VBoxContainer/Label).anima_animation("typewrite", 0.01) )
 ```
 
-Once again we used the [Anima.Node](/docs/docs/anima/anima-node) utility class because we're animating a single node. While the [anima_animation](/docs/docs/anima-declaration/#anima_animation) let us specify the name of the animation to use and its duration.
+Once again we used the [Anima.Node](/docs/anima/anima-node) utility class because we're animating a single node. While the [anima_animation](/docs/anima-declaration/#anima_animation) let us specify the name of the animation to use and its duration.
 
 :::note
 **Typewrite** is a "special" animation where we specify the duration of animating the single character, instead of the entire animation.
@@ -71,7 +71,7 @@ Once again we used the [Anima.Node](/docs/docs/anima/anima-node) utility class b
 
 The button animation starts slightly before the text one completes. So, before writing any code let's see how to achieve that:
 
-We could define the animation as parallel, using the [with](/docs/docs/anima-node/#with-parallel-animations) syntax, but because the text animation depends by its length we would need to manually calculate the delay to apply.
+We could define the animation as parallel, using the [with](/docs/anima-node/#with-parallel-animations) syntax, but because the text animation depends by its length we would need to manually calculate the delay to apply.
 
 So, how can we solve this? By using a negative delay :)
 
@@ -82,5 +82,5 @@ So, how can we solve this? By using a negative delay :)
 Now we don't need to worry about the length of the text as the button is always animated 0.1 second before the previous animation completes!
 
 :::note
-If we have a look at the [anima_delay](/docs/docs/anima-declaration/#anima_delay) documentation, we can see that we can also pass a negative number to anticipate the start of a sequential or parallel animation.
+If we have a look at the [anima_delay](/docs/anima-declaration/#anima_delay) documentation, we can see that we can also pass a negative number to anticipate the start of a sequential or parallel animation.
 :::
