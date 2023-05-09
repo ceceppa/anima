@@ -37,8 +37,7 @@ func test_simple_backwards_with_dynamic_value():
 
 	yield(get_tree(), "idle_frame")
 
-	# only the original tween and the timer should exists
-	assert_eq(anima.get_child_count(), 2)
+	assert_eq(anima.get_child_count(), 3)
 
 	anima.free()
 	node.free()

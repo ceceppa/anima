@@ -49,3 +49,20 @@ func test_3d_boxes():
 
 	box_scene.free()
 	frames.free()
+
+func test_light_speed_in_left():
+	var frames = AnimaAnimationsUtils.get_animation_keyframes("light_speed_in_left")
+	var node := Sprite.new()
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 5 },
+		frames
+	)
+
+	assert_eq_deep(output, [
+		{_is_translation = true, _wait_time = 0.0, duration = 5.0, easing = 4, from = "-:size:x", node = node, property = "position:x", relative = true, to = 0},
+		{_wait_time = 0.0, duration = 3.0, easing = 4, from = 0, initial_value = 0, node = node, property = "opacity", to = 1},
+		{_wait_time = 0.0, duration = 3.0, easing = 4, from = 30, node = node, property = "skew:x", to = -20},
+		{_wait_time = 3.0, duration = 1.0, easing = 4, from = -20, node = node, property = "skew:x", to = 5},
+		{_wait_time = 4.0, duration = 1.0, easing = 4, from = 5, node = node, property = "skew:x", to = 0}])
+	node.free()

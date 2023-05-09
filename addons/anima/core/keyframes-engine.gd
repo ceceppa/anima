@@ -138,6 +138,9 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			keyframes_data._duration.replace("{duration}", duration),
 			animation_data
 		)
+		
+		if duration == null:
+			duration = 0
 
 	for index in all_frames.size() - 1:
 		var current_frame_data = all_frames[index]

@@ -32,7 +32,7 @@ __meta__ = {
 
 [node name="Animations" parent="Control" instance=ExtResource( 3 )]
 margin_right = 548.0
-margin_bottom = 88.0
+margin_bottom = 87.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Built-in animations"
@@ -41,16 +41,16 @@ scene = "res://demos/AnimationsPreview.tscn"
 [node name="Easings" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
 margin_right = 1024.0
-margin_bottom = 88.0
+margin_bottom = 87.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Built-in easings"
 scene = "res://demos/Easings.tscn"
 
 [node name="SequentialAnParallel" parent="Control" instance=ExtResource( 3 )]
-margin_top = 96.0
+margin_top = 95.0
 margin_right = 548.0
-margin_bottom = 183.0
+margin_bottom = 182.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Dialog"
@@ -58,18 +58,18 @@ scene = "res://demos/nodes/Popup.tscn"
 
 [node name="SequentialAnParallel2" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
-margin_top = 96.0
+margin_top = 95.0
 margin_right = 1024.0
-margin_bottom = 183.0
+margin_bottom = 182.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequential with paralel animation"
 scene = "res://demos/nodes/SequenceWithParallel.tscn"
 
 [node name="SequentialAnParallel3" parent="Control" instance=ExtResource( 3 )]
-margin_top = 191.0
+margin_top = 190.0
 margin_right = 548.0
-margin_bottom = 278.0
+margin_bottom = 277.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequential with paralel animation - Backwards"
@@ -77,18 +77,18 @@ scene = "res://demos/nodes/SequenceWithParallelBackwards.tscn"
 
 [node name="ButtonCallbacks" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
-margin_top = 191.0
+margin_top = 190.0
 margin_right = 1024.0
-margin_bottom = 278.0
+margin_bottom = 277.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sequence animation and callbacks"
 scene = "res://demos/nodes/SequenceCallback.tscn"
 
 [node name="Group" parent="Control" instance=ExtResource( 3 )]
-margin_top = 286.0
+margin_top = 285.0
 margin_right = 548.0
-margin_bottom = 373.0
+margin_bottom = 372.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate Group"
@@ -96,18 +96,18 @@ scene = "res://demos/2d/Stagger.tscn"
 
 [node name="2DGrid" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
-margin_top = 286.0
+margin_top = 285.0
 margin_right = 1024.0
-margin_bottom = 373.0
+margin_bottom = 372.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Animate 2D Grid"
 scene = "res://demos/2d/2DGrid.tscn"
 
 [node name="3DRings" parent="Control" instance=ExtResource( 3 )]
-margin_top = 381.0
+margin_top = 380.0
 margin_right = 548.0
-margin_bottom = 468.0
+margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Rings"
@@ -115,18 +115,18 @@ scene = "res://demos/3d/Rings.tscn"
 
 [node name="3DBoxes" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
-margin_top = 381.0
+margin_top = 380.0
 margin_right = 1024.0
-margin_bottom = 468.0
+margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes"
 scene = "res://demos/3d/3DBoxes.tscn"
 
 [node name="3DBoxes - Backwards" parent="Control" instance=ExtResource( 3 )]
-margin_top = 476.0
+margin_top = 475.0
 margin_right = 548.0
-margin_bottom = 563.0
+margin_bottom = 562.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Boxes - Backwards"
@@ -134,9 +134,9 @@ scene = "res://demos/3d/3DBoxesReverse.tscn"
 
 [node name="3D Grid" parent="Control" instance=ExtResource( 3 )]
 margin_left = 556.0
-margin_top = 476.0
+margin_top = 475.0
 margin_right = 1024.0
-margin_bottom = 563.0
+margin_bottom = 562.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D Grid"

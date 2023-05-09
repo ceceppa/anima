@@ -23,6 +23,7 @@ enum STYLE {
 
 export (STYLE) var style = STYLE.PRIMARY setget set_button_style
 export (bool) var transparent = false setget set_transparent
+export (int) var icon_align := ALIGN_LEFT
 
 var COLORS := {
 	STYLE.PRIMARY: "#05445E",
