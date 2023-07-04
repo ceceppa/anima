@@ -61,3 +61,32 @@ func debug(what = "---"):
 	_data.__debug = what
 
 	return self
+
+
+func __get_source():
+	if _data.has("node"):
+		return _data.node
+	elif _data.has("grid"):
+		return _data.grid
+	elif _data.has("group"):
+		return _data.group
+	
+	return null
+
+func play():
+	Anima.begin_single_shot(__get_source()).then(_data).play()
+
+func play_with_delay(delay: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_with_delay(delay)
+
+func play_with_speed(speed: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_with_speed(speed)
+
+func play_backwards():
+	Anima.begin_single_shot(__get_source()).then(_data).play_backwards()
+
+func play_backwards_with_delay(delay: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_backwards_with_delay(delay)
+
+func play_backwards_with_speed(speed: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_backwards_with_speed(speed)
