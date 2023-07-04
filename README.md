@@ -28,7 +28,7 @@ The ready to install version is available [here](https://github.com/ceceppa/anim
 
 ## Documentation & Demo
 
-Check out [documentation](https://anima.ceceppa.me/docs/), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
+Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
 
 
 ## Differences between Anima and Godot Tween
