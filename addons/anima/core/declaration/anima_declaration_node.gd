@@ -5,8 +5,11 @@ var _data: Dictionary
 func _init(node: Node = null):
 	_data.node = node
 
-func _set_data(data: Dictionary) -> void:
-	_data = data
+func set_data(data: Dictionary):
+	for key in data.keys():
+		_data[key] = data[key]
+	
+	return self
 
 func _create_declaration_for_animation(data: Dictionary) -> AnimaDeclarationForAnimation:
 	var c:= AnimaDeclarationForAnimation.new()
@@ -124,3 +127,31 @@ func anima_rotate_z(z: float, pivot: int, duration = null) -> AnimaDeclarationFo
 
 func anima_shader_param(param_name: String, to_value, duration = null) -> AnimaDeclarationForProperty:
 	return _create_declaration_with_easing({ property = "shader_param:" + param_name, to = to_value, duration = duration })
+
+func __get_source():
+	if _data.has("node"):
+		return _data.node
+	elif _data.has("grid"):
+		return _data.grid
+	elif _data.has("group"):
+		return _data.group
+	
+	return null
+
+func play():
+	Anima.begin_single_shot(__get_source()).then(_data).play()
+
+func play_with_delay(delay: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_with_delay(delay)
+
+func play_with_speed(speed: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_with_speed(speed)
+
+func play_backwards():
+	Anima.begin_single_shot(__get_source()).then(_data).play_backwards()
+
+func play_backwards_with_delay(delay: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_backwards_with_delay(delay)
+
+func play_backwards_with_speed(speed: float):
+	Anima.begin_single_shot(__get_source()).then(_data).play_backwards_with_speed(speed)
