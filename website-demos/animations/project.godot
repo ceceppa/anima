@@ -1,0 +1,156 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "AnimaAnimationsUtils",
+"language": "GDScript",
+"path": "res://addons/anima/utils/animations.gd"
+}, {
+"base": "Reference",
+"class": "AnimaAwaitableAddChild",
+"language": "GDScript",
+"path": "res://addons/anima/core/deferred_add_child.gd"
+}, {
+"base": "Object",
+"class": "AnimaDeclarationBase",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_base.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": "AnimaDeclarationForAnimation",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_animation.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": "AnimaDeclarationForProperty",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_property.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": "AnimaDeclarationForRelativeProperty",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_relative_property.gd"
+}, {
+"base": "AnimaDeclarationNode",
+"class": "AnimaDeclarationGrid",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_grid.gd"
+}, {
+"base": "AnimaDeclarationNode",
+"class": "AnimaDeclarationGroup",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_group.gd"
+}, {
+"base": "Reference",
+"class": "AnimaDeclarationNode",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_node.gd"
+}, {
+"base": "Reference",
+"class": "AnimaDeclarationNodes",
+"language": "GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_nodes.gd"
+}, {
+"base": "Reference",
+"class": "AnimaEasing",
+"language": "GDScript",
+"path": "res://addons/anima/core/easings.gd"
+}, {
+"base": "Node",
+"class": "AnimaKeyframesEngine",
+"language": "GDScript",
+"path": "res://addons/anima/core/keyframes-engine.gd"
+}, {
+"base": "Node",
+"class": "AnimaNode",
+"language": "GDScript",
+"path": "res://addons/anima/core/anima_node.gd"
+}, {
+"base": "Reference",
+"class": "AnimaNodesProperties",
+"language": "GDScript",
+"path": "res://addons/anima/utils/node_properties.gd"
+}, {
+"base": "Node",
+"class": "AnimaPlayer",
+"language": "GDScript",
+"path": "res://addons/anima/core/player.gd"
+}, {
+"base": "Object",
+"class": "AnimaPropertyList",
+"language": "GDScript",
+"path": "res://addons/anima/utils/anima_properties_list.gd"
+}, {
+"base": "Reference",
+"class": "AnimaStrings",
+"language": "GDScript",
+"path": "res://addons/anima/utils/strings.gd"
+}, {
+"base": "Tween",
+"class": "AnimaTween",
+"language": "GDScript",
+"path": "res://addons/anima/core/tween.gd"
+}, {
+"base": "Reference",
+"class": "AnimaTweenUtils",
+"language": "GDScript",
+"path": "res://addons/anima/utils/tween_utils.gd"
+}, {
+"base": "Node",
+"class": "AnimaVisualNode",
+"language": "GDScript",
+"path": "res://addons/anima/core/visual_node.gd"
+} ]
+_global_script_class_icons={
+"AnimaAnimationsUtils": "",
+"AnimaAwaitableAddChild": "",
+"AnimaDeclarationBase": "",
+"AnimaDeclarationForAnimation": "",
+"AnimaDeclarationForProperty": "",
+"AnimaDeclarationForRelativeProperty": "",
+"AnimaDeclarationGrid": "",
+"AnimaDeclarationGroup": "",
+"AnimaDeclarationNode": "",
+"AnimaDeclarationNodes": "",
+"AnimaEasing": "",
+"AnimaKeyframesEngine": "",
+"AnimaNode": "",
+"AnimaNodesProperties": "",
+"AnimaPlayer": "",
+"AnimaPropertyList": "",
+"AnimaStrings": "",
+"AnimaTween": "",
+"AnimaTweenUtils": "",
+"AnimaVisualNode": ""
+}
+
+[application]
+
+config/name="Animations"
+run/main_scene="res://AnimationsPreview.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+ANIMA="*res://addons/anima/core/constants.gd"
+Anima="*res://addons/anima/core/anima.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
