@@ -312,7 +312,7 @@ anima_on_started(callback: Funcref | Callable, on_started_value, on_backwards_co
 
 <b>
   <sup>*</sup>
-</b> In Godot4 Funcref are called Callable.
+</b> In Godot4 you can pass the function name without using Callback
 <br />
 <b>
   <sup>**</sup>
@@ -929,3 +929,61 @@ Anima.Node($node).anima_size_z(0.8)
 ```
 
 
+### play
+
+Plays the group's animation
+
+#### Syntax
+
+```gdscript
+play()
+```
+
+### play\_with\_delay
+
+Plays the group's animation after the specified delay has occurred.
+
+#### Syntax
+
+```gdscript
+play_with_delay(delay: float)
+```
+
+#### Example
+
+```gdscript
+Anima.Node($Panel).anima_animation( "scale_y", 0.3 ).play_with_delay(0.5)
+```
+
+Plays the animation after 0.5 seconds.
+
+### play\_backwards
+
+Plays the group's animation backwards.
+
+#### Syntax
+
+```gdscript
+play_backwards()
+```
+
+### play\_backwards\_with\_delay
+
+Plays the group's animation backwards after the specified delay has occurred.
+
+#### Syntax
+
+```gdscript
+play_backwards_with_delay(delay: float)
+```
+
+
+#### Example
+
+```gdscript
+Anima.Node($Panel)
+    .anima_animation( "scale_y", 0.3 )
+    .play_backwards_with_delay(0.5)
+```
+
+Plays the group's animation backwards after 0.5 seconds.

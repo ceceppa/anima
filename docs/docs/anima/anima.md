@@ -10,18 +10,13 @@ The `Anima` class is the starting point for creating an animation, and it return
 
 - [begin(node, animation_name, is_single_shot)](#begin)
 - [begin_single_shot(node, animation_name)](#begin_single_shot)
-
-### Example
-
-```gdscript
-Anima.begin(self, "my animation").then(...)
-
-// or
-
-Anima.begin_single_shot(self, "my animation").then(...)
-```
+- [Node](/docs/anima/anima-node)
+- [Group](/docs/anima/anima-group)
+- [Grid](/docs/anima/anima-grid)
 
 ## Reference
+
+Both `begin` and `beghin_single_shot` can chain one or multiple animations.
 
 ### begin
 

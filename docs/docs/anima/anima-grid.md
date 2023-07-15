@@ -881,3 +881,62 @@ Anima.Node($node).anima_size_z(0.8)
 ```
 
 
+
+### play
+
+Plays the grid's animation
+
+#### Syntax
+
+```gdscript
+play()
+```
+
+### play\_with\_delay
+
+Plays the grid's animation after the specified delay has occurred.
+
+#### Syntax
+
+```gdscript
+play_with_delay(delay: float)
+```
+
+#### Example
+
+```gdscript
+Anima.Node($Panel).anima_animation( "scale_y", 0.3 ).play_with_delay(0.5)
+```
+
+Plays the animation after 0.5 seconds.
+
+### play\_backwards
+
+Plays the grid's animation backwards.
+
+#### Syntax
+
+```gdscript
+play_backwards()
+```
+
+### play\_backwards\_with\_delay
+
+Plays the grid's animation backwards after the specified delay has occurred.
+
+#### Syntax
+
+```gdscript
+play_backwards_with_delay(delay: float)
+```
+
+
+#### Example
+
+```gdscript
+Anima.Node($Panel)
+    .anima_animation( "scale_y", 0.3 )
+    .play_backwards_with_delay(0.5)
+```
+
+Plays the grid's animation backwards after 0.5 seconds.

@@ -18,6 +18,18 @@ Anima.Node(node: Node) -> AnimaDeclaration
 ## Example
 
 ```gdscript
+Anima.Node($Label).anima_animation_frames({
+        0: {
+            "translate:x": "-:size:x",
+        },
+        100: {
+            "translate:x": 0,
+        }
+    })
+)
+
+// or if you want to chain multiple animations:
+
 Anima.begin_single_shot(self) \
     .with(
         Anima.Node($Label).anima_animation_frames({
@@ -28,8 +40,11 @@ Anima.begin_single_shot(self) \
                 "translate:x": 0,
             }
         })
-    ) \
-    .play_with_delay(0.5)
+    ) \.
+    .then(
+        Anima.Node($Label).anima_fade_out()
+    )
+)
 ```
 
 ## Methods
@@ -890,3 +905,61 @@ anima_shader_param(parameter_name: String, to_value: Variant, duration: float)
 Anima.Node($node).anima_size_z(0.8)
 ```
 
+### play
+
+Plays the node's animation
+
+#### Syntax
+
+```gdscript
+play()
+```
+
+### play\_with\_delay
+
+Plays the node's animation after the specified delay has occurred.
+
+#### Syntax
+
+```gdscript
+play_with_delay(delay: float)
+```
+
+#### Example
+
+```gdscript
+Anima.Node($Panel).anima_animation( "scale_y", 0.3 ).play_with_delay(0.5)
+```
+
+Plays the animation after 0.5 seconds.
+
+### play\_backwards
+
+Plays the node's animation backwards.
+
+#### Syntax
+
+```gdscript
+play_backwards()
+```
+
+### play\_backwards\_with\_delay
+
+Plays the node's animation backwards after the specified delay has occurred.
+
+#### Syntax
+
+```gdscript
+play_backwards_with_delay(delay: float)
+```
+
+
+#### Example
+
+```gdscript
+Anima.Node($Panel)
+    .anima_animation( "scale_y", 0.3 )
+    .play_backwards_with_delay(0.5)
+```
+
+Plays the node's animation backwards after 0.5 seconds.

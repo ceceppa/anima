@@ -18,22 +18,9 @@ The latest version can be manually downloaded by cloning [this repo](https://git
 ## Example
 
 ```gdscript
-Anima.begin(self) \
-  .then(
-    Anima.Node($node) \
+  Anima.Node($node) \
       .anima_animation("tada", 0.7)
   ).play()
-```
-
-**NOTE** in Godot 4.0 you'll be able to wrap everything in parenthesis to avoid repeating "[variable].":
-
-```gdscript
-# Works on Godot 4.0 only:
-
-var anima = (
-  Anima.begin(self)
-  .then(Anima.Node($node).anima_animation("tada", 0.7))
-).play()
 ```
 
 ## Demo
