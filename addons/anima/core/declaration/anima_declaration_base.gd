@@ -39,10 +39,16 @@ func anima_initial_value(initial_value):
 
 func anima_on_started(target: Callable, on_started_value = null, on_backwards_completed_value = null):
 	if typeof(on_started_value) != TYPE_ARRAY:
-		on_started_value = [on_started_value]
+		if on_started_value == null:
+			on_started_value = []
+		else:
+			on_started_value = [on_started_value]
 
 	if typeof(on_backwards_completed_value) != TYPE_ARRAY:
-		on_backwards_completed_value = [on_backwards_completed_value]
+		if on_backwards_completed_value == null:
+			on_backwards_completed_value = []
+		else:
+			on_backwards_completed_value = [on_backwards_completed_value]
 
 	_data.on_started = { 
 		target = target,
