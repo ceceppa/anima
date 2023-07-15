@@ -82,10 +82,7 @@ func _ready():
 #			}
 #		}, 0.5)
 #	).play_with_delay(2)
-	Anima.begin(self) \
-		.with(
-			Anima.Node($Button).anima_animation("headshake", 1)
-		).play()
+	Anima.Node($Label).anima_animation("headshake", 1).play()
 
 var _temp
 

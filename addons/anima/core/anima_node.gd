@@ -383,7 +383,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 			data._wait_time += data.items_delay * node_index
 
 		if data.has("on_started"):
-			_anima_tween.add_event_frame(data, "on_started")
+			_anima_tween.add_event_frame(data, "on_started", data._wait_time)
 
 		if data.has("animation"):
 			var keyframes = data.animation
@@ -412,7 +412,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 		if data.has("on_completed"):
 			_has_on_completed = true
-			_anima_tween.add_event_frame(data, "on_completed")
+			_anima_tween.add_event_frame(data, "on_completed", data._wait_time + data.duration)
 
 	return duration
 
