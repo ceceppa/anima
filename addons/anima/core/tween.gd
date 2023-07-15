@@ -179,13 +179,13 @@ func _interpolate_method(source: Node, method: String, duration: float, tween_in
 	
 	add_child(source)
 
-func add_event_frame(animation_data: Dictionary, callback_key: String) -> void:
+func add_event_frame(animation_data: Dictionary, callback_key: String, delay: float) -> void:
 	if animation_data.has("__debug"):
 		printt("add_event_frame", animation_data)
 
 	var object := AnimaEvent.new(animation_data, callback_key, is_playing_backwards)
 
-	_tween.tween_callback(object.execute_callback).set_delay(animation_data._wait_time + animation_data.duration)
+	_tween.tween_callback(object.execute_callback).set_delay(delay)
 
 	add_child(object)
 
@@ -622,12 +622,12 @@ func reverse_animation(from_tween, default_duration: float):
 
 	for new_data in data:
 		if new_data.has("on_started"):
-			add_event_frame(new_data, "on_started")
+			add_event_frame(new_data, "on_started", animation_data._wait_time + animation_data.duration)
 
 		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
 
 		if new_data.has("on_completed"):
-			add_event_frame(new_data, "on_completed")
+			add_event_frame(new_data, "on_completed", animation_data._wait_time)
 
 #
 # In order to flip "nested relative" animations we need to calculate what all the
