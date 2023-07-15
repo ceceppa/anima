@@ -1,12 +1,12 @@
 # Anima
 
-Anima is an addon for Godot that makes it simple to create powerful and impressive UI animations
+Anima is an add-on for Godot that makes it simple to create powerful and impressive UI animations
 
 ## Introduction
 
 ![Example of animation created with anima](https://anima.ceceppa.me/anima.gif)
 
-If you've ever found creating UI animations in Godot using Tween to be a bit of a hassle, Anima is here to make your life easier. With just a few lines of code and a simple syntax, Anima allows you to create stunning animations with ease. And with a built-in library of 89 animations and 36 easings, plus the ability to add your own custom animations using a CSS-inspired syntax, the possibilities are endless.
+If you've ever found creating UI animations in Godot using Tween to be a bit of a hassle, Anima is here to make your life easier. With just a few lines of code and simple syntax, Anima allows you to create stunning animations with ease. And with a built-in library of 89 animations and 36 easings, plus the ability to add your own custom animations using a CSS-inspired syntax, the possibilities are endless.
 
 ### Table of Contents
 
@@ -23,8 +23,8 @@ This is a regular editor plugin. Copy the contents of addons/Anima into the same
 
 ## Godot4
 
-The development happens on the godot-4 branch of the this repository. So, any issue or pull request needs to be open there.
-The ready to install version is available [here](https://github.com/ceceppa/anima-godot-4)
+The development happens on the godot-4 branch of this repository. So, any issue or pull request needs to be open there.
+The ready-to-install version is available [here](https://github.com/ceceppa/anima-godot-4)
 
 ## Documentation & Demo
 
@@ -40,7 +40,7 @@ Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.
 | Use Curve as easing                            | yes                                                        | no            |
 | Set Pivot point                                | yes (2D Only)                                              | no            |
 | Create and reuse custom animations             | 89 built-in, more can be added programmatically            | No            |
-| Animate elements in group or grids             | yes                                                        | No            |
+| Animate elements in groups or grids             | yes                                                        | No            |
 | Multiple distance formulas for Grid animations | yes                                                        | no            |
 | Loop                                           | Infinite, Times, and delayed loops                         | Infinite only |
 | Animate relative values                        | yes                                                        | Only Godot 4  |
