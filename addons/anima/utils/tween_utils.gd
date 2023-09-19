@@ -95,8 +95,8 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 	else:
 		values_to_check = value
 
-	var regex := RegEx.new()
-	regex.compile("([\\.:\\/]*[a-zA-Z]*:[a-z]*:?[^\\s]+)")
+	var DYNAMIC_EXTRACTOR_REGEX := RegEx.new()
+	DYNAMIC_EXTRACTOR_REGEX.compile("(@?[\\.:\\/]*[a-zA-Z_]*:[a-z]*:?[^\\s\\)]+)")
 
 	var all_results := []
 	var root = animation_data.node
@@ -108,7 +108,7 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 		if single_formula == "":
 			single_formula = "0.0"
 
-		var results := regex.search_all(single_formula)
+		var results := DYNAMIC_EXTRACTOR_REGEX.search_all(single_formula)
 		var variables := []
 		var values := []
 
@@ -116,13 +116,17 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 
 		for index in results.size():
 			var rm: RegExMatch = results[index]
-			var info: Array = rm.get_string().split(":")
+			var regex_result = rm.get_string()
+			var info: Array = regex_result.split(":")
 			var source = info.pop_front()
 			var source_node: Node
+			var property: String = ":".join(PackedStringArray(info))
 
-			
 			if source == '' or source == '.':
 				source_node = animation_data.node
+			elif source[0] == '@':
+				source_node = animation_data.node
+				property = regex_result
 			else:
 				source_node = root.get_node(source)
 
@@ -131,16 +135,12 @@ static func calculate_dynamic_value(value, animation_data: Dictionary):
 
 				return value
 
-			var property: String = ":".join(PackedStringArray(info))
-
 			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data, property)
 			var variable := char(65 + index)
 
 			variables.push_back(variable)
 			values.push_back(property_value)
 
-#			single_formula.erase(rm.get_start(), rm.get_end() - rm.get_start())
-#			single_formula = single_formula.insert(rm.get_start(), variable)
 			single_formula = "%s%s%s" % [single_formula.substr(0, rm.get_start()), variable, single_formula.substr(rm.get_end())]
 
 		var expression := Expression.new()
