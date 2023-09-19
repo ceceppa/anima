@@ -1,14 +1,15 @@
 # Anima
 
-Anima is an addon for Godot that allows you to easily create powerful UI animations
+Anima is an add-on for the Godot game engine that simplifies the process of creating dynamic and impactful UI animations.
 
 ## Introduction
 
 ![Example of animation created with anima](https://anima.ceceppa.me/anima.gif)
 
-Creating UI animations in Godot using Tween can be a bit tedious, and Anima allows you doing that with few lines of code and a simple syntax.
-It has built-in about 89 animations and 33 easings, with the ability to easily add your own.
-You can also add your own with a CSS inspired syntax.
+Working with Godot's Tween to create UI animations can be quite challenging.
+However, Anima, an add-on for Godot, simplifies the process by allowing you to create animations using a clear and concise syntax with just a few lines of code.
+With 89 built-in animations and 33 easing options, Anima provides a vast array of options to choose from.
+Moreover, you can easily add your animations using a syntax similar to CSS, making it a convenient tool for developers.
 
 ### Table of Contents
 
@@ -23,15 +24,9 @@ You can also add your own with a CSS inspired syntax.
 
 This is a regular editor plugin. Copy the contents of addons/Anima into the same folder in your project, and activate it in your project settings.
 
-## Godot4
-
-The development happens on the godot-4 branch of the this repository. So, any issue or pull request needs to be open there.
-The ready to install version is available [here](https://github.com/ceceppa/anima-godot-4)
-
 ## Documentation & Demo
 
 Check out [documentation](https://anima.ceceppa.me/docs/), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
-
 
 ## Differences between Anima and Godot Tween
 
@@ -50,7 +45,25 @@ Check out [documentation](https://anima.ceceppa.me/docs/), [demo code](https://g
 | Dynamic values                                 | yes                                                        | no            |
 | CSS-Like animations                            | yes                                                        | no            |
 
-## The Visual Animation Builder
+## Example
+
+```gdscript
+var anima = Anima.Node($Node).anima_keyframes({
+    from = {
+        opacity = 0,
+        scale = Vector2(0.5, 0.5),
+    },
+    to = {
+        opacity = 1,
+        scale = Vector2.ONE
+    },
+    easing = Anima.EASING.EASE_OUT_BACK,
+})
+
+await anima.play()
+
+anima.play_reverse_with_delay(1)
+```
 
 ## Built-in animations
 
