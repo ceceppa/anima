@@ -90,7 +90,6 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 				node.global_position = position - node.offset
 		_:
 			pass
-#			printerr('Pivot point not handled yet')
 
 static func get_property_value(node: Node, animation_data: Dictionary, property = null):
 	if property == null:
@@ -174,6 +173,13 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 		node_property_name = property_name
 	elif rect_property_name in node:
 		node_property_name = rect_property_name
+	elif property_name == "@viewport_rect":
+		var rect = node.get_viewport_rect()
+		
+		if subkey == "x":
+			return rect.size.x
+		else:
+			return rect.size.y
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial
