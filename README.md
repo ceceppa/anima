@@ -26,7 +26,7 @@ This is a regular editor plugin. Copy the contents of addons/Anima into the same
 
 ## Documentation & Demo
 
-Check out [documentation](https://anima.ceceppa.me/docs/), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
+Check out [documentation](https://anima.ceceppa.me), [demo code](https://github.com/ceceppa/anima-demos) and [live examples](https://anima.ceceppa.me/demo).
 
 ## Differences between Anima and Godot Tween
 
