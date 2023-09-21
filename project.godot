@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Anima"
 run/main_scene="res://demos/DemosSelector.tscn"
-config/features=PackedStringArray("4.0")
+config/features=PackedStringArray("4.1")
 
 [autoload]
 
@@ -21,7 +21,7 @@ Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/anima/plugin.cfg")
+enabled=PackedStringArray("res://addons/anima/plugin.cfg", "res://addons/gut/plugin.cfg")
 
 [global]
 

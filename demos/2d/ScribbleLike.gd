@@ -12,28 +12,27 @@ func _ready():
 		var single_letter := Label.new()
 
 		single_letter.text = letter
+#		single_letter.add_theme_font_size_override("font_size", 92)
 
 		letter_container.add_child(single_letter)
 
 		container.add_child(letter_container)
 
-		letter_container.minimum_size = single_letter.size
+		letter_container.custom_minimum_size = single_letter.size
 
-	Anima.begin(self) \
-		super.then(
-			Anima.Nodes(container, 0.01) \
-				super.anima_animation_frames({
-					0: {
-						"translate:y": -40,
-						opacity = 0,
-					},
-					100: {
-						"translate:y": 0,
-						opacity = 1,
-						easing = "spring(1, 80, 8)"
-					},
-					"initial_values": {
-						opacity = 0,
-					},
-				}, 1) \
-		).play()
+	Anima.Group(container, 0.01) \
+		.anima_animation_frames({
+			0: {
+				"translate:y": -40,
+				"opacity": 0,
+			},
+			100: {
+				"translate:y": 0,
+				"opacity": 1,
+				"easing": "spring(1, 80, 8)"
+			},
+			"initial_values": {
+				opacity = 0,
+			},
+		}, 1) \
+		.play_with_speed(0.5)

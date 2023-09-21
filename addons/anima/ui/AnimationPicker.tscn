@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3 uid="uid://brxnmcufd6edq"]
+
+[ext_resource type="Script" path="res://addons/anima/ui/AnimationPicker.gd" id="1_3cmj5"]
+
+[node name="AnimationPicker" type="Window"]
+size = Vector2i(500, 500)
+visible = false
+always_on_top = true
+min_size = Vector2i(500, 500)
+script = ExtResource("1_3cmj5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabBar" type="TabBar" parent="VBoxContainer"]
+layout_mode = 2
+tab_count = 2
+tab_0/title = "Animations"
+tab_1/title = "Keyframes"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ControlContainer" type="CenterContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ControlTest" type="Label" parent="VBoxContainer/HBoxContainer/Control/ControlContainer"]
+layout_mode = 2
+text = "Anima"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(300, 2.08165e-12)
+layout_mode = 2
+
+[node name="ListContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/ScrollContainer"]
+layout_mode = 2
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

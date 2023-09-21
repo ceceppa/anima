@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://demos/components/Button.gd" id="2"]
 
 [node name="Button" type="Button"]
+text = "Button"
 script = ExtResource("2")
