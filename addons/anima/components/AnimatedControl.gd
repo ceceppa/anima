@@ -2,33 +2,47 @@
 extends Control
 class_name AnimaAnimatedController
 
-@export var tree_entered_animation := ""
-@export var tree_exiting_animation := ""
-@export var ready_animation := ""
-@export var focus_entered_animation := ""
-@export var focus_exited_animation := ""
-@export var mouse_entered_animation := ""
-@export var mouse_exited_animation := ""
+@export var _events: Array[Dictionary] = []
 
-func _ready():
-	if mouse_entered_animation:
-		mouse_entered.connect(_on_simple_event(mouse_entered_animation))
+func _enter_tree():
+	for event in _events:
+		var animation = event.event_data if event.has("event_data") else null
 
-	if mouse_exited_animation:
-		mouse_exited.connect(_on_simple_event(mouse_exited_animation))
-	
+		if animation:
+			connect(event.event_name, _on_simple_event(animation))
+
 func _draw():
-	draw_rect(get_rect(), Color.REBECCA_PURPLE)
-
-func _on_mouse_entered():
-	Anima.Node(self).anima_animation(mouse_entered_animation).play()
+	draw_rect(Rect2(Vector2(50, 50), Vector2(100, 100)), Color.REBECCA_PURPLE)
 
 func _on_simple_event(animation: String):
-	print(animation)
-
 	return func ():
-		print(animation)
 		Anima.Node(self).anima_animation(animation).play()
 
-func is_anima_animated_control():
-	return true
+func set_animated_events(events: Array[Dictionary]) -> void:
+	_events = events
+
+func get_animated_events() -> Array[Dictionary]:
+	return _events
+
+func set_animated_event_name_at(index: int, event_name: String) -> Array[Dictionary]:
+	_events[index].event_name = event_name
+
+	return _events
+
+func set_animated_event_data_at(index: int, data) -> Array[Dictionary]:
+	_events[index].event_data = data
+
+	return _events
+
+func set_animated_event(index: int, event_name: String, data: Dictionary):
+	_events[index] = { event_name = event_name, event_data = data }
+
+func add_new_event() -> Array[Dictionary]:
+	_events.push_back({})
+
+	return _events
+
+func remove_event_at(index: int) -> Array[Dictionary]:
+	_events.remove_at(index)
+
+	return _events

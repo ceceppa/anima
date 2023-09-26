@@ -21,3 +21,15 @@ func _exit_tree():
 	
 	remove_inspector_plugin(_anima_inspector_plugin)
 
+func _update_animated_events(node: Node, current_data: Array[Dictionary], events: Array[Dictionary]):
+	var undo_redo = get_undo_redo()
+
+	undo_redo.create_action('Updated Anima Control Events')
+	undo_redo.add_do_property(node, "__events", events)
+	undo_redo.add_undo_method(self, "_undo_update_animated_events", node, current_data)
+	undo_redo.commit_action()
+
+func _undo_update_animated_events(node: Node, previous_data):
+	node.set_animated_events(previous_data)
+
+	_anima_inspector_plugin.refresh_event_items()

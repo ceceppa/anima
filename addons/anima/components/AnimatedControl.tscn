@@ -10,5 +10,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5rqij")
-mouse_entered_animation = "pulse"
-mouse_exited_animation = "purze"
+_events = Array[Dictionary]([{
+"event_data": "swing",
+"event_name": "mouse_entered"
+}, {
+"event_data": "flash",
+"event_name": "mouse_exited"
+}])

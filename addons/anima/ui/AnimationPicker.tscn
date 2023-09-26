@@ -45,11 +45,33 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 92
 text = "Anima"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Animations"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Animations"]
 custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Animations/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_6myxi")
 
-[node name="ListContainer" type="VBoxContainer" parent="TabContainer/Animations/ScrollContainer"]
+[node name="ListContainer" type="VBoxContainer" parent="TabContainer/Animations/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Animations/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="UseAnimation" type="Button" parent="TabContainer/Animations/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "User Animation"
+
+[node name="CloseButton" type="Button" parent="TabContainer/Animations/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Close"
+
+[connection signal="pressed" from="TabContainer/Animations/VBoxContainer/HBoxContainer/UseAnimation" to="." method="_on_use_animation_pressed"]
+[connection signal="pressed" from="TabContainer/Animations/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

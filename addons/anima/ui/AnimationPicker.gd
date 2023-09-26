@@ -4,7 +4,11 @@ extends VBoxContainer
 @onready var List: VBoxContainer = find_child("ListContainer")
 @onready var DemoLabel: Label = find_child("DemoLabel")
 
+signal animation_selected(name: String)
+signal close_pressed
+
 var _anima: AnimaNode
+var _animation_name: String
 
 func _ready():
 	var animations = AnimaAnimationsUtils.get_available_animation_by_category()
@@ -58,6 +62,14 @@ func _on_close_requested():
 	hide()
 
 func _on_animation_button_pressed(animation_name: String):
+	_animation_name = animation_name
+
 	_anima.reset_and_clear()
 
 	await _anima.then( Anima.Node(DemoLabel).anima_animation(animation_name) ).play()
+
+func _on_use_animation_pressed():
+	animation_selected.emit(_animation_name)
+
+func _on_close_button_pressed():
+	close_pressed.emit()
