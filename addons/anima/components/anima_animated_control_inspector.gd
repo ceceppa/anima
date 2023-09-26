@@ -1,14 +1,18 @@
 @tool
 extends EditorInspectorPlugin
 
-var _animation_picker := preload("res://addons/anima/ui/AnimationPicker.tscn").instantiate()
+var _animation_picker := Window.new()
+var _animation_picker_content: VBoxContainer = preload("res://addons/anima/ui/AnimationPicker.tscn").instantiate()
 var _parent: EditorPlugin
 
 func _init(parent: EditorPlugin):
 	_parent = parent
 	
+	_animation_picker.add_child(_animation_picker_content)
 	_animation_picker.hide()
 	_parent.add_child(_animation_picker)
+
+	_animation_picker.close_requested.connect(_close_animation_picker)
 
 func _can_handle(object):
 	return object.has_method("is_anima_animated_control")
@@ -22,5 +26,7 @@ func _parse_begin(object):
 		add_custom_control(button)
 
 func _on_add_event_pressed():
-	_animation_picker.show()
-	prints("ciao", _animation_picker.visible, _animation_picker.position, _animation_picker.size)
+	_animation_picker.popup_centered(Vector2(1024, 768))
+
+func _close_animation_picker():
+	_animation_picker.hide()
