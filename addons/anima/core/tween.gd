@@ -122,6 +122,13 @@ func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMA
 	else:
 		property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
 
+	var meta_value: Array = animation_data.node.get_meta(ANIMA._INITIAL_STATE_META_KEY) if animation_data.node.has_meta(ANIMA._INITIAL_STATE_META_KEY) else []
+
+	if not meta_value.has(animation_data.property):
+		meta_value.push_back(animation_data.property)
+
+		animation_data.node.set_meta(ANIMA._INITIAL_STATE_META_KEY, meta_value)
+
 	if not property_data.has("property") and not property_data.has("callback"):
 #		printerr("property/callback missing or not recognised for the animation: ", animation_data.property)
 		return

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://nnsqkniyrq8k"]
+[gd_scene load_steps=3 format=3 uid="uid://nnsqkniyrq8k"]
 
 [ext_resource type="Script" path="res://addons/anima/ui/EventItem.gd" id="1_45vxs"]
+[ext_resource type="Texture2D" uid="uid://dkqfrypvtspad" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
 
 [node name="EventItem" type="HBoxContainer"]
 anchors_preset = 15
@@ -10,6 +11,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
 script = ExtResource("1_45vxs")
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 2
+tooltip_text = "Preview animation"
+icon = ExtResource("2_nfl0c")
+icon_alignment = 1
 
 [node name="OptionButton" type="OptionButton" parent="."]
 layout_mode = 2
@@ -42,6 +49,7 @@ text = "Skip"
 layout_mode = 2
 text = "X"
 
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_option_button_item_selected"]
 [connection signal="pressed" from="SelectAnimationButton" to="." method="_on_select_animation_button_pressed"]
 [connection signal="pressed" from="DeleteButton" to="." method="_on_delete_button_pressed"]

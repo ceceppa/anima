@@ -65,6 +65,7 @@ func refresh_event_items():
 		item.event_deleted.connect(_on_delete_event.bind(index))
 		item.select_animation.connect(_on_select_animation.bind(index))
 		item.event_selected.connect(_on_event_selected.bind(index))
+		item.preview_animation.connect(_on_preview_animation.bind(index))
 
 		if event.has("event_name"):
 			item.set_event_name(event.event_name)
@@ -74,7 +75,7 @@ func refresh_event_items():
 
 		_items_container.add_child(item)
 
-func _do_event(action: EventAction, param1 = null, param2 = null) -> void:
+func _perform_event(action: EventAction, param1 = null, param2 = null) -> void:
 	var previous: Array[Dictionary] = _selected_object.get_animated_events().duplicate()
 	var events: Array[Dictionary]
 	
@@ -98,19 +99,30 @@ func _on_select_animation(index: int) -> void:
 	_animation_picker.popup_centered(Vector2(1024, 768))
 
 func _on_add_event_pressed() -> void:
-	_do_event(EventAction.ADD)
+	_perform_event(EventAction.ADD)
 
 func _on_delete_event(index: int) -> void:
-	_do_event(EventAction.REMOVE, index)
+	_perform_event(EventAction.REMOVE, index)
 
 func _on_event_selected(name: String, index: int) -> void:
-	_do_event(EventAction.UPDATE_NAME, index, name)
+	_perform_event(EventAction.UPDATE_NAME, index, name)
 
 func _close_animation_picker():
 	_animation_picker.hide()
 
 func _on_animation_selected(name: String) -> void:
-	_do_event(EventAction.UPDATE_DATA, _selected_event_index, name)#
+	_perform_event(EventAction.UPDATE_DATA, _selected_event_index, name)#
 
 	_animation_picker.hide()
 
+func _on_preview_animation(index: int) -> void:
+	var event: Dictionary = _selected_object.get_animated_event_at(index)
+
+	if event.has("event_data"):
+		var anima := Anima.Node(_selected_object).anima_animation(event.event_data).play()
+
+		await anima.animation_completed
+
+		anima.reset_and_clear()
+
+		

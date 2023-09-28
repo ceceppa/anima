@@ -1,6 +1,5 @@
 @tool
 extends Control
-class_name AnimaAnimatedController
 
 @export var _events: Array[Dictionary] = []
 
@@ -23,6 +22,9 @@ func set_animated_events(events: Array[Dictionary]) -> void:
 
 func get_animated_events() -> Array[Dictionary]:
 	return _events
+
+func get_animated_event_at(index: int) -> Dictionary:
+	return _events[index] if _events.size() <= index else {}
 
 func set_animated_event_name_at(index: int, event_name: String) -> Array[Dictionary]:
 	_events[index].event_name = event_name

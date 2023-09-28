@@ -7,8 +7,6 @@ signal animation_completed
 signal loop_started
 signal loop_completed
 
-const INITIAL_STATE_META_KEY: String = "AnimaInitialStates"
-
 var _anima_tween := AnimaTween.new()
 
 var _timer := Timer.new()
@@ -212,12 +210,15 @@ func stop() -> AnimaNode:
 func stop_and_reset():
 	stop()
 	reset()
-	
+
+#
+# Reset the initial animated values
+#
 func reset():
 	var animation_data = get_animation_data()
 	
 	for data in animation_data:
-		var meta_value: Dictionary = data.node.get_meta(INITIAL_STATE_META_KEY) if data.node.has_meta(INITIAL_STATE_META_KEY) else {}
+		var meta_value: Array = data.node.get_meta(ANIMA._INITIAL_STATE_META_KEY) if data.node.has_meta(ANIMA._INITIAL_STATE_META_KEY) else []
 
 		for key in meta_value:
 			print(key)
@@ -369,12 +370,12 @@ func _setup_animation(data: Dictionary) -> float:
 		return 0.0
 
 	var node: Node = data.node
-	var meta_value: Dictionary = data.node.get_meta(INITIAL_STATE_META_KEY) if data.node.has_meta(INITIAL_STATE_META_KEY) else {}
-
-	if data.has("property") and not meta_value.has(data.property):
-		meta_value[data.property] = AnimaNodesProperties.get_property_value(node, data, data.property)
-
-		data.node.set_meta(INITIAL_STATE_META_KEY, meta_value)
+#	var meta_value: Dictionary = data.node.get_meta(INITIAL_STATE_META_KEY) if data.node.has_meta(INITIAL_STATE_META_KEY) else {}
+#
+#	if data.has("property") and not meta_value.has(data.property):
+#		meta_value[data.property] = AnimaNodesProperties.get_property_value(node, data, data.property)
+#
+#		data.node.set_meta(INITIAL_STATE_META_KEY, meta_value)
 
 	return _setup_node_animation(data)
 

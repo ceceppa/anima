@@ -94,6 +94,8 @@ const DEFAULT_DURATION := 0.7
 const DEFAULT_ITEMS_DELAY := 0.05
 const MINIMUM_DURATION := 0.000001
 
+const _INITIAL_STATE_META_KEY = "__anima_initial_state__"
+
 var _custom_animations := {}
 var _animations_list := []
 

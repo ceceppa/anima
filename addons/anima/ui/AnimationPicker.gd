@@ -66,7 +66,11 @@ func _on_animation_button_pressed(animation_name: String):
 
 	_anima.reset_and_clear()
 
-	await _anima.then( Anima.Node(DemoLabel).anima_animation(animation_name) ).play()
+	var anima := _anima.then( Anima.Node(DemoLabel).anima_animation(animation_name) ).play()
+
+	await anima.animation_completed
+
+	anima.reset_and_clear()
 
 func _on_use_animation_pressed():
 	animation_selected.emit(_animation_name)
