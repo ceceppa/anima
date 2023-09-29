@@ -216,12 +216,32 @@ func stop_and_reset():
 #
 func reset():
 	var animation_data = get_animation_data()
+	var nodes_to_reset: Array[Node]
 	
 	for data in animation_data:
-		var meta_value: Array = data.node.get_meta(ANIMA._INITIAL_STATE_META_KEY) if data.node.has_meta(ANIMA._INITIAL_STATE_META_KEY) else []
+		var node: Node = data.node
+
+		if not nodes_to_reset.has(node):
+			nodes_to_reset.push_front(node)
+
+	for node in nodes_to_reset:
+		if not node.has_meta(ANIMA._INITIAL_STATE_META_KEY):
+			continue
+
+		var meta_value: Dictionary = node.get_meta(ANIMA._INITIAL_STATE_META_KEY)
 
 		for key in meta_value:
-			print(key)
+			var value = meta_value[key]
+			var initial_value = value._initial_value
+
+			if value.has("key"):
+				node[value.property][value.key] = initial_value
+			elif value.has("subkey"):
+				node[value.property][value.key][value.subkey] = initial_value
+			else:
+#				var property = AnimaNodesProperties.map_property_to_godot_property(node, value.property)
+
+				node[value.property] = initial_value
 
 func reset_and_clear() -> void:
 	reset()
