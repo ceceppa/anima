@@ -238,10 +238,10 @@ func reset():
 				node[value.property][value.key] = initial_value
 			elif value.has("subkey"):
 				node[value.property][value.key][value.subkey] = initial_value
-			else:
-#				var property = AnimaNodesProperties.map_property_to_godot_property(node, value.property)
-
+			elif value.has("property"):
 				node[value.property] = initial_value
+
+		node.remove_meta(ANIMA._INITIAL_STATE_META_KEY)
 
 func reset_and_clear() -> void:
 	reset()

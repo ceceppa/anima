@@ -23,7 +23,7 @@ border_blend = true
 corner_detail = 1
 
 [node name="HeaderButton" type="Button"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 42)
 offset_right = 54.0
 offset_bottom = 54.0
 size_flags_horizontal = 3

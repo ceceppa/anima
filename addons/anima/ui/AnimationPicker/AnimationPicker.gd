@@ -79,9 +79,6 @@ func _on_animation_button_pressed(animation_name: String):
 	var anima := _anima.then( Anima.Node(DemoLabel).anima_animation(animation_name) ).play()
 
 	await anima.animation_completed
-	await get_tree().create_timer(1).timeout
-
-	anima.reset_and_clear()
 
 func _on_use_animation_pressed():
 	animation_selected.emit(_animation_name)

@@ -288,6 +288,7 @@ func clear_animations() -> void:
 
 	_callbacks = {}
 	_animation_data.clear()
+	_initial_values.clear()
 
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
