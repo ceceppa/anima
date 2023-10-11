@@ -5,7 +5,8 @@ const HEADER_BUTTON = preload("res://addons/anima/ui/AnimationPicker/HeaderButto
 const ANIMATION_BUTTON = preload("res://addons/anima/ui/AnimationPicker/AnimationButton.tscn")
 
 @onready var List: VBoxContainer = find_child("ListContainer")
-@onready var DemoLabel: Label = find_child("DemoLabel")
+@onready var DemoControl: Control = find_child("DemoControl")
+@onready var AnimationSpeed: LineEdit = find_child("AnimationSpeed")
 
 signal animation_selected(name: String)
 signal close_pressed
@@ -16,6 +17,8 @@ var _animation_name: String
 func _ready():
 	var animations = AnimaAnimationsUtils.get_available_animation_by_category()
 	var is_first_header := true
+
+	AnimationSpeed.set_text(str(ANIMA.DEFAULT_DURATION))
 
 	for group in animations:
 		var header: Button = _create_new_header(group)
@@ -39,7 +42,7 @@ func _ready():
 
 		is_first_header = false
 
-	_anima = Anima.begin(DemoLabel)
+	_anima = Anima.begin(DemoControl)
 
 func _create_new_header(animation: String) -> Button:
 	var button: Button = HEADER_BUTTON.instantiate()
@@ -76,7 +79,9 @@ func _on_animation_button_pressed(animation_name: String):
 
 	_anima.reset_and_clear()
 
-	var anima := _anima.then( Anima.Node(DemoLabel).anima_animation(animation_name) ).play()
+	var anima := _anima.then( 
+		Anima.Node(DemoControl).anima_animation(animation_name, AnimationSpeed.get_text().to_float())
+	).play()
 
 	await anima.animation_completed
 

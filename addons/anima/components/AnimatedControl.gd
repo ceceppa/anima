@@ -1,7 +1,19 @@
 @tool
 extends Control
+class_name AnimaAnimatedControl
 
 @export var _events: Array[Dictionary] = []
+
+var transform: Transform2D:
+	get:
+		return transform
+	set(value):
+		transform = value
+
+		queue_redraw()
+
+func _ready():
+	transform = get_transform()
 
 func _enter_tree():
 	for event in _events:
@@ -11,6 +23,7 @@ func _enter_tree():
 			connect(event.event_name, _on_simple_event(animation))
 
 func _draw():
+	draw_set_transform_matrix(transform)
 	draw_rect(Rect2(Vector2(50, 50), Vector2(100, 100)), Color.REBECCA_PURPLE)
 
 func _on_simple_event(animation: String):

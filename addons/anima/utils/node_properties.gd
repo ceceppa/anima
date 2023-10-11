@@ -335,7 +335,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				key = "z"
 			}
 		"skew:x":
-			if not node is Node2D:
+			if not "transform" in node:
 				return {}
 
 			return {
