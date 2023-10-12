@@ -10,6 +10,8 @@
 #
 class_name AnimaNodesProperties
 
+const ANIMA_PIVOT_APPLIED_META = "__anima_pivot_applied"
+
 static func get_position(node: Node):
 	if node is Control or node is Window:
 		return node.position
@@ -41,8 +43,10 @@ static func get_rotation(node: Node):
 static func set_2D_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
 
-	if node is Window:
-		pass
+	if node is Window or node.has_meta(ANIMA_PIVOT_APPLIED_META):
+		return
+
+	node.set_meta(ANIMA_PIVOT_APPLIED_META, true)
 
 	match pivot:
 		ANIMA.PIVOT.TOP_CENTER:
@@ -64,6 +68,11 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		ANIMA.PIVOT.CENTER:
 			if node is Control:
 				node.set_pivot_offset(size / 2)
+			else:
+				var position = node.position
+
+				node.offset = Vector2(size.x / 2, size.y / 2)
+				node.position = position - node.offset
 		ANIMA.PIVOT.BOTTOM_CENTER:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x / 2, size.y / 2))

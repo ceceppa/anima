@@ -225,23 +225,25 @@ func reset():
 			nodes_to_reset.push_front(node)
 
 	for node in nodes_to_reset:
-		if not node.has_meta(ANIMA._INITIAL_STATE_META_KEY):
-			continue
+		if node.has_meta(ANIMA._INITIAL_STATE_META_KEY):
+			var meta_value: Dictionary = node.get_meta(ANIMA._INITIAL_STATE_META_KEY)
 
-		var meta_value: Dictionary = node.get_meta(ANIMA._INITIAL_STATE_META_KEY)
+			for key in meta_value:
+				var value = meta_value[key]
+				var initial_value = value._initial_value
 
-		for key in meta_value:
-			var value = meta_value[key]
-			var initial_value = value._initial_value
+				if value.has("subkey"):
+					node[value.property][value.key][value.subkey] = initial_value
+				elif value.has("key"):
+					node[value.property][value.key] = initial_value
+				elif value.has("property"):
+					node[value.property] = initial_value
 
-			if value.has("key"):
-				node[value.property][value.key] = initial_value
-			elif value.has("subkey"):
-				node[value.property][value.key][value.subkey] = initial_value
-			elif value.has("property"):
-				node[value.property] = initial_value
+			node.remove_meta(ANIMA._INITIAL_STATE_META_KEY)
 
-		node.remove_meta(ANIMA._INITIAL_STATE_META_KEY)
+		for meta_key in node.get_meta_list():
+			if meta_key.begins_with("__anima_"):
+				node.remove_meta(meta_key)
 
 func reset_and_clear() -> void:
 	reset()

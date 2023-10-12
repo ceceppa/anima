@@ -5,7 +5,7 @@ extends Node
 
 signal animation_completed
 
-const VISIBILITY_STRATEGY_META_KEY = "__visibility_strategy"
+const VISIBILITY_STRATEGY_META_KEY = "__anima_visibility_strategy"
 
 var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "y", "position:y", "x"]
 

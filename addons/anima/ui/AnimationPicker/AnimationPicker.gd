@@ -5,8 +5,11 @@ const HEADER_BUTTON = preload("res://addons/anima/ui/AnimationPicker/HeaderButto
 const ANIMATION_BUTTON = preload("res://addons/anima/ui/AnimationPicker/AnimationButton.tscn")
 
 @onready var List: VBoxContainer = find_child("ListContainer")
-@onready var DemoControl: Control = find_child("DemoControl")
+@onready var LabelDemo: Control = find_child("LabelDemo")
+@onready var SpriteDemo: Sprite2D = find_child("SpriteDemo")
 @onready var AnimationSpeed: LineEdit = find_child("AnimationSpeed")
+
+var ActiveDemoNode: Node
 
 signal animation_selected(name: String)
 signal close_pressed
@@ -42,7 +45,12 @@ func _ready():
 
 		is_first_header = false
 
-	_anima = Anima.begin(DemoControl)
+	_anima = Anima.begin(self)
+	_on_item_rect_changed()
+
+	ActiveDemoNode = SpriteDemo
+	ActiveDemoNode.show()
+#	LabelDemo.modulate.a = 0
 
 func _create_new_header(animation: String) -> Button:
 	var button: Button = HEADER_BUTTON.instantiate()
@@ -80,7 +88,7 @@ func _on_animation_button_pressed(animation_name: String):
 	_anima.reset_and_clear()
 
 	var anima := _anima.then( 
-		Anima.Node(DemoControl).anima_animation(animation_name, AnimationSpeed.get_text().to_float())
+		Anima.Node(ActiveDemoNode).anima_animation(animation_name, AnimationSpeed.get_text().to_float())
 	).play()
 
 	await anima.animation_completed
@@ -90,3 +98,11 @@ func _on_use_animation_pressed():
 
 func _on_close_button_pressed():
 	close_pressed.emit()
+
+func _on_animation_speed_text_submitted(new_text):
+	_on_animation_button_pressed(_animation_name)
+
+func _on_item_rect_changed():
+	if SpriteDemo:
+		SpriteDemo.position = LabelDemo.position
+		SpriteDemo.offset = (SpriteDemo.get_rect().size / 2) - (SpriteDemo.get_rect().size - LabelDemo.get_rect().size) / 2

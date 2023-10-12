@@ -1,5 +1,13 @@
 class_name AnimaTweenUtils
 
+static func get_initial_and_relative_meta_keys(property: String) -> Dictionary:
+	var property_name_for_meta = property.replace(":", "_")
+
+	return {
+		initial = "__anima_initial_relative_value_" + property_name_for_meta,
+		relative = "__anima_last_relative_value_" + property_name_for_meta,
+	}
+
 static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 	var node: Node = animation_data.node
 	var from
@@ -14,11 +22,9 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		animation_data.erase('to')
 
 	#
-	# Godot4 doesn't like a meta_key containing the symbol :
+	# Godot4 doesn't like a meta_keys.initial containing the symbol :
 	#
-	var property_name_for_meta = animation_data.property.replace(":", "_")
-	var meta_key = "_initial_relative_value_" + property_name_for_meta
-	var meta_key_last_relative_position = "_last_relative_value_" + property_name_for_meta
+	var meta_keys = get_initial_and_relative_meta_keys(animation_data.property)
 
 	var calculated_from = null
 	
@@ -28,13 +34,13 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 	from = current_value
 
 	if relative:
-		if not node.has_meta(meta_key_last_relative_position):
-			node.set_meta(meta_key, current_value)
+		if not node.has_meta(meta_keys.relative):
+			node.set_meta(meta_keys.initial, current_value)
 
 			if calculated_from:
 				from += calculated_from
 		else:
-			var previous_end_position = node.get_meta(meta_key_last_relative_position)
+			var previous_end_position = node.get_meta(meta_keys.relative)
 
 			from = previous_end_position
 	elif calculated_from != null:
@@ -49,8 +55,8 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		# Because keyframes-translations are relative to the node initial position,
 		# while anima_position_relative are relative to the previous "position"
 		#
-		if relative and animation_data.has("_is_translation") and node.has_meta(meta_key):
-			start = node.get_meta(meta_key)
+		if relative and animation_data.has("_is_translation") and node.has_meta(meta_keys.initial):
+			start = node.get_meta(meta_keys.initial)
 
 		to = calculate_dynamic_value(animation_data.to, animation_data)
 		to = _maybe_calculate_relative_value(relative, to, start)
@@ -58,7 +64,7 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		to = current_value
 
 	if relative:
-		node.set_meta(meta_key_last_relative_position, to)
+		node.set_meta(meta_keys.relative, to)
 
 	var pivot = animation_data.pivot if animation_data.has("pivot") else ANIMA.PIVOT.CENTER
 	if not node is Node3D and not node is CanvasModulate:
