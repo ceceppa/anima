@@ -46,11 +46,11 @@ func _ready():
 		is_first_header = false
 
 	_anima = Anima.begin(self)
-	_on_item_rect_changed()
 
 	ActiveDemoNode = SpriteDemo
 	ActiveDemoNode.show()
-#	LabelDemo.modulate.a = 0
+	LabelDemo.modulate.a = 0
+	_on_item_rect_changed()
 
 func _create_new_header(animation: String) -> Button:
 	var button: Button = HEADER_BUTTON.instantiate()
@@ -105,4 +105,4 @@ func _on_animation_speed_text_submitted(new_text):
 func _on_item_rect_changed():
 	if SpriteDemo:
 		SpriteDemo.position = LabelDemo.position
-		SpriteDemo.offset = (SpriteDemo.get_rect().size / 2) - (SpriteDemo.get_rect().size - LabelDemo.get_rect().size) / 2
+		SpriteDemo.position += (SpriteDemo.get_rect().size / 2) - (SpriteDemo.get_rect().size - LabelDemo.get_rect().size) / 2

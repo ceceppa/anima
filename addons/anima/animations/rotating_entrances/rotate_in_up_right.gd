@@ -1,6 +1,6 @@
 var KEYFRAMES := {
 	0: {
-		rotation = -90,
+		rotation = deg_to_rad(-90),
 		opacity = 0,
 	},
 	100: {

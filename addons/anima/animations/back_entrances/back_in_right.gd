@@ -1,6 +1,6 @@
 var KEYFRAMES := {
 	0: {
-		"translate:x": ":size:x + 60",
+		"translate:x": 2000,
 		"scale": Vector3(0.7, 0.7, 0.7),
 		"opacity": 0.7,
 	},

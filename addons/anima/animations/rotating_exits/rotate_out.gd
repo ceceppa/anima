@@ -3,7 +3,7 @@ var KEYFRAMES := {
 		opacity = 1,
 	},
 	100: {
-		rotation = 200,
+		rotation = deg_to_rad(200),
 		opacity = 0,
 	},
 }

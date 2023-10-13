@@ -68,11 +68,6 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		ANIMA.PIVOT.CENTER:
 			if node is Control:
 				node.set_pivot_offset(size / 2)
-			else:
-				var position = node.position
-
-				node.offset = Vector2(size.x / 2, size.y / 2)
-				node.position = position - node.offset
 		ANIMA.PIVOT.BOTTOM_CENTER:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x / 2, size.y / 2))

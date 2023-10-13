@@ -3,7 +3,7 @@ var KEYFRAMES := {
 		opacity = 1,
 	},
 	100: {
-		rotation = 90,
+		rotation = deg_to_rad(90),
 		opacity = 0,
 	},
 	"pivot": ANIMA.PIVOT.BOTTOM_RIGHT

@@ -9,7 +9,7 @@ var KEYFRAMES := {
 		"opacity": 0.7
 	},
 	100: {
-		"translate:x": ":size:x * 2",
+		"translate:x": 2000,
 		"scale": Vector2(0.7, 0.7),
 		"opacity": 0.7
 	}

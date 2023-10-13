@@ -4,7 +4,8 @@ var KEYFRAMES := {
 	},
 	100: {
 		"translate:x": "-:size:x",
-		"skew:x": -30,
+		"skew:x": deg_to_rad(-30),
+		"opacity": 0
 	},
 	"easing": ANIMA.EASING.EASE_IN
 }

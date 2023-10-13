@@ -10,7 +10,7 @@ var KEYFRAMES := {
 	},
 	100: {
 		"opacity": 0,
-		"translate:y": "..:size:y + ..:position:y",
+		"translate:y": 2000,
 		"scale:y": 3
 	}
 }

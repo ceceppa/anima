@@ -7,7 +7,7 @@ var KEYFRAMES := {
 	100: {
 		"opacity": 0,
 		"translate:x": ":size:x",
-		"rotation": 120
+		"rotation": deg_to_rad(120)
 	}
 }
 
