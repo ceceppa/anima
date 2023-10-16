@@ -35,7 +35,7 @@ func test_simple_backwards():
 
 	assert_eq(node.position, Vector2(0, 100))
 
-	await get_tree().idle_frame
+	await get_tree().process_frame
 
 	# only the original tween and the timer should exists
 	assert_eq(anima.get_child_count(), 2)
@@ -78,7 +78,7 @@ func test_on_started_multiple_params():
 
 	var anima = Anima.begin_single_shot(self) \
 		.set_default_duration(0.15) \
-		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback_two_params", null, [42, "ciao"]) ) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(_on_callback_two_params, null, [42, "ciao"]) ) \
 		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)
@@ -101,7 +101,7 @@ func test_on_completed():
 
 	var anima = Anima.begin_single_shot(self) \
 		.set_default_duration(0.15) \
-		.then( Anima.Node(node).anima_fade_in(1).anima_on_completed(self, "_on_callback", null, "completed-backwards") ) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_completed(_on_callback, null, "completed-backwards") ) \
 		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)
@@ -124,7 +124,7 @@ func test_on_completed_multiple_params():
 
 	var anima = Anima.begin_single_shot(self) \
 		.set_default_duration(0.15) \
-		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(self, "_on_callback_two_params", null, [":)", "yay"]) ) \
+		.then( Anima.Node(node).anima_fade_in(1).anima_on_started(_on_callback_two_params, null, [":)", "yay"]) ) \
 		.play_backwards()
 
 	assert_ne(_on_callback_called_params, null)

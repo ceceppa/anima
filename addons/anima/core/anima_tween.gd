@@ -35,8 +35,8 @@ func _enter_tree():
 		_tween.set_parallel(true)
 		_tween.pause()
 
-		_tween.connect("loop_finished", _on_tween_completed)
-		_tween.connect("finished", _on_tween_completed)
+		_tween.loop_finished.connect(_on_tween_completed)
+		_tween.finished.connect(_on_tween_completed)
 
 func _exit_tree():
 	for child in get_children():
@@ -389,7 +389,7 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 func _on_tween_completed(_ignore = null) -> void:
 	_tween.stop()
 
-	emit_signal("animation_completed")
+	animation_completed.emit()
 
 func _on_node_tree_exiting(anima_item: Node) -> void:
 	anima_item.free()

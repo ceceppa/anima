@@ -1,5 +1,5 @@
 @tool
-extends Node
+class_name  Anima
 
 var _animations_list := []
 var _custom_animations := {}

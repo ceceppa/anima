@@ -1,8 +1,4 @@
 var KEYFRAMES := {
-	0: {
-		scale = Vector3.ONE,
-		"translate:y" = 0,
-	},
 	40: {
 		"scale": Vector3(0.45, 0.45, 0.45),
 		"opacity": 1,
@@ -11,7 +7,7 @@ var KEYFRAMES := {
 	},
 	100: {
 		"scale": Vector3(0.1, 0.1, 0.1),
-		"translate:y": "-:size:y",
+		"translate:y": 1000,
 		"opacity": 0,
 		"easing": [0.175, 0.885, 0.32, 1]
 	},

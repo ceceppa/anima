@@ -49,7 +49,8 @@ func _ready():
 	add_child(_timer)
 
 func init_node(node: Node):
-	_anima_tween.connect("animation_completed",Callable(self,'_on_all_tween_completed'))
+	_anima_tween.animation_completed.connect(_on_all_tween_completed)
+	_anima_reverse_tween.animation_completed.connect(_on_all_tween_completed)
 
 	add_child(_anima_tween)
 	add_child(_anima_reverse_tween)
@@ -770,8 +771,8 @@ func _maybe_play() -> void:
 		_do_play()
 
 func _on_all_tween_completed() -> void:
-	emit_signal("animation_completed")
-	emit_signal("loop_completed", _loop_count)
+	animation_completed.emit()
+	loop_completed.emit(_loop_count)
 
 	if _is_single_shot:
 		queue_free()

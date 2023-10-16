@@ -17,7 +17,6 @@ config/features=PackedStringArray("4.1")
 [autoload]
 
 ANIMA="*res://addons/anima/core/constants.gd"
-Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
