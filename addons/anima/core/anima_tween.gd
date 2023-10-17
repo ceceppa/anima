@@ -19,6 +19,7 @@ var _should_apply_initial_values := true
 var _initial_values := []
 var is_playing_backwards := false
 var _tween: Tween
+var _children_to_remove := []
 
 enum PLAY_MODE {
 	NORMAL,
@@ -78,7 +79,7 @@ func do_apply_initial_values() -> void:
 func set_apply_initial_values(when) -> void:
 	_apply_initial_values_on = when
 
-func add_animation_data(animation_data: Dictionary, play_mode := PLAY_MODE.NORMAL) -> void:
+func add_animation_data(animation_data: Dictionary) -> void:
 	var index: String
 
 	_animation_data.push_back(animation_data)
@@ -621,30 +622,20 @@ class AnimaEvent extends Node:
 
 		fn.callv(args)
 
-func reverse_animation(from_tween, default_duration: float):
-	var animation_data = from_tween.get_animation_data()
-	var animation_length = from_tween.get_duration()
-
+func reverse_animation(tween: AnimaTween, animation_length: float, overridden_default_duration: float):
 	clear_animations()
 
-	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
+	var data: Array = _flip_animations(tween.get_animation_data().duplicate(true), animation_length, overridden_default_duration)
 
 	for new_data in data:
-		if new_data.has("on_started"):
-			add_event_frame(new_data, "on_started", animation_data._wait_time + animation_data.duration)
-
-		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
-
-		if new_data.has("on_completed"):
-			add_event_frame(new_data, "on_completed", animation_data._wait_time)
+		add_animation_data(new_data)
 
 #
-# In order to flip "nested relative" animations we need to calculate what all the
-# property as it would be if the animation is played normally. Only then we can calculate
-# the correct relative positions, by also looking at the previous frames.
+# In order to flip nested relative animations we need to calculate the final value it would
+# have if played forwards. Then we can calculate the correct relative positions, by also looking at the previous frames.
 # Otherwise we would end up with broken animations when animating the same property more than
 # once
-func _flip_animations(data: Array, animation_length: float, default_duration: float) -> Array:
+func _flip_animations(data: Array, animation_length: float, overridden_default_duration: float) -> Array:
 	var new_data := []
 	var previous_frames := {}
 	var length: float = animation_length
@@ -656,7 +647,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 		var animation_data = animation.duplicate(true)
 
-		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
+		var duration: float = float(animation_data.duration) if animation_data.has('duration') else overridden_default_duration
 		var wait_time: float = animation_data._wait_time
 		var node = animation_data.node
 		var new_wait_time: float = length - duration - wait_time
@@ -669,13 +660,15 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 		if animation_data.has("initial_values"):
 			animation_data.erase("initial_values")
 
-		if not is_relative:
-			var temp = animation_data.to
+		var temp = animation_data.to
+		var meta_key: String = "__initial_" + node.name + "_" + str(animation_data.property) 
 
-			if animation_data.has("from"):
-				animation_data.to = animation_data.from
+		if animation_data.has("from"):
+			animation_data.to = animation_data.from
+		elif node.has_meta(meta_key):
+			animation_data.to = node.get_meta(meta_key)
 
-			animation_data.from = temp
+		animation_data.from = temp
 
 		animation_data._wait_time = max(ANIMA.MINIMUM_DURATION, new_wait_time)
 

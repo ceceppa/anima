@@ -43,6 +43,7 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 			var previous_end_position = node.get_meta(meta_keys.relative)
 
 			from = previous_end_position
+
 	elif calculated_from != null:
 		from = calculated_from
 

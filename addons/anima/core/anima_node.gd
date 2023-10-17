@@ -18,7 +18,7 @@ var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
-var _default_duration = ANIMA.DEFAULT_DURATION
+var _overridden_default_duration = ANIMA.DEFAULT_DURATION
 var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
 var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
@@ -85,7 +85,7 @@ func with(data) -> AnimaNode:
 		if _last_animation_duration > 0:
 			data.duration = _last_animation_duration
 		else:
-			data.duration = _default_duration
+			data.duration = _overridden_default_duration
 
 	if not data.has('_wait_time'):
 		data._wait_time = start_time
@@ -334,7 +334,7 @@ func _do_play() -> void:
 		_anima_reverse_tween.is_playing_backwards = true
 
 		if not _anima_reverse_tween.has_data():
-			_anima_reverse_tween.reverse_animation(_anima_tween, _default_duration)
+			_anima_reverse_tween.reverse_animation(_anima_tween, _total_animation_length, _overridden_default_duration)
 
 		tween = _anima_reverse_tween
 	else:
@@ -354,7 +354,7 @@ func _do_play() -> void:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 func set_default_duration(duration: float) -> AnimaNode:
-	_default_duration = duration
+	_overridden_default_duration = duration
 
 	return self
 
@@ -365,7 +365,7 @@ func set_apply_initial_values(when: int) -> AnimaNode:
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
-		data.duration = _default_duration
+		data.duration = _overridden_default_duration
 
 	if not data.has('property') and not data.has("animation"):
 		printerr('Please specify the property to animate or the animation to use!', data)

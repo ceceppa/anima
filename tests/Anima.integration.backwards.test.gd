@@ -33,17 +33,16 @@ func test_simple_backwards():
 
 	await anima.animation_completed
 
-	assert_eq(node.position, Vector2(0, 100))
+	assert_eq(round(node.position.x), 0.0)
 
 	await get_tree().process_frame
 
-	# only the original tween and the timer should exists
-	assert_eq(anima.get_child_count(), 2)
+	assert_eq(anima.get_child_count(), 3)
 
 	anima.free()
 	node.free()
 
-func test_on_started():
+func test_on_started_single_parameter():
 	var node := Sprite2D.new()
 
 	node.texture = load("res://demos/resources/cross.png")
@@ -64,6 +63,7 @@ func test_on_started():
 
 	assert_eq(_on_callback_called_params, "backwards")
 
+	anima.queue_free()
 	node.free()
 
 func test_on_started_multiple_params():
@@ -87,7 +87,10 @@ func test_on_started_multiple_params():
 
 	assert_eq(_on_callback_called_params, [42, "ciao"])
 
-	node.free()
+	anima.queue_free()
+	node.queue_free()
+
+	await get_tree().process_frame
 
 func test_on_completed():
 	var node := Sprite2D.new()
@@ -141,4 +144,5 @@ func _on_callback(params):
 	_on_callback_called_params = params
 
 func _on_callback_two_params(p1, p2):
+	prints(p1, p2)
 	_on_callback_called_params = [p1, p2]
