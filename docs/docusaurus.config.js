@@ -55,7 +55,7 @@ const config = {
         title: "Anima",
         logo: {
           alt: "Anima Logo",
-          src: "anima/img/logo.svg",
+          src: "/anima/img/logo.svg",
         },
         items: [
           {
@@ -65,7 +65,7 @@ const config = {
             label: "Docs",
           },
           {
-            to: "/tutorials/intro",
+            to: "/anima/tutorials/intro",
             position: "left",
             label: "Tutorials",
           },
@@ -89,11 +89,11 @@ const config = {
             items: [
               {
                 label: "Documentation",
-                to: "/docs/docs/intro",
+                to: "/anima/docs/intro",
               },
               {
                 label: "Tutorial",
-                to: "/docs/tutorial/fundamentals",
+                to: "/anima/tutorial/fundamentals",
               },
             ],
           },
