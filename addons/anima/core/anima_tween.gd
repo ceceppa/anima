@@ -27,6 +27,9 @@ enum PLAY_MODE {
 	LOOP_IN_CIRCLE
 }
 
+func _init(new_name: String):
+	name = new_name
+
 func _enter_tree():
 	var tree: SceneTree = get_tree()
 
@@ -169,6 +172,13 @@ func add_animation_data(animation_data: Dictionary) -> void:
 		Tween.TRANS_LINEAR,
 		animation_data._wait_time
 	)
+	
+	
+	if animation_data.has("on_started"):
+		_add_event_frame(animation_data, "on_started", animation_data._wait_time)
+
+	if animation_data.has("on_completed"):
+		_add_event_frame(animation_data, "on_completed", animation_data._wait_time + animation_data.duration)
 
 	if not node.is_connected("tree_exiting",Callable(self,"_on_node_tree_exiting")):
 		node.connect("tree_exiting",Callable(self,"_on_node_tree_exiting").bind(object))
@@ -188,7 +198,7 @@ func _interpolate_method(source: Node, method: String, duration: float, tween_in
 	
 	add_child(source)
 
-func add_event_frame(animation_data: Dictionary, callback_key: String, delay: float) -> void:
+func _add_event_frame(animation_data: Dictionary, callback_key: String, delay: float) -> void:
 	if animation_data.has("__debug"):
 		printt("add_event_frame", animation_data)
 
@@ -197,6 +207,9 @@ func add_event_frame(animation_data: Dictionary, callback_key: String, delay: fl
 	_tween.tween_callback(object.execute_callback).set_delay(delay)
 
 	add_child(object)
+
+func _test():
+	print("ciao")
 
 func _add_initial_values(animation_data: Dictionary) -> void:
 	if _animation_data.has("__debug"):
@@ -280,9 +293,9 @@ func stop() -> void:
 func clear_animations() -> void:
 	_tween.stop()
 	_tween.kill()
-	
-	if is_inside_tree():
-		_enter_tree()
+#
+#	if is_inside_tree():
+#		_enter_tree()
 
 	for child in get_children():
 		child.queue_free()
@@ -294,11 +307,6 @@ func clear_animations() -> void:
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
-
-func seek(value: float) -> void:
-#	_tween.custom_step(value)
-#	_tween.seek(value)
-	pass
 
 func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = ANIMA.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame') or not animation_data._is_first_frame:
@@ -604,6 +612,7 @@ class AnimaEvent extends Node:
 		var fn: Callable
 		var args: Array = []
 
+		prints("@@", "executing")
 		if _callback is Array:
 			fn = _callback[0]
 			args = _callback[1]
@@ -623,8 +632,6 @@ class AnimaEvent extends Node:
 		fn.callv(args)
 
 func reverse_animation(tween: AnimaTween, animation_length: float, overridden_default_duration: float):
-	clear_animations()
-
 	var data: Array = _flip_animations(tween.get_animation_data().duplicate(true), animation_length, overridden_default_duration)
 
 	for new_data in data:

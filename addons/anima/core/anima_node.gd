@@ -7,10 +7,10 @@ signal animation_completed
 signal loop_started
 signal loop_completed
 
-var _anima_tween := AnimaTween.new()
+var _anima_tween := AnimaTween.new("forward")
+var _anima_reverse_tween := AnimaTween.new("backward")
 
 var _timer := Timer.new()
-var _anima_reverse_tween := AnimaTween.new()
 var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
 
@@ -424,9 +424,6 @@ func _setup_node_animation(data: Dictionary) -> float:
 		if are_multiple_nodes:
 			data._wait_time += data.items_delay * node_index
 
-		if data.has("on_started"):
-			_anima_tween.add_event_frame(data, "on_started", data._wait_time)
-
 		if data.has("animation"):
 			var keyframes = data.animation
 
@@ -451,10 +448,6 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 		if are_multiple_nodes:
 			delay += data.items_delay
-
-		if data.has("on_completed"):
-			_has_on_completed = true
-			_anima_tween.add_event_frame(data, "on_completed", data._wait_time + data.duration)
 
 	return duration
 
