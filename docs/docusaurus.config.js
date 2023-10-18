@@ -55,7 +55,7 @@ const config = {
         title: "Anima",
         logo: {
           alt: "Anima Logo",
-          src: "img/logo.svg",
+          src: "anima/img/logo.svg",
         },
         items: [
           {
