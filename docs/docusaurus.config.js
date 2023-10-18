@@ -8,13 +8,14 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const config = {
   title: "Anima",
   tagline: "Animations are your friend",
-  url: "https://anima.ceceppa.me/",
-  baseUrl: "/docs/",
+  url: "https://anima.ceceppa.me",
+  baseUrl: "/anima/",
   onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "ceceppa",
   projectName: "anima",
+  trailingSlash: false,
   presets: [
     [
       "classic",
