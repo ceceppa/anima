@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Anima Tests
-        uses: ceceppa/godot-gut-ci@master
+        uses: ceceppa/godot-gut-ci@main
         with:
           godot_version: 4.1.2
           gut_params: -gdir=res://tests -gsuffix=.test.gd -gprefix=
