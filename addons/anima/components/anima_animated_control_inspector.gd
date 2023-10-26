@@ -1,8 +1,8 @@
 @tool
 extends EditorInspectorPlugin
 
-var _animation_picker_content: VBoxContainer = preload("res://addons/anima/ui/AnimationPicker.tscn").instantiate()
-var _event_item: HBoxContainer = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
+var _animation_picker_content: VBoxContainer = preload("res://addons/anima/ui/AnimationPicker/AnimationPicker.tscn").instantiate()
+var _event_item: VBoxContainer = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
 
 var _animation_picker := Window.new()
 var _items_container: VBoxContainer
