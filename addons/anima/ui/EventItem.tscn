@@ -1,10 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://nnsqkniyrq8k"]
+[gd_scene load_steps=4 format=3 uid="uid://nnsqkniyrq8k"]
 
 [ext_resource type="Script" path="res://addons/anima/ui/EventItem.gd" id="1_45vxs"]
-[ext_resource type="Texture2D" uid="uid://dr8jxaopcypfb" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
-[ext_resource type="Texture2D" uid="uid://dja8cku1bm0vi" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_qywrl"]
-[ext_resource type="Texture2D" uid="uid://dguho1ncutmbk" path="res://addons/anima/icons/AnimationPlayer.svg" id="3_si7m1"]
-[ext_resource type="Texture2D" uid="uid://dhkqdrs35qrn8" path="res://addons/anima/icons/Collapse.svg" id="5_tyu00"]
+[ext_resource type="Texture2D" uid="uid://dkqfrypvtspad" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
+[ext_resource type="Texture2D" uid="uid://omrilwyfeps" path="res://addons/anima/icons/Collapse.svg" id="5_tyu00"]
 
 [node name="EventItem" type="VBoxContainer"]
 anchors_preset = 15
@@ -42,7 +40,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Animation..."
-icon = ExtResource("3_si7m1")
 
 [node name="PlayButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
@@ -52,7 +49,6 @@ icon_alignment = 1
 
 [node name="SkipButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
-icon = ExtResource("3_qywrl")
 
 [node name="MoreButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true

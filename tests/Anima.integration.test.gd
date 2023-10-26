@@ -23,7 +23,7 @@ func test_simple_animation():
 
 	assert_eq(node.scale, Vector2(10, 10))
 
-	await get_tree().idle_frame
+	await get_tree().process_frame
 
 	assert_false(is_instance_valid(anima))
 

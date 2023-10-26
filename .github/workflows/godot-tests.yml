@@ -12,5 +12,5 @@ jobs:
       - name: Anima Tests
         uses: ceceppa/godot-gut-ci@master
         with:
-          godot_version: 3.5.1
+          godot_version: 4.1.2
           gut_params: -gdir=res://tests -gsuffix=.test.gd -gprefix=
