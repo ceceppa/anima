@@ -24,6 +24,7 @@ func test_simple_animation():
 	assert_eq(node.scale, Vector2(10, 10))
 
 	await get_tree().process_frame
+	await get_tree().process_frame
 
 	assert_false(is_instance_valid(anima))
 
@@ -150,7 +151,7 @@ func test_relative_x_animation() -> void:
 
 	node.free()
 
-func test_start_callback():
+func test_start_callback_no_params():
 	var node := Sprite2D.new()
 
 	node.texture = load("res://demos/resources/cross.png")
@@ -244,7 +245,8 @@ func test_on_completed_multiple_params():
 
 var _on_callback_called_params
 
-func _on_callback(params):
+func _on_callback(params = null):
+	print("called")
 	_on_callback_called_params = params
 
 func _on_callback_two_params(p1, p2):

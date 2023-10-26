@@ -612,7 +612,6 @@ class AnimaEvent extends Node:
 		var fn: Callable
 		var args: Array = []
 
-		prints("@@", "executing")
 		if _callback is Array:
 			fn = _callback[0]
 			args = _callback[1]
@@ -629,6 +628,7 @@ class AnimaEvent extends Node:
 		else:
 			fn = _callback
 
+		prints("@@", "executing", fn, args)
 		fn.callv(args)
 
 func reverse_animation(tween: AnimaTween, animation_length: float, overridden_default_duration: float):
