@@ -50,7 +50,7 @@ func test_strips_all_the_non_percentage_keys():
 		[50, "what"]: {
 			scale = 1,
 		},
-		ciao = {
+		"ciao": {
 			scale = 0
 		}
 	})

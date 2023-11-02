@@ -27,7 +27,7 @@ enum PLAY_MODE {
 	LOOP_IN_CIRCLE
 }
 
-func _init(new_name: String):
+func _init(new_name: String = "AnimaTween"):
 	name = new_name
 
 func _enter_tree():

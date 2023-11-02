@@ -13,7 +13,7 @@ func test_add_frames_returns_the_correct_length():
 			from = {
 				opacity = 0,
 			},
-			50: {
+			"50" = {
 				opacity = 1,
 			},
 			to = {

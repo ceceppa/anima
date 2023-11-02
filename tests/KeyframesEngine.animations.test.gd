@@ -40,7 +40,7 @@ func test_3d_boxes():
 
 	assert_eq_deep(output, [
 		{ node = box_scene, _wait_time = 0.0, duration = 1.75, property ="x", from = null, to = -28.117, relative = true, easing = ANIMA.EASING.EASE_OUT_QUAD },
-		{ node = box_scene, _wait_time = 0.0, duration = 5.0, property ="rotation:x", from = null, to = 360, relative = true, easing = ANIMA.EASING.EASE_IN_CIRC },
+		{ node = box_scene, _wait_time = 0.0, duration = 5.0, property ="rotation:x", from = null, to = TAU, relative = true, easing = ANIMA.EASING.EASE_IN_CIRC },
 		{ node = box_scene, _wait_time = 1.5, duration = 0.5, property ="shader_param:albedo", from = Color('#6b9eb1'), to = Color('#e63946'), initial_value = Color('#6b9eb1') },
 		{ node = box_scene, _wait_time = 3.25, duration = 1.75, property ="x", from = -28.117, to =  -25.619, relative = true, easing = ANIMA.EASING.EASE_IN_CIRC },
 		{ node = box_scene, _wait_time = 3.25, duration = 1.75, property ="shader_param:albedo", from = Color('#e63946'), to =  Color('#6b9eb1'), easing = ANIMA.EASING.EASE_IN_CIRC },

@@ -43,13 +43,16 @@ func simple(v1, v2, missing_string=''):
 	var tv1 = typeof(v1)
 	var tv2 = typeof(v2)
 
-	# print(tv1, '::', tv2, '   ', _strutils.types[tv1], '::', _strutils.types[tv2])
+	# prints(v1, v2, tv1, '::', tv2, '   ', _strutils.types[tv1], '::', _strutils.types[tv2], v1 == v2)
 	if(_should_compare_int_to_float and [TYPE_INT, TYPE_FLOAT].has(tv1) and [TYPE_INT, TYPE_FLOAT].has(tv2)):
 		result.are_equal = v1 == v2
 	elif([TYPE_STRING, TYPE_STRING_NAME].has(tv1) and [TYPE_STRING, TYPE_STRING_NAME].has(tv2)):
 		result.are_equal = v1 == v2
 	elif(_utils.are_datatypes_same(v1, v2)):
-		result.are_equal = v1 == v2
+		if tv1 == TYPE_FLOAT:
+			result.are_equal = round(v1 * 100) == round(v2 * 100)
+		else:
+			result.are_equal = v1 == v2
 
 		if(typeof(v1) == TYPE_DICTIONARY or typeof(v1) == TYPE_ARRAY):
 			var sub_result = _utils.DiffTool.new(v1, v2, _utils.DIFF.DEEP)
