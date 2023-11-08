@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxxkjttcw57ae"]
+
+[ext_resource type="Script" path="res://TestScene/AnimatedControl.gd" id="1_242tf"]
+
+[node name="AnimaAnimatedControl" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_242tf")
+_events = Array[Dictionary]([{
+"event_data": {
+"animation": "tada",
+"delay": 0,
+"duration": 0.7,
+"play_mode": 0
+},
+"event_name": "ready"
+}, {
+"event_data": {
+"animation": "fade_out",
+"delay": 0,
+"duration": 0.7,
+"play_mode": 0
+},
+"event_name": "tree_exiting"
+}])
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -39.5
+offset_top = -20.0
+offset_right = 39.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="CenterContainer"]
+layout_mode = 2
+text = "Press me"
+
+[connection signal="pressed" from="CenterContainer/Button" to="." method="_on_button_pressed"]

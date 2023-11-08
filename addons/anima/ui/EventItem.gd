@@ -8,7 +8,16 @@ signal preview_animation
 signal option_updated
 
 func _ready():
+	%Duration.text = str(ANIMA.DEFAULT_DURATION)
 	%Options.hide()
+
+func get_data() -> Dictionary:
+	return {
+		animation = %SelectAnimationButton.text,
+		play_mode = %PlayMode.selected,
+		delay = float(%Delay.text),
+		duration = float(%Duration.text),
+	}
 
 func set_event_name(name: String) -> void:
 	var items = %OptionButton.get_popup().item_count
@@ -23,6 +32,11 @@ func set_event_name(name: String) -> void:
 func set_data(data) -> void:
 	if typeof(data) == TYPE_STRING:
 		%SelectAnimationButton.set_text(data)
+	else:
+		%SelectAnimationButton.set_text(data.animation)
+		%PlayMode.select(data.play_mode)
+		%Delay.text = str(data.delay)
+		%Duration.text = str(data.duration)
 
 func _on_select_animation_button_pressed():
 	select_animation.emit()
@@ -54,7 +68,6 @@ func _on_remove_pressed():
 	event_deleted.emit()
 
 	queue_free()
-
 
 func _on_play_method_item_selected(index):
 	option_updated.emit()

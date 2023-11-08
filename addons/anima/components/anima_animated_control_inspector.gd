@@ -41,14 +41,19 @@ func _parse_begin(object):
 	_selected_object = object
 
 	var container := VBoxContainer.new()
-	var button := Button.new()
-	button.text = "Add event"
-	button.pressed.connect(_on_add_event_pressed)
-
+	
 	container.add_child(_items_container)
 
-	container.add_child(button)
-	
+	var button_container := CenterContainer.new()
+	var button = load("res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn").instantiate()
+	button.text = "  Add event  "
+	button.icon = load("res://addons/anima/icons/Add.svg")
+
+	button.pressed.connect(_on_add_event_pressed)
+
+	button_container.add_child(button)
+	container.add_child(button_container)
+
 	refresh_event_items()
 	add_custom_control(container)
 
@@ -66,7 +71,8 @@ func refresh_event_items():
 		item.select_animation.connect(_on_select_animation.bind(index))
 		item.event_selected.connect(_on_event_selected.bind(index))
 		item.preview_animation.connect(_on_preview_animation.bind(index))
-		item.option_updated.connect(_on_option_updated.bind(index))
+
+		item.option_updated.connect(_on_option_updated.bind(index, item))
 
 		if event.has("event_name"):
 			item.set_event_name(event.event_name)
@@ -76,7 +82,7 @@ func refresh_event_items():
 
 		_items_container.add_child(item)
 
-func _perform_event(action: EventAction, param1 = null, param2 = null) -> void:
+func _perform_event(action: EventAction, param1 = null, param2 = null, should_refresh := true) -> void:
 	var previous: Array[Dictionary] = _selected_object.get_animated_events().duplicate()
 	var events: Array[Dictionary]
 	
@@ -90,7 +96,8 @@ func _perform_event(action: EventAction, param1 = null, param2 = null) -> void:
 		EventAction.UPDATE_DATA:
 			events = _selected_object.set_animated_event_data_at(param1, param2)
 
-	refresh_event_items()
+	if should_refresh:
+		refresh_event_items()
 
 	_anima_editor_plugin._update_animated_events(_selected_object, previous, events)
 
@@ -112,7 +119,7 @@ func _close_animation_picker():
 	_animation_picker.hide()
 
 func _on_animation_selected(name: String) -> void:
-	_perform_event(EventAction.UPDATE_DATA, _selected_event_index, name)#
+	_perform_event(EventAction.UPDATE_DATA, _selected_event_index, { animation = name, delay = 0, duration = ANIMA.DEFAULT_DURATION, play_mode = 0 })
 
 	_animation_picker.hide()
 
@@ -120,12 +127,24 @@ func _on_preview_animation(index: int) -> void:
 	var event: Dictionary = _selected_object.get_animated_event_at(index)
 
 	if event.has("event_data"):
-		var anima := Anima.Node(_selected_object).anima_animation(event.event_data).play()
+		var anima_node := Anima.Node(_selected_object)
+		var event_data = event.event_data
+		var anima: AnimaNode
+
+		if event_data is String:
+			anima = anima_node.anima_animation(event_data).play()
+		else:
+			var animation := anima_node.anima_animation(event_data.animation, event_data.duration)
+
+			if event_data.play_mode == 0:
+				anima = animation.play_with_delay(event_data.delay)
+			else:
+				anima = animation.play_backwards_with_delay(event_data.delay)
 
 		await anima.animation_completed
 
 		anima.reset_and_clear()
 
-func _on_option_updated(index: int) -> void:
-	pass
+func _on_option_updated(index: int, event_item) -> void:
+	_perform_event(EventAction.UPDATE_DATA, index, event_item.get_data(), false)
 

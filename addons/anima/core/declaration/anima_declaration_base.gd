@@ -2,6 +2,7 @@ extends Object
 class_name AnimaDeclarationBase
 
 var _data := {}
+var _is_single_shot := true
 
 enum PlayAction {
 	PLAY,
@@ -72,11 +73,15 @@ func anima_on_completed(target: Callable, on_completed_value = null, on_backward
 		backwards_value = on_backwards_completed_value
 	}
 
+func as_reusable():
+	_is_single_shot = false
+	
+	return self
+
 func debug(what = "---"):
 	_data.__debug = what
 
 	return self
-
 
 func __get_source():
 	if _data.has("node"):
@@ -89,7 +94,8 @@ func __get_source():
 	return null
 
 func _do_play(action: PlayAction, param = null) -> AnimaNode:
-	var anima := Anima.begin_single_shot(__get_source()).then(_data)
+	var anima := Anima.begin(__get_source()).then(_data)
+	anima.set_single_shot(_is_single_shot)
 
 	match action:
 		PlayAction.PLAY:

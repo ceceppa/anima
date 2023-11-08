@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/anima/ui/AnimationPicker/AnimationPicker.gd" id="1_cyqje"]
 [ext_resource type="PackedScene" uid="uid://hrxmgulob80r" path="res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn" id="2_6r4ts"]
-[ext_resource type="Texture2D" uid="uid://cu23cv5pjsa0t" path="res://addons/anima/resources/anima-preview.png" id="2_pk6n6"]
+[ext_resource type="Texture2D" uid="uid://bxufb8w78e7ja" path="res://addons/anima/resources/anima-preview.png" id="2_pk6n6"]
 [ext_resource type="PackedScene" uid="uid://0luo7c2dwb4l" path="res://addons/anima/ui/AnimationPicker/CTASecondaryButton.tscn" id="3_qvnfb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4yg3m"]
@@ -126,6 +126,7 @@ text = "0.7"
 alignment = 2
 
 [node name="ControlWarning" type="MarginContainer" parent="TabContainer/Animations/Control"]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -190,24 +191,12 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CTAButton" parent="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_6r4ts")]
+[node name="UseAnimation" parent="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_6r4ts")]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Use"
 
-[node name="UseAnimation" type="Button" parent="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-text = "User Animation"
-
-[node name="CloseButton" type="Button" parent="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Close"
-
-[node name="CTAButton2" parent="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("3_qvnfb")]
+[node name="CloseButton" parent="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("3_qvnfb")]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Close"
@@ -218,21 +207,5 @@ layout_mode = 2
 
 [connection signal="item_rect_changed" from="." to="." method="_on_item_rect_changed"]
 [connection signal="text_submitted" from="TabContainer/Animations/Control/Panel/MarginContainer/HBoxContainer/AnimationSpeed" to="." method="_on_animation_speed_text_submitted"]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/HeaderButton" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/HeaderButton" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19695" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19695" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19700" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19700" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19705" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19705" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19711" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19711" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19717" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19717" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19732" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19732" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19746" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19746" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19751" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19751" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19757" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19757" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19763" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19763" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19768" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19768" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19773" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19773" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19778" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19778" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19780" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19780" method="_on_toggled" flags=18]
-[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19790" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@19790" method="_on_toggled" flags=18]
 [connection signal="pressed" from="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer/UseAnimation" to="." method="_on_use_animation_pressed"]
 [connection signal="pressed" from="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

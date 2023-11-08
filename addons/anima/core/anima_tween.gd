@@ -290,9 +290,9 @@ func stop() -> void:
 func clear_animations() -> void:
 	_tween.stop()
 	_tween.kill()
-#
-#	if is_inside_tree():
-#		_enter_tree()
+
+	if is_inside_tree():
+		_enter_tree()
 
 	for child in get_children():
 		child.queue_free()
