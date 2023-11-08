@@ -208,9 +208,6 @@ func _add_event_frame(animation_data: Dictionary, callback_key: String, delay: f
 
 	add_child(object)
 
-func _test():
-	print("ciao")
-
 func _add_initial_values(animation_data: Dictionary) -> void:
 	if _animation_data.has("__debug"):
 		prints("_add_initial_values", animation_data.node, animation_data.initial_values)
@@ -628,7 +625,6 @@ class AnimaEvent extends Node:
 		else:
 			fn = _callback
 
-		prints("@@", "executing", fn, args)
 		fn.callv(args)
 
 func reverse_animation(tween: AnimaTween, animation_length: float, overridden_default_duration: float):

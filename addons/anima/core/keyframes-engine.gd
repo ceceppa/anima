@@ -191,6 +191,7 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			if pivot:
 				frame_data.pivot = pivot
 
+
 			if initial_values.has(property) and not initial_values_applied.has(property):
 				frame_data.initial_value = initial_values[property]
 
@@ -201,7 +202,7 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 				frame_data._is_translation = true
 				frame_data.relative = true
 			elif property == "opacity":
-				frame_data.easing = null
+				frame_data.erase("easing")
 
 			var property_value = AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property)
 			var property_type = typeof(property_value)

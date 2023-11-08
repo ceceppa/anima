@@ -144,5 +144,4 @@ func _on_callback(params):
 	_on_callback_called_params = params
 
 func _on_callback_two_params(p1, p2):
-	prints(p1, p2)
 	_on_callback_called_params = [p1, p2]

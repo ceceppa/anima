@@ -25,7 +25,7 @@ func test_parse_only_to_animation():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = null, to = 1, duration = 3.0, _wait_time = 0.0, easing = null }
+		{ node = node, property = "opacity", from = null, to = 1, duration = 3.0, _wait_time = 0.0 }
 	])
 
 	node.free()
@@ -44,7 +44,7 @@ func test_parse_simple_from_to_animation():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 0.0, easing = null }
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 0.0 }
 	])
 
 	node.free()
@@ -65,7 +65,7 @@ func test_parse_all_the_properties():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 0.0, easing = null },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 0.0 },
 		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0 }
 	])
 
@@ -94,10 +94,10 @@ func test_parse_all_the_percentage():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 0.75, _wait_time = 0.0, easing = null },
-		{ node = node, property = "opacity", from = 1, to = 0, duration = 0.75, _wait_time = 0.75, easing = null },
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 0.75, _wait_time = 1.5, easing = null },
-		{ node = node, property = "opacity", from = 1, to = 0, duration = 0.75, _wait_time = 2.25, easing = null },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 0.75, _wait_time = 0.0 },
+		{ node = node, property = "opacity", from = 1, to = 0, duration = 0.75, _wait_time = 0.75 },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 0.75, _wait_time = 1.5 },
+		{ node = node, property = "opacity", from = 1, to = 0, duration = 0.75, _wait_time = 2.25 },
 	])
 
 	node.free()
@@ -124,7 +124,7 @@ func test_handles_missing_properties_in_frames():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 1.5, _wait_time = 0.0, easing = null },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 1.5, _wait_time = 0.0 },
 		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0 },
 
 		{ node = node, property = "x", from = 100, to = -20, duration = 0.75, _wait_time = 1.5 },
@@ -153,7 +153,7 @@ func test_ignores_single_keys_only_present_in_from():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 0.0, easing = null },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 0.0 },
 		{ node = node, property = "x", from = 100, to = -20, duration = 0.75, _wait_time = 1.5 },
 	])
 	
@@ -218,7 +218,7 @@ func test_adds_the_animation_wait_time():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = null, to = 1, duration = 3.0, _wait_time = 42.0, easing = null }
+		{ node = node, property = "opacity", from = null, to = 1, duration = 3.0, _wait_time = 42.0 }
 	])
 
 	node.free()
@@ -243,7 +243,7 @@ func test_should_set_easing_for_relevant_frames():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 42.0, easing = ANIMA.EASING.EASE_OUT_BACK },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 3.0, _wait_time = 42.0 },
 		{ node = node, property = "x", from = -100, to = 0, duration = 1.5, _wait_time = 43.5, easing = ANIMA.EASING.EASE_IN_BACK }
 	])
 
@@ -360,9 +360,9 @@ func test_applies_the_global_initial_values():
 		})
 
 	assert_eq_deep(output, [
-		{ node = node, property = "opacity", from = 0, to = 1, duration = 1.5, _wait_time = 0.0, initial_value = 0, easing = null },
+		{ node = node, property = "opacity", from = 0, to = 1, duration = 1.5, _wait_time = 0.0, initial_value = 0 },
 		{ node = node, property = "scale", from = Vector2.ZERO, to = Vector2.ONE, duration = 3.0, _wait_time = 0.0 },
-		{ node = node, property = "opacity", from = 1, to = 0, duration = 1.5, _wait_time = 1.5, easing = null },
+		{ node = node, property = "opacity", from = 1, to = 0, duration = 1.5, _wait_time = 1.5 },
 	])
 	
 	node.free()
