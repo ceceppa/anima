@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://nnsqkniyrq8k"]
+[gd_scene load_steps=8 format=3 uid="uid://nnsqkniyrq8k"]
 
 [ext_resource type="Script" path="res://addons/anima/ui/EventItem.gd" id="1_45vxs"]
 [ext_resource type="Texture2D" uid="uid://dkqfrypvtspad" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
-[ext_resource type="Texture2D" uid="uid://omrilwyfeps" path="res://addons/anima/icons/Collapse.svg" id="5_tyu00"]
+[ext_resource type="Texture2D" uid="uid://behgw0jgthtrm" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_tewmk"]
+[ext_resource type="Texture2D" uid="uid://bbwti30umytri" path="res://addons/anima/icons/Closed.svg" id="4_gxxe1"]
+[ext_resource type="PackedScene" uid="uid://hrxmgulob80r" path="res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn" id="5_ooait"]
+[ext_resource type="Texture2D" uid="uid://bsywhtcd2weda" path="res://addons/anima/icons/Remove.svg" id="6_h1gix"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnnwg"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 1)
 
 [node name="EventItem" type="VBoxContainer"]
 anchors_preset = 15
@@ -48,26 +54,46 @@ icon = ExtResource("2_nfl0c")
 icon_alignment = 1
 
 [node name="SkipButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+toggle_mode = true
+icon = ExtResource("3_tewmk")
 
 [node name="MoreButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
-icon = ExtResource("5_tyu00")
+icon = ExtResource("4_gxxe1")
 
-[node name="Options" type="GridContainer" parent="."]
+[node name="Options" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rnnwg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="MarginContainer" type="MarginContainer" parent="Options/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Grid" type="GridContainer" parent="Options/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 12
 columns = 2
 
-[node name="Label" type="Label" parent="Options"]
+[node name="Label" type="Label" parent="Options/VBoxContainer/MarginContainer/Grid"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Play method"
 
-[node name="OptionButton" type="OptionButton" parent="Options"]
+[node name="PlayMethod" type="OptionButton" parent="Options/VBoxContainer/MarginContainer/Grid"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 item_count = 2
@@ -77,21 +103,43 @@ popup/item_0/id = 0
 popup/item_1/text = "Backwards"
 popup/item_1/id = 1
 
-[node name="Label2" type="Label" parent="Options"]
+[node name="Label2" type="Label" parent="Options/VBoxContainer/MarginContainer/Grid"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Delay (seconds):"
 
-[node name="LineEdit" type="LineEdit" parent="Options"]
+[node name="Delay" type="LineEdit" parent="Options/VBoxContainer/MarginContainer/Grid"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "0"
-alignment = 2
 
-[node name="Label3" type="Label" parent="Options"]
+[node name="Label3" type="Label" parent="Options/VBoxContainer/MarginContainer/Grid"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "Duration (seconds):"
+
+[node name="Duration" type="LineEdit" parent="Options/VBoxContainer/MarginContainer/Grid"]
+layout_mode = 2
+text = "0"
+
+[node name="CenterContainer" type="CenterContainer" parent="Options/VBoxContainer"]
+layout_mode = 2
+
+[node name="Remove" parent="Options/VBoxContainer/CenterContainer" instance=ExtResource("5_ooait")]
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+text = "Remove"
+icon = ExtResource("6_h1gix")
+
+[node name="Label" type="Label" parent="Options/VBoxContainer"]
+layout_mode = 2
 
 [connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]
 [connection signal="pressed" from="HBoxContainer/SelectAnimationButton" to="." method="_on_select_animation_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/MoreButton" to="." method="_on_more_button_pressed"]
+[connection signal="toggled" from="HBoxContainer/SkipButton" to="." method="_on_skip_button_toggled"]
+[connection signal="toggled" from="HBoxContainer/MoreButton" to="." method="_on_more_button_toggled"]
+[connection signal="item_selected" from="Options/VBoxContainer/MarginContainer/Grid/PlayMethod" to="." method="_on_play_method_item_selected"]
+[connection signal="text_changed" from="Options/VBoxContainer/MarginContainer/Grid/Delay" to="." method="_on_delay_text_changed"]
+[connection signal="text_changed" from="Options/VBoxContainer/MarginContainer/Grid/Duration" to="." method="_on_duration_text_changed"]
+[connection signal="pressed" from="Options/VBoxContainer/CenterContainer/Remove" to="." method="_on_remove_pressed"]

@@ -16,4 +16,4 @@ _events = Array[Dictionary]([{
 }, {
 "event_data": "flash",
 "event_name": "mouse_exited"
-}, {}, {}])
+}])

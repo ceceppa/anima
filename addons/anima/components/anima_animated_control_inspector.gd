@@ -66,6 +66,7 @@ func refresh_event_items():
 		item.select_animation.connect(_on_select_animation.bind(index))
 		item.event_selected.connect(_on_event_selected.bind(index))
 		item.preview_animation.connect(_on_preview_animation.bind(index))
+		item.option_updated.connect(_on_option_updated.bind(index))
 
 		if event.has("event_name"):
 			item.set_event_name(event.event_name)
@@ -125,4 +126,6 @@ func _on_preview_animation(index: int) -> void:
 
 		anima.reset_and_clear()
 
-		
+func _on_option_updated(index: int) -> void:
+	pass
+
