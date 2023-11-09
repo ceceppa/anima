@@ -1,11 +1,14 @@
 @tool
 extends VBoxContainer
 
+var EVENT_PICKER = preload("res://addons/anima/ui/NodeEventPicker/NodeEventPicker.tscn")
+
 signal event_deleted
 signal select_animation
 signal event_selected(name: String)
 signal preview_animation
 signal option_updated
+signal select_node_event
 
 func _ready():
 	%Duration.text = str(ANIMA.DEFAULT_DURATION)
@@ -77,3 +80,6 @@ func _on_delay_text_changed(new_text):
 
 func _on_duration_text_changed(new_text):
 	option_updated.emit()
+
+func _on_on_started_button_pressed():
+	select_node_event.emit()

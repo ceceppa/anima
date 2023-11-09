@@ -65,7 +65,6 @@ icon = ExtResource("4_gxxe1")
 
 [node name="Options" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rnnwg")
 
@@ -122,6 +121,42 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "0.7"
 
+[node name="HSeparator2" type="HSeparator" parent="Options/VBoxContainer"]
+layout_mode = 2
+
+[node name="EventsContaienr" type="MarginContainer" parent="Options/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Grid" type="GridContainer" parent="Options/VBoxContainer/EventsContaienr"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="Label" type="Label" parent="Options/VBoxContainer/EventsContaienr/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "On Animation start"
+
+[node name="OnStartedButton" type="Button" parent="Options/VBoxContainer/EventsContaienr/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "none"
+
+[node name="Label2" type="Label" parent="Options/VBoxContainer/EventsContaienr/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "On Animation completed"
+
+[node name="OnCompletedButton" type="Button" parent="Options/VBoxContainer/EventsContaienr/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "none"
+
 [node name="CenterContainer" type="CenterContainer" parent="Options/VBoxContainer"]
 layout_mode = 2
 
@@ -142,4 +177,5 @@ layout_mode = 2
 [connection signal="item_selected" from="Options/VBoxContainer/MarginContainer/Grid/PlayMode" to="." method="_on_play_method_item_selected"]
 [connection signal="text_changed" from="Options/VBoxContainer/MarginContainer/Grid/Delay" to="." method="_on_delay_text_changed"]
 [connection signal="text_changed" from="Options/VBoxContainer/MarginContainer/Grid/Duration" to="." method="_on_duration_text_changed"]
+[connection signal="pressed" from="Options/VBoxContainer/EventsContaienr/Grid/OnStartedButton" to="." method="_on_on_started_button_pressed"]
 [connection signal="pressed" from="Options/VBoxContainer/CenterContainer/Remove" to="." method="_on_remove_pressed"]

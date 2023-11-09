@@ -11,13 +11,14 @@ func get_name():
 
 func _enter_tree():
 	add_autoload_singleton("ANIMA", 'res://addons/anima/core/constants.gd')
-#	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
 
 	add_inspector_plugin(_anima_inspector_plugin)
 
+func _ready():
+	_anima_inspector_plugin.set_godot_theme(get_editor_interface().get_base_control().theme)
+
 func _exit_tree():
 	remove_autoload_singleton('ANIMA')
-	remove_autoload_singleton('Anima')
 	
 	remove_inspector_plugin(_anima_inspector_plugin)
 

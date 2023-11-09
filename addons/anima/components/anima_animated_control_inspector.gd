@@ -3,8 +3,11 @@ extends EditorInspectorPlugin
 
 var _animation_picker_content: VBoxContainer = preload("res://addons/anima/ui/AnimationPicker/AnimationPicker.tscn").instantiate()
 var _event_item: VBoxContainer = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
+var _event_picker_content: GridContainer = preload("res://addons/anima/ui/NodeEventPicker/NodeEventPicker.tscn").instantiate()
 
-var _animation_picker := Window.new()
+var _animation_picker_window := Window.new()
+var _event_picker_window := Window.new()
+
 var _items_container: VBoxContainer
 var _selected_object
 var _anima_editor_plugin: EditorPlugin
@@ -18,15 +21,23 @@ enum EventAction {
 }
 
 func _init(parent: EditorPlugin):
-	_animation_picker.add_child(_animation_picker_content)
-	_animation_picker.hide()
-	
 	_anima_editor_plugin = parent
-	_anima_editor_plugin.add_child(_animation_picker)
 
-	_animation_picker_content.connect("close_pressed", _close_animation_picker)
+	_animation_picker_window.add_child(_animation_picker_content)
+	_animation_picker_window.hide()
+	_anima_editor_plugin.add_child(_animation_picker_window)
+
 	_animation_picker_content.connect("animation_selected", _on_animation_selected)
-	_animation_picker.close_requested.connect(_close_animation_picker)
+
+	_animation_picker_content.close_pressed.connect(_close_window.bind(_animation_picker_window))
+	_animation_picker_window.close_requested.connect(_close_window.bind(_animation_picker_window))
+
+	_event_picker_window.add_child(_event_picker_content)
+	_event_picker_window.hide()
+	_anima_editor_plugin.add_child(_event_picker_window)
+
+#	_event_picker_window.close_pressed.connect(_close_window.bind(_event_picker_window))
+	_event_picker_window.close_requested.connect(_close_window.bind(_event_picker_window))
 
 func _can_handle(object):
 	return object.has_method("get_animated_events")
@@ -71,6 +82,7 @@ func refresh_event_items():
 		item.select_animation.connect(_on_select_animation.bind(index))
 		item.event_selected.connect(_on_event_selected.bind(index))
 		item.preview_animation.connect(_on_preview_animation.bind(index))
+		item.select_node_event.connect(_on_select_node_event.bind(index))
 
 		item.option_updated.connect(_on_option_updated.bind(index, item))
 
@@ -104,7 +116,7 @@ func _perform_event(action: EventAction, param1 = null, param2 = null, should_re
 func _on_select_animation(index: int) -> void:
 	_selected_event_index = index
 
-	_animation_picker.popup_centered(Vector2(1024, 768))
+	_animation_picker_window.popup_centered(Vector2(1024, 768))
 
 func _on_add_event_pressed() -> void:
 	_perform_event(EventAction.ADD)
@@ -115,13 +127,13 @@ func _on_delete_event(index: int) -> void:
 func _on_event_selected(name: String, index: int) -> void:
 	_perform_event(EventAction.UPDATE_NAME, index, name)
 
-func _close_animation_picker():
-	_animation_picker.hide()
+func _close_window(window: Window):
+	window.hide()
 
 func _on_animation_selected(name: String) -> void:
 	_perform_event(EventAction.UPDATE_DATA, _selected_event_index, { animation = name, delay = 0, duration = ANIMA.DEFAULT_DURATION, play_mode = 0 })
 
-	_animation_picker.hide()
+	_animation_picker_window.hide()
 
 func _on_preview_animation(index: int) -> void:
 	var event: Dictionary = _selected_object.get_animated_event_at(index)
@@ -148,3 +160,8 @@ func _on_preview_animation(index: int) -> void:
 func _on_option_updated(index: int, event_item) -> void:
 	_perform_event(EventAction.UPDATE_DATA, index, event_item.get_data(), false)
 
+func set_godot_theme(theme: Theme) -> void:
+	ANIMA.set_godot_theme(theme)
+
+func _on_select_node_event(index: int) -> void:
+	_event_picker_window.popup_centered(Vector2(1024, 768))

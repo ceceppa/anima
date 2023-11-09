@@ -98,6 +98,7 @@ const _INITIAL_STATE_META_KEY = "__anima_initial_state__"
 
 var _custom_animations := {}
 var _animations_list := []
+var _godot_theme: Theme
 
 func get_animations_list() -> Array:
 	return _animations_list
@@ -110,3 +111,12 @@ func get_custom_animations() -> Dictionary:
 
 func add_custom_animation(name: String, frames: Dictionary) -> void:
 	_custom_animations[name] = frames
+
+func set_godot_theme(theme: Theme) -> void:
+	_godot_theme = theme
+
+func get_node_icon(name: String) -> Texture:
+	if not _godot_theme:
+		return
+
+	return _godot_theme.get_icon(name, "EditorIcon")
