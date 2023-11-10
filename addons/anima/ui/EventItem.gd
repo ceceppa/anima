@@ -8,7 +8,7 @@ signal select_animation
 signal event_selected(name: String)
 signal preview_animation
 signal option_updated
-signal select_node_event
+signal select_node_event(name: String)
 
 func _ready():
 	%Duration.text = str(ANIMA.DEFAULT_DURATION)
@@ -40,6 +40,13 @@ func set_data(data) -> void:
 		%PlayMode.select(data.play_mode)
 		%Delay.text = str(data.delay)
 		%Duration.text = str(data.duration)
+
+func set_events_data(data: Dictionary) -> void:
+	if data.has("on_started"):
+		find_child("OnStartedButton").text = data.on_started.name + "(" + ", ".join(data.on_started.args) + ")"
+
+	if data.has("on_completed"):
+		find_child("OnCompletedButton").text = data.on_completed.name + "(" + ", ".join(data.on_completed.args) + ")"
 
 func _on_select_animation_button_pressed():
 	select_animation.emit()
@@ -82,4 +89,7 @@ func _on_duration_text_changed(new_text):
 	option_updated.emit()
 
 func _on_on_started_button_pressed():
-	select_node_event.emit()
+	select_node_event.emit("on_started")
+
+func _on_on_completed_button_pressed():
+	select_node_event.emit("on_completed")

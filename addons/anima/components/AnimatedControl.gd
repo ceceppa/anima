@@ -4,6 +4,9 @@ class_name AnimaAnimatedControl
 
 @export var _events: Array[Dictionary] = []
 
+signal animation_completed
+signal animation_event_completed(name: String)
+
 var anima := Anima.begin(self)
 var _can_exit := true
 var _exit_data: Dictionary
@@ -22,9 +25,9 @@ func _enter_tree():
 				_can_exit = false
 				_exit_data = data
 			else:
-				connect(event.event_name, _on_simple_event(data))
+				connect(event.event_name, _on_simple_event(event.event_name, data))
 
-func _on_simple_event(data: Dictionary, can_ignore_animations := true):
+func _on_simple_event(event_name: String, data: Dictionary, can_ignore_animations := true):
 	return func ():
 		if can_ignore_animations and _ignore_animations:
 			return
@@ -43,6 +46,11 @@ func _on_simple_event(data: Dictionary, can_ignore_animations := true):
 			anima.play()
 		else:
 			anima.play_backwards()
+
+		await anima.animation_completed
+		
+		animation_completed.emit()
+		animation_event_completed.emit(event_name)
 
 func set_animated_events(events: Array[Dictionary]) -> void:
 	_events = events
@@ -82,10 +90,18 @@ func _notification(what):
 			if !_can_exit:
 				_ignore_animations = true
 
-				var fn = _on_simple_event(_exit_data, false)
+				var fn = _on_simple_event("tree_exiting", _exit_data, false)
 
 				fn.call()
 
 				await anima.animation_completed
 
 				get_tree().quit()
+
+func set_on_event_data(index: int, anima_event_name: String, data: Dictionary) -> Array[Dictionary]:
+	if not _events[index].has("events"):
+		_events[index].events = {}
+
+	_events[index].events[anima_event_name] = data
+
+	return _events

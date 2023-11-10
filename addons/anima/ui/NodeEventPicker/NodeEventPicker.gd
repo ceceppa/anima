@@ -2,9 +2,11 @@
 extends VBoxContainer
 
 signal close_pressed
+signal event_selected(data: Dictionary)
 
 var _start_node: Node 
 var _search_text: String
+var _anima_event_name: String
 
 enum EventType {
 	EVENT,
@@ -12,16 +14,15 @@ enum EventType {
 	PROPERTY
 }
 
-func _ready():
-	populate(self)
-
-func populate(root_node: Node):
+func populate(root_node: Node, event_name: String):
 	_start_node = root_node
+	_anima_event_name = event_name
 
 	_retrieves_list_of_nodes()
 
 	%SearchField.clear()
 	%SearchField.grab_focus()
+	%CallbackOptions.hide()
 
 	var root: TreeItem = %NodesList.get_root()
 	root.select(0)
@@ -68,7 +69,6 @@ func _on_nodes_list_item_selected() -> void:
 	
 	_add_node_options(root, "Call method", EventType.EVENT, node.get_method_list())
 	_add_node_options(root, "Trigger signal", EventType.EVENT, node.get_signal_list())
-#	_add_node_options(root, "Set property", EventType.PROPERTY, node.get_property_list())
 
 func _add_node_options(root: TreeItem, name: String, type: EventType, items: Array) -> void:
 	var parent_item: TreeItem = %EventsList.create_item(root)
@@ -87,19 +87,24 @@ func _add_node_options(root: TreeItem, name: String, type: EventType, items: Arr
 	parent_item.set_icon(0, ANIMA.get_theme_icon(icon))
 
 	for item in items:
-		if item.name.begins_with("_") or not _is_visible(%SearchEventsList, item.name):
+		if not _is_visible(%SearchEventsList, item.name):
 			continue
 
 		var tree_item = %EventsList.create_item(parent_item)
 		var item_name = item.name
 		
+		var args := []
 		if item.has("args"):
-			item_name = item_name + "(" + ", ".join(item.args) + ")"
+			for arg in item.args:
+				args.push_back(arg.name)
+
+			item_name = item_name + "(" + ", ".join(args) + ")"
 
 		tree_item.set_text(0, item_name)
 		tree_item.set_meta("event", {
-			name = item,
+			name = item.name,
 			type = type,
+			args = item.args
 		})
 
 func _on_search_field_text_changed(new_text):
@@ -109,4 +114,52 @@ func _on_search_events_list_text_changed(new_text):
 	_on_nodes_list_item_selected()
 
 func _on_cta_cancel_pressed():
+	close_pressed.emit()
+
+func _on_events_list_item_selected():
+	var selected_item: TreeItem = %EventsList.get_selected()
+	var event = selected_item.get_meta("event")
+
+	%CallbackOptions.visible = event.args.size() > 0
+
+	for arg in event.args:
+		_add_callback_arg(arg)
+
+func _add_callback_arg(arg) -> void:
+	var label := Label.new()
+	var value := LineEdit.new()
+
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.set_text(arg.name)
+
+	value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	%CallbackArgs.add_child(label)
+	%CallbackArgs.add_child(value)
+
+func _on_cta_confirm_pressed():
+	var selected_item: TreeItem = %EventsList.get_selected()
+
+	if not selected_item:
+		return
+
+	var data = selected_item.get_meta("event")
+
+	var args = data.args.duplicate()
+	data.args = []
+
+	for index in args.size():
+		var arg = args[index]
+		var line_edit: LineEdit = %CallbackArgs.get_child(2 * index + 1)
+		var value = line_edit.text
+	
+		match arg.type:
+			TYPE_INT:
+				value = int(value)
+			TYPE_FLOAT:
+				value = float(value)
+		
+		data.args.push_back(value)
+
+	event_selected.emit(_anima_event_name, data)
 	close_pressed.emit()

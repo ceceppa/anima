@@ -1,6 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://0luo7c2dwb4l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lfqp5"]
+content_margin_left = 24.0
+content_margin_right = 24.0
 bg_color = Color(1, 1, 1, 1)
 border_width_left = 1
 border_width_top = 1
@@ -13,6 +15,8 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w56w5"]
+content_margin_left = 24.0
+content_margin_right = 24.0
 bg_color = Color(0.901961, 0.901961, 0.901961, 1)
 border_width_left = 1
 border_width_top = 1

@@ -81,8 +81,18 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 hide_root = true
 
-[node name="Options" type="GridContainer" parent="HBoxContainer/VBoxContainer2"]
+[node name="CallbackOptions" type="MarginContainer" parent="HBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 24
+
+[node name="CallbackArgs" type="GridContainer" parent="HBoxContainer/VBoxContainer2/CallbackOptions"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -100,4 +110,6 @@ text = "Cancel"
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/SearchField" to="." method="_on_search_field_text_changed"]
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/NodesList" to="." method="_on_nodes_list_item_selected"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer2/MarginContainer/HBoxContainer/SearchEventsList" to="." method="_on_search_events_list_text_changed"]
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer2/ScrollCotaniner/EventsList" to="." method="_on_events_list_item_selected"]
+[connection signal="pressed" from="HBoxContainer2/CTAConfirm" to="." method="_on_cta_confirm_pressed"]
 [connection signal="pressed" from="HBoxContainer2/CTACancel" to="." method="_on_cta_cancel_pressed"]

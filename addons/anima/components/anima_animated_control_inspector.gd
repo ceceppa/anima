@@ -1,9 +1,9 @@
 @tool
 extends EditorInspectorPlugin
 
-var _animation_picker_content: VBoxContainer = preload("res://addons/anima/ui/AnimationPicker/AnimationPicker.tscn").instantiate()
-var _event_item: VBoxContainer = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
-var _event_picker_content: GridContainer = preload("res://addons/anima/ui/NodeEventPicker/NodeEventPicker.tscn").instantiate()
+var _animation_picker_content = preload("res://addons/anima/ui/AnimationPicker/AnimationPicker.tscn").instantiate()
+var _event_item = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
+var _event_picker_content = preload("res://addons/anima/ui/NodeEventPicker/NodeEventPicker.tscn").instantiate()
 
 var _animation_picker_window := Window.new()
 var _event_picker_window := Window.new()
@@ -17,7 +17,8 @@ enum EventAction {
 	ADD,
 	REMOVE,
 	UPDATE_NAME,
-	UPDATE_DATA
+	UPDATE_DATA,
+	UPDATE_ON_EVENT,
 }
 
 func _init(parent: EditorPlugin):
@@ -36,7 +37,8 @@ func _init(parent: EditorPlugin):
 	_event_picker_window.hide()
 	_anima_editor_plugin.add_child(_event_picker_window)
 
-	_event_picker_window.close_pressed.connect(_close_window.bind(_event_picker_window))
+	_event_picker_content.close_pressed.connect(_close_window.bind(_event_picker_window))
+	_event_picker_content.event_selected.connect(_on_node_event_selected)
 	_event_picker_window.close_requested.connect(_close_window.bind(_event_picker_window))
 
 func _can_handle(object):
@@ -92,6 +94,9 @@ func refresh_event_items():
 		if event.has("event_data"):
 			item.set_data(event.event_data)
 
+		if event.has("events"):
+			item.set_events_data(event.events)
+
 		_items_container.add_child(item)
 
 func _perform_event(action: EventAction, param1 = null, param2 = null, should_refresh := true) -> void:
@@ -107,6 +112,8 @@ func _perform_event(action: EventAction, param1 = null, param2 = null, should_re
 			events = _selected_object_animated_container.set_animated_event_name_at(param1, param2)
 		EventAction.UPDATE_DATA:
 			events = _selected_object_animated_container.set_animated_event_data_at(param1, param2)
+		EventAction.UPDATE_ON_EVENT:
+			events = _selected_object_animated_container.set_on_event_data(_selected_event_index, param1, param2)
 
 	if should_refresh:
 		refresh_event_items()
@@ -163,6 +170,10 @@ func _on_option_updated(index: int, event_item) -> void:
 func set_godot_theme(theme: Theme) -> void:
 	ANIMA.set_godot_theme(theme)
 
-func _on_select_node_event(index: int) -> void:
+func _on_select_node_event(event_name: String, index: int) -> void:
+	_selected_event_index = index
 	_event_picker_window.popup_centered(Vector2(1024, 768))
-	_event_picker_content.populate(_selected_object_animated_container)
+	_event_picker_content.populate(_selected_object_animated_container, event_name)
+
+func _on_node_event_selected(event_name: String, data: Dictionary) -> void:
+	_perform_event(EventAction.UPDATE_ON_EVENT, event_name, data)

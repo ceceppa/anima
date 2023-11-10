@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://nnsqkniyrq8k"]
 
 [ext_resource type="Script" path="res://addons/anima/ui/EventItem.gd" id="1_45vxs"]
-[ext_resource type="Texture2D" uid="uid://dr8jxaopcypfb" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
-[ext_resource type="Texture2D" uid="uid://dja8cku1bm0vi" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_tewmk"]
-[ext_resource type="Texture2D" uid="uid://cyqm4gl1v32b3" path="res://addons/anima/icons/Closed.svg" id="4_gxxe1"]
+[ext_resource type="Texture2D" uid="uid://dkqfrypvtspad" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
+[ext_resource type="Texture2D" uid="uid://behgw0jgthtrm" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_tewmk"]
+[ext_resource type="Texture2D" uid="uid://bbwti30umytri" path="res://addons/anima/icons/Closed.svg" id="4_gxxe1"]
 [ext_resource type="PackedScene" uid="uid://hrxmgulob80r" path="res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn" id="5_ooait"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnnwg"]
@@ -177,4 +177,5 @@ layout_mode = 2
 [connection signal="text_changed" from="Options/VBoxContainer/MarginContainer/Grid/Delay" to="." method="_on_delay_text_changed"]
 [connection signal="text_changed" from="Options/VBoxContainer/MarginContainer/Grid/Duration" to="." method="_on_duration_text_changed"]
 [connection signal="pressed" from="Options/VBoxContainer/EventsContaienr/Grid/OnStartedButton" to="." method="_on_on_started_button_pressed"]
+[connection signal="pressed" from="Options/VBoxContainer/EventsContaienr/Grid/OnCompletedButton" to="." method="_on_on_completed_button_pressed"]
 [connection signal="pressed" from="Options/VBoxContainer/CenterContainer/Remove" to="." method="_on_remove_pressed"]
