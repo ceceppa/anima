@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://nnsqkniyrq8k"]
+[gd_scene load_steps=7 format=3 uid="uid://nnsqkniyrq8k"]
 
 [ext_resource type="Script" path="res://addons/anima/ui/EventItem.gd" id="1_45vxs"]
-[ext_resource type="Texture2D" uid="uid://dkqfrypvtspad" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
-[ext_resource type="Texture2D" uid="uid://behgw0jgthtrm" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_tewmk"]
-[ext_resource type="Texture2D" uid="uid://bbwti30umytri" path="res://addons/anima/icons/Closed.svg" id="4_gxxe1"]
+[ext_resource type="Texture2D" uid="uid://dr8jxaopcypfb" path="res://addons/anima/icons/Play.svg" id="2_nfl0c"]
+[ext_resource type="Texture2D" uid="uid://dja8cku1bm0vi" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_tewmk"]
+[ext_resource type="Texture2D" uid="uid://cyqm4gl1v32b3" path="res://addons/anima/icons/Closed.svg" id="4_gxxe1"]
 [ext_resource type="PackedScene" uid="uid://hrxmgulob80r" path="res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn" id="5_ooait"]
-[ext_resource type="Texture2D" uid="uid://bsywhtcd2weda" path="res://addons/anima/icons/Remove.svg" id="6_h1gix"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnnwg"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 1)
@@ -65,6 +64,7 @@ icon = ExtResource("4_gxxe1")
 
 [node name="Options" type="PanelContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rnnwg")
 
@@ -164,7 +164,6 @@ layout_mode = 2
 custom_minimum_size = Vector2(120, 48)
 layout_mode = 2
 text = "Remove"
-icon = ExtResource("6_h1gix")
 
 [node name="HSeparator" type="HSeparator" parent="Options/VBoxContainer"]
 layout_mode = 2

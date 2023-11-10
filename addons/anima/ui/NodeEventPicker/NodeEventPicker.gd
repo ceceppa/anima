@@ -1,5 +1,7 @@
 @tool
-extends GridContainer
+extends VBoxContainer
+
+signal close_pressed
 
 var _start_node: Node 
 var _search_text: String
@@ -9,6 +11,9 @@ enum EventType {
 	SIGNAL,
 	PROPERTY
 }
+
+func _ready():
+	populate(self)
 
 func populate(root_node: Node):
 	_start_node = root_node
@@ -37,7 +42,7 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 		if child is AnimaNode:
 			continue
 
-		if _is_visible(child.name):
+		if _is_visible(%SearchField, child.name):
 			item = %NodesList.create_item(parent_item)
 			item.set_text(0, child.name)
 			item.set_meta("path", str(child.get_path()))
@@ -46,8 +51,8 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 		if child.get_child_count() > 0:
 			_add_children(child, item)
 
-func _is_visible(name: String) -> bool:
-	var search: String = _search_text.strip_edges()
+func _is_visible(search_field: LineEdit, name: String) -> bool:
+	var search: String = search_field.text
 	var is_visible: bool = search.length() == 0 or name.to_lower().find(search) >= 0
 
 	return is_visible
@@ -63,7 +68,7 @@ func _on_nodes_list_item_selected() -> void:
 	
 	_add_node_options(root, "Call method", EventType.EVENT, node.get_method_list())
 	_add_node_options(root, "Trigger signal", EventType.EVENT, node.get_signal_list())
-	_add_node_options(root, "Set property", EventType.PROPERTY, node.get_property_list())
+#	_add_node_options(root, "Set property", EventType.PROPERTY, node.get_property_list())
 
 func _add_node_options(root: TreeItem, name: String, type: EventType, items: Array) -> void:
 	var parent_item: TreeItem = %EventsList.create_item(root)
@@ -82,10 +87,26 @@ func _add_node_options(root: TreeItem, name: String, type: EventType, items: Arr
 	parent_item.set_icon(0, ANIMA.get_theme_icon(icon))
 
 	for item in items:
-		var tree_item = %EventsList.create_item(parent_item)
+		if item.name.begins_with("_") or not _is_visible(%SearchEventsList, item.name):
+			continue
 
-		tree_item.set_text(0, item.name)
+		var tree_item = %EventsList.create_item(parent_item)
+		var item_name = item.name
+		
+		if item.has("args"):
+			item_name = item_name + "(" + ", ".join(item.args) + ")"
+
+		tree_item.set_text(0, item_name)
 		tree_item.set_meta("event", {
 			name = item,
 			type = type,
 		})
+
+func _on_search_field_text_changed(new_text):
+	_retrieves_list_of_nodes()
+
+func _on_search_events_list_text_changed(new_text):
+	_on_nodes_list_item_selected()
+
+func _on_cta_cancel_pressed():
+	close_pressed.emit()

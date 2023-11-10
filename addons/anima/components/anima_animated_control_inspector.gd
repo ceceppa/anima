@@ -36,7 +36,7 @@ func _init(parent: EditorPlugin):
 	_event_picker_window.hide()
 	_anima_editor_plugin.add_child(_event_picker_window)
 
-#	_event_picker_window.close_pressed.connect(_close_window.bind(_event_picker_window))
+	_event_picker_window.close_pressed.connect(_close_window.bind(_event_picker_window))
 	_event_picker_window.close_requested.connect(_close_window.bind(_event_picker_window))
 
 func _can_handle(object):
