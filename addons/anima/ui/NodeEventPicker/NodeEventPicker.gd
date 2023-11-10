@@ -4,8 +4,11 @@ extends GridContainer
 var _start_node: Node 
 var _search_text: String
 
-func _ready():
-	populate(self)
+enum EventType {
+	EVENT,
+	SIGNAL,
+	PROPERTY
+}
 
 func populate(root_node: Node):
 	_start_node = root_node
@@ -38,7 +41,7 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 			item = %NodesList.create_item(parent_item)
 			item.set_text(0, child.name)
 			item.set_meta("path", str(child.get_path()))
-			item.set_icon(0, ANIMA.get_node_icon("Save"))
+			item.set_icon(0, ANIMA.get_theme_icon(child.get_class()))
 
 		if child.get_child_count() > 0:
 			_add_children(child, item)
@@ -49,9 +52,40 @@ func _is_visible(name: String) -> bool:
 
 	return is_visible
 
-func _on_nodes_list_item_selected(index):
-	var path = %NodesList.get_item_metadata(index)
+func _on_nodes_list_item_selected() -> void:
+	var selected_item: TreeItem = %NodesList.get_selected()
+	var path = selected_item.get_meta("path")
 	var node: Node = get_node(path)
-	var events = node.get_method_list()
-	var signals = node.get_signal_list()
-	var properties = node.get_property_list()
+
+	%EventsList.clear()
+
+	var root = %EventsList.create_item()
+	
+	_add_node_options(root, "Call method", EventType.EVENT, node.get_method_list())
+	_add_node_options(root, "Trigger signal", EventType.EVENT, node.get_signal_list())
+	_add_node_options(root, "Set property", EventType.PROPERTY, node.get_property_list())
+
+func _add_node_options(root: TreeItem, name: String, type: EventType, items: Array) -> void:
+	var parent_item: TreeItem = %EventsList.create_item(root)
+
+	parent_item.set_text(0, name)
+	
+	var icon: String
+	match type:
+		EventType.EVENT:
+			icon = "MemberMethod"
+		EventType.SIGNAL:
+			icon = "Signals"
+		EventType.PROPERTY:
+			icon = "MemberProperty"
+
+	parent_item.set_icon(0, ANIMA.get_theme_icon(icon))
+
+	for item in items:
+		var tree_item = %EventsList.create_item(parent_item)
+
+		tree_item.set_text(0, item.name)
+		tree_item.set_meta("event", {
+			name = item,
+			type = type,
+		})

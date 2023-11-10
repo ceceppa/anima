@@ -9,7 +9,7 @@ var _animation_picker_window := Window.new()
 var _event_picker_window := Window.new()
 
 var _items_container: VBoxContainer
-var _selected_object
+var _selected_object_animated_container
 var _anima_editor_plugin: EditorPlugin
 var _selected_event_index: int
 
@@ -49,7 +49,7 @@ func _parse_begin(object):
 	if not _items_container:
 		_items_container = VBoxContainer.new()
 
-	_selected_object = object
+	_selected_object_animated_container = object
 
 	var container := VBoxContainer.new()
 	
@@ -69,7 +69,7 @@ func _parse_begin(object):
 	add_custom_control(container)
 
 func refresh_event_items():
-	var events: Array[Dictionary] = _selected_object.get_animated_events()
+	var events: Array[Dictionary] = _selected_object_animated_container.get_animated_events()
 
 	for child in _items_container.get_children():
 		child.queue_free()
@@ -95,23 +95,23 @@ func refresh_event_items():
 		_items_container.add_child(item)
 
 func _perform_event(action: EventAction, param1 = null, param2 = null, should_refresh := true) -> void:
-	var previous: Array[Dictionary] = _selected_object.get_animated_events().duplicate()
+	var previous: Array[Dictionary] = _selected_object_animated_container.get_animated_events().duplicate()
 	var events: Array[Dictionary]
 	
 	match action:
 		EventAction.ADD:
-			events = _selected_object.add_new_event()
+			events = _selected_object_animated_container.add_new_event()
 		EventAction.REMOVE:
-			events = _selected_object.remove_event_at(param1)
+			events = _selected_object_animated_container.remove_event_at(param1)
 		EventAction.UPDATE_NAME:
-			events = _selected_object.set_animated_event_name_at(param1, param2)
+			events = _selected_object_animated_container.set_animated_event_name_at(param1, param2)
 		EventAction.UPDATE_DATA:
-			events = _selected_object.set_animated_event_data_at(param1, param2)
+			events = _selected_object_animated_container.set_animated_event_data_at(param1, param2)
 
 	if should_refresh:
 		refresh_event_items()
 
-	_anima_editor_plugin._update_animated_events(_selected_object, previous, events)
+	_anima_editor_plugin._update_animated_events(_selected_object_animated_container, previous, events)
 
 func _on_select_animation(index: int) -> void:
 	_selected_event_index = index
@@ -136,10 +136,10 @@ func _on_animation_selected(name: String) -> void:
 	_animation_picker_window.hide()
 
 func _on_preview_animation(index: int) -> void:
-	var event: Dictionary = _selected_object.get_animated_event_at(index)
+	var event: Dictionary = _selected_object_animated_container.get_animated_event_at(index)
 
 	if event.has("event_data"):
-		var anima_node := Anima.Node(_selected_object)
+		var anima_node := Anima.Node(_selected_object_animated_container)
 		var event_data = event.event_data
 		var anima: AnimaNode
 
@@ -165,3 +165,4 @@ func set_godot_theme(theme: Theme) -> void:
 
 func _on_select_node_event(index: int) -> void:
 	_event_picker_window.popup_centered(Vector2(1024, 768))
+	_event_picker_content.populate(_selected_object_animated_container)

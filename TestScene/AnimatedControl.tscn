@@ -9,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(576, 324)
 script = ExtResource("1_242tf")
 _events = Array[Dictionary]([{
 "event_data": {
@@ -27,6 +28,7 @@ _events = Array[Dictionary]([{
 },
 "event_name": "tree_exiting"
 }])
+metadata/_visibility_strategy_reverted = true
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1

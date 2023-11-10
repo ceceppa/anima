@@ -115,8 +115,8 @@ func add_custom_animation(name: String, frames: Dictionary) -> void:
 func set_godot_theme(theme: Theme) -> void:
 	_godot_theme = theme
 
-func get_node_icon(name: String) -> Texture:
+func get_theme_icon(name: String) -> Texture:
 	if not _godot_theme:
 		return
 
-	return _godot_theme.get_icon(name, "EditorIcon")
+	return _godot_theme.get_icon(name, "EditorIcons")
