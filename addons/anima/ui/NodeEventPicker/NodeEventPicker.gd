@@ -32,7 +32,8 @@ func _retrieves_list_of_nodes() -> void:
 
 	var root_item: TreeItem = %NodesList.create_item()
 	root_item.set_text(0, _start_node.name)
-	root_item.set_meta("path", str(_start_node.get_path()))
+	root_item.set_meta("path", _start_node.get_path())
+	root_item.set_meta("relative_path", ".")
 
 	_add_children(_start_node, root_item, true)
 
@@ -46,6 +47,7 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 		if _is_visible(%SearchField, child.name):
 			item = %NodesList.create_item(parent_item)
 			item.set_text(0, child.name)
+			item.set_meta("relative_path", str(_start_node.get_path_to(child)))
 			item.set_meta("path", str(child.get_path()))
 			item.set_icon(0, ANIMA.get_theme_icon(child.get_class()))
 
@@ -70,7 +72,11 @@ func _on_nodes_list_item_selected() -> void:
 	_add_node_options(root, "Call method", EventType.EVENT, node.get_method_list())
 	_add_node_options(root, "Trigger signal", EventType.EVENT, node.get_signal_list())
 
+func _sort_by_name(a, b):
+	return a.name < b.name
+
 func _add_node_options(root: TreeItem, name: String, type: EventType, items: Array) -> void:
+	items.sort_custom(_sort_by_name)
 	var parent_item: TreeItem = %EventsList.create_item(root)
 
 	parent_item.set_text(0, name)
@@ -138,12 +144,14 @@ func _add_callback_arg(arg) -> void:
 	%CallbackArgs.add_child(value)
 
 func _on_cta_confirm_pressed():
-	var selected_item: TreeItem = %EventsList.get_selected()
+	var selected_event_item: TreeItem = %EventsList.get_selected()
+	var selected_node: TreeItem = %NodesList.get_selected()
 
-	if not selected_item:
+	if not selected_event_item:
 		return
 
-	var data = selected_item.get_meta("event")
+	var data = selected_event_item.get_meta("event")
+	data.path = selected_node.get_meta("relative_path")
 
 	var args = data.args.duplicate()
 	data.args = []

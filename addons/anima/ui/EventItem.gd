@@ -9,6 +9,7 @@ signal event_selected(name: String)
 signal preview_animation
 signal option_updated
 signal select_node_event(name: String)
+signal clear_anima_event_for(name: String)
 
 func _ready():
 	%Duration.text = str(ANIMA.DEFAULT_DURATION)
@@ -43,10 +44,19 @@ func set_data(data) -> void:
 
 func set_events_data(data: Dictionary) -> void:
 	if data.has("on_started"):
-		find_child("OnStartedButton").text = data.on_started.name + "(" + ", ".join(data.on_started.args) + ")"
+		_anima_event_to_text(find_child("OnStartedButton"), data.on_started)
+		find_child("ClearOnStartedButton").show()
+	else:
+		find_child("ClearOnStartedButton").hide()
 
 	if data.has("on_completed"):
-		find_child("OnCompletedButton").text = data.on_completed.name + "(" + ", ".join(data.on_completed.args) + ")"
+		_anima_event_to_text(find_child("OnCompletedButton"), data.on_completed)
+		find_child("ClearOnClosedButton").show()
+	else:
+		find_child("ClearOnClosedButton").hide()
+
+func _anima_event_to_text(child: Button, data: Dictionary) -> void:
+	child.text = "[" + data.path + "]." + data.name + "(" + ", ".join(data.args) + ")"
 
 func _on_select_animation_button_pressed():
 	select_animation.emit()
@@ -58,21 +68,21 @@ func _on_play_button_pressed():
 	preview_animation.emit()
 
 func _on_skip_button_toggled(button_pressed):
-	var icon_file = "res://addons/anima/icons/GuiVisibilityVisible.svg"
+	var theme_icon = "GuiVisibilityVisible"
 	
 	if button_pressed:
-		icon_file = "res://addons/anima/icons/GuiVisibilityHidden.svg"
+		theme_icon = "GuiVisibilityHidden"
 
-	%SkipButton.icon = load(icon_file)
+	%SkipButton.theme_icon = theme_icon
 
 func _on_more_button_toggled(button_pressed):
-	var icon_file = "res://addons/anima/icons/Closed.svg"
+	var theme_icon = "Close"
 	
 	if button_pressed:
-		icon_file = "res://addons/anima/icons/Collapse.svg"
+		theme_icon = "Collapse"
 
 	%Options.visible = button_pressed
-	%MoreButton.icon = load(icon_file)
+	%MoreButton.theme_icon = theme_icon
 
 func _on_remove_pressed():
 	event_deleted.emit()
@@ -93,3 +103,9 @@ func _on_on_started_button_pressed():
 
 func _on_on_completed_button_pressed():
 	select_node_event.emit("on_completed")
+
+func _on_clear_on_started_button_pressed():
+	clear_anima_event_for.emit("on_started")
+
+func _on_clear_on_closed_button_pressed():
+	clear_anima_event_for.emit("on_completed")

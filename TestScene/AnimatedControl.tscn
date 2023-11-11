@@ -20,9 +20,16 @@ _events = Array[Dictionary]([{
 },
 "event_name": "ready",
 "events": {
+"on_completed": {
+"args": [],
+"name": "show",
+"path": "CenterContainer/Button",
+"type": 0
+},
 "on_started": {
 "args": [],
-"name": "get_text",
+"name": "hide",
+"path": "CenterContainer/Button",
 "type": 0
 }
 },

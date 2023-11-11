@@ -9,7 +9,7 @@ signal animation_event_completed(name: String)
 
 var anima := Anima.begin(self)
 var _can_exit := true
-var _exit_data: Dictionary
+var _exit_event: Dictionary
 var _ignore_animations := false
 
 func _ready():
@@ -18,16 +18,14 @@ func _ready():
 
 func _enter_tree():
 	for event in _events:
-		var data = event.event_data if event.has("event_data") else null
-
-		if data:
+		if event.has("event_data"):
 			if event.event_name == "tree_exiting":
 				_can_exit = false
-				_exit_data = data
+				_exit_event = event
 			else:
-				connect(event.event_name, _on_simple_event(event.event_name, data))
+				connect(event.event_name, _on_simple_event(event))
 
-func _on_simple_event(event_name: String, data: Dictionary, can_ignore_animations := true):
+func _on_simple_event(event: Dictionary, can_ignore_animations := true):
 	return func ():
 		if can_ignore_animations and _ignore_animations:
 			return
@@ -36,10 +34,14 @@ func _on_simple_event(event_name: String, data: Dictionary, can_ignore_animation
 			anima.stop_and_reset()
 			anima.clear()
 
+		var data = event.event_data
+
 		anima.then({
 			animation = data.animation,
 			delay = data.delay,
-			duration = data.duration
+			duration = data.duration,
+			on_started = _get_animation_event("on_started", event),
+			on_completed = _get_animation_event("on_competed", event)
 		})
 
 		if data.play_mode == 0:
@@ -50,7 +52,25 @@ func _on_simple_event(event_name: String, data: Dictionary, can_ignore_animation
 		await anima.animation_completed
 		
 		animation_completed.emit()
-		animation_event_completed.emit(event_name)
+		animation_event_completed.emit(event.event_name)
+
+func _get_animation_event(event_name: String, data: Dictionary):
+	if not data.has("events") or not data.events.has(event_name):
+		return null
+
+	var event = data.events[event_name]
+	var node: Node = get_node(event.path)
+	
+	if not node:
+		return null
+
+	return func():
+		print(event)
+		if event.type == 0:
+			if event.args.size() == 0:
+				node.call(event.name)
+			else:
+				node.callv(event.name, event.args)
 
 func set_animated_events(events: Array[Dictionary]) -> void:
 	_events = events
@@ -90,7 +110,7 @@ func _notification(what):
 			if !_can_exit:
 				_ignore_animations = true
 
-				var fn = _on_simple_event("tree_exiting", _exit_data, false)
+				var fn = _on_simple_event(_exit_event, false)
 
 				fn.call()
 
@@ -98,10 +118,13 @@ func _notification(what):
 
 				get_tree().quit()
 
-func set_on_event_data(index: int, anima_event_name: String, data: Dictionary) -> Array[Dictionary]:
+func set_on_event_data(index: int, anima_event_name: String, data) -> Array[Dictionary]:
 	if not _events[index].has("events"):
 		_events[index].events = {}
 
-	_events[index].events[anima_event_name] = data
+	if data == null:
+		_events[index].events.erase(anima_event_name)
+	else:
+		_events[index].events[anima_event_name] = data
 
 	return _events

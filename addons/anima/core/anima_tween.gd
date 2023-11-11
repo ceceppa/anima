@@ -606,7 +606,7 @@ class AnimaEvent extends Node:
 		_is_playing_backwards = is_playing_backwards
 
 	func execute_callback():
-		var fn: Callable
+		var fn
 		var args: Array = []
 
 		if _callback is Array:
@@ -625,7 +625,8 @@ class AnimaEvent extends Node:
 		else:
 			fn = _callback
 
-		fn.callv(args)
+		if fn:
+			fn.callv(args)
 
 func reverse_animation(tween: AnimaTween, animation_length: float, overridden_default_duration: float):
 	var data: Array = _flip_animations(tween.get_animation_data().duplicate(true), animation_length, overridden_default_duration)

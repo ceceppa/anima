@@ -70,7 +70,7 @@ func _parse_begin(object):
 	refresh_event_items()
 	add_custom_control(container)
 
-func refresh_event_items():
+func refresh_event_items(should_show_options_for := -1):
 	var events: Array[Dictionary] = _selected_object_animated_container.get_animated_events()
 
 	for child in _items_container.get_children():
@@ -85,6 +85,7 @@ func refresh_event_items():
 		item.event_selected.connect(_on_event_selected.bind(index))
 		item.preview_animation.connect(_on_preview_animation.bind(index))
 		item.select_node_event.connect(_on_select_node_event.bind(index))
+		item.clear_anima_event_for.connect(_on_clear_anima_event_for)
 
 		item.option_updated.connect(_on_option_updated.bind(index, item))
 
@@ -98,6 +99,9 @@ func refresh_event_items():
 			item.set_events_data(event.events)
 
 		_items_container.add_child(item)
+
+		if should_show_options_for == index:
+			item._on_more_button_toggled(true)
 
 func _perform_event(action: EventAction, param1 = null, param2 = null, should_refresh := true) -> void:
 	var previous: Array[Dictionary] = _selected_object_animated_container.get_animated_events().duplicate()
@@ -116,7 +120,12 @@ func _perform_event(action: EventAction, param1 = null, param2 = null, should_re
 			events = _selected_object_animated_container.set_on_event_data(_selected_event_index, param1, param2)
 
 	if should_refresh:
-		refresh_event_items()
+		var expand_options_for = -1
+		
+		if action == EventAction.UPDATE_ON_EVENT:
+			expand_options_for = _selected_event_index
+
+		refresh_event_items(expand_options_for)
 
 	_anima_editor_plugin._update_animated_events(_selected_object_animated_container, previous, events)
 
@@ -177,3 +186,6 @@ func _on_select_node_event(event_name: String, index: int) -> void:
 
 func _on_node_event_selected(event_name: String, data: Dictionary) -> void:
 	_perform_event(EventAction.UPDATE_ON_EVENT, event_name, data)
+
+func _on_clear_anima_event_for(event_name: String) -> void:
+	_perform_event(EventAction.UPDATE_ON_EVENT, event_name, null)
