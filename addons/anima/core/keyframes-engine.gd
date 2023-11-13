@@ -123,6 +123,11 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 	
 	var initial_values = keyframes_data.initial_values if keyframes_data.has("initial_values") else {}
 	var initial_values_applied := {}
+	var on_started = animation_data.on_started if animation_data.has("on_started") else null
+	var on_completed = animation_data.on_completed if animation_data.has("on_completed") else null
+
+	animation_data.erase("on_started")
+	animation_data.erase("on_completed")
 
 	if all_frames.size() == 1:
 		printerr("Invalid frame animation!")
@@ -139,12 +144,25 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 			animation_data
 		)
 
-	for index in all_frames.size() - 1:
+	for index in all_frames_size - 1:
 		var current_frame_data = all_frames[index]
+		var is_last_frame = index + 1 == all_frames_size - 1
+		var property_index = 0
+		var total_frame_data = current_frame_data.data.size()
 
 		for property_name in current_frame_data.data:
 			var property: String = property_name
 			var frame_data = animation_data.duplicate()
+
+			property_index += 1
+
+			if index == 0 and on_started:
+				frame_data.on_started = on_started
+				on_started = null
+
+			if is_last_frame and property_index == total_frame_data:
+				frame_data.on_completed = on_completed
+
 
 			if property.begins_with("+"):
 				property = property.substr(1)
@@ -190,7 +208,6 @@ static func parse_frames(animation_data: Dictionary, keyframes_data: Dictionary)
 				frame_data.easing = easing
 			if pivot:
 				frame_data.pivot = pivot
-
 
 			if initial_values.has(property) and not initial_values_applied.has(property):
 				frame_data.initial_value = initial_values[property]

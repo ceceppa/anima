@@ -49,3 +49,62 @@ func test_3d_boxes():
 
 	box_scene.free()
 	frames.free()
+
+func test_on_started():
+	var node := Label.new()
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 6, on_started = _noop },
+		{
+			0: {
+				opacity = 1,
+			},
+			50: {
+				opacity = 0,
+				x = 0,
+			},
+			100: {
+				opacity = 1,
+				x = 100
+			}
+		}
+	)
+
+	assert_eq_deep(output, [
+		{_wait_time=0.0, duration=3.0, node=node, property="opacity", from=1, to=0, on_started = _noop},
+		{_wait_time=3.0, duration=3.0, node=node, property="opacity", from=0, to=1},
+		{_wait_time=3.0, duration=3.0, node=node, property="x", from=0, to=100},
+	])
+
+	node.free()
+
+func test_on_completed():
+	var node := Label.new()
+
+	var output = AnimaKeyframesEngine.parse_frames(
+		{ node = node, duration = 6, on_completed = _noop },
+		{
+			0: {
+				opacity = 1,
+			},
+			50: {
+				opacity = 0,
+				x = 0,
+			},
+			100: {
+				opacity = 1,
+				x = 100
+			}
+		}
+	)
+
+	assert_eq_deep(output, [
+		{_wait_time=0.0, duration=3.0, node=node, property="opacity", from=1, to=0},
+		{_wait_time=3.0, duration=3.0, node=node, property="opacity", from=0, to=1},
+		{_wait_time=3.0, duration=3.0, node=node, property="x", from=0, to=100, on_completed = _noop},
+	])
+
+	node.free()
+	
+func _noop() -> void:
+	pass

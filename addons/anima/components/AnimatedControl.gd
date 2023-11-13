@@ -41,7 +41,7 @@ func _on_simple_event(event: Dictionary, can_ignore_animations := true):
 			delay = data.delay,
 			duration = data.duration,
 			on_started = _get_animation_event("on_started", event),
-			on_completed = _get_animation_event("on_competed", event)
+			on_completed = _get_animation_event("on_completed", event)
 		})
 
 		if data.play_mode == 0:
@@ -65,7 +65,6 @@ func _get_animation_event(event_name: String, data: Dictionary):
 		return null
 
 	return func():
-		print(event)
 		if event.type == 0:
 			if event.args.size() == 0:
 				node.call(event.name)
