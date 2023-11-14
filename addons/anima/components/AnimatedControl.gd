@@ -10,7 +10,15 @@ signal animation_event_completed(name: String)
 var anima := Anima.begin(self)
 var _can_exit := true
 var _exit_event: Dictionary
+
+var _should_handle_visible := false
+var _on_visible_event: Dictionary
+
+var _should_handle_hidden := false
+var _on_hidden_event: Dictionary
+
 var _ignore_animations := false
+var _ignore_visibility_event := false
 
 func _ready():
 	if get_parent() is Window:
@@ -19,16 +27,23 @@ func _ready():
 func _enter_tree():
 	for event in _events:
 		if event.has("event_data"):
-			if event.event_name == "tree_exiting":
-				_can_exit = false
-				_exit_event = event
-			else:
-				connect(event.event_name, _on_simple_event(event))
+			match event.event_name:
+				"tree_exiting":
+					_can_exit = false
+					_exit_event = event
+				"on_visible":
+					_should_handle_visible = true
+					_on_visible_event = event
+				"on_hidden":
+					_should_handle_hidden = true
+					_on_hidden_event = event
+				_:
+					connect(event.event_name, _on_simple_event(event))
 
 func _on_simple_event(event: Dictionary, can_ignore_animations := true):
 	return func ():
-		if can_ignore_animations and _ignore_animations:
-			return
+#		if can_ignore_animations and _ignore_animations:
+#			return
 
 		if anima.get_animation_data().size():
 			anima.stop_and_reset()
@@ -105,17 +120,34 @@ func remove_event_at(index: int) -> Array[Dictionary]:
 
 func _notification(what):
 	match what:
+		NOTIFICATION_VISIBILITY_CHANGED:
+			if _ignore_visibility_event:
+				_ignore_visibility_event = false
+
+				return
+
+			if visible and _on_visible_event:
+				_trigger_on_simple_event(_on_visible_event)
+			elif  not visible and _on_hidden_event:
+				_ignore_visibility_event = true
+				
+				show()
+
+				await _trigger_on_simple_event(_on_hidden_event)
+
+				hide()
 		NOTIFICATION_WM_CLOSE_REQUEST:
 			if !_can_exit:
 				_ignore_animations = true
 
-				var fn = _on_simple_event(_exit_event, false)
+				await _trigger_on_simple_event(_exit_event)
 
-				fn.call()
+func _trigger_on_simple_event(event_data):
+	var fn = _on_simple_event(event_data)
 
-				await anima.animation_completed
+	fn.call()
 
-				get_tree().quit()
+	await anima.animation_completed
 
 func set_on_event_data(index: int, anima_event_name: String, data) -> Array[Dictionary]:
 	if not _events[index].has("events"):
@@ -127,3 +159,7 @@ func set_on_event_data(index: int, anima_event_name: String, data) -> Array[Dict
 		_events[index].events[anima_event_name] = data
 
 	return _events
+
+func show() -> void:
+	print("showing")
+	pass
