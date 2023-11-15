@@ -14,47 +14,28 @@ script = ExtResource("1_242tf")
 _events = Array[Dictionary]([{
 "event_data": {
 "animation": "tada",
-"delay": 0,
+"delay": 0.0,
 "duration": 0.7,
-"play_mode": 0
+"loop_mode": -1,
+"loop_times": -1,
+"play_mode": 0,
+"skip": false
 },
-"event_name": "ready",
-"events": {
-"on_completed": {
-"args": [],
-"name": "show",
-"path": "CenterContainer/Button",
-"type": 0
-},
-"on_started": {
-"args": [],
-"name": "hide",
-"path": "CenterContainer/Button",
-"type": 0
-}
-},
-"on_started": {
-"args": [],
-"name": "show",
-"type": 0
-}
-}, {
-"event_data": {
-"animation": "fade_out",
-"delay": 0,
-"duration": 0.7,
-"play_mode": 0
-},
-"event_name": "tree_exiting"
-}, {
-"event_data": {
-"animation": "fade_in_bottom_left",
-"delay": 0,
-"duration": 0.7,
-"play_mode": 0
-},
-"event_name": "on_visible"
+"event_name": "focus_entered"
 }])
+metadata/__anima_initial_state__ = {
+"rotate:y": {
+"_initial_value": 0.0,
+"property": "rotation"
+},
+"scale": {
+"_initial_value": Vector2(1, 1),
+"is_rect2": false,
+"property": "scale"
+}
+}
+metadata/__anima_visibility_strategy = 0
+metadata/__anima_pivot_applied = true
 metadata/_visibility_strategy_reverted = true
 
 [node name="CenterContainer" type="CenterContainer" parent="."]

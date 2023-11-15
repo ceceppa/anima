@@ -11,14 +11,17 @@ var anima := Anima.begin(self)
 var _can_exit := true
 var _exit_event: Dictionary
 
+var _should_handle_visibility_change := false
 var _should_handle_visible := false
-var _on_visible_event: Dictionary
+var _on_visible_event_data: Dictionary
 
 var _should_handle_hidden := false
-var _on_hidden_event: Dictionary
+var _on_hidden_event_data: Dictionary
 
 var _ignore_animations := false
 var _ignore_visibility_event := false
+
+var _old_visibility := visible
 
 func _ready():
 	if get_parent() is Window:
@@ -26,48 +29,59 @@ func _ready():
 
 func _enter_tree():
 	for event in _events:
-		if event.has("event_data"):
-			match event.event_name:
-				"tree_exiting":
-					_can_exit = false
-					_exit_event = event
-				"on_visible":
-					_should_handle_visible = true
-					_on_visible_event = event
-				"on_hidden":
-					_should_handle_hidden = true
-					_on_hidden_event = event
-				_:
-					connect(event.event_name, _on_simple_event(event))
+		if not event.has("event_data") or event.event_data.skip:
+			continue
 
-func _on_simple_event(event: Dictionary, can_ignore_animations := true):
-	return func ():
-#		if can_ignore_animations and _ignore_animations:
-#			return
+		match event.event_name:
+			"tree_exiting":
+				_can_exit = false
+				_exit_event = event
+			"on_visible":
+				_should_handle_visibility_change = true
+				_should_handle_visible = true
+				_on_visible_event_data = event
+			"on_hidden":
+				_should_handle_visibility_change = true
+				_should_handle_hidden = true
+				_on_hidden_event_data = event
+			_:
+				connect(event.event_name, _animate_event.bind(event))
 
-		if anima.get_animation_data().size():
-			anima.stop_and_reset()
-			anima.clear()
+func _update_events():
+	for s in get_signal_list():
+		prints(s.name, is_connected(s.name, _animate_event))
 
-		var data = event.event_data
+func _animate_event(event: Dictionary):
+	if anima.get_animation_data().size():
+		anima.stop_and_reset()
+		anima.clear()
 
-		anima.then({
-			animation = data.animation,
-			delay = data.delay,
-			duration = data.duration,
-			on_started = _get_animation_event("on_started", event),
-			on_completed = _get_animation_event("on_completed", event)
-		})
+	var data = event.event_data
 
-		if data.play_mode == 0:
-			anima.play()
+	anima.then({
+		animation = data.animation,
+		delay = data.delay,
+		duration = data.duration,
+		on_started = _get_animation_event("on_started", event),
+		on_completed = _get_animation_event("on_completed", event)
+	})
+
+	if data.play_mode == 0:
+		anima.play()
+	elif data.play_mode == 1:
+		anima.play_backwards()
+	else:
+		if data.loop_mode == 0:
+			anima.loop(data.loop_times)
+		elif data.loop_mode == 1:
+			anima.loop_backwards(data.loop_times)
 		else:
-			anima.play_backwards()
+			anima.loop_in_circle(data.loop_times)
 
-		await anima.animation_completed
-		
-		animation_completed.emit()
-		animation_event_completed.emit(event.event_name)
+	await anima.animation_completed
+	
+	animation_completed.emit()
+	animation_event_completed.emit(event.event_name)
 
 func _get_animation_event(event_name: String, data: Dictionary):
 	if not data.has("events") or not data.events.has(event_name):
@@ -89,6 +103,8 @@ func _get_animation_event(event_name: String, data: Dictionary):
 func set_animated_events(events: Array[Dictionary]) -> void:
 	_events = events
 
+	_update_events()
+
 func get_animated_events() -> Array[Dictionary]:
 	return _events
 
@@ -98,15 +114,21 @@ func get_animated_event_at(index: int) -> Dictionary:
 func set_animated_event_name_at(index: int, event_name: String) -> Array[Dictionary]:
 	_events[index].event_name = event_name
 
+	_update_events()
+
 	return _events
 
 func set_animated_event_data_at(index: int, data: Dictionary) -> Array[Dictionary]:
 	_events[index].event_data = data
 
+	_update_events()
+
 	return _events
 
 func set_animated_event(index: int, event_name: String, data: Dictionary):
 	_events[index] = { event_name = event_name, event_data = data }
+
+	_update_events()
 
 func add_new_event() -> Array[Dictionary]:
 	_events.push_back({})
@@ -121,33 +143,31 @@ func remove_event_at(index: int) -> Array[Dictionary]:
 func _notification(what):
 	match what:
 		NOTIFICATION_VISIBILITY_CHANGED:
+			if not _should_handle_visibility_change or _old_visibility == visible:
+				return
+
+			_old_visibility = visible
+
 			if _ignore_visibility_event:
 				_ignore_visibility_event = false
 
 				return
 
-			if visible and _on_visible_event:
-				_trigger_on_simple_event(_on_visible_event)
-			elif  not visible and _on_hidden_event:
+			if visible and _on_visible_event_data:
+				_trigger_animate_event(_on_visible_event_data)
+			elif  not visible and _on_hidden_event_data:
 				_ignore_visibility_event = true
 				
 				show()
 
-				await _trigger_on_simple_event(_on_hidden_event)
+				await _trigger_animate_event(_on_hidden_event_data)
 
 				hide()
 		NOTIFICATION_WM_CLOSE_REQUEST:
 			if !_can_exit:
 				_ignore_animations = true
 
-				await _trigger_on_simple_event(_exit_event)
-
-func _trigger_on_simple_event(event_data):
-	var fn = _on_simple_event(event_data)
-
-	fn.call()
-
-	await anima.animation_completed
+				await _trigger_animate_event(_exit_event)
 
 func set_on_event_data(index: int, anima_event_name: String, data) -> Array[Dictionary]:
 	if not _events[index].has("events"):
@@ -160,6 +180,17 @@ func set_on_event_data(index: int, anima_event_name: String, data) -> Array[Dict
 
 	return _events
 
-func show() -> void:
-	print("showing")
-	pass
+func _trigger_animate_event(event_data):
+	_animate_event(event_data)
+
+	await anima.animation_completed
+
+func preview_animated_event_at(index: int) -> void:
+	_animate_event(_events[index])
+
+	print("ciao")
+	return
+
+	await anima.animation_completed
+
+	anima.reset_and_clear()

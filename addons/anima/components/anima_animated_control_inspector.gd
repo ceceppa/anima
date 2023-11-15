@@ -1,9 +1,9 @@
 @tool
 extends EditorInspectorPlugin
 
-var _animation_picker_content = preload("res://addons/anima/ui/AnimationPicker/AnimationPicker.tscn").instantiate()
-var _event_item = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
-var _event_picker_content = preload("res://addons/anima/ui/NodeEventPicker/NodeEventPicker.tscn").instantiate()
+var ANIMATION_PICKER_CONTENT = preload("res://addons/anima/ui/AnimationPicker/AnimationPicker.tscn").instantiate()
+var EVENT_ITEM = preload("res://addons/anima/ui/EventItem.tscn").instantiate()
+var EVENT_PICKER_CONTENT = preload("res://addons/anima/ui/NodeEventPicker/NodeEventPicker.tscn").instantiate()
 
 var _animation_picker_window := Window.new()
 var _event_picker_window := Window.new()
@@ -12,6 +12,9 @@ var _items_container: VBoxContainer
 var _selected_object_animated_container
 var _anima_editor_plugin: EditorPlugin
 var _selected_event_index: int
+var _event_items: Array[Node]
+
+var _is_restoring_data := false
 
 enum EventAction {
 	ADD,
@@ -24,21 +27,21 @@ enum EventAction {
 func _init(parent: EditorPlugin):
 	_anima_editor_plugin = parent
 
-	_animation_picker_window.add_child(_animation_picker_content)
+	_animation_picker_window.add_child(ANIMATION_PICKER_CONTENT)
 	_animation_picker_window.hide()
 	_anima_editor_plugin.add_child(_animation_picker_window)
 
-	_animation_picker_content.connect("animation_selected", _on_animation_selected)
+	ANIMATION_PICKER_CONTENT.connect("animation_selected", _on_animation_selected)
 
-	_animation_picker_content.close_pressed.connect(_close_window.bind(_animation_picker_window))
+	ANIMATION_PICKER_CONTENT.close_pressed.connect(_close_window.bind(_animation_picker_window))
 	_animation_picker_window.close_requested.connect(_close_window.bind(_animation_picker_window))
 
-	_event_picker_window.add_child(_event_picker_content)
+	_event_picker_window.add_child(EVENT_PICKER_CONTENT)
 	_event_picker_window.hide()
 	_anima_editor_plugin.add_child(_event_picker_window)
 
-	_event_picker_content.close_pressed.connect(_close_window.bind(_event_picker_window))
-	_event_picker_content.event_selected.connect(_on_node_event_selected)
+	EVENT_PICKER_CONTENT.close_pressed.connect(_close_window.bind(_event_picker_window))
+	EVENT_PICKER_CONTENT.event_selected.connect(_on_node_event_selected)
 	_event_picker_window.close_requested.connect(_close_window.bind(_event_picker_window))
 
 func _can_handle(object):
@@ -51,7 +54,13 @@ func _parse_begin(object):
 	if not _items_container:
 		_items_container = VBoxContainer.new()
 
+	if _selected_object_animated_container and _selected_object_animated_container.is_connected("animation_event_completed", _on_animation_event_completed):
+		_selected_object_animated_container.disconnect("animation_event_completed", _on_animation_event_completed)
+
 	_selected_object_animated_container = object
+	
+	if not _selected_object_animated_container.is_connected("animation_event_completed", _on_animation_event_completed):
+		_selected_object_animated_container.animation_event_completed.connect(_on_animation_event_completed)
 
 	var container := VBoxContainer.new()
 	
@@ -71,14 +80,18 @@ func _parse_begin(object):
 	add_custom_control(container)
 
 func refresh_event_items(should_show_options_for := -1):
+	_is_restoring_data = true
+
 	var events: Array[Dictionary] = _selected_object_animated_container.get_animated_events()
 
 	for child in _items_container.get_children():
 		child.queue_free()
 
+	_event_items.clear()
+
 	for index in events.size():
 		var event := events[index]
-		var item := _event_item.duplicate()
+		var item := EVENT_ITEM.duplicate()
 
 		item.event_deleted.connect(_on_delete_event.bind(index))
 		item.select_animation.connect(_on_select_animation.bind(index))
@@ -103,7 +116,14 @@ func refresh_event_items(should_show_options_for := -1):
 		if should_show_options_for == index:
 			item._on_more_button_toggled(true)
 
+		_event_items.push_back(item)
+
+	_is_restoring_data = false
+
 func _perform_event(action: EventAction, param1 = null, param2 = null, should_refresh := true) -> void:
+	if _is_restoring_data:
+		return
+
 	var previous: Array[Dictionary] = _selected_object_animated_container.get_animated_events().duplicate()
 	var events: Array[Dictionary]
 	
@@ -152,26 +172,7 @@ func _on_animation_selected(name: String) -> void:
 	_animation_picker_window.hide()
 
 func _on_preview_animation(index: int) -> void:
-	var event: Dictionary = _selected_object_animated_container.get_animated_event_at(index)
-
-	if event.has("event_data"):
-		var anima_node := Anima.Node(_selected_object_animated_container)
-		var event_data = event.event_data
-		var anima: AnimaNode
-
-		if event_data is String:
-			anima = anima_node.anima_animation(event_data).play()
-		else:
-			var animation := anima_node.anima_animation(event_data.animation, event_data.duration)
-
-			if event_data.play_mode == 0:
-				anima = animation.play_with_delay(event_data.delay)
-			else:
-				anima = animation.play_backwards_with_delay(event_data.delay)
-
-		await anima.animation_completed
-
-		anima.reset_and_clear()
+	_selected_object_animated_container.preview_animated_event_at(index)
 
 func _on_option_updated(index: int, event_item) -> void:
 	_perform_event(EventAction.UPDATE_DATA, index, event_item.get_data(), false)
@@ -182,10 +183,14 @@ func set_godot_theme(theme: Theme) -> void:
 func _on_select_node_event(event_name: String, index: int) -> void:
 	_selected_event_index = index
 	_event_picker_window.popup_centered(Vector2(1024, 768))
-	_event_picker_content.populate(_selected_object_animated_container, event_name)
+	EVENT_PICKER_CONTENT.populate(_selected_object_animated_container, event_name)
 
 func _on_node_event_selected(event_name: String, data: Dictionary) -> void:
 	_perform_event(EventAction.UPDATE_ON_EVENT, event_name, data)
 
 func _on_clear_anima_event_for(event_name: String) -> void:
 	_perform_event(EventAction.UPDATE_ON_EVENT, event_name, null)
+
+func _on_animation_event_completed(name: String):
+	for event in _event_items:
+		event.stop_preview()

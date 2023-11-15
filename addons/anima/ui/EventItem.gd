@@ -7,6 +7,7 @@ signal event_deleted
 signal select_animation
 signal event_selected(name: String)
 signal preview_animation
+signal stop_preview_animation
 signal option_updated
 signal select_node_event(name: String)
 signal clear_anima_event_for(name: String)
@@ -21,6 +22,9 @@ func get_data() -> Dictionary:
 		play_mode = %PlayMode.selected,
 		delay = float(%Delay.text),
 		duration = float(%Duration.text),
+		skip = %SkipButton.button_pressed,
+		loop_mode = %LoopMode.selected,
+		loop_times = int(%LoopTimes.text)
 	}
 
 func set_event_name(name: String) -> void:
@@ -34,13 +38,21 @@ func set_event_name(name: String) -> void:
 			break
 
 func set_data(data) -> void:
-	if typeof(data) == TYPE_STRING:
-		%SelectAnimationButton.set_text(data)
-	else:
-		%SelectAnimationButton.set_text(data.animation)
-		%PlayMode.select(data.play_mode)
-		%Delay.text = str(data.delay)
-		%Duration.text = str(data.duration)
+	%SelectAnimationButton.set_text(data.animation)
+	%PlayMode.select(data.play_mode)
+	%Delay.text = str(data.delay)
+	%Duration.text = str(data.duration)
+
+	if data.has("skip"):
+		%SkipButton.button_pressed = data.skip
+
+	if data.has("loop_mode"):
+		%LoopMode.select(data.loop_mode)
+
+	if data.has("loop_times"):
+		%LoopMode.select(data.loop_times)
+
+	_on_play_method_item_selected(data.play_mode)
 
 func set_events_data(data: Dictionary) -> void:
 	if data.has("on_started"):
@@ -64,9 +76,6 @@ func _on_select_animation_button_pressed():
 func _on_option_button_item_selected(index):
 	event_selected.emit(%OptionButton.get_item_text(index))
 
-func _on_play_button_pressed():
-	preview_animation.emit()
-
 func _on_skip_button_toggled(button_pressed):
 	var theme_icon = "GuiVisibilityVisible"
 	
@@ -74,6 +83,8 @@ func _on_skip_button_toggled(button_pressed):
 		theme_icon = "GuiVisibilityHidden"
 
 	%SkipButton.theme_icon = theme_icon
+
+	option_updated.emit()
 
 func _on_more_button_toggled(button_pressed):
 	var theme_icon = "Close"
@@ -89,7 +100,13 @@ func _on_remove_pressed():
 
 	queue_free()
 
+func _on_option_update():
+	option_updated.emit()
+
 func _on_play_method_item_selected(index):
+	%EmptyLabel.visible = index == 2
+	%LoopOptions.visible = index == 2
+
 	option_updated.emit()
 
 func _on_delay_text_changed(new_text):
@@ -109,3 +126,23 @@ func _on_clear_on_started_button_pressed():
 
 func _on_clear_on_closed_button_pressed():
 	clear_anima_event_for.emit("on_completed")
+
+func _on_play_button_toggled(button_pressed):
+	_update_play_button(button_pressed)
+
+func _update_play_button(button_pressed: bool, should_emit := true):
+	var theme_icon = "Play"
+	
+	if button_pressed:
+		theme_icon = "Stop"
+
+		if should_emit:
+			preview_animation.emit()
+	else:
+		if should_emit:
+			stop_preview_animation.emit()
+
+	%PlayButton.theme_icon = theme_icon
+
+func stop_preview():
+	_update_play_button(false, false)
