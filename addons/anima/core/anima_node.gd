@@ -755,16 +755,18 @@ func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> fl
 	return animation_data.duration + (animation_data.items_delay * nodes.size())
 
 func _maybe_play() -> void:
-	_loop_count -= 1
+	_loop_times -= 1
 
-	if _loop_count > 0 or _should_loop:
+	if _loop_times > 0 or _should_loop:
 		if _loop_delay > 0:
 			await get_tree().create_timer(_loop_delay).timeout
 
 		_do_play()
 
 func _on_all_tween_completed() -> void:
-	animation_completed.emit()
+	if _loop_times <= 1:
+		animation_completed.emit()
+
 	loop_completed.emit(_loop_count)
 
 	if _is_single_shot:
@@ -772,8 +774,7 @@ func _on_all_tween_completed() -> void:
 
 		return
 
-	if _should_loop:
-		_maybe_play()
+	_maybe_play()
 
 func _on_backwords_tween_complete(tween: Tween) -> void:
 	tween.queue_free()

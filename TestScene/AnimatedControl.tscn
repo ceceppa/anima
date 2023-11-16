@@ -16,12 +16,12 @@ _events = Array[Dictionary]([{
 "animation": "tada",
 "delay": 0.0,
 "duration": 0.7,
-"loop_mode": -1,
-"loop_times": -1,
-"play_mode": 0,
+"loop_mode": 2,
+"loop_times": 1,
+"play_mode": 2,
 "skip": false
 },
-"event_name": "focus_entered"
+"event_name": "on_hidden"
 }])
 metadata/__anima_initial_state__ = {
 "rotate:y": {
@@ -34,9 +34,7 @@ metadata/__anima_initial_state__ = {
 "property": "scale"
 }
 }
-metadata/__anima_visibility_strategy = 0
 metadata/__anima_pivot_applied = true
-metadata/_visibility_strategy_reverted = true
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1

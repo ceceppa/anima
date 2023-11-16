@@ -70,14 +70,33 @@ func _create_new_header(animation: String) -> Button:
 
 	return button
 
-func _create_animation_button(label: String) -> Button:
+func _create_animation_button(label: String) -> HBoxContainer:
+	var container := HBoxContainer.new()
 	var button: Button = ANIMATION_BUTTON.instantiate()
 
 	button.text = label.replace('_', ' ').capitalize()
 	button.set_meta('_animation', label)
 	button.pressed.connect(_on_animation_button_pressed.bind(label))
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.mouse_filter = Control.MOUSE_FILTER_PASS
 
-	return button
+	var edit_button := AnimaButton.new()
+	edit_button.theme_icon = "Edit"
+	edit_button.text = "Edit"
+	edit_button.hide()
+	edit_button.mouse_filter = Control.MOUSE_FILTER_PASS
+
+	container.add_child(button)
+	container.add_child(edit_button)
+	container.mouse_entered.connect(func ():
+		edit_button.show()
+	)
+
+	container.mouse_exited.connect(func ():
+		edit_button.hide()
+	)
+
+	return container
 
 func _on_close_requested():
 	hide()

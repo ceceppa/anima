@@ -50,7 +50,7 @@ func set_data(data) -> void:
 		%LoopMode.select(data.loop_mode)
 
 	if data.has("loop_times"):
-		%LoopMode.select(data.loop_times)
+		%LoopTimes.text = str(data.loop_times)
 
 	_on_play_method_item_selected(data.play_mode)
 
