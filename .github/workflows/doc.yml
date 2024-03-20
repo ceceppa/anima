@@ -2,10 +2,8 @@ name: "anima doc"
 on: push
 
 jobs:
-  deploy:
-    environment:
-      name: docusaurus
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-docusaurus:
+    name: Build Docusaurus
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
