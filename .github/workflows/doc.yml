@@ -21,15 +21,15 @@ jobs:
         working-directory: docs
         run: yarn build
       - name: setup git config
-          run: |
-              git config user.name "GitHub Actions Bot"
-              git config user.email "<senesealessandro@gmail.com>"
-              cd docs
-              yarn install --frozen-lockfile --non-interactive
-              yarn build
+        run: |
+            git config user.name "GitHub Actions Bot"
+            git config user.email "<senesealessandro@gmail.com>"
+            cd docs
+            yarn install --frozen-lockfile --non-interactive
+            yarn build
 
-              cd build
-              git init
-              git commit -am "Documentation"
-              git remote add origin https://github.com/ceceppa/anima-doc.git
-          - run: git push origin main --force
+            cd build
+            git init
+            git commit -am "Documentation"
+            git remote add origin https://github.com/ceceppa/anima-doc.git
+        - run: git push origin main --force
