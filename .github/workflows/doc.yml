@@ -25,4 +25,4 @@ jobs:
             git init
             git commit -am "Documentation"
             git remote add origin https://github.com/ceceppa/anima-doc.git
-        - run: git push origin main --force
+            git push origin main --force
