@@ -22,9 +22,9 @@ jobs:
             cd build
             git init
             git branch -M main
+            git remote add origin https://github.com/ceceppa/anima-doc.git
             git config user.name "GitHub Actions Bot"
             git config user.email "<senesealessandro@gmail.com>"
             git add .
-            git commit -am "Documentation"
-            git remote add origin https://github.com/ceceppa/anima-doc.git
+            git commit -m "Documentation"
             git push origin main --force
