@@ -1,3 +1,6 @@
+name: "anima doc"
+on: push
+
 jobs:
   deploy:
     environment:
