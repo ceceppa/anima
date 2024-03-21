@@ -16,6 +16,7 @@ jobs:
       - name: Build
         run: |
           cd docs
+          rm -rf build
           yarn install --frozen-lockfile --non-interactive
           yarn build
 
