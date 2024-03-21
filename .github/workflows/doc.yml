@@ -1,5 +1,5 @@
 name: "anima doc"
-on: push
+on: never
 
 jobs:
   build-docusaurus:
