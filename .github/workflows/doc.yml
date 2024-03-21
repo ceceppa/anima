@@ -27,5 +27,5 @@ jobs:
           git config user.email "<senesealessandro@gmail.com>"
           git add .
           git commit -m "Documentation"
-          git remote set-url --push origin https://ceceppa:${{ secrets.GITHUB_TOKEN }}@github.com/ceceppa/anima-doc.git
+          git remote set-url --push origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git
           git push -f origin main
