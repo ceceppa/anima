@@ -16,6 +16,8 @@ jobs:
           token: ${{ secrets.TOKEN }}
       - name: Copy addon files
         run: |
+          set +x
+
           echo "Updating addon files"
           cd anima-godot-4
 
