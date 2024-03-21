@@ -20,7 +20,7 @@ jobs:
           yarn install --frozen-lockfile --non-interactive
           yarn build
 
-          git clone origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git deploy
+          git clone https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git deploy
           cd deploy
 
           git config user.name "GitHub Actions Bot"
