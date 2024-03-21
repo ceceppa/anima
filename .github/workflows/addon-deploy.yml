@@ -13,15 +13,21 @@ jobs:
           mkdir deploy
           cd deploy
 
-          cp -r ../addons .
-          cp ../LICENSE .
-          cp ../README.ADDON-REPO.md README.md 
           git init
           git branch -M main
           git remote add origin https://github.com/ceceppa/anima-godot-4.git
+          git remote set-url --push origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-godot-4.git
+
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
+
+          git pull origin main
+          rm -rf *
+
+          cp -r ../addons .
+          cp ../LICENSE .
+          cp ../README.ADDON-REPO.md README.md 
+
           git add .
           git commit -m "Update addon files"
-          git remote set-url --push origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-godot-4.git
           git push -f origin main
