@@ -17,23 +17,27 @@ jobs:
         run: |
           cd docs
 
-          mkdir build
+          git clone origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git build
           cd build
 
-          git init
-          git branch -M main
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
-          git remote add origin https://github.com/ceceppa/anima-doc.git
-          git remote set-url origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git
 
-          git pull origin main
           rm -rf *
 
           yarn install --frozen-lockfile --non-interactive
           yarn build
 
           git add .
+
+          uncommitted=$(git status --porcelain | grep -E "^( M |A )")
+
+          if [[ -z "$uncommitted" ]]; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
           git commit -m "Update docs"
 
-          git push -f origin main
+          git push origin main
+          exit 0
