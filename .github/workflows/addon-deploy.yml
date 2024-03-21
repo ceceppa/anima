@@ -31,9 +31,6 @@ jobs:
 
           git add .
 
-          pwd
-          ls -la
-
           uncommitted=$(git status --porcelain | grep -E "^( M |A )")
 
           if [[ -z "$uncommitted" ]]; then

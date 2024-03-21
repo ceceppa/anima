@@ -1,5 +1,5 @@
 name: "anima doc"
-on: never
+on: push
 
 jobs:
   build-docusaurus:
@@ -19,12 +19,17 @@ jobs:
 
           yarn install --frozen-lockfile --non-interactive
           yarn build
+      - name: Checkout Docs repo
+        uses: actions/checkout@v3
+        with:
+          repository: ceceppa/anima-doc
+          path: ./docs/anima-doc
+          token: ${{ secrets.TOKEN }}
 
       - name: Deploy
+        shell: bash {0}
         run: |
-          cd docs
-          git clone https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git
-          cd anima-doc
+          cd docs/anima-doc
 
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
