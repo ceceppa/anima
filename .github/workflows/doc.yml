@@ -17,16 +17,17 @@ jobs:
         run: |
           cd docs
 
-          git clone origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git build
-          cd build
+          yarn install --frozen-lockfile --non-interactive
+          yarn build
+
+          git clone origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git deploy
+          cd deploy
 
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
 
           rm -rf *
-
-          yarn install --frozen-lockfile --non-interactive
-          yarn build
+          cp -r ../build/* .
 
           git add .
 
