@@ -20,6 +20,8 @@ jobs:
           yarn install --frozen-lockfile --non-interactive
           yarn build
 
+      - name: Deploy
+        run: |
           git clone https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git deploy
           cd deploy
 
