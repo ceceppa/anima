@@ -1,0 +1,27 @@
+name: "Deploy Anima Addon"
+on: push
+
+jobs:
+  deploy-addon-only:
+    name: Depoly Anima
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Copy addon files
+        run: |
+          mkdir deploy
+          cd deploy
+
+          cp -r ../addons .
+          cp ../LICENSE .
+          cp ../README.ADDON-REPO.md README.md 
+          git init
+          git branch -M main
+          git remote add origin https://github.com/ceceppa/anima-godot-4.git
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<senesealessandro@gmail.com>"
+          git add .
+          git commit -m "Update addon files"
+          git remote set-url --push origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-godot-4.git
+          git push -f origin main
