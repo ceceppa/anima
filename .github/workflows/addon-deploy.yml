@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
       - name: Copy addon files
         run: |
-          ls -la
+          echo "Updating addon files"
           cd anima-godot-4
 
           git config user.name "GitHub Actions Bot"
