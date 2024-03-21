@@ -24,4 +24,12 @@ jobs:
 
           git add .
           git commit -m "Update addon files"
-          git push -f origin main
+
+          uncommitted=$(git status --porcelain | grep -E "^( M |A )")
+
+          if [[ -z "$uncommitted" ]]; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git push origin main
