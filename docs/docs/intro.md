@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 ---
+
 # Introduction
 
 We believe that creating animation should be easy for any skill level; that's why we created Anima.
@@ -22,15 +23,14 @@ The latest version can be manually downloaded by cloning [this repo](https://git
 
 Anima provides those two additional nodes:
 
-- [AnimaNode](/anima/animate-node), used to handle the setup of all the animations supported by the addon
-- [AnimaTween](/doc/anima-tween.html), is the custom Tween used that allows the magic to happen :)
+- [AnimaNode](/docs/animate-node), used to handle the setup of all the animations supported by the addon
+- [AnimaTween](/docs/anima-tween.html), is the custom Tween used that allows the magic to happen :)
 
 ## Animation Declaration
 
 Animation declarations are used to tell anima how to animate a single node, group or grid:
 
 - [AnimaDeclarationNode](/docs/anima-declaration/)
-
 
 ## Example
 
