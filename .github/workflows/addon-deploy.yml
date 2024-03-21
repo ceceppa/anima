@@ -2,7 +2,7 @@ name: "Deploy Anima Addon"
 on: push
 
 jobs:
-  deploy-addon-only:
+  deploy-anima-addon:
     name: Depoly Anima
     runs-on: ubuntu-latest
     steps:
