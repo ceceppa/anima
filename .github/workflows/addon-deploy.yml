@@ -30,14 +30,5 @@ jobs:
           cp ../README.ADDON-REPO.md README.md 
 
           git add .
-
-          uncommitted=$(git status --porcelain | grep -E "^( M |A )")
-
-          if [[ -z "$uncommitted" ]]; then
-            echo "No changes to commit"
-            exit 0
-          fi
-
           git commit -m "Update addon files"
           git push origin main
-          exit 0

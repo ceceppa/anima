@@ -38,15 +38,6 @@ jobs:
           cp -r ../build/* .
 
           git add .
-
-          uncommitted=$(git status --porcelain | grep -E "^( M |A )")
-
-          if [[ -z "$uncommitted" ]]; then
-            echo "No changes to commit"
-            exit 0
-          fi
-
           git commit -m "Update docs"
 
           git push origin main
-          exit 0
