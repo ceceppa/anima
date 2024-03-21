@@ -21,9 +21,11 @@ jobs:
           cd build
 
           git init
+          git branch -M main
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
           git remote add origin https://github.com/ceceppa/anima-doc.git
+          git remote set-url origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git
 
           git pull origin main
           rm -rf *
