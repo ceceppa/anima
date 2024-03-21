@@ -16,9 +16,10 @@ jobs:
       - name: Build
         run: |
           cd docs
-          rm -rf build
 
+          mkdir build
           cd build
+
           git init
           git branch -M main
           git config user.name "GitHub Actions Bot"
