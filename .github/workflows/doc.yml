@@ -22,6 +22,8 @@ jobs:
 
       - name: Deploy
         run: |
+          cd docs
+          rm -rf deploy
           git clone https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git deploy
           cd deploy
 
