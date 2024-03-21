@@ -23,7 +23,6 @@ jobs:
           cp ../README.ADDON-REPO.md README.md 
 
           git add .
-          git commit -m "Update addon files"
 
           uncommitted=$(git status --porcelain | grep -E "^( M |A )")
 
@@ -32,4 +31,6 @@ jobs:
             exit 0
           fi
 
+          git commit -m "Update addon files"
           git push origin main
+          exit 0
