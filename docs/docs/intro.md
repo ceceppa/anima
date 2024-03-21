@@ -24,13 +24,13 @@ The latest version can be manually downloaded by cloning [this repo](https://git
 Anima provides those two additional nodes:
 
 - [AnimaNode](/docs/animate-node), used to handle the setup of all the animations supported by the addon
-- [AnimaTween](/docs/anima-tween.html), is the custom Tween used that allows the magic to happen :)
+- [AnimaTween](/docs/anima-tween), is the custom Tween used that allows the magic to happen :)
 
 ## Animation Declaration
 
 Animation declarations are used to tell anima how to animate a single node, group or grid:
 
-- [AnimaDeclarationNode](/docs/anima-declaration/)
+- [AnimaDeclarationNode](/docs/anima-declaration)
 
 ## Example
 
