@@ -23,9 +23,8 @@ jobs:
       - name: Deploy
         run: |
           cd docs
-          rm -rf deploy
-          git clone https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git deploy
-          cd deploy
+          git clone https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-doc.git
+          cd anima-doc
 
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
