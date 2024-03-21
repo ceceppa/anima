@@ -15,8 +15,7 @@ jobs:
 
           git init
           git branch -M main
-          git remote add origin https://github.com/ceceppa/anima-godot-4.git
-          git remote set-url origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-godot-4.git
+          git remote add origin https://ceceppa:${{ secrets.TOKEN }}@github.com/ceceppa/anima-godot-4.git
 
           git config user.name "GitHub Actions Bot"
           git config user.email "<senesealessandro@gmail.com>"
