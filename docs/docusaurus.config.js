@@ -119,6 +119,11 @@ const config = {
         additionalLanguages: ["gdscript"],
       },
     }),
+  scripts: [
+    {
+      src: "https://plausible.io/js/script.js",
+    },
+  ],
 };
 
 module.exports = config;
