@@ -122,6 +122,7 @@ const config = {
   scripts: [
     {
       src: "https://plausible.io/js/script.js",
+      "data-domain": "anima.ceceppa.me",
     },
   ],
 };
