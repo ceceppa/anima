@@ -786,4 +786,3 @@ func get_animation_data() -> Array:
 
 func _play_backwards(time: float) -> void:
 	_anima_tween.seek(time)
-

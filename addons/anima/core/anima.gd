@@ -53,4 +53,3 @@ static func Grid(grid: Node, grid_size: Vector2 = Vector2(-1, -1), items_delay: 
 			grid_size = Vector2(grid.get_child_count(), 1)
 
 	return c._init_me(grid, grid_size, items_delay, animation_type, point)
-

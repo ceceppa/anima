@@ -23,31 +23,41 @@ func _init_me(data: Dictionary):
 		if value != null:
 			_data[key] = data[key]
 
-func anima_from(from):
+func anima_from(from) -> Variant:
 	if from == null:
-		return
+		return self
 
 	_data.from = from
 
-func anima_to(to):
+	return self
+
+func anima_to(to) -> Variant:
 	if to == null:
 		return self
 
 	_data.to = to
 
-func anima_delay(delay: float):
+	return self
+
+func anima_delay(delay: float) -> Variant:
 	_data.delay = delay
 
-func anima_visibility_strategy(strategy: int):
+	return self
+
+func anima_visibility_strategy(strategy: int) -> Variant:
 	_data.visibility_strategy = strategy
 
-func anima_initial_value(initial_value):
+	return self
+
+func anima_initial_value(initial_value) -> Variant:
 	var values := {}
 	values[_data.property] = initial_value
 
 	_data.initial_values = values
 
-func anima_on_started(target: Callable, on_started_value = null, on_backwards_completed_value = null):
+	return self
+
+func anima_on_started(target: Callable, on_started_value = null, on_backwards_completed_value = null) -> Variant:
 	if typeof(on_started_value) != TYPE_ARRAY:
 		if on_started_value == null:
 			on_started_value = []
@@ -65,20 +75,24 @@ func anima_on_started(target: Callable, on_started_value = null, on_backwards_co
 		value = on_started_value,
 		backwards_value = on_backwards_completed_value
 	}
+	
+	return self
 
-func anima_on_completed(target: Callable, on_completed_value = null, on_backwards_completed_value = null):
+func anima_on_completed(target: Callable, on_completed_value = null, on_backwards_completed_value = null) -> Variant:
 	_data.on_completed = { 
 		target = target,
 		value = on_completed_value,
 		backwards_value = on_backwards_completed_value
 	}
+	
+	return self
 
-func as_reusable():
+func as_reusable() -> Variant:
 	_is_single_shot = false
 	
 	return self
 
-func debug(what = "---"):
+func debug(what = "---") -> Variant:
 	_data.__debug = what
 
 	return self

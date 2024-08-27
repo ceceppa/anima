@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" path="res://addons/anima/ui/AnimationPicker/AnimationPicker.gd" id="1_cyqje"]
 [ext_resource type="PackedScene" uid="uid://hrxmgulob80r" path="res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn" id="2_6r4ts"]
-[ext_resource type="Texture2D" uid="uid://bxufb8w78e7ja" path="res://addons/anima/resources/anima-preview.png" id="2_pk6n6"]
+[ext_resource type="Texture2D" uid="uid://cu23cv5pjsa0t" path="res://addons/anima/resources/anima-preview.png" id="2_pk6n6"]
 [ext_resource type="PackedScene" uid="uid://0luo7c2dwb4l" path="res://addons/anima/ui/AnimationPicker/CTASecondaryButton.tscn" id="3_qvnfb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ikkc"]
+bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4yg3m"]
 content_margin_left = 12.0
@@ -19,9 +22,6 @@ bg_color = Color(0.913725, 0.768627, 0.415686, 1)
 content_margin_left = 12.0
 content_margin_right = 12.0
 bg_color = Color(0.14902, 0.27451, 0.32549, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ikkc"]
-bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0op83"]
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
@@ -55,15 +55,17 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hovered_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 18
+theme_override_styles/panel = SubResource("StyleBoxFlat_0ikkc")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_4yg3m")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_0tlf5")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5ixaa")
-theme_override_styles/panel = SubResource("StyleBoxFlat_0ikkc")
+current_tab = 0
 
 [node name="Animations" type="HBoxContainer" parent="TabContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0
+metadata/_tab_index = 0
 
 [node name="Control" type="Control" parent="TabContainer/Animations"]
 layout_mode = 2
@@ -94,7 +96,7 @@ text = "Anima"
 
 [node name="SpriteDemo" type="Sprite2D" parent="TabContainer/Animations/Control/ControlContainer"]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(143, 64.5)
+position = Vector2(143, 63)
 texture = ExtResource("2_pk6n6")
 
 [node name="Panel" type="PanelContainer" parent="TabContainer/Animations/Control"]
@@ -202,7 +204,9 @@ size_flags_horizontal = 3
 text = "Close"
 
 [node name="Key Frames" type="HBoxContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="CodeEdit" type="CodeEdit" parent="TabContainer/Key Frames"]
 layout_mode = 2
@@ -214,5 +218,21 @@ auto_brace_completion_highlight_matching = true
 
 [connection signal="item_rect_changed" from="." to="." method="_on_item_rect_changed"]
 [connection signal="text_submitted" from="TabContainer/Animations/Control/Panel/MarginContainer/HBoxContainer/AnimationSpeed" to="." method="_on_animation_speed_text_submitted"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/HeaderButton" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/HeaderButton" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18597" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18597" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18607" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18607" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18617" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18617" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18629" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18629" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18641" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18641" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18671" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18671" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18699" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18699" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18709" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18709" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18721" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18721" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18733" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18733" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18743" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18743" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18753" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18753" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18763" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18763" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18767" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18767" method="_on_toggled"]
+[connection signal="toggled" from="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18787" to="TabContainer/Animations/VBoxContainer/ScrollContainer/ListContainer/@Button@18787" method="_on_toggled"]
 [connection signal="pressed" from="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer/UseAnimation" to="." method="_on_use_animation_pressed"]
 [connection signal="pressed" from="TabContainer/Animations/VBoxContainer/MarginContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
