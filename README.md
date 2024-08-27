@@ -4,7 +4,7 @@ Anima is an add-on for the Godot game engine that simplifies the process of crea
 
 ## Introduction
 
-![Example of animation created with anima](https://anima.ceceppa.me/anima.gif)
+![Example of animation created with anima](https://media.githubusercontent.com/media/ceceppa/anima/main/docs/static/img/anima.gif)
 
 Working with Godot's Tween to create UI animations can be quite challenging.
 However, Anima, an add-on for Godot, simplifies the process by allowing you to create animations using a clear and concise syntax with just a few lines of code.
