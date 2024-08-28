@@ -3,6 +3,7 @@ class_name AnimaDeclarationBase
 
 var _data := {}
 var _is_single_shot := true
+var _anima_node: AnimaNode
 
 enum PlayAction {
 	PLAY,
@@ -11,7 +12,23 @@ enum PlayAction {
 	PLAY_BACKWARDS,
 	PLAY_BACKWARDS_WITH_DELAY,
 	PLAY_BACKWARDS_WITH_SPEED,
+	LOOP,
+	LOOP_IN_CIRCLE,
+	LOOP_IN_CIRCLE_WITH_DELAY,
+	LOOP_IN_CIRCLE_WITH_SPEED,
+	LOOP_IN_CIRCLE_WITH_DELAY_AND_SPEED,
+	LOOP_BACKWARDS,
+	LOOP_BACKWARDS_WITH_SPEED,
+	LOOP_BACKWARDS_WITH_DELAY,
+	LOOP_BACKWARDS_WITH_DELAY_AND_SPEED,
+	LOOP_WITH_DELAY,
+	LOOP_WITH_SPEED,
+	LOOP_TIMES_WITH_DELAY,
+	LOOP_TIMES_WITH_DELAY_AND_SPEED
 }
+
+func clear():
+	_anima_node.clear()
 
 func get_data() -> Dictionary:
 	return _data
@@ -108,24 +125,53 @@ func __get_source():
 	return null
 
 func _do_play(action: PlayAction, param = null) -> AnimaNode:
-	var anima := Anima.begin(__get_source()).then(_data)
-	anima.set_single_shot(_is_single_shot)
+	if _anima_node == null:
+		_anima_node = Anima.begin(__get_source()).then(_data)
+
+		var single_shot = _is_single_shot if action < PlayAction.LOOP else false
+		_anima_node.set_single_shot(single_shot)
 
 	match action:
 		PlayAction.PLAY:
-			anima.play()
+			_anima_node.play()
 		PlayAction.PLAY_WITH_DELAY:
-			anima.play_with_delay(param)
+			_anima_node.play_with_delay(param)
 		PlayAction.PLAY_WITH_SPEED:
-			anima.play_with_speed(param)
+			_anima_node.play_with_speed(param)
 		PlayAction.PLAY_BACKWARDS:
-			anima.play_backwards()
+			_anima_node.play_backwards()
 		PlayAction.PLAY_BACKWARDS_WITH_DELAY:
-			anima.play_backwards_with_delay(param)
+			_anima_node.play_backwards_with_delay(param)
 		PlayAction.PLAY_BACKWARDS_WITH_SPEED:
-			anima.play_backwards_with_speed(param)
+			_anima_node.play_backwards_with_speed(param)
+		PlayAction.LOOP:
+			_anima_node.loop(param)
+		PlayAction.LOOP_IN_CIRCLE:
+			_anima_node.loop_in_circle(param)
+		PlayAction.LOOP_IN_CIRCLE_WITH_DELAY:
+			_anima_node.loop_in_circle_with_delay(param)
+		PlayAction.LOOP_IN_CIRCLE_WITH_SPEED:
+			_anima_node.loop_in_circle_with_speed(param.speed, param.times)
+		PlayAction.LOOP_IN_CIRCLE_WITH_DELAY_AND_SPEED:
+			_anima_node.loop_in_circle_with_delay_and_speed(param.delay, param.speed, param.times)
+		PlayAction.LOOP_BACKWARDS:
+			_anima_node.loop_backwards(param)
+		PlayAction.LOOP_BACKWARDS_WITH_SPEED:
+			_anima_node.loop_backwards_with_speed(param.speed, param.times)
+		PlayAction.LOOP_BACKWARDS_WITH_DELAY:
+			_anima_node.loop_with_delay(param.delay, param.times)
+		PlayAction.LOOP_BACKWARDS_WITH_DELAY_AND_SPEED:
+			_anima_node.loop_times_with_delay_and_speed(param.times, param.delay, param.speed)
+		PlayAction.LOOP_WITH_DELAY:
+			_anima_node.loop_with_delay(param.delay, param.times)
+		PlayAction.LOOP_WITH_SPEED:
+			_anima_node.loop_with_speed(param.speed, param.times)
+		PlayAction.LOOP_TIMES_WITH_DELAY:
+			_anima_node.loop_times_with_delay(param.times, param.delay)
+		PlayAction.LOOP_TIMES_WITH_DELAY_AND_SPEED:
+			_anima_node.loop_times_with_delay_and_speed(param.times, param.delay, param.speed)
 
-	return anima
+	return _anima_node
 
 func play() -> AnimaNode:
 	return _do_play(PlayAction.PLAY)
@@ -144,3 +190,42 @@ func play_backwards_with_delay(delay: float) -> AnimaNode:
 
 func play_backwards_with_speed(speed: float) -> AnimaNode:
 	return _do_play(PlayAction.PLAY_BACKWARDS_WITH_SPEED, speed)
+
+func loop(times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP, times)
+
+func loop_in_circle(times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_IN_CIRCLE, times)
+
+func loop_in_circle_with_delay(delay: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_IN_CIRCLE_WITH_DELAY, times)
+
+func loop_in_circle_with_speed(speed: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_IN_CIRCLE_WITH_SPEED, { times = times, speed = speed })
+
+func loop_in_circle_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_IN_CIRCLE_WITH_DELAY_AND_SPEED, { times = times, delay = delay, speed = speed })
+
+func loop_backwards(times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_BACKWARDS, times)
+
+func loop_backwards_with_speed(speed: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_BACKWARDS_WITH_SPEED, { times = times, speed = speed })
+
+func loop_backwards_with_delay(delay: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_BACKWARDS_WITH_DELAY, { times = times, delay = delay })
+
+func loop_backwards_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_BACKWARDS_WITH_DELAY_AND_SPEED, { times = times, delay = delay, speed = speed })
+
+func loop_with_delay(delay: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_WITH_DELAY,  { times = times, delay = delay })
+
+func loop_with_speed(speed: float, times: int = -1) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_WITH_SPEED, { times = times, speed = speed })
+
+func loop_times_with_delay(times: float, delay: float) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_TIMES_WITH_DELAY, { times = times, delay = delay })
+
+func loop_times_with_delay_and_speed(times: int, delay: float, speed: float) -> AnimaNode:
+	return _do_play(PlayAction.LOOP_TIMES_WITH_DELAY_AND_SPEED, { times = times, delay = delay, speed = speed })

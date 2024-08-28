@@ -138,6 +138,7 @@ func clear() -> void:
 	if not is_instance_valid(_anima_tween) or _anima_tween.is_queued_for_deletion():
 		return
 
+	_timer.stop()
 	stop()
 
 	_anima_tween.clear_animations()
@@ -759,7 +760,10 @@ func _maybe_play() -> void:
 
 	if _loop_times > 0 or _should_loop:
 		if _loop_delay > 0:
-			await get_tree().create_timer(_loop_delay).timeout
+			_timer.wait_time = _loop_delay
+			_timer.start()
+
+			await _timer.timeout
 
 		_do_play()
 
@@ -786,3 +790,6 @@ func get_animation_data() -> Array:
 
 func _play_backwards(time: float) -> void:
 	_anima_tween.seek(time)
+
+func debug():
+	print(get_animation_data())

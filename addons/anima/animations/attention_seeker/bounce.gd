@@ -24,4 +24,3 @@ var KEYFRAMES := {
 		"scale:y": 1.02,
 	},
 }
-

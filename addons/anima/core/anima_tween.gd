@@ -31,16 +31,21 @@ func _init(new_name: String = "AnimaTween"):
 	name = new_name
 
 func _enter_tree():
-	var tree: SceneTree = get_tree()
+	_create_tween()
 
-	if tree:
-		_tween = tree.create_tween()
+func _create_tween():
+	var tree = get_tree()
 
-		_tween.set_parallel(true)
-		_tween.pause()
+	if not tree:
+		return
 
-		_tween.loop_finished.connect(_on_tween_completed)
-		_tween.finished.connect(_on_tween_completed)
+	_tween = tree.create_tween()
+
+	_tween.set_parallel(true)
+	_tween.pause()
+
+	_tween.loop_finished.connect(_on_tween_completed)
+	_tween.finished.connect(_on_tween_completed)
 
 func _exit_tree():
 	for child in get_children():
@@ -291,15 +296,15 @@ func clear_animations() -> void:
 	_tween.stop()
 	_tween.kill()
 
-	if is_inside_tree():
-		_enter_tree()
-
 	for child in get_children():
 		child.queue_free()
 
 	_callbacks = {}
 	_animation_data.clear()
 	_initial_values.clear()
+
+	if is_inside_tree():
+		_enter_tree()
 
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _animation_data:
