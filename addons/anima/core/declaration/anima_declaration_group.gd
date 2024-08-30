@@ -10,6 +10,10 @@ func _init_me(group: Node, items_delay: float, animation_type: int, point: int) 
 		distance_formula = ANIMA.DISTANCE.EUCLIDIAN
 	})
 
+	if Engine.is_editor_hint():
+		for node in group.get_children():
+			super._clear_metakeys(node)
+
 	return self
 
 func anima_distance_formula(distance_formula: int) -> AnimaDeclarationGroup:
