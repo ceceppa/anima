@@ -25,5 +25,9 @@ func _init(nodes, items_delay: float):
 
 	_data.nodes = the_nodes
 
+	if Engine.is_editor_hint():
+		for node in _data.nodes:
+			super._clear_metakeys(node)
+
 func _can_add_node(child) -> bool:
 	return "visible" in child and child.visible
