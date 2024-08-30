@@ -1,5 +1,5 @@
 class_name AnimaDeclarationForRelativeProperty
-extends AnimaDeclarationBase
+extends AnimaDeclarationForBase
 
 # We can't use _init otherwise Godot complains with this nonsense
 # Too few arguments for "_init()". Expected at least 1

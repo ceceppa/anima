@@ -1,5 +1,5 @@
 class_name AnimaDeclarationForProperty
-extends AnimaDeclarationBase
+extends AnimaDeclarationForBase
 
 # We can't use _init otherwise Godot complains with this nonsense
 # Too few arguments for "_init()". Expected at least 1
@@ -9,17 +9,17 @@ func _init_me(data: Dictionary) -> AnimaDeclarationForProperty:
 	return self
 
 func anima_as_relative() -> AnimaDeclarationForProperty:
-	self._data.relative = true
-	
+	super._add("relative", true)
+
 	return self
 
 func anima_easing(easing) -> AnimaDeclarationForProperty:
-	self._data.easing = easing
+	super._add("easing", easing)
 
 	return self
 
 func anima_pivot(pivot: int) -> AnimaDeclarationForProperty:
-	self._data.pivot = pivot
+	super._add("pivot", pivot)
 
 	return self
 
