@@ -234,10 +234,10 @@ func clear():
 	return self
 
 func _then():
-	_nested_animation("_then")
+	return _nested_animation("_then")
 
 func _with():
-	_nested_animation("_with")
+	return _nested_animation("_with")
 
 func _nested_animation(key):
 	if not _target_data.has(key):
