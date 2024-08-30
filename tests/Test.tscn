@@ -37,23 +37,6 @@ text = "Label 1"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Label 2"
-metadata/__anima_initial_state__ = {
-"position:y": {
-"_initial_value": 295.0,
-"key": "y",
-"property": "position"
-},
-"scale:y": {
-"_initial_value": 1.0,
-"is_rect2": false,
-"key": "y",
-"property": "scale"
-}
-}
-metadata/__anima_visibility_strategy = 0
-metadata/__anima_initial_relative_value_position_y = 295.0
-metadata/__anima_last_relative_value_position_y = 295.0
-metadata/__anima_pivot_applied = true
 metadata/_visibility_strategy_reverted = true
 
 [node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer"]

@@ -2,10 +2,11 @@ class_name AnimaTweenUtils
 
 static func get_initial_and_relative_meta_keys(property: String) -> Dictionary:
 	var property_name_for_meta = property.replace(":", "_")
+	var is_editor = "__editor" if Engine.is_editor_hint() else "__"
 
 	return {
-		initial = "__anima_initial_relative_value_" + property_name_for_meta,
-		relative = "__anima_last_relative_value_" + property_name_for_meta,
+		initial = "__anima_initial_relative_value_" + property_name_for_meta + is_editor,
+		relative = "__anima_last_relative_value_" + property_name_for_meta + is_editor,
 	}
 
 static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
@@ -32,7 +33,7 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 		calculated_from = calculate_dynamic_value(animation_data.from, animation_data)
 
 	from = current_value
-
+#
 	if relative:
 		if not node.has_meta(meta_keys.relative):
 			node.set_meta(meta_keys.initial, current_value)
@@ -76,7 +77,14 @@ static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
 
 	if animation_data.has("__debug"):
 		print("calculate_from_and_to")
-		printt("", "Node Name:", animation_data.node.name, "property", animation_data.property, "from", from, "to", to, "current_value", current_value)
+		printt(
+			"",
+			"Node Name:", animation_data.node.name,
+			"property", animation_data.property,
+			"from", from,
+			"to", to,
+			"current_value", current_value
+		)
 		printt("", animation_data)
 
 	if typeof(to) == TYPE_RECT2:

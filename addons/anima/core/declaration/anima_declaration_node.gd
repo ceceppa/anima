@@ -30,6 +30,9 @@ enum PlayAction {
 }
 
 func _init(node: Node = null):
+	if Engine.is_editor_hint():
+		_clear_metakeys(node)
+
 	_data.clear()
 	_target_data = _data
 
@@ -39,9 +42,6 @@ func _set_data(data: Dictionary):
 	_target_data = data
 
 	return self
-
-func _clear_data():
-	_init(_target_data.node)
 
 func _create_declaration_for_animation(data: Dictionary) -> AnimaDeclarationForAnimation:
 	var c:= AnimaDeclarationForAnimation.new(self)
@@ -229,26 +229,34 @@ func clear():
 	if _anima_node and is_instance_valid(_anima_node):
 		_anima_node.clear()
 
+	_clear_metakeys(_target_data.node)
+
 	return self
 
+func _then():
+	_nested_animation("_then")
+
 func _with():
-	if not _target_data.has("_with"):
-		_target_data._with = {}
+	_nested_animation("_with")
+
+func _nested_animation(key):
+	if not _target_data.has(key):
+		_target_data[key] = {}
 
 	if _target_data.has("node"):
-		_target_data._with.node = _target_data.node
+		_target_data[key].node = _target_data.node
 	elif _target_data.has("grid"):
-		_target_data._with.grid = _target_data.grid
+		_target_data[key].grid = _target_data.grid
 	elif _target_data.has("group"):
-		_target_data._with.group = _target_data.group
+		_target_data[key].group = _target_data.group
 
 	var has_duration = _target_data.has("duration")
 	var duration = _target_data.duration if has_duration else null
 
 	if has_duration:
-		_target_data._with.duration = duration
+		_target_data[key].duration = duration
 
-	_target_data = _target_data._with
+	_target_data = _target_data[key]
 
 	return self
 
@@ -275,12 +283,18 @@ func __get_source():
 func _init_anima_node(data, mode):
 	if _anima_node == null:
 		_anima_node = Anima.begin(__get_source())
-	
+
+	if not data.has("duration") or data.duration == null:
+		data.duration = ANIMA.DEFAULT_DURATION
+
 	if mode == "with":
 		_anima_node.with(data)
 
 	if data.has("_with"):
 		_init_anima_node(data._with, "with")
+
+	if data.has("_then"):
+		_init_anima_node(data._then, "then")
 
 func _do_play(action: PlayAction, param = null) -> AnimaNode:
 	_init_anima_node(_data, "with")
@@ -392,3 +406,8 @@ func _add(key, value) -> void:
 
 func _get(key) -> Variant:
 	return _target_data[key]
+
+func _clear_metakeys(node: Node):
+	for meta in node.get_meta_list():
+		if meta.begins_with("__anima"):
+			node.remove_meta(meta)
