@@ -1,10 +1,63 @@
-[gd_scene format=3 uid="uid://b2teliumq3djx"]
+[gd_scene load_steps=2 format=3 uid="uid://b2teliumq3djx"]
+
+[ext_resource type="Script" path="res://tests/test.gd" id="1_gsa5s"]
 
 [node name="Test" type="Control"]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gsa5s")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Play animation"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 48
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Label 1"
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Label 2"
+metadata/__anima_initial_state__ = {
+"position:y": {
+"_initial_value": 295.0,
+"key": "y",
+"property": "position"
+},
+"scale:y": {
+"_initial_value": 1.0,
+"is_rect2": false,
+"key": "y",
+"property": "scale"
+}
+}
+metadata/__anima_visibility_strategy = 0
+metadata/__anima_initial_relative_value_position_y = 295.0
+metadata/__anima_last_relative_value_position_y = 295.0
+metadata/__anima_pivot_applied = true
+metadata/_visibility_strategy_reverted = true
+
+[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Label 3"
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bxxkjttcw57ae"]
 
 [ext_resource type="Script" path="res://TestScene/AnimatedControl.gd" id="1_242tf"]
-[ext_resource type="Texture2D" uid="uid://cu23cv5pjsa0t" path="res://addons/anima/resources/anima-preview.png" id="2_ftiaj"]
+[ext_resource type="Texture2D" uid="uid://ca72ljjcye5v1" path="res://addons/anima/resources/anima-preview.png" id="2_ftiaj"]
 [ext_resource type="Script" path="res://addons/anima/components/AnimatedControl.gd" id="2_y0l0h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ry2r1"]
