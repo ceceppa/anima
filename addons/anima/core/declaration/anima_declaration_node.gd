@@ -243,13 +243,13 @@ func clear():
 
 	return self
 
-func _then(new_class):
-	return _nested_animation("_then", new_class)
+func _then(new_class, delay):
+	return _nested_animation("_then", new_class, delay)
 
-func _with(new_class):
-	return _nested_animation("_with", new_class)
+func _with(new_class, delay):
+	return _nested_animation("_with", new_class, delay)
 
-func _nested_animation(key, new_class):
+func _nested_animation(key, new_class, delay):
 	if not _target_data.has(key):
 		_target_data[key] = {}
 
@@ -265,6 +265,9 @@ func _nested_animation(key, new_class):
 			_target_data[key].grid = _target_data.grid
 		elif _target_data.has("group"):
 			_target_data[key].group = _target_data.group
+
+	if delay:
+		_target_data[key].delay = delay
 
 	var has_duration = _target_data.has("duration")
 	var duration = _target_data.duration if has_duration else null
@@ -305,6 +308,10 @@ func _init_anima_node(data, mode):
 
 	if mode == "with":
 		_anima_node.with(data)
+	elif mode == "then":
+		_anima_node.then(data)
+	else:
+		printerr("Unsupported mode", mode)
 
 	if data.has("_with"):
 		_init_anima_node(data._with, "with")
@@ -313,7 +320,7 @@ func _init_anima_node(data, mode):
 		_init_anima_node(data._then, "then")
 
 func _do_play(action: PlayAction, param = null) -> AnimaNode:
-	_init_anima_node(_data, "with")
+	_init_anima_node(_data, "then")
 
 	var single_shot = _is_single_shot if action < PlayAction.LOOP else false
 	_anima_node.set_single_shot(single_shot)
