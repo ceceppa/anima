@@ -417,6 +417,7 @@ class AnimatedItem extends Node:
 	var _property_data: Dictionary
 	var _easing_curve: Curve
 	var _visibility_applied := false
+	var _animate_callback: Callable
 
 	func set_animation_data(data: Dictionary, property_data: Dictionary) -> void:
 		_animation_data = data
@@ -438,6 +439,11 @@ class AnimatedItem extends Node:
 
 		_node = data.node
 		_node.remove_meta("_visibility_strategy_reverted")
+
+		_animate_callback = _animate_normal
+
+		if _animation_data.has("_decimals"):
+			_animate_callback = _animate_with_fixed_decimals
 
 		if _animation_data.has("__debug"):
 			print("Using:")
@@ -487,6 +493,9 @@ class AnimatedItem extends Node:
 			_node.show()
 
 	func animate(elapsed: float) -> void:
+		_animate_callback.call(elapsed)
+	
+	func _animate_normal(elapsed: float) -> void:
 		if not _visibility_applied:
 			set_visibility_strategy()
 
@@ -501,6 +510,24 @@ class AnimatedItem extends Node:
 		var diff = _property_data.diff
 
 		var value = from + (diff * elapsed)
+
+		apply_value(value)
+
+	func _animate_with_fixed_decimals(elapsed: float) -> void:
+		if not _visibility_applied:
+			set_visibility_strategy()
+
+		if _property_data.size() == 0:
+			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data)
+
+			if _animation_data.has("__debug"):
+				printt("_property_data", _property_data)
+				print("")
+
+		var from = _property_data.from
+		var diff = _property_data.diff
+
+		var value = snapped(from + (diff * elapsed), _animation_data._decimals)
 
 		apply_value(value)
 

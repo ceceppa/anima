@@ -83,11 +83,11 @@ func anima_on_completed(target: Callable, on_completed_value = null, on_backward
 	
 	return self
 
-func with() -> AnimaDeclarationNode:
-	return _parent_class._with()
+func anima_with(new_class = null) -> AnimaDeclarationNode:
+	return _parent_class._with(new_class)
 
-func then() -> AnimaDeclarationNode:
-	return _parent_class._then()
+func anima_then(new_class = null) -> AnimaDeclarationNode:
+	return _parent_class._then(new_class)
 
 func play() -> AnimaNode:
 	return _parent_class.play()

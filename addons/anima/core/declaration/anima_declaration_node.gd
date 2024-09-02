@@ -36,12 +36,17 @@ func _init(node: Node = null):
 	_data.clear()
 	_target_data = _data
 
-	_target_data.node = node
+	if node:
+		_target_data.node = node
 
 func _set_data(data: Dictionary):
-	_target_data = data
+	for key in data:
+		_target_data[key] = data[key]
 
 	return self
+
+func get_data():
+	return _target_data
 
 func _create_declaration_for_animation(data: Dictionary) -> AnimaDeclarationForAnimation:
 	var c:= AnimaDeclarationForAnimation.new(self)
@@ -82,6 +87,11 @@ func anima_animation_frames(frames: Dictionary, duration = null) -> AnimaDeclara
 
 func anima_property(property: String, final_value = null, duration = null) -> AnimaDeclarationForProperty:
 	_anima_declaration = _create_declaration_with_easing({ property = property, to = final_value, duration = duration })
+
+	return _anima_declaration
+
+func anima_property_with_decimals(property: String, final_value = null, decimals: int = 2, duration = null) -> AnimaDeclarationForProperty:
+	_anima_declaration = _create_declaration_with_easing({ property = property, to = final_value, duration = duration, _decimals = decimals })
 
 	return _anima_declaration
 
@@ -233,22 +243,28 @@ func clear():
 
 	return self
 
-func _then():
-	return _nested_animation("_then")
+func _then(new_class):
+	return _nested_animation("_then", new_class)
 
-func _with():
-	return _nested_animation("_with")
+func _with(new_class):
+	return _nested_animation("_with", new_class)
 
-func _nested_animation(key):
+func _nested_animation(key, new_class):
 	if not _target_data.has(key):
 		_target_data[key] = {}
 
-	if _target_data.has("node"):
-		_target_data[key].node = _target_data.node
-	elif _target_data.has("grid"):
-		_target_data[key].grid = _target_data.grid
-	elif _target_data.has("group"):
-		_target_data[key].group = _target_data.group
+	if new_class:
+		var data = new_class.get_data()
+
+		for k in data:
+			_target_data[key][k] = data[k]
+	else:
+		if _target_data.has("node"):
+			_target_data[key].node = _target_data.node
+		elif _target_data.has("grid"):
+			_target_data[key].grid = _target_data.grid
+		elif _target_data.has("group"):
+			_target_data[key].group = _target_data.group
 
 	var has_duration = _target_data.has("duration")
 	var duration = _target_data.duration if has_duration else null
