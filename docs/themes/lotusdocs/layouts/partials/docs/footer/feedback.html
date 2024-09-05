@@ -77,7 +77,7 @@
             result.classList.add("is-visible");
         }
         try {
-            {{ if .Site.GoogleAnalytics -}}
+            {{ if .Site.Config.Services.GoogleAnalytics.ID -}}
             {{ if not .Site.Params.feedback.eventDest | or (in .Site.Params.feedback.eventDest "google") -}}
             gtag('event', '{{ replaceRE `( {1,})` "_" (.Site.Params.feedback.emoticonEventName | default "feedback" | lower) }}',
                 {
@@ -253,7 +253,7 @@
         }
         try {
             if (formType == "positive") {
-                {{ if .Site.GoogleAnalytics -}}
+                {{ if .Site.Config.Services.GoogleAnalytics.ID -}}
                 {{ if not .Site.Params.feedback.eventDest | or (in .Site.Params.feedback.eventDest "google") -}}
                 gtag('event', '{{ replaceRE `( {1,})` "_" (.Site.Params.feedback.positiveEventName | default "Positive Feedback" | lower) }}',
                     {
@@ -279,7 +279,7 @@
                 {{ end -}}
                 {{ end -}}
             } else if (formType == "negative") {
-                {{ if .Site.GoogleAnalytics -}}
+                {{ if .Site.Config.Services.GoogleAnalytics.ID -}}
                 {{ if not .Site.Params.feedback.eventDest | or (in .Site.Params.feedback.eventDest "google") -}}
                 gtag('event', '{{ replaceRE `( {1,})` "_" (.Site.Params.feedback.negativeEventName | default "Positive Feedback" | lower) }}',
                     {

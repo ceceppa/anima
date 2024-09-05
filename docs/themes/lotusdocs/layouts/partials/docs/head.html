@@ -100,7 +100,7 @@
     {{- end -}}
     <!-- Google Analytics v4 Config -->
     {{- if not hugo.IsServer }}
-    {{- if .Site.GoogleAnalytics }}
+    {{- if .Site.Config.Services.GoogleAnalytics.ID }}
         {{- template "_internal/google_analytics.html" . -}}
     {{- end -}}
     {{- end -}}
