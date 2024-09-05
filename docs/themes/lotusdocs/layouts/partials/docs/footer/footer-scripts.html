@@ -45,13 +45,13 @@
 {{ if hugo.IsProduction }}
     {{ $js = $js | fingerprint "sha384" }}
 {{ end }}
-    <script src="{{ $js.RelPermalink }}" {{ if hugo.IsProduction }}integrity="{{ $js.Data.Integrity }}"{{ end -}} defer></script>
+    <script src="{{ $js.RelPermalink }}" defer></script>
 
 {{ $js := $slice | resources.Concat (printf "/%s/%s" ($.Scratch.Get "pathName") "js/bundle.js") -}}
 
 {{- if not hugo.IsServer }}
     {{- $js := $js | minify | fingerprint "sha384" }}
-    <script type="text/javascript" src="{{ $js.Permalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
+    <script type="text/javascript" src="{{ $js.Permalink }}" crossorigin="anonymous" defer></script>
 {{- else }}
     <script type="text/javascript" src="{{ $js.Permalink }}" defer></script>
 {{- end }}

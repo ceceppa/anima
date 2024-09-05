@@ -42,10 +42,10 @@ If so, collect and consolidate the items config from each enabled instance
         {{ $app := resources.Get "/js/app.js" }}
         {{- if not hugo.IsServer }}
             {{- $js := (slice $app) | resources.Concat "/js/bundle.js" | minify | fingerprint "sha384" }}
-            <script type="text/javascript" src="{{ $js.Permalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+            <script type="text/javascript" src="{{ $js.Permalink }}"></script>
         {{- else }}
             {{- $js := (slice $app) | resources.Concat "/js/bundle.js" }}
-            <script type="text/javascript" src="{{ $js.Permalink }}" {{ if hugo.IsProduction }}integrity="{{ $js.Data.Integrity }}"{{ end }}></script>
+            <script type="text/javascript" src="{{ $js.Permalink }}"></script>
         {{- end }}
 
         <!-- Image Compare Viewer Config -->

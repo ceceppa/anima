@@ -14,7 +14,7 @@
     {{ if hugo.IsProduction }}
         {{ $mermaid = $mermaid | fingerprint "sha384" }}
     {{ end }}
-    <script src="{{ $mermaid.RelPermalink }}" {{ if hugo.IsProduction }}integrity="{{ $mermaid.Data.Integrity }}"{{ end }}></script>
+    <script src="{{ $mermaid.RelPermalink }}"></script>
     <script>
         const config = {
             startOnLoad:true,
