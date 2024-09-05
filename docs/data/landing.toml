@@ -22,7 +22,7 @@ info = "**Open Source** MIT Licensed."
   [hero.image]
   path = "images"
   filename = "hero.png"
-  alt = "Lotus Docs Screenshot"
+  alt = "Anima documentation"
   boxShadow = true
   rounded = true
 

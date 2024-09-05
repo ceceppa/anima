@@ -130,11 +130,11 @@ unsafe= true
     identifier = "docs"
     weight = 10
 
-# [[menu.primary]]
-#     name  = "Showcase"
-#     url = "/showcase"
-#     identifier = "showcase"
-#     weight = 20
+[[menu.primary]]
+    name  = "Tutorials"
+    url = "/docs/tutorials/"
+    identifier = "tutorials"
+    weight = 20
 
 # [[menu.primary]]
 #     name  = "Community"
