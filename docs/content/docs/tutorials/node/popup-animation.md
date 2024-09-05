@@ -1,14 +1,14 @@
 ---
 weight: 100
-title: "Simple Animation"
-description: ""
+title: "Popup Animation"
+description: "An example of a sequential animation"
 icon: "developer_guide"
 draft: false
 ---
 
 Let's implement the following animation:
 
-{{< video src="/popup.webm" >}}
+{{< video src="/docs/popup.webm" >}}
 
 As we can see the animation is made of 3 components:
 
