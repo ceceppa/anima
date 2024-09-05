@@ -60,10 +60,8 @@ Animates the {{ .Get "class" }} using the given animation name.
 anima_animation(animation: String, duration: float)
 ```
 
-| Param     | Type   | Default | Description                                                                                     |
-| --------- | ------ | ------- | ----------------------------------------------------------------------------------------------- |
-| animation | string |         | The animation name                                                                              |
-| duration  | float  | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "animation" "type" "string" "default" "" "required" true "description" "The animation name") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -80,13 +78,11 @@ _NOTE:_ For more info check the [Animation Keyframes tutorial](/tutorials/extras
 #### Syntax
 
 ```gdscript
-anima_animation_frames(animation: Dictionary, duration: float)
+anima_animation_frames(frames: Dictionary, duration: float)
 ```
 
-| Param     | Type   | Default | Description                                                                                                                    |
-| --------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| animation | string |         | The animation frames. See[Create a custom animation](docs/extend-anima/custom-animation) for more information about the syntax |
-| duration  | float  | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used                                |
+{{ partial "custom/param" (dict "name" "frames" "type" "Dictionary" "default" "" "required" true "description" "The animation frames. See[Create a custom keyframes animation](/docs/tutorials/extras/animation-keyframes/) for more information about the syntax") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example:
 
@@ -115,21 +111,17 @@ Compared to the other property specific fuctions, like `anima_position_x` this m
 #### Syntax
 
 ```gdscript
-anima_property(property: String, final_value, duration)
+anima_property(property: String, final_value: Variant, duration: float)
 ```
 
-| Param       | Type    | Default | Description                                                                                  |
-| ----------- | ------- | ------- | -------------------------------------------------------------------------------------------- |
-| property    | string  |         | The property to animate                                                                      |
-| final_value | Variant | null    | (Optional) The final value. If null, the current property value is used as final value       |
-| duration    | float   | null    | The animation duration (seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "property" "type" "string" "default" "" "required" true) }}
 
-The `property` parameter can be any node property that can be accessed, even exported variables. For example:
+The property to animate it can be any node property that can be accessed, even exported variables. For example:
 
 - size
 - position
 
-We can also specify the subkey of the Vector2, Vector3 or Rect2 we want to animate, for example:
+We can also specify the subkey of the `Vector2`, `Vector3` or `Rect2` we want to animate, for example:
 
 - size:x
 - position:y
@@ -145,6 +137,9 @@ Anima also recognised these built-in property names:
 | width        | This is equivalent to `size:x` or `rect_size:x`         |
 | height       | This is equivalent to `size:y` or `rect_size:y`         |
 | shared_param | This will call `set_shader_param`                       |
+
+{{ partial "custom/param" (dict "name" "final_value" "type" "Variant" "required" true "description" "(Optional) The final value. If null, the current property value is used as final value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -212,9 +207,7 @@ The formula to use to calculate the distance between the elements.
 .anima_distance_formula(formula: ANIMA.DISTANCE)
 ```
 
-| Param | Type | Description |
-| ----- | ---- | ----------- |
-| formula | int | The formula to use to calculate the distance between the elements. |
+{{ partial "custom/param" (dict "name" "formula" "type" "ANIMA.DISTANCE" "default" "" "required" true "description" "The formula to use to calculate the distance between the elements") }}
 
 **Formula**
 
@@ -276,9 +269,7 @@ Set the initial value.
 anima_from(value: Variant)
 ```
 
-| Param | Type    | Description                                                                                      |
-| ----- | ------- | ------------------------------------------------------------------------------------------------ |
-| value | Variant | The initial value. It can be a fixed or [dynamic](/docs/docs/tutorial-extras/dynamic-value) one. |
+{{ partial "custom/param" (dict "name" "value" "type" "Variant" "default" "" "required" true "description" "The initial value") }}
 
 #### Example
 
@@ -296,9 +287,7 @@ Fades in the given element(s)
 anima_fade_in(duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -316,9 +305,7 @@ Fades out the given element(s)
 anima_fade_out(duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -336,20 +323,9 @@ Callback to be triggered when the {{ .Get "class" }} animation starts.
 anima_on_started(callback: Funcref | Callable, on_started_value, on_backwards_completed_value = null)
 ```
 
-| Param                        | Type                          | Required | Description                                                                         |
-| ---------------------------- | ----------------------------- | -------- | ----------------------------------------------------------------------------------- |
-| callback                     | Funcref/Callable<sup>\*</sup> | yes      | The callback to call when the {{ .Get "class" }} animation is starts (or complete<sup>\*\*</sup>) |
-| on_started_value             | Variant                       | yes      | The parameter to pass at the callback when the {{ .Get "class" }} animation is played forward     |
-| on_backwards_completed_value | Variant                       | no       | The parameter to pass at the callback when the {{ .Get "class" }} animation is played backwards   |
-
-<b>
-  <sup>*</sup>
-</b> In Godot4 Funcref are called Callable.
-<br />
-<b>
-  <sup>**</sup>
-</b> When the animation is played backwards this event is triggered when the
-{{ .Get "class" }} animation starts
+{{ partial "custom/param" (dict "name" "callback" "type" "Callable" "required" true "description" "The callback to call when the animation is starts") }}
+{{ partial "custom/param" (dict "name" "on_started_value" "type" "Variant" "required" true "description" "The parameter to pass at the callback when the animation is played forward") }}
+{{ partial "custom/param" (dict "name" "on_backwards_completed_value" "type" "Variant" "default" "null" "description" "The parameter to pass at the callback when the animation is played backwards") }}
 
 #### Example
 
@@ -367,23 +343,12 @@ Callback to be triggered when the {{ .Get "class" }} animation completes.
 #### Syntax
 
 ```gdscript
-anima_on_completed(on_completed: FuncRef | Callable, on_completed_value, on_backwards_started_value = null)
+anima_on_completed(on_completed: Callable, on_completed_value, on_backwards_started_value = null)
 ```
 
-| Param                      | Type                          | Required | Description                                                                           |
-| -------------------------- | ----------------------------- | -------- | ------------------------------------------------------------------------------------- |
-| callback                   | Funcref/Callable<sup>\*</sup> | yes      | The callback to call when the {{ .Get "class" }} animation is completed (or started<sup>\*\*</sup>) |
-| on_completed_value         | Variant                       | yes      | The parameter to pass at the callback when the {{ .Get "class" }} animation is played forward       |
-| on_backwards_started_value | Variant                       | no       | The parameter to pass at the callback when the {{ .Get "class" }} animation is played backwards     |
-
-<b>
-  <sup>*</sup>
-</b> In Godot4 Funcref are called Callable.
-<br />
-<b>
-  <sup>**</sup>
-</b> When the animation is played backwards this event is triggered when the
-{{ .Get "class" }} animation starts
+{{ partial "custom/param" (dict "name" "on_completed" "type" "Callable" "required" true "description" "The callback to call when the animation is completed") }}
+{{partial "custom/param" (dict "name" "on_completed_value" "type" "Variant" "required" true "description" "The parameter to pass at the callback when the animation is played forward")}}
+{{partial "custom/param" (dict "name" "on_backwards_started_value" "type" "Variant" "default" "null" "description" "The parameter to pass at the callback when the animation is played backwards")}}
 
 #### Example
 
@@ -422,10 +387,8 @@ Animates the `x` and `y` position of the given element(s)
 anima_position(position: Vector2, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| position | Vector2 |         | The final 2D position                                                                           |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "position" "type" "Vector2" "default" "" "required" true "description" "The final 2D position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -444,10 +407,8 @@ Animates the `x`, `y` and `z` position of the given element(s)
 anima_position3D(position: Vector3, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| position | Vector3 |         | The final 3D position                                                                           |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "position" "type" "Vector3" "default" "" "required" true "description" "The final 3D position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -465,10 +426,8 @@ Animates the global `x` position of the given element(s)
 anima_position_x(x: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| x        | float |         | The global final `x` position                                                                   |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "x" "type" "float" "default" "" "required" true "description" "The global final `x` position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -486,10 +445,8 @@ Animates the global `y` position of the given element(s)
 anima_position_y(y: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| y        | float |         | The global final `y` position                                                                   |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "y" "type" "float" "default" "" "required" true "description" "The global final `y` position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -507,10 +464,8 @@ Animates the global `z` position of the given element(s)
 anima_position_z(z: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| z        | float |         | The global final `z` position                                                                   |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "z" "type" "float" "default" "" "required" true "description" "The global final `z` position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -528,10 +483,8 @@ Animates the relative `x` and `y` position of the given element(s)
 anima_relative_position(position: Vector2, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| position | Vector2 |         | The relative 2D position                                                                        |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "position" "type" "Vector2" "default" "" "required" true "description" "The relative 2D position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -549,10 +502,8 @@ Animates the relative `x`, `y` and `z` position of the given element(s)
 anima_relative_position3D(position: Vector3, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| position | Vector3 |         | The relative 3D position                                                                        |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "position" "type" "Vector3" "default" "" "required" true "description" "The relative 3D position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -570,10 +521,8 @@ Animates the relative `x` position of the given element(s)
 anima_relative_position_x(x: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| x        | float |         | The relative `x` position                                                                       |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "x" "type" "float" "default" "" "required" true "description" "The relative `x` position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -591,10 +540,8 @@ Animates the relative `y` position of the given element(s)
 anima_relative_position_y(y: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| y        | float |         | The relative `y` position                                                                       |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "y" "type" "float" "default" "" "required" true "description" "The relative `y` position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -612,10 +559,8 @@ Animates the relative `z` position of the given element(s)
 anima_relative_position_z(z: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| z        | float |         | The relative `z` position                                                                       |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "z" "type" "float" "default" "" "required" true "description" "The relative `z` position") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -633,10 +578,8 @@ Animates the 2D rotate property of the given element(s)
 anima_rotate(rotate: Vector2, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| rotate   | Vector2 |         | The final rotate value                                                                          |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "rotate" "type" "Vector2" "default" "" "required" true "description" "The final rotate value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -654,10 +597,8 @@ Animates the 3D rotate property of the given element(s)
 anima_rotate3D(rotate: Vector3, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| rotate   | Vector3 |         | The final rotate value                                                                          |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "rotate" "type" "Vector3" "default" "" "required" true "description" "The final rotate value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -675,10 +616,8 @@ Animates the `x` rotate property of the given element(s)
 anima_rotate_x(rotate_x: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| rotate_x | float |         | The final rotate `x` value                                                                      |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "rotate_x" "type" "float" "default" "" "required" true "description" "The final rotate `x` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -696,10 +635,8 @@ Animates the `y` rotate property of the given element(s)
 anima_rotate_y(rotate_y: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| rotate_y | float |         | The final rotate `y` value                                                                      |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "rotate_y" "type" "float" "default" "" "required" true "description" "The final rotate `y` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -717,10 +654,8 @@ Animates the `z` rotate property of the given element(s)
 anima_rotate_z(rotate_z: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| rotate_z | float |         | The final rotate `z` value                                                                      |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "rotate_z" "type" "float" "default" "" "required" true "description" "The final rotate `z` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -738,10 +673,8 @@ Animates the 2D scale property of the given element(s)
 anima_scale(scale: Vector2, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| scale    | Vector2 |         | The final scale value                                                                           |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "scale" "type" "Vector2" "default" "" "required" true "description" "The final scale value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -759,10 +692,8 @@ Animates the 3D scale property of the given element(s)
 anima_scale3D(scale: Vector3, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| scale    | Vector3 |         | The final scale value                                                                           |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "scale" "type" "Vector3" "default" "" "required" true "description" "The final scale value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -780,10 +711,8 @@ Animates the `x` scale property of the given element(s)
 anima_scale_x(scale_x: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| scale_x  | float |         | The final scale `x` value                                                                       |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "scale_x" "type" "float" "default" "" "required" true "description" "The final scale `x` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -801,10 +730,8 @@ Animates the `y` scale property of the given element(s)
 anima_scale_y(scale_y: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| scale_y  | float |         | The final scale `y` value                                                                       |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "scale_y" "type" "float" "default" "" "required" true "description" "The final scale `y` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -822,10 +749,8 @@ Animates the `z` scale property of the given element(s)
 anima_scale_z(scale_z: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| scale_z  | float |         | The final scale `z` value                                                                       |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "scale_z" "type" "float" "default" "" "required" true "description" "The final scale `z` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -843,10 +768,8 @@ Animates the 2D size property of the given element(s)
 anima_size(size: Vector2, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| size     | Vector2 |         | The final size value                                                                            |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "size" "type" "Vector2" "default" "" "required" true "description" "The final size value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -864,10 +787,8 @@ Animates the 3D size property of the given element(s)
 anima_size3D(size: Vector3, duration: float)
 ```
 
-| Param    | Type    | Default | Description                                                                                     |
-| -------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
-| size     | Vector3 |         | The final size value                                                                            |
-| duration | float   | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "size" "type" "Vector3" "default" "" "required" true "description" "The final size value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -885,10 +806,8 @@ Animates the `x` size property of the given element(s)
 anima_size_x(size_x: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| size_x   | float |         | The final size `x` value                                                                        |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "size_x" "type" "float" "default" "" "required" true "description" "The final size `x` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -906,10 +825,8 @@ Animates the `y` size property of the given element(s)
 anima_size_y(size_y: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| size_y   | float |         | The final size `y` value                                                                        |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "size_y" "type" "float" "default" "" "required" true "description" "The final size `y` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -927,10 +844,8 @@ Animates the `z` size property of the given element(s)
 anima_size_z(size_z: float, duration: float)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| size_z   | float |         | The final size `z` value                                                                        |
-| duration | float | null    | The animation duration (in seconds). If null, the [default duration](/docs/anima-node/) is used |
+{{ partial "custom/param" (dict "name" "size_z" "type" "float" "default" "" "required" true "description" "The final size `z` value") }}
+{{ partial "custom/param" (dict "name" "duration" "type" "float" "default" "null" "description" "The animation duration (in seconds). If null, the {{% default-duration %}} is used") }}
 
 #### Example
 
@@ -952,10 +867,8 @@ Executes the next animation in parallel with the current one.
 .anima_with(new_class: AnimaDeclaration, delay = 0)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| new_class   | AnimaDeclaration | current node/nodes/grid | The new AnimaDeclaration class to chain with the current one                                   |
-| delay    | float | 0       | The delay to apply before starting the new animation. If negative, it anticipates the animation |
+{{ partial "custom/param" (dict "name" "new_class" "type" "AnimaDeclaration" "default" "" "required" true "description" "The new AnimaDeclaration class to chain with the current one") }}
+{{ partial "custom/param" (dict "name" "delay" "type" "float" "default" "0" "description" "The delay to apply before starting the new animation. If negative, it anticipates the animation") }}
 
 #### Example
 
@@ -994,10 +907,8 @@ Executes the next animation after the current one has completed.
 .anima_then(new_class: AnimaDeclaration, delay = 0)
 ```
 
-| Param    | Type  | Default | Description                                                                                     |
-| -------- | ----- | ------- | ----------------------------------------------------------------------------------------------- |
-| new_class   | AnimaDeclaration | current node/nodes/grid | The new AnimaDeclaration class to chain with the current one                                   |
-| delay    | float | 0       | The delay to apply before starting the new animation. If negative, it anticipates the animation |
+{{ partial "custom/param" (dict "name" "new_class" "type" "AnimaDeclaration" "default" "" "required" true "description" "The new AnimaDeclaration class to chain with the current one") }}
+{{ partial "custom/param" (dict "name" "delay" "type" "float" "default" "0" "description" "The delay to apply before starting the new animation. If negative, it anticipates the animation") }}
 
 #### Example
 
