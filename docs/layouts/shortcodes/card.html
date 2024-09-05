@@ -1,0 +1,140 @@
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .easing-container {
+            margin: 20px;
+            text-align: center;
+        }
+        svg {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+    </style>
+    <div class="easing-container">
+        <h3>Linear</h3>
+        <svg width="300" height="300" viewBox="0 0 100 100" id="linearSvg"></svg>
+    </div>
+    <div class="easing-container">
+        <h3>Ease In Quad</h3>
+        <svg width="300" height="300" viewBox="0 0 100 100" id="easeInQuadSvg"></svg>
+    </div>
+    <div class="easing-container">
+        <h3>Ease Out Quad</h3>
+        <svg width="300" height="300" viewBox="0 0 100 100" id="easeOutQuadSvg"></svg>
+    </div>
+    <div class="easing-container">
+        <h3>Ease In Out Quad</h3>
+        <svg width="300" height="300" viewBox="0 0 100 100" id="easeInOutQuadSvg"></svg>
+    </div>
+
+    <script>
+        const easingFunctions = {
+            linear: t => t,
+            easeInQuad: t => t * t,
+            easeOutQuad: t => t * (2 - t),
+            easeInOutQuad: t => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+        };
+
+        function createEasingCurve(svgId, easingFunction) {
+            const svg = document.getElementById(svgId);
+            const ns = "http://www.w3.org/2000/svg";
+
+            // Create axes
+            const xAxis = document.createElementNS(ns, "line");
+            xAxis.setAttribute("x1", "0");
+            xAxis.setAttribute("y1", "100");
+            xAxis.setAttribute("x2", "100");
+            xAxis.setAttribute("y2", "100");
+            xAxis.setAttribute("stroke", "#888");
+
+            const yAxis = document.createElementNS(ns, "line");
+            yAxis.setAttribute("x1", "0");
+            yAxis.setAttribute("y1", "100");
+            yAxis.setAttribute("x2", "0");
+            yAxis.setAttribute("y2", "0");
+            yAxis.setAttribute("stroke", "#888");
+
+            svg.appendChild(xAxis);
+            svg.appendChild(yAxis);
+
+            // Create easing curve
+            const path = document.createElementNS(ns, "path");
+            let d = "M 0 100";
+
+            for (let x = 0; x <= 100; x++) {
+                const t = x / 100;
+                const y = 100 - easingFunction(t) * 100;
+                d += ` L ${x} ${y}`;
+            }
+
+            path.setAttribute("d", d);
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "blue");
+            svg.appendChild(path);
+
+            // Create point
+            const point = document.createElementNS(ns, "circle");
+            point.setAttribute("r", "2");
+            point.setAttribute("fill", "red");
+            point.setAttribute("cx", "0");
+            point.setAttribute("cy", "100");
+            svg.appendChild(point);
+
+            // Create animations
+            const animateX = document.createElementNS(ns, "animate");
+            animateX.setAttribute("attributeName", "cx");
+            animateX.setAttribute("from", "0");
+            animateX.setAttribute("to", "100");
+            animateX.setAttribute("dur", "2s");
+            animateX.setAttribute("begin", "indefinite");
+            animateX.setAttribute("fill", "freeze");
+            point.appendChild(animateX);
+
+            const animateY = document.createElementNS(ns, "animate");
+            animateY.setAttribute("attributeName", "cy");
+            animateY.setAttribute("values", getYValues(easingFunction));
+            animateY.setAttribute("dur", "2s");
+            animateY.setAttribute("begin", "indefinite");
+            animateY.setAttribute("fill", "freeze");
+            point.appendChild(animateY);
+
+            // Add event listeners
+            svg.addEventListener('mouseenter', () => {
+                animateX.beginElement();
+                animateY.beginElement();
+            });
+
+            svg.addEventListener('mouseleave', () => {
+                animateX.endElement();
+                animateY.endElement();
+
+                point.setAttribute("cx", "0");
+                point.setAttribute("cy", "100");
+            });
+        }
+
+        function getYValues(easingFunction) {
+            const steps = 100;
+            const values = [];
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const y = 100 - easingFunction(t) * 100;
+                values.push(y.toFixed(2));
+            }
+            return values.join(';');
+        }
+
+        createEasingCurve("linearSvg", easingFunctions.linear);
+        createEasingCurve("easeInQuadSvg", easingFunctions.easeInQuad);
+        createEasingCurve("easeOutQuadSvg", easingFunctions.easeOutQuad);
+        createEasingCurve("easeInOutQuadSvg", easingFunctions.easeInOutQuad);
+    </script>

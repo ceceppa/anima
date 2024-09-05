@@ -10,3 +10,5 @@ node_modules
 docs/*.import
 docs/**/.import
 .godot/
+docs.old
+docs/public/

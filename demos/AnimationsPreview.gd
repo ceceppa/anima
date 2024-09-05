@@ -33,7 +33,7 @@ func create_new_header(text: String) -> PanelContainer:
 
 	label.set_text(text.replace('_', ' ').capitalize())
 	container.add_child(label)
-	
+
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color('#404553')
 	style.content_margin_top = 12
