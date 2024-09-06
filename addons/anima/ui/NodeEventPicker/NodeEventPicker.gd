@@ -49,7 +49,7 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 			item.set_text(0, child.name)
 			item.set_meta("relative_path", str(_start_node.get_path_to(child)))
 			item.set_meta("path", str(child.get_path()))
-			item.set_icon(0, ANIMA.get_theme_icon(child.get_class()))
+			item.set_icon(0, get_theme_icon(child.get_class()))
 
 		if child.get_child_count() > 0:
 			_add_children(child, item)
@@ -90,7 +90,7 @@ func _add_node_options(root: TreeItem, name: String, type: EventType, items: Arr
 		EventType.PROPERTY:
 			icon = "MemberProperty"
 
-	parent_item.set_icon(0, ANIMA.get_theme_icon(icon))
+	parent_item.set_icon(0, get_theme_icon(icon))
 
 	for item in items:
 		if not _is_visible(%SearchEventsList, item.name):

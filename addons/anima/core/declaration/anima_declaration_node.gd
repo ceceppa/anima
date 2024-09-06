@@ -30,7 +30,7 @@ enum PlayAction {
 }
 
 func _init(node: Node = null):
-	if Engine.is_editor_hint():
+	if node and Engine.is_editor_hint():
 		_clear_metakeys(node)
 
 	_data.clear()

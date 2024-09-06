@@ -1,6 +1,6 @@
 ---
-weight: 100
-title: "Popup Animation"
+weight: 200
+title: "02: Popup Animation (Sequential animation)"
 description: "An example of a sequential animation"
 icon: "developer_guide"
 draft: false
@@ -86,3 +86,8 @@ So, how can we solve this? By using a negative delay :)
 Now we don't need to worry about the length of the text as the button is always animated 0.1 second before the previous animation completes!
 
 {{< alert context="info" text="If we have a look at the [anima_delay](/docs/anima/anima-node#anima_delay) documentation, we can see that we can also pass a negative number to anticipate the start of a sequential or parallel animation." />}}
+
+## Example code
+
+Example code for the popup animation is available [Popup.tscn](https://github.com/ceceppa/anima/tree/main/demos/nodes)
+

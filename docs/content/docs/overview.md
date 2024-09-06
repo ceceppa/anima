@@ -11,26 +11,56 @@ toc: true
 
 Anima makes animation accessible to everyone, regardless of skill level. With just a few lines of code and simple syntax, you can effortlessly create sequential and parallel animations. Choose from our extensive library of 89 animations and 33 easing functions, or customize your own to match your vision.
 
-## Custom nodes
+## Classes
 
-Anima provides those two additional nodes:
+Anima provides a set of classes that allow you to animate nodes in a simple and intuitive way.
+Here is a list of the available:
 
-- [AnimaNode](/docs/animate-node), used to handle the setup of all the animations supported by the addon
-- [AnimaTween](/docs/anima-tween), is the custom Tween used that allows the magic to happen :)
-
-## Animation Declaration
-
-Animation declarations are used to tell anima how to animate a single node, group or grid:
-
-- [AnimaDeclarationNode](/docs/anima-declaration)
+- [Anima.Node](/docs/anima/anima-node/): A utility class that provides a simple way to animate a single node
+- [Anima.Nodes](/docs/anima/anima-nodes/): A utility class that provides a simple way to animate multiple nodes
+- [Anima.Group](/docs/anima/anima-group/): A utility class that provides a simple way to animate children nodes of a parent node in a group layout
+- [Anima.Grid](/docs/anima/anima-grid/): A utility class that provides a simple way to animate children nodes of a parent node in a grid layout
 
 ## Example
 
+### Single node
+
 ```gdscript
-var anima = (
-  Anima.begin(self)
-  .then(Anima.Node($node).anima_animation("tada", 0.7))
-).play()
+(
+  Anima.Node(self)
+  .anima_animation("tada", 0.7)
+  .play()
+)
+```
+
+### Multiple nodes
+
+```gdscript
+(
+  Anima.Nodes([self, $Button, $AnotherNode], 0.1)
+  .anima_animation("fadeIn", 0.5)
+  .play()
+)
+```
+
+### Group layout
+
+```gdscript
+(
+  Anima.Group(self, 0.05)
+  .anima_animation("fadeIn", 0.5)
+  .play()
+)
+```
+
+### Grid layout
+
+```gdscript
+(
+  Anima.Grid(self, 0.2)
+  .anima_animation("fadeIn", 0.5)
+  .play()
+)
 ```
 
 ## Live demo

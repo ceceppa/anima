@@ -44,23 +44,28 @@ func _init(parent: EditorPlugin):
 	EVENT_PICKER_CONTENT.event_selected.connect(_on_node_event_selected)
 	_event_picker_window.close_requested.connect(_close_window.bind(_event_picker_window))
 
+func _is_anima_animatable(object):
+	return '_animatable' in object and object._animatable is AnimaAnimatable
+
 func _can_handle(object):
-	return object.has_method("get_animated_events")
+	return _is_anima_animatable(object)
 
 func _parse_begin(object):
-	if not object.has_method("get_animated_events"):
+	if not _is_anima_animatable(object):
 		return
 
 	if not _items_container:
 		_items_container = VBoxContainer.new()
 
-	if _selected_object_animated_container and _selected_object_animated_container.is_connected("animation_event_completed", _on_animation_event_completed):
-		_selected_object_animated_container.disconnect("animation_event_completed", _on_animation_event_completed)
+	var animatable = _selected_object_animated_container._animatable if _selected_object_animated_container else null
+	if animatable and animatable.is_connected("animation_event_completed", _on_animation_event_completed):
+		animatable.disconnect("animation_event_completed", _on_animation_event_completed)
 
 	_selected_object_animated_container = object
-	
-	if not _selected_object_animated_container.is_connected("animation_event_completed", _on_animation_event_completed):
-		_selected_object_animated_container.animation_event_completed.connect(_on_animation_event_completed)
+	animatable = _selected_object_animated_container._animatable
+
+	if not animatable.is_connected("animation_event_completed", _on_animation_event_completed):
+		animatable.animation_event_completed.connect(_on_animation_event_completed)
 
 	var container := VBoxContainer.new()
 	
@@ -82,7 +87,8 @@ func _parse_begin(object):
 func refresh_event_items(should_show_options_for := -1):
 	_is_restoring_data = true
 
-	var events: Array[Dictionary] = _selected_object_animated_container.get_animated_events()
+	var animatable = _selected_object_animated_container._animatable
+	var events: Array[Dictionary] = animatable.get_animated_events()
 
 	for child in _items_container.get_children():
 		child.queue_free()
@@ -124,20 +130,21 @@ func _perform_event(action: EventAction, param1 = null, param2 = null, should_re
 	if _is_restoring_data:
 		return
 
-	var previous: Array[Dictionary] = _selected_object_animated_container.get_animated_events().duplicate()
+	var animatable = _selected_object_animated_container._animatable
+	var previous: Array[Dictionary] = animatable.get_animated_events().duplicate()
 	var events: Array[Dictionary]
 	
 	match action:
 		EventAction.ADD:
-			events = _selected_object_animated_container.add_new_event()
+			events = animatable.add_new_event()
 		EventAction.REMOVE:
-			events = _selected_object_animated_container.remove_event_at(param1)
+			events = animatable.remove_event_at(param1)
 		EventAction.UPDATE_NAME:
-			events = _selected_object_animated_container.set_animated_event_name_at(param1, param2)
+			events = animatable.set_animated_event_name_at(param1, param2)
 		EventAction.UPDATE_DATA:
-			events = _selected_object_animated_container.set_animated_event_data_at(param1, param2)
+			events = animatable.set_animated_event_data_at(param1, param2)
 		EventAction.UPDATE_ON_EVENT:
-			events = _selected_object_animated_container.set_on_event_data(_selected_event_index, param1, param2)
+			events = animatable.set_on_event_data(_selected_event_index, param1, param2)
 
 	if should_refresh:
 		var expand_options_for = -1
@@ -172,7 +179,7 @@ func _on_animation_selected(name: String) -> void:
 	_animation_picker_window.hide()
 
 func _on_preview_animation(index: int) -> void:
-	_selected_object_animated_container.preview_animated_event_at(index)
+	_selected_object_animated_container._animatable.preview_animated_event_at(index)
 
 func _on_option_updated(index: int, event_item) -> void:
 	_perform_event(EventAction.UPDATE_DATA, index, event_item.get_data(), false)

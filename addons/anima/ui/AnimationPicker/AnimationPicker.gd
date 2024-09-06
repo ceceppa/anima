@@ -2,7 +2,6 @@
 extends VBoxContainer
 
 const HEADER_BUTTON = preload("res://addons/anima/ui/AnimationPicker/HeaderButton.tscn")
-const ANIMATION_BUTTON = preload("res://addons/anima/ui/AnimationPicker/AnimationButton.tscn")
 
 @onready var List: VBoxContainer = find_child("ListContainer")
 @onready var LabelDemo: Control = find_child("LabelDemo")
@@ -72,7 +71,7 @@ func _create_new_header(animation: String) -> Button:
 
 func _create_animation_button(label: String) -> HBoxContainer:
 	var container := HBoxContainer.new()
-	var button: Button = ANIMATION_BUTTON.instantiate()
+	var button: Button = Button.new()
 
 	button.text = label.replace('_', ' ').capitalize()
 	button.set_meta('_animation', label)
@@ -80,8 +79,8 @@ func _create_animation_button(label: String) -> HBoxContainer:
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.mouse_filter = Control.MOUSE_FILTER_PASS
 
-	var edit_button := AnimaButton.new()
-	edit_button.theme_icon = "Edit"
+	var edit_button := Button.new()
+	edit_button.icon = load("res://addons/anima/icons/more.svg")
 	edit_button.text = "Edit"
 	edit_button.hide()
 	edit_button.mouse_filter = Control.MOUSE_FILTER_PASS
