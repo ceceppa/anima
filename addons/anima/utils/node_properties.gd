@@ -42,11 +42,20 @@ static func get_rotation(node: Node):
 
 static func set_2D_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
+	var meta_key = ANIMA_PIVOT_APPLIED_META
+	
+	if Engine.is_editor_hint():
+		meta_key = meta_key + "Editor"
 
-	if node is Window or node.has_meta(ANIMA_PIVOT_APPLIED_META):
+	var pivot_size_applied = Vector2.ZERO
+	
+	if node.has_meta(meta_key):
+		pivot_size_applied = node.get_meta(meta_key) 
+
+	if node is Window or (node.has_meta(meta_key) and size == pivot_size_applied):
 		return
 
-	node.set_meta(ANIMA_PIVOT_APPLIED_META, true)
+	node.set_meta(meta_key, size)
 
 	match pivot:
 		ANIMA.PIVOT.TOP_CENTER:

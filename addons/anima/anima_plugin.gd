@@ -14,6 +14,9 @@ func _enter_tree():
 
 	add_inspector_plugin(_anima_inspector_plugin)
 
+func _ready():
+	_anima_inspector_plugin.set_godot_theme(get_editor_interface().get_base_control().theme)
+
 func _exit_tree():
 	remove_autoload_singleton('ANIMA')
 	
@@ -28,6 +31,6 @@ func _update_animated_events(node: Node, current_data: Array[Dictionary], events
 	undo_redo.commit_action()
 
 func _undo_update_animated_events(node: Node, previous_data):
-	node._animatable.set_animated_events(previous_data)
+	node.set_animated_events(previous_data)
 
 	_anima_inspector_plugin.refresh_event_items()

@@ -38,6 +38,14 @@ _events = Array[Dictionary]([{
 "play_mode": 0
 },
 "event_name": "ready"
+}, {
+"event_data": {
+"animation": "shake_y",
+"delay": 0,
+"duration": 0.7,
+"play_mode": 0
+},
+"event_name": "focus_entered"
 }])
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]

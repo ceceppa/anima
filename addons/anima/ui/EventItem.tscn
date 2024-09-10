@@ -1,10 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://nnsqkniyrq8k"]
+[gd_scene load_steps=5 format=3 uid="uid://nnsqkniyrq8k"]
 
 [ext_resource type="Script" path="res://addons/anima/ui/EventItem.gd" id="1_45vxs"]
-[ext_resource type="Texture2D" uid="uid://bai5m481wphqh" path="res://addons/anima/icons/Play.svg" id="2_25ntf"]
-[ext_resource type="Texture2D" uid="uid://di2na2kvh7syv" path="res://addons/anima/icons/GuiVisibilityVisible.svg" id="3_he8fa"]
-[ext_resource type="Texture2D" uid="uid://c0h7f30oqtija" path="res://addons/anima/icons/Closed.svg" id="4_dw1rr"]
 [ext_resource type="PackedScene" uid="uid://hrxmgulob80r" path="res://addons/anima/ui/AnimationPicker/CTAPrimaryButton.tscn" id="5_ooait"]
+[ext_resource type="Script" path="res://addons/anima/ui/AnimaButton.gd" id="6_ucond"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnnwg"]
 bg_color = Color(0.34902, 0.34902, 0.34902, 1)
@@ -54,22 +52,23 @@ unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Preview animation"
 toggle_mode = true
-icon = ExtResource("2_25ntf")
 icon_alignment = 1
+script = ExtResource("6_ucond")
+theme_icon = "Play"
 
 [node name="SkipButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Skip/Unskip"
 toggle_mode = true
-icon = ExtResource("3_he8fa")
+script = ExtResource("6_ucond")
+theme_icon = "GuiVisibilityVisible"
 
 [node name="MoreButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Toggle options"
 toggle_mode = true
-icon = ExtResource("4_dw1rr")
+script = ExtResource("6_ucond")
+theme_icon = "Collapse"
 
 [node name="Options" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -105,6 +104,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 item_count = 3
 popup/item_0/text = "Forward"
+popup/item_0/id = 0
 popup/item_1/text = "Backwards"
 popup/item_1/id = 1
 popup/item_2/text = "Loop"
@@ -132,6 +132,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 item_count = 3
 popup/item_0/text = "Forward"
+popup/item_0/id = 0
 popup/item_1/text = "Backward"
 popup/item_1/id = 1
 popup/item_2/text = "In circle"
@@ -202,6 +203,8 @@ text = "none"
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+script = ExtResource("6_ucond")
+theme_icon = "Clear"
 
 [node name="Label2" type="Label" parent="Options/VBoxContainer/EventsContaienr/Grid"]
 layout_mode = 2
@@ -221,6 +224,8 @@ text = "none"
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+script = ExtResource("6_ucond")
+theme_icon = "Clear"
 
 [node name="CenterContainer" type="CenterContainer" parent="Options/VBoxContainer"]
 layout_mode = 2
