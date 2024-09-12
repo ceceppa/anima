@@ -13,7 +13,6 @@ extends Control
 func _animate():
 	await (
 		Anima.Node(%Label2)
-		.clear()
 		.anima_animation("bounce", 0.5)
 		.play()
 	).animation_completed

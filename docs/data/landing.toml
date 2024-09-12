@@ -1,0 +1,78 @@
+[hero]
+enable = true
+weight = 10
+template = "hero"
+title = "Anima"
+subtitle = "Animations are your friend"
+info = "**Open Source** MIT Licensed."
+
+  [hero.backgroundImage]
+  path = "images/templates/hero"
+
+    [hero.backgroundImage.filename]
+    desktop = "gradient-desktop.webp"
+    mobile = "gradient-mobile.webp"
+
+  [hero.badge]
+  text = "v0.6.0"
+  color = "primary"
+  pill = false
+  soft = true
+
+  [hero.image]
+  path = "images"
+  filename = "hero.png"
+  alt = "Anima documentation"
+  boxShadow = true
+  rounded = true
+
+  [hero.ctaButton]
+  icon = "rocket_launch"
+  btnText = "Get Started"
+  url = "/docs/overview/"
+
+  [hero.cta2Button]
+  icon = "animation"
+  btnText = "Demo"
+  url = "https://ceceppa.me/anima-demo/"
+
+[featureGrid]
+enable = true
+weight = 20
+template = "feature grid"
+title = "Why choose Anima?"
+subtitle = "Anima is an add-on for the Godot game engine that simplifies the process of creating dynamic and impactful UI animations."
+
+  [[featureGrid.items]]
+  title = "Easy to Use"
+  icon = "code"
+  description = "Anima was designed to allow creatin powerful animations with few line of codes"
+
+    [featureGrid.items.ctaLink]
+    text = "learn more"
+    url = "/docs/"
+
+  [[featureGrid.items]]
+  title = "Focus on What Matters"
+  icon = "center_focus_strong"
+  description = "Anima has 89 Built-in animations and 39 different easing ready to use"
+
+    [featureGrid.items.ctaLink]
+    text = "learn more"
+    url = "/docs/"
+
+  [[featureGrid.items]]
+  title = "Community"
+  icon = "help"
+  description = "Need help? Join our community and get support from fellow users!"
+
+    [featureGrid.items.ctaLink]
+    text = "Join discord"
+    url = "https://discord.gg/zgtF3us5yN"
+
+
+[imageText]
+enable = false
+
+[imageCompare]
+enable = false

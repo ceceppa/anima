@@ -114,4 +114,3 @@ func _on_Button_pressed():
 	Anima.begin(self).then(
 		Anima.Node($Button).anima_position_x(half_screen_x, 1).anima_from(-178)
 	).play_with_delay(1)
-

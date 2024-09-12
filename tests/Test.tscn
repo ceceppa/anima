@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2teliumq3djx"]
+[gd_scene load_steps=3 format=3 uid="uid://b2teliumq3djx"]
 
 [ext_resource type="Script" path="res://tests/test.gd" id="1_gsa5s"]
+[ext_resource type="Script" path="res://addons/anima/components/AnimatedHBoxContainer.gd" id="2_80aan"]
 
 [node name="Test" type="Control"]
 layout_mode = 3
@@ -28,6 +29,24 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 48
 alignment = 1
+script = ExtResource("2_80aan")
+_events = Array[Dictionary]([{
+"event_data": {
+"animation": "fade_in",
+"delay": 0,
+"duration": 0.7,
+"play_mode": 0
+},
+"event_name": "ready"
+}, {
+"event_data": {
+"animation": "shake_y",
+"delay": 0,
+"duration": 0.7,
+"play_mode": 0
+},
+"event_name": "focus_entered"
+}])
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -37,7 +56,6 @@ text = "Label 1"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Label 2"
-metadata/_visibility_strategy_reverted = true
 
 [node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2

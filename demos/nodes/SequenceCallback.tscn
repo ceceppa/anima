@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://8u1vktammhcn"]
 
 [ext_resource type="Script" path="res://demos/nodes/SequenceCallback.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://bo50sbgp0cq1b" path="res://demos/resources/check.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://c366xnjxgfihg" path="res://demos/resources/check.png" id="3"]
 [ext_resource type="PackedScene" path="res://demos/components/ShowAllDemos.tscn" id="4"]
 
 [node name="Node" type="VBoxContainer"]

@@ -29,7 +29,7 @@ enum PlayAction {
 	LOOP_TIMES_WITH_DELAY_AND_SPEED
 }
 
-func _init(node: Node = null):
+func _init(node: Node = null, name = null):
 	if Engine.is_editor_hint():
 		_clear_metakeys(node)
 
@@ -38,6 +38,7 @@ func _init(node: Node = null):
 
 	if node:
 		_target_data.node = node
+		_target_data._name = name
 
 func _set_data(data: Dictionary):
 	for key in data:
@@ -52,7 +53,8 @@ func _create_declaration_for_animation(data: Dictionary) -> AnimaDeclarationForA
 	var c:= AnimaDeclarationForAnimation.new(self)
 
 	for key in data:
-		_target_data[key] = data[key]
+		if not _target_data.has(key):
+			_target_data[key] = data[key]
 
 	return c._init_me(_target_data)
 
@@ -63,7 +65,8 @@ func _create_declaration_with_easing(data: Dictionary) -> AnimaDeclarationForPro
 		data.duration = _target_data.duration
 
 	for key in data:
-		_target_data[key] = data[key]
+		if not _target_data.has(key):
+			_target_data[key] = data[key]
 
 	return c._init_me(_target_data)
 
@@ -71,7 +74,8 @@ func _create_relative_declaration_with_easing(data: Dictionary) -> AnimaDeclarat
 	var c:= AnimaDeclarationForRelativeProperty.new(self)
 
 	for key in data:
-		_target_data[key] = data[key]
+		if not _target_data[key]:
+			_target_data[key] = data[key]
 
 	return c._init_me(_target_data)
 	
@@ -239,6 +243,12 @@ func clear():
 	if _anima_node and is_instance_valid(_anima_node):
 		_anima_node.clear()
 
+	var to_ignore = ['node', 'nodes', 'grid', 'group']
+	for key in _data.keys():
+		if not to_ignore.has(key):
+			_data.erase(key)
+
+	_target_data = _data
 	_clear_metakeys(_target_data.node)
 
 	return self
@@ -270,10 +280,13 @@ func _nested_animation(key, new_class, delay):
 		_target_data[key].delay = delay
 
 	var has_duration = _target_data.has("duration")
-	var duration = _target_data.duration if has_duration else null
+	var has_easing = _target_data.has("easing")
 
 	if has_duration:
-		_target_data[key].duration = duration
+		_target_data[key].duration = _target_data.duration
+
+	if has_easing:
+		_target_data[key].easing = _target_data.easing
 
 	_target_data = _target_data[key]
 
@@ -374,7 +387,7 @@ func play_with_delay(delay: float) -> AnimaNode:
 	return _do_play(PlayAction.PLAY_WITH_DELAY, delay)
 
 func play_with_speed(speed: float) -> AnimaNode:
-	return _do_play(PlayAction.PLAY_BACKWARDS_WITH_SPEED, speed)
+	return _do_play(PlayAction.PLAY_WITH_SPEED, speed)
 
 func play_backwards() -> AnimaNode:
 	return _do_play(PlayAction.PLAY_BACKWARDS)

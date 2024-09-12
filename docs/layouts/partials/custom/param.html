@@ -1,0 +1,17 @@
+{{ $req := "" }}
+{{ if .required }}
+{{ $req = "required" }}
+{{ else }}
+{{ $req = "optional" }}
+{{ end }}
+<dl>
+    <dt>
+        <code>{{ .name }}</code>
+        <span class="text-success fw-light px-2">{{ .type }}</span>
+        <span class="fs-6 fw-light">{{ $req }}</span>
+    </dt>
+    <dd class="mt-2">
+        <div class="desc"><span class="description">{{ .description | markdownify }}</span></div>
+    </dd>
+</dl>
+{{ if .default }}<div class="fw-light mb-3">Default: <span>{{ .default }}</span></div>{{ end }}

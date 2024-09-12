@@ -37,7 +37,7 @@ func _exit_tree():
 	clear()
 
 	for child in get_children():
-		child.free()
+		child.queue_free()
 
 func _ready():
 	if not _anima_tween.is_connected("animation_completed",Callable(self,"_on_all_tween_completed")):
@@ -185,7 +185,7 @@ func _play(mode: int, delay: float = 0.0, speed := 1.0) -> AnimaNode:
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
-	_play_speed = speed
+	_play_speed = float(speed)
 
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_visibility_strategy)
@@ -759,13 +759,13 @@ func _maybe_play() -> void:
 	_loop_times -= 1
 
 	if _loop_times > 0 or _should_loop:
-		if _loop_delay > 0:
+		if _loop_delay > ANIMA.MINIMUM_DURATION:
 			_timer.wait_time = _loop_delay
 			_timer.start()
 
 			await _timer.timeout
-
-		_do_play()
+		else:
+			_do_play()
 
 func _on_all_tween_completed() -> void:
 	if _loop_times <= 1:
@@ -793,3 +793,5 @@ func _play_backwards(time: float) -> void:
 
 func debug():
 	print(get_animation_data())
+
+	return self

@@ -65,5 +65,3 @@ func _on_button_completed(index: int) -> void:
 
 	anima.play()
 	_check_sprites[index - 1].play()
-
-

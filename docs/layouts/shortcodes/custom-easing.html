@@ -1,0 +1,250 @@
+<style>
+    canvas#curveCanvas {
+        border: 1px solid #ccc;
+    }
+
+    #controls {
+        margin-top: 20px;
+    }
+
+    #pointInputs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .pointInput {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    input[type="number"] {
+        width: 60px;
+    }
+</style>
+<canvas id="curveCanvas" width="400" height="400"></canvas>
+<div id="controls">
+    <button id="playButton">Play Animation</button>
+</div>
+<div id="pointInputs"></div>
+
+<script>
+    const canvas = document.getElementById('curveCanvas');
+    const ctx = canvas.getContext('2d');
+    const playButton = document.getElementById('playButton');
+    const pointInputs = document.getElementById('pointInputs');
+
+    let points = [
+        {x: 0, y: 0},
+        {x: 0.2, y: 0.8},
+        {x: 0.8, y: 0.2},
+        {x: 1, y: 1}
+    ];
+
+    let draggingPoint = null;
+    let animating = false;
+    let animationProgress = 0;
+    const offset = 60;
+
+    function applyOffset(x, y) {
+        const width = canvas.width - 2 * offset;
+        const height = canvas.height - 2 * offset;
+        return {
+            x: x * width + offset,
+            y: (1 - y) * height + offset
+        };
+    }
+
+    function removeOffset(x, y) {
+        const width = canvas.width - 2 * offset;
+        const height = canvas.height - 2 * offset;
+        return {
+            x: (x - offset) / width,
+            y: 1 - (y - offset) / height
+        };
+    }
+
+    function drawPoint(x, y, radius = 6) {
+        const pos = applyOffset(x, y);
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawCurve() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw axes
+        ctx.strokeStyle = '#888';
+        ctx.beginPath();
+        ctx.moveTo(offset, canvas.height - offset);
+        ctx.lineTo(canvas.width - offset, canvas.height - offset);
+        ctx.moveTo(offset, canvas.height - offset);
+        ctx.lineTo(offset, offset);
+        ctx.stroke();
+
+        // Draw axis labels
+        ctx.fillStyle = '#888';
+        ctx.font = '12px Arial';
+        ctx.fillText('0', offset - 15, canvas.height - offset + 15);
+        ctx.fillText('1', canvas.width - offset - 5, canvas.height - offset + 15);
+        ctx.fillText('1', offset - 15, offset + 5);
+
+        // Draw guide lines
+        ctx.strokeStyle = '#ccc';
+        ctx.beginPath();
+        let start = applyOffset(points[0].x, points[0].y);
+        let end = applyOffset(points[1].x, points[1].y);
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(end.x, end.y);
+        start = applyOffset(points[2].x, points[2].y);
+        end = applyOffset(points[3].x, points[3].y);
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(end.x, end.y);
+        ctx.stroke();
+
+        // Draw Bezier curve
+        ctx.strokeStyle = 'blue';
+        ctx.beginPath();
+        start = applyOffset(points[0].x, points[0].y);
+        ctx.moveTo(start.x, start.y);
+        const cp1 = applyOffset(points[1].x, points[1].y);
+        const cp2 = applyOffset(points[2].x, points[2].y);
+        end = applyOffset(points[3].x, points[3].y);
+        ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+        ctx.stroke();
+
+        // Draw control points
+        ctx.fillStyle = 'blue';
+        points.forEach((point, index) => {
+            if (index === 1 || index === 2) {
+                drawPoint(point.x, point.y);
+            }
+        });
+
+        // Draw fixed points
+        ctx.fillStyle = 'gray';
+        drawPoint(points[0].x, points[0].y);
+        drawPoint(points[3].x, points[3].y);
+
+        // Draw animation point if animating
+        if (animating) {
+            const pos = getBezierPoint(animationProgress);
+            ctx.fillStyle = 'red';
+            drawPoint(pos.x, pos.y, 4);
+        }
+    }
+
+    function getBezierPoint(t) {
+        const [p0, p1, p2, p3] = points;
+        const cx = 3 * (p1.x - p0.x);
+        const bx = 3 * (p2.x - p1.x) - cx;
+        const ax = p3.x - p0.x - cx - bx;
+
+        const cy = 3 * (p1.y - p0.y);
+        const by = 3 * (p2.y - p1.y) - cy;
+        const ay = p3.y - p0.y - cy - by;
+
+        const x = ax * Math.pow(t, 3) + bx * Math.pow(t, 2) + cx * t + p0.x;
+        const y = ay * Math.pow(t, 3) + by * Math.pow(t, 2) + cy * t + p0.y;
+
+        return {x, y};
+    }
+
+    function updateCode() {
+        var values = document.querySelectorAll('input.pointInput')
+
+        const code = `Anima.Node(self)
+.anima_scale(Vector2.ONE, 0.7)
+.anima_from(Vector2.ZERO)
+.anima_easing([${values[0].value}, ${values[1].value}, ${values[2].value}, ${values[3].value}])
+.play()
+`;
+
+        const html = Prism.highlight(code, Prism.languages.javascript, 'javascript');
+        document.querySelector('#pointInputs ~ .prism-codeblock code').innerHTML = html;
+    }
+
+    function updatePointInputs() {
+        pointInputs.innerHTML = '';
+        const div = document.createElement('div');
+        div.className = 'pointInput';
+
+        [1, 2].forEach(index => {
+            div.innerHTML += `
+                <input type="number" class="pointInput" step="0.01" value="${points[index].x.toFixed(2)}" data-index="${index}" data-coord="x">
+                <input type="number" class="pointInput" step="0.01" value="${points[index].y.toFixed(2)}" data-index="${index}" data-coord="y">
+            `;
+            pointInputs.appendChild(div);
+        });
+
+        // Add event listeners to inputs
+        pointInputs.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                const coord = e.target.dataset.coord;
+                let value = parseFloat(e.target.value);
+
+                points[index][coord] = value;
+
+                drawCurve();
+                updatePointInputs(); // Update inputs to reflect any clamped values
+                updateCode();
+            });
+        });
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const pos = removeOffset(e.clientX - rect.left, e.clientY - rect.top);
+
+        [1, 2].forEach(index => {
+            const point = applyOffset(points[index].x, points[index].y);
+            if (Math.hypot(point.x - (e.clientX - rect.left), point.y - (e.clientY - rect.top)) < 10) {
+                draggingPoint = index;
+            }
+        });
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (draggingPoint !== null) {
+            const rect = canvas.getBoundingClientRect();
+            const pos = removeOffset(e.clientX - rect.left, e.clientY - rect.top);
+
+            // Clamp values between 0 and 1
+            points[draggingPoint].x = pos.x;
+            points[draggingPoint].y = pos.y;
+
+            drawCurve();
+            updatePointInputs();
+            updateCode();
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        draggingPoint = null;
+    });
+
+    playButton.addEventListener('click', () => {
+        if (!animating) {
+            animating = true;
+            animationProgress = 0;
+            animate();
+        }
+    });
+
+    function animate() {
+        if (animationProgress < 1) {
+            animationProgress += 0.01;
+            drawCurve();
+            requestAnimationFrame(animate);
+        } else {
+            animating = false;
+        }
+    }
+
+    drawCurve();
+    updatePointInputs();
+</script>
