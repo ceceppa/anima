@@ -243,6 +243,12 @@ func clear():
 	if _anima_node and is_instance_valid(_anima_node):
 		_anima_node.clear()
 
+	var to_ignore = ['node', 'nodes', 'grid', 'group']
+	for key in _data.keys():
+		if not to_ignore.has(key):
+			_data.erase(key)
+
+	_target_data = _data
 	_clear_metakeys(_target_data.node)
 
 	return self

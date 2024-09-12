@@ -37,7 +37,7 @@ func _exit_tree():
 	clear()
 
 	for child in get_children():
-		child.free()
+		child.queue_free()
 
 func _ready():
 	if not _anima_tween.is_connected("animation_completed",Callable(self,"_on_all_tween_completed")):
@@ -793,3 +793,5 @@ func _play_backwards(time: float) -> void:
 
 func debug():
 	print(get_animation_data())
+
+	return self
