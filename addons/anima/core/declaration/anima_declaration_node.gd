@@ -312,9 +312,11 @@ func __get_source():
 	
 	return null
 
-func _init_anima_node(data, mode):
+func _init_anima_node(data, mode, clear = false):
 	if _anima_node == null:
 		_anima_node = Anima.begin(__get_source())
+	elif is_instance_valid(_anima_node) and clear:
+		_anima_node.clear()
 
 	if not data.has("duration") or data.duration == null:
 		data.duration = ANIMA.DEFAULT_DURATION
@@ -333,7 +335,7 @@ func _init_anima_node(data, mode):
 		_init_anima_node(data._then, "then")
 
 func _do_play(action: PlayAction, param = null) -> AnimaNode:
-	_init_anima_node(_data, "then")
+	_init_anima_node(_data, "then", true)
 
 	var single_shot = _is_single_shot if action < PlayAction.LOOP else false
 	_anima_node.set_single_shot(single_shot)
