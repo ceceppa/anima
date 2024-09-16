@@ -46,10 +46,10 @@ func anima_visibility_strategy(strategy: int) -> Variant:
 	return self
 
 func anima_initial_value(initial_value) -> Variant:
-	var values := {}
-	values[_parent_class.get("property")] = initial_value
+	#var values := {}
+	#values[_parent_class.get("property")] = initial_value
 
-	_parent_class._add("initial_values", values)
+	_parent_class._add("initial_value", initial_value)
 
 	return self
 
