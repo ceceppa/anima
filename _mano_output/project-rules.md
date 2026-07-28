@@ -18,10 +18,15 @@ addons/anima/
   animations/    # legacy, untouched
   motion/        # new — Phase 1 and onward
     resources/
-      anima_motion.gd
+      anima_motion.gd        # base
       anima_sequence.gd
+      anima_parallel.gd
+      anima_property_motion.gd
+      anima_ease.gd           # curve resource, not an AnimaMotion subtype — still lives with the other resources
     runtime/
       anima_runtime.gd
+      anima_playback.gd       # tracks one play() call's live state; paired with the runtime loop that advances it
+      anima.gd                # class_name Anima entry point
 ```
 
 ## Naming

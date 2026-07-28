@@ -8,15 +8,19 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Anima"
 run/main_scene="res://demos/AnimationsPreview.tscn"
-config/features=PackedStringArray("4.3")
+config/features=PackedStringArray("4.6")
 
 [autoload]
 
-ANIMA="*res://addons/anima/core/constants.gd"
+ANIMA="*uid://dufqe6aoo20fp"
 
 [editor_plugins]
 
