@@ -20,9 +20,9 @@ On activation:
    ```
    - `DECISION: STOP` → you can't scope a phase now. Relay the script's one-line reason (prefixed `[mano start]:`) and stop. Don't re-derive or re-explain it — for the full picture, run `node _mano/scripts/state.js --verbose`. You may note any artifact defect you happened to spot, but it never licenses advancing.
    - `DECISION: PROCEED` → act on `NEXT:`:
-     - `scope-backlog` → **Path A.** The script prints a `SCOPE INPUT` block — the `Status: backlog` items, core product principles, and latest review. That is everything you need; go straight to Step 6 using it. **Do not open any file under `_mano_output/`** (no `backlog.md`, no `reviews.md`, and especially not the finished phase's folder — it's shipped). Don't greet conversationally.
+     - `scope-backlog` → **Path A.** The script prints a `SCOPE INPUT` block — the phase-scopeable `Status: backlog` items (with `spec-gap` / `rule-gap` already excluded), core product principles, and latest review. That is everything you need; go straight to Step 6 using it. **Do not open any file under `_mano_output/`** (no `backlog.md`, no `reviews.md`, and especially not the finished phase's folder — it's shipped). Don't greet conversationally.
      - `conversation` → **Path B** (new project).
-     - `resume-draft` → a previous run left a phase folder without a brief. The script prints all backlog items and recent continuity in `SCOPE INPUT`. Do not infer which items were approved: show the likely `in-phase-[N]` items if any, then ask the user to confirm or restate the exact approved scope for this phase. Once confirmed, resume at Step 7; do not start a new phase.
+     - `resume-draft` → a previous run left a phase folder without a brief. The script prints all phase-scopeable item statuses (`spec-gap` / `rule-gap` excluded) and recent continuity in `SCOPE INPUT`. Do not infer which items were approved: show the likely `in-phase-[N]` items if any, then ask the user to confirm or restate the exact approved scope for this phase. Once confirmed, resume at Step 7; do not start a new phase.
 
    An explicit abandonment does not silently bypass closure. Tell the user to remove or cut unfinished story rows as appropriate, run `mano review` to record and close the phase, then re-run `mano start`. **Script failing?** Stop and report the error — do not derive the go/no-go by scanning `_mano_output/` yourself (see "Scripts are mandatory" in `_mano/workflow.md`).
 
@@ -39,7 +39,7 @@ Provide detail to minimize clarifying queries.
 
 ## Inputs
 
-- The state script's `SCOPE INPUT` block — on Path A it carries the `Status: backlog` items; on `resume-draft` it carries all item statuses so the human can restore the lost approved subset. Both include `## Core Product Principles` and the latest review, so you never reopen `backlog.md` / `reviews.md` to scope.
+- The state script's `SCOPE INPUT` block — on Path A it carries phase-scopeable `Status: backlog` items; on `resume-draft` it carries all phase-scopeable statuses so the human can restore the lost approved subset. Gap types are excluded in both modes. Both include `## Core Product Principles` and the latest review, so you never reopen `backlog.md` / `reviews.md` to scope.
 - `_mano_output/backlog.md` — owned here: created on Path B and stamped at Step 7; on Path A you write to it but don't read it to scope
 - `_mano_output/project-rules.md` only if it already exists and is explicitly relevant to scoping
 - PRD or reference document if provided by the user
@@ -131,7 +131,7 @@ Then proceed to Step 6.
 
 **Precondition: the state script returned `DECISION: PROCEED`.** If a phase folder exists and its phase is in progress, you must not be here — the script's `STOP` is binding, so relay it and stop. Never suggest a next phase while the latest phase is unfinished, even if you noticed defects in its artifacts.
 
-Work from the state script's `SCOPE INPUT` block (the `Status: backlog` items, `## Core Product Principles`, and latest review) — it's already in context from activation, so don't reopen `backlog.md`, `reviews.md`, or the completed phase's folder. Estimate complexity of each item based on its context.
+Work from the state script's `SCOPE INPUT` block (the phase-scopeable `Status: backlog` items, `## Core Product Principles`, and latest review) — it's already in context from activation, so don't reopen `backlog.md`, `reviews.md`, or the completed phase's folder. The projection has already removed `spec-gap` and `rule-gap` items. Estimate complexity of each remaining item based on its context.
 
 **Hard constraint: one testable layer per phase.** A phase should deliver one cohesive slice that can be verified independently. If the suggestion includes both a backend AND a frontend, it's too big — pick one. If it includes a feature AND all its prerequisites as separate items, collapse them into the feature. Ask: "can someone test this phase's output without building the next phase first?" If no, the scope is wrong.
 
@@ -142,7 +142,7 @@ Prioritise:
 2. Dependencies — items that unblock other items
 3. Momentum — items that build on what was just shipped
 
-`mano start` ignores `spec-gap` and `rule-gap` items when suggesting phase scope — these are addressed by `mano spec` and `mano rules` directly.
+`mano start` ignores `spec-gap` and `rule-gap` items when suggesting phase scope — `state.js --scope` excludes them before they enter context. They are exposed separately by `state.js --gaps spec-gap` / `--gaps rule-gap` and addressed by `mano spec` / `mano rules`.
 
 ```
 [mano start]: Suggested Phase [N] Scope:
@@ -375,11 +375,11 @@ Splitting is the one case where editing an existing item's title and context is 
 - **`mano start`** writes deferred items during scoping
 - **`mano review`** writes deferred items during triage
 - **The user** can edit directly at any time
-- **`mano spec`** may only mark explicitly provided `spec-gap` items as resolved after updating the tech spec
-- **`mano rules`** may only mark explicitly provided `rule-gap` items as resolved after updating project rules
+- **`mano spec`** may only mark a fully addressed item from `state.js --gaps spec-gap` as resolved, using `backlog.js resolve-gap`
+- **`mano rules`** may only mark a fully addressed item from `state.js --gaps rule-gap` as resolved, using `backlog.js resolve-gap`
 - No other skill may write to the backlog
 
-Item additions and `backlog → in-phase-[N]` stamps go through `_mano/scripts/backlog.js` (`add` / `assign`), which owns the item format so every writer produces the same shape. The only direct hand-edits to `backlog.md` are the `## Core Product Principles` section and an item's title/context when splitting.
+Item additions, `backlog → in-phase-[N]` stamps, phase-close sweeps, and targeted gap resolutions go through `_mano/scripts/backlog.js` (`add` / `assign` / `resolve` / `resolve-gap`). The script owns the item format and status changes so every writer produces the same shape. The only direct hand-edits to `backlog.md` are the `## Core Product Principles` section and an item's title/context when splitting.
 
 ## Finalisation
 
@@ -425,7 +425,7 @@ Next:
 
 If all four optional artifacts already exist, recommend only the action that is useful from the current state.
 
-<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only -->
+<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
 ## Addressing post-start hook findings
 
 When a just-run post-start hook prints findings, follow `_mano/workflow.md` →
@@ -433,8 +433,9 @@ When a just-run post-start hook prints findings, follow `_mano/workflow.md` →
 selected findings only to the current phase brief and backlog. Any finding that
 would change the already-approved phase scope is `decide`, not `apply`. Backlog
 changes still go through the mandatory writer commands; never route around them
-with a hand-edit. Route findings owned by spec, rules, UX, UI, stories, or source
-code without editing those targets.
+with a hand-edit. A direct brief/backlog correction is `apply` — never route it
+back to the already-active `mano start`. Route findings owned by spec, rules,
+UX, UI, stories, or source code without editing those targets.
 <!-- /mano-rule: post-hook-findings-triage -->
 
 ## Post-start hook suggestion

@@ -1,7 +1,7 @@
 # Backlog
 
 <!-- Future work, deferred items, and ideas. -->
-<!-- `mano start` owns backlog curation during scoping. `mano review` appends or resolves items during review. -->
+<!-- `mano start` owns backlog curation during scoping. `mano review` appends or resolves phase items. `mano spec` / `mano rules` may resolve only exact projected gap items through backlog.js. -->
 <!-- You can edit this file directly at any time. -->
 
 ## Core Product Principles

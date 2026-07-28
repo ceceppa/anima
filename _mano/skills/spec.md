@@ -20,17 +20,19 @@ This skill produces the tech spec: what someone needs to open their editor and s
 This skill activates when the user types `mano spec`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
 
 On activation:
-1. Read the phase brief from `_mano_output/phase-[N]/phase-brief.md`.
-2. Read `_mano_output/tech-spec.md` if it exists.
-3. Read any package manifest and matching lockfile if they exist (`package.json` + `package-lock.json` / `pnpm-lock.yaml` / `yarn.lock` / `bun.lockb`).
-4. If no phase brief exists, warn the user and ask if they want to run `mano start` first or proceed anyway.
-5. If spec already exists, compare it against the current phase brief, any explicitly provided `spec-gap` context, and any manifest or lockfile evidence of the actual installed toolchain. **Brief-consistency is not the only pass condition.** A spec can match the brief and still be defective on its own terms — most commonly because the brief carries the same unhomed magic number the spec does, so diffing them surfaces nothing. Before presenting the diff, run the **Drain check**, the **Unhomed-value check**, and the **Domain model completeness check** (all below) against the *existing* spec, not just against the brief. These are quality passes on the spec itself, mandatory on every re-run, not only when drafting from scratch. An unhomed quantity is a defect even when the spec is "consistent with the brief" — home it and report it as a bullet in the completion log.
+1. Run `node _mano/scripts/state.js --gaps spec-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `spec-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `TYPE: spec-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
+2. Read the phase brief from `_mano_output/phase-[N]/phase-brief.md`.
+3. Read `_mano_output/tech-spec.md` if it exists.
+4. Read any package manifest and matching lockfile if they exist (`package.json` + `package-lock.json` / `pnpm-lock.yaml` / `yarn.lock` / `bun.lockb`).
+5. Do not read the project `README.md` or source files to discover additional context. The phase brief, existing spec, manifests/lockfiles, projected gaps, and literal context supplied by the user are the activation boundary.
+6. If no phase brief exists, warn the user and ask if they want to run `mano start` first or proceed anyway.
+7. If spec already exists, compare it against the current phase brief, the projected `spec-gap` items, any literal spec-gap context supplied by the user, and any manifest or lockfile evidence of the actual installed toolchain. **Brief-consistency is not the only pass condition.** A spec can match the brief and still be defective on its own terms — most commonly because the brief carries the same unhomed magic number the spec does, so diffing them surfaces nothing. Before presenting the diff, run the **Drain check**, the **Unhomed-value check**, and the **Domain model completeness check** (all below) against the *existing* spec, not just against the brief. These are quality passes on the spec itself, mandatory on every re-run, not only when drafting from scratch. An unhomed quantity is a defect even when the spec is "consistent with the brief" — home it and report it as a bullet in the completion log.
 
 **Change-ripple — when the requested change introduces a new mechanism.** A change is rarely just the line it names. When a requested edit swaps in a new node type, interface, entity, or capability (e.g. a single value becomes a collection, a static field becomes computed, a plain-text field becomes rich text), that new mechanism *brings its own required data* — and the localized edit will home the named thing while silently leaving the new data unhomed. Do not apply such a change as a one-line swap. Re-run the Domain model completeness check on what the new mechanism requires: list the properties/state it needs to work, and for each, either home it in the data model or **explicitly defer it in writing** (an Assumption Log / deferral note), naming which entity will own it once a deferred item lands. This is decisive, not interrogative — make the logical assumption and record it; do not stop to ask the user step-by-step. Surface anything newly required-but-unhomed as a bullet in the completion log.
 
 Do not conclude "consistent, no updates needed" until all three checks have run clean. Apply required non-conflicting updates directly in the same run and report them in the completion log; do not present a pre-write diff and ask for routine apply confirmation. If the checks expose a conflicting shared value or another decision the workflow reserves for the human, stop before writing that conflict and surface the exact alternatives. If nothing has changed and no spec-gaps exist, say so and skip the write.
 
-6. If spec doesn't exist yet, generate from scratch.
+8. If spec doesn't exist yet, generate from scratch using the same projected gaps as requirements for the initial artifact.
 
 This same command is also how sync-back works after real project setup. Rerun `mano spec` when:
 - the project was just initialized and now has a real lockfile
@@ -38,15 +40,22 @@ This same command is also how sync-back works after real project setup. Rerun `m
 - the package manager changed
 - developer tooling (linting, formatting, testing, codegen) was introduced after the first spec pass
 
-After addressing spec-gap items, update their status in the backlog to `resolved`.
+After the written tech spec fully addresses a projected spec-gap item, resolve that exact item with:
+
+```sh
+node _mano/scripts/backlog.js resolve-gap --type spec-gap --title "[exact projected title]"
+```
+
+Run one command per addressed item. Do not resolve a gap that was deferred, only partially addressed, or blocked by a human-owned conflict. Trust the writer's result; do not reopen the backlog to verify it.
 
 ## Inputs
 
 - Phase brief (required — warn and proceed if missing)
 - Package manifest and lockfile if they exist (optional — sync the spec to real installed versions)
-- Explicitly provided spec-gap context (optional)
+- Unresolved `spec-gap` projection from `state.js --gaps spec-gap` (optional when its count is zero)
+- Literal spec-gap context supplied directly by the user (optional)
 
-`mano spec` does not read design briefs, project rules, stories, or the backlog directly unless the user deliberately provides them as context. `mano start` owns backlog continuity and copies any relevant product principles into the phase brief; `mano spec` operates from the phase brief and explicitly provided context only.
+`mano spec` does not read design briefs, project rules, stories, project README files, source files, or the backlog directly. This remains true when the user asks to "handle the gaps in the backlog": run the filtered projection instead of opening the file. A backlog excerpt pasted directly into chat is literal user-provided context, but it is never permission to open the full backlog. `mano start` owns general backlog continuity and copies any relevant product principles into the phase brief; `mano spec` operates from the phase brief, the narrow gap projection, manifests/lockfiles, and literal user-provided context only.
 
 When product principles appear in the phase brief, translate only the ones with technical impact into constraints (perceived performance, accessibility posture, offline behaviour, latency budgets, keyboard-first interaction, etc.). Do not restate product copy. If a principle has no technical impact for the current phase, ignore it.
 
@@ -246,7 +255,7 @@ This is not the discretionary `⚠️ Note:` judgement above — a stated-prefer
 
 Tech spec must stay compact. Aim for roughly 400-800 words outside compact tables and keep it readable in under five minutes. Do not generate large architecture documents. If the spec drifts past this, the most likely cause is implementation detail that belongs in `project-rules.md` or in the code — see the Spec vs project-rules boundary above.
 
-<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only -->
+<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
 ## Addressing post-spec hook findings
 
 When a just-run post-spec hook prints findings, follow `_mano/workflow.md` →
@@ -254,8 +263,13 @@ When a just-run post-spec hook prints findings, follow `_mano/workflow.md` →
 selected findings only to `_mano_output/tech-spec.md`. A finding that requires a
 technical choice or conflicts with another artifact's owned value is `decide`;
 capture the selected answer in the spec and keep `Next:` conditional until it is
-resolved. Route conventions, scope changes, design decisions, and source-code
-findings to their owning skill without editing those targets.
+resolved. A direct `tech-spec.md` correction is `apply` — `mano spec` is already
+active, so never route it back to `mano spec` or ask the user to run the same
+command again. Make that edit surgically: adding a cap, default, or missing field
+does not authorize changing an existing count, base delay, strategy, storage
+choice, or neighboring decision. Route conventions, scope changes, design
+decisions, and source-code findings to their owning skill without editing those
+targets.
 <!-- /mano-rule: post-hook-findings-triage -->
 
 ## Post-spec hook suggestion

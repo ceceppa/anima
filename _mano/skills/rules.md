@@ -18,10 +18,13 @@ This skill defines project rules that are useful now — not rules for a project
 This skill activates when the user types `mano rules`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
 
 On activation:
-1. Read `_mano_output/tech-spec.md` if it exists. If it doesn't, warn the user that the rules will be higher-level and offer to proceed from the phase brief or run `mano spec` first.
-2. Read `_mano_output/ux-flow.md`, `_mano_output/design-brief.md`, and `_mano_output/backlog.md` if they exist.
-3. Read `_mano_output/project-rules.md` if it exists.
-4. Read the current phase brief from `_mano_output/phase-[N]/phase-brief.md` if it exists.
+1. Run `node _mano/scripts/state.js --gaps rule-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `rule-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `TYPE: rule-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
+2. Read `_mano_output/tech-spec.md` if it exists. If it doesn't, warn the user that the rules will be higher-level and offer to proceed from the phase brief or run `mano spec` first.
+3. Read `_mano_output/ux-flow.md` and `_mano_output/design-brief.md` if they exist.
+4. Read `_mano_output/project-rules.md` if it exists.
+5. Read the current phase brief from `_mano_output/phase-[N]/phase-brief.md` if it exists.
+
+Do not read the project `README.md` or source files to discover additional context. The listed planning artifacts, projected gaps, and literal context supplied by the user are the activation boundary.
 
 ## When to use
 
@@ -33,7 +36,7 @@ On activation:
 
 ### Step 1 — Understand the project shape
 
-Read the inputs. Infer project shape (solo vs team, prototype vs production, offline vs API) from the existing files. Do not ask questions whose answers are already in the phase brief, tech spec, or existing rules.
+Read the inputs. Infer project shape (solo vs team, prototype vs production, offline vs API) from the listed planning artifacts. Do not ask questions whose answers are already in the phase brief, tech spec, or existing rules.
 
 Two narrow exceptions where one targeted question is allowed:
 - **Accessibility level** is undefined and the current phase has user-facing surfaces where it materially changes the rules. Ask once: "What accessibility level are you targeting — WCAG 2.1 AA, AAA, or skip?" Write the answer as `Accessibility level: ...` in the Accessibility section.
@@ -45,7 +48,7 @@ All other decisions are made one-shot in Step 2. Do not stop to ask the user abo
 
 ### Step 2 — Generate rules one-shot
 
-Based on the tech spec, phase brief scope, backlog, UX flow, and project shape, generate the required project rules and write them directly to `_mano_output/project-rules.md`.
+Based on the tech spec, phase brief scope, projected `rule-gap` items, UX flow, and project shape, generate the required project rules and write them directly to `_mano_output/project-rules.md`.
 
 Only write rules relevant to what is being built now or in the current phase. Do not front-load rules for features that do not exist yet.
 
@@ -242,15 +245,21 @@ If implementation reveals a repeated pattern that should become a rule, do not i
 
 ## Updating existing rules
 
-When `project-rules.md` already exists, `mano rules` compares it against the current backlog, phase brief, and tech spec. Also check the backlog for items with `Type: rule-gap` — these are missing rules flagged during review.
+On every run, use the `rule-gap` projection captured during activation. These are missing rules flagged during review. Never open the backlog to discover or verify them. When `project-rules.md` already exists, compare it against the projected gaps, phase brief, and tech spec.
 
 Update the file directly. Report additions, updates, and removals as ordinary compact bullets in the canonical completion log; do not add a separate `Active Updates` block.
 
-After addressing `rule-gap` items, update their status in the backlog to `resolved`.
+After the written project rules fully address a projected rule-gap item, resolve that exact item with:
+
+```sh
+node _mano/scripts/backlog.js resolve-gap --type rule-gap --title "[exact projected title]"
+```
+
+Run one command per addressed item. Do not resolve a gap that was deferred, only partially addressed, or blocked by a human-owned conflict. Trust the writer's result; do not reopen the backlog to verify it.
 
 Prefer narrow edits. Do not rewrite large parts of `project-rules.md` unless the existing rules are stale, duplicative, or misleading.
 
-<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only -->
+<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
 ## Addressing post-rules hook findings
 
 When a just-run post-rules hook prints findings, follow `_mano/workflow.md` →
@@ -258,7 +267,8 @@ When a just-run post-rules hook prints findings, follow `_mano/workflow.md` →
 selected findings only to `_mano_output/project-rules.md`. A conflict with a
 value owned by the spec, brief, UX, or design brief is `decide` or `route`, never
 an invitation to reconcile the artifacts silently. Do not edit the owning
-artifact on another skill's behalf.
+artifact on another skill's behalf. A direct `project-rules.md` correction is
+`apply` — never route it back to the already-active `mano rules`.
 <!-- /mano-rule: post-hook-findings-triage -->
 
 ## Post-rules hook suggestion

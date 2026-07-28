@@ -11,21 +11,23 @@
  *      start / import / review used to each re-spell the `### title /
  *      **Type:** / **Status:**` block, and those copies drifted. Now they emit
  *      content and this script owns the shape.
- *   2. It performs only mechanical edits the human has already approved during
- *      scoping. It never decides what to scope or what to defer — the skill and
- *      the human own every decision. This is a format-correct executor, not an
- *      autonomous agent.
+ *   2. It performs only mechanical edits already authorized by the owning Mano
+ *      skill's contract (and, where required, human approval). It never decides
+ *      what to scope, defer, or consider addressed. This is a format-correct
+ *      executor, not an autonomous agent.
  *
  * Commands:
  *   add      append item(s) under `## Items`
  *   assign   move approved items from `Status: backlog` to `in-phase-<N>`
  *   resolve  mano review's close sweep: `in-phase-<N>` -> `resolved` (whole phase)
+ *   resolve-gap  mark one exact spec-gap / rule-gap item resolved
  *
  * Usage:
  *   node backlog.js add --title "X" --type feature --context "..." [--source "..."]
  *   node backlog.js add --file items.json        (JSON array, for bulk)
  *   node backlog.js assign --phase 9 --title "X" --title "Y"
  *   node backlog.js resolve --phase 9
+ *   node backlog.js resolve-gap --type spec-gap --title "Exact title"
  *   node backlog.js --help
  *
  * The `add` input is a single item from flags (the shell-safe path — no JSON to
@@ -33,14 +35,15 @@
  * for bulk. In a --context value, a literal `\n` becomes a line break. A
  * trailing positional arg is the project root (default: current dir).
  *
- * Exit code 0 on success (including "nothing matched", which is reported).
- * Non-zero only on bad input (malformed JSON, unknown type, missing --phase).
+ * Exit code 0 on success. Non-zero on bad input or when resolve-gap cannot
+ * identify one safe exact target; failed targeted resolves never write.
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
 
 const VALID_TYPES = ["bug", "refinement", "feature", "tech-debt", "test", "spec-gap", "rule-gap"];
+const GAP_TYPES = ["spec-gap", "rule-gap"];
 const ITEMS_HEADING = "## Items";
 
 const HELP = `mano backlog — deterministic writer for _mano_output/backlog.md
@@ -49,6 +52,7 @@ Commands:
   add      append item(s) under '## Items'
   assign   move approved items from 'Status: backlog' to 'in-phase-<N>'
   resolve  mano review's close sweep: flip every 'in-phase-<N>' to 'resolved'
+  resolve-gap  flip one exact open spec-gap / rule-gap item to 'resolved'
 
 add — one item from flags (the shell-safe path):
   --title "..."     required
@@ -64,7 +68,8 @@ add — many items at once:
 assign:
   --phase N         the phase the approved items enter (required)
   --title "..."     one per approved item, repeatable
-  Flips only items currently 'Status: backlog'; reports anything it can't.
+  Flips only non-gap items currently 'Status: backlog'; reports anything it
+  can't. spec-gap / rule-gap items stay backlog-owned by mano spec / mano rules.
 
 resolve:
   --phase N         the phase being closed (required)
@@ -73,10 +78,19 @@ resolve:
   items still 'Status: backlog' (e.g. this review's freshly triaged items) are
   never touched.
 
+resolve-gap:
+  --type <type>      required: spec-gap or rule-gap
+  --title "..."      required: one exact item title
+  Resolves only the unique item with that exact title, exact type, and
+  'Status: backlog'. An already-resolved matching item is an idempotent success.
+  Ambiguous, missing, malformed, wrong-type, or in-phase targets fail without
+  changing the file.
+
 A trailing positional argument = project root (default: current dir).
 
-This script writes. It owns the item *format* and performs only edits already
-approved during scoping — it never decides scope.`;
+This script writes. It owns the item *format* and performs only edits authorized
+by the owning skill's contract — it never decides scope or whether a gap was
+addressed.`;
 
 // ---- args -----------------------------------------------------------------
 
@@ -259,29 +273,67 @@ function cmdAssign(args) {
     fail("assign needs --phase <N> (an integer).");
   }
   if (args.titles.length === 0) fail("assign needs at least one --title.");
+  if (args.titles.some((title) => typeof title !== "string" || !title.trim())) {
+    fail("assign needs a non-empty value after every --title.");
+  }
   const phase = Number(args.phase);
 
   const file = backlogPath(args.root);
   const text = readText(file);
   if (text == null) fail(`assign: no backlog at ${file}.`);
 
+  // Defense in depth: state.js --scope excludes gaps, but the writer also
+  // refuses them if a caller names one directly. Read only canonical top-level
+  // Type fields; an indented metadata-shaped Context line is not item metadata.
+  const protectedGaps = new Map();
+  const parsedItems = parseItemRecords(text);
+  for (const record of parsedItems.records) {
+    for (let i = record.start + 1; i < record.end; i++) {
+      const typeMatch = /^-\s*\*\*Type:\*\*\s*(.+?)\s*$/i.exec(parsedItems.lines[i]);
+      if (!typeMatch) continue;
+      const type = typeMatch[1].trim().toLowerCase();
+      if (GAP_TYPES.includes(type)) {
+        protectedGaps.set(record.title.toLowerCase(), type);
+      }
+    }
+  }
+
   // Track outcome per requested title.
   const want = new Map();
-  for (const t of args.titles) want.set(t.trim().toLowerCase(), { title: t.trim(), outcome: "not-found", status: null });
+  for (const t of args.titles) {
+    want.set(t.trim().toLowerCase(), {
+      title: t.trim(), outcome: "not-found", status: null, type: null,
+    });
+  }
 
   const lines = text.split("\n");
   let curKey = null;
+  let inItems = false;
   for (let i = 0; i < lines.length; i++) {
+    if (/^##\s+Items\s*$/i.test(lines[i])) {
+      inItems = true;
+      curKey = null;
+      continue;
+    }
+    if (/^##\s+/.test(lines[i])) {
+      inItems = false;
+      curKey = null;
+      continue;
+    }
+    if (!inItems) continue;
     const h = /^###\s+(.+?)\s*$/.exec(lines[i]);
     if (h) { curKey = h[1].trim().toLowerCase(); continue; }
-    if (/^##\s+/.test(lines[i])) { curKey = null; continue; }
     if (curKey && want.has(curKey)) {
-      const m = /^(\s*-\s*\*\*Status:\*\*\s*)(.+?)\s*$/.exec(lines[i]);
+      const m = /^(-\s*\*\*Status:\*\*\s*)(.+?)\s*$/i.exec(lines[i]);
       if (m) {
         const cur = m[2].trim().toLowerCase();
         const rec = want.get(curKey);
         rec.status = cur;
-        if (cur === "backlog") { lines[i] = `${m[1]}in-phase-${phase}`; rec.outcome = "assigned"; }
+        if (protectedGaps.has(curKey)) {
+          rec.type = protectedGaps.get(curKey);
+          rec.outcome = "gap";
+        }
+        else if (cur === "backlog") { lines[i] = `${m[1]}in-phase-${phase}`; rec.outcome = "assigned"; }
         else rec.outcome = "skipped";
       }
     }
@@ -295,6 +347,10 @@ function cmdAssign(args) {
     (results.length - assigned.length ? `, ${results.length - assigned.length} unchanged` : "") + "\n");
   for (const r of results) {
     if (r.outcome === "assigned") process.stdout.write(`  + ${r.title}\n`);
+    else if (r.outcome === "gap") {
+      const owner = r.type === "spec-gap" ? "mano spec" : "mano rules";
+      process.stdout.write(`  ~ ${r.title} (${r.type}; route to ${owner}, left as '${r.status}')\n`);
+    }
     else if (r.outcome === "skipped") process.stdout.write(`  ~ ${r.title} (already '${r.status}', left as-is)\n`);
     else process.stdout.write(`  ? ${r.title} (no matching item — check the title, or split first)\n`);
   }
@@ -319,12 +375,23 @@ function cmdResolve(args) {
 
   const lines = text.split("\n");
   let curTitle = null;
+  let inItems = false;
   const flipped = [];
   for (let i = 0; i < lines.length; i++) {
+    if (/^##\s+Items\s*$/i.test(lines[i])) {
+      inItems = true;
+      curTitle = null;
+      continue;
+    }
+    if (/^##\s+/.test(lines[i])) {
+      inItems = false;
+      curTitle = null;
+      continue;
+    }
+    if (!inItems) continue;
     const h = /^###\s+(.+?)\s*$/.exec(lines[i]);
     if (h) { curTitle = h[1].trim(); continue; }
-    if (/^##\s+/.test(lines[i])) { curTitle = null; continue; }
-    const m = /^(\s*-\s*\*\*Status:\*\*\s*)(.+?)\s*$/.exec(lines[i]);
+    const m = /^(-\s*\*\*Status:\*\*\s*)(.+?)\s*$/i.exec(lines[i]);
     if (m && m[2].trim().toLowerCase() === want) {
       lines[i] = `${m[1]}resolved`;
       flipped.push(curTitle || "(untitled)");
@@ -335,6 +402,121 @@ function cmdResolve(args) {
   process.stdout.write(`[mano backlog] resolve → phase ${phase}: ${flipped.length} item(s) marked resolved\n`);
   if (flipped.length === 0) process.stdout.write(`  (no items with Status: in-phase-${phase})\n`);
   for (const t of flipped) process.stdout.write(`  + ${t}\n`);
+}
+
+// ---- resolve-gap ----------------------------------------------------------
+
+// Parse only `###` item blocks under the canonical `## Items` section. Ranges
+// are line-index based and end-exclusive so a validated status line can be
+// changed without re-rendering any other backlog content.
+function parseItemRecords(text) {
+  const lines = text.split("\n");
+  const records = [];
+  let inItems = false;
+  let cur = null;
+  const flush = (end) => {
+    if (!cur) return;
+    cur.end = end;
+    records.push(cur);
+    cur = null;
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^##\s+Items\s*$/i.test(line)) {
+      flush(i);
+      inItems = true;
+    } else if (/^##\s+/.test(line)) {
+      flush(i);
+      inItems = false;
+    } else if (inItems) {
+      const heading = /^###\s+(.+?)\s*$/.exec(line);
+      if (heading) {
+        flush(i);
+        cur = { title: heading[1].trim(), start: i, end: null };
+      }
+    }
+  }
+  flush(lines.length);
+  return { lines, records };
+}
+
+function itemField(lines, record, label) {
+  const re = label === "Type"
+    ? /^(-\s*\*\*Type:\*\*\s*)(.+?)(\s*)$/i
+    : /^(-\s*\*\*Status:\*\*\s*)(.+?)(\s*)$/i;
+  const found = [];
+  for (let i = record.start + 1; i < record.end; i++) {
+    const match = re.exec(lines[i]);
+    if (match) {
+      found.push({
+        line: i,
+        prefix: match[1],
+        value: match[2].trim().toLowerCase(),
+        trailing: match[3],
+      });
+    }
+  }
+  if (found.length !== 1) {
+    return {
+      error: `${record.title}: expected exactly one **${label}:** line, found ${found.length}`,
+    };
+  }
+  return found[0];
+}
+
+// A deliberately stricter writer than the phase-wide resolve. Gap owners name
+// one projected item and its expected type; every condition is validated before
+// the sole status line is changed.
+function cmdResolveGap(args) {
+  if (!GAP_TYPES.includes(String(args.type || "").trim())) {
+    fail(`resolve-gap needs --type ${GAP_TYPES.join(" or ")}.`);
+  }
+  if (args.titles.length !== 1) {
+    fail("resolve-gap needs exactly one --title.");
+  }
+
+  const expectedType = String(args.type).trim();
+  if (typeof args.titles[0] !== "string" || !args.titles[0].trim()) {
+    fail("resolve-gap needs a non-empty value after --title.");
+  }
+  const requestedTitle = args.titles[0].trim();
+
+  const file = backlogPath(args.root);
+  const text = readText(file);
+  if (text == null) fail(`resolve-gap: no backlog at ${file}.`);
+
+  const parsed = parseItemRecords(text);
+  const key = requestedTitle.toLowerCase();
+  const matches = parsed.records.filter((record) => record.title.toLowerCase() === key);
+  if (matches.length === 0) {
+    fail(`resolve-gap: no item has the exact title "${requestedTitle}".`);
+  }
+  if (matches.length > 1) {
+    fail(`resolve-gap: title "${requestedTitle}" is ambiguous (${matches.length} exact matches).`);
+  }
+
+  const record = matches[0];
+  const type = itemField(parsed.lines, record, "Type");
+  const status = itemField(parsed.lines, record, "Status");
+  if (type.error) fail(`resolve-gap: malformed item — ${type.error}.`);
+  if (status.error) fail(`resolve-gap: malformed item — ${status.error}.`);
+  if (type.value !== expectedType) {
+    fail(`resolve-gap: "${record.title}" is type "${type.value}", not "${expectedType}".`);
+  }
+  if (status.value === "resolved") {
+    process.stdout.write(`[mano backlog] resolve-gap → ${expectedType}: already resolved\n`);
+    process.stdout.write(`  ~ ${record.title} (already 'resolved', left as-is)\n`);
+    return;
+  }
+  if (status.value !== "backlog") {
+    fail(`resolve-gap: "${record.title}" has Status: ${status.value}; only backlog gaps can be resolved here.`);
+  }
+
+  parsed.lines[status.line] = `${status.prefix}resolved${status.trailing}`;
+  fs.writeFileSync(file, parsed.lines.join("\n"));
+  process.stdout.write(`[mano backlog] resolve-gap → ${expectedType}: 1 item marked resolved\n`);
+  process.stdout.write(`  + ${record.title}\n`);
 }
 
 // ---- main -----------------------------------------------------------------
@@ -348,7 +530,8 @@ function main() {
   if (args.command === "add") cmdAdd(args);
   else if (args.command === "assign") cmdAssign(args);
   else if (args.command === "resolve") cmdResolve(args);
-  else fail(`unknown command "${args.command}". Use add, assign, or resolve (--help for usage).`);
+  else if (args.command === "resolve-gap") cmdResolveGap(args);
+  else fail(`unknown command "${args.command}". Use add, assign, resolve, or resolve-gap (--help for usage).`);
 }
 
 main();

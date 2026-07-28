@@ -13,7 +13,7 @@
 
 ## Tech stack
 
-Godot 4.3, GDScript only. No GDExtension/native code in Phase 1 — GDScript remains the fallback until a reproducible benchmark proves the evaluation loop itself is a bottleneck (see Out of Scope).
+Godot 4.3, GDScript only. No GDExtension/native code in Phase 1 — see Out of Scope for the native-accelerator gate criteria.
 
 ## Libraries & dependencies
 
@@ -31,7 +31,7 @@ Godot 4.3, GDScript only. No GDExtension/native code in Phase 1 — GDScript rem
 | `AnimaParallel` (composite) | `children: Array[AnimaMotion]`, `completion_policy: ALL_CHILDREN \| FIRST_CHILD \| NAMED_CHILD` (default `ALL_CHILDREN`), `completion_child_name: String` | Default mirrors Sequence's "wait for everything" behaviour; narrower policies are an explicit opt-in. |
 | `AnimaPropertyMotion` (leaf) | `target_property: NodePath`, `from_value: Variant` (null = read current value at start), `to_value: Variant`, `duration: float`, `ease: AnimaEase` (default: new `AnimaEase` with `kind = LINEAR`) | Only leaf type in Phase 1. Reads/writes the target via Godot's built-in `set`/`get`. |
 | `AnimaEase` | `kind: LINEAR \| POLYNOMIAL \| SINE \| EXPONENTIAL \| CIRCULAR`, `exponent: float` (default `2.0`, used only when `kind = POLYNOMIAL`) | Basic curve set only — spring, decay, cubic Bézier, curve resource, callable evaluator, and custom sampled curve are deferred. `evaluate(t: float) -> float` is the shared contract every kind implements. |
-| `AnimaPlayback` | `motion: AnimaMotion`, `target: Node`, `state: PLAYING \| PAUSED \| CANCELLED \| FINISHED`, `finished` (Signal) | Returned by `Anima.play()`. `cancel()` resolves `finished` in the `CANCELLED` state, distinct from normal completion. |
+| `AnimaPlayback` | `motion: AnimaMotion`, `target: Node`, `state: PLAYING \| PAUSED \| CANCELLED \| FINISHED`, `finished` (Signal) | Returned by `Anima.play()`. Methods: `pause()` → `PAUSED`, animated values freeze in place; `resume()` → `PLAYING` from the paused position; `cancel()` → `CANCELLED`, resolves `finished` as not-success. `finished` fires exactly once, on `FINISHED` or `CANCELLED`. |
 | `AnimaRuntime` | `active_playbacks: Array[AnimaPlayback]` | Lazily created on the first `Anima.play()` call; owns the central per-frame evaluation loop. No `project.godot` autoload entry required. |
 | `Anima` (entry point) | static `play(motion: AnimaMotion, target: Node) -> AnimaPlayback` | Thin static facade; delegates to `AnimaRuntime`. Declared via `class_name Anima`, not an autoload — see ⚠️ Note on the legacy rename this requires. |
 
@@ -47,18 +47,18 @@ None in Phase 1. Motions are constructed and held as in-memory Resource objects.
 - One central per-frame evaluation loop advances all active playbacks (not one Tween per property), per the phase brief's principle.
 - No per-property ownership tracking in Phase 1: if two active motions write the same node property, the later per-frame write wins. Deliberately unguarded until the deferred ownership-tracking backlog item lands.
 - No interruption policy in Phase 1: calling `Anima.play()` again on a node with an existing playback starts an independent second playback; nothing auto-cancels the first. Any resulting property conflict falls under the last-write-wins rule above.
-- Legacy `addons/anima/` code and folder layout stay untouched *except* the one rename below — Phase 1's new code still lives in a new, separate module (`addons/anima/motion/`) so the rest of the existing addon keeps working during the transition. Exact file/folder layout is `project-rules.md`'s call, not this spec's.
-- Legacy v1 entry point renamed `Anima` → `AnimaV1`: `addons/anima/core/anima.gd`'s `class_name Anima` becomes `class_name AnimaV1`, plus every internal reference to the bare `Anima` identifier across the legacy addon, its existing tests, and the demo scenes is updated to `AnimaV1` so v1 keeps working under its new name. `AnimaLegacy` was considered and rejected as the new name — it's reserved by the deferred dictionary-compatibility shim (`AnimaLegacy.from_dictionary()`), a different, not-yet-built class.
+- Legacy `addons/anima/` code and folder layout stay untouched except for the `Anima` → `AnimaV1` rename below — Phase 1's new code lives in its own new module, isolated from the legacy implementation, so the rest of the existing addon keeps working during the transition. Exact file/folder layout is `project-rules.md`'s call, not this spec's.
+- Legacy v1 API is named `AnimaV1` (renamed from `Anima`, freeing the name for the new v2 entry point below); this is a deliberate, accepted breaking change for external projects still calling `Anima.begin(...)` against the installed addon, who must switch to `AnimaV1.begin(...)`. `AnimaLegacy` is reserved for the deferred dictionary-compatibility shim and is not used here.
 
 ## Out of Scope
 
-- No GDExtension/native-code accelerator — see the deferred "native-accelerator gate" backlog item; only reconsidered after a reproducible benchmark shows Anima's own evaluation loop is the bottleneck.
+- No GDExtension/native-code accelerator. Reconsidered only once all three hold: a reproducible benchmark shows a significant bottleneck in Anima's own evaluation loop (not property writes/layout), a native implementation would meaningfully help, and build/release automation covers the needed platforms. Not built in the initial release; GDScript remains the fallback.
 - No dedicated animated-node subclasses (`AnimatedButton`, `AnimatedPanel`, etc.) — Anima always attaches to ordinary nodes.
 - No mandatory `project.godot` autoload entry for the runtime to function.
 
 ## Platform constraints
 
-Godot 4.3 target. No mobile/web/platform-specific behaviour in Phase 1.
+Supported Godot range: 4.3 through the latest stable 4.x release. Godot 3.x is unsupported. No formal LTS-style deprecation window pre-1.0 — if a future 4.x minor requires a breaking change on Anima's side, the minimum version is bumped and noted in the changelog rather than maintained across both. No mobile/web/platform-specific behaviour in Phase 1.
 
 ## Product principle constraints
 
@@ -67,4 +67,4 @@ Godot 4.3 target. No mobile/web/platform-specific behaviour in Phase 1.
 
 ⚠️ Note: `estimate_duration()` returns a plain float in Phase 1 (Fixed-only, since Property motion is the only leaf type). The deferred Duration-kind model (Fixed/Estimated/Dynamic/Infinite) will need to change this return contract once Dynamic/Infinite leaves (springs, signal waits) ship — flagged in the Phase 1 brief's Assumption Log.
 
-⚠️ Note: `addons/anima/core/anima.gd` already declared `class_name Anima` for the legacy v1 API before this phase started. Godot does not allow two global classes with the same name, and the product decision is to keep `Anima` for the new v2 entry point — so the legacy class is renamed to `AnimaV1` instead (see Key technical decisions). This is a deliberate, accepted breaking change for any *external* project that currently calls `Anima.begin(...)` directly against the installed addon; they must switch to `AnimaV1.begin(...)` on upgrade. Internally, renaming touches more than the one declaration: a repo scan found the bare `Anima` identifier used in 18 files — 1 addon file (`addons/anima/core/declaration/anima_declaration_node.gd`), 4 existing legacy GUT tests (`tests/Anima.integration*.test.gd`, `tests/test.gd`), and 13 demo scripts/scenes under `demos/`. All of them need the same `Anima` → `AnimaV1` update as part of whichever story does this rename, or the legacy addon breaks internally, not just externally. The same non-colliding-name constraint will recur for `Anima.of(...)` (Node proxy API) whenever that backlog item is scoped into a future phase — no action needed now, just carries forward.
+⚠️ Note: Godot does not allow two global classes with the same name, so `Anima` could not stay the legacy v1 class name once the new v2 entry point needed it — see Key technical decisions for the resulting `AnimaV1` rename.

@@ -26,6 +26,8 @@
  *   node state.js --next          for mano dev: the active phase + next pending
  *                                 story (#, file) + ordered story list, so the
  *                                 implementer needn't ls or reopen the index
+ *   node state.js --gaps <type>   for mano spec / mano rules: print only open
+ *                                 spec-gap or rule-gap backlog items
  *   node state.js --json          machine-readable output
  *   node state.js --help
  *
@@ -36,23 +38,34 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
+const GAP_TYPES = ["spec-gap", "rule-gap"];
+
 function parseArgs(argv) {
-  const args = { root: process.cwd(), json: false, verbose: false, scope: false, next: false, help: false };
-  for (const a of argv) {
+  const args = {
+    root: process.cwd(), json: false, verbose: false,
+    scope: false, next: false, gaps: null, help: false,
+  };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
     if (a === "--json") args.json = true;
     else if (a === "--verbose" || a === "-v") args.verbose = true;
     else if (a === "--scope") args.scope = true;
     else if (a === "--next") args.next = true;
+    else if (a === "--gaps") {
+      const candidate = argv[i + 1];
+      if (candidate == null || candidate.startsWith("-")) args.gaps = "";
+      else { args.gaps = candidate; i++; }
+    }
     else if (a === "--help" || a === "-h") args.help = true;
     else if (!a.startsWith("-")) args.root = path.resolve(a);
   }
   return args;
 }
 
-const HELP = `mano state — read-only projection of _mano_output/ for mano start / mano dev
+const HELP = `mano state — read-only projections of _mano_output/
 
 Usage:
-  node state.js [projectRoot] [--scope | --next] [--verbose] [--json]
+  node state.js [projectRoot] [--scope | --next | --gaps <type>] [--verbose] [--json]
 
   projectRoot   directory containing _mano_output/ (default: current dir)
   --scope       on a PROCEED to scope-backlog or resume-draft, also print the
@@ -60,6 +73,8 @@ Usage:
   --next        for mano dev: the active phase, the next pending story (its #
                 and file path) and the ordered story list, computed fresh from
                 disk so the implementer needn't ls or reopen the index
+  --gaps <type> for mano spec / mano rules: read only backlog.md and print only
+                unresolved items of exact type spec-gap or rule-gap
   --verbose     also print the evidence (phase, stories, reviewed, backlog)
   --json        emit the full structured state as JSON
 
@@ -76,6 +91,18 @@ function exists(p) {
 
 function readText(p) {
   try { return fs.readFileSync(p, "utf8"); } catch { return null; }
+}
+
+// Gap projection distinguishes an absent backlog (a valid empty result) from a
+// real read failure. Reporting permission/I/O errors as COUNT: 0 would make an
+// incomplete projection look authoritative.
+function readGapText(p) {
+  try {
+    return fs.readFileSync(p, "utf8");
+  } catch (error) {
+    if (error && error.code === "ENOENT") return null;
+    throw error;
+  }
 }
 
 function listDirs(p) {
@@ -141,38 +168,87 @@ function readStories(storiesReadme) {
 function countBacklogStatuses(text) {
   const counts = {}; // e.g. { backlog: 1, "in-phase-8": 0, resolved: 24 }
   if (text === null) return counts;
-  const re = /^\s*-\s*\*\*Status:\*\*\s*(.+?)\s*$/gim;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    const v = m[1].trim().toLowerCase();
-    counts[v] = (counts[v] || 0) + 1;
+  let inItems = false;
+  for (const line of text.split("\n")) {
+    if (/^##\s+Items\s*$/i.test(line)) {
+      inItems = true;
+      continue;
+    }
+    if (/^##\s+/.test(line)) {
+      inItems = false;
+      continue;
+    }
+    if (!inItems) continue;
+    const match = /^-\s*\*\*Status:\*\*\s*(.+?)\s*$/i.exec(line);
+    if (match) {
+      const value = match[1].trim().toLowerCase();
+      counts[value] = (counts[value] || 0) + 1;
+    }
   }
   return counts;
 }
 
 // Backlog items are `### title` blocks, each carrying a `- **Status:** <value>`
-// line. Returns the full text block of every item whose status matches
-// `wantStatus` (e.g. "backlog"), in file order. A `##` heading (e.g. the
-// Core Product Principles section) ends the preceding item.
-function extractBacklogItems(text, wantStatus) {
+// and `- **Type:** <value>` line. Returns the full text block of every item
+// matching the requested exact status/type filters, in file order. Only `###`
+// blocks under `## Items` count as backlog items; headings in Core Product
+// Principles or other sections are never exposed.
+function extractBacklogItems(text, options = {}) {
   if (text === null) return [];
+  const wantStatus = options.status ? options.status.toLowerCase() : null;
+  const wantType = options.type ? options.type.toLowerCase() : null;
+  const excludeTypes = new Set((options.excludeTypes || []).map((t) => t.toLowerCase()));
   const out = [];
   let cur = null; // { lines: [] }
+  let inItems = false;
   const flush = () => {
     if (!cur) return;
     const block = cur.lines.join("\n").replace(/\s+$/, "");
-    const m = /^\s*-\s*\*\*Status:\*\*\s*(.+?)\s*$/im.exec(block);
-    const status = m ? m[1].trim().toLowerCase() : null;
-    if (!wantStatus || status === wantStatus) out.push(block);
+    // Metadata fields are top-level (`- **Field:**` at column 0). Context is
+    // indented, and may legitimately contain a metadata-shaped example.
+    const statusMatches = [...block.matchAll(/^-\s*\*\*Status:\*\*\s*(.+?)\s*$/gim)];
+    const typeMatches = [...block.matchAll(/^-\s*\*\*Type:\*\*\s*(.+?)\s*$/gim)];
+    const valid = statusMatches.length === 1 && typeMatches.length === 1;
+    const status = valid ? statusMatches[0][1].trim().toLowerCase() : null;
+    const type = valid ? typeMatches[0][1].trim().toLowerCase() : null;
+    if (valid &&
+        (!wantStatus || status === wantStatus) &&
+        (!wantType || type === wantType) &&
+        !excludeTypes.has(type)) {
+      out.push(block);
+    }
     cur = null;
   };
   for (const line of text.split("\n")) {
-    if (/^###\s+/.test(line)) { flush(); cur = { lines: [line] }; }
-    else if (/^##\s+/.test(line)) { flush(); }   // a higher heading ends an item
+    if (/^##\s+Items\s*$/i.test(line)) {
+      flush();
+      inItems = true;
+    } else if (/^##\s+/.test(line)) {
+      flush();
+      inItems = false;
+    } else if (inItems && /^###\s+/.test(line)) {
+      flush();
+      cur = { lines: [line] };
+    }
     else if (cur) cur.lines.push(line);
   }
   flush();
   return out;
+}
+
+// The narrow projection used by mano spec / mano rules. It intentionally
+// bypasses scan(): only backlog.md is read, and only matching open gap blocks
+// are returned to the agent.
+function scanGaps(projectRoot, type) {
+  const backlog = readGapText(path.join(projectRoot, "_mano_output", "backlog.md"));
+  const items = extractBacklogItems(backlog, { status: "backlog", type });
+  return {
+    projectRoot,
+    type,
+    status: "backlog",
+    count: items.length,
+    items,
+  };
 }
 
 // The `## Core Product Principles` section (heading + body up to the next `##`
@@ -235,7 +311,10 @@ function scan(projectRoot) {
     stories: null,          // { total, done, openTitles } or null
     reviewEntry: false,
     backlog: null,          // status counts, or null
-    backlogItems: 0,        // Status: backlog count
+    backlogItems: 0,        // all Status: backlog lines (backward-compatible field)
+    unresolvedItems: 0,     // canonical open item count, including gap types
+    scopeableBacklogItems: 0, // open items eligible for phase scope
+    gaps: { "spec-gap": 0, "rule-gap": 0 },
     inPhaseRemaining: 0,    // Status: in-phase-<phase> count
     _backlogText: null,     // raw text, kept for scope extraction; not serialized
     _reviewsText: null,
@@ -246,7 +325,20 @@ function scan(projectRoot) {
   s._backlogText = readText(path.join(outputDir, "backlog.md"));
   s._reviewsText = readText(path.join(outputDir, "reviews.md"));
   s.backlog = countBacklogStatuses(s._backlogText);
+  const openItems = extractBacklogItems(s._backlogText, { status: "backlog" });
+  const scopeableItems = extractBacklogItems(s._backlogText, {
+    status: "backlog",
+    excludeTypes: GAP_TYPES,
+  });
   s.backlogItems = s.backlog["backlog"] || 0;
+  s.unresolvedItems = openItems.length;
+  s.scopeableBacklogItems = scopeableItems.length;
+  s.gaps["spec-gap"] = extractBacklogItems(s._backlogText, {
+    status: "backlog", type: "spec-gap",
+  }).length;
+  s.gaps["rule-gap"] = extractBacklogItems(s._backlogText, {
+    status: "backlog", type: "rule-gap",
+  }).length;
 
   const n = latestPhase(outputDir);
   s.phase = n;
@@ -277,9 +369,15 @@ function finalize(s) {
     action = "No project yet. mano start takes Path B (conversation) — or run `mano import <doc>` first if a PRD/document exists, then Path A.";
   } else if (s.phase === null) {
     // Output dir exists but no phase folder (e.g. fresh `mano import`).
-    if (s.backlogItems > 0) {
+    if (s.scopeableBacklogItems > 0) {
       verdict = "READY_FIRST_PHASE";
-      action = `Backlog has ${s.backlogItems} item(s) and no phase exists yet. mano start scopes phase 1 (Path A).`;
+      action = `Backlog has ${s.scopeableBacklogItems} phase-scopeable item(s) and no phase exists yet. mano start scopes phase 1 (Path A).`;
+    } else if (s.gaps["spec-gap"] > 0 || s.gaps["rule-gap"] > 0) {
+      verdict = "GAPS_ONLY";
+      const routes = [];
+      if (s.gaps["spec-gap"] > 0) routes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
+      if (s.gaps["rule-gap"] > 0) routes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
+      action = `No phase-scopeable backlog items. Open gaps remain (${routes.join("; ")}). Address them with their owning skill; mano start has nothing to scope.`;
     } else {
       verdict = "NEW_PROJECT";
       action = "An _mano_output/ scaffold exists but the backlog is empty and no phase started. mano start takes Path B (conversation), or `mano import <doc>` to populate the backlog first.";
@@ -305,12 +403,17 @@ function finalize(s) {
     action = `Phase ${s.phase} is built (stories all done) but not closed — ${blockers.join("; ")}. ${repair} mano start must NOT scope a next phase.`;
   } else {
     // Phase complete.
-    if (s.backlogItems > 0) {
+    if (s.scopeableBacklogItems > 0) {
       verdict = "READY_NEXT_PHASE";
-      action = `Phase ${s.phase} is complete. mano start may scope phase ${s.phase + 1} from the ${s.backlogItems} backlog item(s) (Path A).`;
+      action = `Phase ${s.phase} is complete. mano start may scope phase ${s.phase + 1} from the ${s.scopeableBacklogItems} phase-scopeable backlog item(s) (Path A).`;
     } else {
       verdict = "COMPLETE_BACKLOG_EMPTY";
-      action = `Phase ${s.phase} is complete and no items have Status: backlog. Nothing to scope — add backlog items (or mano import a doc) before mano start.`;
+      const routes = [];
+      if (s.gaps["spec-gap"] > 0) routes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
+      if (s.gaps["rule-gap"] > 0) routes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
+      action = routes.length
+        ? `Phase ${s.phase} is complete and no phase-scopeable backlog items remain. Open gaps: ${routes.join("; ")}. Address them with their owning skill; mano start has nothing to scope.`
+        : `Phase ${s.phase} is complete and no items have Status: backlog. Nothing to scope — add backlog items (or mano import a doc) before mano start.`;
     }
   }
 
@@ -340,22 +443,28 @@ function finalize(s) {
   else s.targetPhase = null;
 
   // Attach the exact material mano start needs so the skill never has to reopen
-  // backlog.md / reviews.md itself. A resume-draft includes every item because
-  // an interrupted finalisation may have stopped before assignment recorded the
-  // approved subset; the human must confirm that subset again.
+  // backlog.md / reviews.md itself. A resume-draft includes every phase-scopeable
+  // item status (gap types remain excluded) because interrupted finalisation may
+  // have stopped before assignment recorded the approved subset; the human must
+  // confirm that subset again.
   s.scope = null;
   if (s.next === "scope-backlog") {
     s.scope = {
       mode: "scope-backlog",
       coreProductPrinciples: extractCoreProductPrinciples(s._backlogText),
-      backlogItems: extractBacklogItems(s._backlogText, "backlog"),
+      backlogItems: extractBacklogItems(s._backlogText, {
+        status: "backlog",
+        excludeTypes: GAP_TYPES,
+      }),
       latestReview: extractLatestReview(s._reviewsText, s.phase),
     };
   } else if (s.next === "resume-draft") {
     s.scope = {
       mode: "resume-draft",
       coreProductPrinciples: extractCoreProductPrinciples(s._backlogText),
-      backlogItems: extractBacklogItems(s._backlogText, null),
+      backlogItems: extractBacklogItems(s._backlogText, {
+        excludeTypes: GAP_TYPES,
+      }),
       latestReview: extractLatestReview(s._reviewsText, s.phase),
     };
   }
@@ -404,6 +513,9 @@ function renderEvidence(s) {
     L.push("backlog status counts:");
     if (keys.length === 0) L.push("  (no items)");
     for (const k of keys) L.push(`  ${k}: ${b[k]}`);
+    L.push(`  phase-scopeable backlog items: ${s.scopeableBacklogItems}`);
+    L.push(`  open spec-gap items: ${s.gaps["spec-gap"]}`);
+    L.push(`  open rule-gap items: ${s.gaps["rule-gap"]}`);
     L.push("");
   }
 
@@ -411,9 +523,9 @@ function renderEvidence(s) {
   return L.join("\n");
 }
 
-// The scope input the skill consumes on a PROCEED to scope-backlog: the exact
-// Status: backlog items + core principles + latest review, so it needn't reopen
-// any file. Empty string when there's no scope payload.
+// The scope input mano start consumes on a PROCEED: phase-scopeable Status:
+// backlog items for a new scope, or all phase-scopeable statuses for a resumed
+// draft, plus core principles and latest review. Empty when no payload exists.
 function renderScope(s) {
   if (!s.scope) return "";
   const L = ["--- SCOPE INPUT (from the state script — do NOT reopen these files) ---"];
@@ -422,7 +534,9 @@ function renderScope(s) {
     L.push(s.scope.coreProductPrinciples);
   }
   L.push("");
-  const itemLabel = s.scope.mode === "resume-draft" ? "all statuses" : "Status: backlog";
+  const itemLabel = s.scope.mode === "resume-draft"
+    ? "all phase-scopeable statuses"
+    : "phase-scopeable Status: backlog";
   L.push(`## Backlog items — ${itemLabel} (${s.scope.backlogItems.length})`);
   if (s.scope.backlogItems.length === 0) {
     L.push("(none)");
@@ -436,6 +550,30 @@ function renderScope(s) {
   L.push("## Latest review");
   L.push(s.scope.latestReview || "(none)");
   return L.join("\n");
+}
+
+// The only backlog-derived input mano spec / mano rules receive. The sentinel
+// makes the boundary explicit to an agent tool trace: the script has already
+// performed the read, so opening backlog.md is both unnecessary and forbidden.
+function renderGaps(g) {
+  const L = ["--- GAP INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
+  L.push(`TYPE: ${g.type}`);
+  L.push(`STATUS: ${g.status}`);
+  L.push(`COUNT: ${g.count}`);
+  if (g.items.length === 0) {
+    L.push("");
+    L.push("(none)");
+  } else {
+    for (const item of g.items) {
+      L.push("");
+      L.push(item);
+    }
+  }
+  return L.join("\n");
+}
+
+function renderGapsJson(g) {
+  return JSON.stringify(g, null, 2);
 }
 
 // The mano dev projection: what to implement right now, computed fresh from
@@ -501,6 +639,9 @@ function renderJson(s) {
     inPhaseRemaining: s.inPhaseRemaining,
     backlog: s.backlog,
     backlogItems: s.backlogItems,
+    unresolvedItems: s.unresolvedItems,
+    scopeableBacklogItems: s.scopeableBacklogItems,
+    gaps: s.gaps,
     closed: s.closed,
     decision: s.decision,
     next: s.next,
@@ -517,6 +658,25 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
     process.stdout.write(HELP + "\n");
+    process.exit(0);
+  }
+  if (args.gaps !== null) {
+    if (!GAP_TYPES.includes(args.gaps)) {
+      process.stderr.write(`[mano state] --gaps requires exactly one of: ${GAP_TYPES.join(", ")}.\n`);
+      process.exit(1);
+    }
+    if (args.scope || args.next || args.verbose) {
+      process.stderr.write("[mano state] --gaps cannot be combined with --scope, --next, or --verbose.\n");
+      process.exit(1);
+    }
+    let gaps;
+    try {
+      gaps = scanGaps(args.root, args.gaps);
+    } catch (error) {
+      process.stderr.write(`[mano state] cannot read _mano_output/backlog.md — ${error.message}\n`);
+      process.exit(1);
+    }
+    process.stdout.write((args.json ? renderGapsJson(gaps) : renderGaps(gaps)) + "\n");
     process.exit(0);
   }
   const s = scan(args.root);

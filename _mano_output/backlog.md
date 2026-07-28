@@ -689,7 +689,7 @@
   A GDExtension accelerator may only be considered once a reproducible benchmark shows a significant bottleneck in Anima's own evaluation (not property writes/layout), native implementation would meaningfully help, and build/release automation covers the needed platforms.
   Do not build in the initial release; GDScript remains the fallback.
   PRD.md §26.1, §26.4.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Open decision: Godot version support policy
 - **Type:** spec-gap
@@ -697,7 +697,7 @@
 - **Context:**
   The document requires picking and stating one clear supported Godot 4.x minor range (plus a deprecation policy) rather than claiming broad compatibility — the specific version numbers are not yet chosen.
   PRD.md §27.1.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Automated compatibility CI
 - **Type:** test
@@ -955,4 +955,190 @@
 - **Context:**
   Back, bounce, elastic, cubic Bezier, curve resource, callable evaluator, spring, decay, and custom sampled curve easing.
   Extends the Phase 1 AnimaEase basic curve set once shipped. PRD.md §13.1.
+- **Status:** backlog
+
+### Reversibility declared per motion (Automatic/Explicit/Forward-only)
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Every motion declares a Reversibility: AUTOMATIC (Anima derives the reverse), EXPLICIT (author supplies reverse behaviour), or FORWARD_ONLY (reversing is a validation error or follows a configured skip policy).
+  Prevents Anima from pretending every event can be meaningfully reversed.
+  PRD2.md — "Reversibility is part of the motion definition".
+- **Status:** backlog
+
+### Three distinct reverse operations (play backwards / reverse timeline / retarget to start)
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  The original PRD grouped these under one "reverse" idea; they must be distinct: Anima.play_backwards(motion, context) (run from completed state to initial state), playback.reverse() (flip the current timeline's direction from wherever it is), and playback.retarget_to_start() (physically retarget, e.g. a spring's target changes to its initial value while keeping current velocity, instead of retracing the calculated path).
+  API should expose the distinction explicitly (reverse_timeline() vs retarget_to_start()).
+  PRD2.md — "Define three separate operations".
+- **Status:** backlog
+
+### Timeline-reversal semantics
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  playback.reverse() must preserve current values, reverse the relational execution cursor without restarting from the end, trigger reverse-event semantics when markers are crossed, and allow repeated direction changes.
+  Needed for menu open/close, hover/focus, expand/collapse, reversible panels, interaction previews.
+  PRD2.md — "Reverse the current timeline".
+- **Status:** backlog
+
+### Per-motion-type reversal contract
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Defines how each motion type reverses: Property motion (to→from, with mirrored easing so the reversed trajectory matches the forward one); Sequence (children reverse in reverse order); Parallel (children reverse, stay parallel); Delay (same duration, mirrored position in the graph).
+  PRD2.md — "Reverse rules for each motion type".
+- **Status:** backlog
+
+### Stagger reversal & ReverseStaggerPolicy
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  A chronological reverse inverts the resolved stagger order.
+  Resource exposes ReverseStaggerPolicy: REVERSE_ORDER (default — reconstructs the initial visual state in chronological reverse), KEEP_ORDER, CUSTOM.
+  PRD2.md — "Stagger".
+- **Status:** backlog
+
+### Open decision: Repeat reversal rules
+- **Type:** spec-gap
+- **Source:** PRD2.md
+- **Context:**
+  Not yet defined: whether completed iterations of AnimaRepeat are reversed, whether only the current iteration reverses, how alternating repeats behave, and whether infinite repetition can enter reverse mode at all.
+  PRD2.md — "Repeat".
+- **Status:** backlog
+
+### Native Animation reversal via AnimationPlayer
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  When an Anima event references a native clip, use AnimationPlayer's own backwards playback (Godot supports this directly) rather than building custom reversal logic for native clips.
+  PRD2.md — "Native Godot Animation".
+- **Status:** backlog
+
+### Spring reversal: exact timeline vs physical retarget
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Springs must support both, and must not treat them as equivalent: exact timeline reversal (retraces the calculated path backwards) and physical retargeting to the initial state (changes the spring's target while preserving current velocity — usually the more natural choice for interactive UI).
+  PRD2.md — "Spring".
+- **Status:** backlog
+
+### Layout-transition reversal with staleness check
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  If both layout snapshots are still valid, reversing returns from the new layout to the previous one.
+  If the application has since changed the layout again, Anima retargets to the current layout instead of replaying stale geometry.
+  PRD2.md — "Layout transition".
+- **Status:** backlog
+
+### Shared-element transition reversal
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Reverses source/destination roles, provided both states still exist or snapshots were retained.
+  PRD2.md — "Shared-element transition".
+- **Status:** backlog
+
+### Open decision: callback reversal mechanism
+- **Type:** spec-gap
+- **Source:** PRD2.md
+- **Context:**
+  A callback is not automatically reversible. Two alternative shapes are proposed and neither is chosen yet: an explicit forward/backward Callable pair (Motion.callback({forward=..., backward=...})), or a reversible command object (AnimaCommand with execute()/undo()).
+  PRD2.md — "Callback".
+- **Status:** backlog
+
+### Signal-wait reverse policy (ReverseEventPolicy)
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Waiting for a signal has no automatic reverse. Resource exposes ReverseEventPolicy: SKIP, REQUIRE_EXPLICIT, RUN_REVERSE_EVENT, ERROR.
+  Safest default for authored motions is REQUIRE_EXPLICIT.
+  PRD2.md — "Signal wait".
+- **Status:** backlog
+
+### Race/Conditional reversal replays the branch actually taken
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Reversing a completed Race or Conditional motion must reverse the branch that actually ran, not re-evaluate the condition and potentially pick a different one.
+  Requires the playback to retain an execution trace (selected conditional branch, race winner, completed-iteration count).
+  PRD2.md — "Race and conditionals".
+- **Status:** backlog
+
+### Runtime execution-history recording (AnimaExecutionRecord)
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Reversing a dynamic graph can't always be derived from the resource alone. Runtime must record selected conditional branches, race winners, resolved dynamic values, stagger ordering, executed callbacks, completed loops, native clip state, runtime durations, layout snapshots — an AnimaExecutionRecord tree (motion_id, selected_branch, resolved_targets, resolved_values, children).
+  playback.reverse() reverses what actually happened, not what might happen now. Called out as an important architectural requirement.
+  PRD2.md — "Add graph execution history".
+- **Status:** backlog
+
+### Motion Composer: direction & reversibility toolbar
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Add Play Forward, Play Backward, Reverse Current Playback, Reset to Start, Reset to End controls.
+  PRD2.md — "Update the Motion Composer" / Toolbar.
+- **Status:** backlog
+
+### Motion Composer: reversibility structure indicators
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Each event in the Motion Structure tree shows its reversibility at a glance: ↔ automatically reversible, ⇄ explicit reverse defined, → forward only.
+  PRD2.md — "Structure indicators".
+- **Status:** backlog
+
+### Motion Composer: reversal validation messages
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Issues panel reports reversal-specific problems: a callback with no reverse action (warning), a Signal Wait that can't reverse automatically (error), a native Animation using AnimationPlayer backwards playback (info), a dynamic target that must be recorded to support runtime reversal (warning).
+  PRD2.md — "Validation".
+- **Status:** backlog
+
+### Motion Composer: bidirectional timeline preview
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Generated timeline supports forward and backward playheads, direction arrows, reverse-callback markers, mirrored stagger preview, and switching direction mid-scrub.
+  PRD2.md — "Timeline preview".
+- **Status:** backlog
+
+### Motion Composer: Inspector Reverse section
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Per-motion Inspector section: Reversibility (Automatic/Explicit/Forward-only), reverse-easing mode (mirror automatically), callback policy, stagger policy, spring behaviour (retarget physically vs timeline reversal), and an optional explicit reverse-motion resource.
+  PRD2.md — "Inspector".
+- **Status:** backlog
+
+### Compiler: backward-playback support & reversibility metadata
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Compiled native Animation resources can normally be played backwards via AnimationPlayer; compiler metadata records whether callbacks/dynamic events retain equivalent reverse semantics — a successful forward compilation does not automatically mean the whole motion is safely reversible.
+  Compile report states forward vs backward playback fidelity separately, with channel-by-channel reversibility counts.
+  PRD2.md — "Update the compiler".
+- **Status:** backlog
+
+### Reversible-motion acceptance criteria (epic)
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Dedicated epic: Sequence/Parallel/Stagger reverse correctly per their rules; easing mirrors correctly; reversing halfway doesn't snap to either end; direction can change repeatedly; dynamic values use recorded forward values; Conditional reverses the branch actually executed; callbacks require explicit reverse behaviour; native animations use backwards playback; property ownership stays valid while direction changes; layout transitions don't restore stale layouts; forward-only events are reported before playback where detectable.
+  PRD2.md — "Update the acceptance criteria".
+- **Status:** backlog
+
+### Revised four-pillar product framing
+- **Type:** feature
+- **Source:** PRD2.md
+- **Context:**
+  Reframes Anima 2 around four pillars: relational composition; bidirectional & interruptible motion (play backwards, reverse midway, or physically retarget while preserving state); automatic interaction & layout transitions; native Godot authoring & compilation.
+  Updates/extends PRD.md's original single-line product-category framing (§2.2) to give "bidirectional and interruptible motion" equal billing with relational composition.
+  PRD2.md — "Revised core pillars".
 - **Status:** backlog

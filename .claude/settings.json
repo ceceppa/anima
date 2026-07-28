@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node _mano/scripts/stories.js set-status --phase 1 --story 0 --status done)",
+      "Bash(node _mano/scripts/stories.js add-row --phase 1 --story 0a --title \"Rename legacy Anima to AnimaV1\" --file \"story-0a-rename-legacy-anima-v1.md\")",
+      "Bash(node _mano/scripts/stories.js *)"
+    ]
+  }
+}

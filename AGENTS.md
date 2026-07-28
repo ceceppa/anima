@@ -154,6 +154,16 @@ Ignore `.example.md` hooks.
 
 Hooks are suggest-only. Do not run them automatically.
 
+<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
+When a just-run `post-start`, `post-spec`, or `post-rules` hook has printed
+findings in chat, keep the matching Mano skill active and follow
+`_mano/workflow.md` → **Post-Hook Findings Triage**. Running the hook did not
+approve edits. An in-lane finding is `apply`, never a route back to the skill
+already running; a finding owned by another artifact is `route: mano [owner]`
+and must not be edited here. Apply the smallest selected change and preserve
+unmentioned content and adjacent values.
+<!-- /mano-rule: post-hook-findings-triage -->
+
 If an active hook exists, mention it in the final response before the next-action block:
 
 ```text
