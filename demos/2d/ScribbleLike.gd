@@ -20,7 +20,7 @@ func _ready():
 
 		letter_container.custom_minimum_size = single_letter.size
 
-	Anima.Group(container, 0.01) \
+	AnimaV1.Group(container, 0.01) \
 		.anima_animation_frames({
 			0: {
 				"translate:y": -40,

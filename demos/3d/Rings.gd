@@ -18,7 +18,7 @@ func _ready():
 	_setup_animation($Group3, 'ring3')
 
 func _setup_animation(group: Node3D, animation_name: String) -> void:
-	var anima := Anima.begin(group)
+	var anima := AnimaV1.begin(group)
 	anima.then({ group = group, animation = animation_name, duration = 5.0, items_delay = 0.05 })
 	anima.loop()
 

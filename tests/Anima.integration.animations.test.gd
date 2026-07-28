@@ -5,18 +5,18 @@ func test_multiple_fade_in():
 	var node2 = Control.new()
 	var node3 = Control.new()
 
-	var anima = Anima.begin(self, 'sequence_callback') \
+	var anima = AnimaV1.begin(self, 'sequence_callback') \
 		.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
 
-	anima.then( Anima.Node(node1).anima_animation("flash", 1 ) )
+	anima.then( AnimaV1.Node(node1).anima_animation("flash", 1 ) )
 	
 	assert_eq(anima.get_duration(), 1.0)
 
-	anima.then( Anima.Node(node2).anima_animation("flash", 1) )
+	anima.then( AnimaV1.Node(node2).anima_animation("flash", 1) )
 
 	assert_eq(anima.get_duration(), 2.0)
 
-	anima.then( Anima.Node(node3).anima_animation("flash", 1) )
+	anima.then( AnimaV1.Node(node3).anima_animation("flash", 1) )
 
 	assert_eq(anima.get_duration(), 3.0)
 

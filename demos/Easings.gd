@@ -34,9 +34,9 @@ func _on_easing_button_pressed(easing_value) -> void:
 	var size = self.size
 	var logo_size = AnimaNodesProperties.get_size($Container/SpriteContainer/Anima)
 
-	var anima = Anima.begin(self, 'easings') \
+	var anima = AnimaV1.begin(self, 'easings') \
 		.then(
-			Anima.Node($Container/SpriteContainer/Anima)
+			AnimaV1.Node($Container/SpriteContainer/Anima)
 				.anima_position(Vector2(size.x - logo_size.x - 100, 100), 1)
 				.anima_from(Vector2(100, 100))
 				.anima_easing(easing_value)

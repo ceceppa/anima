@@ -1,5 +1,5 @@
 @tool
-class_name Anima
+class_name AnimaV1
 
 var _animations_list := []
 var _custom_animations := {}

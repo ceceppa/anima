@@ -7,21 +7,21 @@ func _test_me():
 	print("started")
 
 func _ready():
-	_animation = Anima.begin(self, 'sequence_callback') \
+	_animation = AnimaV1.begin(self, 'sequence_callback') \
 		.then( 
-			Anima.Node($VBoxContainer/Button1)
+			AnimaV1.Node($VBoxContainer/Button1)
 				.anima_animation("flash", 1)
 				.anima_on_started(_test_me)
 				.anima_on_completed(_on_button_completed, [1])
 		) \
 		.then(
-			Anima.Node($VBoxContainer/Button2)
+			AnimaV1.Node($VBoxContainer/Button2)
 				.anima_animation("flash", 1)
 				.anima_on_started(_test_me)
 				.anima_on_completed(_on_button_completed, [2])
 		) \
 		.then( 
-			Anima.Node($VBoxContainer/Button3)
+			AnimaV1.Node($VBoxContainer/Button3)
 				.anima_animation("flash", 1)
 				.anima_on_started(_test_me)
 				.anima_on_completed(_on_button_completed, [3])
@@ -30,10 +30,10 @@ func _ready():
 
 	for i in range(1, 4):
 		var sprite = find_child('check' + str(i))
-		var anima = Anima.begin(sprite)
+		var anima = AnimaV1.begin(sprite)
 
 		anima.then(
-			Anima.Node(sprite) \
+			AnimaV1.Node(sprite) \
 			.anima_animation("jello", 0.5) \
 			.anima_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY)
 		)
@@ -56,9 +56,9 @@ func _on_button_completed(index: int) -> void:
 	print("completed")
 	var label: Label = find_child('Label' + str(index))
 
-	var anima = Anima.begin(label)
+	var anima = AnimaV1.begin(label)
 	anima.then(
-		Anima.Node(label) \
+		AnimaV1.Node(label) \
 		.anima_property("modulate", Color.AQUA, 0.5) \
 		.anima_from(Color.WHITE)
 	)

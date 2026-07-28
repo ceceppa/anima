@@ -1,15 +1,15 @@
 extends CenterContainer
 
 func _ready():
-	Anima.begin_single_shot(self) \
-		.then( Anima.Node($Panel).anima_scale_y(1, 0.3).anima_from(0) ) \
-		.then( Anima.Node($Panel/MarginContainer/Label).anima_animation('typewrite', 0.01) ) \
-		.then( Anima.Node($Panel/CenterContainer/Button).anima_animation('tada', 0.5 ).anima_delay(-0.2) ) \
+	AnimaV1.begin_single_shot(self) \
+		.then( AnimaV1.Node($Panel).anima_scale_y(1, 0.3).anima_from(0) ) \
+		.then( AnimaV1.Node($Panel/MarginContainer/Label).anima_animation('typewrite', 0.01) ) \
+		.then( AnimaV1.Node($Panel/CenterContainer/Button).anima_animation('tada', 0.5 ).anima_delay(-0.2) ) \
 		.set_visibility_strategy(ANIMA.VISIBILITY.TRANSPARENT_ONLY) \
 		.play_with_delay(0.5)
 
 func _on_Button_pressed():
-	var anima = Anima.begin(self, 'fade_out')
+	var anima = AnimaV1.begin(self, 'fade_out')
 	anima.with({ node = $Panel, animation = 'fadeOut', duration = 0.3 })
 	anima.with({ node = $Panel/MarginContainer/Label, animation = 'fadeOut', duration = 0.3 })
 	anima.with({ node = $Panel/CenterContainer/Button, animation = 'fadeOut', duration = 0.3 })

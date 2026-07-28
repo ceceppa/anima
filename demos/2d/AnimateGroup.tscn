@@ -30,9 +30,9 @@ func _ready():
 
 	AnimaAnimationsUtils.register_animation(\"gridAnimation\", gridAnimation())
 
-	Anima.begin_single_shot($Grid) \\
+	AnimaV1.begin_single_shot($Grid) \\
 		super.then(
-			Anima.Group($Grid, 0.05) \\
+			AnimaV1.Group($Grid, 0.05) \\
 				super.anima_animation(\"gridAnimation\", 1) \\
 		) \\
 		super.play_with_delay(0.5)

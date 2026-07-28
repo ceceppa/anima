@@ -23,8 +23,8 @@ func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
 	_reset_boxes_position($Node, start_position)
 
-	var anima := Anima.begin($Node) \
-		.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
+	var anima := AnimaV1.begin($Node) \
+		.then( AnimaV1.Group($Node, 0.02).anima_animation('3dboxes', 3) )
 
 	if _play_backwards:
 		_init_reverse_boxes()
@@ -35,8 +35,8 @@ func _do_animation(loop:= true) -> void:
 	else:
 		anima.play()
 
-	var ring := Anima.begin($ring)
-	ring.then( Anima.Node($ring).anima_animation('ring', 3) )
+	var ring := AnimaV1.begin($ring)
+	ring.then( AnimaV1.Node($ring).anima_animation('ring', 3) )
 
 	if _play_backwards:
 		ring.loop_backwards()
@@ -100,7 +100,7 @@ func _init_reverse_boxes() -> void:
 	_init_boxes(node)
 	_reset_boxes_position(node, DEFAULT_START_POSITION + Vector3(0, 0, 2))
 
-	var anima_reverse := Anima.begin(node)
+	var anima_reverse := AnimaV1.begin(node)
 	anima_reverse.then({ group = node, animation = '3dboxes', duration = 3, items_delay = 0.02 })
 
 	anima_reverse.loop_backwards()

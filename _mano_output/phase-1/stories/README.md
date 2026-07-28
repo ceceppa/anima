@@ -2,7 +2,8 @@
 
 | # | Story | File | Status |
 |---|-------|------|--------|
-| 0 | Motion resource bootstrap | story-0-motion-resource-bootstrap.md | pending |
+| 0 | Motion resource bootstrap | story-0-motion-resource-bootstrap.md | done |
+| 0a | Rename legacy Anima to AnimaV1 | story-0a-rename-legacy-anima-v1.md | done |
 | 1 | Basic easing curves | story-1-basic-easing-curves.md | pending |
 | 2 | Property motion leaf type | story-2-property-motion-leaf.md | pending |
 | 3 | Runtime playback core | story-3-runtime-playback-core.md | pending |

@@ -8,7 +8,7 @@ The team agrees to follow these architectural decisions, styling standards, and 
 
 **What:** New Phase 1 code lives under `addons/anima/motion/` — a new subfolder, sibling to the legacy `core/`, `utils/`, and `animations/` folders, never inside them. Split into `motion/resources/` (`AnimaMotion` and every subtype) and `motion/runtime/` (`AnimaRuntime`, the scheduler, the evaluation loop).
 
-**Why:** The tech spec commits to leaving the legacy addon untouched so it keeps working during the transition; mixing new and legacy files in the same folders makes that guarantee unverifiable.
+**Why:** New code and legacy code stay in separate folders so it's always clear which system a file belongs to. This holds even though the legacy `Anima` entry point itself was renamed to `AnimaV1` — that's a content edit to an existing legacy file, not new files added into a legacy folder (see `tech-spec.md` §Key technical decisions).
 
 **Pattern:**
 ```
@@ -55,7 +55,7 @@ static func play(motion: AnimaMotion, target: Node) -> AnimaPlayback:
 
 **What:** New Phase 1 code must not import, extend, or otherwise reference anything under `addons/anima/core`, `addons/anima/utils`, or `addons/anima/animations` (the legacy implementation).
 
-**Why:** Keeps the legacy addon independently removable and prevents the new runtime from silently depending on legacy internals that a later, separate compatibility layer (`AnimaLegacy`) is meant to isolate.
+**Why:** Keeps the legacy addon independently removable and prevents the new runtime from silently depending on legacy internals that a later, separate compatibility layer (`AnimaLegacy`) is meant to isolate. This governs new code depending on legacy internals — it does not block the one sanctioned exception, the `Anima` → `AnimaV1` rename (`tech-spec.md` §Key technical decisions), which edits existing legacy files directly rather than adding a new dependency on them.
 
 **Pattern:**
 ```

@@ -10,7 +10,7 @@ func _ready():
 
 	_init_balls()
 
-	_anima = Anima.begin(self)
+	_anima = AnimaV1.begin(self)
 
 func _init_balls() -> void:
 	var ball: Sprite2D = $ball

@@ -314,7 +314,7 @@ func __get_source():
 
 func _init_anima_node(data, mode, clear = false):
 	if _anima_node == null:
-		_anima_node = Anima.begin(__get_source())
+		_anima_node = AnimaV1.begin(__get_source())
 	elif is_instance_valid(_anima_node) and clear:
 		_anima_node.clear()
 

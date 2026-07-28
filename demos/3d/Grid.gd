@@ -4,7 +4,7 @@ func _ready():
 	var grid_size := Vector2(10, 6)
 	_checkboard(grid_size)
 
-	var group1 = Anima.begin($Grid)
+	var group1 = AnimaV1.begin($Grid)
 	group1.then({ 
 		grid = $Grid,
 		grid_size = grid_size,
@@ -56,7 +56,7 @@ func _ready():
 
 	group1.wait(0.3)
 
-	var cube = Anima.begin($Cubes)
+	var cube = AnimaV1.begin($Cubes)
 	cube.then({
 		grid = $Cubes,
 		grid_size = grid_size,
