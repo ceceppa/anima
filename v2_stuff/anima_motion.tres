@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="AnimaMotion" format=3 uid="uid://cn0hdvq0qnxk6"]
+
+[ext_resource type="Script" uid="uid://c3nbbp2pg7so5" path="res://addons/anima/motion/resources/anima_motion.gd" id="1_88qji"]
+
+[resource]
+script = ExtResource("1_88qji")
+metadata/_custom_type_script = "uid://c3nbbp2pg7so5"
