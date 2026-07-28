@@ -1142,3 +1142,437 @@
   Updates/extends PRD.md's original single-line product-category framing (§2.2) to give "bidirectional and interruptible motion" equal billing with relational composition.
   PRD2.md — "Revised core pillars".
 - **Status:** backlog
+
+### AnimaGroupMotion resource
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  First-class AnimaMotion resource applying one item motion to a resolved target collection: targets, item_motion, playback_mode, order, target_resolution, interval/total_stagger_duration/gap, include-parent/hidden/internal flags, reverse/invalid-target policies.
+  Dedicated resource (not builder sugar) because it needs target collections, ordering, runtime expansion, editor representation, reversal policies, and compilation reporting (PRD3.md §28.1).
+  One resource with a playback_mode enum, not separate Sequential/Parallel/Stagger subclasses — target/item-motion config is shared and mode-switching shouldn't require replacing the resource (§28.2).
+  Complements, not replaces, the general-purpose AnimaStagger structural motion: AnimaStagger is for explicitly authored child motions, AnimaGroupMotion-in-staggered-mode is one item-motion template distributed across resolved targets (§28.3).
+  PRD3.md §3, §8.1.
+- **Status:** backlog
+
+### Target collection resource model (AnimaTargetCollection)
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Base Resource every target-collection type extends: resolve(context) -> Array[Node] required; validate(context) -> Array[AnimaIssue] and describe() -> String optional.
+  PRD3.md §9.1.
+- **Status:** backlog
+
+### Children target collection
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Resolves targets from a parent node's children: parent reference, recursive, include_parent, include_hidden, include_internal_children, type_filter.
+  Usage: TargetCollection.children_of($VBoxContainer).
+  PRD3.md §9.2.
+- **Status:** backlog
+
+### Explicit target collection
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  An ordered list of unrelated nodes animated as one group; explicit list order must be preserved.
+  Targets stored as scene-relative NodePath-style references (with editor validation/repair for missing references), never live Node references, so the resource stays safely reusable across scenes (§28.4).
+  Usage: TargetCollection.nodes([$Title, $Portrait, $ConfirmButton]).
+  PRD3.md §9.2.
+- **Status:** backlog
+
+### Scene-group target collection
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Resolves targets from a Godot scene group, optionally restricted to a root node.
+  Usage: TargetCollection.scene_group(&"inventory_items").
+  PRD3.md §9.2.
+- **Status:** backlog
+
+### Descendant target collection
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Resolves recursive descendants with optional type/Godot-group/name filtering.
+  May be introduced after the basic children collection ships.
+  PRD3.md §9.2.
+- **Status:** backlog
+
+### Runtime (callable) target collection
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  A callable or adapter resolves targets at playback time; code-only, may not be serialisable, and the editor must clearly mark such collections as runtime-resolved.
+  Usage: TargetCollection.from_callable(func(): return active_cards).
+  PRD3.md §9.2, §11.4.
+- **Status:** backlog
+
+### Target resolution timing policy
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  When the target collection is evaluated: at playback start (default — reflects current membership/order, stable for one playback), snapshot (fixed list resolved before playback; scene-relative references only, never live object refs, for resources shared across scenes), or live (observes membership changes during playback — deferred, not required for the first release; the enum value is reserved but reports unsupported until implemented).
+  PRD3.md §10.
+- **Status:** backlog
+
+### Group target filtering
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Type filter (e.g. .of_type(Button)); visibility filter (all / visible-property / visible-in-tree); disabled-state filter for BaseButton-like controls (include/exclude/only, advanced option); custom predicate callable (code-only, may block serialization/editor preview — editor must mark such collections runtime-resolved).
+  PRD3.md §11.
+- **Status:** backlog
+
+### Sequential group playback mode
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Each generated item motion begins only after the previous one completes, plus a configurable gap; start(n) = end(n-1) + gap.
+  Group completes when the final item completes.
+  PRD3.md §8.3 (Sequential).
+- **Status:** backlog
+
+### Parallel group playback mode
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  All generated item motions start together (start(n) = 0); default completion waits for every item motion; group duration is the longest item's duration.
+  PRD3.md §8.3 (Parallel).
+- **Status:** backlog
+
+### Staggered group playback mode
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Each item starts after a configured offset regardless of whether the previous item finished; group completes when the final active item completes.
+  Two mutually exclusive timing modes: fixed interval (start(n) = n × interval) or fixed total distribution duration (interval = total / max(N-1, 1)); if both are set, the editor must require choosing one active mode rather than silently picking.
+  PRD3.md §8.3 (Staggered), §8.4.
+- **Status:** backlog
+
+### Group completion policy
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  ALL_ITEMS (default) / FIRST_ITEM (advanced-only, for orchestration) / LAST_STARTED_ITEM.
+  PRD3.md §8.5.
+- **Status:** backlog
+
+### Empty group handling
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  When zero valid targets resolve, the group completes immediately; configurable policy COMPLETE / WARN_AND_COMPLETE (default) / ERROR. Not a runtime error by default.
+  PRD3.md §8.6.
+- **Status:** backlog
+
+### Target ordering strategies
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Forward (resolved order), reverse, from-centre, from-edges, random (seeded, deterministic for a fixed seed, editor can regenerate or lock), grid rows, grid columns, grid diagonal (4 directions), distance-from-point (node/local point/global point/collection centre/pointer position — may be deferred beyond first release), explicit, and custom (callable: reordered array, numeric rank, or comparator; code-only unless represented as a registered ordering resource).
+  Centre/edges ordering is index-based (position in the resolved list), not spatial (on-screen distance) — resolved during import; consistent across every collection type regardless of on-screen layout.
+  PRD3.md §12.
+- **Status:** backlog
+
+### Grid resolution for GridContainer
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Derives row/column from child index and configured column count (row = index / C, column = index % C).
+  Default uses compact filtered indices (excludes gaps left by filtered-out nodes), not original child indices, so exclusions don't create unexpected empty positions.
+  PRD3.md §13.1.
+- **Status:** backlog
+
+### Non-GridContainer spatial grid inference
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Optionally infers rows/columns from target positions (positional tolerance, stable sorting, coordinate-space selection) for layouts that aren't a GridContainer.
+  Not required for the initial release.
+  PRD3.md §13.2.
+- **Status:** backlog
+
+### Grid waves ordering (future)
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Groups items into simultaneous waves (e.g. diagonal bands) that start together, differing from a flat stagger where every item gets its own offset.
+  Initial release may flatten waves into equal-rank items sharing one start offset.
+  PRD3.md §13.3.
+- **Status:** backlog
+
+### Item motion target binding and per-item captured values
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  The item motion is authored relative to the current item's target; inside it, "the target" resolves to the generated per-item context.
+  Each item must independently capture its own initial values, relative offsets, dynamic values, and target-specific data — a group must never capture the first item's values and reuse them for every target.
+  PRD3.md §14.1, §14.3.
+- **Status:** backlog
+
+### Nested item motions
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  An item motion may itself be a Sequence, Parallel group, property motions, native animations, delays, callbacks, or nested reusable motions — instantiated once per resolved target.
+  PRD3.md §14.2.
+- **Status:** backlog
+
+### Per-item context variables
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Item motions can read index, reverse_index, count, normalised_index, row, and column for the current target, e.g. to interpolate a value across the group.
+  PRD3.md §14.4.
+- **Status:** backlog
+
+### Item-motion duration differences across targets
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Item motions may resolve to different durations per target (dynamic values, target-specific config, spring settling, native-animation differences, conditional branches).
+  Sequential waits for each item's actual completion; staggered preserves configured start offsets regardless of duration differences; parallel completion accounts for all actual completions.
+  PRD3.md §14.5.
+- **Status:** backlog
+
+### Group reversal policies
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  REVERSE_ORDER (default: reverse(C) → reverse(B) → reverse(A) for sequential; offsets mirrored for staggered) / KEEP_ORDER (reverse each item's motion without reversing target order — for symmetrical effects or matching entrance/exit direction) / CUSTOM.
+  Parallel reversal keeps every item parallel; order affects callbacks/debugging/determinism only, not timing.
+  PRD3.md §15.1-§15.5.
+- **Status:** backlog
+
+### Mid-playback group reversal
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Active item playbacks reverse or retarget per their own policy; not-yet-started items are rescheduled; completed items may become pending-reverse items.
+  The group preserves its already-resolved target order (random groups don't reshuffle); dynamic collections reverse only the targets that actually participated in the current execution.
+  PRD3.md §15.6.
+- **Status:** backlog
+
+### Group execution record
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Tracks resolved targets (weak refs), resolved order, generated start offsets, completed/active item indices, and the random seed used.
+  Used for reversal, debugging, deterministic replay, and runtime inspection.
+  PRD3.md §15.7.
+- **Status:** backlog
+
+### Group playback runtime responsibilities
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  AnimaGroupPlayback (extends AnimaPlayback) resolves/filters/orders targets, creates independent per-target item playbacks, calculates start offsets, starts/tracks/cancels them, handles reversal, and generates execution records.
+  Each generated item record tracks its target, original/ordered index, row/column, start offset, and its own AnimaPlayback.
+  PRD3.md §16.1-§16.2.
+- **Status:** backlog
+
+### Target validity and invalid-target policies
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Before starting each generated item, the group confirms the target still exists, remains in the required scene-tree context, and is supported by the item motion.
+  Policy: SKIP (default, ignore and continue) / CANCEL_GROUP / COMPLETE_ITEM (counts as successful completion, differs from SKIP only in tracing/reporting) / ERROR (for tests/strict authoring).
+  PRD3.md §16.3-§16.4.
+- **Status:** backlog
+
+### Target removed during playback
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Default: cancel that item's playback, release its property ownership, mark it skipped, continue the group, and complete once all remaining valid items finish.
+  A configurable strict mode may cancel the whole group instead.
+  PRD3.md §16.5.
+- **Status:** backlog
+
+### Group pause and resume
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Pausing a group pauses active item playbacks, pending stagger offsets, sequential progression, and the group's elapsed time together; resuming continues from that same state.
+  PRD3.md §16.6.
+- **Status:** backlog
+
+### Group cancellation
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Cancels active item playbacks, prevents pending items from starting, disconnects signals, releases property ownership, and emits one group cancellation result.
+  PRD3.md §16.7.
+- **Status:** backlog
+
+### Group speed changes
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Changing a group's playback speed affects pending stagger offsets, sequential gaps, active item playback speed (where the item motion supports it), and the estimated group duration.
+  PRD3.md §16.8.
+- **Status:** backlog
+
+### Group code API surface
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Motion.group(nodes) / Motion.group_children(parent) with .apply(item_motion), .sequential([gap]), .parallel(), .staggered(interval), .stagger_across(total_duration), .order(...), .reverse_order(...); TargetCollection.children_of/.nodes/.scene_group/.from_callable; a TargetCollection can be built once and applied to multiple group motions (e.g. separate enter/exit motions).
+  PRD3.md §7 (US1-US8), §17.
+- **Status:** backlog
+
+### Motion Composer: group node representation
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Motion Structure panel shows a Group node's target source, playback mode, interval/gap, order, and item motion as a labelled sub-tree (e.g. "Targets: Children of X", "Mode: Staggered").
+  PRD3.md §18.1.
+- **Status:** backlog
+
+### Motion Composer: group creation and target authoring
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Add → Group, seeded from children-of-selected-node, explicit nodes, a Godot scene group, or an empty reusable collection.
+  Drag-and-drop: drag a container into the target field, drag multiple selected scene nodes into an explicit list, reorder/remove explicit targets, locate a target in the scene tree, replace a missing target.
+  PRD3.md §18.2-§18.3.
+- **Status:** backlog
+
+### Motion Composer: group Inspector fields
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  General (name/enabled/item motion), Targets (collection type/parent/recursive/explicit list/type+visibility filter/resolution policy), Distribution (playback mode/interval/total distribution duration/sequential gap/completion policy), Order (order/grid direction/centre mode/random seed/custom ordering resource), Reverse (reverse order policy/reverse item motion/mid-playback behaviour), Advanced (invalid-target policy/empty-group policy/include-internal-children/compiler behaviour/debug expansion).
+  PRD3.md §18.4.
+- **Status:** backlog
+
+### Motion Composer: resolved target and grid rank preview
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Shows the currently resolved target list by name (or "targets are resolved at runtime" for runtime-only collections), and a grid rank preview (e.g. a numbered layout diagram) for grid orderings so the ordering can be understood before playback.
+  PRD3.md §18.5-§18.6.
+- **Status:** backlog
+
+### Motion Composer: generated group timeline
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Collapsed (single group bar) or expanded (one row per generated item) timeline view; generated rows are not independent source nodes — editing one redirects to the owning target collection, item motion, or ordering config.
+  For parallel/staggered groups, the timeline indicates which item determines group completion (critical path) and the resulting group duration.
+  PRD3.md §18.7-§18.8.
+- **Status:** backlog
+
+### Motion Composer: group playback controls and target highlighting
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Play group / play selected item / play from selected item / play forwards or backwards / reverse during playback / reset all or selected targets / regenerate random ordering.
+  Selecting a generated target row highlights the corresponding node in the preview viewport (bounds, ordered index, row/column, start offset).
+  PRD3.md §18.9-§18.10.
+- **Status:** backlog
+
+### Inspector integration for node-level group motions
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  A node's Anima Inspector section may reference a group motion (e.g. a "Children Motion" field), but primary configuration stays inside the AnimaGroupMotion resource rather than duplicating every field per container.
+  "Create Group Motion from Children" convenience action: creates an AnimaGroupMotion, creates a children target collection for the selected node, and opens it in the Composer.
+  PRD3.md §19.
+- **Status:** backlog
+
+### Native Animation as group item motion
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  A group can apply one native Godot Animation clip to every target via a relative AnimationPlayer path resolved per target and an adapter that plays the named clip.
+  PRD3.md §20.1.
+- **Status:** backlog
+
+### Static group compilation to native Animation
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  A group compiles to a native Animation when targets and ordering are statically resolvable, the item motion is compilable, and no live membership or runtime-only filters/callbacks are involved; the compiler expands the group into individual generated tracks.
+  Compile report includes targets resolved, playback mode, ordering, interval, generated track count, and runtime-only event count; when it can't fully compile it reports the specific blocker (runtime-callable collection, non-deterministic random order, live membership, or a signal-wait inside the item motion).
+  PRD3.md §20.2-§20.3.
+- **Status:** backlog
+
+### Group static and runtime validation
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Static: missing target collection/item motion, unresolvable explicit reference, unsupported mode, negative interval/gap, invalid or doubly-specified stagger duration, unsupported grid layout, recursive resource reference, item motion targeting a fixed external node instead of item context, non-deterministic random seed at compile time, unsupported live resolution, missing custom-ordering resource, unsupported target type, duplicate explicit targets.
+  Runtime: target freed or left the tree during playback, item motion fails to resolve a property, target list changed after snapshot, inconsistent custom comparator, grid dimensions changed mid-playback, reversal requested without sufficient execution history.
+  PRD3.md §21.1, §21.3.
+- **Status:** backlog
+
+### Duplicate target handling policy
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Default: deduplicate targets, keep the first occurrence, emit a warning.
+  Configurable: ALLOW (the same target gets multiple item playbacks and is subject to normal property-conflict policy) / ERROR.
+  PRD3.md §21.2.
+- **Status:** backlog
+
+### Group performance targets and benchmark suite
+- **Type:** tech-debt
+- **Source:** PRD3.md
+- **Context:**
+  Provisional targets: 100 ordinary UI targets with no visible scheduling hitch, 1,000 simple scalar item motions at interactive frame rates, no recurring per-frame allocation for resolution/ordering, reversal without unnecessary resource reconstruction, 500+ generated timeline rows without freezing the editor.
+  Optimisation principles: resolve once per playback by default, reuse item-motion resources, allocate playback state per item only, weak target references, no per-frame membership polling unless live resolution is on.
+  Benchmark matrix: 10/100/1,000/10,000 targets × sequential/parallel/staggered/reverse/random/grid-diagonal × target-removal-mid-playback × nested/spring item motions × native-compiled-output comparison.
+  PRD3.md §22.
+- **Status:** backlog
+
+### Legacy group migration
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Maps legacy container groups, custom (explicit-list) groups, and grid groups onto AnimaGroupMotion with the matching target collection, order, and playback mode.
+  Migration report lists resolved targets/mode/interval/order and per-item conversion result, plus warnings where legacy behaviour has no direct equivalent (e.g. a legacy group callback with no reverse action).
+  Migration prioritises preserving observable timing over the cleanest new resource shape; where exact behaviour can't be inferred, it warns rather than silently changing timing.
+  PRD3.md §23.
+- **Status:** backlog
+
+### Group unit test coverage
+- **Type:** test
+- **Source:** PRD3.md
+- **Context:**
+  Empty/single/multiple targets, explicit ordering, duplicate handling, sequential/parallel/stagger timing, total-duration staggering, reverse playback, random-seed determinism, grid row/column/diagonal ordering, item-context values, invalid-target policies.
+  PRD3.md §26.1.
+- **Status:** backlog
+
+### Group integration test coverage
+- **Type:** test
+- **Source:** PRD3.md
+- **Context:**
+  VBoxContainer/HBoxContainer/GridContainer children, explicit unrelated nodes, targets added or removed before playback, target removed during playback, scene reload, a shared item-motion resource reused across groups, Motion Composer serialization, native Animation compilation.
+  PRD3.md §26.2.
+- **Status:** backlog
+
+### Group visual demo scenes
+- **Type:** test
+- **Source:** PRD3.md
+- **Context:**
+  Sequential menu entrance, staggered button entrance, parallel card reveal, diagonal inventory grid, custom title/portrait/button group, random particle-like UI entrance, forward and backward group playback, mid-playback reversal.
+  PRD3.md §26.3.
+- **Status:** backlog
+
+### AnimaMappedGroupMotion (future per-target motion mapping)
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  Deferred future resource letting different targets receive different motions (e.g. Title→title_motion, Portrait→portrait_motion, Button→button_motion), explicitly out of scope for the core AnimaGroupMotion resource — use a plain Sequence/Parallel for heterogeneous per-target motions until this exists.
+  PRD3.md §5, §28.5.
+- **Status:** backlog
+
+### PRD3's suggested minimum viable Group Animation release
+- **Type:** feature
+- **Source:** PRD3.md
+- **Context:**
+  The document's own proposed first-release slice: AnimaGroupMotion, children + explicit target collections, sequential/parallel/fixed-interval-staggered modes, forward/reverse ordering, independent item playback, basic reversal, VBox/HBox/GridContainer support, code API, a basic Motion Composer group node with resolved-target preview and expandable timeline rows, and legacy migration documentation.
+  Foundation-conflict note for `mano start`: this MVP list already spans PRD3.md's own §25 delivery phases 1 through 4 plus part of 6 (target collections, group playback, and Motion Composer support, which the document itself sequences as separate phases) — this tension between "minimum useful release" and the phased delivery plan is unresolved in the source and should be settled during phase scoping, not assumed either way.
+- **Status:** backlog

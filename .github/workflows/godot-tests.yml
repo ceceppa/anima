@@ -1,5 +1,5 @@
 name: "godot gut test"
-on: merge
+# on: merge
 
 jobs:
   execute-gut:

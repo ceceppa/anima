@@ -11,8 +11,7 @@ func estimate_duration() -> float:
 	return duration
 
 func create_runtime() -> Variant:
-	push_error("AnimaPropertyMotion.create_runtime() is not implemented until the runtime lands (story-3)")
-	return null
+	return AnimaPropertyMotionInstance.new(self)
 
 func validate() -> Array[String]:
 	var errors: Array[String] = []
