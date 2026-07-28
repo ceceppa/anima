@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cftcb0e6g7tu1"]
+[gd_scene load_steps=3 format=3 uid="uid://cftcb0e6g7tu1"]
 
 [ext_resource type="Script" uid="uid://bi8pg352un4om" path="res://addons/gut/gui/RunExternally.gd" id="1_lrqqi"]
 

@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://b2teliumq3djx"]
+[gd_scene format=3 uid="uid://b2teliumq3djx"]
 
-[ext_resource type="Script" path="res://tests/test.gd" id="1_gsa5s"]
+[ext_resource type="Script" uid="uid://l4su8ptpm7ds" path="res://tests/test.gd" id="1_gsa5s"]
 [ext_resource type="Script" path="res://addons/anima/components/AnimatedHBoxContainer.gd" id="2_80aan"]
 
 [node name="Test" type="Control"]

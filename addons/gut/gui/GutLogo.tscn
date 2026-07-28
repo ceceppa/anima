@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bjkn8mhx2fmt1"]
+[gd_scene load_steps=4 format=3 uid="uid://bjkn8mhx2fmt1"]
 
 [ext_resource type="Script" uid="uid://b8lvgepb64m8t" path="res://addons/gut/gui/gut_logo.gd" id="1_ba6lh"]
 [ext_resource type="Texture2D" uid="uid://dyxbmyvpkkcvs" path="res://addons/gut/images/GutIconV2_base.png" id="2_ba6lh"]
