@@ -7,6 +7,6 @@
 | 1 | Basic easing curves | story-1-basic-easing-curves.md | done |
 | 2 | Property motion leaf type | story-2-property-motion-leaf.md | done |
 | 3 | Runtime playback core | story-3-runtime-playback-core.md | done |
-| 4 | Sequence composition | story-4-sequence-composition.md | pending |
+| 4 | Sequence composition | story-4-sequence-composition.md | done |
 | 5 | Parallel composition | story-5-parallel-composition.md | pending |
 | 6 | Nested composition with easing | story-6-nested-composition-easing.md | pending |

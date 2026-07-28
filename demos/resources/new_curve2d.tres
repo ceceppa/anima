@@ -1,7 +1,0 @@
-[gd_resource type="Curve2D" format=2]
-
-[resource]
-bake_interval = 115.97
-_data = {
-"points": PackedVector2Array(  )
-}

@@ -58,9 +58,9 @@ static func play(motion: AnimaMotion, target: Node) -> AnimaPlayback:
     ...
 ```
 
-**What:** New Phase 1 code must not import, extend, or otherwise reference anything under `addons/anima/core`, `addons/anima/utils`, or `addons/anima/animations` (the legacy implementation).
+**What:** New code must not import, extend, or otherwise reference anything under `addons/anima/core`, `addons/anima/utils`, or `addons/anima/animations`.
 
-**Why:** Keeps the legacy addon independently removable and prevents the new runtime from silently depending on legacy internals that a later, separate compatibility layer (`AnimaLegacy`) is meant to isolate. This governs new code depending on legacy internals — it does not block the one sanctioned exception, the `Anima` → `AnimaV1` rename (`tech-spec.md` §Key technical decisions), which edits existing legacy files directly rather than adding a new dependency on them.
+**Why:** That legacy v0.x implementation has been deleted from the repository (`tech-spec.md` §Key technical decisions); this rule now guards against reintroducing a dependency on it (e.g. if a file is ever restored from git history for reference) rather than against a currently-existing folder.
 
 **Pattern:**
 ```

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3q76bpa0hm4m"]
-
-[ext_resource type="Script" path="res://demos/components/Button.gd" id="2"]
-
-[node name="Button" type="Button"]
-text = "Button"
-script = ExtResource("2")

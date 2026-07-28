@@ -3,7 +3,12 @@
     "allow": [
       "Bash(node _mano/scripts/stories.js set-status --phase 1 --story 0 --status done)",
       "Bash(node _mano/scripts/stories.js add-row --phase 1 --story 0a --title \"Rename legacy Anima to AnimaV1\" --file \"story-0a-rename-legacy-anima-v1.md\")",
-      "Bash(node _mano/scripts/stories.js *)"
+      "Bash(node _mano/scripts/stories.js *)",
+      "Bash(\"/Applications/Godot.app/Contents/MacOS/Godot\" --headless --editor --quit --path /Users/asenese/Projects/anima > /tmp/godot_rescan2.log 2>&1)",
+      "Bash(\"/Applications/Godot.app/Contents/MacOS/Godot\" --headless -s addons/gut/gut_cmdln.gd -gtest=tests/AnimaSequence.test.gd,tests/Anima.integration.playback.test.gd -gexit)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }
