@@ -16,7 +16,7 @@ var state: State = State.PLAYING
 
 var _instance: Variant = null
 
-func _init(p_motion: AnimaMotion, p_target: Node) -> void:
+func _init(p_motion: AnimaMotion, p_target: Node = null) -> void:
 	motion = p_motion
 	target = p_target
 	_instance = motion.create_runtime()

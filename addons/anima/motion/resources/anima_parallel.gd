@@ -28,16 +28,24 @@ func get_completion_child() -> AnimaMotion:
 		_:
 			return null
 
-func estimate_duration() -> float:
+func estimate_duration() -> AnimaDuration:
 	if completion_policy == CompletionPolicy.ALL_CHILDREN:
-		var longest := 0.0
+		var child_durations: Array[AnimaDuration] = []
 		for child in children:
 			if child.enabled:
-				longest = maxf(longest, child.estimate_duration())
-		return longest
+				child_durations.append(child.estimate_duration())
+
+		var kind := AnimaDuration.worst_kind(child_durations)
+		if kind != AnimaDuration.Kind.FIXED:
+			return AnimaDuration.new(kind, 0.0)
+
+		var longest := 0.0
+		for child_duration in child_durations:
+			longest = maxf(longest, child_duration.seconds)
+		return AnimaDuration.fixed(longest)
 
 	var completion_child := get_completion_child()
-	return completion_child.estimate_duration() if completion_child != null else 0.0
+	return completion_child.estimate_duration() if completion_child != null else AnimaDuration.fixed(0.0)
 
 func create_runtime() -> Variant:
 	return AnimaParallelInstance.new(self)

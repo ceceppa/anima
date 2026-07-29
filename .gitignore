@@ -13,3 +13,4 @@ docs/**/.import
 docs.old
 docs/public/
 docs/resources/_gen/
+.claude

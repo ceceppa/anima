@@ -24,4 +24,6 @@ func test_estimate_duration_returns_duration():
 	var motion := AnimaPropertyMotion.new()
 	motion.duration = 0.75
 
-	assert_eq(motion.estimate_duration(), 0.75)
+	var result := motion.estimate_duration()
+	assert_eq(result.kind, AnimaDuration.Kind.FIXED)
+	assert_eq(result.seconds, 0.75)

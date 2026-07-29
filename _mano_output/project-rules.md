@@ -60,6 +60,20 @@ static func play(motion: AnimaMotion, target: Node) -> AnimaPlayback:
     ...
 ```
 
+**What:** A lazily-created runtime singleton (like `AnimaRuntime`) adds itself to the scene tree with `add_child.call_deferred(...)`, never a direct `add_child(...)`.
+
+**Why:** The call that first creates the singleton often happens from inside another node's own `_ready()` — e.g. a scene that calls `Anima.play()` as soon as it loads — and at that exact moment the scene tree root can still be mid-`add_child()` for the scene itself. Godot rejects a direct, reentrant `add_child()` on a node that's still busy with its own `add_child()` call ("Parent node is busy setting up children"); this went undetected through three phases of tests because no test happened to call `Anima.play()` from a real node's `_ready()` during actual scene load. Deferring sidesteps the reentrancy entirely, for this singleton and any future one.
+
+**Pattern:**
+```
+# addons/anima/motion/runtime/anima_runtime.gd
+static func get_singleton() -> AnimaRuntime:
+    if _instance == null:
+        _instance = AnimaRuntime.new()
+        (Engine.get_main_loop() as SceneTree).root.add_child.call_deferred(_instance)
+    return _instance
+```
+
 ## Patterns
 
 **What:** Every `AnimaMotion` subtype implements all three base-contract methods explicitly — `estimate_duration()`, `create_runtime()`, `validate()`. Never rely on an inherited default that silently returns a zero, empty, or no-op result.
@@ -92,6 +106,15 @@ func validate() -> Array[String]:
 tests/AnimaSequence.test.gd
 tests/AnimaParallel.test.gd
 tests/Anima.integration.playback.test.gd
+```
+
+**What:** Never write a throwaway smoke-test script to verify behaviour and then delete it once it passes. If a check is worth writing to confirm something works, it's worth keeping as a permanent test under `tests/`, following the naming convention above.
+
+**Why:** A disposable smoke test still has to catch a real bug to earn its keep — deleting it after one green run throws away that coverage and lets the same regression slip back in silently later, unnoticed until it breaks something a user can see.
+
+**Pattern:**
+```
+tests/Anima.integration.composition_playground.test.gd   # kept, not deleted after the one-off check that motivated it
 ```
 
 ## Documentation
@@ -141,6 +164,8 @@ examples/
       state_card.gd
       playback_controls.tscn    # restart/play-pause/speed, etc.
       playback_controls.gd
+      selector_button.tscn      # toggle/segment-style button (selected vs. unselected fill)
+      selector_button.gd
   composition_playground.tscn   # this phase's example scene, composed from the shared components above
 ```
 
@@ -155,16 +180,34 @@ class_name StateCard
 extends PanelContainer
 ```
 
-**What:** `StateCard` accepts a `state: WAITING | PLAYING | COMPLETED` enum and a short `label: String`. The outline colour, glow, and paired status-pill styling per state come from the theme, not from parameters callers pass in.
+**What:** `StateCard` has no discrete state. It exposes `set_label(text: String)` and `set_progress(t: float)`, where `t` (`0.0`–`1.0`) continuously drives every visual property — border colour, glow, label colour, opacity, and a small scale pulse — from that one value. `0.0` is at rest/not started, `1.0` is fully complete; nothing in between is a named state a caller sets.
 
-**Why:** Every composition type in the example scene reuses the same three states; a fixed enum keeps cards behaving identically everywhere instead of each caller inventing its own state names or one-off styling.
+**Why:** An earlier version modelled this as a `WAITING | PLAYING | COMPLETED` enum with a `set_state()` call per transition, which meant the "complete" look snapped in abruptly the instant `t` crossed into that state instead of arriving smoothly. Collapsing it to one continuous driver removes the discrete jump entirely — there's no state boundary left to snap across, and every composition type in the example scene drives it the same way regardless of how many pulses it needs.
 
 **Pattern:**
 ```
 # examples/shared/components/state_card.gd
-enum State { WAITING, PLAYING, COMPLETED }
+class_name StateCard
+extends PanelContainer
 
-func set_state(state: State, label: String) -> void:
+func set_label(text: String) -> void:
+    ...
+
+func set_progress(t: float) -> void:
+    ...
+```
+
+**What:** A toggle/segment-style button (selected vs. unselected fill, like the composition-type selector) is built from the shared `SelectorButton` component under `examples/shared/components/` — never an ad-hoc `StyleBoxFlat` constructed inline in a scene script. Its content margins — `24px` left/right, `12px` top/bottom, `12px` corner radius — are the one canonical button-padding value for every button in an example scene, toggle or not; the shared theme's own Button style (`anima_examples.tres`) must match it.
+
+**Why:** This padding value existed only once, inline, in a scene script's ad-hoc `StyleBoxFlat` — it silently diverged from the shared theme's own Button style, which had no padding at all, and the mismatch went unnoticed until a real button visibly had no left/right margin. Pulling it into one shared component prevents that same drift on the next button a future example scene adds.
+
+**Pattern:**
+```
+# examples/shared/components/selector_button.gd
+class_name SelectorButton
+extends Button
+
+func set_selected(selected: bool) -> void:
     ...
 ```
 

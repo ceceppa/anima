@@ -50,7 +50,7 @@
   Repeats a template motion across a target selector with an interval and an order (forward, reverse, from-center, from-edges, random, custom).
   Used for effects like buttons appearing one after another.
   PRD.md §10.2.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Repeat composition (AnimaRepeat)
 - **Type:** feature
@@ -58,7 +58,7 @@
 - **Context:**
   Repeats a child motion a given count, with an optional delay between repeats and an alternate (ping-pong) mode.
   PRD.md §10.2.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Race composition (AnimaRace)
 - **Type:** feature
@@ -66,7 +66,7 @@
 - **Context:**
   Runs children concurrently and completes on the first completion, optionally cancelling the remaining children.
   PRD.md §10.2.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Conditional branch (AnimaConditional)
 - **Type:** feature
@@ -75,7 +75,7 @@
   Selects between a when_true and when_false child motion at runtime based on a condition.
   Runtime-only unless the condition can be resolved at compile time.
   PRD.md §10.2.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Property motion leaf type
 - **Type:** feature
@@ -93,7 +93,7 @@
   Start offset, "overlap previous" (start before the previous child completes), and "start after previous begins" — relative timing between children beyond strict Sequence/Parallel.
   Completion threshold is exact-end only this phase; spring-settled, visually-settled, named-marker, and signal thresholds need features not built yet.
   PRD.md §10.4.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Duration model (Fixed/Estimated/Dynamic/Infinite) — runtime only
 - **Type:** feature
@@ -102,7 +102,7 @@
   Motions report a duration kind, not just a number: Fixed, Estimated, Dynamic, or Infinite — the runtime/data-model concept only.
   Editor visual distinction (solid/striped/dashed/arrow bars) needs the Motion Composer, which doesn't exist yet.
   PRD.md §11.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Functional builder API
 - **Type:** feature
@@ -111,7 +111,7 @@
   Fluent, chainable GDScript builder (Motion.sequence/parallel/stagger/... with .duration()/.ease() chaining) designed for autocomplete and readability when nested.
   Primary code-first authoring surface.
   PRD.md §12.2.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Explicit resource API
 - **Type:** feature
@@ -2620,7 +2620,7 @@
 - **Context:**
   A Godot scene demonstrating the composition types built in this phase (Sequence, Parallel, Stagger, Repeat, Race, Conditional) running via Anima.play(), watchable and runnable in the editor.
   Proves the phase's exit criteria visually, distinct from GUT tests which only prove logical correctness.
-- **Status:** in-phase-3
+- **Status:** resolved
 
 ### Relationship timing: spring/marker/signal completion thresholds
 - **Type:** feature

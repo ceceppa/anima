@@ -15,7 +15,14 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Anima"
+run/main_scene="uid://bbxtvbpvxfod2"
 config/features=PackedStringArray("4.6")
+
+[display]
+
+window/size/viewport_width=2880
+window/size/viewport_height=1620
+window/stretch/mode="canvas_items"
 
 [editor_plugins]
 

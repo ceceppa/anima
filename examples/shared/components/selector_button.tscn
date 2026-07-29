@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cips4mqckwu75"]
+
+[ext_resource type="Script" uid="uid://7xshkiaehevc" path="res://examples/shared/components/selector_button.gd" id="1"]
+
+[node name="SelectorButton" type="Button" unique_id=1770782652]
+script = ExtResource("1")

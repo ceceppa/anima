@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://bbxtvbpvxfod2"]
+
+[ext_resource type="Script" uid="uid://cywi7ohm2iphf" path="res://examples/composition_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="1_lyx8s"]
+[ext_resource type="PackedScene" path="res://examples/shared/components/playback_controls.tscn" id="2"]
+
+[node name="CompositionPlayground" type="Control" unique_id=584612889]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_lyx8s")
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=582436016]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.039216, 0.054902, 0.101961, 1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1712743689]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=2135021707]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="Title" type="Label" parent="Margin/Content" unique_id=941379105]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "Composition Example"
+horizontal_alignment = 1
+
+[node name="Selector" type="HBoxContainer" parent="Margin/Content" unique_id=230794907]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="DurationBadge" type="Label" parent="Margin/Content" unique_id=2005584351]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin/Content" unique_id=1311286085]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="CardRow" type="HBoxContainer" parent="Margin/Content/VBoxContainer" unique_id=1767555272]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 48
+alignment = 1
+
+[node name="PlaybackControls" parent="Margin/Content" unique_id=1402109595 instance=ExtResource("2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2

@@ -66,6 +66,17 @@ func test_first_child_policy_finishes_as_soon_as_first_child_finishes():
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 	assert_lt(node.position.y, 20.0)
 
+func test_estimate_duration_reports_longest_fixed_child_by_default():
+	var parallel := AnimaParallel.new()
+	parallel.children = [
+		_make_child("position:x", 10.0, 0.3),
+		_make_child("position:y", 20.0, 0.6),
+	]
+
+	var result := parallel.estimate_duration()
+	assert_eq(result.kind, AnimaDuration.Kind.FIXED)
+	assert_almost_eq(result.seconds, 0.6, 0.0001)
+
 func test_named_child_policy_finishes_as_soon_as_named_child_finishes():
 	var node := Node2D.new()
 	autofree(node)
