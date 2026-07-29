@@ -31,3 +31,31 @@
 ### What we learned
 
 - Documentation wasn't part of any story's Definition of Done in Phase 1. Future phase briefs/stories should decide explicitly whether doc pages ship in-phase or as a separate pass, rather than defaulting to forgotten.
+
+---
+
+## Phase 2 Review — 2026-07-30
+
+### What worked
+
+- All 12 Phase 1 classes got a documentation page, and the docs site's stale v1 content — the old class-reference pages, guides, tutorials, and features — was fully removed.
+- Verifying the docs site's build surfaced a real, unrelated Hugo/theme version incompatibility (several removed/renamed Hugo APIs) and got it fixed, rather than shipping docs nobody could actually build.
+
+### What didn't
+
+- The docs site had never been verified against the currently-installed Hugo version before this phase — the build-check acceptance criterion couldn't even be assessed until several theme templates were patched first.
+- Removing the v1-specific guides/tutorials/features left the docs site with no top-level overview or quickstart page until a future phase writes new ones for the v2 API.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| The documentation-page convention is stable enough to write all 12 pages against as-is. | Reformatting risk if the convention changed materially after pages were written. | Held — the convention didn't change during the phase; all 12 pages were written against it once. | confirmed |
+
+### Feedback that changes future scope
+
+No feedback logged.
+
+### What we learned
+
+- The docs site's build had drifted out of sync with its own theme's Hugo-version assumptions before this phase touched it. A build-verification step earlier in the pipeline — not just at doc-writing time — would catch this kind of drift sooner.

@@ -50,7 +50,7 @@
   Repeats a template motion across a target selector with an interval and an order (forward, reverse, from-center, from-edges, random, custom).
   Used for effects like buttons appearing one after another.
   PRD.md §10.2.
-- **Status:** backlog
+- **Status:** in-phase-3
 
 ### Repeat composition (AnimaRepeat)
 - **Type:** feature
@@ -58,7 +58,7 @@
 - **Context:**
   Repeats a child motion a given count, with an optional delay between repeats and an alternate (ping-pong) mode.
   PRD.md §10.2.
-- **Status:** backlog
+- **Status:** in-phase-3
 
 ### Race composition (AnimaRace)
 - **Type:** feature
@@ -66,7 +66,7 @@
 - **Context:**
   Runs children concurrently and completes on the first completion, optionally cancelling the remaining children.
   PRD.md §10.2.
-- **Status:** backlog
+- **Status:** in-phase-3
 
 ### Conditional branch (AnimaConditional)
 - **Type:** feature
@@ -75,7 +75,7 @@
   Selects between a when_true and when_false child motion at runtime based on a condition.
   Runtime-only unless the condition can be resolved at compile time.
   PRD.md §10.2.
-- **Status:** backlog
+- **Status:** in-phase-3
 
 ### Property motion leaf type
 - **Type:** feature
@@ -86,22 +86,23 @@
   Full schema: PRD.md §10.3.
 - **Status:** resolved
 
-### Relationship timing modifiers
+### Relationship timing modifiers (start offset, overlap, after-start)
 - **Type:** feature
 - **Source:** PRD.md
 - **Context:**
-  Start offset, "overlap previous" (start before the previous child completes), "start after previous begins", and configurable completion thresholds (exact end / spring settled / visually settled / named marker / signal / custom callback).
+  Start offset, "overlap previous" (start before the previous child completes), and "start after previous begins" — relative timing between children beyond strict Sequence/Parallel.
+  Completion threshold is exact-end only this phase; spring-settled, visually-settled, named-marker, and signal thresholds need features not built yet.
   PRD.md §10.4.
-- **Status:** backlog
+- **Status:** in-phase-3
 
-### Duration model (Fixed/Estimated/Dynamic/Infinite)
+### Duration model (Fixed/Estimated/Dynamic/Infinite) — runtime only
 - **Type:** feature
 - **Source:** PRD.md
 - **Context:**
-  Motions report a duration kind, not just a number: Fixed, Estimated, Dynamic, or Infinite.
-  The editor must visually distinguish these (solid bar / striped-or-faded / dashed open-ended / continuation arrow).
+  Motions report a duration kind, not just a number: Fixed, Estimated, Dynamic, or Infinite — the runtime/data-model concept only.
+  Editor visual distinction (solid/striped/dashed/arrow bars) needs the Motion Composer, which doesn't exist yet.
   PRD.md §11.
-- **Status:** backlog
+- **Status:** in-phase-3
 
 ### Functional builder API
 - **Type:** feature
@@ -110,7 +111,7 @@
   Fluent, chainable GDScript builder (Motion.sequence/parallel/stagger/... with .duration()/.ease() chaining) designed for autocomplete and readability when nested.
   Primary code-first authoring surface.
   PRD.md §12.2.
-- **Status:** backlog
+- **Status:** in-phase-3
 
 ### Explicit resource API
 - **Type:** feature
@@ -2586,7 +2587,7 @@
 - **Context:**
   Phase 1 shipped without developer documentation for any of its new classes: AnimaMotion, AnimaSequence, AnimaParallel, AnimaPropertyMotion, AnimaEase, AnimaPlayback, AnimaRuntime, Anima, AnimaMotionInstance, AnimaPropertyMotionInstance, AnimaSequenceInstance, AnimaParallelInstance.
   Needs a doc page for each once the documentation-page rule exists (see "Documentation page convention for new classes").
-- **Status:** in-phase-2
+- **Status:** resolved
 
 ### Delete stale v1 documentation
 - **Type:** bug
@@ -2594,7 +2595,7 @@
 - **Context:**
   Existing documentation describes the legacy v1 classes (addons/anima/core, utils, animations) that were deleted from the repo during Phase 1.
   That documentation is now stale/dangling and should be deleted.
-- **Status:** in-phase-2
+- **Status:** resolved
 
 ### Documentation page convention for new classes
 - **Type:** rule-gap
@@ -2611,4 +2612,30 @@
 - **Context:**
   Once the v2 API is more complete, write new guides/tutorials/features documentation (fundamentals, reusable animations, multiple animations, dynamic values, relative motion, keyframes, etc.) based on the final API and code.
   Replaces the v1-based guides/tutorials/features content deleted in Phase 2.
+- **Status:** backlog
+
+### Basic example scene for relational composition
+- **Type:** feature
+- **Source:** User idea (Phase 3 scoping)
+- **Context:**
+  A Godot scene demonstrating the composition types built in this phase (Sequence, Parallel, Stagger, Repeat, Race, Conditional) running via Anima.play(), watchable and runnable in the editor.
+  Proves the phase's exit criteria visually, distinct from GUT tests which only prove logical correctness.
+- **Status:** in-phase-3
+
+### Relationship timing: spring/marker/signal completion thresholds
+- **Type:** feature
+- **Source:** PRD.md
+- **Context:**
+  The deferred completion-threshold variants from relationship timing: spring-settled, visually-settled, named-marker, and signal thresholds.
+  Extends the relationship-timing-modifiers item once spring easing, markers, and the signal-wait leaf type exist.
+  PRD.md §10.4.
+- **Status:** backlog
+
+### Duration model: editor visual distinction
+- **Type:** feature
+- **Source:** PRD.md
+- **Context:**
+  The Motion Composer must visually distinguish duration kinds (solid bar / striped-or-faded / dashed open-ended / continuation arrow).
+  Extends the duration-model item once the Motion Composer exists.
+  PRD.md §11.
 - **Status:** backlog

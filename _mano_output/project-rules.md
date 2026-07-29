@@ -10,16 +10,19 @@ The team agrees to follow these architectural decisions, styling standards, and 
 
 **Why:** Keeps the resource types authors configure separate from the runtime machinery that executes them, and leaves room under `addons/anima/` for a future non-motion module (an editor integration, for instance) to sit alongside `motion/` later without reorganising what's already there.
 
+`resources/` holds every `AnimaMotion` subtype plus any construction-time-only resource or authoring helper that never implements the runtime contract (`estimate_duration()`/`create_runtime()`/`advance()`) — `AnimaEase` and the `Motion` builder are both this second kind, not `AnimaMotion` subtypes themselves.
+
 **Pattern:**
 ```
 addons/anima/
   motion/
     resources/
-      anima_motion.gd        # base
+      anima_motion.gd          # base
       anima_sequence.gd
       anima_parallel.gd
       anima_property_motion.gd
-      anima_ease.gd           # curve resource, not an AnimaMotion subtype — still lives with the other resources
+      anima_ease.gd             # curve resource, not an AnimaMotion subtype — still lives with the other resources
+      anima_motion_builder.gd   # class_name Motion — fluent builder/factory, not an AnimaMotion subtype either
     runtime/
       anima_runtime.gd
       anima_playback.gd       # tracks one play() call's live state; paired with the runtime loop that advances it
@@ -38,6 +41,8 @@ addons/anima/
 class_name AnimaSequence
 extends AnimaMotion
 ```
+
+Exception: the fluent builder class is named `Motion` (`tech-spec.md` §Data model `Motion` row) — unprefixed, since `AnimaMotion` already names the base resource type and `Motion.sequence(...)` is the intended authoring surface. This is the only unprefixed type in the addon's public API; it is a one-off carve-out for this specific name clash, not a pattern to extend to future classes.
 
 ## Architecture
 
@@ -119,7 +124,59 @@ See `v2_stuff/doc.example.md` for the full section-by-section structure.
 - Before using a Godot-specific term for the first time on a page, explain what it means in one clause.
 - The Quick example section must not depend on setup the reader hasn't already seen on that same page.
 
----
+## Example Scenes
+
+**What:** UI-facing example/demo scenes (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (state cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/shared/`, not duplicated per example scene.
+
+**Why:** The reference visual direction (`v2_stuff/ex1.jpg`) is a modern, custom-styled look, not stock Godot widget styling; shared, themed components built once keep every future example scene consistent instead of each one restyling controls from scratch.
+
+**Pattern:**
+```
+examples/
+  shared/
+    theme/
+      anima_examples.tres       # custom Theme resource, applied at each example scene's root
+    components/
+      state_card.tscn           # e.g. the A/B/C motion-state cards in v2_stuff/ex1.jpg
+      state_card.gd
+      playback_controls.tscn    # restart/play-pause/speed, etc.
+      playback_controls.gd
+  composition_playground.tscn   # this phase's example scene, composed from the shared components above
+```
+
+**What:** Example-scene component scripts use plain descriptive names (`StateCard`, `PlaybackControls`), not the `Anima`-prefixed `class_name` convention.
+
+**Why:** The `Anima` prefix is reserved for the addon's own public runtime/resource API (see Naming); example-only UI helpers aren't part of that surface, and prefixing them the same way would blur which classes ship in the addon versus which live only in the examples project.
+
+**Pattern:**
+```
+# examples/shared/components/state_card.gd
+class_name StateCard
+extends PanelContainer
+```
+
+**What:** `StateCard` accepts a `state: WAITING | PLAYING | COMPLETED` enum and a short `label: String`. The outline colour, glow, and paired status-pill styling per state come from the theme, not from parameters callers pass in.
+
+**Why:** Every composition type in the example scene reuses the same three states; a fixed enum keeps cards behaving identically everywhere instead of each caller inventing its own state names or one-off styling.
+
+**Pattern:**
+```
+# examples/shared/components/state_card.gd
+enum State { WAITING, PLAYING, COMPLETED }
+
+func set_state(state: State, label: String) -> void:
+    ...
+```
+
+**What:** The `positive-fill` theme colour (`design-brief.md` § Colour palette) is used only for large or bold display text (≥18pt, or ≥14pt bold) — never for body or caption text.
+
+**Why:** White text on `positive-fill` measures 3.7:1 contrast — it passes WCAG AA's large-text threshold (3:1) but fails the normal-text threshold (4.5:1); using it for small text would ship an inaccessible pairing.
+
+**Pattern:**
+```
+# OK: StateCard's single large letter
+# Not OK: a caption, status pill, or body label using positive-fill as its background
+```
 
 ## ❌ Not yet
 

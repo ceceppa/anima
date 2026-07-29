@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Anima — Design Preview</title>
+<style>
+  :root {
+    --bg: #0A0E1A;
+    --surface: #121826;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --accent: #4F46E5;
+    --accent-text: #818CF8;
+    --positive: #2DD4BF;
+    --positive-fill: #0D9488;
+    --border: #1E293B;
+    --radius-md: 12px;
+    --radius-full: 9999px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 48px 32px 96px;
+  }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 4px; }
+  h2 { font-size: 18px; font-weight: 600; margin: 48px 0 16px; padding-top: 24px; border-top: 1px solid var(--border); }
+  p.sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 32px; }
+
+  .swatches { display: flex; flex-wrap: wrap; gap: 16px; }
+  .swatch { width: 140px; }
+  .swatch-color { height: 64px; border-radius: var(--radius-md); border: 1px solid var(--border); }
+  .swatch-label { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+  .swatch-hex { font-size: 12px; color: var(--text-primary); font-family: monospace; }
+
+  .type-row { display: flex; align-items: baseline; gap: 16px; margin-bottom: 12px; }
+  .type-label { width: 160px; font-size: 12px; color: var(--text-secondary); }
+
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    border: 1px solid var(--border); background: var(--surface);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 16px;
+  }
+  .icon-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Composition-type selector */
+  .selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .seg {
+    padding: 10px 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600;
+    background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border);
+  }
+  .seg.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Scene mockup */
+  .scene {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 32px; max-width: 720px;
+  }
+  .scene-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+
+  .badge-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+  .badge {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-full);
+    padding: 6px 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
+  }
+
+  .cards-row { display: flex; align-items: center; justify-content: center; gap: 0; margin: 24px 0; }
+  .state-card {
+    width: 96px; height: 96px; border-radius: var(--radius-md); background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700;
+  }
+  .state-card.waiting { border: 1px solid var(--border); color: var(--text-secondary); }
+  .state-card.playing { border: 2px solid var(--accent); color: var(--accent-text); box-shadow: 0 0 24px rgba(79,70,229,0.35); }
+  .state-card.completed { border: 2px solid var(--positive); color: var(--positive); box-shadow: 0 0 24px rgba(45,212,191,0.35); }
+
+  .connector { width: 64px; height: 2px; border-top: 2px dotted var(--border); margin: 0 4px; }
+  .connector.active { border-top-color: var(--accent); }
+  .connector.done { border-top-color: var(--positive); }
+
+  .card-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .pill { border-radius: var(--radius-full); padding: 4px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+  .pill.waiting { color: var(--text-secondary); background: var(--bg); }
+  .pill.playing { color: var(--accent-text); background: var(--bg); }
+  .pill.completed { color: var(--positive); background: var(--bg); }
+
+  .restart-row { display: flex; justify-content: center; margin-top: 24px; }
+
+  .avatar-large {
+    width: 72px; height: 72px; border-radius: var(--radius-md); background: var(--positive-fill);
+    display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;
+  }
+  .contrast-note { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+</style>
+</head>
+<body>
+
+  <h1>Anima — Design Preview</h1>
+  <p class="sub">Phase 3 · Composition Example Scene · reference: v2_stuff/ex1.jpg, scoped to this phase's actual UX flow</p>
+
+  <h2>Colour palette</h2>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-color" style="background:var(--bg)"></div><div class="swatch-label">bg</div><div class="swatch-hex">#0A0E1A</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--surface)"></div><div class="swatch-label">surface</div><div class="swatch-hex">#121826</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--text-primary)"></div><div class="swatch-label">text-primary</div><div class="swatch-hex">#F8FAFC</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--text-secondary)"></div><div class="swatch-label">text-secondary</div><div class="swatch-hex">#94A3B8</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--accent)"></div><div class="swatch-label">accent</div><div class="swatch-hex">#4F46E5</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--accent-text)"></div><div class="swatch-label">accent-text</div><div class="swatch-hex">#818CF8</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--positive)"></div><div class="swatch-label">positive</div><div class="swatch-hex">#2DD4BF</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:var(--positive-fill)"></div><div class="swatch-label">positive-fill</div><div class="swatch-hex">#0D9488</div></div>
+  </div>
+
+  <h2>Typography</h2>
+  <div class="type-row"><div class="type-label">Scene title / 20·600</div><div style="font-size:20px;font-weight:600;">Composition Example</div></div>
+  <div class="type-row"><div class="type-label">Section label / 16·600</div><div style="font-size:16px;font-weight:600;">Sequence</div></div>
+  <div class="type-row"><div class="type-label">Body / 14·400</div><div style="font-size:14px;color:var(--text-secondary);">Each motion begins relative to the previous motion.</div></div>
+  <div class="type-row"><div class="type-label">Caption / 12·500</div><div style="font-size:12px;font-weight:500;letter-spacing:0.02em;text-transform:uppercase;color:var(--text-secondary);">Waiting</div></div>
+
+  <h2>Composition-type selector</h2>
+  <div class="selector">
+    <div class="seg selected">Sequence</div>
+    <div class="seg">Parallel</div>
+    <div class="seg">Stagger</div>
+    <div class="seg">Repeat</div>
+    <div class="seg">Race</div>
+    <div class="seg">Conditional</div>
+  </div>
+
+  <h2>StateCard states</h2>
+  <div style="display:flex; gap:24px; align-items:flex-start;">
+    <div class="card-col">
+      <div class="state-card waiting">A</div>
+      <div class="pill waiting">Waiting</div>
+    </div>
+    <div class="card-col">
+      <div class="state-card playing">B</div>
+      <div class="pill playing">Playing</div>
+    </div>
+    <div class="card-col">
+      <div class="state-card completed">C</div>
+      <div class="pill completed">Completed</div>
+    </div>
+  </div>
+
+  <h2>Restart button &amp; icon style</h2>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <div class="icon-btn accent">&#8635;</div>
+    <span style="font-size:14px;color:var(--text-secondary);">Restart — 20px line icon, 1.5px stroke, accent fill</span>
+  </div>
+
+  <h2>positive-fill contrast constraint</h2>
+  <div style="display:flex; gap:16px; align-items:center;">
+    <div class="avatar-large">A</div>
+    <div>
+      <div style="font-size:14px;">White text on <code>positive-fill</code> — large/bold display use only</div>
+      <div class="contrast-note">3.7:1 — passes AA for large text (3:1), fails for normal text (needs 4.5:1). Do not use for body or caption text.</div>
+    </div>
+  </div>
+
+  <h2>Sample screen — Composition Example Scene</h2>
+  <div class="scene">
+    <div class="scene-title">Composition Example</div>
+
+    <div class="selector">
+      <div class="seg selected">Sequence</div>
+      <div class="seg">Parallel</div>
+      <div class="seg">Stagger</div>
+      <div class="seg">Repeat</div>
+      <div class="seg">Race</div>
+      <div class="seg">Conditional</div>
+    </div>
+
+    <div class="badge-row"><div class="badge">FIXED · 2.4s</div></div>
+
+    <div class="cards-row">
+      <div class="card-col">
+        <div class="state-card completed">A</div>
+        <div class="pill completed">Completed</div>
+      </div>
+      <div class="connector done"></div>
+      <div class="card-col">
+        <div class="state-card playing">B</div>
+        <div class="pill playing">Playing</div>
+      </div>
+      <div class="connector"></div>
+      <div class="card-col">
+        <div class="state-card waiting">C</div>
+        <div class="pill waiting">Waiting</div>
+      </div>
+    </div>
+
+    <div class="restart-row">
+      <div class="icon-btn accent">&#8635;</div>
+    </div>
+  </div>
+
+</body>
+</html>
