@@ -31,6 +31,10 @@
                             {{ $url = $url }}
                         {{ else if eq . `rss` }}
                             {{ $url = printf "index.xml" | absURL }}
+                        {{ else if eq . `bluesky` }}
+                            {{ $url = printf "https://bsky.app/profile/%s" (index site.Params.social .) }}
+                        {{ else if eq . `linkedin` }}
+                            {{ $url = printf "https://www.linkedin.com/in/%s" (index site.Params.social .) }}
                         {{ else }}
                             {{ $url = printf "https://%s.com/%s" . (index site.Params.social .) }}
                         {{ end }}

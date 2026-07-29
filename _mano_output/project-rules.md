@@ -6,17 +6,14 @@ The team agrees to follow these architectural decisions, styling standards, and 
 
 ## Folder Structure
 
-**What:** New Phase 1 code lives under `addons/anima/motion/` — a new subfolder, sibling to the legacy `core/`, `utils/`, and `animations/` folders, never inside them. Split into `motion/resources/` (`AnimaMotion` and every subtype) and `motion/runtime/` (`AnimaRuntime`, the scheduler, the evaluation loop).
+**What:** Code lives under `addons/anima/motion/`, split into `motion/resources/` (`AnimaMotion` and every subtype) and `motion/runtime/` (`AnimaRuntime`, the scheduler, the evaluation loop, `AnimaPlayback`).
 
-**Why:** New code and legacy code stay in separate folders so it's always clear which system a file belongs to. This holds even though the legacy `Anima` entry point itself was renamed to `AnimaV1` — that's a content edit to an existing legacy file, not new files added into a legacy folder (see `tech-spec.md` §Key technical decisions).
+**Why:** Keeps the resource types authors configure separate from the runtime machinery that executes them, and leaves room under `addons/anima/` for a future non-motion module (an editor integration, for instance) to sit alongside `motion/` later without reorganising what's already there.
 
 **Pattern:**
 ```
 addons/anima/
-  core/          # legacy, untouched
-  utils/         # legacy, untouched
-  animations/    # legacy, untouched
-  motion/        # new — Phase 1 and onward
+  motion/
     resources/
       anima_motion.gd        # base
       anima_sequence.gd
@@ -31,9 +28,9 @@ addons/anima/
 
 ## Naming
 
-**What:** Every new GDScript type is declared with `class_name` in PascalCase, prefixed `Anima` (`AnimaMotion`, `AnimaSequence`, `AnimaPropertyMotion`, …). The file name mirrors the class name in snake_case.
+**What:** Every GDScript type is declared with `class_name` in PascalCase, prefixed `Anima` (`AnimaMotion`, `AnimaSequence`, `AnimaPropertyMotion`, …). The file name mirrors the class name in snake_case.
 
-**Why:** Matches Godot's own global-class convention and keeps every new type discoverable by name; a mismatched file/class name is a common source of GDScript's duplicate-class-name errors.
+**Why:** Matches Godot's own global-class convention and keeps every type discoverable by name; a mismatched file/class name is a common source of GDScript's duplicate-class-name errors.
 
 **Pattern:**
 ```
@@ -44,9 +41,9 @@ extends AnimaMotion
 
 ## Architecture
 
-**What:** The public entry point (`Anima.play(...)`) is exposed through a `class_name`-declared script, never through a `project.godot` autoload. Do not add, rename, or remove anything under `[autoload]` while implementing this phase.
+**What:** The public entry point (`Anima.play(...)`) is exposed through a `class_name`-declared script, never through a `project.godot` autoload. Do not add anything under `[autoload]`.
 
-**Why:** The tech spec requires zero mandatory setup, and the project already has one autoload registered for the legacy addon (`ANIMA`) — adding a second global identifier through `project.godot` risks colliding with it.
+**Why:** The tech spec requires zero mandatory setup — nothing should need registering in `project.godot` before `Anima.play()` works.
 
 **Pattern:**
 ```
@@ -56,16 +53,6 @@ extends RefCounted
 
 static func play(motion: AnimaMotion, target: Node) -> AnimaPlayback:
     ...
-```
-
-**What:** New code must not import, extend, or otherwise reference anything under `addons/anima/core`, `addons/anima/utils`, or `addons/anima/animations`.
-
-**Why:** That legacy v0.x implementation has been deleted from the repository (`tech-spec.md` §Key technical decisions); this rule now guards against reintroducing a dependency on it (e.g. if a file is ever restored from git history for reference) rather than against a currently-existing folder.
-
-**Pattern:**
-```
-# Not allowed in Phase 1 code:
-# extends "res://addons/anima/core/some_legacy_class.gd"
 ```
 
 ## Patterns
@@ -91,7 +78,7 @@ func validate() -> Array[String]:
 
 ## Testing
 
-**What:** Every new piece of code ships with a test — no exceptions. Tests use GUT ([bitwes/Gut](https://github.com/bitwes/Gut)), already installed at `addons/gut`, and live flat in `tests/`. A unit test is named `<ClassName>.test.gd` for the type it covers. An integration test — exercising behaviour across multiple classes through the public `Anima.<...>` entry point — is named `Anima.integration.<name>.test.gd`. A story that introduces one type needs at least the unit test; a story that composes multiple types together through `Anima.play()` (or another `Anima.<...>` entry point) also needs an integration test.
+**What:** Every piece of code ships with a test — no exceptions. Tests use GUT ([bitwes/Gut](https://github.com/bitwes/Gut)), already installed at `addons/gut`, and live flat in `tests/`. A unit test is named `<ClassName>.test.gd` for the type it covers. An integration test — exercising behaviour across multiple classes through the public `Anima.<...>` entry point — is named `Anima.integration.<name>.test.gd`. A story that introduces one type needs at least the unit test; a story that composes multiple types together through `Anima.play()` (or another `Anima.<...>` entry point) also needs an integration test.
 
 **Why:** GUT is already the project's test runner. Unit tests are named after the class they cover; integration tests are named after the entry point they exercise (`Anima`) rather than an arbitrary label, since every integration test drives the system the same way a real caller does — through `Anima.<something>`.
 
@@ -104,9 +91,9 @@ tests/Anima.integration.playback.test.gd
 
 ## Documentation
 
-**What:** Every public class ships a documentation page at `docs/content/docs/anima/<kebab-case-class-name>.md` (e.g. `AnimaPropertyMotion` → `anima-property-motion.md`). Follow the structure in `v2_stuff/doc.example.md`: front-matter, a one-line description, Overview, Inheritance, Quick example, then whichever of Properties / Methods / Signals / Enumerations / Constants the class actually has. Sections the template marks as conditional (Determinism, Performance notes, Reduced motion, Interruption behaviour, and similar) are included only when they genuinely apply to that class — do not add a section with nothing to say just to match the template.
+**What:** Every public class ships a documentation page at `docs/content/docs/anima/<kebab-case-class-name>.md` (e.g. `AnimaPropertyMotion` → `anima-property-motion.md`). Follow the structure in `v2_stuff/doc.example.md`: front-matter, a one-line description, Overview, Inheritance, Availability, Quick example, then whichever of Properties / Methods / Signals / Enumerations / Constants the class actually has. Sections the template marks as conditional (Determinism, Performance notes, Reduced motion, Interruption behaviour, and similar) are included only when they genuinely apply to that class — do not add a section with nothing to say just to match the template. The Availability section's Godot version comes from `tech-spec.md`'s Platform constraints, not a restated number.
 
-**Why:** The template was purpose-built during the Phase 1 review specifically to close a gap where new classes shipped with no documentation at all; following it keeps every page the same shape as the class count grows instead of each page inventing its own structure.
+**Why:** Keeps every class's documentation the same shape as the class count grows, instead of each page inventing its own structure.
 
 **Pattern:**
 ```markdown
@@ -136,7 +123,7 @@ See `v2_stuff/doc.example.md` for the full section-by-section structure.
 
 ## ❌ Not yet
 
-- Editor plugin / Inspector integration folder conventions — no editor-facing surface exists this phase; don't scaffold `addons/anima/motion/editor/` yet.
+- Editor plugin / Inspector integration folder conventions — no editor-facing surface exists yet; don't scaffold `addons/anima/motion/editor/` until one is planned.
 
 ---
 

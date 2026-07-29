@@ -32,11 +32,12 @@ unsafe= true
 
     [params.social]
         github = "ceceppa/anima" 
-        twitter = "ceceppa"
+        bluesky = "ceceppa.bsky.social"
+        linkedin = "alessandrosenese"
         discord = "https://discord.gg/zgtF3us5yN"
 
     [params.docs] # Parameters for the /docs 'template'
-        title           = "Lotus Docs Example Site"           # default html title for documentation pages/sections
+        title           = "Anima"           # default html title for documentation pages/sections
 
         # pathName        = "docs"                            # path name for documentation site | default "docs"
 
@@ -130,11 +131,11 @@ unsafe= true
     identifier = "docs"
     weight = 10
 
-[[menu.primary]]
-    name  = "Tutorials"
-    url = "/docs/tutorials/"
-    identifier = "tutorials"
-    weight = 20
+#[[menu.primary]]
+#    name  = "Tutorials"
+#    url = "/docs/tutorials/"
+#    identifier = "tutorials"
+#    weight = 20
 
 # [[menu.primary]]
 #     name  = "Community"

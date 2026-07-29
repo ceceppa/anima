@@ -2,7 +2,7 @@
 {{ $.Scratch.Delete "social_list" }}
 {{ $.Scratch.Set "pathName" (printf "%s" (.Site.Params.docs.pathName | default "docs")) }}
 <!-- social_list -->
-{{ $social_params := slice "github" "twitter" "instagram" "rss" }}
+{{ $social_params := slice "github" "bluesky" "linkedin" }}
 {{ range $social_params }}
     {{ if isset site.Params.social . }}
         {{ $.Scratch.Add "social_list" (slice .) }}
