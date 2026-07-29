@@ -12,6 +12,7 @@
 - One data model, multiple authoring surfaces: code, the Inspector, and the Motion Composer must all produce the same AnimaMotion resource — no separate visual-only format.
 - Graceful degradation: unsupported integrations fail safely; optional editor conveniences are never required for runtime correctness.
 - Motion should stay comprehensible: the editor should always be able to show execution order, parallel groups, derived duration, and the critical path — never just a black-box result.
+- Production-ready by default: a feature isn't complete just because its ideal demo works — interruption, reversal, direction/speed changes, seeking, removed targets, layout changes, skipped/reduced motion, property conflicts, and editor preview must all be defined, not left as edge cases.
 
 ## Items
 
@@ -22,7 +23,7 @@
   Base Resource class shared by every motion type (composite and leaf): display_name, enabled, delay, speed, tags, metadata, plus estimate_duration/create_runtime/validate methods.
   Every composite and leaf motion type extends this.
   Full schema: PRD.md §10.1.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Sequence composition (AnimaSequence)
 - **Type:** feature
@@ -31,7 +32,7 @@
   Runs child motions one after another; completes when the final enabled child completes.
   The core building block for "after this" relationships (G1).
   PRD.md §10.2.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Parallel composition (AnimaParallel)
 - **Type:** feature
@@ -40,7 +41,7 @@
   Starts all children together; a completion policy (all children / first child / a named child) decides when the group finishes.
   For "all children", duration is the longest child's duration.
   PRD.md §10.2.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Stagger composition (AnimaStagger)
 - **Type:** feature
@@ -83,7 +84,7 @@
   Property motion leaf: animates one property from/to a value.
   The only leaf type in Phase 1 — enough to make Sequence/Parallel structure produce visible motion.
   Full schema: PRD.md §10.3.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Relationship timing modifiers
 - **Type:** feature
@@ -117,7 +118,7 @@
 - **Context:**
   Motions can be constructed directly as typed Resource objects (e.g. AnimaSequence.new(), assigning a `children` array) without the builder.
   PRD.md §12.3.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Runtime playback API
 - **Type:** feature
@@ -125,7 +126,7 @@
 - **Context:**
   Anima.play(motion, node) returns a playback object with an awaitable `finished` signal plus pause/resume/cancel/reverse/seek/set_speed controls.
   PRD.md §12.4.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Node proxy API (Anima.of)
 - **Type:** feature
@@ -151,7 +152,7 @@
   Typed easing resource, narrowed to a basic curve set for Phase 1: linear, polynomial, sine, exponential, circular.
   Gives Phase 1 motion real feel without the advanced easing modes.
   PRD.md §13.1.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Parameterised spring easing
 - **Type:** feature
@@ -335,7 +336,7 @@
   The first runtime request lazily creates an internal AnimaRuntime node in the current scene tree — no required project.godot autoload entry.
   Survives scene changes where the engine allows; optional explicit setup for advanced users.
   PRD.md §17.1.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Runtime manager responsibilities
 - **Type:** feature
@@ -351,7 +352,7 @@
 - **Context:**
   Resolves motion resources into executable instances: nested sequences/parallels, dynamic child duration, cancellation propagation, completion policies, runtime waits, reverse playback where supported, loops, speed scaling, pause/resume.
   PRD.md §17.3.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Central per-frame evaluation loop
 - **Type:** feature
@@ -360,7 +361,7 @@
   Prefer one central evaluation loop over one Tween per property, to cut allocations, simplify velocity tracking, support interruption, and keep debugging deterministic.
   Godot Tween may still back simple compiled cases but must not define the core runtime model.
   PRD.md §17.4.
-- **Status:** in-phase-1
+- **Status:** resolved
 
 ### Clock modes (Idle/Physics/Manual)
 - **Type:** feature
@@ -1575,4 +1576,1031 @@
 - **Context:**
   The document's own proposed first-release slice: AnimaGroupMotion, children + explicit target collections, sequential/parallel/fixed-interval-staggered modes, forward/reverse ordering, independent item playback, basic reversal, VBox/HBox/GridContainer support, code API, a basic Motion Composer group node with resolved-target preview and expandable timeline rows, and legacy migration documentation.
   Foundation-conflict note for `mano start`: this MVP list already spans PRD3.md's own §25 delivery phases 1 through 4 plus part of 6 (target collections, group playback, and Motion Composer support, which the document itself sequences as separate phases) — this tension between "minimum useful release" and the phased delivery plan is unresolved in the source and should be settled during phase scoping, not assumed either way.
+- **Status:** backlog
+
+### Anima.on() target-bound convenience API (core)
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Anima.on(target) -> AnimaTargetMotionFactory: a convenience facade that creates normal AnimaMotion resources (primarily AnimaPropertyMotion) from a target that's already bound, not a separate runtime or animation model.
+  Chosen name over Anima.Node()/Anima.target()/Anima.for_node() — shorter, more readable, avoids confusion with Godot's own Node type (PRD4.md §28.2).
+  Design principle: make common property animation concise and discoverable without creating a second motion architecture.
+  PRD4.md §1, §3, §9.1.
+- **Status:** backlog
+
+### AnimaTargetMotionFactory
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  RefCounted factory bound to one target reference; must not hold current property selection, motion, duration, easing, playback, or velocity state.
+  Safe to keep and reuse to create multiple independent motions against the same target.
+  PRD4.md §9.2.
+- **Status:** backlog
+
+### Factory immutability and independent motions per call
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Every convenience property method call creates a new, independent motion; calling one method must never mutate a motion an earlier call already returned.
+  During construction, fluent modifier methods may mutate the newly created motion and return self; once a motion is shared or saved it should be treated as a definition, not active runtime state (§28.4).
+  PRD4.md §9.3.
+- **Status:** backlog
+
+### Canonical equivalence guarantee
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Every Anima.on() convenience call must produce a motion equivalent to the matching Motion.animate() call — no convenience-specific runtime, easing, reversal, interruption, or scheduling logic, to avoid a second motion architecture that has to stay in sync.
+  Convenience methods return AnimaPropertyMotion directly (or a specialised subclass with the standard modifier API) rather than a separate convenience-builder type, where practical (§28.3).
+  PRD4.md §2.4, §3, §9.4.
+- **Status:** backlog
+
+### Three-level motion-authoring hierarchy
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Level 1 Anima.on() — common/discoverable convenience. Level 2 Motion — universal property + structural API for arbitrary properties, custom scripts, and structural composition. Level 3 explicit resource classes — for the Motion Composer, compiler, migration tools, tests, and extension authors.
+  All three levels must produce equivalent resources.
+  PRD4.md §8.
+- **Status:** backlog
+
+### Convenience-method positional argument policy
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Convenience property methods accept only destination and an optional duration positionally; every other behaviour (starting value, ease, delay, interruption, relative mode, reverse policy, loop, completion threshold, clock) must be a named fluent modifier, never positional.
+  The generic Motion.animate() accepts target/property/destination positionally instead.
+  Both positional duration and .duration() are supported (§28.1) — positional for beginner examples where the named method already makes the meaning clear, .duration() when inherited defaults or advanced modifiers are being demonstrated; if both are given, .duration() wins and the editor/debug mode may warn about the redundancy.
+  PRD4.md §2.2, §10.1-§10.3, §13.2.
+- **Status:** backlog
+
+### Convenience duration default and inheritance chain
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  When duration is omitted, resolution order is: motion-specific override (if supplied later) → node-behaviour default → motion-theme default → global Anima default.
+  The resolved value must not be copied into the motion prematurely when inheritance is intended, so a later default change still applies.
+  PRD4.md §10.4.
+- **Status:** backlog
+
+### Starting-value semantics (current-at-start vs explicit)
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Default: Anima captures the property's value at the moment that specific motion begins, not when it's authored or composed.
+  .from(value) sets an explicit start instead; the target is only assigned that starting value when the property motion itself begins — never during an earlier wait/delay elsewhere in the same chain.
+  PRD4.md §11.1-§11.2.
+- **Status:** backlog
+
+### Relative destination convenience methods
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  move_by(), rotate_by(), and a generic property_by() compute their destination from the property value captured when the motion begins, rather than an absolute destination.
+  PRD4.md §11.3-§11.4.
+- **Status:** backlog
+
+### Reserved future starting-value modes
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Architecture should not block future start modes: value at child start, value at parent-playback start, explicit, relative-to-current, relative-to-destination, dynamic callable.
+  Only current-at-start and explicit are required for the initial release.
+  PRD4.md §11.5.
+- **Status:** backlog
+
+### Initial convenience property set
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  position (Control/Node2D/Node3D, Variant-typed with runtime+editor validation since GDScript can't overload cleanly), position_x/y/z (z only for 3D targets; axis methods included only where they clearly help), move_by, scale + scale_by, rotation + rotate_by (optional rotation_degrees/rotate_degrees_by only if target classes expose consistent degree-based properties).
+  opacity → modulate:a (values outside 0..1 are allowed by default with a validation warning, not clamped or rejected; self_modulate:a stays out until a concrete use case justifies a second method, §28.5); colour → modulate, spelled .color() to match Godot's own Color naming (§12.7); size (Control only initially; must document container/minimum-size/anchor/layout-recalculation interaction, and steer container-controlled nodes toward Layout Transition instead, §12.8/§28.6 — the same steer applies to position on layout-owned Control properties, allowed with a validation warning rather than blocked).
+  Generic .property() delegates directly to Motion.animate(); an optional shader_parameter convenience may use a dedicated adapter and may be deferred from the minimum release.
+  PRD4.md §12.
+- **Status:** backlog
+
+### Motion modifiers on convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Shared modifier API: .from()/.from_current(), .duration(), .ease(), .delay(), .interruption(), .reversibility() (property motions default to automatic reversal where values/easing support it), .relative() (generic escape hatch — docs should prefer semantic methods like move_by()), .repeat()/.alternate() (exact looping API owned by the broader motion system, not this feature).
+  PRD4.md §13.
+- **Status:** backlog
+
+### No implicit multi-property composition
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Chaining a second property method directly (e.g. .position().opacity()) is not supported, since the first call already returns a motion, not the factory.
+  Parallel intent between two properties on the same target must be explicit via with() or Motion.parallel().
+  PRD4.md §5, §14.4.
+- **Status:** backlog
+
+### Relational choreography integration for convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Motions created through Anima.on() work with then() and with() like any other motion.
+  Multiple consecutive with() calls after one then() form one Parallel group of everything chained since that then(), not nested pairs.
+  PRD4.md §14.1-§14.3.
+- **Status:** backlog
+
+### Group-item convenience API (Anima.item())
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Anima.item() -> AnimaItemMotionFactory: resolves its target separately per Group Animation target rather than binding one fixed node.
+  Exposes the same convenience property methods as Anima.on() where meaningful: position, move_by, scale, rotation, opacity, colour, size, generic property.
+  PRD4.md §15.1-§15.4.
+- **Status:** backlog
+
+### Group item context for dynamic convenience destinations
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  A convenience method's destination may be a callable receiving AnimaGroupItemContext (e.g. lerp by normalised_index) instead of a fixed value.
+  May be deferred from the minimum release, but the architecture must not prevent it later.
+  PRD4.md §15.5.
+- **Status:** backlog
+
+### Type validation for convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Validated when the motion is created (if target and property are already known), in the Motion Composer, before playback, during compilation, and at runtime if the target's type changed since creation.
+  Type-mismatch and unsupported-target errors must name the expected type/property and suggest a fix (e.g. "use property() or select a CanvasItem target").
+  PRD4.md §16.1-§16.4.
+- **Status:** backlog
+
+### Variant-typed signature compensation
+- **Type:** tech-debt
+- **Source:** PRD4.md
+- **Context:**
+  Since GDScript can't provide type-safe overloads for every supported node class, some convenience methods accept Variant.
+  Compensated through documentation, runtime validation, editor warnings, and typed generated C# wrappers where practical.
+  PRD4.md §16.5.
+- **Status:** backlog
+
+### Target-reference storage modes for convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  A motion created and played immediately may hold a runtime object reference; a motion saved as a resource must use AnimaTargetReference instead (explicit NodePath / relative-to-playback-root / current-context-target / current-group-item / named-target).
+  Saving a motion still holding an unsafe live reference must convert it to a scene-relative reference, prompt for a resolution mode, or refuse to save — never persist a live object reference silently.
+  PRD4.md §17.1-§17.3.
+- **Status:** backlog
+
+### Reserved context-target convenience (future)
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  A potential Anima.on_target()/Anima.target() API for reusable motions that target "the current playback context" rather than one fixed node.
+  Explicitly overlaps conceptually with Anima.item() and needs careful naming to avoid confusion between them; not required for the initial Anima.on() release.
+  PRD4.md §17.4.
+- **Status:** backlog
+
+### Motion Composer: canonical display of convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  A convenience-created motion displays its resolved target/property/from/to/duration/ease like any property motion, using the semantic convenience name (Opacity, Position, Scale, Rotation, Colour, Size) rather than only the raw property path.
+  An advanced field shows the underlying Godot property path (e.g. "Underlying property: modulate:a").
+  PRD4.md §18.1-§18.2.
+- **Status:** backlog
+
+### Motion Composer: round-trip editing and origin metadata
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Editing a convenience-created motion in the Composer edits the canonical resource directly; the editor is not required to regenerate the original source-code expression that created it — the resource is the shared model.
+  Optional editor-only, non-runtime-affecting metadata may record which convenience call created a motion (e.g. "Created through: Anima.on().opacity()").
+  PRD4.md §18.3-§18.4.
+- **Status:** backlog
+
+### Motion Composer: generic property selector
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  For generic .property() motions, the Composer offers a searchable target-property list with type information, current value, common-property shortcuts, and validation.
+  PRD4.md §18.5.
+- **Status:** backlog
+
+### Native Animation compilation parity for convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  A convenience-created motion compiles identically to the equivalent explicit AnimaPropertyMotion — same property path and values, no compiler distinction between the two authoring styles.
+  The compile report may retain the semantic name (e.g. "Panel opacity → modulate:a").
+  PRD4.md §19.
+- **Status:** backlog
+
+### Reversal parity for convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Convenience motions use standard property reversal and easing-mirroring rules.
+  A motion without an explicit .from() must record its resolved starting value so reverse playback returns to the value actually observed at start (e.g. 0.42), not an arbitrary default.
+  PRD4.md §20.1-§20.2.
+- **Status:** backlog
+
+### Interruption parity for convenience motions
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Convenience motions use the standard property-ownership and interruption system exclusively — no convenience-specific interruption implementation is permitted.
+  PRD4.md §20.3.
+- **Status:** backlog
+
+### Anima V1 migration for the target-bound API
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  Naming migration: Anima.Node(target) -> Anima.on(target); property-method calls migrate 1:1 where semantics are unchanged.
+  Old anima_property()/anima_to()/anima_duration() chains map to a named convenience call (or Motion.animate() when no convenience method fits).
+  An optional temporary Anima.Node() alias may ship with a deprecation warning, removed later per the broader compatibility policy.
+  PRD4.md §21.5, §22.
+- **Status:** backlog
+
+### Getting-started and equivalence documentation
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  First tutorial example uses Anima.on().opacity().from().play(); a composition example shows then()/with(); an escape-hatch progression shows .property() then Motion.animate() for advanced/structural work.
+  Explicit equivalence documentation demonstrates that Anima.on() and Motion.animate() produce the same resource, framing the levels as layered rather than competing.
+  PRD4.md §21.1-§21.4.
+- **Status:** backlog
+
+### Convenience-layer performance requirements
+- **Type:** tech-debt
+- **Source:** PRD4.md
+- **Context:**
+  Must add negligible runtime overhead versus constructing the equivalent canonical motion directly: lightweight factory creation, no playback-state allocation in convenience methods, cacheable property resolution where safe, no per-frame convenience-layer logic, created motions use the normal runtime evaluator, and reusing a factory must not retain previously generated motions.
+  PRD4.md §23.
+- **Status:** backlog
+
+### Convenience API unit test coverage
+- **Type:** test
+- **Source:** PRD4.md
+- **Context:**
+  Null-target rejection, correct stored target reference, independent motions from repeated calls, opacity maps to modulate:a, position resolves per target type (Control/Node2D/Node3D), scale/rotation/colour mapping, size target-support validation, generic-property delegation, duration parameter application and .duration()-overrides-positional precedence, .from() vs omitted-.from() start mode.
+  PRD4.md §24.1.
+- **Status:** backlog
+
+### Convenience-vs-canonical equivalence tests
+- **Type:** test
+- **Source:** PRD4.md
+- **Context:**
+  For every convenience method, the resulting canonical resource is compared against the equivalent Motion.animate() output to catch the two APIs diverging.
+  PRD4.md §24.2.
+- **Status:** backlog
+
+### Convenience API integration test coverage
+- **Type:** test
+- **Source:** PRD4.md
+- **Context:**
+  then()/with() composition, reverse playback, mid-flight retargeting, group-item usage, resource serialization, Motion Composer editing, native Animation compilation, target removal before and during playback.
+  PRD4.md §24.3.
+- **Status:** backlog
+
+### Convenience API validation test coverage
+- **Type:** test
+- **Source:** PRD4.md
+- **Context:**
+  Invalid target class, invalid destination type, missing generic property, unsupported size() target, incorrect Vector2/Vector3 position type, a saved motion still holding an unsafe live target reference.
+  PRD4.md §24.4.
+- **Status:** backlog
+
+### PRD4's suggested minimum viable Anima.on() release
+- **Type:** feature
+- **Source:** PRD4.md
+- **Context:**
+  The document's own proposed first-release slice: Anima.on(), reusable factory, position/move_by/scale/rotation/opacity/color/property, optional positional duration, .from()/.duration()/.ease(), then()/with() compatibility, normal reverse and interruption support, canonical-equivalence tests, and Anima.Node() migration documentation.
+  Foundation-conflict note for `mano start`: this MVP list already spans PRD4.md's own §26 delivery phases 1 and 2 together, and explicitly excludes Anima.item() (deferred to ship alongside Group Animation rather than the first Anima.on() milestone) — this tension between "minimum useful release" and the phased delivery plan is unresolved in the source and should be settled during phase scoping, not assumed either way.
+- **Status:** backlog
+
+### AnimaKeyframeMotion resource
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  First-class AnimaMotion describing one or more properties at normalised offsets across a duration (CSS-inspired keyframes): Anima.on($Panel).keyframes({"from": {...}, 50: {...}, "to": {...}}).duration(0.6).
+  PRD5.md §5.1-§5.2.
+- **Status:** backlog
+
+### Keyframe grouped-offset declarations
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  One declaration may target multiple offsets at once, e.g. ["from", 10]: {...} — preserved from Anima V1. Flattening/normalisation happens internally; developers never call the flattening engine directly.
+  PRD5.md §5.3.
+- **Status:** backlog
+
+### Keyframe offset normalisation and parsing
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Parser must: flatten grouped offsets, validate them, normalise to 0.0-1.0 ("from"=0.0, "to"=1.0, numbers as percentages), sort them, detect duplicate property declarations at the same offset, and generate canonical keyframe tracks. Input declaration order must not determine playback order.
+  PRD5.md §5.4.
+- **Status:** backlog
+
+### Multi-property keyframes with semantic names
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  One keyframe block may animate several properties at once. Convenience names resolve to canonical properties (opacity->modulate:a, position->position, scale->scale, rotation->rotation, color->modulate, size->size); arbitrary property paths are also supported directly.
+  PRD5.md §5.5.
+- **Status:** backlog
+
+### Programmatic keyframe construction (Motion.keyframes())
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  A fluent alternative to the dictionary form: Motion.keyframes().at(["from", 10], {...}).at([23, 50], {...}).duration(0.6). Both forms must produce the same AnimaKeyframeMotion.
+  PRD5.md §5.6.
+- **Status:** backlog
+
+### Per-segment keyframe easing and reserved metadata
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Each keyframe segment may set its own easing via a reserved key (_ease); other reserved keys are anticipated (_hold, _marker, _callback) under a clear namespace so they can't collide with real property names. Reserved metadata is stored separately from animated properties in the canonical resource.
+  PRD5.md §5.7.
+- **Status:** backlog
+
+### Keyframe reversal
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Automatic reversal: keyframe order reverses, offset becomes 1.0 - original_offset, segment easing mirrors, resolved dynamic values are reused from the execution record (not recalculated). Pure property tracks reverse automatically; callback/side-effect tracks need explicit backward behaviour.
+  PRD5.md §5.8.
+- **Status:** backlog
+
+### Motion Composer: keyframe editing
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Composer support for keyframe-track creation, percentage editing, multiple properties per track, per-segment easing, grouped-offset visualisation, forward/backward preview, dynamic-value indicators, loop preview, validation, and conversion between semantic and canonical property names.
+  PRD5.md §5.9, §31.1.
+- **Status:** backlog
+
+### AnimaValue dynamic value resource
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  A dynamic value (AnimaValue) resolves against the current playback context: func resolve(context: AnimaValueContext) -> Variant. A motion property may accept a fixed value, an AnimaValue, or a supported callable wrapper instead.
+  Preserves Anima V1's dynamic-expression capability (e.g. "-.:size:x" meaning "negative width of the current target") in typed form.
+  PRD5.md §6.1-§6.2.
+- **Status:** backlog
+
+### Typed dynamic value API (Value.*)
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  The primary Anima 2 API expresses dynamic values through typed expressions, e.g. .from(Value.target(^"size:x").negative()). Works standalone and inside a Group, where each item resolves its own value independently.
+  PRD5.md §6.3.
+- **Status:** backlog
+
+### Dynamic value sources
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Value.constant(), Value.target(property), Value.node(path, property), Value.root(property), Value.context(key), Value.group_index(), Value.group_count(), Value.group_normalised_index(), Value.grid_row(), Value.grid_column().
+  PRD5.md §6.4.
+- **Status:** backlog
+
+### Dynamic value arithmetic composition
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Structural arithmetic chainable on a Value: add/subtract/multiply/divide/negative/absolute/minimum/maximum/clamp/map, plus vector helpers x()/y()/z()/component().
+  PRD5.md §6.5.
+- **Status:** backlog
+
+### Dynamic value callable fallback
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Value.call(func(context): ...) covers calculations that can't be expressed structurally; must be marked runtime-only, potentially non-serialisable, potentially non-compilable, and potentially unavailable in editor preview.
+  PRD5.md §6.6.
+- **Status:** backlog
+
+### Dynamic value resolution timing policy
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  MOTION_START (default — resolves when the specific property motion begins), PLAYBACK_START (resolves when the root playback begins, useful when later scene changes mustn't affect the value), EACH_FRAME (deferred — continuous resolution, treated as tracking/constraint motion rather than ordinary interpolation).
+  PRD5.md §6.7.
+- **Status:** backlog
+
+### Dynamic values inside keyframes
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Any keyframe property value may be a dynamic Value instead of a fixed literal.
+  PRD5.md §6.8.
+- **Status:** backlog
+
+### Dynamic value execution record
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  When a dynamic value resolves, Anima records the result; mid-playback reversal reuses the recorded value rather than recalculating against a target whose state may have changed. A fresh playback resolves the value again.
+  PRD5.md §6.9.
+- **Status:** backlog
+
+### Legacy dynamic-value string syntax compatibility
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Legacy string expressions like .from("-.:size:x") remain available for migration, internally converted to the typed value graph (e.g. Negative(TargetProperty("size:x"))). Typed API is preferred in new documentation.
+  PRD5.md §6.10, §32.2.
+- **Status:** backlog
+
+### Automatic layout transition core (Anima.layout())
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Anima.layout($Node).change(func(): ...).duration(...).play() captures the layout before and after an arbitrary mutation callback and animates the visual difference — the developer never computes old/new rectangles by hand.
+  Elaborates on the original PRD.md "FLIP-style automatic layout transitions" / "Layout transition APIs" items with substantially more detail; worth reconciling when this area is phase-scoped.
+  PRD5.md §7.1-§7.2.
+- **Status:** backlog
+
+### Layout transition FLIP algorithm and workflow
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  First (capture current layout) / Last (apply mutation, allow layout recalculation) / Invert (apply inverse visual transforms) / Play (animate transforms back to identity). For Control nodes, prefer visual-only transforms so the container stays authoritative.
+  Full required workflow: identify affected controls, capture initial+final geometry, execute mutation, wait for recalculation, classify targets, invert, play, remove temporary state, leave nodes in their real final layout.
+  PRD5.md §7.3-§7.4.
+- **Status:** backlog
+
+### Layout transition result categories
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Each affected target is classified as: unchanged, moved, resized, moved-and-resized, added, removed, reparented, or invalid.
+  PRD5.md §7.6.
+- **Status:** backlog
+
+### Layout transition added/removed target handling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Added targets get an entrance motion while their final layout stays authoritative. Removed targets may need to stay visually present during exit: capture a snapshot/temporary presentation, remove the real node from layout, present it in an overlay, animate the exit, then release the temporary object.
+  PRD5.md §7.7-§7.8.
+- **Status:** backlog
+
+### Layout transition reparented-target handling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  For shared nodes moving between parents: capture global geometry before and after the mutation, animate through an overlay or visual transform, preserve the final hierarchy.
+  PRD5.md §7.9.
+- **Status:** backlog
+
+### Layout transition nested-container policy
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  ROOTS_ONLY / LEAVES_ONLY / SMART (recommended default) / ALL. The runtime must prevent unintended parent-child transform compounding.
+  PRD5.md §7.10.
+- **Status:** backlog
+
+### Open decision: layout transition clipping policy default
+- **Type:** spec-gap
+- **Source:** PRD5.md
+- **Context:**
+  PRD5.md defines the policy options (RESPECT / OVERLAY / TEMPORARILY_DISABLE) for whether animated content is clipped by its container during a layout transition, but states no recommended default — unlike every neighbouring policy in the same section.
+  PRD5.md §7.11.
+- **Status:** backlog
+
+### Layout transition mid-flight interruption
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  When another mutation occurs during an active transition: capture the current visual state as the new initial state, apply the new mutation, retarget toward the new final layout, avoid snapping to old logical endpoints. Recommended default: RETARGET.
+  PRD5.md §7.12.
+- **Status:** backlog
+
+### Layout transition reversal and restoration
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  A completed transition may reverse only when initial/final snapshots remain valid, removed targets can be restored, added targets can be removed safely, and the original hierarchy can be reconstructed — otherwise Anima offers restoration/retargeting rather than claiming exact reverse support. API distinguishes playback.reverse() from playback.revert().
+  PRD5.md §7.13.
+- **Status:** backlog
+
+### Layout transition group/stagger integration
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Moved or added items from a layout transition may be staggered, e.g. .stagger(0.025).stagger_order(AnimaGroupOrder.FROM_CENTER).
+  PRD5.md §7.14.
+- **Status:** backlog
+
+### Motion Composer: layout transition tooling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Before/after bounds, movement paths, added/removed target markers, nested-container behaviour display, clip warnings.
+  PRD5.md §31.2.
+- **Status:** backlog
+
+### Named visual states (Anima.states())
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Anima.states($Menu) lets code define named states (menu_state.define(&"open", motion)) and transition between them safely (menu_state.go(&"open")) instead of interactive UI killing an in-flight animation and losing track of the correct resulting state.
+  Scope-limited: named visual states, one current + one destination state, optional explicit transitions, automatic interruption policies, AnimaBehaviour integration. Not a general gameplay state machine — nested state machines, arbitrary condition graphs, boolean expression editors, gameplay data flow, and complex transition routing are all deferred.
+  PRD5.md §8.1-§8.4.
+- **Status:** backlog
+
+### Visual state transition interruption policies
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  When state changes mid-transition, Anima must determine whether to continue, reverse, retarget, replace, queue, cancel, or complete the current transition — and must define current logical state, current visual state, destination state, input availability, and completion-event behaviour.
+  PRD5.md §8.3.
+- **Status:** backlog
+
+### Visual state reversal optimisation
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Anima may reverse the active transition when the graph is reversible, its endpoints match the requested states, and no irreversible side effect invalidated it — otherwise it retargets instead.
+  PRD5.md §8.5.
+- **Status:** backlog
+
+### AnimaMarkerMotion and named markers
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Motion.mark(&"hit") places a semantic milestone inside a relational graph (e.g. Sequence(wind_up, Motion.mark(&"hit"), follow_through, Motion.mark(&"recovered"))); absolute timestamps are generated, never authored directly — solves gameplay logic currently tied to a hardcoded animation duration/timer.
+  PRD5.md §9.1-§9.2.
+- **Status:** backlog
+
+### Marker runtime API
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  await playback.reached(&"hit"); playback.seek_marker(), play_to(), play_from(), play_between(), reverse_to() — lets gameplay code synchronise to animation milestones regardless of duration/speed/skip/reverse/interrupt/seek changes.
+  PRD5.md §9.3.
+- **Status:** backlog
+
+### Marker event and direction policies
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Event policy: SUPPRESS / EMIT_CROSSED / EMIT_DESTINATION_ONLY. Direction policy: FORWARD_ONLY / BACKWARD_ONLY / BOTH. Marker events report name, direction, loop index, playback progress, and whether they were crossed via seeking or normal completion.
+  PRD5.md §9.4-§9.5.
+- **Status:** backlog
+
+### Motion Composer: marker tooling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Add marker, rename marker, seek to marker, play between markers, configure direction policy.
+  PRD5.md §31.3.
+- **Status:** backlog
+
+### Playback cancel/complete/revert/reverse operations
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  cancel() stops without claiming completion (keeps current visual values, cancels pending children, emits cancellation not completion, releases ownership). complete() reaches the valid final state (applies final values, resolves cleanup, processes markers, emits completion once). revert() restores the state captured before playback affected the target. reverse() plays the current execution backwards from its current progress. Reverse and revert are explicitly not equivalent.
+  PRD5.md §10.1.
+- **Status:** backlog
+
+### Completion and cancellation behaviour policies
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Completion: KEEP_FINAL / RESTORE_INITIAL. Cancellation: KEEP_CURRENT (recommended default) / RESTORE_INITIAL / COMPLETE.
+  PRD5.md §10.2-§10.3.
+- **Status:** backlog
+
+### Pre-animation snapshots
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Snapshots may capture property values, target identity, layout rectangle, parent, child index, visibility, focus state, and temporary presentation state. Used for reverse playback, dynamic-value reversal, revert(), layout transitions, editor preview, reduced-motion completion, and interrupted transitions.
+  PRD5.md §10.4.
+- **Status:** backlog
+
+### Progress-based playback evaluation and seeking
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  playback.get_progress()/.set_progress(p)/.seek_time(s)/.animate_to_progress(p)/.seek_marker(name) — supports drag-driven interaction (e.g. a drawer that follows a pointer, then animates to the nearer end on release). Seek event policy: SUPPRESS / EMIT_CROSSED.
+  PRD5.md §11.1-§11.4.
+- **Status:** backlog
+
+### Progress-driven evaluator requirement
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  The evaluator must support evaluating the motion graph at an arbitrary progress P, not depend exclusively on incrementing elapsed time — required for reversal, editor scrubbing, gesture-driven animation, native-compilation sampling, deterministic tests, manual stepping, and reduced-motion completion.
+  PRD5.md §11.5.
+- **Status:** backlog
+
+### Playback clocks and manual stepping
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  AnimaClock: PROCESS / PHYSICS / UNSCALED / MANUAL. Example: .clock(AnimaClock.UNSCALED) for pause-menu animation; manual clock lets code drive playback.step(delta) directly. Recommended: the playback clock cannot change once playback has begun.
+  PRD5.md §12.
+- **Status:** backlog
+
+### Forward and reverse speed multipliers
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Every motion and playback may define forward_speed/reverse_speed (default 1.0), e.g. an opening motion at 1.0x and its structural reverse (closing) at 1.5x, without duplicating the motion or hand-adjusting durations. A playback may also set a general .speed() multiplier affecting both directions.
+  PRD5.md §13.1-§13.3.
+- **Status:** backlog
+
+### Effective speed calculation model
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  effective speed = scope speed x playback speed x parent motion speed x local motion speed x direction speed. Authored duration itself never changes — speed is a playback multiplier, not a destructive edit to the motion definition. Implementations may simplify how many levels are exposed initially, but the model stays consistent.
+  PRD5.md §13.4-§13.5.
+- **Status:** backlog
+
+### Speed and direction kept as separate concepts
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Negative speed must never be used to reverse playback (speed values must stay greater than zero); direction is switched via reverse(), pacing via set_speed(). Mid-flight direction changes preserve current progress exactly, change direction and reverse speed immediately, don't snap values, don't re-resolve dynamic values, and reschedule pending structural events backwards while keeping execution history valid.
+  PRD5.md §13.6-§13.7.
+- **Status:** backlog
+
+### Group speed scaling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  A group's speed multiplier scales its entire generated schedule together — item-motion durations, stagger intervals, sequential gaps, delays, marker timing, and generated start offsets — as one coherent schedule, not independently. Target order still follows the group's reverse-order policy.
+  PRD5.md §13.8.
+- **Status:** backlog
+
+### Nested speed multiplier composition
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Speed multipliers at different levels (item motion, group, playback) compose multiplicatively (e.g. 1.2x item x 1.5x group = 1.8x effective) — the Motion Inspector must show how the final value was produced.
+  PRD5.md §13.9.
+- **Status:** backlog
+
+### Spring simulation speed scaling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Timeline-based easing scales directly through time; physical springs instead scale simulation delta (frame delta x effective speed) to preserve authored spring characteristics while changing real-time duration. Physical retargeting (retarget_to_start()) stays distinct from exact timeline reversal (reverse_timeline()).
+  PRD5.md §13.10.
+- **Status:** backlog
+
+### Speed effect on markers
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Speed changes affect when a marker is reached in real time, but never marker order, identity, direction policy, or position within the authored graph.
+  PRD5.md §13.11.
+- **Status:** backlog
+
+### Manual stepping respects effective speed
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  evaluated delta = supplied manual delta x effective speed.
+  PRD5.md §13.12.
+- **Status:** backlog
+
+### Reduced-motion speed override
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Reduced-motion policy may override speed by completing immediately, selecting a simpler motion, removing stagger, or applying a dedicated reduced-motion speed.
+  PRD5.md §13.13.
+- **Status:** backlog
+
+### Motion Composer and Inspector: speed tooling
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Composer: forward-speed field, reverse-speed field, general preview-speed control, effective forward/reverse duration, forward/backward preview, mid-playback reverse, optional direction-speed visualisation. Inspector: full breakdown (authored duration, local/parent/playback speed, direction, reverse multiplier, effective speed, estimated remaining duration).
+  PRD5.md §13.14-§13.15, §31.4.
+- **Status:** backlog
+
+### Lifecycle-safe playback policies
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Recommended defaults: target freed -> cancel affected motion safely; playback root freed -> cancel whole playback; target hidden -> continue; scene tree paused -> follow selected clock; target reparented -> continue if references remain valid; layout target removed -> follow layout-exit policy.
+  PRD5.md §14.1-§14.2.
+- **Status:** backlog
+
+### Playback cleanup requirements on cancellation
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Cancellation must disconnect signals, release property ownership, stop pending callbacks, release layout overlays, clear runtime records, and emit exactly one terminal result.
+  PRD5.md §14.3.
+- **Status:** backlog
+
+### Live Motion Inspector
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Debug panel exposing per-playback: hierarchy, active motion, target, property, current/starting/destination value, velocity, progress, direction, clock, effective speed, authored+effective duration, owner, interruption policy, dynamic-value expression and resolved value, group item index, layout source, captured snapshot, previous owner, conflict resolution, marker history.
+  PRD5.md §15.1, §15.3.
+- **Status:** backlog
+
+### Property conflict report
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  When two motions target the same property, a report names the target, property, existing motion, incoming motion, and the resolution applied (e.g. REPLACE).
+  PRD5.md §15.2.
+- **Status:** backlog
+
+### Debug tracing overhead controls
+- **Type:** tech-debt
+- **Source:** PRD5.md
+- **Context:**
+  Tracing must be optional: disable entirely, enable globally, enable per-playback, limit history size, and strip tracing from production exports.
+  PRD5.md §15.4.
+- **Status:** backlog
+
+### Reduced-motion policy and alternatives
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Policy: FULL / SHORTEN / SIMPLIFY / COMPLETE_IMMEDIATELY / CUSTOM. A motion may declare motion.reduced_motion(alternative_motion) — e.g. full motion slides+scales+fades, reduced motion just fades.
+  Elaborates on the original PRD.md's "Per-motion reduced-motion alternatives" / "Global reduced-motion setting" items; worth reconciling when this area is phase-scoped.
+  PRD5.md §16.1-§16.2.
+- **Status:** backlog
+
+### Safe completion when motion is skipped
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  When skipped or completed immediately: final visual values must be applied, layout state committed, temporary nodes cleaned up, focus and input state correct, marker policy respected, completion emitted exactly once.
+  PRD5.md §16.3.
+- **Status:** backlog
+
+### Reduced-motion group and layout behaviour
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Reduced-motion mode may remove staggering, reduce movement distance, replace movement with opacity, complete layout movement immediately, and must preserve enter/exit visibility semantics regardless.
+  PRD5.md §16.4.
+- **Status:** backlog
+
+### Eased group-stagger distribution
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Group start offsets can follow an easing curve across the distribution instead of a flat interval: .stagger_across(0.4).origin(AnimaGroupOrigin.CENTER).distribution(Ease.out_cubic()). start offset = distribution_ease(normalised rank) x total stagger duration.
+  PRD5.md §17.1-§17.2.
+- **Status:** backlog
+
+### Open decision: group-stagger origin default
+- **Type:** spec-gap
+- **Source:** PRD5.md
+- **Context:**
+  PRD5.md defines the stagger-distribution origin options (FIRST / CENTER / LAST / INDEX / POINT) but states no recommended default — unlike most other enums in this document.
+  PRD5.md §17.3.
+- **Status:** backlog
+
+### Equal-rank stagger waves
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Items sharing the same ordering rank (e.g. equidistant from a stagger origin) start together as one wave, supporting ripple effects without manually building parallel subgroups.
+  PRD5.md §17.4.
+- **Status:** backlog
+
+### Stagger reverse-distribution behaviour
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Reverse distribution must reuse the target order and ranks resolved for the current execution; random order must not be regenerated on reversal.
+  PRD5.md §17.5.
+- **Status:** backlog
+
+### Example and showcase design principles
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  The example project is a product surface, not an afterthought. Every example must be understandable within seconds, focused on one primary capability, attractive, reproducible (deterministic under a fixed seed), inspectable, interactive where relevant (play/pause/reverse/speed/scrub/reduced-motion/interrupt/debug/reset), loopable where the feature naturally allows it, and honest (never implies functionality that depends on unreleased or private code).
+  PRD5.md §18.1-§18.2, §3.5.
+- **Status:** backlog
+
+### Example project tiers
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Tier 1 minimal (one API, short script, regression test); Tier 2 practical game-UI scenarios (e.g. inventory sorting, interruptible pause menu, drag-driven drawer); Tier 3 showcase scenes (visually elaborate, multiple mature features together, still public-API-only). Every capability needs at least one minimal example and may have a showcase (see the selection matrix, PRD5.md §25).
+  PRD5.md §18.3.
+- **Status:** backlog
+
+### Proposed 2D showcase scenes
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  Grid Bloom (grid groups + from-point ordering + eased stagger + dynamic values + reverse speed), Responsive Inventory (layout transitions + sorting + column changes + interruption retargeting), Elastic Menu (named states + mid-flight reversal + separate forward/reverse speed + conflict handling), Card Cascade (custom groups + eased distribution + dynamic per-item values), Kinetic Typography (keyframes + group ordering + markers + seamless loop), Signal Strike (markers + awaitable milestones + speed/reverse), Infinite Conveyor (groups + relative movement + deterministic looping).
+  PRD5.md §19.
+- **Status:** backlog
+
+### Proposed 3D showcase scenes
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  3D examples only where they show behaviour meaningfully different from 2D. Kinetic Totems (3D group animation + spatial ordering + eased stagger), Orbiting Crystals (progress-driven motion + scrubbing), Satisfying Assembly (relational sequence/parallel + markers + group waves), Spatial Ripple (spatial group ordering + distance-based timing, captured point not a continuous Motion Field), Camera Portal (only once camera/3D property support is stable).
+  PRD5.md §20.
+- **Status:** backlog
+
+### Oddly-satisfying loop requirements
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Loops serve landing pages, docs, social posts, and force the runtime to prove it handles repeated playback without drift/leakage. A loop is appropriate when the end state naturally returns to the start and reverse playback is meaningful. Patterns: forward-hold-reverse, ping-pong, circular, state-cycle. Quality bar: same visual+logical end state, no drift/duplicated callbacks/retained nodes/unintended random-order changes/boundary jumps, repeatable 100+ cycles, recommended 4-12s duration.
+  PRD5.md §21.
+- **Status:** backlog
+
+### Example scene interaction shell
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  A shared, reusable UI shell for practical/showcase scenes: play/pause/reverse/restart/complete/revert, progress slider, playback/forward/reverse speed, reduced motion, debug overlay, loop toggle; displays feature name, direction, progress, effective speed, state, active marker. Must be hideable for clean showcase footage capture.
+  PRD5.md §22.
+- **Status:** backlog
+
+### Example scene contract
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Every maintained example needs: a .tscn, a minimal controlling script, reusable .tres motion resources, a short README, a feature list, interaction instructions, a deterministic reset path (reset_demo()), a known loop duration where applicable, a fixed random seed where randomisation is used, at least one automated smoke/integration test, a capture manifest, and asset licensing info. Looping examples also expose play_showcase_loop().
+  PRD5.md §23.
+- **Status:** backlog
+
+### Example artifact categories and structure
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Three artifact categories: source (the primary artifact — scenes, motion resources, scripts, README), presentation (derived — master video, seamless loop, GIF, poster, thumbnails, crops, screenshots), and verification (expected snapshots, loop-boundary comparison, progress checkpoints, performance measurements, marker logs, seed, compatibility metadata). One showcase scene should generate every downstream output (example content, docs, README animation, social crops, benchmark, regression test) rather than maintaining separate one-off assets per surface.
+  PRD5.md §24.1-§24.3, §24.6.
+- **Status:** backlog
+
+### Deterministic showcase capture pipeline
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Every showcase declares a capture manifest (scene path, loop duration, warm-up, resolution, frame rate, camera, seed, overlay visibility, background, crop, poster-frame time, reduced-motion variant). A shared capture controller resets the scene, applies the fixed seed and requested speed, disables interactive overlays, waits through warm-up, starts at a known progress, runs a known duration, and stops exactly on the loop boundary. Supported aspect ratios: 16:9, 1:1, 9:16, 4:3 — important content stays inside a safe central area.
+  PRD5.md §24.7-§24.10.
+- **Status:** backlog
+
+### Showcase asset and maintenance policy
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Showcase assets should prefer Godot primitives, procedural shapes, and clearly-licensed original/third-party material — never assets that can't be redistributed. Every example records its feature owner, last-verified Anima/Godot version, capture version, and known limitations; when an API changes, examples and derived artifacts are regenerated from source, not manually patched.
+  PRD5.md §24.11-§24.12.
+- **Status:** backlog
+
+### Motion Composer: showcase capture mode
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  An optional capture mode (Composer or example shell) hides editor-only overlays, resets the motion, selects a fixed seed, runs exactly one loop at a configured preview speed, and stops at the defined boundary. Optional for the first Composer release but should be supported by shared example tooling regardless.
+  PRD5.md §31.6.
+- **Status:** backlog
+
+### Showcase acceptance criteria
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  A showcase is ready when its primary capability reads within 5 seconds, the source uses only public APIs, it resets deterministically, it survives repeated runs without state leakage, it ships a README and a committed capture manifest, it produces a clean master plus at least one documentation and one social-ready artifact, it passes loop/final-state validation, it avoids unredistributable assets, and it runs on the currently supported Godot version.
+  PRD5.md §26.
+- **Status:** backlog
+
+### Additive motion layers (architectural preparation)
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Not part of the immediate implementation scope, but the central evaluator must not permanently assume "one property = exactly one possible contribution" — the initial implementation may still enforce one replacing owner, but the contribution system stays encapsulated so additive/multiply blend modes (REPLACE/ADDITIVE/MULTIPLY) can be added later (e.g. layered interaction + feedback offsets) without a rearchitecture.
+  PRD5.md §27.
+- **Status:** backlog
+
+### Motion Fields (deferred future concept)
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  A future Group Animation capability calculating per-target influence (0.0-1.0) from a spatial falloff (e.g. Anima.field().circle(pointer_position, 180.0).falloff(Ease.out_cubic())), applicable to delay/scale/opacity/position/rotation/colour/spring-strength/speed. Not part of the current committed roadmap — depends on group target resolution, dynamic values, spatial ordering, progress evaluation, and runtime inspection all being stable first.
+  PRD5.md §28.
+- **Status:** backlog
+
+### Compiler support for advanced motion types
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Static keyframe motions compile to native Animation tracks. Dynamic values compile when targets are statically resolvable and resolution doesn't depend on runtime-only context (otherwise the compiler reports runtime evaluation). Mutation-based layout transitions are generally runtime-driven (captured static transitions compilable later, not required initially). Markers may compile to method tracks, metadata, or runtime marker adapters, preserving semantics or reporting loss. Authored forward/reverse speed is retained in Anima metadata even though a baked native animation captures only one direction unless separate forward/backward variants are output.
+  PRD5.md §30.
+- **Status:** backlog
+
+### Motion Composer: snapshot inspection
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Inspect captured property values, captured layout, logical value, visual value, and a restore preview for any pre-animation snapshot.
+  PRD5.md §31.5.
+- **Status:** backlog
+
+### Migration requirements for advanced motion features
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  Existing flattened keyframe data migrates to AnimaKeyframeMotion. Existing dynamic-value string expressions continue through a compatibility parser or convert to typed value graphs; per-item group/grid resolution must be preserved. Converted keyframe/dynamic-value motions require reversibility validation. Representative V1 examples are recreated (not copied), each documenting the V1 capability, its Anima 2 equivalent, any intentional API change, any behavioural improvement, and any unsupported legacy behaviour.
+  PRD5.md §32.
+- **Status:** backlog
+
+### Performance requirements for advanced motion features
+- **Type:** tech-debt
+- **Source:** PRD5.md
+- **Context:**
+  Keyframes: cache normalised/sorted tracks, don't rebuild per frame, evaluate only active properties. Dynamic values: resolve once per timing policy, avoid repeated path parsing, cache validated accessors. Layout: capture only relevant controls, avoid recurring allocations, pool overlays, support 100+ moving UI items without a visible hitch. Seeking: repeated scrubbing must not reconstruct the full graph each time. Speed: changes must not rebuild the authored graph; direction changes reuse existing definitions/execution records. Showcases: profile with tracing on/off, normal/max speed, and repeated loop playback — polish must not hide poor runtime performance.
+  PRD5.md §33.
+- **Status:** backlog
+
+### Test coverage: keyframes and dynamic values
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  Keyframes: from/to, grouped offsets, unsorted declarations, duplicate offsets, multiple properties, segment easing, forward/reverse playback, native compilation. Dynamic values: target property, relative node, context value, arithmetic, group per-item resolution, motion-start vs playback-start resolution, reverse reuses recorded values, legacy string parsing.
+  PRD5.md §34.1-§34.2.
+- **Status:** backlog
+
+### Test coverage: layout transitions
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  VBox expansion, HBox reordering, grid sorting, column changes, added item, removed item, reparenting, nested containers, clipping, mid-flight mutation, revert, reduced-motion completion.
+  PRD5.md §34.3.
+- **Status:** backlog
+
+### Test coverage: markers
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  Forward crossing, backward crossing, seek policies, loop markers, completion crossing, cancellation before marker, speed changes before marker.
+  PRD5.md §34.4.
+- **Status:** backlog
+
+### Test coverage: speed multipliers
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  Default speed, general playback speed, forward speed, reverse speed, mid-flight reversal, nested speed multiplication, group stagger scaling, sequential-gap scaling, marker timing, manual stepping, spring simulation speed, invalid zero/negative speeds, reduced-motion override.
+  PRD5.md §34.5.
+- **Status:** backlog
+
+### Test coverage: showcase loop determinism
+- **Type:** test
+- **Source:** PRD5.md
+- **Context:**
+  Initial/final logical state equality, initial/final visual state equality, no callback duplication, no temporary-node leakage, no random-order change with a fixed seed, no visible boundary jump, one hundred consecutive loops, capture duration matches the manifest.
+  PRD5.md §34.6.
+- **Status:** backlog
+
+### PRD5's delivery-phase roadmap (Phases A-G)
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  The document's own proposed sequencing: A keyframes+dynamic values, B playback safety+speed foundation, C markers+gameplay integration, D automatic layout transitions, E group distribution+production tooling, F visual states, G example/showcase project (recommended to start early, incrementally, and never block runtime foundations).
+  Foundation-conflict note for `mano start`: this phasing is independent of PRD.md's own Phase-1 runtime work and PRD3/PRD4's Group/Anima.on() phasing — all four documents' delivery suggestions will need reconciling against each other during phase scoping, not assumed compatible by default.
+  PRD5.md §35.
+- **Status:** backlog
+
+### Documentation missing for Phase 1 classes
+- **Type:** bug
+- **Source:** Phase 1 review
+- **Context:**
+  Phase 1 shipped without developer documentation for any of its new classes: AnimaMotion, AnimaSequence, AnimaParallel, AnimaPropertyMotion, AnimaEase, AnimaPlayback, AnimaRuntime, Anima, AnimaMotionInstance, AnimaPropertyMotionInstance, AnimaSequenceInstance, AnimaParallelInstance.
+  Needs a doc page for each once the documentation-page rule exists (see "Documentation page convention for new classes").
+- **Status:** backlog
+
+### Delete stale v1 documentation
+- **Type:** bug
+- **Source:** Phase 1 review
+- **Context:**
+  Existing documentation describes the legacy v1 classes (addons/anima/core, utils, animations) that were deleted from the repo during Phase 1.
+  That documentation is now stale/dangling and should be deleted.
+- **Status:** backlog
+
+### Documentation page convention for new classes
+- **Type:** rule-gap
+- **Source:** Phase 1 review
+- **Context:**
+  Every new Anima class needs a doc page (front-matter + Overview/Inheritance/Availability/Quick example/Properties/Methods/Signals/Enums/Constants/Complete example/Interruption/Reduced motion/Determinism/Performance/Limitations/Related API/Source), written for developers with zero prior Godot/coding experience.
+  No rule currently requires or shapes this.
+  Full template supplied during Phase 1 review; also see v2_stuff/doc.example.md.
 - **Status:** backlog

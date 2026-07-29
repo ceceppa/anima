@@ -1,5 +1,5 @@
 name: "anima doc"
-on: push
+# on: push
 
 jobs:
   build-documentation:
