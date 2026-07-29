@@ -34,13 +34,6 @@ GodotObject
     └── ClassName
 ```
 
-## Availability
-
-| Requirement | Version |
-|---|---|
-| Godot | `4.x` or later |
-| Anima | `2.x` or later |
-
 ## Quick example
 
 Show the smallest complete example demonstrating the class’s primary purpose.

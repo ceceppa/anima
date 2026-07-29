@@ -1,5 +1,5 @@
 {{ define "main" }}
-    {{ $landingData := .Site.Data.landing }}
+    {{ $landingData := hugo.Data.landing }}
     {{ $map := newScratch }}
 
     {{ range $key, $value := $landingData }}

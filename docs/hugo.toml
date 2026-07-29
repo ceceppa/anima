@@ -1,5 +1,5 @@
 baseURL = 'https://anima.ceceppa.me/'
-languageCode = 'en-gb'
+locale = 'en-gb'
 title = 'Anima documentation'
 twitter = 'ceceppa'
 enableEmoji = true

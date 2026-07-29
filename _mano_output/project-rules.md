@@ -93,7 +93,7 @@ func validate() -> Array[String]:
 
 **What:** Every new piece of code ships with a test — no exceptions. Tests use GUT ([bitwes/Gut](https://github.com/bitwes/Gut)), already installed at `addons/gut`, and live flat in `tests/`. A unit test is named `<ClassName>.test.gd` for the type it covers. An integration test — exercising behaviour across multiple classes through the public `Anima.<...>` entry point — is named `Anima.integration.<name>.test.gd`. A story that introduces one type needs at least the unit test; a story that composes multiple types together through `Anima.play()` (or another `Anima.<...>` entry point) also needs an integration test.
 
-**Why:** GUT is already the project's test runner. Unit tests are named after the class they cover; integration tests are named after the entry point they exercise (`Anima`) rather than an arbitrary label, since every integration test drives the system the same way a real caller does — through `Anima.<something>`. This also matches the existing legacy convention already in `tests/` (`Anima.integration.animations.test.gd`, `Anima.integration.backwards.test.gd`).
+**Why:** GUT is already the project's test runner. Unit tests are named after the class they cover; integration tests are named after the entry point they exercise (`Anima`) rather than an arbitrary label, since every integration test drives the system the same way a real caller does — through `Anima.<something>`.
 
 **Pattern:**
 ```
@@ -101,6 +101,36 @@ tests/AnimaSequence.test.gd
 tests/AnimaParallel.test.gd
 tests/Anima.integration.playback.test.gd
 ```
+
+## Documentation
+
+**What:** Every public class ships a documentation page at `docs/content/docs/anima/<kebab-case-class-name>.md` (e.g. `AnimaPropertyMotion` → `anima-property-motion.md`). Follow the structure in `v2_stuff/doc.example.md`: front-matter, a one-line description, Overview, Inheritance, Quick example, then whichever of Properties / Methods / Signals / Enumerations / Constants the class actually has. Sections the template marks as conditional (Determinism, Performance notes, Reduced motion, Interruption behaviour, and similar) are included only when they genuinely apply to that class — do not add a section with nothing to say just to match the template.
+
+**Why:** The template was purpose-built during the Phase 1 review specifically to close a gap where new classes shipped with no documentation at all; following it keeps every page the same shape as the class count grows instead of each page inventing its own structure.
+
+**Pattern:**
+```markdown
+---
+title: "AnimaPropertyMotion"
+description: "Animates a single property on a node from one value to another."
+godot_version: "4.x"
+anima_version: "2.x"
+api_type: "class"
+---
+
+# AnimaPropertyMotion
+
+...
+```
+See `v2_stuff/doc.example.md` for the full section-by-section structure.
+
+**What:** Write every page for a reader with zero prior Godot or programming experience — define a Godot-specific term (`Resource`, `NodePath`, `signal`, and similar) the first time it's used on a page, avoid unexplained jargon, and keep the Quick example minimal and runnable standalone.
+
+**Why:** Anima's own audience includes developers new to both Godot and programming, not just developers new to Anima; a page that assumes prior GDScript familiarity fails that reader.
+
+**Pattern:**
+- Before using a Godot-specific term for the first time on a page, explain what it means in one clause.
+- The Quick example section must not depend on setup the reader hasn't already seen on that same page.
 
 ---
 

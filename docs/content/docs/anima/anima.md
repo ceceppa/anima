@@ -1,73 +1,77 @@
 ---
-weight: 100
+weight: 60
 title: "Anima"
-description: "Anima addon"
+description: "The entry point you call to play any motion."
 draft: false
+godot_version: "4.x"
+anima_version: "2.x (unreleased)"
+api_type: "class"
 ---
 
-Once activated, the addon will add the Anima singleton class to your project.
+# Anima
 
-## Custom nodes
-
-Anima provides those two additional nodes:
-
-- [AnimaNode](/doc/anima-node.html), used to handle the setup of all the animations supported by the addon
-- [AnimaTween](/doc/anima-tween.html), is the custom Tween used that allows the magic to happen :)
-
-## Syntax
-
-- [begin(node, animation_name, is_single_shot)](#begin)
-- [begin_single_shot(node, animation_name)](#begin_single_shot)
-
-
-## Reference
-
-### begin
-
-This method is used to programmatically add the AnimaNode to the scene as a child of the specified **node** one.
-It will return the AnimaNode added attached to the specified **node**.
-
-#### Syntax
-```gdscript
-begin(node: Node, animation_name = 'Anima', is_single_shot := false) -> AnimaNode:
-```
-
-|Parameter|Type|Default|Description|
-|---|---|---|---|
-|node|Node||The node where to attache the AnimaNode generated during the process|
-|animation_name|String|Anima|_(optional)_ The animation name.|
-|is_single_shot|bool|false|_(optional)_ If true automatically frees the AnimaNode created by the scene once the animation completes|
-
-**NOTE**: Anytime this method is called `Anima` will check if an `AnimaNode` already exists with the given name and, if not, creates one.
-So, calling `begin` multiple times using the same name will result in reusing the same `AnimaNode` over and over.
-
-The node created is not freed by default once an animation has completed unless `is_singl_shot` is set to true.
-
-#### Example
+`Anima` is the one thing you call to actually run a motion you've built — a single [`AnimaPropertyMotion`](./anima-property-motion.md), or a whole tree of [`AnimaSequence`](./anima-sequence.md)s and [`AnimaParallel`](./anima-parallel.md)s.
 
 ```gdscript
-var anima: AnimaNode = Anima.begin(self)
-var anima: AnimaNode = Anima.begin(self, 'my cool animation')
-var anima: AnimaNode = Anima.begin(self, 'my cool animation', true)
+class_name Anima
+extends RefCounted
 ```
 
-### begin_single_shot
+## Overview
 
-This method is syntax sugar for the `begin` one automatically sets `is_single_shot` to true.
+You never create an instance of `Anima` yourself — every one of its methods is called directly on the class itself (this is called a **static method**: a function you call on the type, like `Anima.play(...)`, rather than on an object you created with `.new()`).
 
-#### Syntax
-```gdscript
-begin(node: Node, animation_name = 'Anima') -> AnimaNode:
-```
+There is nothing to set up before calling `Anima.play()` — no autoload to add, no node to place in your scene. The first call creates everything Anima needs internally, automatically.
 
-|Parameter|Type|Default|Description|
-|---|---|---|---|
-|node|Node||The node where to attache the AnimaNode generated during the process|
-|animation_name|String|Anima|_(optional)_ The animation name.|
-
-#### Example
+## Quick example
 
 ```gdscript
-var anima: AnimaNode = Anima.begin(self, 'my cool animation')
-var anima: AnimaNode = Anima.begin(self)
+var motion := AnimaPropertyMotion.new()
+motion.target_property = NodePath("modulate:a")
+motion.to_value = 0.0
+motion.duration = 0.5
+
+var playback := Anima.play(motion, $Sprite2D)
+await playback.finished
+print("Done!")
 ```
+
+> This example assumes Anima is installed and enabled in the current Godot project, and that `$Sprite2D` refers to a node already in your scene.
+
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| [`play()`](#play) | [`AnimaPlayback`](./anima-playback.md) | Starts playing a motion against a target node. |
+
+---
+
+### `play()`
+
+```gdscript
+static func play(motion: AnimaMotion, target: Node) -> AnimaPlayback
+```
+
+Starts running `motion` against `target` immediately and returns an [`AnimaPlayback`](./anima-playback.md) you can use to pause, resume, cancel, or wait for it to finish.
+
+#### Parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `motion` | [`AnimaMotion`](./anima-motion.md) | The motion to play — any subtype, such as [`AnimaPropertyMotion`](./anima-property-motion.md), [`AnimaSequence`](./anima-sequence.md), or [`AnimaParallel`](./anima-parallel.md). |
+| `target` | `Node` | The node the motion animates. |
+
+#### Behaviour
+
+- Playback starts immediately — there is no delay before the first frame of the motion runs.
+- Calling `Anima.play()` again on the same node while a motion is still playing starts a second, independent playback. The first one keeps running unaffected; there is no conflict detection between them yet if they happen to target the same property.
+
+## Related API
+
+- [`AnimaPlayback`](./anima-playback.md)
+- [`AnimaRuntime`](./anima-runtime.md)
+- [`AnimaMotion`](./anima-motion.md)
+
+## Source
+
+- [`anima.gd`](https://github.com/ceceppa/anima/blob/main/addons/anima/motion/runtime/anima.gd)

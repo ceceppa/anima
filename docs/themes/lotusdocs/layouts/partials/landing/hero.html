@@ -1,5 +1,5 @@
 {{ $sectionTitle := .Scratch.Get "sectionTitle" }}
-{{ with (index .Site.Data.landing $sectionTitle) }}
+{{ with (index hugo.Data.landing $sectionTitle) }}
 {{ if eq .enable true }}
 <!-- Hero Start -->
 {{ with .backgroundImage }}

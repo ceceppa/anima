@@ -16,7 +16,7 @@
                 {{- partial (printf "%s/%s" ($.Scratch.Get "pathName") "sidebar.html") . -}}
                     <!-- Start Page Content -->
                     <main class="page-content bg-transparent">
-                        {{ if .Site.IsMultiLingual }}
+                        {{ if hugo.IsMultilingual }}
                             {{- partial (printf "%s/%s" ($.Scratch.Get "pathName") "top-header.html") . -}}
                         {{ else }}
                             {{- partialCached (printf "%s/%s" ($.Scratch.Get "pathName") "top-header.html") . -}}

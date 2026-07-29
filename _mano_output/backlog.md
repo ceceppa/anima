@@ -2586,7 +2586,7 @@
 - **Context:**
   Phase 1 shipped without developer documentation for any of its new classes: AnimaMotion, AnimaSequence, AnimaParallel, AnimaPropertyMotion, AnimaEase, AnimaPlayback, AnimaRuntime, Anima, AnimaMotionInstance, AnimaPropertyMotionInstance, AnimaSequenceInstance, AnimaParallelInstance.
   Needs a doc page for each once the documentation-page rule exists (see "Documentation page convention for new classes").
-- **Status:** backlog
+- **Status:** in-phase-2
 
 ### Delete stale v1 documentation
 - **Type:** bug
@@ -2594,13 +2594,21 @@
 - **Context:**
   Existing documentation describes the legacy v1 classes (addons/anima/core, utils, animations) that were deleted from the repo during Phase 1.
   That documentation is now stale/dangling and should be deleted.
-- **Status:** backlog
+- **Status:** in-phase-2
 
 ### Documentation page convention for new classes
 - **Type:** rule-gap
 - **Source:** Phase 1 review
 - **Context:**
-  Every new Anima class needs a doc page (front-matter + Overview/Inheritance/Availability/Quick example/Properties/Methods/Signals/Enums/Constants/Complete example/Interruption/Reduced motion/Determinism/Performance/Limitations/Related API/Source), written for developers with zero prior Godot/coding experience.
+  Every new Anima class needs a doc page (front-matter + Overview/Inheritance/Quick example/Properties/Methods/Signals/Enums/Constants/Complete example/Interruption/Reduced motion/Determinism/Performance/Limitations/Related API/Source), written for developers with zero prior Godot/coding experience.
   No rule currently requires or shapes this.
   Full template supplied during Phase 1 review; also see v2_stuff/doc.example.md.
+- **Status:** resolved
+
+### Guides, tutorials, and features docs for the final v2 API
+- **Type:** feature
+- **Source:** User idea (Phase 2 scoping)
+- **Context:**
+  Once the v2 API is more complete, write new guides/tutorials/features documentation (fundamentals, reusable animations, multiple animations, dynamic values, relative motion, keyframes, etc.) based on the final API and code.
+  Replaces the v1-based guides/tutorials/features content deleted in Phase 2.
 - **Status:** backlog
