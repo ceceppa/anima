@@ -1,3 +1,5 @@
+## Runtime instance for [AnimaRace] — advances every enabled child each frame
+## and completes as soon as the fastest one finishes.
 class_name AnimaRaceInstance
 extends AnimaMotionInstance
 

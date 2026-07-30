@@ -1,6 +1,9 @@
+## Plays one instance of [member template] per entry in [member targets],
+## started [member interval] seconds apart in the resolved [member order].
 class_name AnimaStagger
 extends AnimaMotion
 
+## The order [member targets] start in.
 enum Order {
 	FORWARD,
 	REVERSE,
@@ -10,12 +13,17 @@ enum Order {
 	RANDOM,
 }
 
+## The motion played against every entry in [member targets].
 @export var template: AnimaMotion = null
 ## Untyped (not Array[Node]): a typed Node array on a Resource script fails
 ## Godot 4.6's external-class-member static resolution when set from another script.
 @export var targets: Array = []
+## Seconds between one target starting and the next.
 @export var interval: float = 0.05
+## The order [member targets] start in.
 @export var order: Order = Order.FORWARD
+## Explicit start-order target indices, used only when [member order] is
+## [constant Order.CUSTOM].
 @export var custom_order: Array[int] = []
 
 ## Returns target indices in the order each entry should start, per `order`.
@@ -54,6 +62,8 @@ func resolve_order() -> Array[int]:
 		_:
 			return indices
 
+## The template's own kind, combined with the staggered start offsets — not a
+## sum of per-target durations, since targets start staggered rather than end-to-end.
 func estimate_duration() -> AnimaDuration:
 	if template == null or targets.is_empty():
 		return AnimaDuration.fixed(0.0)
@@ -65,9 +75,12 @@ func estimate_duration() -> AnimaDuration:
 	var total: float = float(targets.size() - 1) * interval + template_duration.seconds
 	return AnimaDuration.fixed(total)
 
+## Builds the runtime instance that plays [member template] across [member targets].
 func create_runtime() -> Variant:
 	return AnimaStaggerInstance.new(self)
 
+## Requires [member template], and one [member custom_order] entry per target
+## when [member order] is [constant Order.CUSTOM].
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	if template == null:

@@ -1,3 +1,5 @@
+## Runtime instance for [AnimaStagger] — advances one [member AnimaStagger.template]
+## instance per target, started per the resolved stagger order.
 class_name AnimaStaggerInstance
 extends AnimaMotionInstance
 

@@ -110,9 +110,26 @@ var ease: AnimaEase = AnimaEase.new()
 
 Controls the pacing of the animation — see [`AnimaEase`](./anima-ease.md). Defaults to a plain linear curve if you don't set one.
 
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| [`estimate_duration()`](#estimate_duration) | [`AnimaDuration`](./anima-duration.md) | Returns how long this motion is expected to take, and how certain that is. |
+
+---
+
+### `estimate_duration()`
+
+```gdscript
+func estimate_duration() -> AnimaDuration
+```
+
+Reports `FIXED` — using `duration` directly — for every ease except `SPRING`. When `ease.kind` is `SPRING`, this reports `ESTIMATED` instead, using [`AnimaEase.spring_estimated_seconds()`](./anima-ease.md#spring_estimated_seconds) as the settle-time guess — since a spring doesn't run for a pre-set `duration`, it settles on its own schedule, so its length can only ever be an estimate.
+
 ## Related API
 
 - [`AnimaEase`](./anima-ease.md)
+- [`AnimaDuration`](./anima-duration.md)
 - [`AnimaSequence`](./anima-sequence.md)
 - [`AnimaParallel`](./anima-parallel.md)
 - [`Anima`](./anima.md)

@@ -1,6 +1,9 @@
+## Runs each enabled child in [member children] one after another; completes
+## when the last one finishes.
 class_name AnimaSequence
 extends AnimaMotion
 
+## The motions to run in order.
 @export var children: Array[AnimaMotion] = []
 
 ## Returns each enabled child's scheduled start time (seconds since the
@@ -28,6 +31,9 @@ func compute_schedule() -> Array[float]:
 
 	return starts
 
+## Sum of every enabled child's scheduled end time, once every child reports
+## a fixed duration (worst-kind-wins otherwise). Honours [method compute_schedule]'s
+## delay/overlap timing, not a plain sum of durations.
 func estimate_duration() -> AnimaDuration:
 	var enabled_children: Array[AnimaMotion] = []
 	for child in children:
@@ -51,9 +57,11 @@ func estimate_duration() -> AnimaDuration:
 		latest_end = maxf(latest_end, starts[i] + child_durations[i].seconds)
 	return AnimaDuration.fixed(latest_end)
 
+## Builds the runtime instance that plays each child per [method compute_schedule].
 func create_runtime() -> Variant:
 	return AnimaSequenceInstance.new(self)
 
+## Validates every child recursively.
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	for child in children:

@@ -133,9 +133,9 @@
 - **Type:** feature
 - **Source:** PRD.md
 - **Context:**
-  A lightweight proxy (Anima.of($Node)) exposes enter()/exit()/to()/transition_to() without modifying the node's class — the "native-feeling" runtime surface used both standalone and by AnimaBehaviour-bound nodes.
-  PRD.md §12.5, §16.8.
-- **Status:** backlog
+  A lightweight proxy (Anima.of($Node)) exposes enter()/exit()/to()/transition_to() without modifying the node's class — the standalone "native-feeling" runtime surface used directly against ordinary nodes.
+  PRD.md §12.5.
+- **Status:** in-phase-5
 
 ### Legacy dictionary compatibility API
 - **Type:** feature
@@ -162,7 +162,7 @@
   Simple response/bounce spring parameters, plus an advanced physics mode (mass, stiffness, damping, initial_velocity, settle_velocity, settle_distance).
   Open decision on which model is the default-visible one — see "Open decision: spring parameter model".
   PRD.md §13.2.
-- **Status:** backlog
+- **Status:** in-phase-5
 
 ### Spring completion & retargeting
 - **Type:** feature
@@ -171,7 +171,7 @@
   Spring completes when distance-from-target and velocity both fall below configured thresholds, with modes: strictly settled / visually settled / fixed preview duration / manual.
   Retargeting reads current value + velocity and continues without resetting state.
   PRD.md §13.3, §13.4.
-- **Status:** backlog
+- **Status:** in-phase-5
 
 ### Interruption policies
 - **Type:** feature
@@ -275,18 +275,20 @@
 - **Type:** feature
 - **Source:** PRD.md
 - **Context:**
-  Per-node config resource: identity (motion_id), lifecycle (motion_in/out, play_in_on_ready, hide_after_out), defaults (duration/ease/interruption), layout toggle, state bindings, reduced-motion field.
+  Per-node config resource: identity (motion_id), lifecycle (motion_in/out, play_in_on_ready, hide_after_out), defaults (duration/ease/interruption), layout toggle, reduced-motion field.
+  The resource also reserves a state-bindings field/slot, but the binding behaviour itself (Idle/Hover/Pressed/etc.) is a separate, later item — see "State bindings for common control states".
   PRD.md §16.1.
-- **Status:** backlog
+- **Status:** in-phase-5
 
 ### Behaviour storage without node subclassing
 - **Type:** feature
 - **Source:** PRD.md
 - **Context:**
-  Behaviour resource stored in node metadata (_anima_behaviour) plus membership in a private discovery group (_anima_enabled), surfaced through a custom Inspector plugin — no new node class required.
+  Behaviour resource stored in node metadata (_anima_behaviour) plus membership in a private discovery group (_anima_enabled) — no new node class required.
+  Surfacing this through a custom Inspector plugin is a separate, later item — see "Anima Inspector section for ordinary nodes".
   Still an open decision vs. a hidden node — see "Open decision: behaviour storage mechanism".
   PRD.md §16.2.
-- **Status:** backlog
+- **Status:** in-phase-5
 
 ### Runtime state separation from behaviour config
 - **Type:** feature
@@ -897,7 +899,7 @@
   Metadata Resource + private group + Inspector plugin vs. a hidden node (see "Behaviour storage without node subclassing").
   Document recommends the metadata approach initially, re-evaluating only if metadata serialization proves impractical.
   PRD.md §37.2.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Open decision: timeline direct-manipulation scope
 - **Type:** spec-gap
@@ -915,7 +917,7 @@
   Simple response/bounce vs. mass/stiffness/damping vs. both.
   Document recommends simple response/bounce as the default surface, with advanced physics parameters behind an expandable/advanced section.
   PRD.md §37.4.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Open decision: native-Animation import strategy
 - **Type:** spec-gap
@@ -957,7 +959,7 @@
 - **Context:**
   Back, bounce, elastic, cubic Bezier, curve resource, callable evaluator, spring, decay, and custom sampled curve easing.
   Extends the Phase 1 AnimaEase basic curve set once shipped. PRD.md §13.1.
-- **Status:** backlog
+- **Status:** in-phase-5
 
 ### Reversibility declared per motion (Automatic/Explicit/Forward-only)
 - **Type:** feature
@@ -2647,7 +2649,7 @@
   Compact, left-aligned app-style header (icon + title + subtitle, optional category/counter) shared by every Anima example scene, replacing the current large centred heading.
   Subtle bg tint, bottom border, soft shadow — not a floating card.
   Suggested sizing: icon 40-48px, title 28-34px, subtitle 14-16px, padding 32-48px horizontal / 20-28px vertical.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Composition example content stage (container)
 - **Type:** feature
@@ -2656,7 +2658,7 @@
   One large rounded (20-24px), low-contrast-bordered container holds the description, cards, and selector together, replacing today's loose canvas layout.
   Container position/size, stage position, and selector position stay fixed across tab switches — only the selected example's inner state changes.
   Soft outer shadow, generous internal padding, optional subtle radial gradient behind the cards.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Per-type title and description inside the stage
 - **Type:** feature
@@ -2665,7 +2667,7 @@
   Each composition type shows its own title + one-line description top-left of the stage, with an optional counter (e.g. 01/05) top-right.
   Subtle crossfade transition on switch (~100-150ms, optionally a few px horizontal shift) — no large entrance/exit animation.
   Copy per type: Sequence/Parallel/Stagger/Repeat/Race one-liners are already drafted in the source doc.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Selector dock component with animated indicator
 - **Type:** feature
@@ -2674,7 +2676,7 @@
   Shared pseudo-tab selector moves below the cards inside the stage as a compact floating dock, not a full-width nav bar.
   Selected-state indicator physically moves and resizes between labels (~250-300ms, springy easing); label colour transitions ~120-160ms; small press-feedback dip on tap.
   Selection must not rely on colour alone — combine background + brighter/bolder text; keyboard focus stays visually distinct from selection.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Card resting/waiting/active/completed states
 - **Type:** refinement
@@ -2683,7 +2685,7 @@
   Cards currently show a permanent glow regardless of state, so everything reads as active — glow should be animation feedback, not decoration.
   Resting: crisp border, soft shadow, no strong glow. Waiting: reduced opacity, minimal glow (not disabled-looking).
   Active: stronger glow/brighter border, optional small lift. Completed: glow settles back down with a subtle completion accent instead of staying fully lit.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Composition-specific card storytelling
 - **Type:** refinement
@@ -2692,7 +2694,7 @@
   The same cards should visibly communicate which composition type is running, not just complete together.
   Sequence: one card strongly active at a time, next activates after previous completes. Parallel: all activate together. Stagger: activation visibly travels A to C.
   Repeat: shows completion and restart (optional small repeat counter). Race: winner gets a clear win state, others stop/interrupt visibly.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Background depth behind the example stage
 - **Type:** refinement
@@ -2700,7 +2702,7 @@
 - **Context:**
   Add restrained depth to the dark background: either a subtle radial gradient centred behind the animation stage, or a very low-opacity grid/dot texture inside the container.
   Pick only one of the two — don't combine unless both are extremely subtle.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Composition example spacing and hierarchy pass
 - **Type:** refinement
@@ -2708,7 +2710,7 @@
 - **Context:**
   Too much undefined space currently sits between the selector and the cards; apply deliberate spacing across the whole stage.
   Suggested: header-to-container 24-32px, container internal padding 32-48px, description-to-cards 32-48px, cards-to-selector 40-56px, gap between cards 32-48px.
-- **Status:** in-phase-4
+- **Status:** resolved
 
 ### Restore Conditional composition type with True/False cards
 - **Type:** feature
@@ -2716,4 +2718,19 @@
 - **Context:**
   Conditional was hidden from the selector last phase because its single-branch presentation read as confusing.
   Restore it with a different demo: show two cards, one labelled "True" and one labelled "False", making the branch choice visible instead of implicit.
-- **Status:** in-phase-4
+- **Status:** resolved
+
+### In-editor help for Anima functions
+- **Type:** feature
+- **Source:** Phase 4 review
+- **Context:**
+  Hovering an Anima public class/function in the Godot editor currently shows "no description available" — the addon's GDScript source has no ## doc comments backing the editor's built-in hover help.
+  Add them across the public API so in-editor help works without opening the markdown docs site.
+- **Status:** in-phase-5
+
+### AnimaBehaviour-bound Anima.of proxy usage
+- **Type:** feature
+- **Context:**
+  Extends the standalone Anima.of($Node) proxy (Phase 5) so behaviour-bound nodes get the same enter()/exit()/to()/transition_to() surface automatically once AnimaBehaviour exists.
+  PRD.md §16.8. Depends on the AnimaBehaviour resource shipping first.
+- **Status:** backlog

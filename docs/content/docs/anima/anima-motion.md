@@ -23,6 +23,8 @@ A **[`Resource`](https://docs.godotengine.org/en/stable/classes/class_resource.h
 
 Every motion type in Anima — whether it animates a single property or composes several motions together — extends `AnimaMotion` and shares the same fields (`enabled`, `delay`, `speed`, and others) and the same three-method contract (`estimate_duration()`, `create_runtime()`, `validate()`). This is what lets [`Anima.play()`](./anima.md) treat any motion the same way, no matter which specific subtype it is.
 
+`estimate_duration()` doesn't just return a number of seconds — it returns an [`AnimaDuration`](./anima-duration.md), which also says how certain that number is. Most motions report an exact, `FIXED` length; a spring-eased [`AnimaPropertyMotion`](./anima-property-motion.md) reports `ESTIMATED` instead, since a spring settles on its own schedule rather than a fixed timer.
+
 You never construct a plain `AnimaMotion` yourself — you always work with one of its subtypes.
 
 ## Inheritance
@@ -109,7 +111,7 @@ An empty dictionary you can fill with anything you like. Anima never reads or wr
 
 | Method | Returns | Description |
 |---|---|---|
-| [`estimate_duration()`](#estimate_duration) | `float` | Returns how long this motion is expected to take, in seconds. |
+| [`estimate_duration()`](#estimate_duration) | [`AnimaDuration`](./anima-duration.md) | Returns how long this motion is expected to take, and how certain that is. |
 | [`create_runtime()`](#create_runtime) | `Variant` | Creates the internal object that actually runs this motion. |
 | [`validate()`](#validate) | `Array[String]` | Checks the motion is configured correctly and returns a list of problems, if any. |
 
@@ -118,10 +120,10 @@ An empty dictionary you can fill with anything you like. Anima never reads or wr
 ### `estimate_duration()`
 
 ```gdscript
-func estimate_duration() -> float
+func estimate_duration() -> AnimaDuration
 ```
 
-Every subtype of `AnimaMotion` implements this to report how many seconds it will take to finish. A [`AnimaSequence`](./anima-sequence.md) sums its children's durations; a [`AnimaParallel`](./anima-parallel.md) uses its longest child (by default).
+Every subtype of `AnimaMotion` implements this to report how long it will take to finish, as an [`AnimaDuration`](./anima-duration.md) rather than a plain number of seconds — so callers can tell an exact length apart from a rough guess. A [`AnimaSequence`](./anima-sequence.md) sums its children's durations; a [`AnimaParallel`](./anima-parallel.md) uses its longest child (by default).
 
 You do not need to call this yourself — [`Anima.play()`](./anima.md) and the composite motion types call it internally.
 
@@ -150,6 +152,7 @@ Returns an empty array if the motion is configured correctly, or a list of human
 - [`AnimaSequence`](./anima-sequence.md)
 - [`AnimaParallel`](./anima-parallel.md)
 - [`AnimaPropertyMotion`](./anima-property-motion.md)
+- [`AnimaDuration`](./anima-duration.md)
 - [`Anima`](./anima.md)
 
 ## Source

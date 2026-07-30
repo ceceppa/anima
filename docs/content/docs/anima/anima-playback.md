@@ -74,6 +74,7 @@ The playback's current state. See the [`State`](#state) enum below for every pos
 | [`pause()`](#pause) | `void` | Freezes the animated values in place. |
 | [`resume()`](#resume) | `void` | Continues from wherever the motion paused. |
 | [`cancel()`](#cancel) | `void` | Stops the motion and marks it as not successful. |
+| [`retarget()`](#retarget) | `void` | Redirects a running SPRING-eased motion to a new destination. |
 
 ---
 
@@ -104,6 +105,24 @@ func cancel() -> void
 ```
 
 Stops the motion immediately. The animated property is left at whatever value it had reached — it does not jump to its final value. The [`finished`](#finished) signal fires with `success` set to `false`.
+
+---
+
+### `retarget()`
+
+```gdscript
+func retarget(new_to_value: Variant) -> void
+```
+
+Redirects a still-moving [`SPRING`](./anima-ease.md#spring-easing)-eased [`AnimaPropertyMotion`](./anima-property-motion.md) to a new destination, preserving its current value and velocity instead of restarting the motion from scratch — the spring simply keeps moving, now toward `new_to_value`.
+
+This is only defined for a single motion whose `ease.kind` is `SPRING`. Calling it on any other shape — a composite motion, or a non-`SPRING` ease — pushes an error rather than silently doing nothing, since retargeting has no defined meaning there.
+
+#### Parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `new_to_value` | `Variant` | The new value the spring should move toward. |
 
 ## Signals
 
@@ -171,6 +190,8 @@ enum State {
 
 - [`Anima`](./anima.md)
 - [`AnimaRuntime`](./anima-runtime.md)
+- [`AnimaPropertyMotion`](./anima-property-motion.md)
+- [`AnimaEase`](./anima-ease.md)
 
 ## Source
 

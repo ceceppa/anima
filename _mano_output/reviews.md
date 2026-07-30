@@ -91,3 +91,36 @@ No feedback logged.
 
 - GUT's automated coverage verifies functional correctness (durations, completion, state transitions) but has no way to catch visual/perceptual problems — two different composition types looking identical, or an animation reading as "happened once" when it structurally happened three times. That class of bug only surfaces by actually watching the scene run, which is a fundamentally different verification channel than story ACs and test suites provide.
 - A latent runtime bug can survive multiple phases of green tests if nothing in the suite exercises the exact real-world call pattern that triggers it (here: `Anima.play()` invoked from a node's own `_ready()` during real initial scene load, not from a test harness that never reproduces engine startup timing).
+
+---
+
+## Phase 4 Review — 2026-07-31
+
+### What worked
+
+- The continuous `set_progress(t)` card model held up exactly as assumed: it absorbed resting/waiting/active/completed visuals, and later Conditional's forward/backward/grow-shrink/brighten-dim treatment, without becoming a discrete state machine again.
+- The new shared components (`ExampleHeader`, the content stage container, `SelectorDock`/`SelectorButton`) were built once and reused correctly inside `composition_playground` — no retrofitting of an older ad-hoc pattern was needed.
+- 107 GUT tests (unit + integration) stayed green across repeated runs despite two randomised demos (Race, Conditional), giving real confidence in the functional behaviour underneath the visual redesign.
+
+### What didn't
+
+- Conditional's first shipped presentation (story-8: two static "True"/"False" cards, only one animating) had to be redesigned after shipping (story-9b: one card, forward/backward + grow/shrink + brighten/dim, plus a brief callout) — direct feedback said it was "still confusing," even though story-8 met its own AC and passed its tests.
+- Two small planning gaps surfaced only during implementation: `ExampleHeader`'s rule briefly documented a `set_counter()` method that was never actually needed (the counter lives on the stage's type-title row, not the header), and the per-type stage copy text was never captured in `design-brief.md`, so it had to be inlined directly into stories instead of referencing an owning artifact.
+- A new project rule (editor-authored static content via `@export`, not code-set imperative calls) was added mid-phase and needed its own same-day follow-up story (9a) to actually reach already-shipped code — the rule didn't retroactively apply itself.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| The existing continuous progress-driven card model (`set_progress(t)`) can be re-skinned into resting/waiting/active/completed visuals without becoming a discrete state machine again. | Rework needed if the states required genuinely discrete transitions. | Held — the same single driver absorbed every visual need this phase, including Conditional's later direction/scale/dim treatment, with no state field added anywhere. | confirmed |
+| "Shared component used by every example" is scoped this phase as reusable-and-applied-to-`composition_playground`, not retrofitted onto other scenes, since none exist yet. | The reuse claim couldn't be verified until a second example scene existed. | Held as scoped — no second example scene was built this phase; the components were built with reuse in mind but the claim itself stays unverified until one exists. | confirmed |
+
+### Feedback that changes future scope
+
+- In-editor GDScript help (`##` doc comments on the public API) is missing — hovering an Anima function in the Godot editor shows "no description available." Logged as a new backlog item for a future phase.
+- Conditional needed a second design pass after shipping once. Watch for the same "passes its own AC, still confusing in practice" pattern on any future composition-type-specific storytelling work — it's the same class of gap Phase 3's review already flagged, just recurring on a different composition type.
+
+### What we learned
+
+- Phase 3's review lesson repeated exactly: automated tests can't catch "this is still confusing" — only a person actually running the demo caught Conditional's usability problem, and only after it had already shipped once.
+- A project rule introduced mid-phase needs its own tracked follow-up story to reach code that shipped before the rule existed — a new rule doesn't retroactively apply itself to already-written code.

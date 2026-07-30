@@ -68,6 +68,7 @@ var _selector_type_order: Array = []
 var _selected_type: CompositionType = CompositionType.SEQUENCE
 
 var _conditional_callout_active: bool = false
+var _conditional_callout_elapsed: float = 0.0
 
 var _conditional_picked_true: bool = false
 var _conditional_base_position: Vector2 = Vector2.ZERO
@@ -233,8 +234,27 @@ func _show_conditional_callout(picked_true: bool) -> void:
 		"TRUE" if picked_true else "FALSE",
 		"True" if picked_true else "False",
 	]
+	_conditional_callout.modulate.a = 1.0
 	_conditional_callout.visible = true
+	_conditional_callout_elapsed = 0.0
 	_conditional_callout_active = true
+
+## Advances the callout's visible-then-fade lifetime by `delta`, called each
+## frame from _process() alongside the card updates.
+func _update_conditional_callout(delta: float) -> void:
+	if not _conditional_callout_active:
+		return
+
+	_conditional_callout_elapsed += delta
+	var fade_start := CONDITIONAL_CALLOUT_DURATION
+	var fade_end := CONDITIONAL_CALLOUT_DURATION + CONDITIONAL_CALLOUT_FADE
+
+	if _conditional_callout_elapsed >= fade_end:
+		_conditional_callout.visible = false
+		_conditional_callout_active = false
+	elif _conditional_callout_elapsed >= fade_start:
+		var fade_t := (_conditional_callout_elapsed - fade_start) / CONDITIONAL_CALLOUT_FADE
+		_conditional_callout.modulate.a = 1.0 - fade_t
 
 ## Layers direction/scale/dimming on top of StateCard's own progress-driven
 ## look for Conditional's single card — true moves it forward and grows it;
@@ -426,6 +446,8 @@ func _build_conditional_demo() -> Dictionary:
 ## advancing the moment the race resolves instead of reaching full
 ## progress alongside the winner.
 func _process(delta: float) -> void:
+	_update_conditional_callout(delta)
+
 	if not _tracking:
 		return
 

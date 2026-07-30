@@ -1,14 +1,21 @@
+## Starts every enabled child in [member children] together; [member completion_policy]
+## decides which child (or children) must finish for the group to complete.
 class_name AnimaParallel
 extends AnimaMotion
 
+## Which child (or children) must finish for the group to complete.
 enum CompletionPolicy {
 	ALL_CHILDREN,
 	FIRST_CHILD,
 	NAMED_CHILD,
 }
 
+## The motions to run together.
 @export var children: Array[AnimaMotion] = []
+## Which child (or children) must finish for the group to complete.
 @export var completion_policy: CompletionPolicy = CompletionPolicy.ALL_CHILDREN
+## The [member AnimaMotion.display_name] to match against when
+## [member completion_policy] is [constant CompletionPolicy.NAMED_CHILD].
 @export var completion_child_name: String = ""
 
 ## Returns the single child whose completion decides the group's completion
@@ -28,6 +35,9 @@ func get_completion_child() -> AnimaMotion:
 		_:
 			return null
 
+## Under [constant CompletionPolicy.ALL_CHILDREN], the slowest enabled child's
+## duration (worst-kind-wins across children first). Otherwise defers entirely
+## to [method get_completion_child]'s own duration.
 func estimate_duration() -> AnimaDuration:
 	if completion_policy == CompletionPolicy.ALL_CHILDREN:
 		var child_durations: Array[AnimaDuration] = []
@@ -47,9 +57,11 @@ func estimate_duration() -> AnimaDuration:
 	var completion_child := get_completion_child()
 	return completion_child.estimate_duration() if completion_child != null else AnimaDuration.fixed(0.0)
 
+## Builds the runtime instance that plays every enabled child together.
 func create_runtime() -> Variant:
 	return AnimaParallelInstance.new(self)
 
+## Validates every child recursively.
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	for child in children:

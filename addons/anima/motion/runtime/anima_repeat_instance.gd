@@ -1,3 +1,5 @@
+## Runtime instance for [AnimaRepeat] — replays [member AnimaRepeat.child]
+## [member AnimaRepeat.count] times, with an optional delay between repetitions.
 class_name AnimaRepeatInstance
 extends AnimaMotionInstance
 
@@ -29,6 +31,8 @@ func _build_iteration_instance(iteration: int) -> Variant:
 		return reversed.create_runtime()
 	return repeat.child.create_runtime()
 
+## Advances the current repetition; once it finishes, either waits out
+## delay_between and starts the next repetition, or completes if that was the last one.
 func advance(target: Node, delta: float) -> bool:
 	var repeat := motion as AnimaRepeat
 	if repeat.child == null or repeat.count <= 0:

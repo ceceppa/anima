@@ -1,9 +1,15 @@
+## Runs every enabled child in [member children] concurrently and completes
+## as soon as the fastest one finishes.
 class_name AnimaRace
 extends AnimaMotion
 
+## The motions racing against each other.
 @export var children: Array[AnimaMotion] = []
+## Whether the runtime stops advancing the other children once one finishes.
+## Setting this to `false` has no defined effect this phase.
 @export var cancel_remaining: bool = true
 
+## The fastest enabled child's duration (worst-kind-wins across children first).
 func estimate_duration() -> AnimaDuration:
 	var enabled_children: Array[AnimaMotion] = []
 	for child in children:
@@ -26,9 +32,11 @@ func estimate_duration() -> AnimaDuration:
 		fastest = minf(fastest, child_duration.seconds)
 	return AnimaDuration.fixed(fastest)
 
+## Builds the runtime instance that races every enabled child.
 func create_runtime() -> Variant:
 	return AnimaRaceInstance.new(self)
 
+## Validates every child recursively.
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	for child in children:

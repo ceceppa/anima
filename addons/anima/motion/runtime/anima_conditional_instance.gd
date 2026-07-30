@@ -1,3 +1,5 @@
+## Runtime instance for [AnimaConditional] — selects a branch once at
+## construction and advances only that branch's own runtime instance.
 class_name AnimaConditionalInstance
 extends AnimaMotionInstance
 
@@ -13,6 +15,8 @@ func _init(p_motion: AnimaMotion) -> void:
 	if branch != null:
 		_branch_instance = branch.create_runtime()
 
+## Advances the branch selected at construction. Completes immediately if
+## `condition` had no valid branch to select.
 func advance(target: Node, delta: float) -> bool:
 	if _branch_instance == null:
 		return true

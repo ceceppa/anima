@@ -23,9 +23,11 @@ addons/anima/
       anima_property_motion.gd
       anima_ease.gd             # curve resource, not an AnimaMotion subtype — still lives with the other resources
       anima_motion_builder.gd   # class_name Motion — fluent builder/factory, not an AnimaMotion subtype either
+      anima_behaviour.gd        # class_name AnimaBehaviour — per-node config resource, not an AnimaMotion subtype either
     runtime/
       anima_runtime.gd
       anima_playback.gd       # tracks one play() call's live state; paired with the runtime loop that advances it
+      anima_node_proxy.gd     # class_name AnimaNodeProxy — returned by Anima.of(node); a runtime-facing object, not a motion resource
       anima.gd                # class_name Anima entry point
 ```
 
@@ -43,6 +45,17 @@ extends AnimaMotion
 ```
 
 Exception: the fluent builder class is named `Motion` (`tech-spec.md` §Data model `Motion` row) — unprefixed, since `AnimaMotion` already names the base resource type and `Motion.sequence(...)` is the intended authoring surface. This is the only unprefixed type in the addon's public API; it is a one-off carve-out for this specific name clash, not a pattern to extend to future classes.
+
+**What:** An `AnimaEase` field that only applies to one specific `kind` is prefixed with a short form of that kind's name (`spring_response`, `spring_stiffness`, `elastic_amplitude`, `bezier_p1`, `decay_rate`, `back_overshoot`) — never a bare name that could belong to any kind (`response`, `amplitude`, `rate`).
+
+**Why:** `AnimaEase` holds every kind's fields on one shared Resource (`tech-spec.md` §Data model), so an unprefixed field name can't tell a reader which `kind` it actually belongs to at a glance, or whether it's read at all for the current `kind`.
+
+**Pattern:**
+```
+# addons/anima/motion/resources/anima_ease.gd
+@export var spring_response: float = 0.5   # SPRING only
+@export var elastic_period: float = 0.3    # ELASTIC only
+```
 
 ## Architecture
 
@@ -146,6 +159,20 @@ See `v2_stuff/doc.example.md` for the full section-by-section structure.
 **Pattern:**
 - Before using a Godot-specific term for the first time on a page, explain what it means in one clause.
 - The Quick example section must not depend on setup the reader hasn't already seen on that same page.
+
+**What:** Every public class, function, property, signal, and enum ships a `##` GDScript doc comment directly above its declaration — a one-line summary, optionally followed by a blank `##` line and more detail. This is a standing requirement, not a one-time cleanup: any story that adds a new public class/function/property/signal/enum, or changes what an existing one does, adds or updates its `##` comment in that same story — never as a separate later pass.
+
+**Why:** Hovering an Anima class or function in the Godot script editor showed "No description available" — the markdown pages under `docs/content/docs/anima/` are a separate channel that don't feed the editor's own hover/help panel; only GDScript's own `##` comments do that. A one-time sweep fixed every existing gap once, but the gap comes right back the first time new public API ships without one — so this has to hold on every story that touches the public API, not just the retroactive pass that closed it out this phase.
+
+**Pattern:**
+```gdscript
+## Plays [param motion] against [param target] and returns the resulting [AnimaPlayback].
+##
+## [param target] is optional when [param motion] supplies its own targets (e.g. AnimaStagger).
+static func play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
+    ...
+```
+Use Godot's `[ClassName]` / `[method Class.name]` / `[param name]` reference syntax where it helps the built-in help panel link to related pages — plain prose is fine when it doesn't. If a story changes what an existing function does, update its `##` comment to match in the same story — a stale comment is worse than a missing one, since it reads as confirmed and correct.
 
 ## Example Scenes
 

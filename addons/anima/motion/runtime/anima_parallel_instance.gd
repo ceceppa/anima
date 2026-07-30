@@ -1,3 +1,5 @@
+## Runtime instance for [AnimaParallel] — advances every enabled child each
+## frame and completes per its [member AnimaParallel.completion_policy].
 class_name AnimaParallelInstance
 extends AnimaMotionInstance
 
@@ -21,6 +23,8 @@ func _init(p_motion: AnimaMotion) -> void:
 		if child == completion_child:
 			_completion_index = _child_instances.size() - 1
 
+## Advances every unfinished child, then completes per completion_policy —
+## all of them, or just the one tracked at [member _completion_index].
 func advance(target: Node, delta: float) -> bool:
 	if _child_instances.is_empty():
 		return true

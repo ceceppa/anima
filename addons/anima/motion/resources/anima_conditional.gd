@@ -1,14 +1,21 @@
+## Selects between [member when_true] and [member when_false] based on
+## [member condition], evaluated once per [method create_runtime] call.
 class_name AnimaConditional
 extends AnimaMotion
 
+## When [member condition] is evaluated.
 enum ResolutionTiming {
 	COMPILE_TIME,
 	RUNTIME,
 }
 
+## Motion played when [member condition] returns `true`.
 @export var when_true: AnimaMotion = null
+## Motion played when [member condition] returns `false`.
 @export var when_false: AnimaMotion = null
+## Zero-argument [Callable] returning a [bool] that picks the branch.
 @export var condition: Callable = Callable()
+## When [member condition] is evaluated.
 @export var resolution_timing: ResolutionTiming = ResolutionTiming.RUNTIME
 
 ## COMPILE_TIME: resolves now and defers to the selected branch's own
@@ -25,9 +32,11 @@ func _select_branch() -> AnimaMotion:
 		return null
 	return when_true if condition.call() else when_false
 
+## Builds the runtime instance, selecting the branch once (see [method _select_branch]).
 func create_runtime() -> Variant:
 	return AnimaConditionalInstance.new(self)
 
+## Requires [member condition], [member when_true], and [member when_false].
 func validate() -> Array[String]:
 	var errors: Array[String] = []
 	if not condition.is_valid():

@@ -1,3 +1,6 @@
+## Runtime instance for [AnimaSequence] — advances each child per its
+## scheduled start ([method AnimaSequence.compute_schedule]) and completes
+## once every enabled child has finished.
 class_name AnimaSequenceInstance
 extends AnimaMotionInstance
 
