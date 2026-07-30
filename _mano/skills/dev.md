@@ -1,0 +1,28 @@
+---
+name: mano-dev
+description: Use to implement the next pending story for the active phase. Thin entry point — the implementation contract lives in AGENTS.md, not here.
+---
+
+# mano dev — implement the next pending story
+
+This skill is a **pointer**, not a contract. The implementation contract is `AGENTS.md` → **"Implementing a story"** and **"Implementation Output Discipline"**. Read those and follow them exactly. Do not re-derive or paraphrase them from this file.
+
+`mano dev` is the sanctioned path from a finished `stories/` folder into code. It runs on the implementing agent (the small-context coding model), so this file stays deliberately short.
+
+## What to do
+
+1. Read `AGENTS.md` → "Implementing a story" and follow it step by step.
+2. Implement only the selected story's acceptance criteria.
+3. Mark the story `done` via `node _mano/scripts/stories.js set-status` (the exact call is `AGENTS.md` step 11) — don't hand-edit the index table.
+
+**Determine the active phase and next story fresh from disk via `node _mano/scripts/state.js --next`, not from the chat** (AGENTS.md step 1 is authoritative). The script reads the filesystem this turn and reports the active phase + next pending story; a newer phase may have been added since the conversation's context was loaded. Trusting the loaded chat context here is the common way `mano dev` ends up reporting on a stale, already-closed phase instead of the open one.
+
+## Hard stops (from AGENTS.md — repeated here only so they are never skipped)
+
+- **No implementable story → stop — but only when *every* row is `done`.** The `Status` column is the only signal; a story's number, letter, or title grants no exemption, and lettered stories (`4a`) are their own pending work. The full selection rule lives in `AGENTS.md` → "The `Status` column is the only signal" — it is authoritative; do not paraphrase around it. When every row is `done`, output one line — the phase's stories are all done but the phase is **not closed** until `mano review` runs. Do not call the phase "complete", do not present `mano start` as an equal option, and do not start, scope, or plan a new phase. If a requested story number does not exist while another row is pending, report the missing number and the actual next pending story; do not claim the phase is built.
+- **Respect order.** If an earlier story is still `pending`, stop and tell the user which story would be skipped. Do not bypass without explicit confirmation.
+- **AC only.** Implement the story's acceptance criteria — nothing beyond them. On a genuine gap, stop and name the Mano flow that owns the decision; do not invent behaviour.
+- **`Not this story` is a hard no.** Every item in the story's out-of-scope section is a prohibition equal to a `Do not:` line — implement none of it. The full rule (including the named-type trap) lives in `AGENTS.md` → "`Not this story` is a hard boundary" — it is authoritative. If an excluded item seems required for the AC to work, that's a gap — stop and surface it.
+- **One-line done.** After implementing, the entire chat response is `Story [N] done — status updated in stories/README.md`. No recap, no checklist, no AC restatement. The only permitted additions are a real deviation or a project-relevant decision worth preserving (offered for capture) — per `AGENTS.md` step 12 and "Implementation Output Discipline". Nothing else.
+
+If this file and `AGENTS.md` ever disagree, `AGENTS.md` wins — fix this pointer.

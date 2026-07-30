@@ -1,5 +1,5 @@
 name: "Deploy Anima Addon"
-on: push
+# on: push
 
 jobs:
   deploy-anima-addon:

@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://ccxvk4hf58ljx"]
-
-[ext_resource type="PackedScene" uid="uid://bydlwlwtrj4l1" path="res://demos/resources/box.dae" id="1"]
-
-[node name="Ring" instance=ExtResource("1")]

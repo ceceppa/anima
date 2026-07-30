@@ -19,7 +19,7 @@ func _register_inners(base_path, obj, prev_inner = ''):
 		var key = consts[const_idx]
 		var thing = const_map[key]
 
-		if(typeof(thing) == TYPE_OBJECT):
+		if(typeof(thing) == TYPE_OBJECT and thing.resource_path == ''):
 			var cur_inner = str(prev_inner, ".", key)
 			_registry[thing] = _create_reg_entry(base_path, cur_inner)
 			_register_inners(base_path, thing, cur_inner)
@@ -59,6 +59,12 @@ func get_base_resource(inner_class):
 	if(_registry.has(inner_class)):
 		return _registry[inner_class].base_resource
 
+func get_full_path(inner_class):
+	if(_registry.has(inner_class)):
+		var entry = _registry[inner_class]
+		return str(entry.base_path.get_file(), entry.subpath.replace('.', '/'))
+	else:
+		return "/Unregistered-Inner-Class"
 
 func to_s():
 	var text = ""

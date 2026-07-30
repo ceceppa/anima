@@ -11,11 +11,7 @@ extends Control
 		_animate()
 
 func _animate():
-	await (
-		Anima.Node(%Label2)
-		.anima_animation("bounce", 0.5)
-		.play()
-	).animation_completed
+	pass
 
 func _on_button_pressed():
 	_animate()
