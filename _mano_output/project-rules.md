@@ -160,11 +160,15 @@ examples/
     theme/
       anima_examples.tres       # custom Theme resource, applied at each example scene's root
     components/
+      example_header.tscn       # icon + title + subtitle (+ optional counter), shared by every example scene
+      example_header.gd
       state_card.tscn           # e.g. the A/B/C motion-state cards in v2_stuff/ex1.jpg
       state_card.gd
       playback_controls.tscn    # restart/play-pause/speed, etc.
       playback_controls.gd
-      selector_button.tscn      # toggle/segment-style button (selected vs. unselected fill)
+      selector_dock.tscn        # owns the shared background + the sliding selected-item indicator
+      selector_dock.gd
+      selector_button.tscn      # one item inside a SelectorDock — label colour/weight only, no own fill
       selector_button.gd
   composition_playground.tscn   # this phase's example scene, composed from the shared components above
 ```
@@ -180,7 +184,7 @@ class_name StateCard
 extends PanelContainer
 ```
 
-**What:** `StateCard` has no discrete state. It exposes `set_label(text: String)` and `set_progress(t: float)`, where `t` (`0.0`–`1.0`) continuously drives every visual property — border colour, glow, label colour, opacity, and a small scale pulse — from that one value. `0.0` is at rest/not started, `1.0` is fully complete; nothing in between is a named state a caller sets.
+**What:** `StateCard` has no state of its own — no state field, no state enum, nothing a caller sets by name. It's one plain visual style (dark card, thin outline, soft shadow, bold label) that exposes `set_label(text: String)` and `set_progress(t: float)`, where `t` (`0.0`–`1.0`) continuously drives every visual property — border colour, glow, label colour, opacity, and a small scale pulse — from that one value, the same way any other node's properties get animated. `0.0` is at rest/not started, `1.0` is fully complete; nothing in between is a named state.
 
 **Why:** An earlier version modelled this as a `WAITING | PLAYING | COMPLETED` enum with a `set_state()` call per transition, which meant the "complete" look snapped in abruptly the instant `t` crossed into that state instead of arriving smoothly. Collapsing it to one continuous driver removes the discrete jump entirely — there's no state boundary left to snap across, and every composition type in the example scene drives it the same way regardless of how many pulses it needs.
 
@@ -197,7 +201,7 @@ func set_progress(t: float) -> void:
     ...
 ```
 
-**What:** A toggle/segment-style button (selected vs. unselected fill, like the composition-type selector) is built from the shared `SelectorButton` component under `examples/shared/components/` — never an ad-hoc `StyleBoxFlat` constructed inline in a scene script. Its content margins — `24px` left/right, `12px` top/bottom, `12px` corner radius — are the one canonical button-padding value for every button in an example scene, toggle or not; the shared theme's own Button style (`anima_examples.tres`) must match it.
+**What:** A toggle/segment-style item inside a selector (like the composition-type selector) is built from the shared `SelectorButton` component under `examples/shared/components/` — never an ad-hoc `StyleBoxFlat` constructed inline in a scene script. Its content margins — `24px` left/right, `12px` top/bottom, `12px` corner radius — are the one canonical button-padding value for every button in an example scene, toggle or not; the shared theme's own Button style (`anima_examples.tres`) must match it.
 
 **Why:** This padding value existed only once, inline, in a scene script's ad-hoc `StyleBoxFlat` — it silently diverged from the shared theme's own Button style, which had no padding at all, and the mismatch went unnoticed until a real button visibly had no left/right margin. Pulling it into one shared component prevents that same drift on the next button a future example scene adds.
 
@@ -208,7 +212,41 @@ class_name SelectorButton
 extends Button
 
 func set_selected(selected: bool) -> void:
+    ...  # label colour/weight only — no own background fill (see SelectorDock)
+```
+
+**What:** The selector's shared background, border, and the visible selected-state indicator are owned by a separate `SelectorDock` component, not by each `SelectorButton`. `SelectorDock` holds one indicator child that repositions and resizes to sit behind whichever `SelectorButton` is currently selected; the buttons themselves only change label colour/weight and never render their own selected-state background fill.
+
+**Why:** The design direction (`design-brief.md` § Selector dock) calls for one indicator that physically animates between items. If each button also kept its own selected-fill logic, there would be two independent sources of "selected" visual truth animating separately instead of one shared, single-owner indicator.
+
+**Pattern:**
+```
+# examples/shared/components/selector_dock.gd
+class_name SelectorDock
+extends PanelContainer
+
+func select(index: int) -> void:
+    ...  # animates the shared indicator to the SelectorButton at `index`
+```
+
+**What:** Every example scene's top-level header is the shared `ExampleHeader` component under `examples/shared/components/` (icon + title + subtitle, optional counter) — never a scene-specific title `Label` built inline.
+
+**Why:** `design-brief.md` scopes the header as reusable across every future example scene; building it once now, the same way `StateCard` and `SelectorButton` were extracted, prevents it being reimplemented (and drifting) per scene later.
+
+**Pattern:**
+```
+# examples/shared/components/example_header.gd
+class_name ExampleHeader
+extends PanelContainer
+
+func set_title(text: String) -> void:
     ...
+
+func set_subtitle(text: String) -> void:
+    ...
+
+func set_counter(text: String) -> void:
+    ...  # optional — hidden when unset
 ```
 
 **What:** The `positive-fill` theme colour (`design-brief.md` § Colour palette) is used only for large or bold display text (≥18pt, or ≥14pt bold) — never for body or caption text.

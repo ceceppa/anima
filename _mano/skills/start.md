@@ -133,7 +133,9 @@ Then proceed to Step 6.
 
 Work from the state script's `SCOPE INPUT` block (the phase-scopeable `Status: backlog` items, `## Core Product Principles`, and latest review) — it's already in context from activation, so don't reopen `backlog.md`, `reviews.md`, or the completed phase's folder. The projection has already removed `spec-gap` and `rule-gap` items. Estimate complexity of each remaining item based on its context.
 
-**Hard constraint: one testable layer per phase.** A phase should deliver one cohesive slice that can be verified independently. If the suggestion includes both a backend AND a frontend, it's too big — pick one. If it includes a feature AND all its prerequisites as separate items, collapse them into the feature. Ask: "can someone test this phase's output without building the next phase first?" If no, the scope is wrong.
+**Hard constraint: one independently verifiable outcome per phase.** A phase should deliver one cohesive capability or retire one meaningful risk that can be validated without work planned for a later phase. It may cross backend, frontend, storage, or other layers when that is the smallest complete slice; keep each layer to the minimum required for the outcome. Do not bundle unrelated outcomes simply because they share infrastructure. Treat internal prerequisites as part of the outcome rather than separate phase-scope items, while recording them explicitly in the phase brief and stories.
+
+Ask: "At the end of this phase, can someone demonstrate the capability or verify that the risk has been retired using clear acceptance criteria?" If not, reshape the scope.
 
 Suggest a shortlist that fits this constraint — 1-2 items if complex, several if small. When in doubt, err on fewer items. A phase that's too small ships fast; a phase that's too big never ships.
 

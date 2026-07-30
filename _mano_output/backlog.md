@@ -2639,3 +2639,81 @@
   Extends the duration-model item once the Motion Composer exists.
   PRD.md §11.
 - **Status:** backlog
+
+### Shared example header component
+- **Type:** feature
+- **Source:** User UI recommendations doc
+- **Context:**
+  Compact, left-aligned app-style header (icon + title + subtitle, optional category/counter) shared by every Anima example scene, replacing the current large centred heading.
+  Subtle bg tint, bottom border, soft shadow — not a floating card.
+  Suggested sizing: icon 40-48px, title 28-34px, subtitle 14-16px, padding 32-48px horizontal / 20-28px vertical.
+- **Status:** in-phase-4
+
+### Composition example content stage (container)
+- **Type:** feature
+- **Source:** User UI recommendations doc
+- **Context:**
+  One large rounded (20-24px), low-contrast-bordered container holds the description, cards, and selector together, replacing today's loose canvas layout.
+  Container position/size, stage position, and selector position stay fixed across tab switches — only the selected example's inner state changes.
+  Soft outer shadow, generous internal padding, optional subtle radial gradient behind the cards.
+- **Status:** in-phase-4
+
+### Per-type title and description inside the stage
+- **Type:** feature
+- **Source:** User UI recommendations doc
+- **Context:**
+  Each composition type shows its own title + one-line description top-left of the stage, with an optional counter (e.g. 01/05) top-right.
+  Subtle crossfade transition on switch (~100-150ms, optionally a few px horizontal shift) — no large entrance/exit animation.
+  Copy per type: Sequence/Parallel/Stagger/Repeat/Race one-liners are already drafted in the source doc.
+- **Status:** in-phase-4
+
+### Selector dock component with animated indicator
+- **Type:** feature
+- **Source:** User UI recommendations doc
+- **Context:**
+  Shared pseudo-tab selector moves below the cards inside the stage as a compact floating dock, not a full-width nav bar.
+  Selected-state indicator physically moves and resizes between labels (~250-300ms, springy easing); label colour transitions ~120-160ms; small press-feedback dip on tap.
+  Selection must not rely on colour alone — combine background + brighter/bolder text; keyboard focus stays visually distinct from selection.
+- **Status:** in-phase-4
+
+### Card resting/waiting/active/completed states
+- **Type:** refinement
+- **Source:** User UI recommendations doc
+- **Context:**
+  Cards currently show a permanent glow regardless of state, so everything reads as active — glow should be animation feedback, not decoration.
+  Resting: crisp border, soft shadow, no strong glow. Waiting: reduced opacity, minimal glow (not disabled-looking).
+  Active: stronger glow/brighter border, optional small lift. Completed: glow settles back down with a subtle completion accent instead of staying fully lit.
+- **Status:** in-phase-4
+
+### Composition-specific card storytelling
+- **Type:** refinement
+- **Source:** User UI recommendations doc
+- **Context:**
+  The same cards should visibly communicate which composition type is running, not just complete together.
+  Sequence: one card strongly active at a time, next activates after previous completes. Parallel: all activate together. Stagger: activation visibly travels A to C.
+  Repeat: shows completion and restart (optional small repeat counter). Race: winner gets a clear win state, others stop/interrupt visibly.
+- **Status:** in-phase-4
+
+### Background depth behind the example stage
+- **Type:** refinement
+- **Source:** User UI recommendations doc
+- **Context:**
+  Add restrained depth to the dark background: either a subtle radial gradient centred behind the animation stage, or a very low-opacity grid/dot texture inside the container.
+  Pick only one of the two — don't combine unless both are extremely subtle.
+- **Status:** in-phase-4
+
+### Composition example spacing and hierarchy pass
+- **Type:** refinement
+- **Source:** User UI recommendations doc
+- **Context:**
+  Too much undefined space currently sits between the selector and the cards; apply deliberate spacing across the whole stage.
+  Suggested: header-to-container 24-32px, container internal padding 32-48px, description-to-cards 32-48px, cards-to-selector 40-56px, gap between cards 32-48px.
+- **Status:** in-phase-4
+
+### Restore Conditional composition type with True/False cards
+- **Type:** feature
+- **Source:** User UI recommendations doc
+- **Context:**
+  Conditional was hidden from the selector last phase because its single-branch presentation read as confusing.
+  Restore it with a different demo: show two cards, one labelled "True" and one labelled "False", making the branch choice visible instead of implicit.
+- **Status:** in-phase-4
