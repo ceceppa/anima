@@ -2,7 +2,19 @@
 
 [ext_resource type="Script" uid="uid://cywi7ohm2iphf" path="res://examples/composition_playground.gd" id="1"]
 [ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="1_lyx8s"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/playback_controls.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://examples/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/shared/components/selector_dock.tscn" id="4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7k6g3"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
 
 [node name="CompositionPlayground" type="Control" unique_id=584612889]
 layout_mode = 3
@@ -37,40 +49,97 @@ theme_override_constants/margin_bottom = 48
 
 [node name="Content" type="VBoxContainer" parent="Margin" unique_id=2135021707]
 layout_mode = 2
-theme_override_constants/separation = 48
+theme_override_constants/separation = 24
 
-[node name="Title" type="Label" parent="Margin/Content" unique_id=941379105]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 48
-text = "Composition Example"
-horizontal_alignment = 1
+[node name="Header" parent="Margin/Content" unique_id=941379105 instance=ExtResource("3")]
+unique_name_in_owner = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_7k6g3")
+title = "Composition"
+subtitle = "See how simple animations come together in expressive flows."
+icon = "✦"
 
-[node name="Selector" type="HBoxContainer" parent="Margin/Content" unique_id=230794907]
+[node name="Stage" type="PanelContainer" parent="Margin/Content" unique_id=2005584351]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StageContent" type="VBoxContainer" parent="Margin/Content/Stage" unique_id=2005584352]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="StageHead" type="HBoxContainer" parent="Margin/Content/Stage/StageContent" unique_id=1696545033]
+layout_mode = 2
+
+[node name="TypeInfo" type="VBoxContainer" parent="Margin/Content/Stage/StageContent/StageHead" unique_id=1131605855]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TypeTitle" type="Label" parent="Margin/Content/Stage/StageContent/StageHead/TypeInfo" unique_id=1292025533]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 20
+
+[node name="TypeDescription" type="Label" parent="Margin/Content/Stage/StageContent/StageHead/TypeInfo" unique_id=1016112776]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14
+
+[node name="TypeCounter" type="Label" parent="Margin/Content/Stage/StageContent/StageHead" unique_id=1719399923]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="CardStage" type="Control" parent="Margin/Content/Stage/StageContent" unique_id=1311286085]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Glow" type="TextureRect" parent="Margin/Content/Stage/StageContent/CardStage" unique_id=383867045]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CardCenter" type="VBoxContainer" parent="Margin/Content/Stage/StageContent/CardStage" unique_id=1389423788]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="DurationBadge" type="Label" parent="Margin/Content" unique_id=2005584351]
+[node name="ConditionalCallout" type="Label" parent="Margin/Content/Stage/StageContent/CardStage/CardCenter" unique_id=1863992894]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-horizontal_alignment = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Margin/Content" unique_id=1311286085]
-layout_mode = 2
-size_flags_vertical = 3
-alignment = 1
-
-[node name="CardRow" type="HBoxContainer" parent="Margin/Content/VBoxContainer" unique_id=1767555272]
+[node name="CardRow" type="HBoxContainer" parent="Margin/Content/Stage/StageContent/CardStage/CardCenter" unique_id=1767555272]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 48
+theme_override_constants/separation = 40
 alignment = 1
 
-[node name="PlaybackControls" parent="Margin/Content" unique_id=1402109595 instance=ExtResource("2")]
+[node name="DockMargin" type="MarginContainer" parent="Margin/Content/Stage/StageContent" unique_id=783329598]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+
+[node name="DockRow" type="HBoxContainer" parent="Margin/Content/Stage/StageContent/DockMargin" unique_id=566790424]
+layout_mode = 2
+alignment = 1
+
+[node name="Selector" parent="Margin/Content/Stage/StageContent/DockMargin/DockRow" unique_id=230794907 instance=ExtResource("4")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2

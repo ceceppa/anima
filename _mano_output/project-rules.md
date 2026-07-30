@@ -229,7 +229,7 @@ func select(index: int) -> void:
     ...  # animates the shared indicator to the SelectorButton at `index`
 ```
 
-**What:** Every example scene's top-level header is the shared `ExampleHeader` component under `examples/shared/components/` (icon + title + subtitle, optional counter) — never a scene-specific title `Label` built inline.
+**What:** Every example scene's top-level header is the shared `ExampleHeader` component under `examples/shared/components/` (icon + title + subtitle) — never a scene-specific title `Label` built inline. The per-type counter lives on the stage's own type-title row (it changes as the user switches composition type), not on `ExampleHeader`.
 
 **Why:** `design-brief.md` scopes the header as reusable across every future example scene; building it once now, the same way `StateCard` and `SelectorButton` were extracted, prevents it being reimplemented (and drifting) per scene later.
 
@@ -239,14 +239,32 @@ func select(index: int) -> void:
 class_name ExampleHeader
 extends PanelContainer
 
-func set_title(text: String) -> void:
-    ...
+@export var title: String = "": ...
+@export var subtitle: String = "": ...
+@export var icon: String = "": ...
+```
+See **Editor-Authored Content** below for why these are exports, not setter methods called from a parent script.
 
-func set_subtitle(text: String) -> void:
-    ...
+**What:** Static, per-scene authoring content — labels, titles, subtitles, icons, and any other value that is fixed for the life of one scene instance — is exposed as an `@export` property on the component and set directly in the `.tscn` via the editor Inspector. It is not assigned imperatively from a parent scene's script (e.g. calling `_header.set_title(...)` from `composition_playground.gd`'s `_ready()`). Reserve code-driven setters for values that genuinely change at runtime — `StateCard.set_progress(t)`, `SelectorDock.select(index)` — where there's nothing for the editor to author because the value doesn't exist until the scene runs.
 
-func set_counter(text: String) -> void:
-    ...  # optional — hidden when unset
+**Why:** A value like `ExampleHeader`'s title or icon never changes once the scene is built; hardcoding it in a parent script's `_ready()` hides that content from the editor and from anyone opening the `.tscn` — reading the script becomes the only way to see what an example scene actually says. Exporting it keeps the content visible and editable in the Inspector, matching how Godot scenes are meant to be authored.
+
+**Pattern:**
+```
+# examples/shared/components/example_header.gd
+@export var title: String = "":
+    set(value):
+        title = value
+        if is_node_ready():
+            _title.text = value
+```
+```
+# examples/composition_playground.tscn — authored in the editor Inspector,
+# not assigned in composition_playground.gd
+[node name="Header" parent="..." instance=ExtResource("...")]
+title = "Composition"
+subtitle = "Combine simple animations into expressive flows."
+icon = "✦"
 ```
 
 **What:** The `positive-fill` theme colour (`design-brief.md` § Colour palette) is used only for large or bold display text (≥18pt, or ≥14pt bold) — never for body or caption text.

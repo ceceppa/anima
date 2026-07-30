@@ -7,6 +7,15 @@ const LABEL_START := Color(0.580392, 0.639216, 0.721569, 1.0)
 const LABEL_END := Color(0.176471, 0.831373, 0.74902, 1.0)
 const DIM_ALPHA := 0.5
 
+## The glow (shadow) is animation feedback, not a permanent decoration: it
+## rises while the card is actively animating and settles back down once
+## complete, rather than climbing to its brightest point exactly when the
+## card stops moving.
+const GLOW_PEAK_ALPHA := 0.35
+const GLOW_SETTLE_ALPHA := 0.10
+const GLOW_PEAK_SIZE := 12
+const GLOW_SETTLE_SIZE := 4
+
 @onready var label: Label = %Label
 
 var style_box: StyleBoxFlat
@@ -45,8 +54,16 @@ func set_progress(t: float) -> void:
 
 	var border := BORDER_START.lerp(BORDER_END, progress)
 	style_box.border_color = border
-	style_box.shadow_color = Color(border.r, border.g, border.b, 0.35 * progress)
-	style_box.shadow_size = roundi(12 * progress)
+
+	# A bump that rises from 0 and returns to 0 across the [0, 1] range (peaks
+	# around the midpoint), blended toward the small settle value as progress
+	# nears 1 — continuous throughout, so nothing snaps at completion either.
+	var glow_bump := sin(progress * PI)
+	var settle_weight := progress * progress
+	var glow_alpha := lerpf(GLOW_PEAK_ALPHA * glow_bump, GLOW_SETTLE_ALPHA, settle_weight)
+	var glow_size := lerpf(GLOW_PEAK_SIZE * glow_bump, GLOW_SETTLE_SIZE, settle_weight)
+	style_box.shadow_color = Color(border.r, border.g, border.b, glow_alpha)
+	style_box.shadow_size = roundi(glow_size)
 
 	label.add_theme_color_override("font_color", LABEL_START.lerp(LABEL_END, progress))
 
