@@ -31,6 +31,19 @@ addons/anima/
       anima.gd                # class_name Anima entry point
 ```
 
+## Editor Boundaries
+
+**What:** Editor-only group authoring, Inspector integration, previews, and generated timeline views live outside the runtime and resource layers. Editor code reads and edits motion resources through the same public contracts used by code authoring; it never creates a visual-only group format or bypasses runtime validation.
+
+**Why:** The Motion Composer and Inspector must stay another authoring surface for the one Anima motion model, not a second implementation that drifts from playback.
+
+**Pattern:**
+```
+addons/anima/
+  motion/        # resources and runtime playback
+  editor/        # Composer, Inspector, and preview integration
+```
+
 ## Naming
 
 **What:** Every GDScript type is declared with `class_name` in PascalCase, prefixed `Anima` (`AnimaMotion`, `AnimaSequence`, `AnimaPropertyMotion`, …). The file name mirrors the class name in snake_case.
@@ -87,6 +100,15 @@ static func get_singleton() -> AnimaRuntime:
     return _instance
 ```
 
+**What:** Resources hold authored group configuration only. Resolved targets, ordering, ranks, offsets, active instances, and reversal history belong to a playback or execution record created for one run.
+
+**Why:** A reusable Resource must not leak mutable state between concurrent plays, previews, or scene instances.
+
+**Pattern:**
+- Create a fresh execution record when playback begins.
+- Pass that record to runtime, preview, tracing, and reverse operations instead of recomputing schedule state independently.
+- Follow the group contract in `tech-spec.md`; do not add uncontracted configuration fields inline.
+
 ## Patterns
 
 **What:** Every `AnimaMotion` subtype implements all three base-contract methods explicitly — `estimate_duration()`, `create_runtime()`, `validate()`. Never rely on an inherited default that silently returns a zero, empty, or no-op result.
@@ -107,6 +129,17 @@ func validate() -> Array[String]:
         errors.append("target_property is required")
     return errors
 ```
+
+## Derived Scheduling
+
+**What:** Resolve, filter, order, rank, and schedule a target collection once per execution through shared group helpers. Consumers use the resulting execution record rather than recalculating order or start offsets.
+
+**Why:** Playback, reverse, compiler output, diagnostics, and the Composer must agree on the same group schedule.
+
+**Pattern:**
+- Keep target resolution and schedule derivation separate from leaf-motion evaluation.
+- Treat generated timeline rows and preview highlights as read-only projections of the execution record.
+- Route a missing group behaviour back to `tech-spec.md` instead of encoding a local scheduling exception.
 
 ## Testing
 
@@ -129,6 +162,15 @@ tests/Anima.integration.playback.test.gd
 ```
 tests/Anima.integration.composition_playground.test.gd   # kept, not deleted after the one-off check that motivated it
 ```
+
+**What:** Scheduling code is tested through deterministic, observable group outcomes before editor presentation is tested.
+
+**Why:** A visually plausible group can still have incorrect ranks, offsets, completion, or reversal behaviour that later surfaces across every authoring surface.
+
+**Pattern:**
+- Unit-test pure resolution, ordering, and schedule derivation with fixed inputs and seeds.
+- Integration-test runtime playback and lifecycle through the public facade.
+- Treat Composer and compiler tests as consumers of the same established execution record.
 
 ## Documentation
 
@@ -178,7 +220,7 @@ Use Godot's `[ClassName]` / `[method Class.name]` / `[param name]` reference syn
 
 **What:** UI-facing example/demo scenes (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (state cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/shared/`, not duplicated per example scene.
 
-**Why:** The reference visual direction (`v2_stuff/ex1.jpg`) is a modern, custom-styled look, not stock Godot widget styling; shared, themed components built once keep every future example scene consistent instead of each one restyling controls from scratch.
+**Why:** The design brief calls for a custom, dark, luminous scene rather than stock Godot widget styling; shared, themed components keep example scenes consistent.
 
 **Pattern:**
 ```
@@ -189,7 +231,7 @@ examples/
     components/
       example_header.tscn       # icon + title + subtitle (+ optional counter), shared by every example scene
       example_header.gd
-      state_card.tscn           # e.g. the A/B/C motion-state cards in v2_stuff/ex1.jpg
+      state_card.tscn           # shared artwork card animated by Anima
       state_card.gd
       playback_controls.tscn    # restart/play-pause/speed, etc.
       playback_controls.gd
@@ -197,6 +239,8 @@ examples/
       selector_dock.gd
       selector_button.tscn      # one item inside a SelectorDock — label colour/weight only, no own fill
       selector_button.gd
+  images/
+    cards.jpg                  # 4 × 3 StateCard artwork atlas
   composition_playground.tscn   # this phase's example scene, composed from the shared components above
 ```
 
@@ -211,9 +255,9 @@ class_name StateCard
 extends PanelContainer
 ```
 
-**What:** `StateCard` has no state of its own — no state field, no state enum, nothing a caller sets by name. It's one plain visual style (dark card, thin outline, soft shadow, bold label) that exposes `set_label(text: String)` and `set_progress(t: float)`, where `t` (`0.0`–`1.0`) continuously drives every visual property — border colour, glow, label colour, opacity, and a small scale pulse — from that one value, the same way any other node's properties get animated. `0.0` is at rest/not started, `1.0` is fully complete; nothing in between is a named state.
+**What:** `StateCard` draws from the single `examples/images/cards.jpg` atlas through Godot's Region feature. The atlas is 1536×1023 pixels, arranged as four columns by three rows; every card region is 384×341 pixels. Scene authoring selects a zero-based cell index in row-major order and derives the Region offset from that index. The component has no state enum or letter-label fallback. `set_progress(t)` remains the only runtime visual driver, animating the frame's border, glow, opacity, and scale.
 
-**Why:** An earlier version modelled this as a `WAITING | PLAYING | COMPLETED` enum with a `set_state()` call per transition, which meant the "complete" look snapped in abruptly the instant `t` crossed into that state instead of arriving smoothly. Collapsing it to one continuous driver removes the discrete jump entirely — there's no state boundary left to snap across, and every composition type in the example scene drives it the same way regardless of how many pulses it needs.
+**Why:** One atlas keeps related artwork together and makes every StateCard selection deterministic. Fixed regions prevent accidental cropping drift or stretched art across examples.
 
 **Pattern:**
 ```
@@ -221,9 +265,10 @@ extends PanelContainer
 class_name StateCard
 extends PanelContainer
 
-func set_label(text: String) -> void:
-    ...
-
+# index 0: Region(0, 0, 384, 341)
+# index 1: Region(384, 0, 384, 341)
+# index 4: Region(0, 341, 384, 341)
+# column = index % 4; row = index / 4
 func set_progress(t: float) -> void:
     ...
 ```
@@ -293,20 +338,6 @@ title = "Composition"
 subtitle = "Combine simple animations into expressive flows."
 icon = "✦"
 ```
-
-**What:** The `positive-fill` theme colour (`design-brief.md` § Colour palette) is used only for large or bold display text (≥18pt, or ≥14pt bold) — never for body or caption text.
-
-**Why:** White text on `positive-fill` measures 3.7:1 contrast — it passes WCAG AA's large-text threshold (3:1) but fails the normal-text threshold (4.5:1); using it for small text would ship an inaccessible pairing.
-
-**Pattern:**
-```
-# OK: StateCard's single large letter
-# Not OK: a caption, status pill, or body label using positive-fill as its background
-```
-
-## ❌ Not yet
-
-- Editor plugin / Inspector integration folder conventions — no editor-facing surface exists yet; don't scaffold `addons/anima/motion/editor/` until one is planned.
 
 ---
 

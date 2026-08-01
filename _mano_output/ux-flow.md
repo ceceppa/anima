@@ -2,26 +2,82 @@
 
 ## Composition Example Scene
 
-**How it's accessed:** Opened directly in the Godot editor (`examples/composition_playground.tscn`) and run with Play Scene — there's no in-app navigation leading to it yet.
+**How it's accessed:** Open `examples/composition_playground.tscn` in the Godot editor and run the scene.
 
-**How the user gets back:** Stop the running scene, or close it in the editor. There's nowhere else to go from here yet, so there's no in-scene "back" action.
+**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
 
 **What the user sees:**
-- A themed scene (the custom `Theme` from `project-rules.md` §Example Scenes, not default Godot control styling)
-- A selector for which of this phase's composition types to preview: Sequence, Parallel, Stagger, Repeat, Race, Conditional
-- A state-card area (the shared `StateCard` component) showing each node involved in the current composition and its state — waiting, playing, or completed
-- A duration readout showing the current composition's reported kind and value (`Fixed`/`Estimated`/`Dynamic`/`Infinite` — the `AnimaDuration` concept from `tech-spec.md`)
+- The shared `ExampleHeader` with the Composition title and subtitle.
+- A fixed content stage with the selected composition’s name, description, and compact counter.
+- A row of shared `StateCard` artwork cards. Each card displays a different Region from the `cards.jpg` atlas; the scene title and selector provide the meaning, so the images are decorative.
+- The shared `SelectorDock` for Sequence, Parallel, Stagger, Repeat, Race, and Conditional.
 
 **What the user can do:**
-- Select a different composition type from the selector
-- Restart the current composition's playback (the shared `PlaybackControls` component, restart action only this phase)
+- Choose one composition type from the selector dock.
 
 **What happens on action:**
-- Selecting a composition type builds that composition using the Functional builder API and plays it immediately against the scene's demo nodes; the state cards update live as it plays
-- Restarting cancels the current playback and starts the same composition fresh from the beginning
+- Choosing a type updates the stage title, description, counter, and artwork-card animation, then plays that composition from its starting state.
+- The header and content-stage frame stay in place while only the selected composition content changes.
 
-## Not this scene yet
+## Group Motion Example Scene
 
-- No scrubbing/seeking, speed control, reduced-motion toggle, or easing-curve/direction picker — those belong to the fuller playground vision (`v2_stuff/ex1.jpg`), which a later phase covers once the underlying seeking, speed, and reduced-motion features actually exist.
-- Relationship timing modifiers (overlap, start-offset) aren't a separate interactive control — they show up as part of how the Sequence example is composed, not as their own toggle.
-- No navigation to or from other example scenes — this phase ships exactly one; the multi-scene "playground" is future scope.
+**How it's accessed:** Open `examples/group_motion_playground.tscn` in the Godot editor and run the scene.
+
+**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+
+**What the user sees:**
+- The shared `ExampleHeader` with the Group Motion title and subtitle.
+- A stage containing a single row or column of shared `StateCard` artwork cards, each showing a different Region from the shared atlas. The collection is never presented as a grid.
+- One selector for Sequential, Parallel, and Stagger playback.
+- One selector for First, Last, Center, Odd, Even, Random, and Index ordering.
+- The shared playback controls for restarting the selected motion and playing its reverse.
+
+**What the user can do:**
+- Choose a playback mode.
+- Choose an ordering mode.
+- Restart the selected group motion or play it in reverse.
+
+**What happens on action:**
+- Choosing playback or ordering restarts the card animation from its starting state with the selected combination.
+- Restart plays the selected combination forward again.
+- Reverse plays the same resolved card collection backward.
+
+## Motion Composer — Group Setup
+
+**How it's accessed:** In the Motion Composer, add a Group Motion or select an existing Group Motion from the current motion.
+
+**How the user gets back:** Select another motion in the Composer or return to the parent motion.
+
+**What the user sees:**
+- The selected group’s target collection and shared item motion.
+- Group settings for playback, distribution, ordering, filters, completion, reverse order, and empty or invalid targets.
+- Only the settings that apply to the selected option.
+- An Inspect action for the resolved collection and a preview action for the authored group.
+
+**What the user can do:**
+- Configure one Group Motion.
+- Open its inspection view or preview the configuration.
+
+**What happens on action:**
+- Editing a setting updates the same Group Motion used by code authoring.
+- Opening inspection shows the current group’s resolved targets and validation state.
+- Preview plays the current configuration; the author can stop it or play it in reverse, then continue editing.
+
+## Motion Composer — Group Inspection
+
+**How it's accessed:** Choose Inspect from Group Setup.
+
+**How the user gets back:** Return to Group Setup.
+
+**What the user sees:**
+- The resolved target list in the collection’s current order.
+- The group’s generated start timing as per-target details, without a timeline view.
+- Validation and compile eligibility, with a plain-language reason when compilation is blocked.
+
+**What the user can do:**
+- Validate the group or compile an eligible group.
+- Return to Group Setup to change the configuration.
+
+**What happens on action:**
+- Validation refreshes the displayed issues for the current configuration.
+- Compiling an eligible group produces its native Animation; blocked groups remain in the inspection view with the reason shown.

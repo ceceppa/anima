@@ -4,94 +4,74 @@
 
 | | |
 |---|---|
-| Runtime / framework | Godot 4.3 (GDScript), addon under `addons/` |
+| Runtime / framework | Godot 4.3, addon runtime |
 | Language | GDScript |
-| Data / storage | None — motions are in-memory Resource objects; no persistence layer |
-| Main interfaces | `Anima.play(motion, node = null)` runtime playback entry point; `Anima.of(node)` lightweight node-proxy surface; typed `AnimaMotion` Resource hierarchy; `Motion` static builder; `AnimaBehaviour` per-node config resource (attached via node metadata, not yet consumed at runtime) |
-| Testing | GUT ([bitwes/Gut](https://github.com/bitwes/Gut)) — already installed and enabled as an editor plugin; the project's committed test runner (see `project-rules.md` §Testing for coverage expectations) |
-| Key constraints | No mandatory autoload; the legacy v0.x implementation has been removed from the repository entirely (not kept alongside) |
+| Data / storage | Godot `Resource` and scene serialization; no separate persistence layer |
+| Main interfaces | Anima runtime facade, `Motion` builder, `AnimaMotion` resource graph, Motion Composer |
+| Testing | GUT |
+| Key constraints | Ordinary Godot nodes; one motion resource model for code and editor; no legacy compatibility API |
 
 ## Tech stack
 
-Godot 4.3, GDScript only. No GDExtension/native code in Phase 1 — see Out of Scope for the native-accelerator gate criteria.
+Godot 4.3 through stable Godot 4.x, implemented in GDScript. The JavaScript toolchain is documentation-only; GUT is the test runner.
 
 ## Libraries & dependencies
 
 | Category | Decision | Why | Install |
-|----------|----------|-----|---------|
-| Core runtime | None — pure GDScript, Godot 4.3 stdlib | No external dependency needed for resource composition + a per-frame loop | n/a |
-| Testing | GUT ([bitwes/Gut](https://github.com/bitwes/Gut)), already installed at `addons/gut` | Matches the existing project's test convention; avoids a second test runner | Already present |
+|---|---|---|---|
+| Testing | GUT (already installed) | Keeps group unit and integration coverage under the established runner | Already present |
+| Documentation | VuePress 1.9.10 with its committed plugins | Existing documentation toolchain | Already present |
 
 ## Data model
 
 | Entity | Fields | Notes |
-|--------|--------|-------|
-| `AnimaMotion` (base) | `display_name: String`, `enabled: bool`, `delay: float`, `delay_basis: AFTER_PREVIOUS_ENDS \| AFTER_PREVIOUS_STARTS` (default `AFTER_PREVIOUS_ENDS`), `speed: float`, `tags: Array[String]`, `metadata: Dictionary` | Base Resource every composite/leaf extends. Contract: `estimate_duration() -> AnimaDuration` / `create_runtime()` / `validate()`. Defaults: `delay = 0.0`, `speed = 1.0`. `tags` is optional categorisation metadata — no logic reads or filters on it. `delay` may be negative (an overlap); `delay_basis` picks which sibling instant it's relative to (see Key technical decisions). Only `AnimaSequence` consumes `delay`/`delay_basis` this phase. |
-| `AnimaDuration` | `kind: FIXED \| ESTIMATED \| DYNAMIC \| INFINITE`, `seconds: float` (meaningful for `FIXED`/`ESTIMATED`; `0.0` and unused for `DYNAMIC`/`INFINITE`) | Return type of `estimate_duration()`. Replaces the Phase 1 plain-`float` contract (see ⚠️ Note). |
-| `AnimaSequence` (composite) | `children: Array[AnimaMotion]` | Completes when the last enabled child completes. Each child's effective start now honours its own `delay`/`delay_basis` — see Key technical decisions. |
-| `AnimaParallel` (composite) | `children: Array[AnimaMotion]`, `completion_policy: ALL_CHILDREN \| FIRST_CHILD \| NAMED_CHILD` (default `ALL_CHILDREN`), `completion_child_name: String` | Default mirrors Sequence's "wait for everything" behaviour; narrower policies are an explicit opt-in. Does not consume `delay`/`delay_basis` this phase. |
-| `AnimaStagger` (composite) | `template: AnimaMotion`, `targets: Array[Node]`, `interval: float` (default `0.05`), `order: FORWARD \| REVERSE \| FROM_CENTER \| FROM_EDGES \| RANDOM \| CUSTOM` (default `FORWARD`), `custom_order: Array[int]` (used only when `order = CUSTOM`; explicit target indices) | One `template` instance is created per entry in `targets`, started `interval` seconds apart in the resolved order. Ignores the `target` passed to its own `advance()` — see Key technical decisions. |
-| `AnimaRepeat` (composite) | `child: AnimaMotion`, `count: int` (default `1`), `delay_between: float` (default `0.0`), `alternate: bool` (default `false`) | `count` is always finite this phase (see Out of Scope). When `alternate` is `true` and `child` is an `AnimaPropertyMotion`, odd iterations swap `from_value`/`to_value`; reversing a composite `child` is not defined this phase (see Out of Scope). |
-| `AnimaRace` (composite) | `children: Array[AnimaMotion]`, `cancel_remaining: bool` (default `true`) | Completes as soon as the fastest child finishes. "Cancel" means the runtime stops advancing the other children's instances — the same mechanism `AnimaParallel`'s `FIRST_CHILD`/`NAMED_CHILD` policies already use, never `AnimaPlayback.cancel()` (children have no playback of their own). Setting `cancel_remaining = false` has no defined effect this phase. |
-| `AnimaConditional` (composite) | `when_true: AnimaMotion`, `when_false: AnimaMotion`, `condition: Callable` (zero-arg, returns `bool`), `resolution_timing: COMPILE_TIME \| RUNTIME` (default `RUNTIME`) | `COMPILE_TIME`: `estimate_duration()` calls `condition` immediately and returns the selected branch's own `AnimaDuration`. `RUNTIME` (default, safer): `estimate_duration()` returns `Kind.DYNAMIC` without calling `condition`; the branch is selected once, inside `create_runtime()`, and that branch's instance drives `advance()` from then on. |
-| `AnimaPropertyMotion` (leaf) | `target_property: NodePath`, `from_value: Variant` (null = read current value at start), `to_value: Variant`, `duration: float`, `ease: AnimaEase` (default: new `AnimaEase` with `kind = LINEAR`) | Only leaf type. Reads/writes the target via Godot's built-in `set`/`get`. Chainable methods: `.duration(value: float) -> AnimaPropertyMotion`, `.ease(value: AnimaEase) -> AnimaPropertyMotion` (each sets the field and returns `self`, for the builder API). Reports `AnimaDuration.Kind.FIXED` for every ease except `SPRING`, which reports `ESTIMATED` (settle time estimated from the spring's parameters) — see Key technical decisions. |
-| `AnimaEase` | `kind: LINEAR \| POLYNOMIAL \| SINE \| EXPONENTIAL \| CIRCULAR \| BACK \| BOUNCE \| ELASTIC \| CUBIC_BEZIER \| CURVE \| CALLABLE \| DECAY \| CUSTOM_SAMPLED \| SPRING`, `exponent: float` (default `2.0`, `POLYNOMIAL` only), `back_overshoot: float` (default `1.70158`, `BACK` only), `elastic_amplitude: float` (default `1.0`) / `elastic_period: float` (default `0.3`, `ELASTIC` only), `bezier_p1: Vector2` / `bezier_p2: Vector2` (default `(0.42, 0)` / `(0.58, 1)`, `CUBIC_BEZIER` only), `curve: Curve` (`CURVE` only), `evaluator: Callable` (`(t: float) -> float`, `CALLABLE` only), `decay_rate: float` (default `0.998`, `DECAY` only), `custom_samples: PackedFloat32Array` (`CUSTOM_SAMPLED` only), `spring_model: SIMPLE \| ADVANCED` (default `SIMPLE`), `spring_response: float` (default `0.5`, `SIMPLE` only), `spring_bounce: float` (default `0.0`, range `-1..1`, `SIMPLE` only), `spring_mass: float` (default `1.0`, `ADVANCED` only), `spring_stiffness: float` (default `100.0`, `ADVANCED` only), `spring_damping: float` (default `10.0`, `ADVANCED` only), `spring_initial_velocity: float` (default `0.0`), `spring_completion_mode: STRICTLY_SETTLED \| VISUALLY_SETTLED \| FIXED_PREVIEW_DURATION \| MANUAL` (default `STRICTLY_SETTLED`), `spring_settle_velocity: float` (default `0.01`), `spring_settle_distance: float` (default `0.001`), `spring_preview_duration: float` (default `1.0`, `FIXED_PREVIEW_DURATION` only) | `evaluate(t: float) -> float` is the shared contract for every non-`SPRING` kind. `SPRING` is stateful and does not implement `evaluate(t)` — see Key technical decisions. |
-| `AnimaNodeProxy` | `target: Node`; constants `DEFAULT_DURATION: float = 0.3`, `DEFAULT_EASE: AnimaEase` (`kind = SINE`) | Returned by `Anima.of(node)`. `to(property: NodePath, to_value: Variant, duration: float = DEFAULT_DURATION, ease: AnimaEase = DEFAULT_EASE) -> AnimaPlayback` builds and plays one `AnimaPropertyMotion`. `transition_to(properties: Dictionary, duration: float = DEFAULT_DURATION, ease: AnimaEase = DEFAULT_EASE) -> AnimaPlayback` builds an `AnimaParallel` of one `AnimaPropertyMotion` per `{property: NodePath -> value}` entry. `enter() -> AnimaPlayback` / `exit() -> AnimaPlayback` play a built-in default (`modulate:a` 0→1, or current→0, over `DEFAULT_DURATION`) when the node has no attached `AnimaBehaviour` — see Key technical decisions. |
-| `AnimaBehaviour` | `motion_id: String` (default `""`), `motion_in: AnimaMotion` (nullable), `motion_out: AnimaMotion` (nullable), `play_in_on_ready: bool` (default `false`), `hide_after_out: bool` (default `false`), `default_duration: float` (default `0.3`), `default_ease: AnimaEase` (nullable → falls back to linear), `layout_transition_enabled: bool` (default `false`), `state_bindings: Dictionary` (default `{}`, reserved — no runtime consumer this phase), `reduced_motion: SYSTEM \| ENABLED \| DISABLED` (default `SYSTEM`) | Configuration only — nothing reads `motion_in`/`play_in_on_ready`/etc. yet. Attached via `Anima.attach_behaviour(node, behaviour)`; stored in node metadata (`set_meta("_anima_behaviour", ...)`) plus membership in a private group (`"_anima_enabled"`) for discovery. Retrieved via `Anima.get_behaviour(node) -> AnimaBehaviour` (`null` if none attached). Node metadata persists with the scene on save — no separate storage format. |
-| `AnimaPlayback` | `motion: AnimaMotion`, `target: Node`, `state: PLAYING \| PAUSED \| CANCELLED \| FINISHED`, `finished` (Signal) | Returned by `Anima.play()`. Methods: `pause()` → `PAUSED`, animated values freeze in place; `resume()` → `PLAYING` from the paused position; `cancel()` → `CANCELLED`, resolves `finished` as not-success; `retarget(new_to_value: Variant) -> void`, valid only when the motion is a single `AnimaPropertyMotion` using a `SPRING` ease — updates the destination in place, preserving current value/velocity, instead of restarting (an error on any other motion shape). `finished` fires exactly once, on `FINISHED` or `CANCELLED`. |
-| `AnimaRuntime` | `active_playbacks: Array[AnimaPlayback]` | Lazily created on the first `Anima.play()` call; owns the central per-frame evaluation loop. No `project.godot` autoload entry required. |
-| `Anima` (entry point) | static `play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback`; static `of(node: Node) -> AnimaNodeProxy`; static `attach_behaviour(node: Node, behaviour: AnimaBehaviour) -> void`; static `get_behaviour(node: Node) -> AnimaBehaviour` | Thin static facade; delegates to `AnimaRuntime`. Declared via `class_name Anima`, not an autoload. `target` on `play()` is optional — omit it when the top-level motion supplies its own targets (`AnimaStagger`); every other motion type still requires it. |
-| `Motion` (builder) | static factories: `sequence(children: Array[AnimaMotion]) -> AnimaSequence`, `parallel(children: Array[AnimaMotion]) -> AnimaParallel`, `stagger(targets: Array[Node], template: AnimaMotion, interval: float) -> AnimaStagger`, `repeat(child: AnimaMotion, count: int) -> AnimaRepeat`, `race(children: Array[AnimaMotion]) -> AnimaRace`, `conditional(condition: Callable, when_true: AnimaMotion, when_false: AnimaMotion) -> AnimaConditional`, `to(target_property: NodePath, to_value: Variant) -> AnimaPropertyMotion` | Thin factory + chaining layer over the existing resource model — builds the same resources direct construction does, nothing new at runtime. Takes an `Array[AnimaMotion]` for multi-child factories rather than variadic arguments (GDScript has no true variadics); this is a deliberate divergence from the PRD's illustrative comma-separated syntax. No named presets (`fade_in`, etc.) this phase — see Out of Scope. |
+|---|---|---|
+| `AnimaMotion` | display name, enabled, delay, speed, tags, metadata | Base Resource for all leaf and composite motions. |
+| `AnimaGroupMotion` | `target_collection`, `item_motion`, `playback_mode`, `distribution`, `order`, `sequential_gap`, `completion_policy`, `reverse_order_policy`, `invalid_target_policy`, `empty_group_policy` | One Resource model for every group mode; configuration is serialized and shared by code and the Motion Composer. |
+| `AnimaTargetCollection` | collection kind, reference data, filters, resolution timing | Children, explicit, scene-group, descendant, or runtime-callable targets. |
+| `AnimaGroupDistribution` | `mode`, `stagger_interval`, `total_stagger_duration`, `ease` | Fixed interval or total spread across ranks. |
+| `AnimaGroupOrder` | `kind`, `origin`, `origin_index`, `origin_point`, coordinate space, seed, grid columns, custom ordering | Origin-specific fields are required only by their matching kind. |
+| `AnimaGroupPlayback` | resolved targets, ordered targets, ranks, start offsets, active/completed item records, random seed, state | Runtime-only state; each item receives an independent runtime instance of the shared item motion. |
+| `AnimaExecutionRecord` | resolved target identity, order, ranks, offsets, completion state, selected seed | Retained for reversal, tracing, and deterministic replay. |
 
-Test data: a demo scene with one Control/Node2D node and 2-3 `AnimaPropertyMotion` leaves composed via Sequence/Parallel is enough to verify every Phase 1 Exit Criterion. Phase 3 needs a scene with several nodes (for `AnimaStagger`'s `targets` and `AnimaRace`/`AnimaConditional` branches) — this is what the phase's own example-scene item builds.
+`playback_mode` is `SEQUENTIAL`, `PARALLEL`, or `STAGGERED`. Staggered playback uses exactly one distribution mode: `FIXED_INTERVAL` or `TOTAL_DURATION`. Its interval and total-duration fields own the corresponding delay; `sequential_gap` owns the post-completion delay.
 
-## Storage strategy
+`order.kind` is forward, reverse, centred, edge, random, grid, distance, explicit, or custom. `order.origin` is `FIRST`, `LAST`, `CENTER`, `INDEX`, or `POINT`; index and point values are required only for their matching origin. Grid columns own non-inferred grid resolution. A seed makes random order deterministic and is retained in the execution record.
 
-None beyond Godot's own scene serialization. Motions are constructed and held as in-memory Resource objects; if a developer chooses to save one as a `.tres`, that's Godot's own resource-saving mechanism, not something Anima adds. `AnimaBehaviour` resources attached via node metadata persist with the scene file itself (Godot serializes node metadata on save) — no separate database or file format.
+## Group animation semantics
+
+The former v1 animation types are expressed as resource configuration, never as a compatibility enum or API:
+
+| v1 behaviour | Anima 2 semantics |
+|---|---|
+| FROM_TOP / FROM_BOTTOM | `FORWARD` / `REVERSE` resolved order with a first-origin stagger |
+| FROM_CENTER | centre origin; distance from the middle determines rank |
+| TOGETHER | `PARALLEL`; all stagger settings are ignored |
+| ODDS_ONLY / EVEN_ONLY | index-parity target filter before ordering and scheduling |
+| RANDOM | seeded random order, retained for replay and reverse |
+| FROM_INDEX | index origin; rank is absolute distance from the chosen resolved-list index |
+
+Even-centre targets share rank zero. An index origin ranks by absolute distance, so equal-distance targets begin as one wave; grids use the same rule. “Top” and “bottom” mean resolved collection order unless an explicit spatial order is selected.
+
+`order.origin = FIRST` is the default when no origin is specified, matching top-to-bottom list traversal.
 
 ## Key technical decisions
 
-- Every motion type extends `AnimaMotion`; the scheduler treats Sequence/Parallel/Property polymorphically through `estimate_duration()` / `create_runtime()` / `validate()` — no type-specific branching in the scheduler itself.
-- One central per-frame evaluation loop advances all active playbacks (not one Tween per property), per the phase brief's principle.
-- No per-property ownership tracking in Phase 1: if two active motions write the same node property, the later per-frame write wins. Deliberately unguarded until the deferred ownership-tracking backlog item lands.
-- No interruption policy in Phase 1: calling `Anima.play()` again on a node with an existing playback starts an independent second playback; nothing auto-cancels the first. Any resulting property conflict falls under the last-write-wins rule above.
-- The legacy v0.x implementation (`addons/anima/core`, `addons/anima/utils`, `addons/anima/animations`, its demos, and its tests) has been deleted from the repository rather than kept alongside the new implementation — a deliberate, accepted breaking change for external projects still depending on the installed v0.x addon. It remains recoverable from git history if ever needed for reference. `AnimaLegacy` is still reserved for the deferred dictionary-compatibility shim (a separate, not-yet-built class) and is unaffected by this removal.
-- Duration-kind combining rule for any composite with more than one duration-contributing source (`AnimaSequence`, `AnimaParallel` under `ALL_CHILDREN`, `AnimaStagger`, `AnimaRepeat`, `AnimaRace`): the worst kind wins, in priority order `INFINITE > DYNAMIC > ESTIMATED > FIXED`. Once every source is `FIXED`, each composite has its own numeric rule for `seconds` — the shape of the composite decides whether that's a sum, a max, or a min, not one shared formula:
-  - `AnimaSequence` (serial): sum of children's `seconds`.
-  - `AnimaParallel`/`ALL_CHILDREN` (concurrent, waits for slowest): max of children's `seconds`.
-  - `AnimaRepeat` (serial repetition): `count × child.seconds + (count - 1) × delay_between`.
-  - `AnimaStagger` (concurrent, offset starts — every target runs the same `template`, so its kind is simply the template's kind): `(targets.size() - 1) × interval + template.seconds`. Not a sum of per-target durations — a literal sum would overstate the composition's actual wall-clock length, since targets start staggered rather than end-to-end.
-  - `AnimaRace` (concurrent, completes on the fastest child): min of children's `seconds`.
-  `AnimaParallel` under `FIRST_CHILD`/`NAMED_CHILD`, and `AnimaConditional`, instead defer entirely to one specific child/branch's own `AnimaDuration` — no combining.
-- `AnimaSequence` child timing: a child's effective start is `delay` seconds after either the previous child's end (`delay_basis = AFTER_PREVIOUS_ENDS`, the default — a negative `delay` is an overlap) or the previous child's start (`AFTER_PREVIOUS_STARTS`). The first child has no predecessor, so both bases resolve to "relative to the sequence's own start" for it.
-- `AnimaStagger` ignores the `target` argument its own `advance()` receives; it drives each entry in its own `targets` array through its own instance of `template.create_runtime()` instead. This is why `Anima.play()`'s `target` parameter became optional — a top-level `AnimaStagger` doesn't need one.
-- `AnimaRace`/`AnimaParallel` "cancelling" a losing child never goes through `AnimaPlayback.cancel()` — children are internal instances with no playback of their own; cancelling means the runtime simply stops calling `advance()` on that instance, identical to how `AnimaParallel`'s narrower completion policies already work.
-- `AnimaEase`'s `SPRING` kind is stateful, not a pure function of normalized time — it does not implement `evaluate(t)`. The runtime advances it frame-by-frame from the target's current value/velocity, the same per-frame model every other motion already uses; this is why a `SPRING`-eased leaf reports `ESTIMATED` duration (derived from its parameters) instead of `FIXED`.
-- Retargeting a spring (`AnimaPlayback.retarget()`) changes the destination value only — it never resets the spring's current value or velocity, and it is defined only for a single `AnimaPropertyMotion` using a `SPRING` ease; retargeting a composite motion is unsupported this phase.
-- `Anima.of(node)`'s `enter()`/`exit()` fall back to a fixed built-in `modulate:a` fade when the node has no attached `AnimaBehaviour`. Reading a behaviour's own `motion_in`/`motion_out` instead is the deferred `AnimaBehaviour`-bound integration, not this phase.
-- `AnimaBehaviour` is stored via node metadata plus a private discovery group, never a hidden child node or a new node subclass — resolves the storage-mechanism decision in the PRD's own favoured direction (re-evaluate only if metadata serialization proves impractical).
-- Spring's default parameter surface is `spring_model = SIMPLE` (response/bounce); the advanced physics fields (mass/stiffness/damping) live on the same resource for authors who need them, with no editor UI yet to switch between the two — resolves the open default-visibility decision.
+- Target filters run before ordering. Odd/even filters use zero-based resolved-list parity and cannot be combined with each other.
+- Parallel groups start all valid targets together and use their completion policy; sequential groups wait for the actual completion of each item; staggered groups schedule by rank regardless of individual duration.
+- Lifecycle changes, duplicate/empty targets, and reversal are explicit states. Reversal reuses the execution record and never reshuffles random order.
+- The Composer shows configuration, resolved targets, ranks, offsets, and critical path; timeline rows are derived, not source motions.
+- Compilation requires static deterministic resolution; runtime-only sources, live membership, callbacks, unresolved references, and non-deterministic order block it.
+- Reduced motion may remove staggering or simplify presentation while preserving visibility and completion. Tests cover parity, origins, waves, and deterministic random seeds.
 
 ## Out of Scope
 
-- No GDExtension/native-code accelerator. Reconsidered only once all three hold: a reproducible benchmark shows a significant bottleneck in Anima's own evaluation loop (not property writes/layout), a native implementation would meaningfully help, and build/release automation covers the needed platforms. Not built in the initial release; GDScript remains the fallback.
-- No dedicated animated-node subclasses (`AnimatedButton`, `AnimatedPanel`, etc.) — Anima always attaches to ordinary nodes.
-- No mandatory `project.godot` autoload entry for the runtime to function.
-- No target-collection/selector system (`AnimaTargetSelector` or similar) — `AnimaStagger` takes a plain `targets: Array[Node]` this phase; resolving targets from a group, grid, or other dynamic source is a separate, later backlog item.
-- No named motion presets (`fade_in`, `tada`, etc.) in the builder API — `Motion` only exposes generic factories this phase; presets are a separate, later backlog item.
-- `AnimaParallel` does not consume `delay`/`delay_basis` this phase — only `AnimaSequence` does.
-- `AnimaRepeat`'s `alternate` mode is defined only for an `AnimaPropertyMotion` child (swaps `from_value`/`to_value` on odd iterations); reversing a composite child (`AnimaSequence`, `AnimaParallel`, etc.) under `alternate` is undefined until the separate reversibility epic lands.
-- `AnimaRace.cancel_remaining = false` has no defined effect — the field exists for future extensibility only.
-- Spring/easing reversal (exact-timeline replay vs. physical retarget-to-start) is undefined until the separate reversibility epic lands — every motion type, including springs, only runs forward or retargets forward.
-
-## Platform constraints
-
-Supported Godot range: 4.3 through the latest stable 4.x release. Godot 3.x is unsupported. No formal LTS-style deprecation window pre-1.0 — if a future 4.x minor requires a breaking change on Anima's side, the minimum version is bumped and noted in the changelog rather than maintained across both. No mobile/web/platform-specific behaviour in Phase 1.
+- Legacy dictionary or group-migration compatibility layers.
+- A heterogeneous per-target motion mapping resource; groups apply one item motion template.
+- Native-code acceleration or an ECS architecture.
 
 ## Product principle constraints
 
-- **Relationships before timestamps** — the scheduler resolves relative structure (Sequence/Parallel) into per-frame values; no public API accepts an absolute start time.
-- **Composition over inheritance** — `AnimaMotion` and its subtypes are Resources played against ordinary nodes via `Anima.play()`; nothing subclasses `Node`. `Anima.of()` and `AnimaBehaviour` hold to the same rule — a proxy object and node metadata, never a node subclass.
-- **Static motion compiles, dynamic motion stays dynamic** — a `SPRING`-eased motion is runtime state by definition (interruptible, retargetable); it is never a candidate for native-`Animation` compilation.
-
-⚠️ Note: `estimate_duration()` returns `AnimaDuration` (a kind + seconds). `AnimaPropertyMotion` reports `FIXED` for every ease except `SPRING`, which reports `ESTIMATED`. `AnimaConditional` reports `DYNAMIC` unless `resolution_timing = COMPILE_TIME`. No leaf reports `INFINITE` yet — reserved for true infinite repeat, still deferred.
+- Group timing derives from relationships, ranks, and completion, not user-managed absolute timestamps.
+- The same `AnimaGroupMotion` Resource is the source of truth for code, Inspector, and Motion Composer authoring.
+- Deterministic execution records make random, centred, and index-origin groups inspectable and reversible.

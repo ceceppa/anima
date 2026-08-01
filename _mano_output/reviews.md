@@ -124,3 +124,34 @@ No feedback logged.
 
 - Phase 3's review lesson repeated exactly: automated tests can't catch "this is still confusing" — only a person actually running the demo caught Conditional's usability problem, and only after it had already shipped once.
 - A project rule introduced mid-phase needs its own tracked follow-up story to reach code that shipped before the rule existed — a new rule doesn't retroactively apply itself to already-written code.
+
+---
+
+## Phase 5 Review — 2026-07-31
+
+### What worked
+
+- Every new curve kind (back/bounce/elastic/cubic-Bezier/curve-resource/callable-evaluator/decay/custom-sampled) and the spring kind landed as additions to the existing `AnimaEase` resource, with no new easing class introduced — matching the phase's design principle that a spring is "just another `AnimaEase` kind."
+- `Anima.of($Node)` shipped as a thin proxy over `Anima.play()`, exactly as scoped — no parallel authoring system.
+- `AnimaBehaviour` attaches to and is discoverable from an ordinary node (via metadata + a private group) with zero subclassing, resolving the phase's open spec question on storage mechanism in the source document's recommended direction.
+- The in-editor hover-help gap flagged in Phase 4's review was closed across the entire public API, old and new, in one sweep (story-6) — not just this phase's additions.
+
+### What didn't
+
+- No defects or refinements were reported during this review — all three assumptions held and no follow-up feedback was logged.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| The spring completion/retargeting model built this phase is the foundation the later reversibility epic (`playback.reverse()`, `retarget_to_start()`) will build on — this phase implements forward spring behaviour only, not reversal. | If reversal needs a different underlying spring representation than what ships here, the spring model may need reworking once the reversibility epic starts. | Held as assumed — confirmed by user review. | confirmed |
+| The standalone `Anima.of` proxy shipped this phase is a deliberately narrowed version of the PRD's full proxy, which also covers `AnimaBehaviour`-bound nodes — that integration is separate follow-on work, not this phase. | If `Anima.of`'s standalone shape doesn't accommodate reading an attached `AnimaBehaviour` cleanly, the follow-on integration may need to rework this phase's proxy shape. | Held as assumed — confirmed by user review. | confirmed |
+| `AnimaBehaviour`'s state-bindings field is scoped this phase as a reserved, non-functional slot — the deferred "State bindings for common control states" item is what actually makes it do anything. | If the field's shape doesn't match what the binding behaviour needs later, that later item may need to change the field instead of just building on it. | Held as assumed — confirmed by user review. | confirmed |
+
+### Feedback that changes future scope
+
+No feedback logged.
+
+### What we learned
+
+- No new lessons surfaced this review — the phase closed cleanly against its own goal and assumptions.

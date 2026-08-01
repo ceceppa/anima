@@ -1,274 +1,44 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Anima — Design Preview</title>
-<style>
-  :root {
-    --bg: #0A0E1A;
-    --surface: #121826;
-    --stage-bg: #0E1420;
-    --dock-bg: rgba(18, 24, 38, 0.85);
-    --text-primary: #F8FAFC;
-    --text-secondary: #94A3B8;
-    --accent: #4F46E5;
-    --accent-text: #818CF8;
-    --positive: #2DD4BF;
-    --positive-fill: #0D9488;
-    --border: #1E293B;
-    --radius-md: 12px;
-    --radius-dock: 16px;
-    --radius-lg: 24px;
-    --radius-full: 9999px;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
-    padding: 48px 32px 96px;
-  }
-  h1 { font-size: 24px; font-weight: 700; margin: 0 0 4px; }
-  h2 { font-size: 18px; font-weight: 600; margin: 48px 0 16px; padding-top: 24px; border-top: 1px solid var(--border); }
-  p.sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 32px; }
-  p.note { color: var(--text-secondary); font-size: 12px; margin: 8px 0 0; }
-
-  .swatches { display: flex; flex-wrap: wrap; gap: 16px; }
-  .swatch { width: 140px; }
-  .swatch-color { height: 64px; border-radius: var(--radius-md); border: 1px solid var(--border); }
-  .swatch-label { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
-  .swatch-hex { font-size: 12px; color: var(--text-primary); font-family: monospace; }
-
-  .type-row { display: flex; align-items: baseline; gap: 16px; margin-bottom: 12px; }
-  .type-label { width: 180px; font-size: 12px; color: var(--text-secondary); }
-
-  .icon-btn {
-    width: 36px; height: 36px; border-radius: var(--radius-md);
-    border: 1px solid var(--border); background: var(--surface);
-    display: inline-flex; align-items: center; justify-content: center;
-    color: var(--text-primary); font-size: 16px;
-  }
-  .icon-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  /* Shared header */
-  .example-header {
-    display: flex; align-items: center; gap: 16px;
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    padding: 24px 32px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.24);
-    max-width: 760px;
-  }
-  .header-icon {
-    width: 40px; height: 40px; border-radius: var(--radius-md);
-    background: var(--accent); color: #fff;
-    display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
-  }
-  .header-title { font-size: 28px; font-weight: 700; line-height: 1.15; }
-  .header-subtitle { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
-
-  /* Content stage */
-  .stage {
-    position: relative; overflow: hidden;
-    background: var(--stage-bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.32);
-    padding: 40px; max-width: 760px;
-  }
-  .stage-glow {
-    position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(79,70,229,0.08), transparent 70%);
-  }
-  .stage-head { position: relative; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
-  .stage-type-title { font-size: 20px; font-weight: 700; }
-  .stage-type-desc { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
-  .stage-counter { font-size: 12px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-secondary); }
-
-  .cards-row { position: relative; display: flex; align-items: center; justify-content: center; gap: 40px; margin: 24px 0 48px; }
-  .card-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .state-card {
-    width: 96px; height: 96px; border-radius: var(--radius-md); background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; font-weight: 700; transition: all 0.2s ease;
-  }
-  .state-card.idle { border: 1px solid var(--border); color: var(--text-secondary); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  .state-card.animating { border: 2px solid var(--accent); color: var(--accent-text); box-shadow: 0 0 24px rgba(79,70,229,0.35); transform: scale(1.06); }
-  .state-card.settled { border: 2px solid var(--positive); color: var(--positive); box-shadow: 0 0 8px rgba(45,212,191,0.1); }
-  .state-caption { font-size: 11px; color: var(--text-secondary); }
-
-  /* Selector dock */
-  .dock-row { position: relative; display: flex; justify-content: center; }
-  .dock {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: var(--dock-bg); border: 1px solid var(--border); border-radius: var(--radius-dock);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-    padding: 6px; position: relative;
-  }
-  .dock-item {
-    position: relative; z-index: 1;
-    padding: 10px 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600;
-    color: var(--text-secondary); border: none; background: transparent; cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    transition: color 0.14s ease, transform 0.08s ease;
-    font-family: inherit;
-  }
-  .dock-item.selected { color: #fff; }
-  .dock-item:active { transform: translateY(2px) scale(0.97); }
-  .dock-indicator {
-    position: absolute; top: 6px; bottom: 6px; left: 6px;
-    width: 108px;
-    background: var(--accent); border-radius: var(--radius-md);
-    box-shadow: 0 0 16px rgba(79,70,229,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
-    transition: left 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 0;
-  }
-
-  .avatar-large {
-    width: 72px; height: 72px; border-radius: var(--radius-md); background: var(--positive-fill);
-    display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: #fff;
-  }
-  .contrast-note { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anima — Composition Example</title>
+  <style>
+    :root { --bg:#060a16; --surface:#11182a; --stage:#0a1224; --text:#f8fafc; --muted:#a8b4cc; --accent:#7c3aed; --accent-soft:#a78bfa; --positive:#2dd4bf; --border:#26324b; }
+    * { box-sizing:border-box; } body { margin:0; min-height:100vh; display:grid; place-items:center; background:radial-gradient(circle at 50% -10%,#192d5b 0,transparent 35%),var(--bg); color:var(--text); font-family:Inter,system-ui,sans-serif; }
+    .app { width:min(100%,1200px); overflow:hidden; border:1px solid #1b2942; border-radius:20px; background:#080f20; box-shadow:0 24px 70px #0009; }
+    header { display:flex; align-items:center; gap:16px; padding:22px 30px; border-bottom:1px solid var(--border); background:linear-gradient(90deg,#0b1222,#0d1325); }
+    .mark { width:40px; height:40px; border:2px solid var(--accent-soft); border-radius:50%; display:grid; place-items:center; color:var(--accent-soft); box-shadow:0 0 20px #7c3aed66; font-size:20px; }
+    h1 { margin:0; font-size:28px; line-height:1.05; } header p { margin:4px 0 0; color:var(--muted); font-size:14px; }
+    main { margin:24px; padding:28px 32px 24px; border:1px solid #2b3a57; border-radius:24px; background:radial-gradient(ellipse at 50% 46%,#5423a92e 0,transparent 48%),var(--stage); }
+    .title-row { display:flex; justify-content:space-between; gap:16px; align-items:start; } h2 { margin:0; font-size:20px; } .title-row p { margin:6px 0 0; color:var(--muted); } .counter { color:var(--muted); font-size:12px; letter-spacing:.08em; }
+    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:40px auto 32px; max-width:680px; }
+    .card { position:relative; min-height:160px; overflow:hidden; border:1px solid var(--border); border-radius:12px; background:#10182b; box-shadow:0 10px 24px #0005; }
+    .card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,#060a1626,#060a1666); pointer-events:none; }
+    .card svg { display:block; width:100%; height:100%; min-height:160px; }
+    .card.active { border-color:var(--accent-soft); box-shadow:0 0 0 1px #b79cff55,0 0 28px #7c3aed77; transform:translateY(-5px) scale(1.03); }
+    .card.complete { border-color:#2dd4bfaa; }
+    .dock { display:flex; width:max-content; max-width:100%; margin:auto; overflow:auto; padding:5px; border:1px solid var(--border); border-radius:16px; background:#11182ad9; box-shadow:0 12px 30px #0008; }
+    .choice { position:relative; z-index:1; padding:11px 16px; border:0; border-radius:11px; background:transparent; color:var(--muted); font:600 14px/1 Inter,system-ui,sans-serif; white-space:nowrap; }
+    .choice.selected { color:#fff; background:linear-gradient(135deg,#8b5cf6,#6330d6); box-shadow:0 0 18px #7c3aed77; }
+    .swatches { display:flex; gap:10px; padding:0 24px 24px; } .swatch { width:24px; height:24px; border:1px solid #ffffff33; border-radius:50%; }
+    @media (max-width:650px) { header { padding:18px; } h1 { font-size:23px; } main { margin:14px; padding:22px 16px; } .cards { gap:10px; margin:32px 0 24px; } .card { min-height:110px; font-size:34px; } .choice { padding:10px 12px; } }
+  </style>
 </head>
 <body>
-
-  <h1>Anima — Design Preview</h1>
-  <p class="sub">Phase 4 · Composition Example Scene redesign · reference: v2_stuff/ex1.jpg</p>
-
-  <h2>Colour palette</h2>
-  <div class="swatches">
-    <div class="swatch"><div class="swatch-color" style="background:var(--bg)"></div><div class="swatch-label">bg</div><div class="swatch-hex">#0A0E1A</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--surface)"></div><div class="swatch-label">surface</div><div class="swatch-hex">#121826</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--stage-bg)"></div><div class="swatch-label">stage-bg</div><div class="swatch-hex">#0E1420</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--dock-bg)"></div><div class="swatch-label">dock-bg</div><div class="swatch-hex">surface @ 85%</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--text-primary)"></div><div class="swatch-label">text-primary</div><div class="swatch-hex">#F8FAFC</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--text-secondary)"></div><div class="swatch-label">text-secondary</div><div class="swatch-hex">#94A3B8</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--accent)"></div><div class="swatch-label">accent</div><div class="swatch-hex">#4F46E5</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--accent-text)"></div><div class="swatch-label">accent-text</div><div class="swatch-hex">#818CF8</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--positive)"></div><div class="swatch-label">positive</div><div class="swatch-hex">#2DD4BF</div></div>
-    <div class="swatch"><div class="swatch-color" style="background:var(--positive-fill)"></div><div class="swatch-label">positive-fill</div><div class="swatch-hex">#0D9488</div></div>
-  </div>
-
-  <h2>Typography</h2>
-  <div class="type-row"><div class="type-label">Header title / 28·700</div><div style="font-size:28px;font-weight:700;">Composition</div></div>
-  <div class="type-row"><div class="type-label">Header subtitle / 14·400</div><div style="font-size:14px;color:var(--text-secondary);">Combine simple animations into expressive flows.</div></div>
-  <div class="type-row"><div class="type-label">Stage type title / 20·700</div><div style="font-size:20px;font-weight:700;">Sequence</div></div>
-  <div class="type-row"><div class="type-label">Stage type description / 14·400</div><div style="font-size:14px;color:var(--text-secondary);">Runs each animation one after another.</div></div>
-  <div class="type-row"><div class="type-label">Caption / 12·500</div><div style="font-size:12px;font-weight:500;letter-spacing:0.02em;text-transform:uppercase;color:var(--text-secondary);">01 / 05</div></div>
-
-  <h2>Shared example header</h2>
-  <div class="example-header">
-    <div class="header-icon">&#10038;</div>
-    <div>
-      <div class="header-title">Composition</div>
-      <div class="header-subtitle">Combine simple animations into expressive flows.</div>
-    </div>
-  </div>
-  <p class="note">Fixed across every tab switch. Reusable across every future Anima example scene.</p>
-
-  <h2>StateCard — one style, animated directly</h2>
-  <div style="display:flex; gap:24px; align-items:flex-start;">
-    <div class="card-col">
-      <div class="state-card idle">A</div>
-      <div class="state-caption">Not yet animated</div>
-    </div>
-    <div class="card-col">
-      <div class="state-card animating">B</div>
-      <div class="state-caption">Mid-animation</div>
-    </div>
-    <div class="card-col">
-      <div class="state-card settled">C</div>
-      <div class="state-caption">Settled</div>
-    </div>
-  </div>
-  <p class="note">StateCard has no state of its own — these are just three snapshots of the same component while Anima animates its border, glow, label colour, and scale, exactly like it would any other node. Captions here are preview labels only, not a rendered pill or a state the component tracks.</p>
-
-  <h2>Selector dock (click a tab)</h2>
-  <div class="dock-row">
-    <div class="dock" id="dock">
-      <div class="dock-indicator" id="dockIndicator"></div>
-      <button class="dock-item selected" data-w="108">&#8594; Sequence</button>
-      <button class="dock-item" data-w="96">&#8649; Parallel</button>
-      <button class="dock-item" data-w="90">&#8694; Stagger</button>
-      <button class="dock-item" data-w="86">&#10162; Repeat</button>
-      <button class="dock-item" data-w="72">&#8658; Race</button>
-      <button class="dock-item" data-w="110">&#8605; Conditional</button>
-    </div>
-  </div>
-  <p class="note">Indicator slides + resizes to the selected label (260ms, spring-style ease-out). Selected label turns white + bold; unselected stays text-secondary — colour is never the only signal.</p>
-
-  <h2>positive-fill contrast constraint</h2>
-  <div style="display:flex; gap:16px; align-items:center;">
-    <div class="avatar-large">A</div>
-    <div>
-      <div style="font-size:14px;">White text on <code>positive-fill</code> — large/bold display use only</div>
-      <div class="contrast-note">3.7:1 — passes AA for large text (3:1), fails for normal text (needs 4.5:1). Do not use for body or caption text.</div>
-    </div>
-  </div>
-
-  <h2>Sample screen — Composition Example Scene</h2>
-  <div class="example-header" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin-bottom: -1px;">
-    <div class="header-icon">&#10038;</div>
-    <div>
-      <div class="header-title">Composition</div>
-      <div class="header-subtitle">Combine simple animations into expressive flows.</div>
-    </div>
-  </div>
-  <div class="stage" style="border-radius: 0 0 var(--radius-lg) var(--radius-lg);">
-    <div class="stage-glow"></div>
-
-    <div class="stage-head">
-      <div>
-        <div class="stage-type-title">Sequence</div>
-        <div class="stage-type-desc">Runs each animation one after another.</div>
+  <section class="app" aria-label="Composition example scene preview">
+    <header><div class="mark">◉</div><div><h1>Composition</h1><p>Combine simple animations into expressive flows.</p></div></header>
+    <main>
+      <div class="title-row"><div><h2>Stagger</h2><p>Each card begins after the one before it.</p></div><span class="counter">03 / 06</span></div>
+      <div class="cards" aria-label="Animated artwork cards">
+        <div class="card" aria-label="Moonlit mountain artwork"><svg viewBox="0 0 240 160" role="img" aria-hidden="true"><defs><linearGradient id="sky-a" x2="0" y2="1"><stop stop-color="#442879"/><stop offset="1" stop-color="#10244b"/></linearGradient></defs><rect width="240" height="160" fill="url(#sky-a)"/><circle cx="175" cy="42" r="22" fill="#ffbf79" opacity=".9"/><path d="M0 128 55 72l32 37 38-55 80 74v32H0Z" fill="#1b2148"/><path d="m65 118 30-34 24 28 29-37 48 53v32H0Z" fill="#2d3568"/></svg></div>
+        <div class="card active" aria-label="Sunset mountain artwork"><svg viewBox="0 0 240 160" role="img" aria-hidden="true"><defs><linearGradient id="sky-b" x2="0" y2="1"><stop stop-color="#f378a0"/><stop offset="1" stop-color="#6f3fab"/></linearGradient></defs><rect width="240" height="160" fill="url(#sky-b)"/><circle cx="120" cy="66" r="27" fill="#ffd487"/><path d="M0 133 60 83l37 38 37-61 106 73v27H0Z" fill="#3d286b"/><path d="M0 141 68 104l36 23 43-38 93 52v19H0Z" fill="#251a50"/></svg></div>
+        <div class="card complete" aria-label="Ocean wave artwork"><svg viewBox="0 0 240 160" role="img" aria-hidden="true"><defs><linearGradient id="sky-c" x2="0" y2="1"><stop stop-color="#6bd3db"/><stop offset="1" stop-color="#1c567f"/></linearGradient></defs><rect width="240" height="160" fill="url(#sky-c)"/><circle cx="66" cy="43" r="22" fill="#e1ffdc" opacity=".8"/><path d="M0 126c27-37 54-40 82-4 26 33 51 28 78-6 22-29 49-25 80 10v34H0Z" fill="#146d8a"/><path d="M0 144c35-29 71-20 108-3 37 17 83 12 132-9v28H0Z" fill="#0c385f"/></svg></div>
       </div>
-      <div class="stage-counter">01 / 05</div>
-    </div>
-
-    <div class="cards-row">
-      <div class="card-col">
-        <div class="state-card settled">A</div>
-      </div>
-      <div class="card-col">
-        <div class="state-card animating">B</div>
-      </div>
-      <div class="card-col">
-        <div class="state-card idle">C</div>
-      </div>
-    </div>
-
-    <div class="dock-row">
-      <div class="dock">
-        <div class="dock-indicator" style="left:6px; width:108px;"></div>
-        <button class="dock-item selected" style="pointer-events:none;">&#8594; Sequence</button>
-        <button class="dock-item" style="pointer-events:none;">&#8649; Parallel</button>
-        <button class="dock-item" style="pointer-events:none;">&#8694; Stagger</button>
-        <button class="dock-item" style="pointer-events:none;">&#10162; Repeat</button>
-        <button class="dock-item" style="pointer-events:none;">&#8658; Race</button>
-        <button class="dock-item" style="pointer-events:none;">&#8605; Conditional</button>
-      </div>
-    </div>
-  </div>
-
-<script>
-  var dock = document.getElementById('dock');
-  var indicator = document.getElementById('dockIndicator');
-  if (dock) {
-    var items = dock.querySelectorAll('.dock-item');
-    items.forEach(function (item) {
-      item.addEventListener('click', function () {
-        items.forEach(function (i) { i.classList.remove('selected'); });
-        item.classList.add('selected');
-        indicator.style.left = item.offsetLeft + 'px';
-        indicator.style.width = item.offsetWidth + 'px';
-      });
-    });
-    // initial position
-    var first = items[0];
-    indicator.style.left = first.offsetLeft + 'px';
-    indicator.style.width = first.offsetWidth + 'px';
-  }
-</script>
-
+      <nav class="dock" aria-label="Composition type"><button class="choice">Sequence</button><button class="choice">Parallel</button><button class="choice selected" aria-current="true">Stagger</button><button class="choice">Repeat</button><button class="choice">Race</button><button class="choice">Conditional</button></nav>
+    </main>
+    <div class="swatches" aria-label="Palette"><span class="swatch" style="background:#060a16"></span><span class="swatch" style="background:#11182a"></span><span class="swatch" style="background:#7c3aed"></span><span class="swatch" style="background:#2dd4bf"></span></div>
+  </section>
 </body>
 </html>

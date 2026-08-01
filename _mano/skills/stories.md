@@ -96,12 +96,19 @@ When project rules or the tech spec own exact tokens — prop names, attribute n
   - ✅ Do, genuinely split: `Files: compute in src/foo.cpp; commit in src/bar.cpp` (each file's role explicit, no `or`)
   - ✅ Do, genuinely unknown: do not write the entry — flag it in the artifact gap check (Step 0a) so the upstream skill resolves it before the story ships.
 
-**Translate relevant project rules into the Implementation Reference.** Do not rely on the implementer to remember or rediscover project rules. Common translations:
-- Colour constant rules → add named colour constants; forbid inline colour values
-- Accessibility rules → add relevant `A11y` constraints
-- File ownership rules → add relevant `Files` or `Boundaries`
-- Naming rules → point to the exact naming-contract section
-- Shared constants or measurements → require one named source of truth instead of per-file literals, per "Shared Values: One Canonical Home" in workflow.md
+<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
+**Carry every applicable project rule into the story set.** Determine applicability from what each story creates, changes, or exposes; do not rely on the implementer to rediscover the rules file, and do not copy irrelevant rules into every story.
+
+- **Implementation constraint or internal mechanism** — naming, accessibility pattern, shared constant, file boundary, prohibition, or prescribed implementation technique: state the obligation explicitly in `Implementation Reference` and point to the exact `project-rules.md` section. Keep any shared literal in its canonical artifact.
+- **Rule-required outcome or companion deliverable with a direct verification surface** — documentation page, generated artifact, audit record, test result, command result, or user-visible behaviour: make it a concrete `Done when` criterion and name its ownership under `Files`, `Rules`, or the closest relevant field. A reference in `Implementation Reference` alone is not coverage. If a required internal artifact has no independently inspectable outcome, keep it as an explicit Implementation Reference obligation; do not invent UI, editor, or runtime behaviour merely to force it into acceptance criteria.
+- **Cross-cutting deliverable** — keep it in the introducing story by default. If that would make the story oversized or incoherent, create one dedicated story ordered after and dependent on every story that introduces the affected output. Each introducing story must name the rule and the fulfilling story in `Notes`; the dedicated story must enumerate the required outputs and complete before the phase can complete.
+
+When a rule owns a file-placement template, keep the template canonical in the rule but name the concrete files this story creates. That is story ownership, not a second definition of the shared convention.
+
+Examples: a colour-constant rule becomes an explicit no-inline-values constraint under `Implementation Reference`. A documentation rule with two inspectable channels creates two `Done when` criteria — for example, "The API reference page for `WidgetClient` exists with an overview, one minimal example, and its public methods" and "The source documentation for the exported `WidgetClient` states its one-line purpose." Put concrete story-owned paths, required comment placement, and the narrow rule pointer in `Implementation Reference`. A public API identifier is acceptable here because that API is the deliverable being inspected. Do not invent editor-hover behaviour unless the rule requires it. Do not treat inspectable documentation as implementation mechanics and demote it to `Implementation Reference` only; every required channel needs an acceptance criterion. The documentation requirement is not satisfied by mentioning `project-rules.md`, and it cannot be moved to `Not this story` without resolving the scope conflict below.
+
+If an applicable project rule conflicts with something the phase brief excludes, defers, or contradicts, stop before writing the affected stories. Quote the rule and the conflicting phase scope, then ask whether the user wants `mano start` to change the phase or `mano rules` to change the rule. If the user already resolved which artifact governs in this request, apply that correction to the stories and flag the stale owning artifact instead of asking again. Do not silently defer, weaken, or override either artifact.
+<!-- /mano-rule: project-rule-story-coverage -->
 
 If a required constant, token, rule, or shared measurement is needed and no artifact defines its value, do not write "if not yet defined." Make the requirement explicit and point to the owning artifact. If choosing the value would be guesswork, flag it during artifact gap check. If the value already exists in another artifact but with a different number or unit, do not silently pick one — surface the conflict, per "Conflicting Values: Surface, Do Not Reconcile" in workflow.md.
 
@@ -143,6 +150,10 @@ For stateful frontend stories: name what persists across restart, what stays tra
 - **Use observer perspective.** Avoid "A developer…" or "the system does X" phrasing. Describe what the product or user experiences from the outside.
 
 - **Acceptance criteria are observable behaviour.** No implementation tasks. This applies to technical and bug-fix stories too. Function signatures, variable names, type names, formulas, timing of internal computation, and internal logic are not AC.
+
+  <!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
+  Only rule-required outcomes and companion deliverables with a direct verification surface belong in `Done when`: state the inspectable result without inventing a new surface. A public API identifier or artifact name is allowed when that named API or artifact is itself the deliverable being inspected. Keep internal mechanisms, file paths, and construction details in `Implementation Reference`. Do not use the observable-behaviour rule or the "move implementation mechanics" rule to remove an inspectable rule deliverable from the acceptance criteria; do not use this exception to promote an internal-only constraint into acceptance criteria.
+  <!-- /mano-rule: project-rule-story-coverage -->
 
   Good: *Drag a card to another column — the column item counts update as the card moves.*
   Bad: *`move_card` passes `target_column_id` to `recalc_counts` on every drag event.*
@@ -207,6 +218,10 @@ Before drafting the story set, run these against the inputs. Each is a real chec
   Mandatory for user-entered draft state: if the tech spec says onboarding data, forms, preferences, or local entities use durable on-device storage, every story that creates or edits that data must include both a behaviour AC ("saved or draft data is still present after closing and reopening the app") and a corresponding `Test:` AC.
 
 - **Design brief.** If a story introduces or depends on a visual element, component, state, animation, layout, or styling distinction, check the design brief for matching guidance. If guidance exists, reference it in `Implementation Reference` instead of restating it as prose in AC. If no guidance exists and the choice affects the observable outcome, flag it during the artifact gap check.
+
+<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
+- **Project rules (mandatory).** Apply the rule-placement contract above, then complete the project-rule coverage map in Step 0g. An applicable rule with no owning story is an incomplete story set.
+<!-- /mano-rule: project-rule-story-coverage -->
 
 - **Acknowledged risks.** If the phase brief lists `Acknowledged risks`, each risk that describes an interaction, conflict, or possible failure mode the phase could ship with must be addressed by at least one story — covered by an AC that exercises the risk scenario, or explicitly flagged as a deferred concern in that story's `Notes`. Risks named in the brief but not surfaced anywhere in the story set are silently dropped. Pure outside-world risks ("library X may release a breaking change") that cannot be exercised by an AC may be acknowledged in the story set's execution-log `⚠ Verify` line instead.
 
@@ -330,6 +345,10 @@ If sufficient guidance exists, do not warn. Include a compact pointer in `Implem
 - **Rules:** Colour Constants — add named constants for empty-state colours; no inline hex values in rendering code
 ```
 
+<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
+A conflict between an applicable project rule and the phase scope is not a continuable artifact gap. Stop and follow the project-rule conflict rule above; options 2 and 3 do not waive an existing rule.
+<!-- /mano-rule: project-rule-story-coverage -->
+
 **0e. Story reachability.** For each story involving interactive behaviour, screens, endpoints, or any user-triggered action, name:
 - What surface does this behaviour live on? (screen, route, command, endpoint)
 - What user action or call invokes it?
@@ -346,7 +365,18 @@ If wiring lives in another story, that story must already exist and run earlier 
 
 Report the mapping in the execution log only if something was missing and had to be added or flagged. A fully covered goal needs no narration. Never write story files until every element of the phase goal maps to a concrete AC or an explicit flag.
 
-**0g. Vague-AC self-audit.** Before writing any story file, scan every drafted AC across the entire story set for the forbidden vocabulary from the "Define vague correctness words" rule above. Check for *every grammatical form* — adverbial, adjectival, and noun-phrase — of: `correct`/`correctly`, `proper`/`properly`, `smooth`/`smoothly`, `works`, `handles`, `real time`/`real-time`, `instantly`, `seamless`/`seamlessly`. Also flag any AC that consists of a noun phrase with no verb describing what the user observes (e.g. *"correct snap behaviour"*, *"smooth drag interaction"*) — these are placeholder labels, not acceptance criteria.
+<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
+**0g. Project-rule coverage map.** After drafting the story set and before writing any files:
+
+1. For every rule-level section in `project-rules.md` (normally each `##` rule, not its `What` / `Why` / `Pattern` parts), mark it internally as `not applicable` with a concrete reason, or `applicable` to one or more prospective stories. Decompose every normative obligation in `What` plus any explicit `must`, `required`, or `never` elsewhere: each bullet, required channel, `both`, and joined obligation needs its own mapping. Treat rationale and examples as interpretive context, not separate obligations. A single general pointer does not cover a compound rule.
+2. For each applicable obligation, map it to a story and exact location: a `Done when` criterion, an `Implementation Reference` field, or a named dedicated dependent story.
+3. Verify implementation constraints, internal-only artifacts, and internal mechanisms map to `Implementation Reference`; rule-required outcomes and companion deliverables with a direct verification surface map to `Done when`; and every dedicated rule-deliverable story has the ordering, dependencies, producer notes, and complete output list required above.
+4. If any applicable obligation is unmapped, revise the story set. If mapping exposes a phase-scope conflict, stop under the hard-stop rule above.
+
+Do not write story files until the map has no unmapped applicable obligations. Report the mapping in the execution log only when it exposed a conflict or caused a story or criterion to be added; a clean map needs no narration.
+<!-- /mano-rule: project-rule-story-coverage -->
+
+**0h. Vague-AC self-audit.** Before writing any story file, scan every drafted AC across the entire story set for the forbidden vocabulary from the "Define vague correctness words" rule above. Check for *every grammatical form* — adverbial, adjectival, and noun-phrase — of: `correct`/`correctly`, `proper`/`properly`, `smooth`/`smoothly`, `works`, `handles`, `real time`/`real-time`, `instantly`, `seamless`/`seamlessly`. Also flag any AC that consists of a noun phrase with no verb describing what the user observes (e.g. *"correct snap behaviour"*, *"smooth drag interaction"*) — these are placeholder labels, not acceptance criteria.
 
 For each match: rewrite the AC to name the observable behaviour. Do not write the story file with a vague AC and a `TODO` note. Do not defer rewrites to a follow-up `mano stories` run. The audit happens *before* the first file write because every shipped vague AC creates downstream review burden — the hook catches it post-hoc, but the rule already exists and should have caught it pre-hoc.
 
