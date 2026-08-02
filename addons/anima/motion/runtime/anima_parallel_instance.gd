@@ -40,3 +40,14 @@ func advance(target: Node, delta: float) -> bool:
 		if not finished:
 			return false
 	return true
+
+## Builds a reversed [AnimaParallel]: every child that captured a start value
+## gets its own reversed motion, still played together. `null` when no child
+## has captured one yet.
+func build_reversed() -> AnimaMotion:
+	var reversed := AnimaParallel.new()
+	for child_instance in _child_instances:
+		var reversed_child: AnimaMotion = child_instance.build_reversed()
+		if reversed_child != null:
+			reversed.children.append(reversed_child)
+	return reversed if not reversed.children.is_empty() else null

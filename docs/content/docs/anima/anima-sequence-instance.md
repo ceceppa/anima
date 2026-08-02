@@ -26,3 +26,9 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 Children are scheduled by delay/delay_basis (AnimaSequence.compute_schedule())
 rather than strictly starting one after another finishes, so more than one
 child can be active at once when a negative delay overlaps them.
+
+### build_reversed
+
+Builds a reversed [AnimaSequence]: each started child's own reversed
+motion, in reverse start order, keeping each child's own delay/delay_basis.
+`null` when no child has started yet.

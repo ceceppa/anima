@@ -40,25 +40,16 @@ The way a stagger calculates its visible start delays.
 
 ### stagger_interval
 
-The way a stagger calculates its visible start delays.
 The delay between neighbouring stagger positions when [member mode] is
 [constant Mode.FIXED_INTERVAL].
 
 ### total_stagger_duration
 
-The way a stagger calculates its visible start delays.
-The delay between neighbouring stagger positions when [member mode] is
-[constant Mode.FIXED_INTERVAL].
 The delay from the first to last stagger position when [member mode] is
 [constant Mode.TOTAL_DURATION].
 
 ### ease
 
-The way a stagger calculates its visible start delays.
-The delay between neighbouring stagger positions when [member mode] is
-[constant Mode.FIXED_INTERVAL].
-The delay from the first to last stagger position when [member mode] is
-[constant Mode.TOTAL_DURATION].
 Optional curve used to distribute starts between the first and last item.
 
 ## Methods

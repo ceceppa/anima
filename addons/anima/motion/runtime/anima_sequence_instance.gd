@@ -55,3 +55,22 @@ func advance(target: Node, delta: float) -> bool:
 		if not state.finished:
 			return false
 	return true
+
+## Builds a reversed [AnimaSequence]: each started child's own reversed
+## motion, in reverse start order, keeping each child's own delay/delay_basis.
+## `null` when no child has started yet.
+func build_reversed() -> AnimaMotion:
+	var started_states: Array[_ChildState] = []
+	for state in _states:
+		if state.started:
+			started_states.append(state)
+	if started_states.is_empty():
+		return null
+
+	started_states.reverse()
+	var reversed := AnimaSequence.new()
+	for state in started_states:
+		var reversed_child: AnimaMotion = state.instance.build_reversed()
+		if reversed_child != null:
+			reversed.children.append(reversed_child)
+	return reversed if not reversed.children.is_empty() else null

@@ -32,20 +32,14 @@ Motion played when [member condition] returns `true`.
 
 ### when_false
 
-Motion played when [member condition] returns `true`.
 Motion played when [member condition] returns `false`.
 
 ### condition
 
-Motion played when [member condition] returns `true`.
-Motion played when [member condition] returns `false`.
 Zero-argument [Callable] returning a [bool] that picks the branch.
 
 ### resolution_timing
 
-Motion played when [member condition] returns `true`.
-Motion played when [member condition] returns `false`.
-Zero-argument [Callable] returning a [bool] that picks the branch.
 When [member condition] is evaluated.
 
 ## Methods

@@ -1,4 +1,4 @@
-extends Control
+extends ExamplePlayground
 
 enum PlaybackMode { SEQUENTIAL, PARALLEL, STAGGERED }
 enum Ordering { FIRST, LAST, CENTER, ODD, EVEN, RANDOM, INDEX }
@@ -29,6 +29,8 @@ var active_playback: AnimaPlayback = null
 var _group: AnimaGroupMotion = null
 
 func _ready() -> void:
+	super._ready()
+
 	for index in PLAYBACK_LABELS.size():
 		var playback_button: SelectorButton = SELECTOR_BUTTON.instantiate()
 		playback_button.text = PLAYBACK_LABELS[index]

@@ -23,6 +23,12 @@ This skill is a **pointer**, not a contract. The implementation contract is `AGE
 - **Respect order.** If an earlier story is still `pending`, stop and tell the user which story would be skipped. Do not bypass without explicit confirmation.
 - **AC only.** Implement the story's acceptance criteria — nothing beyond them. On a genuine gap, stop and name the Mano flow that owns the decision; do not invent behaviour.
 - **`Not this story` is a hard no.** Every item in the story's out-of-scope section is a prohibition equal to a `Do not:` line — implement none of it. The full rule (including the named-type trap) lives in `AGENTS.md` → "`Not this story` is a hard boundary" — it is authoritative. If an excluded item seems required for the AC to work, that's a gap — stop and surface it.
-- **One-line done.** After implementing, the entire chat response is `Story [N] done — status updated in stories/README.md`. No recap, no checklist, no AC restatement. The only permitted additions are a real deviation or a project-relevant decision worth preserving (offered for capture) — per `AGENTS.md` step 12 and "Implementation Output Discipline". Nothing else.
+- **One-line done (default mode).** After implementing, the entire chat response is `Story [N] done — status updated in stories/README.md`. No recap, no checklist, no AC restatement. The only permitted additions are a real deviation or a project-relevant decision worth preserving (offered for capture) — per `AGENTS.md` step 12 and "Implementation Output Discipline". Nothing else.
+
+<!-- mano-rule: id=dev-yolo-batch; incident=explicit-yolo-stopped-after-one-story; model=codex; date=2026-08-03; eval=dev-yolo-batch,dev-yolo-blocker,dev-default-single -->
+## Explicit YOLO exception
+
+When the invocation is exactly `mano dev yolo` or `mano-dev yolo`, follow `AGENTS.md` → "Execution modes" and its YOLO override to step 12. Process the stories that were pending at invocation sequentially in index order, checkpoint each story with `stories.js set-status`, and return only the exact final aggregate line—with story numbers joined by comma plus space, and without a phase-built, review, recap, or other suffix. This changes how many stories the turn executes and replaces the default-only stop/output shape above; every scope, quality, ordering, and blocker boundary still applies. Without the literal `yolo` modifier, stop after one story as usual.
+<!-- /mano-rule: dev-yolo-batch -->
 
 If this file and `AGENTS.md` ever disagree, `AGENTS.md` wins — fix this pointer.

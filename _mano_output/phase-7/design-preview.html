@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anima — Grid Motion</title>
+  <style>
+    :root { --bg:#060A16; --surface:#11182A; --stage:#0A1224; --text:#F8FAFC; --muted:#A8B4CC; --accent:#7C3AED; --soft:#A78BFA; --border:#26324B; }
+    * { box-sizing:border-box; } body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--text); font-family:Inter, ui-sans-serif, system-ui, sans-serif; }
+    .app { width:min(1040px, calc(100vw - 40px)); padding:28px 0 40px; }
+    header { display:flex; align-items:center; gap:14px; padding:18px 22px; background:var(--surface); border:1px solid var(--border); border-radius:16px; }
+    .mark { display:grid; place-items:center; width:38px; height:38px; color:#fff; border-radius:12px; background:linear-gradient(145deg, #8B5CF6, #5B21B6); box-shadow:0 0 26px #7c3aed66; font-size:20px; }
+    h1, h2, p { margin:0; } h1 { font-size:28px; line-height:1.15; } header p { margin-top:4px; color:var(--muted); font-size:14px; }
+    .stage { position:relative; overflow:hidden; margin-top:24px; padding:28px 32px 30px; border:1px solid var(--border); border-radius:24px; background:radial-gradient(circle at 50% 48%, #41217648, transparent 42%), var(--stage); }
+    .stage::before { content:""; position:absolute; inset:-30%; background:radial-gradient(ellipse, #7c3aed18, transparent 56%); pointer-events:none; }
+    .content { position:relative; } .topline { display:flex; justify-content:space-between; align-items:baseline; gap:20px; } h2 { font-size:20px; } .description { color:var(--muted); font-size:14px; margin-top:6px; }
+    .formula { color:var(--soft); font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+    .label { margin:24px 0 8px; color:var(--muted); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .dock { display:grid; grid-template-columns:repeat(8, 1fr); gap:4px; padding:4px; border:1px solid var(--border); border-radius:16px; background:var(--surface); }
+    .dock span { min-width:0; padding:10px 4px; text-align:center; color:var(--muted); font-size:12px; font-weight:600; border-radius:12px; } .dock .selected { color:#fff; background:var(--accent); box-shadow:0 7px 17px #4c1d9555; }
+    .grid { width:min(610px, 100%); margin:28px auto 4px; display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; }
+    .card { position:relative; aspect-ratio:1.18; overflow:hidden; border:1px solid var(--border); border-radius:12px; background:linear-gradient(135deg, #1B2945, #17213A 52%, #46276D); box-shadow:inset 0 0 0 1px #ffffff08; }
+    .card:nth-child(3n) { background:linear-gradient(135deg, #20354A, #365157 55%, #253C5E); }.card:nth-child(4n) { background:linear-gradient(135deg, #3C214F, #1B2945 60%, #486172); }
+    .card::after { content:""; position:absolute; inset:0; background:linear-gradient(145deg, #ffffff25, transparent 35%, #060a1655); } .card.start { border:2px solid var(--soft); box-shadow:0 0 0 3px #a78bfa2a, 0 0 22px #7c3aed80; }
+    .start b { position:absolute; z-index:1; top:7px; left:7px; padding:3px 5px; border-radius:5px; background:#0A1224e8; color:var(--soft); font-size:9px; letter-spacing:.08em; }
+    .controls { display:flex; justify-content:center; gap:10px; margin-top:24px; } button { padding:10px 17px; border:1px solid var(--border); border-radius:12px; color:var(--text); font:600 13px inherit; background:var(--surface); } button.primary { border-color:#8B5CF6; background:var(--accent); }
+    @media (max-width:720px) { .app { width:min(100% - 24px, 610px); }.stage { padding:22px 16px; }.topline { align-items:flex-start; flex-direction:column; gap:5px; }.dock { grid-template-columns:repeat(4,1fr); }.grid { gap:6px; }.card { border-radius:8px; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header><div class="mark">✦</div><div><h1>Grid Motion</h1><p>See how a wave travels across a group of cards.</p></div></header>
+    <section class="stage"><div class="content">
+      <div class="topline"><div><h2>Euclidean propagation</h2><p class="description">Cards animate outward from the selected start tile.</p></div><div class="formula">Formula · Euclidean</div></div>
+      <div class="label">Order From</div>
+      <div class="dock"><span class="selected">Top</span><span>Bottom</span><span>Center</span><span>Together</span><span>Odd</span><span>Even</span><span>Random</span><span>Index</span></div>
+      <div class="grid" aria-label="Five by five grid of animation cards">
+        <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="card start"><b>START</b></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div>
+        <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div>
+      </div>
+      <div class="controls"><button class="primary">↻ Restart</button><button>↶ Reverse</button></div>
+    </div></section>
+  </main>
+</body>
+</html>

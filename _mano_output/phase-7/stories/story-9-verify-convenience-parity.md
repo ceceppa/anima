@@ -18,7 +18,7 @@ Depends on: stories 1 through 8.
 
 #### Implementation Reference
 - **Files:** `tests/Anima.integration.convenience-parity.test.gd`
-- **Contract:** `_mano_output/tech-spec.md §Convenience performance budget`; `§Target-bound authoring contract`
+- **Contract:** `_mano_output/tech-spec.md §Convenience performance budget`; `§Target-bound authoring contract`; `§Convenience method interface`; `§Key technical decisions`
 - **Rules:** `_mano_output/project-rules.md §Testing`
 
 ---

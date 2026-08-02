@@ -26,31 +26,32 @@ The property to animate, e.g. `NodePath("position:x")`.
 
 ### from_value
 
-The property to animate, e.g. `NodePath("position:x")`.
 Starting value. `null` reads the target's current value when playback starts.
 
 ### to_value
 
-The property to animate, e.g. `NodePath("position:x")`.
-Starting value. `null` reads the target's current value when playback starts.
-Value to animate to.
+Value to animate to. Interpreted as an absolute destination, unless
+[member relative] is `true` — see [member relative].
 
 ### duration
 
-The property to animate, e.g. `NodePath("position:x")`.
-Starting value. `null` reads the target's current value when playback starts.
-Value to animate to.
 How long the motion takes, in seconds. Unused when [member ease] is
 [constant AnimaEase.Kind.SPRING] — a spring settles on its own instead.
 
 ### ease
 
-The property to animate, e.g. `NodePath("position:x")`.
-Starting value. `null` reads the target's current value when playback starts.
-Value to animate to.
-How long the motion takes, in seconds. Unused when [member ease] is
-[constant AnimaEase.Kind.SPRING] — a spring settles on its own instead.
 The curve (or spring) driving the animation.
+
+### is_relative
+
+When `true`, [member to_value] is added to the resolved start value
+instead of replacing it — e.g. move 40 pixels right from wherever the
+target actually is, instead of moving to x = 40. Used by `move_by()`,
+`scale_by()`, `rotate_by()`, and the generic [method relative] modifier
+(`tech-spec.md` §Target-bound authoring contract). Named is_relative
+rather than relative — that name is the [method relative] chain method
+below, and GDScript cannot declare a method with the same name as a
+property (see [method with_duration]).
 
 ## Methods
 
@@ -76,3 +77,24 @@ and GDScript cannot declare a method with the same name as a property.
 ### with_ease
 
 See [method with_duration].
+
+### with_delay
+
+See [method with_duration]. Named with_delay rather than delay — that name
+is [member AnimaMotion.delay] above, inherited from the base resource.
+
+### from
+
+Sets an explicit starting value instead of reading the target's current
+value when playback starts. See [member from_value].
+
+### from_current
+
+Clears an explicit start value, restoring the default of reading the
+target's current value when playback starts. Mainly useful for
+readability when a chain wants to say so explicitly.
+
+### relative
+
+Marks [member to_value] as a delta added to the resolved start value
+instead of an absolute destination. See [member is_relative].

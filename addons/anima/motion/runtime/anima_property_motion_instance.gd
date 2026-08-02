@@ -6,6 +6,7 @@ extends AnimaMotionInstance
 
 var _elapsed: float = 0.0
 var _from_value: Variant = null
+var _to_value: Variant = null
 var _from_value_captured: bool = false
 
 ## Spring-only state ([constant AnimaEase.Kind.SPRING]) — a stateful
@@ -24,6 +25,7 @@ func advance(target: Node, delta: float) -> bool:
 		_from_value = property_motion.from_value
 		if _from_value == null:
 			_from_value = target.get_indexed(property_motion.target_property)
+		_to_value = _from_value + property_motion.to_value if property_motion.is_relative else property_motion.to_value
 		_from_value_captured = true
 
 	if property_motion.ease.kind == AnimaEase.Kind.SPRING:
@@ -34,9 +36,29 @@ func advance(target: Node, delta: float) -> bool:
 	var t: float = 1.0 if duration <= 0.0 else clampf(_elapsed / duration, 0.0, 1.0)
 	var eased_t := property_motion.ease.evaluate(t)
 
-	target.set_indexed(property_motion.target_property, lerp(_from_value, property_motion.to_value, eased_t))
+	target.set_indexed(property_motion.target_property, lerp(_from_value, _to_value, eased_t))
 
 	return t >= 1.0 or is_equal_approx(t, 1.0)
+
+## Builds a new [AnimaPropertyMotion] that reverses this instance's actually
+## resolved run — the captured start and effective end values swapped, so
+## reverse playback returns to what was actually observed at start, even for
+## a relative (`move_by`-style) motion. `null` before any value is captured.
+func build_reversed() -> AnimaMotion:
+	if not _from_value_captured:
+		return null
+
+	var property_motion := motion as AnimaPropertyMotion
+	var reversed := AnimaPropertyMotion.new()
+	reversed.target_property = property_motion.target_property
+	reversed.from_value = _to_value
+	reversed.to_value = _from_value
+	reversed.duration = property_motion.duration
+	reversed.ease = property_motion.ease
+	reversed.speed = property_motion.speed
+	reversed.delay = property_motion.delay
+	reversed.delay_basis = property_motion.delay_basis
+	return reversed
 
 ## Advances a SPRING-eased motion one physics step (semi-implicit Euler on a
 ## damped harmonic oscillator) instead of evaluating a normalized-time curve.
@@ -46,7 +68,7 @@ func _advance_spring(target: Node, property_motion: AnimaPropertyMotion, delta: 
 	if not _spring_initialized:
 		_spring_value = float(_from_value)
 		_spring_velocity = easing.spring_initial_velocity
-		_spring_target = float(property_motion.to_value)
+		_spring_target = float(_to_value)
 		_spring_initialized = true
 
 	_elapsed += delta * motion.speed

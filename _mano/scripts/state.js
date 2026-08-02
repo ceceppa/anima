@@ -26,7 +26,11 @@
  *   node state.js --next          for mano dev: the active phase + next pending
  *                                 story (#, file) + ordered story list, so the
  *                                 implementer needn't ls or reopen the index
- *   node state.js --gaps <type>   for mano spec / mano rules: print only open
+ *   node state.js --ui            for mano ui: the active phase's exact brief
+ *                                 and phase-local preview paths
+ *   node state.js --spec          for mano spec: print current-phase source
+ *                                 items plus open spec-gap items
+ *   node state.js --gaps <type>   narrow gap-only diagnostic projection for
  *                                 spec-gap or rule-gap backlog items
  *   node state.js --json          machine-readable output
  *   node state.js --help
@@ -43,7 +47,7 @@ const GAP_TYPES = ["spec-gap", "rule-gap"];
 function parseArgs(argv) {
   const args = {
     root: process.cwd(), json: false, verbose: false,
-    scope: false, next: false, gaps: null, help: false,
+    scope: false, next: false, ui: false, spec: false, gaps: null, help: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -51,6 +55,8 @@ function parseArgs(argv) {
     else if (a === "--verbose" || a === "-v") args.verbose = true;
     else if (a === "--scope") args.scope = true;
     else if (a === "--next") args.next = true;
+    else if (a === "--ui") args.ui = true;
+    else if (a === "--spec") args.spec = true;
     else if (a === "--gaps") {
       const candidate = argv[i + 1];
       if (candidate == null || candidate.startsWith("-")) args.gaps = "";
@@ -65,7 +71,7 @@ function parseArgs(argv) {
 const HELP = `mano state — read-only projections of _mano_output/
 
 Usage:
-  node state.js [projectRoot] [--scope | --next | --gaps <type>] [--verbose] [--json]
+  node state.js [projectRoot] [--scope | --next | --ui | --spec | --gaps <type>] [--verbose] [--json]
 
   projectRoot   directory containing _mano_output/ (default: current dir)
   --scope       on a PROCEED to scope-backlog or resume-draft, also print the
@@ -73,8 +79,14 @@ Usage:
   --next        for mano dev: the active phase, the next pending story (its #
                 and file path) and the ordered story list, computed fresh from
                 disk so the implementer needn't ls or reopen the index
-  --gaps <type> for mano spec / mano rules: read only backlog.md and print only
-                unresolved items of exact type spec-gap or rule-gap
+  --ui          for mano ui: report the current phase brief and phase-local
+                design preview paths without exposing backlog content or
+                scanning phase folders in the prompt
+  --spec        for mano spec: report the current phase brief path, exact
+                in-phase-N backlog items, and open spec-gap items without
+                exposing the rest of backlog.md
+  --gaps <type> read only backlog.md and print unresolved items of exact type
+                spec-gap or rule-gap (mano rules uses the rule-gap projection)
   --verbose     also print the evidence (phase, stories, reviewed, backlog)
   --json        emit the full structured state as JSON
 
@@ -93,9 +105,10 @@ function readText(p) {
   try { return fs.readFileSync(p, "utf8"); } catch { return null; }
 }
 
-// Gap projection distinguishes an absent backlog (a valid empty result) from a
-// real read failure. Reporting permission/I/O errors as COUNT: 0 would make an
-// incomplete projection look authoritative.
+// Gap projection distinguishes an absent backlog (a valid empty result before
+// any phase exists) from a real read failure. --spec additionally rejects an
+// absent backlog once a phase exists. Reporting either condition as empty in an
+// active phase would make an incomplete projection look authoritative.
 function readGapText(p) {
   try {
     return fs.readFileSync(p, "utf8");
@@ -236,9 +249,48 @@ function extractBacklogItems(text, options = {}) {
   return out;
 }
 
-// The narrow projection used by mano spec / mano rules. It intentionally
-// bypasses scan(): only backlog.md is read, and only matching open gap blocks
-// are returned to the agent.
+// A narrow projection cannot silently treat an unparseable item as irrelevant:
+// its missing/duplicate metadata may be the very status or type being filtered.
+// Validate the item envelope before --spec claims its result is authoritative.
+function assertBacklogItemsWellFormed(text) {
+  if (text === null) return;
+  let current = null;
+  let inItems = false;
+  const validate = () => {
+    if (!current) return;
+    const block = current.lines.join("\n");
+    const types = [...block.matchAll(/^-\s*\*\*Type:\*\*\s*(.+?)\s*$/gim)];
+    const statuses = [...block.matchAll(/^-\s*\*\*Status:\*\*\s*(.+?)\s*$/gim)];
+    if (types.length !== 1 || statuses.length !== 1) {
+      throw new Error(
+        `malformed backlog item "${current.title}": expected exactly one top-level Type and Status field`,
+      );
+    }
+    current = null;
+  };
+
+  for (const line of text.split("\n")) {
+    if (/^##\s+Items\s*$/i.test(line)) {
+      validate();
+      inItems = true;
+    } else if (/^##\s+/.test(line)) {
+      validate();
+      inItems = false;
+    } else if (inItems && /^###\s+/.test(line)) {
+      validate();
+      current = {
+        title: line.replace(/^###\s+/, "").trim(),
+        lines: [line],
+      };
+    } else if (current) {
+      current.lines.push(line);
+    }
+  }
+  validate();
+}
+
+// A narrow gap-only projection. It intentionally bypasses scan(): only
+// backlog.md is read, and only matching open gap blocks are returned.
 function scanGaps(projectRoot, type) {
   const backlog = readGapText(path.join(projectRoot, "_mano_output", "backlog.md"));
   const items = extractBacklogItems(backlog, { status: "backlog", type });
@@ -249,6 +301,107 @@ function scanGaps(projectRoot, type) {
     count: items.length,
     items,
   };
+}
+
+// The narrow projection used by mano spec. It carries source requirements that
+// mano start assigned to the current phase, plus unresolved spec-gap blocks.
+// No other backlog status/type enters the projection.
+function scanSpec(projectRoot) {
+  const outputDir = path.join(projectRoot, "_mano_output");
+  const backlog = readGapText(path.join(outputDir, "backlog.md"));
+  const phase = latestPhase(outputDir);
+  if (phase !== null && backlog === null) {
+    throw new Error(
+      `active phase ${phase} exists but _mano_output/backlog.md is missing; ` +
+      "cannot produce authoritative current-phase input",
+    );
+  }
+  if (phase !== null && !/^##\s+Items\s*$/im.test(backlog)) {
+    throw new Error(
+      `active phase ${phase} exists but _mano_output/backlog.md has no canonical ## Items section; ` +
+      "cannot produce authoritative current-phase input",
+    );
+  }
+  assertBacklogItemsWellFormed(backlog);
+  const briefPath = phase === null
+    ? null
+    : `_mano_output/phase-${phase}/phase-brief.md`;
+  const briefExists = briefPath !== null && exists(path.join(projectRoot, briefPath));
+  const briefStatus = briefExists ? "present" : "missing";
+  const inPhaseStatus = phase === null ? "unavailable" : `in-phase-${phase}`;
+  const inPhaseItems = phase === null
+    ? []
+    : extractBacklogItems(backlog, { status: inPhaseStatus });
+  const specGapItems = extractBacklogItems(backlog, {
+    status: "backlog", type: "spec-gap",
+  });
+
+  return {
+    projectRoot,
+    // READY means the projection completed authoritatively. Phase/brief
+    // availability is separate and does not make a valid projection fail.
+    status: "READY",
+    phase,
+    briefPath,
+    briefExists,
+    briefStatus,
+    inPhaseStatus,
+    inPhaseCount: inPhaseItems.length,
+    inPhaseItems,
+    specGapStatus: "backlog",
+    specGapCount: specGapItems.length,
+    specGapItems,
+  };
+}
+
+// The narrow projection used by mano ui. It reuses project-state signals only
+// to reject a phase that is already reviewed and has no reopened story work;
+// it never exposes backlog content or opens prior/root preview contents.
+function scanUi(projectRoot) {
+  const outputDir = path.join(projectRoot, "_mano_output");
+  const projectState = scan(projectRoot);
+  const phase = projectState.phase;
+  const designBriefPath = "_mano_output/design-brief.md";
+  const legacyPreviewPath = "_mano_output/design-preview.html";
+  const ui = {
+    projectRoot,
+    status: "BLOCKED",
+    phase,
+    briefPath: null,
+    previewPath: null,
+    previewExists: false,
+    designBriefPath,
+    designBriefExists: exists(path.join(projectRoot, designBriefPath)),
+    legacyPreviewPath,
+    legacyPreviewExists: exists(path.join(projectRoot, legacyPreviewPath)),
+    route: "mano start — scope and approve a phase before running mano ui.",
+  };
+
+  if (phase === null) return ui;
+
+  ui.briefPath = `_mano_output/phase-${phase}/phase-brief.md`;
+  ui.previewPath = `_mano_output/phase-${phase}/design-preview.html`;
+  const briefExists = exists(path.join(projectRoot, ui.briefPath));
+  ui.previewExists = exists(path.join(projectRoot, ui.previewPath));
+  if (!briefExists) {
+    ui.route = `mano start — finish the draft for phase ${phase}; its phase-brief.md is missing.`;
+    return ui;
+  }
+
+  const reopenedStoryWork = !!(
+    projectState.stories
+    && projectState.stories.rows.some((row) => row.status !== "done")
+  );
+  if (projectState.reviewEntry && !reopenedStoryWork) {
+    ui.route = projectState.closed
+      ? `mano start — phase ${phase} is already reviewed; scope the next phase before running mano ui.`
+      : `mano review — phase ${phase} has a review entry but its close sweep still needs repair.`;
+    return ui;
+  }
+
+  ui.status = "READY";
+  ui.route = null;
+  return ui;
 }
 
 // The `## Core Product Principles` section (heading + body up to the next `##`
@@ -552,9 +705,9 @@ function renderScope(s) {
   return L.join("\n");
 }
 
-// The only backlog-derived input mano spec / mano rules receive. The sentinel
-// makes the boundary explicit to an agent tool trace: the script has already
-// performed the read, so opening backlog.md is both unnecessary and forbidden.
+// A gap-only backlog projection. The sentinel makes the boundary explicit to
+// an agent tool trace: the script has already performed the read, so opening
+// backlog.md is both unnecessary and forbidden.
 function renderGaps(g) {
   const L = ["--- GAP INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
   L.push(`TYPE: ${g.type}`);
@@ -574,6 +727,73 @@ function renderGaps(g) {
 
 function renderGapsJson(g) {
   return JSON.stringify(g, null, 2);
+}
+
+// The complete backlog-derived input for mano spec. Sentinels are deliberately
+// stable so the skill can reject a malformed/partial projection before reading
+// any artifact. Item blocks are emitted verbatim.
+function renderSpec(spec) {
+  const L = ["--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
+  L.push(`STATUS: ${spec.status}`);
+  L.push(`PHASE: ${spec.phase === null ? "none" : spec.phase}`);
+  L.push(`BRIEF: ${spec.briefPath || "missing"}`);
+  L.push(`BRIEF_STATUS: ${spec.briefStatus}`);
+  L.push(`IN_PHASE_STATUS: ${spec.inPhaseStatus}`);
+  L.push(`IN_PHASE_COUNT: ${spec.inPhaseCount}`);
+  L.push(`SPEC_GAP_STATUS: ${spec.specGapStatus}`);
+  L.push(`SPEC_GAP_COUNT: ${spec.specGapCount}`);
+  L.push("");
+  L.push("## Current phase source items");
+  if (spec.inPhaseItems.length === 0) L.push("(none)");
+  else {
+    for (const [index, item] of spec.inPhaseItems.entries()) {
+      L.push("");
+      L.push(`--- BEGIN IN-PHASE ITEM ${index + 1}/${spec.inPhaseCount} ---`);
+      L.push(item);
+      L.push(`--- END IN-PHASE ITEM ${index + 1}/${spec.inPhaseCount} ---`);
+    }
+  }
+  L.push("");
+  L.push("## Open spec gaps");
+  if (spec.specGapItems.length === 0) L.push("(none)");
+  else {
+    for (const [index, item] of spec.specGapItems.entries()) {
+      L.push("");
+      L.push(`--- BEGIN SPEC-GAP ITEM ${index + 1}/${spec.specGapCount} ---`);
+      L.push(item);
+      L.push(`--- END SPEC-GAP ITEM ${index + 1}/${spec.specGapCount} ---`);
+    }
+  }
+  L.push("");
+  L.push(`END_IN_PHASE_COUNT: ${spec.inPhaseCount}`);
+  L.push(`END_SPEC_GAP_COUNT: ${spec.specGapCount}`);
+  L.push("--- END SPEC INPUT ---");
+  return L.join("\n");
+}
+
+function renderSpecJson(spec) {
+  return JSON.stringify(spec, null, 2);
+}
+
+// The only phase-discovery input mano ui receives. Paths are explicit so the
+// skill never has to list phase folders or guess whether a root preview belongs
+// to the current phase.
+function renderUi(ui) {
+  const L = ["--- UI INPUT (from the state script — do not scan phase folders) ---"];
+  L.push(`STATUS: ${ui.status}`);
+  L.push(`PHASE: ${ui.phase === null ? "none" : ui.phase}`);
+  L.push(`BRIEF: ${ui.briefPath || "missing"}`);
+  L.push(`PREVIEW: ${ui.previewPath || "unavailable"}`);
+  L.push(`PREVIEW_STATUS: ${ui.previewExists ? "present" : "missing"}`);
+  L.push(`DESIGN_BRIEF: ${ui.designBriefPath}`);
+  L.push(`DESIGN_BRIEF_STATUS: ${ui.designBriefExists ? "present" : "missing"}`);
+  L.push(`LEGACY_ROOT_PREVIEW: ${ui.legacyPreviewExists ? "present" : "absent"} — ${ui.legacyPreviewPath}; leave untouched`);
+  if (ui.route) L.push(`ROUTE: ${ui.route}`);
+  return L.join("\n");
+}
+
+function renderUiJson(ui) {
+  return JSON.stringify(ui, null, 2);
 }
 
 // The mano dev projection: what to implement right now, computed fresh from
@@ -660,13 +880,37 @@ function main() {
     process.stdout.write(HELP + "\n");
     process.exit(0);
   }
+  if (args.spec) {
+    if (args.scope || args.next || args.ui || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --spec cannot be combined with --scope, --next, --ui, --gaps, or --verbose.\n");
+      process.exit(1);
+    }
+    let spec;
+    try {
+      spec = scanSpec(args.root);
+    } catch (error) {
+      process.stderr.write(`[mano state] cannot read _mano_output/backlog.md — ${error.message}\n`);
+      process.exit(1);
+    }
+    process.stdout.write((args.json ? renderSpecJson(spec) : renderSpec(spec)) + "\n");
+    process.exit(0);
+  }
+  if (args.ui) {
+    if (args.scope || args.next || args.spec || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --ui cannot be combined with --scope, --next, --spec, --gaps, or --verbose.\n");
+      process.exit(1);
+    }
+    const ui = scanUi(args.root);
+    process.stdout.write((args.json ? renderUiJson(ui) : renderUi(ui)) + "\n");
+    process.exit(0);
+  }
   if (args.gaps !== null) {
     if (!GAP_TYPES.includes(args.gaps)) {
       process.stderr.write(`[mano state] --gaps requires exactly one of: ${GAP_TYPES.join(", ")}.\n`);
       process.exit(1);
     }
-    if (args.scope || args.next || args.verbose) {
-      process.stderr.write("[mano state] --gaps cannot be combined with --scope, --next, or --verbose.\n");
+    if (args.scope || args.next || args.ui || args.spec || args.verbose) {
+      process.stderr.write("[mano state] --gaps cannot be combined with --scope, --next, --ui, --spec, or --verbose.\n");
       process.exit(1);
     }
     let gaps;

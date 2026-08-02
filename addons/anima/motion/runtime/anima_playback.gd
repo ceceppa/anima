@@ -62,24 +62,35 @@ func retarget(new_to_value: Variant) -> void:
 	property_motion.to_value = new_to_value
 	_instance.retarget_spring(new_to_value)
 
-## Reverses a still-playing or already-finished [AnimaGroupMotion] group,
-## reusing its recorded target sequence instead of resolving and scheduling
-## it again — a [constant AnimaGroupOrder.Kind.RANDOM] order does not
-## reshuffle. Restarts this same playback from the top, respecting [member
-## AnimaGroupMotion.reverse_order_policy]. An error (not silently ignored)
-## for any other motion shape — only a played group has a recorded sequence
-## to reverse.
+## Reverses this playback, returning the target to what was actually observed
+## when the run began. For an [AnimaGroupMotion] (including [AnimaGridMotion]),
+## reuses its recorded target sequence instead of resolving and scheduling it
+## again — a [constant AnimaGroupOrder.Kind.RANDOM] order does not reshuffle —
+## and restarts this same playback from the top, respecting [member
+## AnimaGroupMotion.reverse_order_policy]. For a leaf [AnimaPropertyMotion] or
+## an [AnimaSequence]/[AnimaParallel] composition of them (e.g. a target-bound
+## motion authored through [method Anima.on]), replaces [member motion] with a
+## freshly built reversed motion and restarts playback against it — see
+## [method AnimaMotionInstance.build_reversed]. An error (not silently
+## ignored) when nothing has been captured yet to reverse to.
 func reverse() -> void:
 	var group_instance := _instance as AnimaGroupPlayback
 	var group_motion := motion as AnimaGroupMotion
-	if group_instance == null or group_motion == null or group_instance.execution_record == null:
-		push_error("AnimaPlayback.reverse() is only defined for a played AnimaGroupMotion")
+	if group_instance != null and group_motion != null and group_instance.execution_record != null:
+		var record := group_instance.execution_record
+		if group_motion.reverse_order_policy == AnimaGroupMotion.ReverseOrderPolicy.REVERSE_EXECUTION:
+			record = record.reversed()
+		group_instance.restart_from_record(record)
+		state = State.PLAYING
 		return
 
-	var record := group_instance.execution_record
-	if group_motion.reverse_order_policy == AnimaGroupMotion.ReverseOrderPolicy.REVERSE_EXECUTION:
-		record = record.reversed()
-	group_instance.restart_from_record(record)
+	var reversed_motion: AnimaMotion = _instance.build_reversed()
+	if reversed_motion == null:
+		push_error("AnimaPlayback.reverse() has nothing captured to reverse yet — play this motion at least one frame first.")
+		return
+
+	motion = reversed_motion
+	_instance = motion.create_runtime()
 	state = State.PLAYING
 
 func _advance(delta: float) -> void:

@@ -10,6 +10,7 @@ extends VBoxContainer
 const _COMPOSER_SESSION = preload("res://addons/anima/editor/anima_composer_session.gd")
 const _GROUP_COMPOSER = preload("res://addons/anima/editor/anima_group_composer.gd")
 const _GROUP_INSPECTOR = preload("res://addons/anima/editor/anima_group_inspector.gd")
+const _PROPERTY_MOTION_COMPOSER = preload("res://addons/anima/editor/anima_property_motion_composer.gd")
 
 ## The transient selection and scene-node context for this open workspace.
 var session = _COMPOSER_SESSION.new()
@@ -18,6 +19,7 @@ var _motion_picker: OptionButton
 var _context_message: Label
 var _group_composer
 var _group_inspector
+var _property_motion_composer
 var _inspect_button: Button
 var _undo_redo: EditorUndoRedoManager
 
@@ -26,6 +28,8 @@ func set_undo_redo(undo_redo: EditorUndoRedoManager) -> void:
 	_undo_redo = undo_redo
 	if _group_composer != null:
 		_group_composer.set_undo_redo(_undo_redo)
+	if _property_motion_composer != null:
+		_property_motion_composer.set_undo_redo(_undo_redo)
 
 ## Creates the lightweight workspace controls when the panel enters the editor.
 func _ready() -> void:
@@ -55,6 +59,10 @@ func _ready() -> void:
 	_group_inspector = _GROUP_INSPECTOR.new()
 	_group_inspector.setup_requested.connect(_return_to_setup)
 	add_child(_group_inspector)
+
+	_property_motion_composer = _PROPERTY_MOTION_COMPOSER.new()
+	_property_motion_composer.set_undo_redo(_undo_redo)
+	add_child(_property_motion_composer)
 
 ## Opens [param motion] and shows it as the root of this workspace.
 func open_motion(motion: AnimaMotion) -> void:
@@ -98,9 +106,16 @@ func _refresh_workspace() -> void:
 	_motion_picker.disabled = motions.is_empty()
 	_title.text = "Motion Composer: %s" % (session.selected_motion.get_class() if session.selected_motion != null else "No motion selected")
 	_refresh_context_message()
-	_group_composer.show_motion(session.selected_motion, session.selected_scene_node)
+
+	var showing_property_motion: bool = session.selected_motion is AnimaPropertyMotion and session.active_view == AnimaComposerSession.View.SETUP
+	if showing_property_motion:
+		_property_motion_composer.show_motion(session.selected_motion as AnimaPropertyMotion, session.selected_scene_node)
+	else:
+		_group_composer.show_motion(session.selected_motion, session.selected_scene_node)
+
+	_property_motion_composer.visible = showing_property_motion
+	_group_composer.visible = session.active_view == AnimaComposerSession.View.SETUP and not showing_property_motion
 	_inspect_button.visible = session.selected_motion is AnimaGroupMotion and session.active_view == AnimaComposerSession.View.SETUP
-	_group_composer.visible = session.active_view == AnimaComposerSession.View.SETUP
 	_group_inspector.visible = session.active_view == AnimaComposerSession.View.INSPECTION
 	if session.active_view == AnimaComposerSession.View.INSPECTION:
 		_group_inspector.inspect(session.selected_motion as AnimaGroupMotion, session.selected_scene_node)

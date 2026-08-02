@@ -226,3 +226,301 @@ func test_deriving_an_empty_target_list_returns_an_empty_schedule():
 	var group := _group()
 	var schedule := AnimaGroupScheduler.derive(group, [])
 	assert_eq(schedule.entries.size(), 0)
+
+## --- AnimaGridMotion: distance_formula propagation (story 6) ---
+
+func _grid(formula: AnimaGridMotion.DistanceFormula, dimensions: Vector2i = Vector2i(3, 3), start: Vector2i = Vector2i(1, 1)) -> AnimaGridMotion:
+	var grid := AnimaGridMotion.new()
+	grid.target_collection = AnimaTargetCollection.new()
+	grid.item_motion = Motion.to(NodePath("position:x"), 10.0)
+	grid.grid_dimensions = dimensions
+	grid.start_point = start
+	grid.distance_formula = formula
+	return grid
+
+func _wave(schedule: AnimaGroupScheduler.Schedule, targets: Array[Node], rank: int) -> Array:
+	var wave := []
+	for entry in schedule.entries:
+		if entry.rank == rank:
+			wave.append(entry.target)
+	return wave
+
+func test_a_grid_motion_defaults_to_the_grid_order_kind_that_triggers_formula_ranking():
+	assert_eq(AnimaGridMotion.new().order.kind, AnimaGroupOrder.Kind.GRID)
+
+func test_euclidean_formula_ranks_by_straight_line_distance_from_the_start_point():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.EUCLIDEAN)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	assert_eq(schedule.entries[0].target, targets[4], "the start cell (1,1) itself should start first")
+	var second_wave := _wave(schedule, targets, 1)
+	assert_eq(second_wave.size(), 8, "every immediate neighbour — orthogonal (distance 1.0) and diagonal (distance ~1.41) — floors to the same wave 1")
+
+func test_manhattan_formula_groups_the_orthogonal_cross_ahead_of_the_corners():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.MANHATTAN)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	assert_eq(schedule.entries[0].target, targets[4])
+	var cross := _wave(schedule, targets, 1)
+	assert_eq(cross.size(), 4)
+	assert_has(cross, targets[1])
+	assert_has(cross, targets[3])
+	assert_has(cross, targets[5])
+	assert_has(cross, targets[7])
+	var corners := _wave(schedule, targets, 2)
+	assert_eq(corners.size(), 4)
+	assert_has(corners, targets[0])
+	assert_has(corners, targets[2])
+	assert_has(corners, targets[6])
+	assert_has(corners, targets[8])
+
+func test_chebyshev_formula_treats_every_neighbour_including_corners_as_one_wave():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.CHEBYSHEV)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	assert_eq(schedule.entries[0].target, targets[4])
+	var ring := _wave(schedule, targets, 1)
+	assert_eq(ring.size(), 8, "every surrounding cell, including corners, is distance 1 under Chebyshev")
+
+func test_row_formula_waves_by_row_distance_from_the_start_row():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.ROW)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var first_wave := _wave(schedule, targets, 0)
+	assert_eq(first_wave.size(), 3)
+	assert_has(first_wave, targets[3])
+	assert_has(first_wave, targets[4])
+	assert_has(first_wave, targets[5])
+
+	var second_wave := _wave(schedule, targets, 1)
+	assert_eq(second_wave.size(), 6, "both the row above and the row below the start row tie at distance 1")
+
+func test_column_formula_waves_by_column_distance_from_the_start_column():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.COLUMN)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var first_wave := _wave(schedule, targets, 0)
+	assert_eq(first_wave.size(), 3)
+	assert_has(first_wave, targets[1])
+	assert_has(first_wave, targets[4])
+	assert_has(first_wave, targets[7])
+
+func test_diagonal_formula_waves_along_the_main_diagonal_from_the_start_point():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.DIAGONAL)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var first_wave := _wave(schedule, targets, 0)
+	assert_eq(first_wave.size(), 3)
+	assert_has(first_wave, targets[0])
+	assert_has(first_wave, targets[4])
+	assert_has(first_wave, targets[8])
+
+func test_anti_diagonal_formula_waves_along_the_anti_diagonal_from_the_start_point():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.ANTI_DIAGONAL)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var first_wave := _wave(schedule, targets, 0)
+	assert_eq(first_wave.size(), 3)
+	assert_has(first_wave, targets[2])
+	assert_has(first_wave, targets[4])
+	assert_has(first_wave, targets[6])
+
+func test_clockwise_formula_sweeps_from_12_oclock_with_the_start_point_always_first():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.CLOCKWISE)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	assert_eq(order, [
+		targets[4], # start point, always first
+		targets[1], # 12 o'clock
+		targets[2], # 1:30
+		targets[5], # 3 o'clock
+		targets[8], # 4:30
+		targets[7], # 6 o'clock
+		targets[6], # 7:30
+		targets[3], # 9 o'clock
+		targets[0], # 10:30
+	])
+
+func test_anticlockwise_formula_sweeps_the_opposite_way_from_12_oclock():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.ANTICLOCKWISE)
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	assert_eq(order, [
+		targets[4], # start point, always first
+		targets[1], # 12 o'clock
+		targets[0], # 10:30
+		targets[3], # 9 o'clock
+		targets[6], # 7:30
+		targets[7], # 6 o'clock
+		targets[8], # 4:30
+		targets[5], # 3 o'clock
+		targets[2], # 1:30
+	])
+
+func test_a_different_valid_start_point_changes_the_propagation_and_is_not_restricted_to_the_centre():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.MANHATTAN, Vector2i(3, 3), Vector2i(0, 0))
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	assert_eq(schedule.entries[0].target, targets[0], "start point in the corner should itself start first")
+	var second_wave := _wave(schedule, targets, 1)
+	assert_eq(second_wave.size(), 2)
+	assert_has(second_wave, targets[1])
+	assert_has(second_wave, targets[3])
+
+func test_spiral_outward_orders_strictly_by_distance_then_clockwise_angle_with_no_simultaneous_waves():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD)
+	grid.spiral_direction = AnimaGridMotion.SpiralDirection.CLOCKWISE
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	assert_eq(order, [
+		targets[4], # start point
+		targets[1], targets[5], targets[7], targets[3], # orthogonal ring, clockwise from 12
+		targets[2], targets[8], targets[6], targets[0], # diagonal ring, clockwise from 1:30
+	])
+	for i in range(order.size() - 1):
+		assert_ne(schedule.entries[i].rank, schedule.entries[i + 1].rank, "a spiral is a strict traversal, never a simultaneous wave")
+
+func test_spiral_inward_reverses_the_outward_traversal():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.SPIRAL_INWARD)
+	grid.spiral_direction = AnimaGridMotion.SpiralDirection.CLOCKWISE
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	assert_eq(schedule.entries[schedule.entries.size() - 1].target, targets[4], "inward spiral should reach the start point last")
+	assert_eq(schedule.entries[0].target, targets[2], "inward spiral should start at the far ring")
+
+func test_serpentine_row_zigzags_alternating_direction_each_row():
+	var targets := _make_nodes(6)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.SERPENTINE_ROW, Vector2i(3, 2), Vector2i(0, 0))
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	assert_eq(order, [targets[0], targets[1], targets[2], targets[5], targets[4], targets[3]])
+
+func test_serpentine_column_zigzags_alternating_direction_each_column():
+	var targets := _make_nodes(6)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.SERPENTINE_COLUMN, Vector2i(3, 2), Vector2i(0, 0))
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	# columns: 0={0,3}, 1={1,4}, 2={2,5}; column 0 top-to-bottom, column 1 bottom-to-top, column 2 top-to-bottom
+	assert_eq(order, [targets[0], targets[3], targets[4], targets[1], targets[2], targets[5]])
+
+func test_top_bottom_center_orders_still_work_when_order_kind_is_explicitly_overridden():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.EUCLIDEAN)
+	grid.order.kind = AnimaGroupOrder.Kind.REVERSE
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	assert_eq(schedule.entries[0].target, targets[8], "explicitly overriding order.kind should fall back to the standard flat-list ordering, ignoring distance_formula")
+
+func test_together_playback_mode_still_starts_every_grid_target_at_once():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.EUCLIDEAN)
+	grid.playback_mode = AnimaGroupMotion.PlaybackMode.PARALLEL
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	for entry in schedule.entries:
+		assert_almost_eq(entry.start_offset, 0.0, 0.0001)
+
+func test_odd_even_filters_still_apply_before_grid_formula_ranking():
+	var source := _make_nodes(9)
+	var collection := AnimaTargetCollection.new()
+	collection.kind = AnimaTargetCollection.Kind.EXPLICIT
+	collection.reference_data = source
+	collection.filter = AnimaTargetCollection.Filter.EVEN_ONLY
+
+	var resolution := AnimaTargetResolver.resolve(collection, null)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.EUCLIDEAN, Vector2i(2, 3), Vector2i(0, 0))
+
+	var schedule := AnimaGroupScheduler.derive(grid, resolution.targets)
+
+	assert_eq(resolution.targets, [source[0], source[2], source[4], source[6], source[8]])
+	assert_eq(schedule.entries[0].target, source[0])
+
+func test_a_plain_group_motion_authored_with_the_grid_order_kind_keeps_the_original_virtual_grid_behaviour():
+	var targets := _make_nodes(6)
+	var group := _group()
+	group.order.kind = AnimaGroupOrder.Kind.GRID
+	group.order.origin = AnimaGroupOrder.Origin.INDEX
+	group.order.origin_index = 0
+	group.order.grid_columns = 3
+
+	var schedule := AnimaGroupScheduler.derive(group, targets)
+
+	assert_eq(schedule.entries[0].target, targets[0])
+	assert_eq(schedule.entries[0].rank, 0)
+
+## Regression: CLOCKWISE/ANTICLOCKWISE encode a bearing, and the spiral
+## formulas encode a distance and a bearing, into one raw rank key — several
+## orders of magnitude larger than an actual wave count. Undensified, a
+## staggered group's `rank * stagger_interval` turned that raw magnitude
+## directly into a start_offset of thousands of seconds, which is why these
+## four formulas looked like they never animated at all.
+func test_angular_and_spiral_formula_ranks_stay_dense_enough_for_a_sane_stagger_offset():
+	var targets := _make_nodes(25)
+	for formula in [
+		AnimaGridMotion.DistanceFormula.CLOCKWISE,
+		AnimaGridMotion.DistanceFormula.ANTICLOCKWISE,
+		AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD,
+		AnimaGridMotion.DistanceFormula.SPIRAL_INWARD,
+	]:
+		var grid := AnimaGridMotion.new()
+		grid.target_collection = AnimaTargetCollection.new()
+		grid.item_motion = Motion.to(NodePath("position:x"), 10.0)
+		grid.grid_dimensions = Vector2i(5, 5)
+		grid.start_point = Vector2i(2, 2)
+		grid.distance_formula = formula
+		grid.distribution.stagger_interval = 0.1
+
+		var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+		var max_offset := 0.0
+		for entry in schedule.entries:
+			max_offset = maxf(max_offset, entry.start_offset)
+		assert_lt(max_offset, 5.0, "formula %s should schedule its last wave within a few seconds, not thousands" % formula)

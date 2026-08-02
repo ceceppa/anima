@@ -17,7 +17,7 @@ Motion authors can combine target-bound motions into intentional sequences and p
 
 #### Implementation Reference
 - **Files:** `addons/anima/motion/resources/anima_motion_builder.gd`; `addons/anima/motion/runtime/anima.gd`; `tests/Anima.integration.convenience-composition.test.gd`
-- **Contract:** `_mano_output/tech-spec.md §Target-bound authoring contract`; `§Key technical decisions`
+- **Contract:** `_mano_output/tech-spec.md §Target-bound authoring contract`; `§Convenience method interface`; `§Key technical decisions`
 - **Rules:** `_mano_output/project-rules.md §Architecture`; `§Testing`; `§Documentation`
 
 ---

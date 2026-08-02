@@ -82,6 +82,6 @@ func _apply_progress_appearance() -> void:
 	style_box.shadow_color = Color(border.r, border.g, border.b, glow_alpha)
 	style_box.shadow_size = roundi(glow_size)
 
-	modulate.a = lerpf(DIM_ALPHA, 1.0, progress)
+	#modulate.a = lerpf(DIM_ALPHA, 1.0, progress)
 	var bump := 1.0 + 0.08 * sin(progress * PI)
 	scale = Vector2(bump, bump)

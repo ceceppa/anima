@@ -56,83 +56,38 @@ The nodes this group will resolve when it plays.
 
 ### item_motion
 
-The nodes this group will resolve when it plays.
 The shared motion each resolved target receives.
 
 ### playback_mode
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
 The relationship between item starts.
 
 ### distribution
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
 Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
 
 ### order
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
-Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
 The resolved-target order and starting point.
 
 ### sequential_gap
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
-Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
-The resolved-target order and starting point.
 Extra wait after each completed item in [constant PlaybackMode.SEQUENTIAL].
 
 ### completion_policy
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
-Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
-The resolved-target order and starting point.
-Extra wait after each completed item in [constant PlaybackMode.SEQUENTIAL].
 The completion event an author wants to observe.
 
 ### reverse_order_policy
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
-Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
-The resolved-target order and starting point.
-Extra wait after each completed item in [constant PlaybackMode.SEQUENTIAL].
-The completion event an author wants to observe.
 The order policy used when the author reverses a group.
 
 ### invalid_target_policy
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
-Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
-The resolved-target order and starting point.
-Extra wait after each completed item in [constant PlaybackMode.SEQUENTIAL].
-The completion event an author wants to observe.
-The order policy used when the author reverses a group.
 The response when a resolved target cannot play.
 
 ### empty_group_policy
 
-The nodes this group will resolve when it plays.
-The shared motion each resolved target receives.
-The relationship between item starts.
-Stagger timing choices, used only for [constant PlaybackMode.STAGGERED].
-The resolved-target order and starting point.
-Extra wait after each completed item in [constant PlaybackMode.SEQUENTIAL].
-The completion event an author wants to observe.
-The order policy used when the author reverses a group.
-The response when a resolved target cannot play.
 The response when no targets are found.
 
 ## Methods

@@ -26,7 +26,6 @@ The motions racing against each other.
 
 ### cancel_remaining
 
-The motions racing against each other.
 Whether the runtime stops advancing the other children once one finishes.
 Setting this to `false` has no defined effect this phase.
 

@@ -32,13 +32,10 @@ The motions to run together.
 
 ### completion_policy
 
-The motions to run together.
 Which child (or children) must finish for the group to complete.
 
 ### completion_child_name
 
-The motions to run together.
-Which child (or children) must finish for the group to complete.
 The [member AnimaMotion.display_name] to match against when
 [member completion_policy] is [constant CompletionPolicy.NAMED_CHILD].
 

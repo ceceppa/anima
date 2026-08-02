@@ -25,9 +25,19 @@ Every Mano skill's exact name is `mano-<action>` — **hyphen-separated**: `mano
 
 `mano dev` is **not** a planning action — it is the implementation entry point. It does not generate planning artifacts; it implements the next pending story by following the contract in `AGENTS.md`. See `skills/dev.md` (a thin pointer to that contract). The "Refuse code generation" rule below applies to the planning actions, not to `mano dev`.
 
+<!-- mano-rule: id=dev-yolo-batch; incident=explicit-yolo-stopped-after-one-story; model=codex; date=2026-08-03; eval=dev-yolo-batch,dev-yolo-blocker,dev-default-single -->
+`mano dev yolo` and `mano-dev yolo` are the same explicit batch invocation: both resolve to the existing `mano-dev` skill with the trailing `yolo` preserved as an argument — never to a separate `mano-dev-yolo` skill. The default command still implements one story. The literal YOLO modifier tells the `AGENTS.md` implementation contract to process every story that was pending at invocation, sequentially in index order. It is still implementation rather than planning, and it preserves every per-story boundary and hard stop.
+<!-- /mano-rule: dev-yolo-batch -->
+
 `mano [action]` handles everything — first run, extending, and regeneration. When an action executes, it checks what already exists:
 - **Output doesn't exist yet** → generate it directly to the file (first run).
 - **Output already exists** → read it and the current phase brief, then update only the parts affected by concrete new context or a requested regeneration. If the command carries no change and the artifact is still current, do not rewrite it merely because the action was re-run.
+
+<!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
+`mano ui` begins with `node _mano/scripts/state.js --ui`; that projection is its only phase-directory discovery and supplies the exact current `BRIEF` and `PREVIEW` paths plus legacy-root presence without exposing the backlog. It then applies two output lifecycles. `_mano_output/design-brief.md` is the cumulative, canonical visual contract; preserve its established tokens, components, and phase-namespaced Screen Composition entries while extending it for the current phase. The HTML is a non-canonical phase snapshot at `_mano_output/phase-[N]/design-preview.html`. A same-phase re-run may read and update that file, but a later phase must not read or write another phase's preview. Never read, overwrite, move, or infer ownership for a legacy `_mano_output/design-preview.html`; leave it untouched.
+
+The current phase brief is a blocking input for `mano ui`: if `_mano_output/phase-[N]/phase-brief.md` is missing, stop and route to `mano start`. When the brief exists, a missing current-phase preview keeps `mano ui` useful even when the phase reuses components already documented in the design brief; a new screen composition still deserves its own phase snapshot.
+<!-- /mano-rule: ui-phase-preview-ownership -->
 
 When a user types a Mano command in chat, the agent should execute that Mano workflow directly. Do not bounce the command back by telling the user to run it manually.
 
@@ -139,9 +149,9 @@ Whenever a skill suggests what to do next, base that suggestion on the artifacts
 - Use this decision tree when evaluating next steps for the planning stage:
   ```
   Phase is user-facing or mobile?
-  ├─ design-brief missing? → suggest `mano ui` (do not auto-run stories)
+  ├─ design coverage or the current visual preview missing/stale? → suggest `mano ui` (do not auto-run stories)
   ├─ project-rules still default? → list `mano rules` + `mano stories` as options
-  └─ both present? → suggest `mano stories`
+  └─ design coverage, visual preview, and useful rules present? → suggest `mano stories`
   
   Phase is non-user-facing (backend/infra)?
   └─ go straight to `mano stories` unless tech is genuinely fuzzy (suggest `mano spec`)
@@ -184,7 +194,7 @@ Show a brief description of the skill — what it does, when to use it, what it 
 | **`mano spec`** | Translates the phase brief into a tech spec. Recommends libraries, defines data model, flags cross-environment boundaries. | Phase brief, existing tech spec, package manifest/lockfile, filtered unresolved spec-gap projection | Tech spec; targeted spec-gap status updates |
 | **`mano ux`** | Defines UX flows — screens, navigation, user interactions. One screen at a time, only new or changed. | Phase brief, UX flow, tech spec, project rules | UX flow |
 | **`mano rules`** | Defines and updates project rules — components, patterns, naming, a11y, folder structure. Flags over-engineering. Most useful once the tech stack is known. | Tech spec (recommended), UX flow, design brief, filtered unresolved rule-gap projection, phase brief, existing project rules | Project rules; targeted rule-gap status updates |
-| **`mano ui`** | Establishes the visual language — palette, typography, spacing, component guide. Generates a preview HTML. | Phase brief, UX flow, tech spec, project rules | Design brief, design preview |
+| **`mano ui`** | Establishes the visual language — palette, typography, spacing, component guide. Generates a preview HTML. | Phase brief, UX flow, tech spec, project rules, existing design artifacts | Design brief, current visual preview |
 | **`mano stories`** | Breaks the phase into implementable stories. Writes directly to files. Flags overloaded screens. | Phase brief, existing current-phase story set on re-run, tech spec, UX flow, design brief, project rules | Story files, stories index |
 | **`mano review`** | Collects feedback after shipping, triages into backlog, writes review log. | Stories index, phase brief, reviews, backlog | Review log, backlog updates |
 | **`mano dev`** | Implements the next pending story for the active phase. Not a planning lens — follows the `AGENTS.md` implementation contract. | Stories index, the selected story, `AGENTS.md` contract | Source code, story marked `done` |
@@ -196,7 +206,7 @@ When the user types `mano status`:
 2. Report: active phase, what files exist, what is missing, and what is present-but-incomplete.
 3. If multiple planning actions are still reasonable, show them as `Next options` instead of forcing a single `Suggested next action`.
 4. Only show one `Suggested next action` when the next move is genuinely narrower than the other valid options.
-5. For user-facing or mobile phases, missing `design-brief.md` and `design-preview.html` should keep `mano ui` visible as a valid next option unless the current phase is already obviously ready for stories without further design clarification.
+5. For user-facing or mobile phases, missing or stale design coverage or visual preview keeps `mano ui` visible as a valid next option, even when `mano stories` is also ready. Apply the phase-preview ownership contract above when deciding whether an existing preview covers the phase.
 6. Do not activate any skill.
 
 ## Single obvious next action gates
@@ -280,7 +290,7 @@ When the user types `mano [action]`:
 - `mano ui` must begin with one brief preference-capture step on first-run design generation when visual preferences are not already defined; after that reply, `mano ui` generates files in one shot.
 - Output a single execution log snippet to the user, not conversational dialogue.
 
-Valid actions: `spec` (`mano spec` — `tech-spec.md`), `ux` (`mano ux` — `ux-flow.md`), `rules` (`mano rules` — `project-rules.md`), `ui` (`mano ui` — `design-brief.md` + `design-preview.html`), `stories` (`mano stories` — `phase-[N]/stories/`), `review` (`mano review` — `reviews.md`).
+Valid actions: `spec` (`mano spec` — `tech-spec.md`), `ux` (`mano ux` — `ux-flow.md`), `rules` (`mano rules` — `project-rules.md`), `ui` (`mano ui` — `design-brief.md` + current visual preview), `stories` (`mano stories` — `phase-[N]/stories/`), `review` (`mano review` — `reviews.md`).
 
 ## First run — new project
 
@@ -489,7 +499,9 @@ If they differ in number or in unit, **stop and surface the conflict for a human
 `mano start` and `mano review` own backlog content and long-lived project continuity.
 
 Other skills should not edit the backlog except for narrow gap-resolution status updates:
-- `mano spec` must run `node _mano/scripts/state.js --gaps spec-gap`; that projection is its only backlog read. After updating the technical specification, it may mark only a fully addressed projected item resolved via `backlog.js resolve-gap --type spec-gap --title "..."`.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- `mano spec` must run `node _mano/scripts/state.js --spec`; its current-phase item plus spec-gap projection is its only backlog read. After updating the technical specification, it may mark only a fully addressed projected spec-gap item resolved via `backlog.js resolve-gap --type spec-gap --title "..."`.
+<!-- /mano-rule: public-interface-contract-readiness -->
 - `mano rules` must run `node _mano/scripts/state.js --gaps rule-gap`; that projection is its only backlog read. After updating project rules, it may mark only a fully addressed projected item resolved via `backlog.js resolve-gap --type rule-gap --title "..."`.
 
 Neither skill opens `backlog.md`, even when the user asks it to handle backlog gaps; the read-only projection and targeted writer are the complete interface. Skills should not inspect the backlog for general project memory unless their role explicitly owns that context.

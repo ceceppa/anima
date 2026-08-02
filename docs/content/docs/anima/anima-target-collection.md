@@ -41,7 +41,6 @@ The source used to find the group’s target nodes.
 
 ### reference_data
 
-The source used to find the group’s target nodes.
 References used by the selected source.
 
 For [constant Kind.EXPLICIT], add nodes or paths relative to the supplied
@@ -50,12 +49,6 @@ groups. Runtime-supplied collections receive their nodes from code instead.
 
 ### filter
 
-The source used to find the group’s target nodes.
-References used by the selected source.
-
-For [constant Kind.EXPLICIT], add nodes or paths relative to the supplied
-root node. For [constant Kind.SCENE_GROUP], add the names of Godot scene
-groups. Runtime-supplied collections receive their nodes from code instead.
 Chooses whether every target or only alternating zero-based positions play.
 
 Filtering happens before a group chooses its animation order, so these
@@ -63,16 +56,6 @@ positions always refer to the visible collection order.
 
 ### resolve_on_play
 
-The source used to find the group’s target nodes.
-References used by the selected source.
-
-For [constant Kind.EXPLICIT], add nodes or paths relative to the supplied
-root node. For [constant Kind.SCENE_GROUP], add the names of Godot scene
-groups. Runtime-supplied collections receive their nodes from code instead.
-Chooses whether every target or only alternating zero-based positions play.
-
-Filtering happens before a group chooses its animation order, so these
-positions always refer to the visible collection order.
 Whether targets are chosen when the group begins playing.
 
 Keep this enabled when a scene can add or remove nodes before the animation

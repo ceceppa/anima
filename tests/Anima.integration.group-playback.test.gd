@@ -127,7 +127,28 @@ func test_reversing_a_finished_group_replays_the_recorded_target_sequence():
 		playback._advance(0.02)
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 
-func test_reversing_a_non_group_playback_reports_an_error():
+func test_reversing_a_non_group_playback_returns_to_the_actual_start_value():
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 0.1
+	var node := Node2D.new()
+	add_child_autofree(node)
+	node.position.x = 0.0
+
+	var playback := Anima.play(motion, node)
+	for i in range(6):
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(node.position.x, 10.0, 0.01)
+
+	playback.reverse()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+	for i in range(6):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(node.position.x, 0.0, 0.01)
+
+func test_reversing_a_playback_with_nothing_captured_yet_reports_an_error():
 	var motion := AnimaPropertyMotion.new()
 	motion.target_property = NodePath("position:x")
 	motion.to_value = 10.0
@@ -137,5 +158,5 @@ func test_reversing_a_non_group_playback_reports_an_error():
 
 	var playback := Anima.play(motion, node)
 	playback.reverse()
-	assert_push_error("only defined for a played AnimaGroupMotion")
+	assert_push_error("nothing captured to reverse")
 	playback.cancel()

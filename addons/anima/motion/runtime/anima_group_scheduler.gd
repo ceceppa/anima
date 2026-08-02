@@ -58,7 +58,7 @@ static func derive(group: AnimaGroupMotion, targets: Array[Node]) -> Schedule:
 	if targets.is_empty():
 		return schedule
 
-	var ranks := _compute_ranks(group.order, targets.size())
+	var ranks := _compute_ranks(group, targets.size())
 
 	for index in targets.size():
 		var entry := ScheduleEntry.new()
@@ -91,8 +91,13 @@ static func _apply_start_offsets(entries: Array[ScheduleEntry], group: AnimaGrou
 			entry.start_offset = float(entry.rank) * distribution.stagger_interval
 
 ## Returns one rank per resolved position, `0..count - 1`, following
-## [param order]'s [member AnimaGroupOrder.kind].
-static func _compute_ranks(order: AnimaGroupOrder, count: int) -> Array[int]:
+## [param group]'s [member AnimaGroupMotion.order] [member AnimaGroupOrder.kind].
+## An [AnimaGridMotion] (which defaults its own [member AnimaGroupOrder.kind]
+## to [constant AnimaGroupOrder.Kind.GRID]) upgrades that kind to its richer
+## [member AnimaGridMotion.distance_formula] system instead of the plain
+## [method _ranks_grid] every other group still gets for that kind.
+static func _compute_ranks(group: AnimaGroupMotion, count: int) -> Array[int]:
+	var order := group.order
 	match order.kind:
 		AnimaGroupOrder.Kind.REVERSE:
 			return _ranks_reverse(count)
@@ -103,6 +108,8 @@ static func _compute_ranks(order: AnimaGroupOrder, count: int) -> Array[int]:
 		AnimaGroupOrder.Kind.RANDOM:
 			return _ranks_random(order.seed, count)
 		AnimaGroupOrder.Kind.GRID:
+			if group is AnimaGridMotion:
+				return _ranks_grid_formula(group as AnimaGridMotion, count)
 			return _ranks_grid(order, count)
 		AnimaGroupOrder.Kind.DISTANCE:
 			return _ranks_distance(order, count)
@@ -211,3 +218,117 @@ static func _resolve_grid_origin(order: AnimaGroupOrder, count: int, columns: in
 			return order.origin_point
 		_:
 			return Vector2.ZERO
+
+## Ranks a resolved list against [param grid]'s own 2D shape and [member
+## AnimaGridMotion.distance_formula] — see `tech-spec.md` §Grid motion
+## contract for each formula's exact traversal. Resolved targets fill cells
+## in row-major order using [member AnimaGridMotion.grid_dimensions]; a
+## partially filled final row is valid.
+static func _ranks_grid_formula(grid: AnimaGridMotion, count: int) -> Array[int]:
+	var columns := maxi(grid.grid_dimensions.x, 1)
+	var rows := maxi(grid.grid_dimensions.y, 1)
+	var start := Vector2(grid.start_point.x, grid.start_point.y)
+
+	var raw_ranks: Array[int] = []
+	for index in count:
+		var row := index / columns
+		var col := index % columns
+		var cell := Vector2(float(col), float(row))
+		raw_ranks.append(_grid_formula_rank(grid, cell, start, row, col, columns, rows))
+	return _densify_ranks(raw_ranks)
+
+## Remaps arbitrary (but order- and tie-preserving) rank keys to a dense
+## `0..distinct-1` sequence. [constant AnimaGridMotion.DistanceFormula.CLOCKWISE]/
+## [constant AnimaGridMotion.DistanceFormula.ANTICLOCKWISE] encode a bearing
+## in thousandths of a radian, and the two spiral formulas encode a distance
+## *and* a bearing into one key — both raw magnitudes are far larger than the
+## actual number of waves. Left un-densified, [method _apply_start_offsets]'s
+## `rank * stagger_interval` turns that raw magnitude directly into a
+## multi-thousand-second start delay, which is why those formulas looked like
+## they "didn't work" — the wave was scheduled to start long after any real
+## playback or test ever advances that far.
+static func _densify_ranks(raw_ranks: Array[int]) -> Array[int]:
+	var distinct := raw_ranks.duplicate()
+	distinct.sort()
+	var dense_by_raw := {}
+	var next_dense := 0
+	for value in distinct:
+		if not dense_by_raw.has(value):
+			dense_by_raw[value] = next_dense
+			next_dense += 1
+
+	var dense_ranks: Array[int] = []
+	for value in raw_ranks:
+		dense_ranks.append(dense_by_raw[value])
+	return dense_ranks
+
+static func _grid_formula_rank(grid: AnimaGridMotion, cell: Vector2, start: Vector2, row: int, col: int, columns: int, rows: int) -> int:
+	match grid.distance_formula:
+		AnimaGridMotion.DistanceFormula.MANHATTAN:
+			return int(absf(cell.x - start.x) + absf(cell.y - start.y))
+		AnimaGridMotion.DistanceFormula.CHEBYSHEV:
+			return int(maxf(absf(cell.x - start.x), absf(cell.y - start.y)))
+		AnimaGridMotion.DistanceFormula.ROW:
+			return int(absf(cell.y - start.y))
+		AnimaGridMotion.DistanceFormula.COLUMN:
+			return int(absf(cell.x - start.x))
+		AnimaGridMotion.DistanceFormula.DIAGONAL:
+			return int(absf((cell.x - cell.y) - (start.x - start.y)))
+		AnimaGridMotion.DistanceFormula.ANTI_DIAGONAL:
+			return int(absf((cell.x + cell.y) - (start.x + start.y)))
+		AnimaGridMotion.DistanceFormula.CLOCKWISE:
+			return _angular_rank(cell, start, true)
+		AnimaGridMotion.DistanceFormula.ANTICLOCKWISE:
+			return _angular_rank(cell, start, false)
+		AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD:
+			return _spiral_rank(cell, start, grid.spiral_direction, true)
+		AnimaGridMotion.DistanceFormula.SPIRAL_INWARD:
+			return _spiral_rank(cell, start, grid.spiral_direction, false)
+		AnimaGridMotion.DistanceFormula.SERPENTINE_ROW:
+			return row * columns + (col if row % 2 == 0 else columns - 1 - col)
+		AnimaGridMotion.DistanceFormula.SERPENTINE_COLUMN:
+			return col * rows + (row if col % 2 == 0 else rows - 1 - row)
+		_:
+			# EUCLIDEAN, the default.
+			return int(floor(cell.distance_to(start)))
+
+## Bearing of [param cell] from [param start], in radians clockwise from 12
+## o'clock (`0`), increasing clockwise, wrapped to `0..TAU`. The start cell
+## itself (zero offset) has no defined angle and reports `0.0`.
+static func _clockwise_bearing(cell: Vector2, start: Vector2) -> float:
+	var offset := cell - start
+	if offset == Vector2.ZERO:
+		return 0.0
+	var bearing := atan2(offset.x, -offset.y)
+	if bearing < 0.0:
+		bearing += TAU
+	return bearing
+
+## Shared angular rank for [constant AnimaGridMotion.DistanceFormula.CLOCKWISE]
+## and [constant AnimaGridMotion.DistanceFormula.ANTICLOCKWISE] — cells at the
+## same angle from [param start] share a rank, an intentional simultaneous
+## wave; the start cell itself always ranks first, ahead of the angular sweep.
+static func _angular_rank(cell: Vector2, start: Vector2, clockwise: bool) -> int:
+	if cell == start:
+		return -1
+	var bearing := _clockwise_bearing(cell, start)
+	if not clockwise:
+		bearing = fposmod(TAU - bearing, TAU)
+	return int(round(bearing * 1000.0))
+
+## Shared rank for the two spiral formulas — primarily ordered by distance
+## from [param start] (ascending for outward, descending for inward), with
+## the 12-o'clock angle (swept per [param spiral_direction]) breaking ties
+## within the same ring so a spiral is a strict cell-by-cell traversal, not a
+## set of simultaneous waves.
+static func _spiral_rank(cell: Vector2, start: Vector2, spiral_direction: AnimaGridMotion.SpiralDirection, outward: bool) -> int:
+	var distance_key := int(round(cell.distance_to(start) * 1000.0))
+	var bearing := _clockwise_bearing(cell, start)
+	if spiral_direction == AnimaGridMotion.SpiralDirection.COUNTERCLOCKWISE:
+		bearing = fposmod(TAU - bearing, TAU)
+	var angle_key := int(round(bearing * 100.0))
+	# Reversing for inward flips which radial extreme sorts first without
+	# reversing the angular sweep within a ring — a large sentinel keeps the
+	# inverted key positive for any grid this formula is realistically used on.
+	var radial_key := distance_key if outward else (10_000_000 - distance_key)
+	return radial_key * 1000 + angle_key

@@ -29,10 +29,48 @@ const BEHAVIOUR_GROUP := "_anima_enabled"
 static func play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
 	return AnimaRuntime.get_singleton().play(motion, target)
 
+## Resolves [param target_reference] then plays [param motion] against that
+## node. Supply [param scene_root] for a saved scene-relative reference or
+## [param playback_target] for a playback-context reference. Returns `null`
+## and reports the reason when the reference cannot safely resolve.
+static func play_referenced(
+	motion: AnimaMotion,
+	target_reference: Resource,
+	scene_root: Node = null,
+	playback_target: Node = null,
+) -> AnimaPlayback:
+	var target := target_reference.call("resolve", scene_root, playback_target) as Node
+	if target == null:
+		push_error("Anima target reference could not resolve a target.")
+		return null
+	return play(motion, target)
+
 ## Returns a lightweight proxy for animating [param node] directly —
 ## `Anima.of(node).to(...)` — without building an [AnimaMotion] resource by hand.
 static func of(node: Node) -> AnimaNodeProxy:
 	return AnimaNodeProxy.new(node)
+
+## Returns a factory for authoring a common property change against [param
+## target] by name — `Anima.on(panel).opacity(1.0)` — instead of a raw
+## property path. Each factory method builds the same canonical
+## [AnimaPropertyMotion] direct [method Motion.to] authoring would, so the
+## result plays, composes, and reverses exactly like any other property
+## motion (`tech-spec.md` §Target-bound authoring contract). Reports an error
+## and returns `null` when [param target] is `null`.
+static func on(target: Node) -> AnimaOnMotionFactory:
+	if target == null:
+		push_error("Anima.on() requires a non-null target.")
+		return null
+	return AnimaOnMotionFactory.new(target)
+
+## Returns a factory for authoring a common per-item change against an
+## [AnimaGroupMotion]'s [member AnimaGroupMotion.item_motion] by name —
+## `group.item_motion = Anima.item().opacity(1.0)` — the same methods
+## [method on] exposes, except no fixed target: the group resolves and
+## supplies each item's own target when it plays
+## (`tech-spec.md` §Target-bound authoring contract).
+static func item() -> AnimaItemMotionFactory:
+	return AnimaItemMotionFactory.new()
 
 ## Attaches [param behaviour] to [param node] via node metadata — [param node]'s
 ## class and script are unchanged. Retrieve it later with [method get_behaviour].

@@ -28,7 +28,14 @@ function commentAbove(lines, index) {
   const comment = [];
   for (let cursor = index - 1; cursor >= 0; cursor -= 1) {
     const line = lines[cursor].trim();
-    if (line.startsWith("@")) continue;
+    // A bare annotation line with nothing else on it (e.g. a standalone
+    // `@tool`) sits between a comment and its declaration in some styles;
+    // skip past it. A full sibling declaration also starts with `@` (this
+    // codebase writes `@export var name = value` on one line) but has more
+    // after the annotation, so it falls through to the stop check below
+    // instead of being skipped — otherwise the scan walks straight past a
+    // preceding property into *its* comment block and accumulates it too.
+    if (/^@[A-Za-z_]+(?:\([^)]*\))?$/.test(line)) continue;
     if (!line.startsWith("##")) break;
     comment.unshift(line.replace(/^## ?/, ""));
   }

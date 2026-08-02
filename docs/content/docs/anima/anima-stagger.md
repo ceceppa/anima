@@ -32,32 +32,19 @@ The motion played against every entry in [member targets].
 
 ### targets
 
-The motion played against every entry in [member targets].
 Untyped (not Array[Node]): a typed Node array on a Resource script fails
 Godot 4.6's external-class-member static resolution when set from another script.
 
 ### interval
 
-The motion played against every entry in [member targets].
-Untyped (not Array[Node]): a typed Node array on a Resource script fails
-Godot 4.6's external-class-member static resolution when set from another script.
 Seconds between one target starting and the next.
 
 ### order
 
-The motion played against every entry in [member targets].
-Untyped (not Array[Node]): a typed Node array on a Resource script fails
-Godot 4.6's external-class-member static resolution when set from another script.
-Seconds between one target starting and the next.
 The order [member targets] start in.
 
 ### custom_order
 
-The motion played against every entry in [member targets].
-Untyped (not Array[Node]): a typed Node array on a Resource script fails
-Godot 4.6's external-class-member static resolution when set from another script.
-Seconds between one target starting and the next.
-The order [member targets] start in.
 Explicit start-order target indices, used only when [member order] is
 [constant Order.CUSTOM].
 

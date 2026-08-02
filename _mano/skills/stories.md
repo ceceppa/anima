@@ -85,6 +85,10 @@ Every story must include an Implementation Reference. Write it as a compact poin
 
 Only include fields relevant to this story. Omit empty categories. Do not invent variants, props, states, or constraints not backed by an existing artifact.
 
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+An artifact pointer is not proof that its named section is complete. Before pointing at a public/package contract—or a cross-component contract consumed by independently-owned components or multiple stories—verify that the section actually contains the exact operations/events, inputs/defaults, result/failure behavior, and any semantic-to-canonical mapping the story needs. A broad paragraph that only names capability families cannot be promoted into an implementation-ready contract by citing it.
+<!-- /mano-rule: public-interface-contract-readiness -->
+
 When project rules or the tech spec own exact tokens — prop names, attribute names, file paths, state keys, install commands, constants — point to the exact owning section instead of copying the value. When a project rule implies a required file, module, constant, or prohibition, make the obligation explicit while leaving any shared literal at its canonical home.
 
 **No hedged paths or ambiguous ownership.** Name one location. Do not write `src/foo.cpp or src/bar.cpp`, `either A or B`, `wherever the X helper lives`, or `if needed`. If ownership genuinely splits (computation in one file, enforcement in another), say so with each file's role: `compute in src/foo.cpp; enforce in src/bar.cpp`. If the correct location is genuinely unknown and not determinable from existing artifacts, flag it during the artifact gap check — do not ship the ambiguity.
@@ -308,6 +312,20 @@ If a story depends on missing domain structure, do not hide the gap in vague AC.
 
 Examples: do not write a checkout story unless the cart model is defined. Do not write a notification story unless a delivery channel is represented. Do not write a dashboard story unless a default or empty data state exists.
 
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+**0c.1 Public-interface readiness — hard gate.** For every prospective story that creates, changes, wraps, or depends on a public/package API, command, event protocol, plugin hook, external integration, persisted/wire format, or cross-component contract consumed by independently-owned components or multiple stories, verify its canonical owning artifact defines:
+
+- the exact consumer-visible operation, method, command, or event names;
+- input order/shape, required vs optional values, and behavior-driving defaults;
+- result/return or emitted payload plus validation/failure behavior;
+- ownership/lifetime and evaluation timing for relative/lazy/dynamic values when they change consumer use;
+- semantic-to-canonical mappings for convenience layers, adapters, aliases, serializers, or protocol translations.
+
+Apply this only to that consumer-visible or independently-owned boundary, not a private helper, internal service, or component API that one story and one implementer can safely design locally. “Supports position, movement, opacity, and generic properties” is not a callable contract: method names, argument shapes, and property mappings are still missing. “See tech-spec §API” is also insufficient when that section contains only the same family list.
+
+If any behavior-driving interface field needed by the story is absent or has two materially different readings, **write no story files**. Report one `⚠️ Story readiness gap` naming every missing field and route to `mano spec`. The general gap-check options to continue with a temporary note or partial guidance do not waive this gate; an implementer cannot safely invent a shared/public contract story by story.
+<!-- /mano-rule: public-interface-contract-readiness -->
+
 **0d. Artifact gap check.** For each prospective story, check whether it depends on a visual, interaction, accessibility, technical, data, API, constant, shared measurement, or rule detail that is not defined by the artifacts read this run. This is a warning/decision point, not a default blocker.
 
 Look for partial-but-usable guidance before flagging a gap. A detail is not missing merely because it is brief. If an artifact contains a relevant section, subsection, token, note, rule, constant, or implementation reference, reuse it and cite the artifact location in the story's `Implementation Reference`.
@@ -423,6 +441,10 @@ Next:
 Give each story its **full project-root-relative path** (as above), not a bare `story-N-[slug].md` — that is what makes each line tap-to-open in the editor. The path replaces the old parenthesised filename.
 
 Two rules for the flag lines (see the canonical execution-log format in `_mano/workflow.md`): **(1)** When an input artifact should have stated a behaviour-driving value and didn't (a default, a threshold, a severity), infer the most consistent value, build the story with it, and raise the inference as a `❓ Decide:` — never leave the implementer to invent it, and never edit the upstream artifact yourself (flag the gap for its owning skill). **(2)** A pending `❓ Decide:` makes the affected next action conditional: name which story is blocked and write `mano dev` as available only after that decision. Do not add a separate `Status:` line.
+
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+The inference path above does not apply to the Public-interface readiness hard gate: route that missing contract to `mano spec` and write no stories.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 Do not ask for per-story approval. The user reviews the files at their own pace in their editor.
 

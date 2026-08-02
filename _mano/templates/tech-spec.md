@@ -20,6 +20,16 @@
 |--------|--------|-------|
 | | | |
 
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+## Public / Integration Interface Contracts
+
+<!-- Include only when the product exposes or consumes a public, package, protocol, command, event, plugin, persisted/wire, external-integration, or independently-owned cross-component interface. Exact consumer-visible contracts belong here; reusable coding/signature conventions belong in project-rules.md. -->
+
+| Surface | Exact operation / event | Inputs & defaults | Result / failure | Canonical mapping / ownership |
+|---------|-------------------------|-------------------|------------------|-------------------------------|
+| | | | | |
+<!-- /mano-rule: public-interface-contract-readiness -->
+
 ## Storage Strategy
 
 <!-- Library, location, offline behaviour. Schema if SQL. -->
@@ -45,4 +55,3 @@
 <!-- Optional. Only include technical constraints derived from principles explicitly present in the current phase brief or provided context. Omit if none apply. -->
 
 -
-

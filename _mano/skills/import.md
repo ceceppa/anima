@@ -144,6 +144,6 @@ This list is the negative restatement of rules defined in full elsewhere. Where 
 - Do not ask about tech, persistence, or implementation, or re-open closed scope — see **Intake Boundaries B1 and B2** in `_mano/workflow.md`.
 - Do not ask scope-sizing or phase-selection questions, including ones disguised as contradictions or yes/no confirmations — see **B3**.
 - Do not decide, evaluate, or act on a stated technical preference — transcribe it verbatim into the item context and leave the decision to `mano spec` (see **B1**, pass-through).
-- Do not create optional artifacts (`project-rules.md`, `tech-spec.md`, `ux-flow.md`, `design-brief.md`, `design-preview.html`).
+- Do not create optional project-rule, technical, UX, or UI design artifacts.
 - Do not remove or replace existing backlog items. Only append, or merge with explicit user confirmation when a backlog already exists.
 - Do not write or fix code. `mano import` is a planner.

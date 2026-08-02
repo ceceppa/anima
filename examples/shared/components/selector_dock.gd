@@ -5,7 +5,7 @@ const INDICATOR_BG := Color(0.309804, 0.27451, 0.898039, 1.0) # accent
 const INDICATOR_RADIUS := 12
 const MOVE_DURATION := 0.26
 
-@onready var _items_box: HBoxContainer = %Items
+@onready var _items_box: HFlowContainer = %Items
 
 ## The indicator's logical target, updated synchronously on every select() —
 ## independent of how far the animated (tweened) visual has actually moved,
@@ -91,19 +91,16 @@ func select(index: int) -> void:
 	var rect := _rect_for_index(index)
 	_move_indicator_to(rect.position, rect.size)
 
-## Computes the target's rect analytically from minimum sizes rather than
-## reading target.position/size directly — those only reflect real values
-## once the HBoxContainer has run its (deferred) sort pass, which hasn't
-## necessarily happened yet the moment an item is selected right after being
-## added. No child here expands to fill extra space, so summing minimum
-## sizes plus separation exactly matches where the container will place it.
+## Reads the target's actual laid-out rect, relative to this dock — correct
+## across however many rows [member _items_box] (an [HFlowContainer], so a
+## wide item set wraps) has actually placed it on. [method select]'s
+## `_is_first_time` guard already awaits one frame before the first call
+## here, so the container's sort pass has already run by the time this reads
+## `position`/`size`; the item set never changes after that, so every later
+## call reads an already-settled layout too.
 func _rect_for_index(index: int) -> Rect2:
-	var separation: int = _items_box.get_theme_constant("separation")
-	var x := _items_box.position.x
-	for i in range(index):
-		x += _items_box.get_child(i).get_combined_minimum_size().x + separation
 	var target: Control = _items_box.get_child(index)
-	return Rect2(Vector2(x, _items_box.position.y), target.get_combined_minimum_size())
+	return Rect2(_items_box.position + target.position, target.size)
 
 func _move_indicator_to(target_position: Vector2, target_size: Vector2) -> void:
 	indicator_target_position = target_position

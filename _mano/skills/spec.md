@@ -20,19 +20,25 @@ This skill produces the tech spec: what someone needs to open their editor and s
 This skill activates when the user types `mano spec`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
 
 On activation:
-1. Run `node _mano/scripts/state.js --gaps spec-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `spec-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `TYPE: spec-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+1. Run `node _mano/scripts/state.js --spec`. Its `SPEC INPUT` is the complete backlog-derived context for this skill: the current phase's exact `in-phase-[N]` item blocks plus unresolved `spec-gap` items. **Do not open `_mano_output/backlog.md` before or after this command.** Treat the projection as valid only when all of these integrity checks pass: the exact opening `--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---` and exact closing `--- END SPEC INPUT ---` sentinels are present; `STATUS: READY`, `PHASE:`, `BRIEF:`, `IN_PHASE_COUNT:`, and `SPEC_GAP_COUNT:` are present; `END_IN_PHASE_COUNT` and `END_SPEC_GAP_COUNT` equal their matching header counts; and the number and sequence of matching BEGIN/END item envelopes equals each count. **Any tool/runtime notice that output was truncated, elided, or omitted invalidates the projection regardless of which sentinels survived.** If the command fails or any integrity check fails, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result. Phase-item context is input evidence, not permission to expand the approved phase: if it conflicts with the phase brief, surface the conflict instead of silently combining them.
+<!-- /mano-rule: public-interface-contract-readiness -->
 2. Read the phase brief from `_mano_output/phase-[N]/phase-brief.md`.
 3. Read `_mano_output/tech-spec.md` if it exists.
 4. Read any package manifest and matching lockfile if they exist (`package.json` + `package-lock.json` / `pnpm-lock.yaml` / `yarn.lock` / `bun.lockb`).
-5. Do not read the project `README.md` or source files to discover additional context. The phase brief, existing spec, manifests/lockfiles, projected gaps, and literal context supplied by the user are the activation boundary.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+5. Do not read the project `README.md` or mine source files for requirements. The phase brief, existing spec, manifests/lockfiles, projected current-phase items and gaps, and literal context supplied by the user are the requirements boundary. The single source exception is the bounded **Existing-interface reconciliation** below: when this phase changes or composes with an already-implemented consumer-visible or independently-owned cross-component interface, inspect only its declarations to verify the proposed contract is compatible with current reality.
+<!-- /mano-rule: public-interface-contract-readiness -->
 6. If no phase brief exists, warn the user and ask if they want to run `mano start` first or proceed anyway.
-7. If spec already exists, compare it against the current phase brief, the projected `spec-gap` items, any literal spec-gap context supplied by the user, and any manifest or lockfile evidence of the actual installed toolchain. **Brief-consistency is not the only pass condition.** A spec can match the brief and still be defective on its own terms — most commonly because the brief carries the same unhomed magic number the spec does, so diffing them surfaces nothing. Before presenting the diff, run the **Drain check**, the **Unhomed-value check**, and the **Domain model completeness check** (all below) against the *existing* spec, not just against the brief. These are quality passes on the spec itself, mandatory on every re-run, not only when drafting from scratch. An unhomed quantity is a defect even when the spec is "consistent with the brief" — home it and report it as a bullet in the completion log.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+7. If spec already exists, compare it against the current phase brief, projected current-phase items, projected `spec-gap` items, any literal spec-gap context supplied by the user, and any manifest or lockfile evidence of the actual installed toolchain. **Brief-consistency is not the only pass condition.** A spec can match the brief and still be defective on its own terms — most commonly because the brief carries the same unhomed magic number the spec does, so diffing them surfaces nothing. Before presenting the diff, run the **Drain check**, the **Unhomed-value check**, **Domain model completeness check**, and **Public interface completeness check** (all below) against the *existing* spec, not just against the brief. These are quality passes on the spec itself, mandatory on every re-run, not only when drafting from scratch. An unhomed value or incomplete public contract is a defect even when the spec is "consistent with the brief" — repair it and report it as a bullet in the completion log.
 
-**Change-ripple — when the requested change introduces a new mechanism.** A change is rarely just the line it names. When a requested edit swaps in a new node type, interface, entity, or capability (e.g. a single value becomes a collection, a static field becomes computed, a plain-text field becomes rich text), that new mechanism *brings its own required data* — and the localized edit will home the named thing while silently leaving the new data unhomed. Do not apply such a change as a one-line swap. Re-run the Domain model completeness check on what the new mechanism requires: list the properties/state it needs to work, and for each, either home it in the data model or **explicitly defer it in writing** (an Assumption Log / deferral note), naming which entity will own it once a deferred item lands. This is decisive, not interrogative — make the logical assumption and record it; do not stop to ask the user step-by-step. Surface anything newly required-but-unhomed as a bullet in the completion log.
+**Change-ripple — when the requested change introduces a new mechanism.** A change is rarely just the line it names. When a requested edit swaps in a new node type, interface, entity, or capability (e.g. a single value becomes a collection, a static field becomes computed, a plain-text field becomes rich text), that new mechanism *brings its own required data* — and the localized edit will home the named thing while silently leaving the new data unhomed. Do not apply such a change as a one-line swap. Re-run the Domain model completeness check and, when a consumer-visible or independently-owned cross-component surface is involved, the Public interface completeness check. List what the new mechanism needs to work; home each requirement or **explicitly defer it in writing** (an Assumption Log / deferral note), naming its future owner. This is decisive, not interrogative — make the logical assumption and record it; do not stop to ask the user step-by-step. Surface anything newly required-but-unhomed as a bullet in the completion log.
 
-Do not conclude "consistent, no updates needed" until all three checks have run clean. Apply required non-conflicting updates directly in the same run and report them in the completion log; do not present a pre-write diff and ask for routine apply confirmation. If the checks expose a conflicting shared value or another decision the workflow reserves for the human, stop before writing that conflict and surface the exact alternatives. If nothing has changed and no spec-gaps exist, say so and skip the write.
+Do not conclude "consistent, no updates needed" until all four checks have run clean. Apply required non-conflicting updates directly in the same run and report them in the completion log; do not present a pre-write diff and ask for routine apply confirmation. If the checks expose a conflicting shared value or another decision the workflow reserves for the human, stop before writing that conflict and surface the exact alternatives. If nothing has changed and no spec-gaps exist, say so and skip the write.
 
-8. If spec doesn't exist yet, generate from scratch using the same projected gaps as requirements for the initial artifact.
+8. If spec doesn't exist yet, generate from scratch using the projected current-phase items and gaps as requirements for the initial artifact.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 This same command is also how sync-back works after real project setup. Rerun `mano spec` when:
 - the project was just initialized and now has a real lockfile
@@ -52,10 +58,14 @@ Run one command per addressed item. Do not resolve a gap that was deferred, only
 
 - Phase brief (required — warn and proceed if missing)
 - Package manifest and lockfile if they exist (optional — sync the spec to real installed versions)
-- Unresolved `spec-gap` projection from `state.js --gaps spec-gap` (optional when its count is zero)
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- Current phase's exact `in-phase-[N]` backlog-item projection from `state.js --spec` (optional when no phase exists)
+- Unresolved `spec-gap` projection from `state.js --spec` (optional when its count is zero)
+- Existing declaration/export surface for a named brownfield interface (optional; bounded reconciliation only)
 - Literal spec-gap context supplied directly by the user (optional)
 
-`mano spec` does not read design briefs, project rules, stories, project README files, source files, or the backlog directly. This remains true when the user asks to "handle the gaps in the backlog": run the filtered projection instead of opening the file. A backlog excerpt pasted directly into chat is literal user-provided context, but it is never permission to open the full backlog. `mano start` owns general backlog continuity and copies any relevant product principles into the phase brief; `mano spec` operates from the phase brief, the narrow gap projection, manifests/lockfiles, and literal user-provided context only.
+`mano spec` does not read design briefs, project rules, stories, project README files, or the backlog directly, and it does not mine source for requirements. The bounded existing-interface declaration check is the only source exception. This remains true when the user asks to "handle the gaps in the backlog": run the filtered projection instead of opening the file. A backlog excerpt pasted directly into chat is literal user-provided context, but it is never permission to open the full backlog. `mano start` owns general backlog continuity and the approved phase boundary; `state.js --spec` carries the selected items' exact source context across that boundary without exposing unrelated backlog content.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 When product principles appear in the phase brief, translate only the ones with technical impact into constraints (perceived performance, accessibility posture, offline behaviour, latency budgets, keyboard-first interaction, etc.). Do not restate product copy. If a principle has no technical impact for the current phase, ignore it.
 
@@ -67,6 +77,9 @@ A full tech spec is strongly recommended when any of these are true:
 - Data model with more than two entities
 - Platform-specific constraints (offline, biometrics, OCR, etc.)
 - Third-party integrations or APIs
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- New or changed public/package APIs, protocols, commands, events, persisted/wire formats, external integrations, or cross-component contracts consumed by independently-owned components or multiple stories
+<!-- /mano-rule: public-interface-contract-readiness -->
 - Non-obvious architecture decisions
 - User explicitly asks
 
@@ -80,6 +93,9 @@ Belongs in `tech-spec.md`:
 - Library and framework choices, with install commands
 - Data model (entities, fields, relationships)
 - API contracts (endpoints, request/response shapes, error format)
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- Public or independently-owned cross-component callable contracts (exact consumer-visible operation/event names, inputs and defaults, result/failure shape, and semantic-to-canonical mappings)
+<!-- /mano-rule: public-interface-contract-readiness -->
 - Storage strategy (library, location, offline behaviour, schema if SQL)
 - Platform constraints
 - Cross-environment boundaries (app ↔ widget, app ↔ watch, web ↔ native)
@@ -87,22 +103,30 @@ Belongs in `tech-spec.md`:
 - Tool choices (linter, formatter, test runner)
 
 Belongs in `project-rules.md`, NOT `tech-spec.md`:
-- Function signatures, parameter shapes, return-type conventions (e.g. "loaders return `std::optional<T>` and are marked `[[nodiscard]]`")
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- Project-wide signature, parameter, and return-type conventions (e.g. "all loaders return `std::optional<T>` and are marked `[[nodiscard]]`")
+<!-- /mano-rule: public-interface-contract-readiness -->
 - File-IO patterns and which helpers to use (e.g. "use `LoadFileText` / `UnloadFileText`")
 - Validation and error-handling patterns (e.g. "log via TraceLog, return nullopt on failure")
 - Code-style obligations and enforcement details
 - File-placement conventions, folder layout rules
 - Naming conventions
-- Component API patterns
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- Reusable component API patterns (a particular shared component's consumer-visible prop/event contract remains a spec decision when the phase depends on it)
+<!-- /mano-rule: public-interface-contract-readiness -->
 - "How to write a loader" or "how to write a service" — these are patterns, not decisions
 
-The test: if the rule applies project-wide and could be followed by any future loader, service, or screen, it is a project rule. If it is a one-time decision about *what the system is* (which JSON library, which storage backend, which API shape), it is a spec decision.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+The test: if the rule applies project-wide and could be followed by any future loader, service, or screen, it is a project rule. If it defines a particular consumer-visible public/package surface or independently-owned cross-component contract this product exposes or consumes, it is a spec decision. **Do not misclassify an exact public API signature as an implementation pattern.** `WidgetClient.subscribe(topic, options) -> Subscription` belongs in the spec when that callable is the feature contract; "client methods accept an options object" belongs in rules when it is a reusable convention. Private helper signatures and internal construction steps belong in code, not either planning artifact.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 Borderline cases:
 - "Use cJSON for JSON parsing" → spec (library choice).
 - "Loaders return optional and log via TraceLog" → project-rules (pattern).
 - "Level files live at `levels/level_NN.json` and validate `cols == COLS` and `rows == ROWS`" → spec (data contract).
-- "The exact C++ function signature `[[nodiscard]] std::optional<Level> load_level(std::string_view path)`" → not in spec; either code, or a project rule if signatures follow a project-wide convention.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- "The exact private C++ helper signature `load_level(std::string_view path)`" → code; the exported `LevelStore.load(id) -> Level | NotFound` consumer contract → spec; a project-wide `[[nodiscard]]` convention → rules.
+<!-- /mano-rule: public-interface-contract-readiness -->
 - "The pricing calculator is a pure function with no side effects" → spec (architectural commitment).
 - "The validator's per-field loop steps: empty → skip, invalid → collect error, valid → continue" → either code or a project rule if there's a pattern across validators; not the spec's job to specify behaviour at this granularity.
 
@@ -176,13 +200,15 @@ The spec is not a project diary. History lives in `reviews.md`, `backlog.md`, an
   |--------|--------|-------|
   | | | |
 
-- **API contract** (if applicable).
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- **Public / integration interface contracts** (if applicable). Use the shape appropriate to the product; do not force an HTTP endpoint table onto a library, CLI, event stream, independently-owned component boundary, or engine API.
 
-  | Method | Endpoint | Request | Response |
-  |--------|----------|---------|----------|
-  | | | | |
+  | Surface | Exact operation / event | Inputs & defaults | Result / failure | Canonical mapping / ownership |
+  |---------|-------------------------|-------------------|------------------|-------------------------------|
+  | | | | | |
 
-  Error format: [proposed shape]
+  For HTTP, `Exact operation / event` may be `METHOD /path` and the remaining columns hold request, response/error, and owning service. For a callable API, include the consumer-visible signature and any required semantic-to-underlying mapping.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 - **Storage strategy** — library, location, offline behaviour. Schema if SQL.
 - **Key technical decisions** — state the decision, not the options.
@@ -236,6 +262,35 @@ Examples:
 - Notifications require a delivery channel or address per recipient.
 - Level loading requires a level structure or default test level.
 - Completion logic requires a target, goal, or win condition.
+
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+## Public interface completeness check
+
+Run this check whenever the approved phase creates, changes, wraps, or consumes a public/package API, CLI command, event protocol, plugin hook, external integration, persisted/wire format, or cross-component contract consumed by independently-owned components or multiple stories. It runs on both first generation and every re-run. It does **not** apply to a private helper, internal service, or component API that one story and one implementer can safely design locally.
+
+Build a compact interface matrix from the phase brief **and every projected current-phase item**. For each promised operation or event, the canonical spec must define all behavior-driving parts needed by its consumers:
+
+- exact consumer-visible operation, method, command, or event name;
+- input order/shape, types where meaningful, required vs optional fields, and defaults;
+- result/return or emitted payload, including failure and validation behavior;
+- ownership/lifetime, evaluation timing for relative/lazy/dynamic values, or state transition when it changes how the interface is used;
+- semantic-to-canonical mapping when the interface is a convenience layer, adapter, alias, serializer, or protocol translation.
+
+Names such as “position, relative movement, opacity, and generic property” are only capability families; they do not define callable methods. A heading named “API contract” is not evidence of completeness. If two reasonable method names, argument shapes, property mappings, or failure results would produce materially different consumer code, choose and record the most consistent one or raise `❓ Decide:` when the choice is reserved for the human. Never leave it for `mano stories` or `mano dev` to invent.
+
+After completing the matrix, compare every row with the surrounding data model, decisions, and prose. The same operation must not acquire a second default, mapping, validation point, ownership rule, or evaluation time elsewhere in the spec. A correct statement in one section does not cancel a contradictory statement in another; resolve the contradiction before writing or confirming the artifact.
+
+### Existing-interface reconciliation (brownfield only)
+
+When the matrix changes or composes with an interface that the projected context names as already implemented, reconcile the desired contract with current declarations before confirming the spec:
+
+1. Search only for the named public symbols/types with a narrow text search such as `rg`; do not inventory the codebase or mine source for new requirements.
+2. Read only the declaration/export surface and directly required public types. Do not trace implementation bodies, debug behavior, or broaden phase scope.
+3. Compare actual names, signatures/defaults, return shapes, and language/framework constraints with the proposed matrix.
+4. Record an explicit replacement, adapter/alias, or compatible extension. If the source and approved requirement conflict and the resolution changes consumer behavior, raise `❓ Decide:` before stories.
+
+If the named existing interface cannot be located, state that as `⚠ Verify:`; do not pretend compatibility was checked. This bounded exception verifies an already-selected contract—it does not let `mano spec` derive the work list from source.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 ## Spec generation — one-shot
 
@@ -314,7 +369,9 @@ Populate the canonical `Next:` block from the actions that are still missing or 
 - Do not include deployment architecture for small projects.
 - Do not include security architecture beyond what the brief specifies.
 - Do not include performance benchmarks unless relevant.
-- Do not put implementation patterns (function signatures, error-handling conventions, file-IO helpers, folder structure) in the spec — those are `project-rules.md` territory. This explicitly includes the two recurring leaks the **Drain check** targets: concrete on-disk file paths (`prisma/dev.db`, `db/schema.ts`, migration dirs) and accessibility/coding *patterns* phrased as contributor obligations ("use native `<button>` not custom widgets"). The spec keeps the decision/constraint that motivates these; the path and the how-to drain out. Applies even when `project-rules.md` does not exist yet — an unhomed pattern is a `rule-gap`, not spec content.
-- Do not write implementation code, internal component signatures, or exact UI/rendering math.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- Do not put implementation patterns (project-wide signature/error conventions, file-IO helpers, folder structure) in the spec — those are `project-rules.md` territory. This explicitly includes the two recurring leaks the **Drain check** targets: concrete on-disk file paths (`prisma/dev.db`, `db/schema.ts`, migration dirs) and accessibility/coding *patterns* phrased as contributor obligations ("use native `<button>` not custom widgets"). The spec keeps the decision/constraint that motivates these; the path and the how-to drain out. Applies even when `project-rules.md` does not exist yet — an unhomed pattern is a `rule-gap`, not spec content. Exact consumer-visible contracts remain in the spec under the Public interface completeness check.
+- Do not write implementation code, private/internal helper signatures, or exact UI/rendering math.
+<!-- /mano-rule: public-interface-contract-readiness -->
 - Do not list phase-level scope ("not in this phase," "deferred to Phase N") — phase scope belongs in the phase brief. Out of Scope in the spec is for architectural commitments only.
 - Do not mention the current Phase number anywhere in the generated spec, except in a one-line replacement note when a significant decision was superseded.

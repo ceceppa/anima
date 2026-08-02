@@ -26,6 +26,13 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 Advances this motion by [param delta] seconds and writes the new value to
 [param target]. Returns `true` once finished.
 
+### build_reversed
+
+Builds a new [AnimaPropertyMotion] that reverses this instance's actually
+resolved run — the captured start and effective end values swapped, so
+reverse playback returns to what was actually observed at start, even for
+a relative (`move_by`-style) motion. `null` before any value is captured.
+
 ### retarget_spring
 
 Redirects a still-moving spring to a new destination, preserving its

@@ -26,20 +26,14 @@ The motion to repeat.
 
 ### count
 
-The motion to repeat.
 How many times [member child] plays. Always finite this phase.
 
 ### delay_between
 
-The motion to repeat.
-How many times [member child] plays. Always finite this phase.
 Delay in seconds between one repetition ending and the next starting.
 
 ### alternate
 
-The motion to repeat.
-How many times [member child] plays. Always finite this phase.
-Delay in seconds between one repetition ending and the next starting.
 When `true`, odd repetitions reverse [member child] (swap `from_value`/
 `to_value` for an [AnimaPropertyMotion] child) instead of repeating it
 identically.

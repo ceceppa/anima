@@ -33,52 +33,27 @@ Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
 
 ### enabled
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
 Disabled motions are skipped by every composite that contains them.
 
 ### delay
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
-Disabled motions are skipped by every composite that contains them.
 Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
 this and [member delay_basis] this phase. May be negative (an overlap).
 
 ### delay_basis
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
-Disabled motions are skipped by every composite that contains them.
-Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
-this and [member delay_basis] this phase. May be negative (an overlap).
 Which sibling instant [member delay] is measured from.
 
 ### speed
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
-Disabled motions are skipped by every composite that contains them.
-Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
-this and [member delay_basis] this phase. May be negative (an overlap).
-Which sibling instant [member delay] is measured from.
 Playback speed multiplier.
 
 ### tags
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
-Disabled motions are skipped by every composite that contains them.
-Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
-this and [member delay_basis] this phase. May be negative (an overlap).
-Which sibling instant [member delay] is measured from.
-Playback speed multiplier.
 Optional categorisation metadata — no logic reads or filters on this.
 
 ### metadata
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
-Disabled motions are skipped by every composite that contains them.
-Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
-this and [member delay_basis] this phase. May be negative (an overlap).
-Which sibling instant [member delay] is measured from.
-Playback speed multiplier.
-Optional categorisation metadata — no logic reads or filters on this.
 Optional free-form metadata — no logic reads this.
 
 ## Methods
@@ -97,3 +72,21 @@ motion frame by frame. Every subtype must override this explicitly.
 
 Returns a list of human-readable configuration errors, or an empty array
 when this motion (and its children, if any) are valid.
+
+### then
+
+Builds an [AnimaSequence] that plays this motion, then [param other],
+in order — the same resource [method Motion.sequence] would build.
+Chaining a second `.then()` appends another step to one flat sequence
+instead of nesting (`a.then(b).then(c)` is a 3-step sequence, not a
+sequence of sequences). See [method with] for combining steps that
+should start together instead.
+
+### with
+
+Folds [param other] into the same [AnimaParallel] group as whatever was
+most recently chained — the group open since the last [method then], or
+the whole chain when no [method then] preceded it. Multiple consecutive
+`.with()` calls join one growing group rather than nesting
+(`a.then(b).with(c).with(d)` is `b`, `c`, and `d` all starting together,
+after `a`).

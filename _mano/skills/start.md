@@ -71,7 +71,7 @@ Acceptable approval examples: "Approve", "Use this as Phase 1", "Go with backend
 
 Do not create `_mano_output/phase-[N]/phase-brief.md`, create stories, or mark backlog items as `in-phase-[N]` until the human explicitly confirms the phase scope.
 
-Optional artifacts (`project-rules.md`, `tech-spec.md`, `ux-flow.md`, `design-brief.md`, `design-preview.html`) are never created during `mano start`.
+Optional project-rule, technical, UX, and UI design artifacts are never created during `mano start`.
 
 ## Flow
 
@@ -144,7 +144,9 @@ Prioritise:
 2. Dependencies — items that unblock other items
 3. Momentum — items that build on what was just shipped
 
-`mano start` ignores `spec-gap` and `rule-gap` items when suggesting phase scope — `state.js --scope` excludes them before they enter context. They are exposed separately by `state.js --gaps spec-gap` / `--gaps rule-gap` and addressed by `mano spec` / `mano rules`.
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+`mano start` ignores `spec-gap` and `rule-gap` items when suggesting phase scope — `state.js --scope` excludes them before they enter context. They are exposed to their owners by `state.js --spec` / `state.js --gaps rule-gap` and addressed by `mano spec` / `mano rules`.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 ```
 [mano start]: Suggested Phase [N] Scope:
@@ -377,7 +379,9 @@ Splitting is the one case where editing an existing item's title and context is 
 - **`mano start`** writes deferred items during scoping
 - **`mano review`** writes deferred items during triage
 - **The user** can edit directly at any time
-- **`mano spec`** may only mark a fully addressed item from `state.js --gaps spec-gap` as resolved, using `backlog.js resolve-gap`
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+- **`mano spec`** may only mark a fully addressed spec-gap item from `state.js --spec` as resolved, using `backlog.js resolve-gap`
+<!-- /mano-rule: public-interface-contract-readiness -->
 - **`mano rules`** may only mark a fully addressed item from `state.js --gaps rule-gap` as resolved, using `backlog.js resolve-gap`
 - No other skill may write to the backlog
 
@@ -401,8 +405,12 @@ Only finalise after explicit human approval of the phase scope.
    ```
    One `--title` per human-approved item. The script flips only items currently `Status: backlog` and reports any it can't match (wrong title, or already moved). If an approved item covers only a *slice* of a backlog item, split it (see **Splitting an item**) before assigning. Never mark candidate items in-phase before approval.
    **Script failing?** Stop and report the error — do not hand-edit `Status` lines.
-5. Suggest next actions based on which useful artifacts are still missing. Check which of `tech-spec.md`, `ux-flow.md`, `design-brief.md`, and `project-rules.md` exist in `_mano_output/`. Then emit a next-action block that:
-   - Lists only artifacts that don't exist yet (skipping ones that are already present)
+<!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
+For a user-facing or mobile phase, check both the cumulative `_mano_output/design-brief.md` and the newly approved phase's `_mano_output/phase-[N]/design-preview.html`. A preview in another phase, or a legacy root `_mano_output/design-preview.html`, does not cover this phase. Keep `mano ui` visible whenever the current preview is missing or the phase introduces visual or screen-composition work not covered by the design brief, even when every component is reused. Do not read another phase's preview to make this decision.
+<!-- /mano-rule: ui-phase-preview-ownership -->
+
+5. Suggest next actions based on which useful artifacts are still missing or stale. Check which of `tech-spec.md`, `ux-flow.md`, `design-brief.md`, and `project-rules.md` exist in `_mano_output/`, plus whether a current design preview exists when one is useful. Then emit a next-action block that:
+   - Lists only artifacts that don't exist yet or need refinement (skipping ones that are already present and current)
    - Ends with a clear **recommended next step** — whichever single action is most likely to unblock implementation. Default recommendation is `mano stories` when the phase is self-contained (pure visual, pure refactor, or the brief already captures the full behaviour contract). Default to `mano spec` first when the phase introduces new data, new APIs, new external dependencies, or new integration points.
    - **"Incremental on existing tech" is not the same as "no new external API."** Recommend `mano spec` first whenever *any* of these hold, even if no new external dependency is added:
      - The phase **replaces or overturns an existing tech-spec decision** — e.g. swapping an established approach for a different one (a full-list refresh becomes incremental sync, in-memory becomes persisted, polling becomes push). Reversing a committed decision is new technical territory, not an increment on it.
@@ -457,7 +465,7 @@ This list is the negative restatement of rules defined in full elsewhere. Where 
 - Do not ask scope-sizing or phase-selection questions during intake, or float a candidate decomposition before the backlog exists — see **Boundaries** B3.
 - Do not read source code to enumerate the work or verify defects — a structural glance to ground a question is fine, mining the codebase for the work list is not — see **Boundaries** B5.
 - Do not suggest, draft, or advance to a new phase while the latest phase is in progress — the state script's `DECISION: STOP` is binding. Spotting defects does not license advancing.
-- Do not create optional artifacts during `mano start` (`project-rules.md`, `tech-spec.md`, `ux-flow.md`, `design-brief.md`, `design-preview.html`).
+- Do not create optional project-rule, technical, UX, or UI design artifacts during `mano start`.
 - Do not write a phase brief, create a phase folder, create stories, or mark backlog items as `in-phase-[N]` before explicit human approval of the phase scope.
 - Do not put implementation tokens in the phase brief — specific hex values, pixel sizes, animation durations, function signatures, API contracts, file paths, or data-model decisions (schema fields, column names, storage shape). Applies everywhere in the brief, including the Assumption Log and Acknowledged Risks. Express the *constraint or intent*, not the *mechanism*. (This is the brief-output face of B1.) **Sole exemption:** the `## Stated Technical Preferences` pass-through block, which is a verbatim quoted record of a directive the user themselves stated — not `mano start` introducing or deciding tech. The exemption covers only verbatim transcription there; everywhere else, including paraphrasing those preferences into other sections, remains forbidden.
 - Do not skip scope sizing. Enforce the one-testable-layer rule even if the user asks for a larger dump.

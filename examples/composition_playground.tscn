@@ -16,7 +16,7 @@ border_color = Color(0.117647, 0.160784, 0.231373, 1)
 shadow_color = Color(0, 0, 0, 0.24)
 shadow_size = 8
 
-[node name="CompositionPlayground" type="Control" unique_id=584612889]
+[node name="CompositionPlayground" type="Control" unique_id=2008351733]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,6 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_lyx8s")
 script = ExtResource("1")
+metadata/_custom_type_script = "uid://basfvmk14pm0u"
 
 [node name="Background" type="ColorRect" parent="." unique_id=582436016]
 layout_mode = 1

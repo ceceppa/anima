@@ -16,6 +16,7 @@ Developers evaluating the new convenience layer can run one focused playground a
 
 #### Implementation Reference
 - **Files:** `examples/convenience_motion_playground.tscn`; `examples/convenience_motion_playground.gd`; `tests/Anima.integration.convenience-playground.test.gd`
+- **Contract:** `_mano_output/tech-spec.md §Key technical decisions` — `AnimaPlayback.reverse()` now covers a leaf/composite target-bound motion, not just groups
 - **UX:** `_mano_output/ux-flow.md §Convenience Motion Example Scene`
 - **Design:** `_mano_output/design-brief.md §Component guide`; `§Screen composition — Composition Example Scene`
 - **Rules:** `_mano_output/project-rules.md §Example Scenes`; `§Testing`

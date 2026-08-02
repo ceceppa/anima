@@ -43,41 +43,22 @@ The ordering strategy used for the group.
 
 ### origin
 
-The ordering strategy used for the group.
 The start point for origin-based ordering. First preserves list traversal.
 
 ### origin_index
 
-The ordering strategy used for the group.
-The start point for origin-based ordering. First preserves list traversal.
 The resolved-list position used when [member origin] is [constant Origin.INDEX].
 
 ### origin_point
 
-The ordering strategy used for the group.
-The start point for origin-based ordering. First preserves list traversal.
-The resolved-list position used when [member origin] is [constant Origin.INDEX].
 The virtual position used when [member origin] is [constant Origin.POINT].
 See [constant Origin.POINT] for how [constant Kind.GRID] and
 [constant Kind.DISTANCE] each interpret this differently.
 
 ### seed
 
-The ordering strategy used for the group.
-The start point for origin-based ordering. First preserves list traversal.
-The resolved-list position used when [member origin] is [constant Origin.INDEX].
-The virtual position used when [member origin] is [constant Origin.POINT].
-See [constant Origin.POINT] for how [constant Kind.GRID] and
-[constant Kind.DISTANCE] each interpret this differently.
 Optional seed that makes a [constant Kind.RANDOM] order repeatable.
 
 ### grid_columns
 
-The ordering strategy used for the group.
-The start point for origin-based ordering. First preserves list traversal.
-The resolved-list position used when [member origin] is [constant Origin.INDEX].
-The virtual position used when [member origin] is [constant Origin.POINT].
-See [constant Origin.POINT] for how [constant Kind.GRID] and
-[constant Kind.DISTANCE] each interpret this differently.
-Optional seed that makes a [constant Kind.RANDOM] order repeatable.
 Column count used only by [constant Kind.GRID].

@@ -20,6 +20,55 @@ func test_default_ease_is_linear():
 
 	assert_eq(motion.ease.kind, AnimaEase.Kind.LINEAR)
 
+func test_with_delay_sets_the_inherited_delay_field_and_returns_self():
+	var motion := AnimaPropertyMotion.new()
+
+	var result := motion.with_delay(0.25)
+
+	assert_eq(motion.delay, 0.25)
+	assert_same(result, motion)
+
+func test_from_sets_explicit_start_value_and_returns_self():
+	var motion := AnimaPropertyMotion.new()
+
+	var result := motion.from(10.0)
+
+	assert_eq(motion.from_value, 10.0)
+	assert_same(result, motion)
+
+func test_from_current_clears_the_start_value():
+	var motion := AnimaPropertyMotion.new()
+	motion.from_value = 10.0
+
+	motion.from_current()
+
+	assert_null(motion.from_value)
+
+func test_relative_sets_is_relative_and_returns_self():
+	var motion := AnimaPropertyMotion.new()
+
+	var result := motion.relative()
+
+	assert_true(motion.is_relative)
+	assert_same(result, motion)
+
+func test_is_relative_adds_to_value_to_the_resolved_start_instead_of_replacing_it():
+	var target := Node2D.new()
+	add_child_autofree(target)
+	target.position.x = 10.0
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 40.0
+	motion.duration = 0.5
+	motion.is_relative = true
+
+	var instance = motion.create_runtime()
+	for i in range(30):
+		instance.advance(target, 1.0 / 60.0)
+
+	assert_almost_eq(target.position.x, 50.0, 0.01, "move_by-style motion should end at start (10) + delta (40)")
+
 func test_estimate_duration_returns_duration():
 	var motion := AnimaPropertyMotion.new()
 	motion.duration = 0.75

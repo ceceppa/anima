@@ -17,7 +17,7 @@ Motion authors can describe the most common changes from a target node in a read
 
 #### Implementation Reference
 - **Files:** `addons/anima/motion/resources/anima_property_motion.gd`; `addons/anima/motion/runtime/anima.gd`; `tests/Anima.integration.convenience-motions.test.gd`
-- **Contract:** `_mano_output/tech-spec.md §Target-bound authoring contract`
+- **Contract:** `_mano_output/tech-spec.md §Target-bound authoring contract`; `§Convenience method interface`
 - **Rules:** `_mano_output/project-rules.md §Folder Structure`; `§Naming`; `§Patterns`; `§Documentation`; `§Testing`
 
 ---

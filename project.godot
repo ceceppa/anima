@@ -21,7 +21,7 @@ config/features=PackedStringArray("4.7")
 [display]
 
 window/size/viewport_width=2880
-window/size/viewport_height=1620
+window/size/viewport_height=1980
 window/stretch/mode="canvas_items"
 
 [editor_plugins]

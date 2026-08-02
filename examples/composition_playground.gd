@@ -1,4 +1,4 @@
-extends Control
+extends ExamplePlayground
 
 enum CompositionType {
 	SEQUENCE,
@@ -83,7 +83,8 @@ var _playback: AnimaPlayback = null
 var _current_targets: Array[Node] = []
 
 func _ready() -> void:
-	_apply_hidpi_scale()
+	super._ready()
+
 	_style_stage()
 	_style_glow()
 
@@ -150,17 +151,6 @@ func _exit_tree() -> void:
 	for target in _current_targets:
 		target.free()
 	_current_targets.clear()
-
-## The editor scales its own UI for a HiDPI display automatically; a running
-## game window does not. This reads the actual screen's OS-reported scale
-## factor and applies it as the window's content scale, rather than
-## hardcoding a fixed @2x — correct on any scale factor (1.5x, 2x, 3x...),
-## not just Retina's usual 2x, and a no-op on a non-HiDPI screen.
-func _apply_hidpi_scale() -> void:
-	var screen := DisplayServer.window_get_current_screen()
-	var f_scale := DisplayServer.screen_get_scale(screen)
-	if f_scale > 1.0:
-		get_window().content_scale_factor = f_scale
 
 func _select_type(type: CompositionType) -> void:
 	if _playback != null and _playback.state == AnimaPlayback.State.PLAYING:

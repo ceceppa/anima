@@ -34,7 +34,7 @@ corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
 
-[node name="GroupMotionPlayground" type="Control" unique_id=1345763159]
+[node name="GroupMotionPlayground" type="Control" unique_id=109754219]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,6 +43,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2")
 script = ExtResource("1")
+metadata/_custom_type_script = "uid://basfvmk14pm0u"
 
 [node name="Background" type="ColorRect" parent="." unique_id=1978153449]
 layout_mode = 1
