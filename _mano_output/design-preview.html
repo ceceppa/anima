@@ -3,42 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anima — Composition Example</title>
+  <title>Anima — Grid Motion Example</title>
   <style>
-    :root { --bg:#060a16; --surface:#11182a; --stage:#0a1224; --text:#f8fafc; --muted:#a8b4cc; --accent:#7c3aed; --accent-soft:#a78bfa; --positive:#2dd4bf; --border:#26324b; }
+    :root { --bg:#060a16; --surface:#11182a; --stage:#0a1224; --text:#f8fafc; --muted:#a8b4cc; --accent:#7c3aed; --accent-soft:#a78bfa; --border:#26324b; }
     * { box-sizing:border-box; } body { margin:0; min-height:100vh; display:grid; place-items:center; background:radial-gradient(circle at 50% -10%,#192d5b 0,transparent 35%),var(--bg); color:var(--text); font-family:Inter,system-ui,sans-serif; }
-    .app { width:min(100%,1200px); overflow:hidden; border:1px solid #1b2942; border-radius:20px; background:#080f20; box-shadow:0 24px 70px #0009; }
+    .app { width:min(100%,1240px); margin:24px; overflow:hidden; border:1px solid #1b2942; border-radius:20px; background:#080f20; box-shadow:0 24px 70px #0009; }
     header { display:flex; align-items:center; gap:16px; padding:22px 30px; border-bottom:1px solid var(--border); background:linear-gradient(90deg,#0b1222,#0d1325); }
-    .mark { width:40px; height:40px; border:2px solid var(--accent-soft); border-radius:50%; display:grid; place-items:center; color:var(--accent-soft); box-shadow:0 0 20px #7c3aed66; font-size:20px; }
-    h1 { margin:0; font-size:28px; line-height:1.05; } header p { margin:4px 0 0; color:var(--muted); font-size:14px; }
-    main { margin:24px; padding:28px 32px 24px; border:1px solid #2b3a57; border-radius:24px; background:radial-gradient(ellipse at 50% 46%,#5423a92e 0,transparent 48%),var(--stage); }
-    .title-row { display:flex; justify-content:space-between; gap:16px; align-items:start; } h2 { margin:0; font-size:20px; } .title-row p { margin:6px 0 0; color:var(--muted); } .counter { color:var(--muted); font-size:12px; letter-spacing:.08em; }
-    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:40px auto 32px; max-width:680px; }
-    .card { position:relative; min-height:160px; overflow:hidden; border:1px solid var(--border); border-radius:12px; background:#10182b; box-shadow:0 10px 24px #0005; }
-    .card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,#060a1626,#060a1666); pointer-events:none; }
-    .card svg { display:block; width:100%; height:100%; min-height:160px; }
-    .card.active { border-color:var(--accent-soft); box-shadow:0 0 0 1px #b79cff55,0 0 28px #7c3aed77; transform:translateY(-5px) scale(1.03); }
-    .card.complete { border-color:#2dd4bfaa; }
-    .dock { display:flex; width:max-content; max-width:100%; margin:auto; overflow:auto; padding:5px; border:1px solid var(--border); border-radius:16px; background:#11182ad9; box-shadow:0 12px 30px #0008; }
-    .choice { position:relative; z-index:1; padding:11px 16px; border:0; border-radius:11px; background:transparent; color:var(--muted); font:600 14px/1 Inter,system-ui,sans-serif; white-space:nowrap; }
-    .choice.selected { color:#fff; background:linear-gradient(135deg,#8b5cf6,#6330d6); box-shadow:0 0 18px #7c3aed77; }
+    .mark { width:40px; height:40px; border:2px solid var(--accent-soft); border-radius:50%; display:grid; place-items:center; color:var(--accent-soft); box-shadow:0 0 20px #7c3aed66; font-size:20px; } h1 { margin:0; font-size:28px; line-height:1.05; } header p { margin:4px 0 0; color:var(--muted); font-size:14px; }
+    main { margin:24px; padding:26px 30px 24px; border:1px solid #2b3a57; border-radius:24px; background:radial-gradient(ellipse at 50% 52%,#5423a930 0,transparent 57%),var(--stage); }
+    .title-row { display:flex; justify-content:space-between; gap:16px; align-items:start; } h2 { margin:0; font-size:20px; } .title-row p { margin:6px 0 0; color:var(--muted); }
+    .formula { display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid var(--border); border-radius:12px; color:var(--text); background:var(--surface); font-size:14px; font-weight:650; } .formula small { color:var(--muted); font-weight:500; }
+    .order { display:flex; align-items:center; gap:12px; margin:22px 0 0; } .order-label { flex:0 0 auto; color:#b9c8e8; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; } .order-dock { display:flex; flex:1; overflow:auto; padding:4px; border:1px solid var(--border); border-radius:13px; background:#11182ad9; } .order-item { flex:1; min-width:max-content; padding:9px 13px; border-radius:9px; color:var(--muted); text-align:center; font-size:13px; font-weight:650; } .order-item.selected { color:#fff; background:linear-gradient(135deg,#8b5cf6,#6330d6); box-shadow:0 0 16px #7c3aed66; }
+    .grid-frame { margin:28px auto 22px; max-width:760px; padding:20px; border:1px solid #293750; border-radius:18px; background:radial-gradient(circle at 50% 50%,#7c3aed14,transparent 56%),#081124; }
+    .grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+    .card { position:relative; aspect-ratio:1.22; overflow:hidden; border:1px solid var(--border); border-radius:10px; background:linear-gradient(145deg,var(--a),var(--b)); box-shadow:0 7px 16px #0006; } .card::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 72% 23%,#fff8 0 7%,transparent 8%),linear-gradient(155deg,transparent 45%,#060a164d 46% 57%,transparent 58%); opacity:.75; } .card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,#060a1614,#060a166e); }
+    .card.start { border:2px solid var(--accent-soft); box-shadow:0 0 0 2px #a78bfa33,0 0 28px #7c3aed99; transform:scale(1.035); z-index:1; } .start span { position:absolute; z-index:2; top:7px; left:7px; padding:3px 7px; border:1px solid #ddd1ff99; border-radius:999px; background:#261252e8; color:#fff; font-size:10px; font-weight:700; letter-spacing:.04em; }
+    .controls { display:flex; justify-content:center; gap:10px; } button { border:1px solid var(--border); border-radius:12px; padding:11px 17px; background:var(--surface); color:var(--text); font:650 14px/1 Inter,system-ui,sans-serif; } button.primary { border-color:#a78bfa; background:linear-gradient(135deg,#8b5cf6,#6330d6); box-shadow:0 0 18px #7c3aed66; }
+    .picker { margin:0 24px 24px; padding:16px; border:1px solid var(--border); border-radius:16px; background:var(--surface); } .picker h3 { margin:0 0 10px; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.09em; } .choices { display:flex; flex-wrap:wrap; gap:8px; } .choice { padding:8px 11px; border-radius:10px; border:1px solid transparent; color:var(--muted); font-size:13px; } .choice.selected { border-color:#a78bfa; color:#fff; background:#6330d6; }
     .swatches { display:flex; gap:10px; padding:0 24px 24px; } .swatch { width:24px; height:24px; border:1px solid #ffffff33; border-radius:50%; }
-    @media (max-width:650px) { header { padding:18px; } h1 { font-size:23px; } main { margin:14px; padding:22px 16px; } .cards { gap:10px; margin:32px 0 24px; } .card { min-height:110px; font-size:34px; } .choice { padding:10px 12px; } }
+    @media (max-width:720px) { .app { margin:12px; } header { padding:18px; } h1 { font-size:23px; } main { margin:14px; padding:20px 14px; } .title-row { flex-direction:column; } .grid-frame { padding:10px; } .grid { gap:6px; } .formula { width:100%; justify-content:space-between; } }
   </style>
 </head>
 <body>
-  <section class="app" aria-label="Composition example scene preview">
-    <header><div class="mark">◉</div><div><h1>Composition</h1><p>Combine simple animations into expressive flows.</p></div></header>
+  <section class="app" aria-label="Grid Motion example scene preview">
+    <header><div class="mark">◎</div><div><h1>Grid Motion</h1><p>Animate a collection from any chosen point.</p></div></header>
     <main>
-      <div class="title-row"><div><h2>Stagger</h2><p>Each card begins after the one before it.</p></div><span class="counter">03 / 06</span></div>
-      <div class="cards" aria-label="Animated artwork cards">
-        <div class="card" aria-label="Moonlit mountain artwork"><svg viewBox="0 0 240 160" role="img" aria-hidden="true"><defs><linearGradient id="sky-a" x2="0" y2="1"><stop stop-color="#442879"/><stop offset="1" stop-color="#10244b"/></linearGradient></defs><rect width="240" height="160" fill="url(#sky-a)"/><circle cx="175" cy="42" r="22" fill="#ffbf79" opacity=".9"/><path d="M0 128 55 72l32 37 38-55 80 74v32H0Z" fill="#1b2148"/><path d="m65 118 30-34 24 28 29-37 48 53v32H0Z" fill="#2d3568"/></svg></div>
-        <div class="card active" aria-label="Sunset mountain artwork"><svg viewBox="0 0 240 160" role="img" aria-hidden="true"><defs><linearGradient id="sky-b" x2="0" y2="1"><stop stop-color="#f378a0"/><stop offset="1" stop-color="#6f3fab"/></linearGradient></defs><rect width="240" height="160" fill="url(#sky-b)"/><circle cx="120" cy="66" r="27" fill="#ffd487"/><path d="M0 133 60 83l37 38 37-61 106 73v27H0Z" fill="#3d286b"/><path d="M0 141 68 104l36 23 43-38 93 52v19H0Z" fill="#251a50"/></svg></div>
-        <div class="card complete" aria-label="Ocean wave artwork"><svg viewBox="0 0 240 160" role="img" aria-hidden="true"><defs><linearGradient id="sky-c" x2="0" y2="1"><stop stop-color="#6bd3db"/><stop offset="1" stop-color="#1c567f"/></linearGradient></defs><rect width="240" height="160" fill="url(#sky-c)"/><circle cx="66" cy="43" r="22" fill="#e1ffdc" opacity=".8"/><path d="M0 126c27-37 54-40 82-4 26 33 51 28 78-6 22-29 49-25 80 10v34H0Z" fill="#146d8a"/><path d="M0 144c35-29 71-20 108-3 37 17 83 12 132-9v28H0Z" fill="#0c385f"/></svg></div>
-      </div>
-      <nav class="dock" aria-label="Composition type"><button class="choice">Sequence</button><button class="choice">Parallel</button><button class="choice selected" aria-current="true">Stagger</button><button class="choice">Repeat</button><button class="choice">Race</button><button class="choice">Conditional</button></nav>
+      <div class="title-row"><div><h2>Clockwise</h2><p>Cards sweep clockwise from the selected start point.</p></div><div class="formula"><small>Formula</small> Clockwise ▾</div></div>
+      <div class="order" aria-label="Order From"><span class="order-label">Order From</span><div class="order-dock"><span class="order-item selected">Top</span><span class="order-item">Bottom</span><span class="order-item">Center</span><span class="order-item">Together</span><span class="order-item">Odd</span><span class="order-item">Even</span><span class="order-item">Random</span><span class="order-item">Index</span></div></div>
+      <div class="grid-frame"><div class="grid" aria-label="Five by five artwork card grid">
+        <div class="card start" style="--a:#1e3d68;--b:#131738"><span>START</span></div><div class="card" style="--a:#5a2d69;--b:#19244c"></div><div class="card" style="--a:#21656f;--b:#193454"></div><div class="card" style="--a:#64315d;--b:#172445"></div><div class="card" style="--a:#294a77;--b:#171a41"></div>
+        <div class="card" style="--a:#185f78;--b:#1a294e"></div><div class="card" style="--a:#6b396b;--b:#2b245a"></div><div class="card" style="--a:#285c83;--b:#1b284f"></div><div class="card" style="--a:#73445b;--b:#262151"></div><div class="card" style="--a:#3b3a79;--b:#14213e"></div>
+        <div class="card" style="--a:#215e75;--b:#1b2b51"></div><div class="card" style="--a:#8d4e7d;--b:#352060"></div><div class="card" style="--a:#6a4ad0;--b:#25164b"></div><div class="card" style="--a:#7c3f77;--b:#32225b"></div><div class="card" style="--a:#256778;--b:#152747"></div>
+        <div class="card" style="--a:#244e79;--b:#1a1d47"></div><div class="card" style="--a:#6c345f;--b:#23224d"></div><div class="card" style="--a:#24606d;--b:#142b4b"></div><div class="card" style="--a:#70415f;--b:#20204d"></div><div class="card" style="--a:#2e4e86;--b:#1b2049"></div>
+        <div class="card" style="--a:#256174;--b:#182447"></div><div class="card" style="--a:#663f78;--b:#262050"></div><div class="card" style="--a:#2b557f;--b:#1a274b"></div><div class="card" style="--a:#7d3e70;--b:#301d50"></div><div class="card" style="--a:#235473;--b:#172447"></div>
+      </div></div>
+      <div class="controls"><button>↺ Restart</button><button class="primary">↶ Reverse</button></div>
     </main>
-    <div class="swatches" aria-label="Palette"><span class="swatch" style="background:#060a16"></span><span class="swatch" style="background:#11182a"></span><span class="swatch" style="background:#7c3aed"></span><span class="swatch" style="background:#2dd4bf"></span></div>
+    <section class="picker" aria-label="Formula picker preview"><h3>Formula picker</h3><div class="choices"><span class="choice">Euclidean</span><span class="choice">Manhattan</span><span class="choice">Chebyshev</span><span class="choice">Row</span><span class="choice">Column</span><span class="choice">Diagonal</span><span class="choice">Anti-diagonal</span><span class="choice selected">Clockwise</span><span class="choice">Anticlockwise</span><span class="choice">Spiral Inward</span><span class="choice">Spiral Outward</span><span class="choice">Serpentine Row</span><span class="choice">Serpentine Column</span></div></section>
+    <div class="swatches" aria-label="Palette"><span class="swatch" style="background:#060a16"></span><span class="swatch" style="background:#11182a"></span><span class="swatch" style="background:#7c3aed"></span><span class="swatch" style="background:#a78bfa"></span></div>
   </section>
 </body>
 </html>

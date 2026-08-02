@@ -9,7 +9,7 @@
 **What the user sees:**
 - The shared `ExampleHeader` with the Composition title and subtitle.
 - A fixed content stage with the selected composition’s name, description, and compact counter.
-- A row of shared `StateCard` artwork cards. Each card displays a different Region from the `cards.jpg` atlas; the scene title and selector provide the meaning, so the images are decorative.
+- A row of shared `Card` artwork cards. Each card displays a different Region from the `cards.jpg` atlas; the scene title and selector provide the meaning, so the images are decorative.
 - The shared `SelectorDock` for Sequence, Parallel, Stagger, Repeat, Race, and Conditional.
 
 **What the user can do:**
@@ -27,7 +27,7 @@
 
 **What the user sees:**
 - The shared `ExampleHeader` with the Group Motion title and subtitle.
-- A stage containing a single row or column of shared `StateCard` artwork cards, each showing a different Region from the shared atlas. The collection is never presented as a grid.
+- A stage containing a single row or column of shared `Card` artwork cards, each showing a different Region from the shared atlas. The collection is never presented as a grid.
 - One selector for Sequential, Parallel, and Stagger playback.
 - One selector for First, Last, Center, Odd, Even, Random, and Index ordering.
 - The shared playback controls for restarting the selected motion and playing its reverse.
@@ -41,6 +41,63 @@
 - Choosing playback or ordering restarts the card animation from its starting state with the selected combination.
 - Restart plays the selected combination forward again.
 - Reverse plays the same resolved card collection backward.
+
+## Convenience Motion Example Scene
+
+**How it's accessed:** Open the convenience-motion playground scene in the Godot editor and run it.
+
+**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+
+**What the user sees:**
+- The shared example header and one Card stage.
+- A short, read-only `Anima.on()` example for the selected motion.
+- A selector for the supported convenience-motion families and shared restart/reverse controls.
+
+**What the user can do:**
+- Choose a convenience-motion family.
+- Restart the selected motion or play it in reverse.
+
+**What happens on action:**
+- Choosing a family changes the example line and replays the matching Card motion.
+- Restart and reverse replay the same selected motion from its recorded state, demonstrating that convenience authoring uses normal playback behaviour.
+
+## Grid Motion Example Scene
+
+**How it's accessed:** Open the Grid-motion playground scene in the Godot editor and run it.
+
+**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+
+**What the user sees:**
+- The shared example header and a 5×5 `GridContainer` of Cards.
+- The currently selected propagation formula, Order From choice, and selected start Card.
+- An Order From selector for Top, Bottom, Center, Together, Odd, Even, Random, and Index; Top is selected by default.
+- A Formula control, shared restart/reverse controls, and no rank, timeline, speed, or reduced-motion UI.
+
+**What the user can do:**
+- Choose an Order From mode or choose the start Card by selecting any tile in the grid.
+- Open the Formula Picker, then restart the selected motion or play it in reverse.
+
+**What happens on action:**
+- Tapping any Card makes that tile the persistent start point and immediately replays the currently selected grid propagation. It remains the start point for the selected animation and every later replay or configuration change until the user taps a different Card; it is not assumed to be the grid centre.
+- Choosing an Order From mode changes the grid ordering and immediately replays it. Center is an explicit choice, not the default start point.
+- Choosing a formula preserves the chosen Order From mode and start point whenever that mode uses a point, then replays the same grid with that propagation.
+- Restart and reverse replay the resulting grid schedule; the demonstration never adds a separate playback model.
+
+## Grid Formula Picker
+
+**How it's accessed:** Choose Formula from the Grid Motion Example Scene.
+
+**How the user gets back:** Choose a formula to return to the Grid Motion Example Scene, or close the picker to keep the current formula.
+
+**What the user sees:**
+- The available formula names: Euclidean, Manhattan, Chebyshev, Row, Column, Diagonal, Anti-diagonal, Clockwise, Anticlockwise, Spiral Inward, Spiral Outward, Serpentine Row, and Serpentine Column.
+- A plain-language one-line explanation for the highlighted formula.
+
+**What the user can do:**
+- Select one formula.
+
+**What happens on action:**
+- Selecting a formula closes the picker and returns to the Grid Motion Example Scene, where the 5×5 grid immediately demonstrates it with the currently selected order and start point.
 
 ## Motion Composer — Workspace
 
