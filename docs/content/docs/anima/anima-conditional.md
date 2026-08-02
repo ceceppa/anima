@@ -1,138 +1,65 @@
 ---
-weight: 130
 title: "AnimaConditional"
-description: "Plays one of two motions, chosen by a condition you provide."
-draft: false
-godot_version: "4.x"
-anima_version: "2.x (unreleased)"
-api_type: "class"
+description: "Selects between [member when_true] and [member when_false] based on"
 ---
 
 # AnimaConditional
 
-`AnimaConditional` picks between two motions — `when_true` or `when_false` — based on a condition you give it, and plays only the one it picked.
-
-```gdscript
-class_name AnimaConditional
-extends AnimaMotion
-```
-
 ## Overview
 
-Use `AnimaConditional` whenever which animation should play depends on something in your game's state — for example, playing a "success" motion or a "failure" motion depending on the outcome of an action.
+Selects between [member when_true] and [member when_false] based on
+[member condition], evaluated once per [method create_runtime] call.
 
-The condition is a **[`Callable`](https://docs.godotengine.org/en/stable/classes/class_callable.html)** — a function reference you can pass around like a value — that takes no arguments and returns `true` or `false`. By default, `AnimaConditional` doesn't call your condition until the motion actually starts playing (`resolution_timing = RUNTIME`), and it's only ever called once per play — it never re-checks partway through.
+## Availability
 
-## Inheritance
-
-```text
-Object
-└── RefCounted
-    └── Resource
-        └── AnimaMotion
-            └── AnimaConditional
-```
+Godot 4.x and Anima 2.x.
 
 ## Quick example
 
-This plays a green flash if a check passes, or a red shake if it doesn't:
-
-```gdscript
-var on_success := AnimaPropertyMotion.new()
-on_success.target_property = NodePath("modulate")
-on_success.to_value = Color.GREEN
-on_success.duration = 0.3
-
-var on_failure := AnimaPropertyMotion.new()
-on_failure.target_property = NodePath("position:x")
-on_failure.to_value = 20.0
-on_failure.duration = 0.1
-
-var conditional := AnimaConditional.new()
-conditional.condition = func() -> bool: return player_won
-conditional.when_true = on_success
-conditional.when_false = on_failure
-
-Anima.play(conditional, $Sprite2D)
-```
-
-> This example assumes Anima is installed and enabled in the current Godot project, and that `$Sprite2D` refers to a node already in your scene, and `player_won` is a variable available where this code runs.
-
-## Properties
-
-| Property | Type | Default | Description |
-|---|---|---:|---|
-| [`when_true`](#when_true) | [`AnimaMotion`](./anima-motion.md) | `null` | Played when `condition` returns `true`. |
-| [`when_false`](#when_false) | [`AnimaMotion`](./anima-motion.md) | `null` | Played when `condition` returns `false`. |
-| [`condition`](#condition) | `Callable` | *(empty)* | A zero-argument function returning `bool`. |
-| [`resolution_timing`](#resolution_timing) | `ResolutionTiming` | `RUNTIME` | When `condition` is evaluated. |
-
----
-
-### `when_true`
-
-```gdscript
-var when_true: AnimaMotion = null
-```
-
-The motion played when `condition` returns `true`. Required — [`validate()`](./anima-motion.md#validate) reports an error if this is left unset.
-
----
-
-### `when_false`
-
-```gdscript
-var when_false: AnimaMotion = null
-```
-
-The motion played when `condition` returns `false`. Required — [`validate()`](./anima-motion.md#validate) reports an error if this is left unset.
-
----
-
-### `condition`
-
-```gdscript
-var condition: Callable = Callable()
-```
-
-A function taking no arguments and returning a `bool`, used to pick between `when_true` and `when_false`. Required — [`validate()`](./anima-motion.md#validate) reports an error if this isn't set to a valid `Callable`.
-
----
-
-### `resolution_timing`
-
-```gdscript
-var resolution_timing: ResolutionTiming = ResolutionTiming.RUNTIME
-```
-
-Controls when `condition` gets called. See [Enumerations](#enumerations) below.
+See the class and member help in the Godot editor for a minimal, runnable example.
 
 ## Enumerations
 
-### `ResolutionTiming`
+### ResolutionTiming
 
-```gdscript
-enum ResolutionTiming {
-    COMPILE_TIME,
-    RUNTIME,
-}
-```
+When [member condition] is evaluated.
 
-| Value | Description |
-|---|---|
-| `RUNTIME` | The default. `condition` isn't evaluated when you call [`estimate_duration()`](./anima-motion.md#estimate_duration) — only once playback actually starts. The reported duration kind is `DYNAMIC` until then. |
-| `COMPILE_TIME` | `condition` is evaluated immediately when [`estimate_duration()`](./anima-motion.md#estimate_duration) is called, and the reported duration is whichever branch's own duration turns out to be. |
+## Properties and constants
 
-## Limitations
+### when_true
 
-- `condition` is evaluated at most once per play — it never re-checks partway through, even if whatever it depends on changes while the motion is running.
+Motion played when [member condition] returns `true`.
 
-## Related API
+### when_false
 
-- [`AnimaSequence`](./anima-sequence.md)
-- [`AnimaRace`](./anima-race.md)
-- [`Anima`](./anima.md)
+Motion played when [member condition] returns `true`.
+Motion played when [member condition] returns `false`.
 
-## Source
+### condition
 
-- [`anima_conditional.gd`](https://github.com/ceceppa/anima/blob/main/addons/anima/motion/resources/anima_conditional.gd)
+Motion played when [member condition] returns `true`.
+Motion played when [member condition] returns `false`.
+Zero-argument [Callable] returning a [bool] that picks the branch.
+
+### resolution_timing
+
+Motion played when [member condition] returns `true`.
+Motion played when [member condition] returns `false`.
+Zero-argument [Callable] returning a [bool] that picks the branch.
+When [member condition] is evaluated.
+
+## Methods
+
+### estimate_duration
+
+COMPILE_TIME: resolves now and defers to the selected branch's own
+AnimaDuration. RUNTIME (default): reports Dynamic without evaluating
+`condition` — the branch isn't chosen until create_runtime() plays it.
+
+### create_runtime
+
+Builds the runtime instance, selecting the branch once (see [method _select_branch]).
+
+### validate
+
+Requires [member condition], [member when_true], and [member when_false].

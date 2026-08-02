@@ -20,6 +20,11 @@ var motion: AnimaMotion
 var target: Node
 ## Which lifecycle stage this playback is in.
 var state: State = State.PLAYING
+## A multiplier applied to every frame this playback advances by. `1.0` is
+## normal speed; `2.0` runs twice as fast; `0.5` runs at half speed. When
+## [member motion] is an [AnimaGroupMotion], every active item shares this
+## same scaled delta, so changing it affects the whole group as one playback.
+var speed_scale: float = 1.0
 
 var _instance: Variant = null
 
@@ -57,11 +62,31 @@ func retarget(new_to_value: Variant) -> void:
 	property_motion.to_value = new_to_value
 	_instance.retarget_spring(new_to_value)
 
+## Reverses a still-playing or already-finished [AnimaGroupMotion] group,
+## reusing its recorded target sequence instead of resolving and scheduling
+## it again — a [constant AnimaGroupOrder.Kind.RANDOM] order does not
+## reshuffle. Restarts this same playback from the top, respecting [member
+## AnimaGroupMotion.reverse_order_policy]. An error (not silently ignored)
+## for any other motion shape — only a played group has a recorded sequence
+## to reverse.
+func reverse() -> void:
+	var group_instance := _instance as AnimaGroupPlayback
+	var group_motion := motion as AnimaGroupMotion
+	if group_instance == null or group_motion == null or group_instance.execution_record == null:
+		push_error("AnimaPlayback.reverse() is only defined for a played AnimaGroupMotion")
+		return
+
+	var record := group_instance.execution_record
+	if group_motion.reverse_order_policy == AnimaGroupMotion.ReverseOrderPolicy.REVERSE_EXECUTION:
+		record = record.reversed()
+	group_instance.restart_from_record(record)
+	state = State.PLAYING
+
 func _advance(delta: float) -> void:
 	if state != State.PLAYING:
 		return
 
-	var is_finished: bool = _instance.advance(target, delta)
+	var is_finished: bool = _instance.advance(target, delta * speed_scale)
 	if is_finished:
 		state = State.FINISHED
 		finished.emit(true)

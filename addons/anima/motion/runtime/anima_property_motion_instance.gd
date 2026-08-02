@@ -41,20 +41,20 @@ func advance(target: Node, delta: float) -> bool:
 ## Advances a SPRING-eased motion one physics step (semi-implicit Euler on a
 ## damped harmonic oscillator) instead of evaluating a normalized-time curve.
 func _advance_spring(target: Node, property_motion: AnimaPropertyMotion, delta: float) -> bool:
-	var ease := property_motion.ease
+	var easing := property_motion.ease
 
 	if not _spring_initialized:
 		_spring_value = float(_from_value)
-		_spring_velocity = ease.spring_initial_velocity
+		_spring_velocity = easing.spring_initial_velocity
 		_spring_target = float(property_motion.to_value)
 		_spring_initialized = true
 
 	_elapsed += delta * motion.speed
 
-	var stiffness_damping := ease.spring_stiffness_and_damping()
+	var stiffness_damping := easing.spring_stiffness_and_damping()
 	var stiffness: float = stiffness_damping.x
 	var damping: float = stiffness_damping.y
-	var mass: float = maxf(ease.spring_mass, 0.001)
+	var mass: float = maxf(easing.spring_mass, 0.001)
 
 	var acceleration: float = (stiffness * (_spring_target - _spring_value) - damping * _spring_velocity) / mass
 	_spring_velocity += acceleration * delta
@@ -62,7 +62,7 @@ func _advance_spring(target: Node, property_motion: AnimaPropertyMotion, delta: 
 
 	target.set_indexed(property_motion.target_property, _spring_value)
 
-	return _spring_is_finished(ease)
+	return _spring_is_finished(easing)
 
 ## Redirects a still-moving spring to a new destination, preserving its
 ## current value/velocity instead of resetting them (see [method AnimaPlayback.retarget]).
@@ -71,15 +71,15 @@ func retarget_spring(new_to_value: Variant) -> void:
 	_spring_target = float(new_to_value)
 	_elapsed = 0.0
 
-func _spring_is_finished(ease: AnimaEase) -> bool:
-	match ease.spring_completion_mode:
+func _spring_is_finished(easing: AnimaEase) -> bool:
+	match easing.spring_completion_mode:
 		AnimaEase.SpringCompletionMode.FIXED_PREVIEW_DURATION:
-			return _elapsed >= ease.spring_preview_duration
+			return _elapsed >= easing.spring_preview_duration
 		AnimaEase.SpringCompletionMode.MANUAL:
 			return false
 		AnimaEase.SpringCompletionMode.VISUALLY_SETTLED:
-			return absf(_spring_target - _spring_value) < ease.spring_settle_distance * 10.0 \
-				and absf(_spring_velocity) < ease.spring_settle_velocity * 10.0
+			return absf(_spring_target - _spring_value) < easing.spring_settle_distance * 10.0 \
+				and absf(_spring_velocity) < easing.spring_settle_velocity * 10.0
 		_: # STRICTLY_SETTLED
-			return absf(_spring_target - _spring_value) < ease.spring_settle_distance \
-				and absf(_spring_velocity) < ease.spring_settle_velocity
+			return absf(_spring_target - _spring_value) < easing.spring_settle_distance \
+				and absf(_spring_velocity) < easing.spring_settle_velocity

@@ -6,7 +6,7 @@ Animation authors can construct and play a group from the same public Anima API 
 #### Done when
 - [ ] An author can create a group with a collection, shared item motion, playback, distribution, ordering, filtering, and policies through the public code API.
 - [ ] A group authored in code can be opened in the Motion Composer with the same selected configuration.
-- [ ] The public API documentation includes one standalone group example that plays a collection.
+- [ ] Browsing the public group API in Godot and its generated online reference includes one standalone example that plays a collection.
 - [ ] Test: a group built through the public API plays through `Anima.play(...)` and exposes the configured choices to the caller.
 
 #### Not this story
@@ -15,10 +15,10 @@ Animation authors can construct and play a group from the same public Anima API 
 
 #### Implementation Reference
 - **Files:** update `addons/anima/motion/resources/anima_motion_builder.gd`; update `addons/anima/motion/runtime/anima.gd`
-- **Docs:** `docs/content/docs/anima/anima.md`
+- **Docs:** source `##` comments generate the public API reference through `npm run docs:api`; do not hand-edit generated pages.
 - **Tests:** `tests/Anima.integration.group-api.test.gd`
 - **Contract:** `_mano_output/tech-spec.md §Current Technical Summary`, `§Data model`, and `§Product principle constraints`
-- **Rules:** `_mano_output/project-rules.md §Architecture`, `§Naming`, `§Testing`, and `§Documentation`; no autoload and update `##` comments for changed public declarations.
+- **Rules:** `_mano_output/project-rules.md §Architecture`, `§Naming`, `§Testing`, and `§Documentation`; no autoload and update plain-language `##` comments for changed public declarations.
 
 ---
 <!-- ⚠️ When this story is implemented, mark it done via `stories.js set-status` (AGENTS.md step 11) — don't hand-edit the index. -->

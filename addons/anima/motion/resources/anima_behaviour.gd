@@ -1,6 +1,7 @@
 ## Per-node configuration resource, attached to an ordinary node via
-## [method Anima.attach_behaviour] — no node subclass required. Configuration
-## only this phase: nothing reads these fields to actually play a motion yet.
+## [method Anima.attach_behaviour] — no node subclass required. A group played
+## against a node with reduced motion enabled starts its items together, without
+## sequential or staggered waiting.
 class_name AnimaBehaviour
 extends Resource
 
@@ -36,5 +37,8 @@ enum ReducedMotion {
 ## runtime consumer yet. See "State bindings for common control states" in
 ## the backlog for the feature that will actually use this field.
 @export var state_bindings: Dictionary = {}
-## Reduced-motion preference for this behaviour.
+## Reduced-motion preference for this behaviour. [constant ReducedMotion.ENABLED]
+## removes group sequencing and staggering when this node is the group's root;
+## [constant ReducedMotion.SYSTEM] and [constant ReducedMotion.DISABLED] retain
+## the authored group timing until a system-preference adapter is introduced.
 @export var reduced_motion: ReducedMotion = ReducedMotion.SYSTEM

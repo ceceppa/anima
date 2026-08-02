@@ -1,83 +1,47 @@
 ---
-weight: 40
 title: "AnimaSequence"
-description: "Runs a list of motions one after another."
-draft: false
-godot_version: "4.x"
-anima_version: "2.x (unreleased)"
-api_type: "class"
+description: "Runs each enabled child in [member children] one after another; completes"
 ---
 
 # AnimaSequence
 
-`AnimaSequence` runs a list of motions strictly one after another — the second one doesn't start until the first has finished, and so on.
-
-```gdscript
-class_name AnimaSequence
-extends AnimaMotion
-```
-
 ## Overview
 
-Use `AnimaSequence` whenever you want to say "do this, then that" without calculating start times by hand. Anima works out the timing for you: if you change how long one child takes, everything after it automatically shifts.
+Runs each enabled child in [member children] one after another; completes
+when the last one finishes.
 
-A child with [`enabled`](./anima-motion.md#enabled) set to `false` is skipped entirely, as if it weren't in the list.
+## Availability
 
-## Inheritance
-
-```text
-Object
-└── RefCounted
-    └── Resource
-        └── AnimaMotion
-            └── AnimaSequence
-```
+Godot 4.x and Anima 2.x.
 
 ## Quick example
 
-This moves a panel in, then fades a label in after the panel has finished moving:
+See the class and member help in the Godot editor for a minimal, runnable example.
 
-```gdscript
-var move_panel := AnimaPropertyMotion.new()
-move_panel.target_property = NodePath("position:y")
-move_panel.to_value = 0.0
-move_panel.duration = 0.4
+## Properties and constants
 
-var fade_label := AnimaPropertyMotion.new()
-fade_label.target_property = NodePath("modulate:a")
-fade_label.to_value = 1.0
-fade_label.duration = 0.3
+### children
 
-var sequence := AnimaSequence.new()
-sequence.children = [move_panel, fade_label]
+The motions to run in order.
 
-Anima.play(sequence, $Panel)
-```
+## Methods
 
-> This example plays both motions on the same node for simplicity. In practice, each child motion can target any node — see [`AnimaParallel`](./anima-parallel.md) for playing motions on different nodes together.
+### compute_schedule
 
-## Properties
+Returns each enabled child's scheduled start time (seconds since the
+sequence's own start), honouring delay/delay_basis. Parallel array to
+this sequence's enabled children, in the same order.
 
-| Property | Type | Default | Description |
-|---|---|---:|---|
-| [`children`](#children) | `Array[AnimaMotion]` | `[]` | The motions to run one after another, in order. |
+### estimate_duration
 
----
+Sum of every enabled child's scheduled end time, once every child reports
+a fixed duration (worst-kind-wins otherwise). Honours [method compute_schedule]'s
+delay/overlap timing, not a plain sum of durations.
 
-### `children`
+### create_runtime
 
-```gdscript
-var children: Array[AnimaMotion] = []
-```
+Builds the runtime instance that plays each child per [method compute_schedule].
 
-The list of motions this sequence runs in order. Each entry can be any [`AnimaMotion`](./anima-motion.md) — a plain [`AnimaPropertyMotion`](./anima-property-motion.md), or even another `AnimaSequence` or [`AnimaParallel`](./anima-parallel.md) nested inside.
+### validate
 
-## Related API
-
-- [`AnimaParallel`](./anima-parallel.md)
-- [`AnimaPropertyMotion`](./anima-property-motion.md)
-- [`Anima`](./anima.md)
-
-## Source
-
-- [`anima_sequence.gd`](https://github.com/ceceppa/anima/blob/main/addons/anima/motion/resources/anima_sequence.gd)
+Validates every child recursively.

@@ -1,60 +1,32 @@
 ---
-weight: 90
 title: "AnimaMotionInstance"
-description: "The internal base class that advances a playing motion, frame by frame."
-draft: false
-godot_version: "4.x"
-anima_version: "2.x (unreleased)"
-api_type: "class"
+description: "Base runtime instance every [AnimaMotion] subtype's [method AnimaMotion.create_runtime]"
 ---
 
 # AnimaMotionInstance
 
-`AnimaMotionInstance` is the internal base class behind every motion's runtime behaviour. It is created automatically by [`AnimaMotion.create_runtime()`](./anima-motion.md#create_runtime) and is not something you construct directly.
-
-```gdscript
-class_name AnimaMotionInstance
-extends RefCounted
-```
-
 ## Overview
 
-Every [`AnimaMotion`](./anima-motion.md) subtype (like [`AnimaPropertyMotion`](./anima-property-motion.md)) has a matching `AnimaMotionInstance` subtype that knows how to actually advance that specific kind of motion, frame by frame. [`AnimaPlayback`](./anima-playback.md) calls `advance()` on one of these every frame — you never call it, or create one, yourself.
+Base runtime instance every [AnimaMotion] subtype's [method AnimaMotion.create_runtime]
+returns. [method advance] is the shared per-frame contract every subtype implements.
 
-This page exists mainly so you can understand what `create_runtime()` returns if you go looking for it in the source.
+## Availability
 
-## Inheritance
+Godot 4.x and Anima 2.x.
 
-```text
-Object
-└── RefCounted
-    └── AnimaMotionInstance
-```
+## Quick example
+
+See the class and member help in the Godot editor for a minimal, runnable example.
+
+## Properties and constants
+
+### motion
+
+The motion resource this instance is advancing.
 
 ## Methods
 
-| Method | Returns | Description |
-|---|---|---|
-| [`advance()`](#advance) | `bool` | Advances the motion by one frame's worth of time. |
+### advance
 
----
-
-### `advance()`
-
-```gdscript
-func advance(target: Node, delta: float) -> bool
-```
-
-Advances the motion by `delta` seconds against `target`, applying whatever change that frame requires. Returns `true` once the motion has finished, `false` otherwise. Every subtype overrides this with its own specific behaviour.
-
-## Related API
-
-- [`AnimaMotion`](./anima-motion.md)
-- [`AnimaPlayback`](./anima-playback.md)
-- [`AnimaPropertyMotionInstance`](./anima-property-motion-instance.md)
-- [`AnimaSequenceInstance`](./anima-sequence-instance.md)
-- [`AnimaParallelInstance`](./anima-parallel-instance.md)
-
-## Source
-
-- [`anima_motion_instance.gd`](https://github.com/ceceppa/anima/blob/main/addons/anima/motion/runtime/anima_motion_instance.gd)
+Advances playback by delta seconds and applies the motion's effect to target.
+Returns true once the motion has finished.

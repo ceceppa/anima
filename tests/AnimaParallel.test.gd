@@ -1,11 +1,11 @@
 extends "res://addons/gut/test.gd"
 
-func _make_child(property: String, to_value: float, duration: float, name: String = "") -> AnimaPropertyMotion:
+func _make_child(property: String, to_value: float, duration: float, display_name: String = "") -> AnimaPropertyMotion:
 	var motion := AnimaPropertyMotion.new()
 	motion.target_property = NodePath(property)
 	motion.to_value = to_value
 	motion.duration = duration
-	motion.display_name = name
+	motion.display_name = display_name
 	return motion
 
 func test_children_start_immediately_and_run_concurrently():

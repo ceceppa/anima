@@ -9,8 +9,9 @@
   },
   "repository": "/Anima",
   "scripts": {
-    "dev": "cd docs && hugo serve",
-    "build": "cd docs && hugo build"
+    "docs:api": "node scripts/generate-api-docs.js",
+    "dev": "npm run docs:api && cd docs && hugo serve",
+    "build": "npm run docs:api && cd docs && hugo build"
   },
   "license": "MIT"
 }

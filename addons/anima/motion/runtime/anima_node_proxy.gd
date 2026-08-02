@@ -18,9 +18,9 @@ func _init(p_target: Node) -> void:
 ## this is a factory returning a fresh instance per call rather than a shared
 ## constant.
 static func default_ease() -> AnimaEase:
-	var ease := AnimaEase.new()
-	ease.kind = AnimaEase.Kind.SINE
-	return ease
+	var easing := AnimaEase.new()
+	easing.kind = AnimaEase.Kind.SINE
+	return easing
 
 ## Animates a single [param property] on [member target] to [param to_value].
 func to(property: NodePath, to_value: Variant, duration: float = DEFAULT_DURATION, ease: AnimaEase = null) -> AnimaPlayback:

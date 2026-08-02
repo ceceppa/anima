@@ -12,3 +12,10 @@ layout_mode = 2
 custom_minimum_size = Vector2(44, 44)
 tooltip_text = "Restart"
 text = "⟲"
+
+[node name="ReverseButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(44, 44)
+tooltip_text = "Reverse"
+text = "↶"

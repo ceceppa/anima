@@ -39,10 +39,10 @@ const DISPLAYED_TYPES := [
 ]
 
 ## Peak alpha of the stage's background glow — deliberately well below
-## StateCard.GLOW_PEAK_ALPHA so it never competes with an animating card.
+## Card.GLOW_PEAK_ALPHA so it never competes with an animating card.
 const GLOW_ALPHA := 0.08
 
-## Conditional's single card layers these on top of StateCard's own
+## Conditional's single card layers these on top of Card's own
 ## progress-driven look (story-9b) — which branch ran is shown by direction
 ## of travel, extra scale, and (for the false branch) extra dimming, not by
 ## a label on the card.
@@ -74,7 +74,7 @@ var _conditional_picked_true: bool = false
 var _conditional_base_position: Vector2 = Vector2.ZERO
 var _conditional_base_captured: bool = false
 
-var _cards: Array[StateCard] = []
+var _cards: Array[Card] = []
 var _card_segments: Array = []       # per card: Array[Vector2], each a [start, end) pulse window
 var _card_freeze_at: Array[float] = [] # per card: elapsed time is clamped to this before scaling
 var _demo_elapsed: float = 0.0
@@ -182,7 +182,7 @@ func _select_type(type: CompositionType) -> void:
 	_card_freeze_at.clear()
 
 	# Placeholder targets are plain Nodes, never added to the tree — unlike
-	# the StateCards above, nothing frees them automatically; dropping the
+	# the Cards above, nothing frees them automatically; dropping the
 	# only reference to a Node (not a RefCounted) leaks it.
 	for old_target in _current_targets:
 		old_target.free()
@@ -194,10 +194,11 @@ func _select_type(type: CompositionType) -> void:
 	for new_target in demo.targets:
 		_current_targets.append(new_target)
 
-	for card_info in demo.cards:
-		var card: StateCard = preload("res://examples/shared/components/state_card.tscn").instantiate()
+	for card_index in demo.cards.size():
+		var card_info: Dictionary = demo.cards[card_index]
+		var card: Card = preload("res://examples/shared/components/card.tscn").instantiate()
 		_card_row.add_child(card)
-		card.set_label(card_info.label)
+		card.atlas_index = card_index
 		card.set_progress(0.0)
 		_cards.append(card)
 
@@ -256,13 +257,13 @@ func _update_conditional_callout(delta: float) -> void:
 		var fade_t := (_conditional_callout_elapsed - fade_start) / CONDITIONAL_CALLOUT_FADE
 		_conditional_callout.modulate.a = 1.0 - fade_t
 
-## Layers direction/scale/dimming on top of StateCard's own progress-driven
+## Layers direction/scale/dimming on top of Card's own progress-driven
 ## look for Conditional's single card — true moves it forward and grows it;
 ## false moves it backward and shrinks + dims it. This is deliberately kept
-## out of StateCard's own contract (project-rules.md §Example Scenes: no
-## state, no per-composition-type branching inside state_card.gd) since no
+## out of Card's own contract (project-rules.md §Example Scenes: no
+## state, no per-composition-type branching inside card.gd) since no
 ## other composition type needs a direction.
-func _apply_conditional_transform(card: StateCard, t: float) -> void:
+func _apply_conditional_transform(card: Card, t: float) -> void:
 	if not _conditional_base_captured:
 		_conditional_base_position = card.position
 		_conditional_base_captured = true
@@ -272,7 +273,7 @@ func _apply_conditional_transform(card: StateCard, t: float) -> void:
 	card.scale += Vector2.ONE * (direction * CONDITIONAL_EXTRA_SCALE * t)
 
 	if not _conditional_picked_true:
-		card.modulate.a = lerpf(StateCard.DIM_ALPHA, CONDITIONAL_DIM_ALPHA, t)
+		card.modulate.a = lerpf(Card.DIM_ALPHA, CONDITIONAL_DIM_ALPHA, t)
 
 ## Updates the stage's per-type title/description/counter as the composition
 ## type changes. The text updates immediately (so it's correct the instant a
@@ -313,8 +314,8 @@ func _build_demo(type: CompositionType) -> Dictionary:
 
 ## Anima.play() still needs a real Node target to prove the composition
 ## genuinely runs and completes for real — this one is never added to the
-## tree, so it's never rendered. The StateCards themselves are what the
-## user actually watches (StateCard.set_progress()), driven by the same
+## tree, so it's never rendered. The Cards themselves are what the user
+## actually watches (Card.set_progress()), driven by the same
 ## precomputed [start, end] windows below, not by this placeholder's values.
 func _make_placeholder() -> Node2D:
 	return Node2D.new()
@@ -436,7 +437,7 @@ func _build_conditional_demo() -> Dictionary:
 		"conditional_picked_true": picked_true,
 	}
 
-## Drives each StateCard purely from elapsed time against that card's own
+## Drives each Card purely from elapsed time against that card's own
 ## precomputed pulse segments — no new addon API, just each composition's
 ## public duration/schedule surface (stories 0, 1, 2). Within a segment,
 ## progress rises 0→1 continuously (no discrete state, nothing snaps).

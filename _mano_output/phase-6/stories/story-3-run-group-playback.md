@@ -8,7 +8,7 @@ Animation authors can play a group as independent item animations, then pause, r
 - [ ] Pausing, resuming, changing speed, and cancelling a running group affect its active items as one playback.
 - [ ] Reversing a completed or active group reuses its recorded target sequence; a seeded random group does not reshuffle.
 - [ ] When a target leaves the scene during playback, the remaining visible items follow the selected completion and invalid-target policies.
-- [ ] The API reference pages for `AnimaGroupPlayback` and `AnimaExecutionRecord` explain interruption and reversal behavior.
+- [ ] Browsing `AnimaGroupPlayback` or `AnimaExecutionRecord` in Godot explains interruption and reversal behavior in plain language.
 - [ ] Test: public group playback covers pause, cancel, speed change, target departure, and reverse replay through `Anima.play(...)`.
 
 #### Not this story
@@ -17,10 +17,10 @@ Animation authors can play a group as independent item animations, then pause, r
 
 #### Implementation Reference
 - **Files:** `addons/anima/motion/runtime/anima_group_playback.gd`; `addons/anima/motion/runtime/anima_execution_record.gd`; update `addons/anima/motion/runtime/anima_playback.gd`
-- **Docs:** `docs/content/docs/anima/anima-group-playback.md`; `docs/content/docs/anima/anima-execution-record.md`
+- **Docs:** source `##` comments generate the matching online reference through `npm run docs:api`; do not hand-edit generated pages.
 - **Tests:** `tests/AnimaGroupPlayback.test.gd`; `tests/AnimaExecutionRecord.test.gd`; `tests/Anima.integration.group-playback.test.gd`
 - **Contract:** `_mano_output/tech-spec.md §Data model` and `§Key technical decisions`
-- **Rules:** `_mano_output/project-rules.md §Architecture`, `§Derived Scheduling`, `§Testing`, and `§Documentation`; execution state stays runtime-only and every public declaration receives a `##` comment.
+- **Rules:** `_mano_output/project-rules.md §Architecture`, `§Derived Scheduling`, `§Testing`, and `§Documentation`; execution state stays runtime-only and every public declaration is documented in plain language for newcomers.
 
 ---
 <!-- ⚠️ When this story is implemented, mark it done via `stories.js set-status` (AGENTS.md step 11) — don't hand-edit the index. -->

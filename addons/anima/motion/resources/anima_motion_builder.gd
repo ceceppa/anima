@@ -53,3 +53,25 @@ static func to(target_property: NodePath, to_value: Variant) -> AnimaPropertyMot
 	motion.target_property = target_property
 	motion.to_value = to_value
 	return motion
+
+## Builds an [AnimaGroupMotion] playing [param item_motion] against every
+## target [param target_collection] resolves. The rest of a group's
+## configuration — [member AnimaGroupMotion.playback_mode], [member
+## AnimaGroupMotion.distribution], [member AnimaGroupMotion.order], and its
+## policies — all have working defaults, so set only the ones you need to
+## change directly on the returned resource.
+##
+## ```gdscript
+## var collection := AnimaTargetCollection.new()
+## collection.kind = AnimaTargetCollection.Kind.CHILDREN
+##
+## var group := Motion.group(collection, Motion.to(NodePath("modulate:a"), 1.0))
+## group.order.kind = AnimaGroupOrder.Kind.CENTRED
+##
+## Anima.play(group, $CardRow)
+## ```
+static func group(target_collection: AnimaTargetCollection, item_motion: AnimaMotion) -> AnimaGroupMotion:
+	var motion := AnimaGroupMotion.new()
+	motion.target_collection = target_collection
+	motion.item_motion = item_motion
+	return motion

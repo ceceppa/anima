@@ -1,10 +1,11 @@
-class_name StateCard
+class_name Card
 extends PanelContainer
 
+const ATLAS_COLUMNS := 4
+const ATLAS_CELL_SIZE := Vector2(384, 341)
+const CARD_ATLAS := preload("res://examples/images/cards.jpg")
 const BORDER_START := Color(0.117647, 0.160784, 0.231373, 1.0)
 const BORDER_END := Color(0.176471, 0.831373, 0.74902, 1.0)
-const LABEL_START := Color(0.580392, 0.639216, 0.721569, 1.0)
-const LABEL_END := Color(0.176471, 0.831373, 0.74902, 1.0)
 const DIM_ALPHA := 0.5
 
 ## The glow (shadow) is animation feedback, not a permanent decoration: it
@@ -16,18 +17,29 @@ const GLOW_SETTLE_ALPHA := 0.10
 const GLOW_PEAK_SIZE := 12
 const GLOW_SETTLE_SIZE := 4
 
-@onready var label: Label = %Label
+## Zero-based artwork cell in the shared 4 × 3 cards atlas, laid out left to
+## right then top to bottom.
+@export_range(0, 11, 1) var atlas_index: int = 0:
+	set(value):
+		atlas_index = clampi(value, 0, 11)
+		if is_node_ready():
+			_apply_atlas_region()
+
+@onready var artwork: TextureRect = %Artwork
 
 var style_box: StyleBoxFlat
-var progress: float = 0.0
+var progress: float = 0.0:
+	set(value):
+		progress = clampf(value, 0.0, 1.0)
+		if style_box != null:
+			_apply_progress_appearance()
 
 func _ready() -> void:
+	var atlas_texture := AtlasTexture.new()
+	atlas_texture.atlas = CARD_ATLAS
+	artwork.texture = atlas_texture
 	style_box = StyleBoxFlat.new()
 	style_box.bg_color = Color(0.0705882, 0.0941176, 0.14902, 1.0)
-	style_box.corner_radius_top_left = 12
-	style_box.corner_radius_top_right = 12
-	style_box.corner_radius_bottom_right = 12
-	style_box.corner_radius_bottom_left = 12
 	style_box.border_width_left = 2
 	style_box.border_width_top = 2
 	style_box.border_width_right = 2
@@ -39,19 +51,24 @@ func _ready() -> void:
 	pivot_offset = size / 2.0
 	resized.connect(func() -> void: pivot_offset = size / 2.0)
 
+	_apply_atlas_region()
 	set_progress(0.0)
 
-func set_label(text: String) -> void:
-	label.text = text
+func _apply_atlas_region() -> void:
+	var column := atlas_index % ATLAS_COLUMNS
+	var row := floori(float(atlas_index) / float(ATLAS_COLUMNS))
+	var atlas_texture := artwork.texture as AtlasTexture
+	atlas_texture.region = Rect2(Vector2(column, row) * ATLAS_CELL_SIZE, ATLAS_CELL_SIZE)
 
 ## The single visual driver: 0 = at rest (not started), 1 = fully complete.
-## Border colour, glow, label colour, brightness, and a small scale pulse all
-## come continuously from this one value — there is no discrete state to
-## jump between, so nothing snaps at any point along the way, including the
-## very end.
+## Border colour, glow, artwork brightness, and a small scale pulse all come
+## continuously from this one value — there is no discrete state to jump
+## between, so nothing snaps at any point along the way, including the end.
 func set_progress(t: float) -> void:
-	progress = clampf(t, 0.0, 1.0)
+	progress = t
 
+
+func _apply_progress_appearance() -> void:
 	var border := BORDER_START.lerp(BORDER_END, progress)
 	style_box.border_color = border
 
@@ -64,8 +81,6 @@ func set_progress(t: float) -> void:
 	var glow_size := lerpf(GLOW_PEAK_SIZE * glow_bump, GLOW_SETTLE_SIZE, settle_weight)
 	style_box.shadow_color = Color(border.r, border.g, border.b, glow_alpha)
 	style_box.shadow_size = roundi(glow_size)
-
-	label.add_theme_color_override("font_color", LABEL_START.lerp(LABEL_END, progress))
 
 	modulate.a = lerpf(DIM_ALPHA, 1.0, progress)
 	var bump := 1.0 + 0.08 * sin(progress * PI)

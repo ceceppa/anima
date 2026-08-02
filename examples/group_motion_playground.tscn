@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://catfct3sc6jw8"]
+
+[ext_resource type="Script" uid="uid://cf0k15nok4fxb" path="res://examples/group_motion_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="2"]
+[ext_resource type="PackedScene" path="res://examples/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/shared/components/card.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/shared/components/selector_dock.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://examples/shared/components/playback_controls.tscn" id="7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xfwvc"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StageStyle"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0392157, 0.0705882, 0.141176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.14902, 0.196078, 0.294118, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[node name="GroupMotionPlayground" type="Control" unique_id=1345763159]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1978153449]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0235294, 0.0392157, 0.0862745, 1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1584464201]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=1369562611]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" parent="Margin/Content" unique_id=1934436438 instance=ExtResource("3")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_xfwvc")
+title = "Group Motion"
+subtitle = "Coordinate one motion across a collection of artwork cards."
+icon = "✦"
+
+[node name="Stage" type="PanelContainer" parent="Margin/Content" unique_id=421232414]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StageStyle")
+
+[node name="StageContent" type="VBoxContainer" parent="Margin/Content/Stage" unique_id=1586035978]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="StageHead" type="VBoxContainer" parent="Margin/Content/Stage/StageContent" unique_id=1447602012]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Margin/Content/Stage/StageContent/StageHead" unique_id=1341900400]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 20
+text = "One shared motion, many card starts"
+
+[node name="OrderDescription" type="Label" parent="Margin/Content/Stage/StageContent/StageHead" unique_id=1570576986]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.658824, 0.705882, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+
+[node name="CardCenter" type="CenterContainer" parent="Margin/Content/Stage/StageContent" unique_id=1496215554]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardRow" type="HBoxContainer" parent="Margin/Content/Stage/StageContent/CardCenter" unique_id=306959967]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Card0" parent="Margin/Content/Stage/StageContent/CardCenter/CardRow" unique_id=172521445 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="Card1" parent="Margin/Content/Stage/StageContent/CardCenter/CardRow" unique_id=1982970608 instance=ExtResource("4")]
+layout_mode = 2
+atlas_index = 1
+
+[node name="Card2" parent="Margin/Content/Stage/StageContent/CardCenter/CardRow" unique_id=1534563745 instance=ExtResource("4")]
+layout_mode = 2
+atlas_index = 2
+
+[node name="Card3" parent="Margin/Content/Stage/StageContent/CardCenter/CardRow" unique_id=521466962 instance=ExtResource("4")]
+layout_mode = 2
+atlas_index = 3
+
+[node name="Card4" parent="Margin/Content/Stage/StageContent/CardCenter/CardRow" unique_id=1461805797 instance=ExtResource("4")]
+layout_mode = 2
+atlas_index = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/Content/Stage/StageContent" unique_id=1780653053]
+layout_mode = 2
+
+[node name="PlaybackLabel" type="Label" parent="Margin/Content/Stage/StageContent/HBoxContainer" unique_id=792818270]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+text = "Playback"
+
+[node name="PlaybackSelector" parent="Margin/Content/Stage/StageContent/HBoxContainer" unique_id=1028358552 instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Margin/Content/Stage/StageContent" unique_id=1053052962]
+layout_mode = 2
+
+[node name="OrderingLabel" type="Label" parent="Margin/Content/Stage/StageContent/HBoxContainer2" unique_id=1431402104]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+text = "Ordering"
+
+[node name="OrderSelector" parent="Margin/Content/Stage/StageContent/HBoxContainer2" unique_id=1201445042 instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=1076318812 instance=ExtResource("7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2

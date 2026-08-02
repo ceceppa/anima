@@ -13,7 +13,19 @@ const BEHAVIOUR_GROUP := "_anima_enabled"
 
 ## Plays [param motion] against [param target] and returns the resulting
 ## [AnimaPlayback]. [param target] is optional when [param motion] supplies
-## its own targets (e.g. [AnimaStagger]).
+## its own targets (e.g. [AnimaStagger], which ignores [param target]
+## entirely). An [AnimaGroupMotion] is different: it still reads [param
+## target] as the root node its [member AnimaGroupMotion.target_collection]
+## resolves against — required for a [constant AnimaTargetCollection.Kind.CHILDREN]
+## or [constant AnimaTargetCollection.Kind.DESCENDANTS] collection, unused otherwise.
+##
+## ```gdscript
+## var collection := AnimaTargetCollection.new()
+## collection.kind = AnimaTargetCollection.Kind.CHILDREN
+## var group := Motion.group(collection, Motion.to(NodePath("modulate:a"), 1.0))
+##
+## Anima.play(group, $CardRow) # $CardRow's children are the group's targets
+## ```
 static func play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
 	return AnimaRuntime.get_singleton().play(motion, target)
 

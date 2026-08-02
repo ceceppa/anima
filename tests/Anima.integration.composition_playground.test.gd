@@ -104,7 +104,7 @@ func test_background_glow_is_subtle_and_stays_fixed_across_type_switches():
 	var glow: TextureRect = scene.get_node("%Glow")
 	assert_true(stage.clip_contents, "the glow must stay within the stage's rounded bounds")
 	assert_not_null(glow.texture, "the stage should show a background glow behind the cards")
-	assert_lt(scene.GLOW_ALPHA, StateCard.GLOW_PEAK_ALPHA, "the background glow must stay clearly less prominent than an animating card's own glow")
+	assert_lt(scene.GLOW_ALPHA, Card.GLOW_PEAK_ALPHA, "the background glow must stay clearly less prominent than an animating card's own glow")
 
 	var before_position := glow.position
 	var before_size := glow.size
@@ -121,9 +121,11 @@ func test_background_glow_is_subtle_and_stays_fixed_across_type_switches():
 func test_selector_dock_moves_indicator_and_selects_exactly_one_item():
 	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
+	await get_tree().process_frame
 
 	var selector: SelectorDock = scene.get_node("%Selector")
 	selector.select(2)
+	await get_tree().process_frame
 
 	var selected_count := 0
 	for button in _selector_buttons(selector):
@@ -230,7 +232,7 @@ func test_conditional_shows_one_card_with_a_branch_callout():
 	var card_row: HBoxContainer = scene.get_node("%CardRow")
 	var cards := card_row.get_children()
 	assert_eq(cards.size(), 1, "Conditional demo shows exactly one card")
-	assert_eq(cards[0].label.text, "", "the card should show no True/False label on itself")
+	assert_null(cards[0].get_node_or_null("MarginContainer/Label"), "the card should show decorative artwork, not a branch label")
 
 	_tick(scene, 200)
 
@@ -245,7 +247,7 @@ func test_conditional_shows_one_card_with_a_branch_callout():
 	else:
 		assert_lt(offset, 0.0, "the false branch should move the card backward")
 		assert_lt(cards[0].scale.x, 1.0, "the false branch should shrink the card slightly smaller")
-		assert_lt(cards[0].modulate.a, StateCard.DIM_ALPHA, "the false branch should dim below the card's resting look")
+		assert_lt(cards[0].modulate.a, Card.DIM_ALPHA, "the false branch should dim below the card's resting look")
 
 func test_race_loser_card_freezes_short_of_full_progress():
 	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()

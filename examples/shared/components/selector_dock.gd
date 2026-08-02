@@ -2,7 +2,7 @@ class_name SelectorDock
 extends PanelContainer
 
 const INDICATOR_BG := Color(0.309804, 0.27451, 0.898039, 1.0) # accent
-const INDICATOR_RADIUS := 12.0
+const INDICATOR_RADIUS := 12
 const MOVE_DURATION := 0.26
 
 @onready var _items_box: HBoxContainer = %Items
@@ -12,6 +12,7 @@ const MOVE_DURATION := 0.26
 ## so callers (and tests) can always read where the indicator is headed.
 var indicator_target_position := Vector2.ZERO
 var indicator_target_size := Vector2.ZERO
+var _is_first_time := true
 
 var _indicator_position := Vector2.ZERO:
 	set(value):
@@ -76,6 +77,11 @@ func get_item(index: int) -> SelectorButton:
 func select(index: int) -> void:
 	if index < 0 or index >= _items_box.get_child_count():
 		return
+
+	if _is_first_time:
+		await get_tree().process_frame
+
+		_is_first_time = false
 
 	selected_index = index
 	for i in range(_items_box.get_child_count()):

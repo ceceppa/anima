@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Anima"
 run/main_scene="uid://bbxtvbpvxfod2"
-config/features=PackedStringArray("4.6")
+config/features=PackedStringArray("4.7")
 
 [display]
 

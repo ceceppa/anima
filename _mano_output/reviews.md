@@ -155,3 +155,30 @@ No feedback logged.
 ### What we learned
 
 - No new lessons surfaced this review — the phase closed cleanly against its own goal and assumptions.
+
+---
+
+## Phase 6 Review — 2026-08-03
+
+### What worked
+
+- The phase delivered the complete group-motion workflow across runtime playback, compilation, authoring, inspection, reduced-motion handling, tests, benchmarking, and a showcase.
+- A single item motion applied across a resolved target collection remained the right core model for this phase.
+
+### What didn't
+
+- The shared `ExamplePlayground` base exists but has not yet been adopted by every existing runnable playground, leaving HiDPI scaling inconsistent across demos.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| Core groups apply one shared item motion to every resolved target. | Heterogeneous target-to-motion mapping would require a separate model and must not be smuggled into this resource. | Confirmed by user review. | confirmed |
+
+### Feedback that changes future scope
+
+- Retrofit every existing runnable playground example to extend `ExamplePlayground`, so the shared HiDPI scaling behaviour applies consistently.
+
+### What we learned
+
+- A shared playground foundation only provides a consistent experience after existing demos are deliberately migrated to it.

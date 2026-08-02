@@ -174,51 +174,42 @@ tests/Anima.integration.composition_playground.test.gd   # kept, not deleted aft
 
 ## Documentation
 
-**What:** Every public class ships a documentation page at `docs/content/docs/anima/<kebab-case-class-name>.md` (e.g. `AnimaPropertyMotion` → `anima-property-motion.md`). Follow the structure in `v2_stuff/doc.example.md`: front-matter, a one-line description, Overview, Inheritance, Availability, Quick example, then whichever of Properties / Methods / Signals / Enumerations / Constants the class actually has. Sections the template marks as conditional (Determinism, Performance notes, Reduced motion, Interruption behaviour, and similar) are included only when they genuinely apply to that class — do not add a section with nothing to say just to match the template. The Availability section's Godot version comes from `tech-spec.md`'s Platform constraints, not a restated number.
+**What:** GDScript `##` comments are the canonical public API documentation. Every public class, function, property, signal, enum, and enum value has a complete comment directly above its declaration; changing public behaviour means updating that comment in the same story. The online API reference is generated from these comments, never maintained as a competing hand-written copy.
 
-**Why:** Keeps every class's documentation the same shape as the class count grows, instead of each page inventing its own structure.
-
-**Pattern:**
-```markdown
----
-title: "AnimaPropertyMotion"
-description: "Animates a single property on a node from one value to another."
-godot_version: "4.x"
-anima_version: "2.x"
-api_type: "class"
----
-
-# AnimaPropertyMotion
-
-...
-```
-See `v2_stuff/doc.example.md` for the full section-by-section structure.
-
-**What:** Write every page for a reader with zero prior Godot or programming experience — define a Godot-specific term (`Resource`, `NodePath`, `signal`, and similar) the first time it's used on a page, avoid unexplained jargon, and keep the Quick example minimal and runnable standalone.
-
-**Why:** Anima's own audience includes developers new to both Godot and programming, not just developers new to Anima; a page that assumes prior GDScript familiarity fails that reader.
-
-**Pattern:**
-- Before using a Godot-specific term for the first time on a page, explain what it means in one clause.
-- The Quick example section must not depend on setup the reader hasn't already seen on that same page.
-
-**What:** Every public class, function, property, signal, and enum ships a `##` GDScript doc comment directly above its declaration — a one-line summary, optionally followed by a blank `##` line and more detail. This is a standing requirement, not a one-time cleanup: any story that adds a new public class/function/property/signal/enum, or changes what an existing one does, adds or updates its `##` comment in that same story — never as a separate later pass.
-
-**Why:** Hovering an Anima class or function in the Godot script editor showed "No description available" — the markdown pages under `docs/content/docs/anima/` are a separate channel that don't feed the editor's own hover/help panel; only GDScript's own `##` comments do that. A one-time sweep fixed every existing gap once, but the gap comes right back the first time new public API ships without one — so this has to hold on every story that touches the public API, not just the retroactive pass that closed it out this phase.
+**Why:** The Godot editor is where authors discover and search Anima APIs. One source of truth gives them useful in-editor help and prevents the website from drifting away from the code.
 
 **Pattern:**
 ```gdscript
-## Plays [param motion] against [param target] and returns the resulting [AnimaPlayback].
+## Plays [param motion] on [param target] and returns controls for this one run.
 ##
-## [param target] is optional when [param motion] supplies its own targets (e.g. AnimaStagger).
+## A motion describes an animation. A target is the node that visibly changes.
+## [param target] is optional when the motion already chooses its targets.
 static func play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
     ...
 ```
-Use Godot's `[ClassName]` / `[method Class.name]` / `[param name]` reference syntax where it helps the built-in help panel link to related pages — plain prose is fine when it doesn't. If a story changes what an existing function does, update its `##` comment to match in the same story — a stale comment is worse than a missing one, since it reads as confirmed and correct.
+Use Godot's `[ClassName]`, `[method Class.name]`, and `[param name]` reference syntax when it helps navigation in the editor.
+
+**What:** Public comments are written for someone new to Godot and programming. A class comment states what the feature lets an author achieve and defines unfamiliar Godot terms the first time they appear. A property comment says what changing it visibly changes and its default or allowed choices. A method comment states the action, what each input means, what it returns or changes, and any outcome an author needs to know. Signal, enum, and enum-value comments state when they occur or what each choice means in plain language.
+
+**Why:** A one-line technical label is searchable but does not help a newcomer decide whether the API is the right tool or use it safely.
+
+**Pattern:**
+- Start with the author-visible outcome, not the implementation detail.
+- Use a short follow-up paragraph when inputs, defaults, interruption, determinism, or reduced motion materially change the result.
+- Keep every example self-contained and minimal; explain any Godot-specific word in the example before relying on it.
+
+**What:** Generated online pages retain the established reference shape from `v2_stuff/doc.example.md`: front matter, one-line description, Overview, Inheritance, Availability, Quick example, and only the applicable API sections. The generator derives page prose and API lists from code comments; it does not require contributors to maintain a second explanation under `docs/content/docs/anima/`.
+
+**Why:** The website and the editor should answer the same questions in the same language while the generated page retains a skimmable reference structure.
+
+**Pattern:**
+- Keep enough context in class and member comments to populate the matching online section.
+- Include Determinism, Performance notes, Reduced motion, or Interruption behaviour only when the API has that behaviour.
+- Generation tooling and the Hugo pipeline are defined by `_mano_output/tech-spec.md`; do not add a second documentation format inline.
 
 ## Example Scenes
 
-**What:** UI-facing example/demo scenes (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (state cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/shared/`, not duplicated per example scene.
+**What:** UI-facing example/demo scenes (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (artwork cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/shared/`, not duplicated per example scene.
 
 **Why:** The design brief calls for a custom, dark, luminous scene rather than stock Godot widget styling; shared, themed components keep example scenes consistent.
 
@@ -231,8 +222,8 @@ examples/
     components/
       example_header.tscn       # icon + title + subtitle (+ optional counter), shared by every example scene
       example_header.gd
-      state_card.tscn           # shared artwork card animated by Anima
-      state_card.gd
+      card.tscn                 # shared artwork card animated by Anima
+      card.gd
       playback_controls.tscn    # restart/play-pause/speed, etc.
       playback_controls.gd
       selector_dock.tscn        # owns the shared background + the sliding selected-item indicator
@@ -240,29 +231,54 @@ examples/
       selector_button.tscn      # one item inside a SelectorDock — label colour/weight only, no own fill
       selector_button.gd
   images/
-    cards.jpg                  # 4 × 3 StateCard artwork atlas
+    cards.jpg                  # 4 × 3 Card artwork atlas
   composition_playground.tscn   # this phase's example scene, composed from the shared components above
 ```
 
-**What:** Example-scene component scripts use plain descriptive names (`StateCard`, `PlaybackControls`), not the `Anima`-prefixed `class_name` convention.
+**What:** Every runnable playground scene extends the shared `ExamplePlayground`
+root script. It applies the operating system's HiDPI content scale in `_ready()`;
+individual playgrounds do not duplicate a local `_apply_hidpi_scale()` helper.
+
+**Why:** Examples must remain legible at the display scale the author actually
+uses, and a shared root keeps that platform behaviour consistent as more demos
+are added.
+
+**Pattern:**
+```gdscript
+# examples/shared/components/example_playground.gd
+class_name ExamplePlayground
+extends Control
+
+func _ready() -> void:
+    apply_hidpi_scale()
+
+# examples/a_playground.gd
+extends ExamplePlayground
+
+func _ready() -> void:
+    super._ready()
+    # scene-specific setup
+```
+
+**What:** Example-scene component scripts use plain descriptive names (`Card`, `PlaybackControls`), not the `Anima`-prefixed `class_name` convention.
 
 **Why:** The `Anima` prefix is reserved for the addon's own public runtime/resource API (see Naming); example-only UI helpers aren't part of that surface, and prefixing them the same way would blur which classes ship in the addon versus which live only in the examples project.
 
 **Pattern:**
 ```
-# examples/shared/components/state_card.gd
-class_name StateCard
+# examples/shared/components/card.gd
+class_name Card
 extends PanelContainer
 ```
 
-**What:** `StateCard` draws from the single `examples/images/cards.jpg` atlas through Godot's Region feature. The atlas is 1536×1023 pixels, arranged as four columns by three rows; every card region is 384×341 pixels. Scene authoring selects a zero-based cell index in row-major order and derives the Region offset from that index. The component has no state enum or letter-label fallback. `set_progress(t)` remains the only runtime visual driver, animating the frame's border, glow, opacity, and scale.
+**What:** `Card` draws from the single `examples/images/cards.jpg` atlas through Godot's Region feature. The atlas is 1536×1023 pixels, arranged as four columns by three rows; every card region is 384×341 pixels. Scene authoring selects a zero-based cell index in row-major order and derives the Region offset from that index. The component has no state enum or letter-label fallback. `set_progress(t)` remains the only runtime visual driver, animating the frame's border, glow, opacity, and scale.
 
-**Why:** One atlas keeps related artwork together and makes every StateCard selection deterministic. Fixed regions prevent accidental cropping drift or stretched art across examples.
+**Why:** One atlas keeps related artwork together and makes every Card selection deterministic. Fixed regions prevent accidental cropping drift or stretched art across examples.
 
 **Pattern:**
 ```
-# examples/shared/components/state_card.gd
-class_name StateCard
+# examples/shared/components/card.gd
+class_name Card
 extends PanelContainer
 
 # index 0: Region(0, 0, 384, 341)
@@ -303,7 +319,7 @@ func select(index: int) -> void:
 
 **What:** Every example scene's top-level header is the shared `ExampleHeader` component under `examples/shared/components/` (icon + title + subtitle) — never a scene-specific title `Label` built inline. The per-type counter lives on the stage's own type-title row (it changes as the user switches composition type), not on `ExampleHeader`.
 
-**Why:** `design-brief.md` scopes the header as reusable across every future example scene; building it once now, the same way `StateCard` and `SelectorButton` were extracted, prevents it being reimplemented (and drifting) per scene later.
+**Why:** `design-brief.md` scopes the header as reusable across every future example scene; building it once now, the same way `Card` and `SelectorButton` were extracted, prevents it being reimplemented (and drifting) per scene later.
 
 **Pattern:**
 ```
@@ -317,7 +333,7 @@ extends PanelContainer
 ```
 See **Editor-Authored Content** below for why these are exports, not setter methods called from a parent script.
 
-**What:** Static, per-scene authoring content — labels, titles, subtitles, icons, and any other value that is fixed for the life of one scene instance — is exposed as an `@export` property on the component and set directly in the `.tscn` via the editor Inspector. It is not assigned imperatively from a parent scene's script (e.g. calling `_header.set_title(...)` from `composition_playground.gd`'s `_ready()`). Reserve code-driven setters for values that genuinely change at runtime — `StateCard.set_progress(t)`, `SelectorDock.select(index)` — where there's nothing for the editor to author because the value doesn't exist until the scene runs.
+**What:** Static, per-scene authoring content — labels, titles, subtitles, icons, and any other value that is fixed for the life of one scene instance — is exposed as an `@export` property on the component and set directly in the `.tscn` via the editor Inspector. It is not assigned imperatively from a parent scene's script (e.g. calling `_header.set_title(...)` from `composition_playground.gd`'s `_ready()`). Reserve code-driven setters for values that genuinely change at runtime — `Card.set_progress(t)`, `SelectorDock.select(index)` — where there's nothing for the editor to author because the value doesn't exist until the scene runs.
 
 **Why:** A value like `ExampleHeader`'s title or icon never changes once the scene is built; hardcoding it in a parent script's `_ready()` hides that content from the editor and from anyone opening the `.tscn` — reading the script becomes the only way to see what an example scene actually says. Exporting it keeps the content visible and editable in the Inspector, matching how Godot scenes are meant to be authored.
 
