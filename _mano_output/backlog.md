@@ -304,7 +304,8 @@
 - **Context:**
   Selecting a supported node with an Anima motion shows an "Anima" Inspector section with an Open Motion Composer entry point and a next-step message when there's nothing to show yet — today the only way in is expanding an AnimaMotion resource field, with no guidance from a plain node selection.
   Narrowed from "Anima Inspector section for ordinary nodes" (PRD.md §16.4, §20.2) to this entry-point slice; see "Anima Inspector behaviour section (Enable/Lifecycle/Defaults/Layout/States/Shared Element/Accessibility)" for the deferred remainder.
-- **Status:** resolved
+  Shipped in Phase 8, then rejected in the Phase 9 review: requiring a node's script to expose an AnimaMotion field is not the intended attachment mechanism. Superseded by "Motion Composer attachment mechanism requires exposing a script property" and "Redirect Motion Composer work toward the full PRD vision."
+- **Status:** rejected
 
 ### Undo/redo for all Anima Inspector edits
 - **Type:** feature
@@ -2796,7 +2797,7 @@
 - **Context:**
   Runnable showcase scenes under examples/editor/ (per project-rules.md §Example Scenes) demonstrating how to use the addons/anima/editor/ tools — Motion Composer, Group Composer, Property Motion Composer, Group Inspector — directly in the Godot editor.
   User has no hands-on way to learn the editor tooling today; complements the written Motion Composer guide (docs/content/docs/guides/motion-composer) with something to actually open and try.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Restore Anima v1 easing curve parity
 - **Type:** refinement
@@ -2828,7 +2829,7 @@
 - **Context:**
   The reported confusion ("select a node, nothing happens") is addressed in Phase 8 by "Anima Inspector entry point for ordinary nodes." This item covers usability beyond that entry point: whether the panel still has other dead ends (an empty graph, unclear switching between editing a group vs. a property motion vs. Inspection view) once a developer can actually reach it.
   Narrowed from "Iterate on the Motion Composer dock usability" once the concrete pain point was identified; revisit after the Phase 8 entry point ships and real usage shows whether more is needed.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Anima Inspector behaviour section (Enable/Lifecycle/Defaults/Layout/States/Shared Element/Accessibility)
 - **Type:** feature
@@ -2836,4 +2837,18 @@
 - **Context:**
   The fuller per-node behaviour system from PRD.md §16.4, §20.2: an Enable Anima toggle before activation, then Lifecycle/Defaults/Layout/States/Shared Element/Accessibility groups, plus Remove Anima.
   Extends the Phase 8 Motion Composer entry point (Anima Inspector entry point for ordinary nodes) once shipped; deferred because this per-node behaviour system (AnimaBehaviour-equivalent) doesn't exist yet.
+- **Status:** backlog
+
+### Motion Composer attachment mechanism requires exposing a script property
+- **Type:** bug
+- **Source:** Phase 9 review
+- **Context:**
+  The Motion Composer's entry point only appears when a node's script exports an AnimaMotion-typed field (AnimaMotionFieldScanner/AnimaMotionInspectorPlugin). This was rejected as the product direction -- attaching a motion to a node must not require modifying that node's script. The intended mechanism is an 'Enable Anima' toggle stored via metadata, matching the already-backlogged 'Anima Inspector behaviour section' item, not an exported field.
+- **Status:** backlog
+
+### Redirect Motion Composer work toward the full PRD vision
+- **Type:** refinement
+- **Source:** Phase 9 review
+- **Context:**
+  No further incremental work on the current lightweight dock (entry point, empty-state messaging, group/property-motion sub-view switching) -- it is being superseded, not extended. The actual target is the full Motion Composer vision shown in v2_stuff/anima-motion-composer.png: toolbar (Preview/Play/Stop/Compile to Animation/Open Clip/Add Sequence/Parallel/Stagger), a Motion Structure tree, tabbed Inspector (General/Timing/Motion/Advanced), curve/timeline preview, and a validation/issues panel. Already-backlogged items cover this build: Motion Composer primary layout, Motion Composer toolbar, Motion Composer Inspector tabs, Easing panel (curve preview), Composer validation/issues panel, EditorInspectorPlugin for Anima, Inspector preview actions.
 - **Status:** backlog

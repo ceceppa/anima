@@ -514,6 +514,8 @@ If they differ in number or in unit, **stop and surface the conflict for a human
 
 `mano start` and `mano review` own backlog content and long-lived project continuity.
 
+An item's `Status` says where it stands: `backlog` (open), `in-phase-N` / `in-owner-phase-N` (scoped into a phase), `resolved` (shipped or fixed), `rejected` (no longer wanted — its premise was invalidated). `resolved` and `rejected` are both closed states and neither is scopeable, but they are not interchangeable: recording a rejection as `resolved` claims work was done that never was. Only `mano review` sets `rejected`, only on items the human confirmed, via `backlog.js reject --title "..."`.
+
 Other skills should not edit the backlog except for narrow gap-resolution status updates:
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
 - `mano spec` must run `node _mano/scripts/state.js --spec`; its current-phase item plus spec-gap projection is its only backlog read. After updating the technical specification, it may mark only a fully addressed projected spec-gap item resolved via `backlog.js resolve-gap --type spec-gap --title "..."`.
@@ -634,7 +636,10 @@ Use this format:
 Active post-[skill] hook found: `_mano/hooks/post-[skill].md`.
 -> Purpose: Optional specialist review of the generated or current artifact.
 -> Recommended timing: Run after reviewing the artifact and before the next dependent Mano action if this check matters for the phase.
+-> Run it now? (yes / not yet)
 ```
+
+The `Run it now?` line is part of the template, not optional — omitting it means the user was never asked.
 
 Do not run the hook without explicit user confirmation.
 

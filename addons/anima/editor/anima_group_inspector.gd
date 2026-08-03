@@ -92,6 +92,12 @@ func _refresh_inspection() -> void:
 		messages.append(eligibility.message)
 	_refresh_visible_details()
 
+## Returns this view's own resolved-target detail text — including the
+## next-step message shown when the resolved target list is empty
+## (`project-rules.md` §Editor Boundaries).
+func resolved_targets_message() -> String:
+	return _details.text if _details != null else ""
+
 func _refresh_visible_details() -> void:
 	if _status == null or _details == null:
 		return
@@ -99,4 +105,4 @@ func _refresh_visible_details() -> void:
 	var lines: Array[String] = []
 	for index in targets.size():
 		lines.append("%d. %s — starts at %.2fs" % [index + 1, targets[index].name, start_offsets[index]])
-	_details.text = "\n".join(lines) if not lines.is_empty() else "No resolved targets."
+	_details.text = "\n".join(lines) if not lines.is_empty() else "No resolved targets yet — return to Group Setup and assign a target collection."

@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f4u0c"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2o1f1"]
 content_margin_left = 32.0
 content_margin_top = 24.0
 content_margin_right = 32.0
@@ -70,7 +70,7 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=274345128 instance=ExtResource("3")]
-theme_override_styles/panel = SubResource("StyleBoxFlat_f4u0c")
+theme_override_styles/panel = SubResource("StyleBoxFlat_2o1f1")
 title = "Grid Motion"
 subtitle = "Propagate a wave across a 5×5 grid from any tile you choose."
 icon = "✦"
@@ -154,4 +154,5 @@ layout_mode = 2
 
 [node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=605429258 instance=ExtResource("5")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2

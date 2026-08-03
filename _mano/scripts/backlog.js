@@ -21,6 +21,7 @@
  *   assign   move approved items from `Status: backlog` to `in-phase-<N>`
  *   resolve  mano review's close sweep: `in-phase-<N>` -> `resolved` (whole phase)
  *   resolve-gap  mark one exact spec-gap / rule-gap item resolved
+ *   reject   mark named open items `rejected` (premise invalidated, won't do)
  *
  * Usage:
  *   node backlog.js add --title "X" --type feature --context "..." [--source "..."]
@@ -28,6 +29,7 @@
  *   node backlog.js assign --phase 9 --title "X" --title "Y"
  *   node backlog.js resolve --phase 9
  *   node backlog.js resolve-gap --type spec-gap --title "Exact title"
+ *   node backlog.js reject --title "X" --title "Y"
  *   node backlog.js --help
  *
  * The `add` input is a single item from flags (the shell-safe path — no JSON to
@@ -54,6 +56,7 @@ Commands:
   assign   move approved items from 'Status: backlog' to the configured phase
   resolve  mano review's close sweep for the configured phase identity
   resolve-gap  flip one exact open spec-gap / rule-gap item to 'resolved'
+  reject   flip named open items to 'rejected' (premise invalidated, won't do)
 
 add — one item from flags (the shell-safe path):
   --title "..."     required
@@ -87,6 +90,14 @@ resolve-gap:
   'Status: backlog'. An already-resolved matching item is an idempotent success.
   Ambiguous, missing, malformed, wrong-type, or in-phase targets fail without
   changing the file.
+
+reject:
+  --title "..."     one per human-approved item, repeatable
+  Flips each exact-titled item from 'Status: backlog' to 'Status: rejected' —
+  the item's premise was invalidated (e.g. its feature was rejected in review),
+  distinct from 'resolved' (shipped/fixed). Only open 'backlog' items flip;
+  in-phase, resolved, ambiguous, or missing targets are reported and left
+  unchanged. Already-rejected items are an idempotent success.
 
 A trailing positional argument = project root (default: current dir).
 
@@ -525,6 +536,72 @@ function cmdResolveGap(args) {
   process.stdout.write(`  + ${record.title}\n`);
 }
 
+// ---- reject ---------------------------------------------------------------
+
+// mano review's scope-retirement writer: flip each human-approved title from
+// `Status: backlog` to `Status: rejected`. Title-scoped and backlog-only —
+// in-phase items belong to their phase's resolve sweep, and `rejected` stays
+// distinct from `resolved` (shipped/fixed) so backlog history reads honestly.
+function cmdReject(args) {
+  if (args.titles.length === 0) fail("reject needs at least one --title.");
+  if (args.titles.some((title) => typeof title !== "string" || !title.trim())) {
+    fail("reject needs a non-empty value after every --title.");
+  }
+
+  const file = backlogPath(args.root);
+  const text = readText(file);
+  if (text == null) fail(`reject: no backlog at ${file}.`);
+
+  const parsed = parseItemRecords(text);
+  const results = [];
+  const seen = new Set();
+  for (const raw of args.titles) {
+    const requested = raw.trim();
+    const key = requested.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const matches = parsed.records.filter((record) => record.title.toLowerCase() === key);
+    if (matches.length === 0) {
+      results.push({ title: requested, outcome: "not-found" });
+      continue;
+    }
+    if (matches.length > 1) {
+      results.push({ title: requested, outcome: "ambiguous", count: matches.length });
+      continue;
+    }
+    const record = matches[0];
+    const status = itemField(parsed.lines, record, "Status");
+    if (status.error) {
+      results.push({ title: record.title, outcome: "malformed", error: status.error });
+      continue;
+    }
+    if (status.value === "rejected") {
+      results.push({ title: record.title, outcome: "already" });
+      continue;
+    }
+    if (status.value !== "backlog") {
+      results.push({ title: record.title, outcome: "skipped", status: status.value });
+      continue;
+    }
+    parsed.lines[status.line] = `${status.prefix}rejected${status.trailing}`;
+    results.push({ title: record.title, outcome: "rejected" });
+  }
+
+  const rejected = results.filter((r) => r.outcome === "rejected");
+  if (rejected.length) fs.writeFileSync(file, parsed.lines.join("\n"));
+
+  process.stdout.write(`[mano backlog] reject → ${rejected.length} item(s) marked rejected` +
+    (results.length - rejected.length ? `, ${results.length - rejected.length} unchanged` : "") + "\n");
+  for (const r of results) {
+    if (r.outcome === "rejected") process.stdout.write(`  + ${r.title}\n`);
+    else if (r.outcome === "already") process.stdout.write(`  ~ ${r.title} (already 'rejected', left as-is)\n`);
+    else if (r.outcome === "skipped") process.stdout.write(`  ~ ${r.title} (Status: ${r.status}; only open 'backlog' items can be rejected, left as-is)\n`);
+    else if (r.outcome === "ambiguous") process.stdout.write(`  ? ${r.title} (ambiguous — ${r.count} exact matches, left as-is)\n`);
+    else if (r.outcome === "malformed") process.stdout.write(`  ? ${r.title} (malformed item — ${r.error})\n`);
+    else process.stdout.write(`  ? ${r.title} (no matching item — check the title)\n`);
+  }
+}
+
 // ---- main -----------------------------------------------------------------
 
 function main() {
@@ -537,7 +614,8 @@ function main() {
   else if (args.command === "assign") cmdAssign(args);
   else if (args.command === "resolve") cmdResolve(args);
   else if (args.command === "resolve-gap") cmdResolveGap(args);
-  else fail(`unknown command "${args.command}". Use add, assign, resolve, or resolve-gap (--help for usage).`);
+  else if (args.command === "reject") cmdReject(args);
+  else fail(`unknown command "${args.command}". Use add, assign, resolve, resolve-gap, or reject (--help for usage).`);
 }
 
 main();

@@ -1,7 +1,8 @@
 # Backlog
 
 <!-- Future work, deferred items, and ideas. -->
-<!-- `mano start` owns backlog curation during scoping. `mano review` appends or resolves phase items. `mano spec` / `mano rules` may resolve only exact projected gap items through backlog.js. -->
+<!-- `mano start` owns backlog curation during scoping. `mano review` appends, resolves phase items, or rejects items the human confirmed are no longer wanted. `mano spec` / `mano rules` may resolve only exact projected gap items through backlog.js. -->
+<!-- `resolved` means shipped or fixed. `rejected` means the item is no longer wanted — its premise was invalidated. Both are closed; neither is scopeable. -->
 <!-- You can edit this file directly at any time. -->
 
 ## Core Product Principles
@@ -32,4 +33,4 @@ Current-phase implementation work belongs in `phase-brief.md` or the phase's sto
 - **Context:**
   What it is.
   Why it matters or key detail.
-- **Status:** backlog / in-phase-N / in-owner-phase-N / resolved
+- **Status:** backlog / in-phase-N / in-owner-phase-N / resolved / rejected

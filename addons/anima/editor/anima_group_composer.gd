@@ -115,9 +115,9 @@ func _refresh() -> void:
 	add_child(_setup)
 	if _group == null:
 		if _add_group_button.visible:
-			_set_status("This motion isn't a group — press Add Group Motion below, or pick a Group Motion from the dropdown above.")
+			_set_status("This motion isn't a group — press Add Group Motion below, or pick a Group Motion or Property Motion from the dropdown above.")
 		else:
-			_set_status("This motion isn't a group and can't hold one — pick a Group Motion from the dropdown above.")
+			_set_status("This motion isn't a group and can't hold one — pick a Group Motion or Property Motion from the dropdown above.")
 		return
 	_build_setup()
 
@@ -127,7 +127,11 @@ func _selected_parent() -> AnimaMotion:
 	return get_meta("selected_motion", null) as AnimaMotion
 
 func _build_setup() -> void:
-	_set_status("Select a scene node before previewing this group." if _scene_node == null else "This group uses the selected scene node for preview.")
+	var is_configured: bool = _group.item_motion != null and _group.target_collection != null
+	if not is_configured:
+		_set_status("This group has no target collection or item motion yet — assign both above before previewing or inspecting.")
+	else:
+		_set_status("Select a scene node before previewing this group." if _scene_node == null else "This group uses the selected scene node for preview.")
 	_add_resource_picker("Target collection", "AnimaTargetCollection", _group.target_collection, func(value: Resource): _change_property(_group, "target_collection", value, "Set group target collection"))
 	_add_resource_picker("Item motion", "AnimaMotion", _group.item_motion, func(value: Resource): _change_property(_group, "item_motion", value, "Set group item motion"))
 	_add_option("Playback", ["Sequential", "Parallel", "Staggered"], _group.playback_mode, func(index: int): _change_property(_group, "playback_mode", index, "Set group playback"))
@@ -149,15 +153,20 @@ func _build_setup() -> void:
 	_add_option("Reverse order", ["Reuse execution", "Reverse execution"], _group.reverse_order_policy, func(index: int): _change_property(_group, "reverse_order_policy", index, "Set reverse order"))
 	_add_option("Invalid target", ["Skip", "Cancel group"], _group.invalid_target_policy, func(index: int): _change_property(_group, "invalid_target_policy", index, "Set invalid target policy"))
 	_add_option("Empty group", ["Complete", "Report error"], _group.empty_group_policy, func(index: int): _change_property(_group, "empty_group_policy", index, "Set empty group policy"))
-	var controls := HBoxContainer.new()
-	for data in [["Preview", preview_forward], ["Stop", stop_preview], ["Reverse", preview_reverse]]:
-		var button := Button.new()
-		button.text = data[0]
-		button.pressed.connect(data[1])
-		controls.add_child(button)
-	_setup.add_child(controls)
+	if is_configured:
+		var controls := HBoxContainer.new()
+		for data in [["Preview", preview_forward], ["Stop", stop_preview], ["Reverse", preview_reverse]]:
+			var button := Button.new()
+			button.text = data[0]
+			button.pressed.connect(data[1])
+			controls.add_child(button)
+		_setup.add_child(controls)
 
 func _add_resource_picker(label_text: String, base_type: String, value: Resource, changed: Callable) -> void:
+	if not Engine.is_editor_hint():
+		# EditorResourcePicker can only be instantiated inside a real editor
+		# session; outside it (headless test runs), this row is skipped.
+		return
 	var picker := EditorResourcePicker.new()
 	picker.base_type = base_type
 	picker.edited_resource = value

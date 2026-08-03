@@ -126,7 +126,7 @@
 
 **What the user sees:**
 - The current motion and its place in the opened resource graph.
-- The selected motion’s editing view.
+- The selected motion’s editing view, in the form that matches what's actually selected: Group Setup for a Group Motion, Property Motion Editing for a Property Motion.
 - The currently selected scene node, or a clear message that a node must be selected before targets can be resolved or previewed.
 - If nothing has been opened yet, a message explaining what to do next (select a node with an Anima motion, or open one from the Inspector) instead of a blank panel.
 
@@ -135,7 +135,7 @@
 - Select a scene node in Godot to provide the current target and preview context.
 
 **What happens on action:**
-- Selecting a motion opens its editing view without creating another copy of the resource.
+- Selecting any motion in the graph — a Group Motion or a Property Motion — opens straight into that motion's own type-appropriate editing view. Switching between them is the same one action regardless of type; there is no separate mode toggle to find first and no blank state in between.
 - Selecting a scene node makes it the context for resolving or previewing the current group; without one, the group remains editable but those actions explain what is missing.
 - A compatible composite parent offers Add Group Motion. Choosing it creates and selects a new group; opening a standalone Group Motion selects it directly.
 
@@ -151,6 +151,7 @@
 - Only settings that apply to the selected option.
 - Inspect and Preview controls for this same group.
 - When the selected motion isn't itself a group, a message naming what to do next: select a Group Motion elsewhere in the graph, or add one to the current selection if it can hold one.
+- When the group has no target collection or item motion assigned yet, a message naming the concrete next step — assign a target collection and an item motion — instead of an empty graph with Inspect and Preview controls that have nothing to act on.
 
 **What the user can do:**
 - Configure one Group Motion.
@@ -160,6 +161,25 @@
 - Editing a setting updates the same Group Motion used by code authoring and supports normal editor undo and redo.
 - Inspect opens the current group’s inspection view in the same workspace session.
 - Preview uses the selected scene node and current settings. The author can stop it or play it in reverse, then continue editing; if the context is missing or invalid, the setup view explains why preview cannot start.
+
+## Motion Composer — Property Motion Editing
+
+**How it's accessed:** Select a Property Motion in the Composer workspace graph — a leaf motion that isn't a Group Motion.
+
+**How the user gets back:** Select another motion in the workspace, or return to the parent motion.
+
+**What the user sees:**
+- The selected Property Motion's target property, easing (including the full restored curve library) and optional pivot choice, duration, and delay.
+- Only settings that apply to the selected easing kind.
+- When the selected motion isn't a Property Motion, a message naming what to do next: select a Property Motion elsewhere in the graph.
+
+**What the user can do:**
+- Configure the selected Property Motion's settings.
+- Select a different motion in the graph to switch what's being edited.
+
+**What happens on action:**
+- Editing a setting updates the same AnimaPropertyMotion resource used by code authoring and supports normal editor undo and redo.
+- Selecting a different motion in the graph switches directly into that motion's own editing view — Group Setup for a Group Motion, this view for another Property Motion — with no intermediate blank state.
 
 ## Motion Composer — Group Inspection
 
@@ -171,6 +191,7 @@
 - The resolved target list in the collection’s current order.
 - Each target’s generated start timing as a detail list, without a timeline or visible rank labels.
 - Validation and compile eligibility, including a plain-language reason when compilation is blocked.
+- When the resolved target list is empty, a message naming the concrete next step — return to Group Setup and assign a target collection — instead of a blank list with no explanation.
 
 **What the user can do:**
 - Refresh validation, then compile when the group is eligible.
@@ -179,3 +200,19 @@
 **What happens on action:**
 - Validation refreshes the displayed issues from the current resource and scene-node context.
 - Compiling an eligible group produces its native Animation. A blocked group remains inspectable with its reason, so the author can return to setup and correct it.
+
+## Editor Tooling Showcase Scene
+
+**How it's accessed:** Open `examples/editor/motion_composer_showcase.tscn` in the Godot editor. This scene is opened and explored in the editor, not run.
+
+**How the user gets back:** Select a different node in the Scene panel, or close the scene tab. The scene has no in-app navigation of its own.
+
+**What the user sees:**
+- A Scene panel with four labelled nodes, one per editor panel this showcase demonstrates: a node carrying an authored Group Motion, a node carrying an authored Property Motion, a node carrying a compiled/resolved group ready for inspection, and a node with no motion assigned yet.
+- Selecting any of the four opens the same "Anima" Inspector section and Motion Composer a real project uses, showing that node's matching state.
+
+**What the user can do:**
+- Select any of the four nodes to see its matching Motion Composer state live: Group Setup, Property Motion Editing, Group Inspection, or the top-level empty-state entry point.
+
+**What happens on action:**
+- Selecting a node opens the real Motion Composer workspace, not a showcase-only mock — what the developer sees here is exactly what they'll get once they wire up their own motions.

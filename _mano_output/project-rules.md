@@ -52,6 +52,35 @@ addons/anima/
 - Bad: `"Select a Group Motion to edit it, or select a compatible parent to add one."` shown with no indication of how to do either from where the author actually is.
 - Good: name the specific action reachable from this exact state — open a motion from the Inspector, pick a different motion from the graph, or add a group to the current selection.
 
+**What:** Every `addons/anima/editor/` panel exposes its current empty/nothing-actionable-state message through a small, plain method that returns the string (`status_message()`, `workspace_status_message()`) — never text set only inline inside `_refresh()`'s UI-mutation code.
+
+**Why:** `EditorInspectorPlugin`-derived panel classes can't be instantiated outside a real editor session, so a small testable method separate from the UI-mutation path is the only way to unit-test an empty state's wording and triggering condition — the pattern Phase 8 already established for `AnimaGroupComposer.status_message()` and `AnimaMotionComposer.workspace_status_message()`; every new panel state message follows it too.
+
+**Pattern:**
+```gdscript
+func status_message() -> String:
+    if _group == null:
+        return "Select a Group Motion to edit, or add one to the current selection."
+    return ""
+
+func _refresh() -> void:
+    _status_label.text = status_message()
+```
+
+**What:** The Motion Composer's active editing view is chosen from the currently selected motion's type through one shared switch — never a separate, divergent entry point per motion type (one path for opening a Group Motion's view, a different bespoke path for a Property Motion's).
+
+**Why:** Phase 8's review traced the original discoverability complaint to exactly this kind of divergence — one motion type had a working path in, another didn't. A single type-driven switch keeps adding a new editing view (this phase's Property Motion Editing, alongside the existing Group Setup) a matter of adding one match arm, not wiring a second parallel mechanism.
+
+**Pattern:**
+```gdscript
+func _open_motion(motion: AnimaMotion) -> void:
+    match true:
+        motion is AnimaGroupMotion:
+            _show_group_setup(motion)
+        motion is AnimaPropertyMotion:
+            _show_property_motion_editing(motion)
+```
+
 ## Naming
 
 **What:** Every GDScript type is declared with `class_name` in PascalCase, prefixed `Anima` (`AnimaMotion`, `AnimaSequence`, `AnimaPropertyMotion`, …). The file name mirrors the class name in snake_case.
@@ -252,6 +281,20 @@ title: "Motion Composer"
 examples/
   playground/     # runtime motion scenes — Anima.play(), restart/reverse controls
   editor/         # showcase scenes for addons/anima/editor/ tools — opened in the Godot editor, not run
+```
+
+**What:** The `examples/editor/` showcase for the Motion Composer's four editor panels is one scene, `motion_composer_showcase.tscn`, holding four labelled nodes — one carrying an authored Group Motion, one carrying an authored Property Motion, one carrying a compiled/resolved group ready for inspection, and one with no motion assigned — not four separate scene files. It uses plain Godot nodes with no shared theme or `examples/playground/shared/` component; `examples/editor/` scenes are opened and clicked through, not run, so the playground's runtime visual chrome does not apply.
+
+**Why:** `ux-flow.md`'s Editor Tooling Showcase Scene defines this as one scene a developer opens and clicks through node by node to see each Motion Composer state live; four separate project files would mean opening and closing four scenes to see four states of the same dock.
+
+**Pattern:**
+```
+examples/editor/
+  motion_composer_showcase.tscn
+    GroupMotionExample      # AnimaGroupMotion assigned — opens Group Setup
+    PropertyMotionExample   # AnimaPropertyMotion assigned — opens Property Motion Editing
+    ResolvedGroupExample    # compiled/resolved group — opens Group Inspection
+    EmptyExample            # no motion assigned — opens the top-level entry-point empty state
 ```
 
 **What:** UI-facing example/demo scenes under `examples/playground/` (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (artwork cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/playground/shared/`, not duplicated per example scene.

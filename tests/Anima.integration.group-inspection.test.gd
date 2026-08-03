@@ -23,3 +23,20 @@ func test_inspection_uses_the_same_resolved_targets_and_offsets_as_playback_and_
 	assert_ne(animation, null)
 	assert_eq(animation.get_track_count(), inspector.targets.size())
 	inspector.free()
+
+## Regression: an empty resolved-target list used to read "No resolved
+## targets." with no indication of what to do about it.
+func test_empty_resolved_target_list_names_the_next_step():
+	var root := Node.new()
+	add_child_autofree(root)
+	var collection := AnimaTargetCollection.new()
+	collection.kind = AnimaTargetCollection.Kind.CHILDREN
+	var group := Motion.group(collection, Motion.to(NodePath("position:x"), 10.0))
+	var inspector := GroupInspector.new()
+	add_child_autofree(inspector)
+
+	inspector.inspect(group, root)
+
+	assert_eq(inspector.targets, [])
+	assert_string_contains(inspector.resolved_targets_message(), "Group Setup")
+	assert_string_contains(inspector.resolved_targets_message(), "target collection")

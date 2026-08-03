@@ -120,7 +120,9 @@ func _refresh_workspace() -> void:
 
 	_property_motion_composer.visible = showing_property_motion
 	_group_composer.visible = session.active_view == AnimaComposerSession.View.SETUP and not showing_property_motion
-	_inspect_button.visible = session.selected_motion is AnimaGroupMotion and session.active_view == AnimaComposerSession.View.SETUP
+	var selected_group := session.selected_motion as AnimaGroupMotion
+	var group_is_configured: bool = selected_group != null and selected_group.item_motion != null and selected_group.target_collection != null
+	_inspect_button.visible = group_is_configured and session.active_view == AnimaComposerSession.View.SETUP
 	_group_inspector.visible = session.active_view == AnimaComposerSession.View.INSPECTION
 	if session.active_view == AnimaComposerSession.View.INSPECTION:
 		_group_inspector.inspect(session.selected_motion as AnimaGroupMotion, session.selected_scene_node)

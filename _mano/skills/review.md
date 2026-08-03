@@ -101,14 +101,17 @@ That is your complete response. No preamble. No explanation. No extra commentary
 
 **STEP 2 — Triage Feedback**
 
-When the user replies with their feedback, or when substantive feedback was already included in the activation message, triage it into five buckets:
+When the user replies with their feedback, or when substantive feedback was already included in the activation message, triage it into six buckets:
 - 🐛 Defects — broken things from this phase
 - 🔧 Refinements — things that work but could be better
 - ✨ New ideas — emerged from usage, not originally scoped
 - 📋 Spec gaps — missing or unclear tech spec (if applicable)
 - 📏 Rule gaps — missing or unclear rules (if applicable)
+- ❌ Rejected scope — open backlog items whose premise this feedback invalidates (if applicable)
 
 **Splitting rule:** A single sentence can contain both a failure signal and an improvement detail — split them. If the user says "there's an issue with X, and it should also do Y", the failure is a 🐛 Defect and the improvement detail is a 🔧 Refinement. Defect signals: "issue", "broken", "doesn't work", "fails", "wrong", "missing". Do not collapse a defect into a refinement just because the user described a fix in the same breath.
+
+**Rejected-scope rule:** When the feedback rejects a scoped direction, feature, or assumption ("reject", "drop", "abandon", "we're not doing X anymore", "different direction"), the additions are only half the triage — the other half is the open items that direction leaves orphaned. Read `_mano_output/backlog.md` and list every item still `Status: backlog` that is predicated on the rejected direction as a ❌ rejection candidate, one line each, exact title first. Matching is a judgment call the human confirms per item: propose candidates, never auto-reject, and when unsure whether an item depends on the rejected direction, include it as a candidate and say why — the user removes it from the list if it survives. In-phase items are not candidates; they belong to the phase's close sweep.
 
 Present the triaged list to the user for confirmation:
 
@@ -124,14 +127,21 @@ Present the triaged list to the user for confirmation:
 ✨ New ideas:
 3. [one sentence]
 
+❌ Rejected scope (open backlog items this feedback invalidates — confirm each):
+4. "[exact backlog item title]" — [why it depends on the rejected direction]
+
 Does this look right? Tell me what to move or remove, or say "close it" to log this.
 ```
+
+Omit the ❌ section when the feedback rejects nothing. Rejection candidates follow the same confirmation model as every other bucket: they are visible in the presented list, the user removes any that survive, and "close it" confirms the list as presented. Never reject an item that was not listed as a candidate in this message.
 
 That is your complete response. DO NOT write files yet.
 
 **Fast close — no feedback to triage.** If the user's reply contains no feedback to triage (e.g. "nothing to report, close it", "close it", "all good"), skip the triage presentation entirely — there is nothing to confirm. Treat the reply as direct confirmation and go straight to STEP 3 with an empty triage: no backlog items are written, the resolve sweep and review entry still happen. In the review entry, fill the Assumption results table from any verdicts the user gave in STEP 1; record `What we'd do differently` as "No feedback logged." Do not ask a follow-up question to fish for feedback before closing — "close it" means close it.
 
 **The close instruction is terminal — never re-confirm it.** When a single message carries both the assumption verdicts and a close instruction (e.g. "all valid, close it", "1 confirmed 2 invalidated, close it", "all good close it"), that one message clears STEP 1 *and* is the STEP 3 confirmation. Go straight to writing files. Do **not** emit an empty-triage "Does this look right? Say close it to log" message — that is a second confirmation gate the user already satisfied, and it is the exact double-confirm this rule forbids. Re-prompting after the user has already said "close it" is a bug, not caution.
+
+The one thing that survives a close instruction is a ❌ rejection candidate the user has not seen. "Drop the dock work, close it" closes the phase, but the open backlog items that rejection orphans are information the user has not been shown, not a re-confirmation of something they already approved. Present the ❌ list alone — no other buckets, no re-litigating the rest of the triage — and write the rest of the close in the same turn.
 
 ---
 
@@ -168,9 +178,14 @@ When the user confirms (e.g., "close it", "yes"):
    node _mano/scripts/backlog.js resolve --phase [N]
    ```
    It flips every item carrying the current owner's exact projected `IN_PHASE_STATUS` to `resolved` — the whole phase in one call — which officially closes that owner-scoped phase. It never matches another owner's in-phase status, and the items you just triaged remain `Status: backlog`. **Script failing?** Stop and report the error — do not flip statuses by hand.
-3. If `_mano_output/reviews.md` does not exist, create it with the top-level title.
-4. **Always append** the new review entry at the **bottom** of `_mano_output/reviews.md`. Never insert between existing entries.
-5. Fill the template sections concretely.
+3. **Retire rejected scope — via the writer, only for ❌ items the user confirmed:**
+   ```
+   node _mano/scripts/backlog.js reject --title "[exact title]" --title "[exact title]"
+   ```
+   It flips each named open item to `Status: rejected`, which is not `resolved`: rejected means no longer wanted, resolved means shipped or fixed. Never conflate them — a rejected item recorded as resolved falsely claims the work was done. Skip this step entirely when the triage had no confirmed ❌ items. **Script failing?** Stop and report the error — do not flip statuses by hand.
+4. If `_mano_output/reviews.md` does not exist, create it with the top-level title.
+5. **Always append** the new review entry at the **bottom** of `_mano_output/reviews.md`. Never insert between existing entries.
+6. Fill the template sections concretely. When scope was rejected, the review entry records what was rejected and why in the narrative sections — it is the phase's durable record of a direction change.
 
 Output a cold execution log:
 Use the canonical execution-log format defined in `_mano/workflow.md` ("Canonical execution-log format"):
@@ -178,6 +193,7 @@ Use the canonical execution-log format defined in `_mano/workflow.md` ("Canonica
 ```
 [mano review]: mano review — _mano_output/backlog.md, _mano_output/reviews.md
 - Triaged items inserted to backlog
+- [N] backlog item(s) marked rejected — omit this line if none
 - [PHASE_ID] items marked resolved
 - [PHASE_ID] closed
 ⚠ Verify: [material triage decision worth checking — omit if none]
@@ -234,10 +250,15 @@ Present the triaged outcomes for confirmation:
 ✨ New ideas:
 4. [one sentence]
 
+❌ Rejected scope (open backlog items this feedback invalidates — confirm each):
+5. "[exact backlog item title]" — [why it depends on the rejected direction]
+
 Does this look right? Tell me what to move or remove, or say "close it".
 ```
 
 That is your complete response. DO NOT write to files yet.
+
+The ❌ section follows the same **Rejected-scope rule** as the standard STEP 2: propose candidates from the open backlog, never auto-reject, and omit the section when the feedback rejects nothing.
 
 **Fast close — nothing to triage.** If the user's follow-up reply contains no feedback to triage (e.g. "everything's resolved, close it", "all good"), skip the triage presentation — there is nothing to confirm. Treat the reply as direct confirmation and go straight to STEP 3 (Follow-up) with an empty triage: no new backlog items are written; the addendum is still appended, recording the outcomes the user stated (or "No follow-up feedback logged"). Do not ask a follow-up question to fish for feedback before closing.
 
@@ -249,12 +270,14 @@ When the user confirms (e.g., "close it", "yes"):
 1. Read `_mano_output/backlog.md`.
 2. Match resolved items to existing backlog items and flip each to `Status: resolved` by hand (these are specific `backlog` items now fixed — a title-scoped edit, not the `resolve --phase` sweep).
 3. Append any still open / new ideas to the backlog **via `node _mano/scripts/backlog.js add`** (same flags / `--file` as the standard STEP 3.1) — don't hand-write the blocks. **Script failing?** Stop and report the error.
-4. **Do not create a new follow-up review section.** Find the existing owner-aware H2 that begins with the exact projected `REVIEW_HEADING_PREFIX` and append an `### Addendum — [Date]` subsection directly under it (before the next `---` separator). Use the addendum structure from `_mano/templates/phase-review.md`.
+4. Retire any confirmed ❌ items **via `node _mano/scripts/backlog.js reject --title "[exact title]"`** (same writer and same rejected-vs-resolved distinction as the standard STEP 3.3). Skip when the triage had no confirmed ❌ items.
+5. **Do not create a new follow-up review section.** Find the existing owner-aware H2 that begins with the exact projected `REVIEW_HEADING_PREFIX` and append an `### Addendum — [Date]` subsection directly under it (before the next `---` separator). Use the addendum structure from `_mano/templates/phase-review.md`.
 
 Output execution log (canonical format, see `_mano/workflow.md`):
 ```
 [mano review]: mano review — _mano_output/backlog.md, _mano_output/reviews.md
 - Follow-up statuses updated in backlog
+- [N] backlog item(s) marked rejected — omit this line if none
 - Addendum appended to [PHASE_ID] review entry
 
 [Optional hook block if active]
@@ -311,5 +334,6 @@ Do not write hook suggestions into generated artifacts.
 - Do not manage story state. Do not edit story files, mark stories `done`, cut stories, or touch the stories README index — not even in the pre-review gate. If stories aren't `done`, refuse per the pre-review gate and point the user to `mano dev` or their own README edit.
 - Do not check off acceptance criteria in story files.
 - Do not scope the next phase. That's `mano start`'s job.
-- Do not present the backlog or use it for scoping. Reading it in STEP 3 to append, deduplicate, or resolve items is allowed.
+- Do not present the backlog or use it for scoping. Reading it is allowed for two purposes only: in STEP 2, to find rejection candidates when the feedback rejects a scoped direction (list only those candidates, never the backlog at large); and in STEP 3, to append, deduplicate, resolve, or reject items.
+- Do not reject a backlog item the user did not confirm as a listed ❌ candidate, and never mark a rejected item `resolved` — that records unwanted work as shipped.
 - Do not create files outside the defined output structure. `mano review` writes to `backlog.md` and `reviews.md` only. No extra tracking files.

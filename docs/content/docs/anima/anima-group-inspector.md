@@ -58,3 +58,9 @@ Recalculates target resolution, generated timing, validation, and compile eligib
 ### compile
 
 Compiles the inspected group when it is eligible, otherwise keeps its blocker visible.
+
+### resolved_targets_message
+
+Returns this view's own resolved-target detail text — including the
+next-step message shown when the resolved target list is empty
+(`project-rules.md` §Editor Boundaries).

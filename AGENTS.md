@@ -193,7 +193,10 @@ If an active hook exists, mention it in the final response before the next-actio
 Active post-[skill] hook found: `_mano/hooks/post-[skill].md`.
 -> Purpose: Optional specialist review of the generated or current artifact.
 -> Recommended timing: Run after reviewing the artifact and before the next dependent Mano action if this check matters for the phase.
+-> Run it now? (yes / not yet)
 ```
+
+The `Run it now?` line is part of the template, not optional — omitting it means the user was never asked.
 
 Do not mention specific third-party or external skill names in generic Mano output.
 

@@ -243,3 +243,30 @@ No feedback logged.
 ### What we learned
 
 - A component that builds its own children entirely in code (as `Card3D` originally did) is invisible in the Godot editor's viewport and Inspector until the scene runs — worth checking for the same pattern in any future component with fixed child nodes.
+
+---
+
+## Phase 9 Review — 2026-08-04
+
+### What worked
+
+- All three scoped stories shipped and verified: reaching Property Motion Editing directly from graph selection, empty-state messaging naming a next step across Group Setup, Group Inspection, and Property Motion Editing, and a four-node `examples/editor/` showcase scene demonstrating all three Motion Composer states live.
+
+### What didn't
+
+- The underlying attachment mechanism — requiring a node's script to expose an `AnimaMotion` field — was rejected outright once seen working in a real example scene; the phase's usability fixes polished a dock whose basic design isn't the intended one.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| This phase's Motion Composer usability fixes are minimal navigation/messaging improvements to the existing lightweight dock, not the fuller PRD Motion Composer vision (toolbar, structure tree, timeline panel) already noted in the backlog. | If the fuller Composer rebuild lands first, this phase's specific navigation affordances could be reworked or discarded rather than reused. | The predicted risk materialized: the attachment mechanism itself was rejected, and all further dock work is redirected toward the full PRD Motion Composer vision instead. | invalidated |
+
+### Feedback that changes future scope
+
+- The Motion Composer's node-exposes-an-`AnimaMotion`-property attachment mechanism is rejected as the product direction — see the new "Motion Composer attachment mechanism requires exposing a script property" backlog item.
+- No further incremental work on the current lightweight dock — the actual target is the full Motion Composer vision in `v2_stuff/anima-motion-composer.png` (toolbar, Motion Structure tree, tabbed Inspector, curve/timeline preview). See the new "Redirect Motion Composer work toward the full PRD vision" backlog item.
+
+### What we learned
+
+- Phase 8 and 9's incremental dock fixes were validated against passing tests and each phase's own acceptance criteria, but never compared against the original PRD reference image until this review — checking new editor-tooling work against its own source reference earlier would likely have caught the direction mismatch sooner.

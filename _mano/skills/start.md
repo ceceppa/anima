@@ -453,7 +453,7 @@ UX, UI, stories, or source code without editing those targets.
 
 After `mano start`, check whether `_mano/hooks/post-start.md` exists. Ignore `_mano/hooks/post-start.example.md`.
 
-If `_mano/hooks/post-start.md` exists, prepare the generic hook block for the final chat response. Do not run the hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
+If `_mano/hooks/post-start.md` exists, prepare the generic hook block for the final chat response, including its closing `Run it now?` question line. Do not run the hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
 
 This step is required even when no scoping update was needed. Mention it in the final chat response before the next-action block.
 
