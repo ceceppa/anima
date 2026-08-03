@@ -16,10 +16,10 @@ Optional post-UI review after `mano ui` creates or updates the design brief and 
 Allow the review skill to read:
 - `_mano_output/design-brief.md` — visual direction, shared components, tokens, component states
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-- The current `_mano_output/phase-[N]/design-preview.html` if it exists — the non-canonical snapshot to compare with the current phase's brief entry. Do not read a prior phase preview or a legacy root `_mano_output/design-preview.html`.
+- The exact current `PREVIEW` path from `state.js --ui` if it exists — the non-canonical snapshot to compare with the current phase's brief entry. Do not read a prior/different-owner preview or a legacy root `_mano_output/design-preview.html`.
 <!-- /mano-rule: ui-phase-preview-ownership -->
 - `_mano_output/ux-flow.md` if it exists — to verify every screen referenced by the flow has visual guidance
-- `_mano_output/phase-[N]/phase-brief.md` — phase scope, including any visual-related items
+- The exact `BRIEF` path from `state.js --ui` — owner-aware phase scope, including any visual-related items
 - `_mano_output/project-rules.md` if it exists — implementation contracts, accessibility rules, and component constraints
 - `_mano_output/tech-spec.md` if it exists — for platform constraints that affect flow (offline, biometrics, etc.)
 

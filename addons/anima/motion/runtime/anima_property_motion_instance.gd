@@ -27,6 +27,7 @@ func advance(target: Node, delta: float) -> bool:
 			_from_value = target.get_indexed(property_motion.target_property)
 		_to_value = _from_value + property_motion.to_value if property_motion.is_relative else property_motion.to_value
 		_from_value_captured = true
+		_apply_pivot(target, property_motion)
 
 	if property_motion.ease.kind == AnimaEase.Kind.SPRING:
 		return _advance_spring(target, property_motion, delta)
@@ -39,6 +40,59 @@ func advance(target: Node, delta: float) -> bool:
 	target.set_indexed(property_motion.target_property, lerp(_from_value, _to_value, eased_t))
 
 	return t >= 1.0 or is_equal_approx(t, 1.0)
+
+## Normalized (x, y) position of each [enum AnimaPropertyMotion.Pivot] anchor
+## within a target's own bounds — `(0, 0)` is the top-left corner, `(1, 1)`
+## the bottom-right, matching Control.size / Sprite2D.texture-space.
+const _PIVOT_ANCHORS := {
+	AnimaPropertyMotion.Pivot.TOP_LEFT: Vector2(0.0, 0.0),
+	AnimaPropertyMotion.Pivot.TOP_CENTER: Vector2(0.5, 0.0),
+	AnimaPropertyMotion.Pivot.TOP_RIGHT: Vector2(1.0, 0.0),
+	AnimaPropertyMotion.Pivot.CENTER_LEFT: Vector2(0.0, 0.5),
+	AnimaPropertyMotion.Pivot.CENTER: Vector2(0.5, 0.5),
+	AnimaPropertyMotion.Pivot.CENTER_RIGHT: Vector2(1.0, 0.5),
+	AnimaPropertyMotion.Pivot.BOTTOM_LEFT: Vector2(0.0, 1.0),
+	AnimaPropertyMotion.Pivot.BOTTOM_CENTER: Vector2(0.5, 1.0),
+	AnimaPropertyMotion.Pivot.BOTTOM_RIGHT: Vector2(1.0, 1.0),
+}
+
+## Resolves and applies [member AnimaPropertyMotion.pivot] once, at the same
+## point the start value is resolved (tech-spec.md §Motion pivot control).
+## Only scale/rotation motions on a Control (native pivot_offset) or a 2D
+## node exposing both offset and texture (Sprite2D-like) are affected;
+## anything else is left untouched, same as an unsupported [member is_relative].
+func _apply_pivot(target: Node, property_motion: AnimaPropertyMotion) -> void:
+	if property_motion.pivot == AnimaPropertyMotion.Pivot.NONE:
+		return
+	var base_property := String(property_motion.target_property).split(":")[0]
+	if base_property != "scale" and base_property != "rotation":
+		return
+
+	var anchor: Vector2 = _PIVOT_ANCHORS.get(property_motion.pivot, Vector2(0.5, 0.5))
+
+	if target is Control:
+		(target as Control).pivot_offset = anchor * (target as Control).size
+	elif target is Node2D and _supports_offset_pivot(target):
+		var texture: Texture2D = target.texture
+		if texture == null:
+			return
+		var size: Vector2 = texture.get_size() * (target as Node2D).scale
+		var delta: Vector2 = size * (Vector2(0.5, 0.5) - anchor)
+		var basis_delta: Vector2 = (target as Node2D).global_transform.basis_xform(delta)
+		target.offset += delta
+		(target as Node2D).global_position -= basis_delta
+
+## Whether [param target] exposes both `offset` and `texture` — the
+## Sprite2D-like shape pivot uses to shift artwork instead of a native pivot.
+func _supports_offset_pivot(target: Node) -> bool:
+	var has_offset := false
+	var has_texture := false
+	for property in target.get_property_list():
+		if property.name == "offset":
+			has_offset = true
+		elif property.name == "texture":
+			has_texture = true
+	return has_offset and has_texture
 
 ## Builds a new [AnimaPropertyMotion] that reverses this instance's actually
 ## resolved run — the captured start and effective end values swapped, so

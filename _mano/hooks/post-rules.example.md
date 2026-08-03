@@ -15,7 +15,7 @@ Optional post-rules review after `mano rules` creates or updates project rules.
 Allow the review skill to read:
 - `_mano_output/project-rules.md` — coding conventions, accessibility patterns, naming, file organisation, testing posture
 - `_mano_output/tech-spec.md` if it exists — to verify rules don't restate spec decisions
-- `_mano_output/phase-[N]/phase-brief.md` — to verify rules are scoped to current phase needs
+- The exact `BRIEF` path from `state.js --current` — to verify rules are scoped to current owner-aware phase needs
 - `_mano_output/ux-flow.md` if it exists — user-flow constraints that may require implementation rules
 - `_mano_output/design-brief.md` if it exists — component, accessibility, and UI constraints that may require implementation rules
 

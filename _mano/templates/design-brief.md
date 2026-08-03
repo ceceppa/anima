@@ -5,7 +5,8 @@
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
 <!-- This markdown is the canonical cumulative visual contract. Preserve established
 tokens, components, and prior phase entries when extending it. HTML previews live
-at _mano_output/phase-[N]/design-preview.html and are non-canonical phase snapshots. -->
+at the exact projected [PHASE_DIR]/design-preview.html (phase-N by default,
+owner-phase-N after opt-in) and are non-canonical phase snapshots. -->
 <!-- /mano-rule: ui-phase-preview-ownership -->
 
 ## Visual Direction
@@ -50,11 +51,11 @@ at _mano_output/phase-[N]/design-preview.html and are non-canonical phase snapsh
 ## Screen Composition
 
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-<!-- For every sample screen shown in _mano_output/phase-[N]/design-preview.html, preserve the
-phase boundary in this cumulative brief. Use one `Phase [N] — [Screen Name]`
+<!-- For every sample screen shown in the current [PHASE_DIR]/design-preview.html, preserve the
+exact phase identity in this cumulative brief. Use one `[PHASE_ID] — [Screen Name]`
 heading per composition; do not replace prior phase compositions. -->
 
-### Phase [N] — [Screen Name]
+### [PHASE_ID] — [Screen Name]
 <!-- /mano-rule: ui-phase-preview-ownership -->
 
 - **Purpose:**

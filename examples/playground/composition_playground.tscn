@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7k6g3"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mpv4"]
 content_margin_left = 32.0
 content_margin_top = 24.0
 content_margin_right = 32.0
@@ -54,7 +54,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=941379105 instance=ExtResource("3")]
 unique_name_in_owner = true
-theme_override_styles/panel = SubResource("StyleBoxFlat_7k6g3")
+theme_override_styles/panel = SubResource("StyleBoxFlat_3mpv4")
 title = "Composition"
 subtitle = "See how simple animations come together in expressive flows."
 icon = "✦"

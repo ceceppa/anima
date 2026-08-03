@@ -18,11 +18,12 @@ This skill defines project rules that are useful now — not rules for a project
 This skill activates when the user types `mano rules`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
 
 On activation:
-1. Run `node _mano/scripts/state.js --gaps rule-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `rule-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `TYPE: rule-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
-2. Read `_mano_output/tech-spec.md` if it exists. If it doesn't, warn the user that the rules will be higher-level and offer to proceed from the phase brief or run `mano spec` first.
-3. Read `_mano_output/ux-flow.md` and `_mano_output/design-brief.md` if they exist.
-4. Read `_mano_output/project-rules.md` if it exists.
-5. Read the current phase brief from `_mano_output/phase-[N]/phase-brief.md` if it exists.
+1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails or lacks `STATUS`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, stop and report the exact failure. `STATUS: NO_PHASE` is allowed for a gap-only rules update; in that case there is no phase brief to read. Never construct `phase-N` from the number.
+2. Run `node _mano/scripts/state.js --gaps rule-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `rule-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `TYPE: rule-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
+3. Read `_mano_output/tech-spec.md` if it exists. If it doesn't, warn the user that the rules will be higher-level and offer to proceed from the phase brief or run `mano spec` first.
+4. Read `_mano_output/ux-flow.md` and `_mano_output/design-brief.md` if they exist.
+5. Read `_mano_output/project-rules.md` if it exists.
+6. Read the exact projected `BRIEF` path if `state.js --current` reports it present.
 
 Do not read the project `README.md` or source files to discover additional context. The listed planning artifacts, projected gaps, and literal context supplied by the user are the activation boundary.
 
@@ -48,7 +49,7 @@ All other decisions are made one-shot in Step 2. Do not stop to ask the user abo
 
 ### Step 2 — Generate rules one-shot
 
-Based on the tech spec, phase brief scope, projected `rule-gap` items, UX flow, and project shape, generate the required project rules and write them directly to `_mano_output/project-rules.md`.
+Based on the tech spec, phase brief scope, projected `rule-gap` items, UX flow, and project shape, generate the required project rules and write them directly to `_mano_output/project-rules.md`. Immediately before writing—especially after an accessibility or testing question pauses the flow—rerun `node _mano/scripts/state.js --current`; when a phase exists, continue only if `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF` match activation. If routing changed, write nothing and ask the user to rerun `mano rules`.
 
 Only write rules relevant to what is being built now or in the current phase. Do not front-load rules for features that do not exist yet.
 

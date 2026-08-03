@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Anima — Phase 8 Design Preview — 3D Motion Example Scene</title>
+<style>
+  :root {
+    --bg: #060A16;
+    --surface: #11182A;
+    --stage-bg: #0A1224;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A8B4CC;
+    --accent: #7C3AED;
+    --accent-soft: #A78BFA;
+    --positive: #2DD4BF;
+    --border: #26324B;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .screen {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .meta {
+    max-width: 640px;
+    margin: 0 auto 20px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    padding: 20px 24px;
+  }
+
+  .header .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex: none;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .header p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .stage-wrap {
+    background: var(--surface);
+    padding: 24px;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .example-line {
+    font-family: 'SF Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+
+  .stage {
+    position: relative;
+    background: var(--stage-bg);
+    border-radius: 24px;
+    padding: 32px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    overflow: hidden;
+  }
+
+  .stage-glow {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(124, 58, 237, 0) 65%);
+    pointer-events: none;
+  }
+
+  .gem {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    filter: drop-shadow(0 0 28px rgba(124, 58, 237, 0.55)) drop-shadow(0 0 60px rgba(167, 139, 250, 0.25));
+  }
+
+  .dock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    background: var(--stage-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px;
+  }
+
+  .dock button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .dock button.selected {
+    background: var(--accent);
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .controls button {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--stage-bg);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .controls button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .caption {
+    max-width: 640px;
+    margin: 28px auto 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .caption b { color: var(--text-primary); }
+</style>
+</head>
+<body>
+  <div>
+    <div class="meta">Anima — Phase 8 — 3D Motion Example Scene</div>
+
+    <div class="screen">
+      <div class="header">
+        <div class="icon">✦</div>
+        <div>
+          <h1>3D Motion</h1>
+          <p>The same Anima.on() convenience layer, driving a 3D Icosahedron Card instead of a flat one.</p>
+        </div>
+      </div>
+
+      <div class="stage-wrap">
+        <div class="example-line">Anima.on(card).position(Vector3(0.6, 0.0, 0.0), 0.4)</div>
+
+        <div class="stage">
+          <div class="stage-glow"></div>
+          <div class="gem">
+            <svg viewBox="0 0 300 300" width="100%" height="100%">
+              <defs>
+                <linearGradient id="facetA" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#C4B5FD" stop-opacity="0.85" />
+                  <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.55" />
+                </linearGradient>
+                <linearGradient id="facetB" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#5B21B6" stop-opacity="0.6" />
+                </linearGradient>
+                <linearGradient id="facetC" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#A78BFA" stop-opacity="0.35" />
+                </linearGradient>
+                <radialGradient id="core" cx="50%" cy="48%" r="30%">
+                  <stop offset="0%" stop-color="#F5F3FF" stop-opacity="0.95" />
+                  <stop offset="55%" stop-color="#A78BFA" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#A78BFA" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <!-- upper facets -->
+              <polygon points="150,150 150,20 40,110" fill="url(#facetA)" stroke="#C4B5FD" stroke-opacity="0.5" stroke-width="1.5" />
+              <polygon points="150,150 150,20 260,110" fill="url(#facetB)" stroke="#C4B5FD" stroke-opacity="0.5" stroke-width="1.5" />
+
+              <!-- mid facets -->
+              <polygon points="150,150 40,110 60,190" fill="url(#facetC)" stroke="#C4B5FD" stroke-opacity="0.35" stroke-width="1.5" />
+              <polygon points="150,150 260,110 240,190" fill="url(#facetA)" stroke="#C4B5FD" stroke-opacity="0.35" stroke-width="1.5" />
+
+              <!-- lower facets -->
+              <polygon points="150,150 60,190 150,280" fill="url(#facetB)" stroke="#C4B5FD" stroke-opacity="0.4" stroke-width="1.5" />
+              <polygon points="150,150 240,190 150,280" fill="url(#facetC)" stroke="#C4B5FD" stroke-opacity="0.4" stroke-width="1.5" />
+
+              <!-- emissive core glow -->
+              <circle cx="150" cy="150" r="70" fill="url(#core)" />
+
+              <!-- outer rim -->
+              <polygon points="150,20 260,110 240,190 150,280 60,190 40,110"
+                fill="none" stroke="#E9E3FF" stroke-opacity="0.6" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="dock">
+          <button>Position</button>
+          <button>Position X</button>
+          <button>Position Y</button>
+          <button>Position Z</button>
+          <button class="selected">Move By</button>
+          <button>Scale</button>
+          <button>Scale By</button>
+        </div>
+
+        <div class="controls">
+          <button class="primary">Restart</button>
+          <button>Reverse</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="caption">
+      Same shared <b>ExampleHeader</b>, stage frame, and playback controls as every 2D playground —
+      only the card changes. The Icosahedron (<code>examples/playground/models/card.obj</code>) is
+      approximated here as a faceted gem: translucent violet facets, a bright rim where edges catch
+      the light, and an emissive core glow — <code>v2_stuff/icosahedron.png</code>'s look and feel,
+      recoloured to the app's own <code>accent</code> / <code>accent-soft</code> palette instead of
+      green, and with no text on any face. In Godot this comes from a <code>ShaderMaterial</code>
+      (fresnel rim + emissive core), not a flat texture.
+    </p>
+  </div>
+</body>
+</html>

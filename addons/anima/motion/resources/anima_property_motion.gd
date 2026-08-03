@@ -3,6 +3,24 @@
 class_name AnimaPropertyMotion
 extends AnimaMotion
 
+## Restored Anima v1 anchor positions a scale or rotation motion can
+## transform around, instead of the target's default origin. Only takes
+## effect when [member target_property] is `scale`/`scale:x`/`scale:y` or
+## `rotation` — see [member pivot] (`tech-spec.md` §Motion pivot control).
+enum Pivot {
+	## No pivot override — the target's default transform origin is used.
+	NONE,
+	TOP_LEFT,
+	TOP_CENTER,
+	TOP_RIGHT,
+	CENTER_LEFT,
+	CENTER,
+	CENTER_RIGHT,
+	BOTTOM_LEFT,
+	BOTTOM_CENTER,
+	BOTTOM_RIGHT,
+}
+
 ## The property to animate, e.g. `NodePath("position:x")`.
 @export var target_property: NodePath = NodePath()
 ## Starting value. `null` reads the target's current value when playback starts.
@@ -24,6 +42,11 @@ extends AnimaMotion
 ## below, and GDScript cannot declare a method with the same name as a
 ## property (see [method with_duration]).
 @export var is_relative: bool = false
+## Anchor position a scale or rotation motion transforms around, restored
+## from Anima v1. Ignored on any other property, or a target that supports
+## neither `Control`'s native pivot nor an `offset`+`texture` pair
+## (`tech-spec.md` §Motion pivot control).
+@export var pivot: Pivot = Pivot.NONE
 
 ## `FIXED` for every ease except [constant AnimaEase.Kind.SPRING], which
 ## reports `ESTIMATED` (a settle-time estimate derived from its parameters).
@@ -78,4 +101,10 @@ func from_current() -> AnimaPropertyMotion:
 ## instead of an absolute destination. See [member is_relative].
 func relative() -> AnimaPropertyMotion:
 	is_relative = true
+	return self
+
+## See [method with_duration]. Sets [member pivot] directly — that name is
+## the field above, and GDScript cannot declare a method with the same name.
+func with_pivot(value: Pivot) -> AnimaPropertyMotion:
+	pivot = value
 	return self

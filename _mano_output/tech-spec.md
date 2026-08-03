@@ -43,6 +43,32 @@ Godot 4.3 through stable Godot 4.x, implemented in GDScript. The JavaScript tool
 
 `AnimaGridMotion.grid_dimensions` owns the authored grid width and height. Both values must be positive; resolved children fill cells in row-major order, and a partially filled final row is valid. When the target is a `GridContainer`, its configured column count is used only when the authored dimensions are absent. `start_point` owns the zero-based grid coordinate from which distance is calculated, and must be inside `grid_dimensions`. `distance_formula` defaults to `ROW` and `start_point` defaults to `(0, 0)` — together the "defaults to `FROM_TOP`" propagation the phase brief describes: row 0 starts first, each following row one wave later. `spiral_direction` defaults to clockwise. The grid showcase's 5×5 layout is a demo scenario, not a runtime limit.
 
+## Easing curve library
+
+`AnimaEase.Kind` gains 33 new named values alongside its existing ones (`LINEAR` already covers the identical `t -> t` case, so it is not duplicated): `EASE`, `EASE_IN`, `EASE_OUT`, `EASE_IN_OUT`, and the `EASE_IN_*`/`EASE_OUT_*`/`EASE_IN_OUT_*` triad for `SINE`, `QUAD`, `CUBIC`, `QUART`, `QUINT`, `EXPO`, `CIRC`, `BACK`, `ELASTIC`, and `BOUNCE` — the full curve vocabulary the phase brief restores, matching each name exactly so existing author knowledge (and any code) carries over directly. Each evaluates its curve's standard closed-form definition (the well-known Penner/CSS easing equations) for `AnimaEase.evaluate(t)`; the existing family-plus-parameter `Kind` values (`POLYNOMIAL`, `SINE`, `EXPONENTIAL`, `CIRCULAR`, `BACK`, `BOUNCE`, `ELASTIC`, `CUBIC_BEZIER`, `CURVE`, `CALLABLE`, `DECAY`, `CUSTOM_SAMPLED`, `SPRING`) are unchanged and keep their current single-shape behaviour for existing callers. `EASE`/`EASE_IN`/`EASE_OUT`/`EASE_IN_OUT` use the quadratic curve shape (the same shape as their `_QUAD` counterpart) — a common default for a bare "ease" across engines and CSS.
+
+⚠️ Note: the bare `EASE`/`EASE_IN`/`EASE_OUT`/`EASE_IN_OUT` → quadratic mapping is a reasonable default, not verified against the original Anima v1 source (unavailable). Low-risk to retune later — it changes a curve shape, not a public signature.
+
+The Property Motion Composer's ease picker already builds its list from `AnimaEase.Kind.keys()` (`anima_property_motion_composer.gd`), so the new values appear there automatically — no Composer change is needed for this addition.
+
+## Motion pivot control
+
+`AnimaPropertyMotion` gains a `pivot` field: `enum Pivot { NONE, TOP_LEFT, TOP_CENTER, TOP_RIGHT, CENTER_LEFT, CENTER, CENTER_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT }`, default `NONE`. It only takes effect when the motion's canonical property is `scale`/`scale:x`/`scale:y` or `rotation`, resolved once when the motion's runtime instance begins advancing (the same "resolved once at start" timing `from_value` already uses), against the target's size at that moment. Two target categories resolve it, confirmed against Anima v1's own `set_2D_pivot()`:
+- **`Control`** — resolves the 9 anchor positions against `size` (`TOP_LEFT` = `Vector2.ZERO`, `CENTER` = `size / 2.0`, `BOTTOM_RIGHT` = `size`, and so on) directly into Godot's native `Control.pivot_offset`, which Godot's own rendering already uses as the scale/rotation origin — no per-frame compensation needed.
+- **A 2D node exposing both `offset: Vector2` and `texture: Texture2D`** (`Sprite2D`, `AnimatedSprite2D`, and similar — detected by property presence, the same way as the Inspector entry point) — has no native pivot, so `pivot` shifts the node's own `offset` and compensates `global_position` once at motion start so the artwork doesn't visibly jump, the same technique v1 used; size is `texture.get_size() * node.scale`.
+
+`pivot` is silently ignored (not a validation error) on any other property or target class — including a plain `Node2D` with no `texture`/`offset`, which has no inherent size to resolve a named anchor against — the same way `is_relative` is inert where it doesn't apply.
+
+⚠️ Note: v1's pasted `set_2D_pivot()` also cached the size it last applied pivot at (in node meta, with a separate editor-hint key) to skip reapplying when unchanged — a guard against being called repeatedly from an unspecified call site. Anima 2 doesn't need it: pivot resolves exactly once, when the runtime instance begins advancing, never on every frame or every call.
+
+⚠ Verify: the pasted v1 code's `BOTTOM_CENTER` (`size.y / 2`) and `BOTTOM_RIGHT` (`size.y / 2`) `Control` cases look inconsistent with `BOTTOM_LEFT`'s own `size.y` (full height) and with what "bottom" implies — this spec uses `size.y` (full) for all three `BOTTOM_*` positions instead of reproducing what looks like a copy-paste bug in the reference. Flag if that halving was actually intentional.
+
+## Motion Composer entry point
+
+`AnimaMotionInspectorPlugin._can_handle(object)` (`addons/anima/anima_plugin.gd`) currently returns true only for `object is AnimaMotion` — reachable only by first expanding an `AnimaMotion` *resource field* in the Inspector, with no path in from the node itself. It now also returns true for a `Node` whose script exposes at least one exported property typed as `AnimaMotion` (or a subtype), detected via `get_property_list()`'s `PROPERTY_HINT_RESOURCE_TYPE` hint. For such a node, `_parse_begin` adds an "Anima" Inspector section listing each matching motion field by name with an Open Motion Composer action; a field currently holding `null` shows a short message instead of a disabled dead end ("Assign an Anima motion to open it here"). A node with zero motion fields is not handled, unchanged from today.
+
+`AnimaMotionComposer`'s own top-level empty state, and `AnimaGroupComposer`'s "no group selected" state, each name the concrete next action reachable from exactly that state (open a motion from the Inspector or select a node with one; pick a different motion from the graph or add a group to the current selection) instead of a message with no path forward — the exact copy is implementation detail, the contract is that every such state names a reachable next action (see `project-rules.md` §Editor Boundaries).
+
 ## Group animation semantics
 
 The former v1 animation types are expressed as resource configuration, never as a compatibility enum or API:
@@ -92,6 +118,7 @@ A resource intended for serialization must hold an `AnimaTargetReference`. A tra
 | Modifiers on the returned `AnimaPropertyMotion` | `.from(value)` / `.from_current()` | `value: Variant` | Sets `from_value` to `value`, or clears it to `null` | `EXPLICIT` / `CURRENT_AT_MOTION_START` |
 | | `.with_duration(value)` / `.with_ease(value)` / `.with_delay(value)` | `with_duration`/`with_ease` already exist; `with_delay(value: float)` is new, mirroring them for the inherited `delay` field | Overrides the positional `duration` default | Sets `duration` / `ease` / `delay` directly — bare `duration()`/`ease()`/`delay()` would collide with the existing field names of the same name, so every modifier follows the established `with_` prefix (see `anima_property_motion.gd`) |
 | | `.relative()` | none | Sets the new `is_relative` field to `true` — named separately from the field itself for the same GDScript reason as `with_duration`/`with_ease`/`with_delay` | see `is_relative` field above |
+| | `.with_pivot(value)` | `value: AnimaPropertyMotion.Pivot` | Sets the new `pivot` field directly — same `with_` prefix reason as `with_duration`/`with_ease`/`with_delay` | see §Motion pivot control |
 | | `.repeat()` / `.alternate()` | — | Not exposed on the factory; compose with the existing `Motion.repeat(child, count)` builder instead | owned by the broader motion system |
 | `AnimaMotion` (any motion) | `.then(other)` | `other: AnimaMotion` | Returns a flat `AnimaSequence`; repeated `.then()` calls append, never nest | new step in `AnimaSequence.children` |
 | | `.with(other)` | `other: AnimaMotion` | Returns the same chain with `other` folded into the currently-open `AnimaParallel` group | joins `AnimaParallel.children` for the group open since the last `.then()` |
@@ -127,7 +154,7 @@ Clockwise and anticlockwise treat `start_point` as the centre. Their 12-o’cloc
 
 ## Motion Composer shell
 
-The Motion Composer is an `EditorPlugin`-owned bottom-panel workspace, not an inspector-only custom control and not a separate asset format. It opens an authored `AnimaMotion` resource graph from the editor and maintains one `AnimaComposerSession` for that graph. The session has a root resource, a currently selected motion within that graph, an optional selected scene node used as the target-resolution and preview context, and an active `SETUP` or `INSPECTION` view.
+The Motion Composer is an `EditorPlugin`-owned bottom-panel workspace, not an inspector-only custom control and not a separate asset format. It opens an authored `AnimaMotion` resource graph from the editor and maintains one `AnimaComposerSession` for that graph. The session has a root resource, a currently selected motion within that graph, an optional selected scene node used as the target-resolution and preview context, and an active `SETUP` or `INSPECTION` view. It opens from either an inspected `AnimaMotion` resource or, now, an "Anima" Inspector section on a plain node carrying one (see §Motion Composer entry point) — both paths call the same `open_motion()`.
 
 The shell provides graph navigation and creation of a Group Motion in a compatible composite parent. It also opens a standalone Group Motion as the root graph. If no selected scene node is available, authored configuration remains editable while resolving and previewing report that their target context is missing. Setup and inspection are views of the same session and selected resource; returning between them never reconstructs or copies the Group Motion.
 
@@ -145,6 +172,8 @@ Composer edits mutate the authored Resource through Godot editor undo/redo, so c
 - Compilation requires static deterministic resolution; runtime-only sources, live membership, callbacks, unresolved references, and non-deterministic order block it.
 - Reduced motion may remove staggering or simplify presentation while preserving visibility and completion. Tests cover parity, origins, waves, and deterministic random seeds.
 - Composer setup and inspection share one editor session and mutate the authored resource directly; no visual-only motion format or duplicate schedule is allowed.
+- Pivot resolves to Godot's native `Control.pivot_offset` rather than custom per-frame transform compensation — it reuses the engine's own scale/rotation origin instead of a second mechanism.
+- The Motion Composer's Inspector entry point is detected by property hint (`PROPERTY_HINT_RESOURCE_TYPE` naming `AnimaMotion`) on the selected node's script, not a required base class or interface — any node with an exported `AnimaMotion` field qualifies.
 
 ## API documentation pipeline
 

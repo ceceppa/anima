@@ -150,6 +150,48 @@ func test_spring_stiffness_and_damping_reflects_advanced_model_directly():
 	assert_eq(result.x, 250.0)
 	assert_eq(result.y, 15.0)
 
+const _RESTORED_KINDS := [
+	AnimaEase.Kind.EASE, AnimaEase.Kind.EASE_IN, AnimaEase.Kind.EASE_OUT, AnimaEase.Kind.EASE_IN_OUT,
+	AnimaEase.Kind.EASE_IN_SINE, AnimaEase.Kind.EASE_OUT_SINE, AnimaEase.Kind.EASE_IN_OUT_SINE,
+	AnimaEase.Kind.EASE_IN_QUAD, AnimaEase.Kind.EASE_OUT_QUAD, AnimaEase.Kind.EASE_IN_OUT_QUAD,
+	AnimaEase.Kind.EASE_IN_CUBIC, AnimaEase.Kind.EASE_OUT_CUBIC, AnimaEase.Kind.EASE_IN_OUT_CUBIC,
+	AnimaEase.Kind.EASE_IN_QUART, AnimaEase.Kind.EASE_OUT_QUART, AnimaEase.Kind.EASE_IN_OUT_QUART,
+	AnimaEase.Kind.EASE_IN_QUINT, AnimaEase.Kind.EASE_OUT_QUINT, AnimaEase.Kind.EASE_IN_OUT_QUINT,
+	AnimaEase.Kind.EASE_IN_EXPO, AnimaEase.Kind.EASE_OUT_EXPO, AnimaEase.Kind.EASE_IN_OUT_EXPO,
+	AnimaEase.Kind.EASE_IN_CIRC, AnimaEase.Kind.EASE_OUT_CIRC, AnimaEase.Kind.EASE_IN_OUT_CIRC,
+	AnimaEase.Kind.EASE_IN_BACK, AnimaEase.Kind.EASE_OUT_BACK, AnimaEase.Kind.EASE_IN_OUT_BACK,
+	AnimaEase.Kind.EASE_IN_ELASTIC, AnimaEase.Kind.EASE_OUT_ELASTIC, AnimaEase.Kind.EASE_IN_OUT_ELASTIC,
+	AnimaEase.Kind.EASE_IN_BOUNCE, AnimaEase.Kind.EASE_OUT_BOUNCE, AnimaEase.Kind.EASE_IN_OUT_BOUNCE,
+]
+
+const _RESTORED_TRIADS := [
+	[AnimaEase.Kind.EASE_IN_SINE, AnimaEase.Kind.EASE_OUT_SINE],
+	[AnimaEase.Kind.EASE_IN_QUAD, AnimaEase.Kind.EASE_OUT_QUAD],
+	[AnimaEase.Kind.EASE_IN_CUBIC, AnimaEase.Kind.EASE_OUT_CUBIC],
+	[AnimaEase.Kind.EASE_IN_QUART, AnimaEase.Kind.EASE_OUT_QUART],
+	[AnimaEase.Kind.EASE_IN_QUINT, AnimaEase.Kind.EASE_OUT_QUINT],
+	[AnimaEase.Kind.EASE_IN_EXPO, AnimaEase.Kind.EASE_OUT_EXPO],
+	[AnimaEase.Kind.EASE_IN_CIRC, AnimaEase.Kind.EASE_OUT_CIRC],
+	[AnimaEase.Kind.EASE_IN_BACK, AnimaEase.Kind.EASE_OUT_BACK],
+	[AnimaEase.Kind.EASE_IN_ELASTIC, AnimaEase.Kind.EASE_OUT_ELASTIC],
+	[AnimaEase.Kind.EASE_IN_BOUNCE, AnimaEase.Kind.EASE_OUT_BOUNCE],
+]
+
+func test_every_restored_v1_curve_starts_at_zero_and_ends_at_one():
+	for kind in _RESTORED_KINDS:
+		var easing := AnimaEase.new()
+		easing.kind = kind
+		assert_almost_eq(easing.evaluate(0.0), 0.0, 0.0001, "kind %s should start at 0" % kind)
+		assert_almost_eq(easing.evaluate(1.0), 1.0, 0.0001, "kind %s should end at 1" % kind)
+
+func test_restored_in_and_out_variants_differ_at_their_midpoint():
+	for pair in _RESTORED_TRIADS:
+		var ease_in := AnimaEase.new()
+		ease_in.kind = pair[0]
+		var ease_out := AnimaEase.new()
+		ease_out.kind = pair[1]
+		assert_ne(ease_in.evaluate(0.5), ease_out.evaluate(0.5), "in kind %s should differ from out kind %s at t=0.5" % [pair[0], pair[1]])
+
 func test_custom_sampled_interpolates_between_configured_samples():
 	var easing := AnimaEase.new()
 	easing.kind = AnimaEase.Kind.CUSTOM_SAMPLED

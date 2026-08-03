@@ -2,34 +2,17 @@
 extends EditorPlugin
 
 const MotionComposer = preload("res://addons/anima/editor/anima_motion_composer.gd")
+const MotionInspectorPlugin = preload("res://addons/anima/editor/anima_motion_inspector_plugin.gd")
 
 var _composer: AnimaMotionComposer
 var _inspector_plugin: AnimaMotionInspectorPlugin
-
-class AnimaMotionInspectorPlugin extends EditorInspectorPlugin:
-	var composer: AnimaMotionComposer
-
-	func _init(p_composer: AnimaMotionComposer) -> void:
-		composer = p_composer
-
-	func _can_handle(object: Object) -> bool:
-		return object is AnimaMotion
-
-	func _parse_begin(object: Object) -> void:
-		var button := Button.new()
-		button.text = "Open in Motion Composer"
-		button.pressed.connect(_open_motion.bind(object as AnimaMotion))
-		add_custom_control(button)
-
-	func _open_motion(motion: AnimaMotion) -> void:
-		composer.open_motion(motion)
 
 ## Adds the Motion Composer panel and Inspector action when the Anima plugin starts.
 func _enter_tree() -> void:
 	_composer = MotionComposer.new()
 	_composer.set_undo_redo(get_undo_redo())
 	add_control_to_bottom_panel(_composer, "Anima")
-	_inspector_plugin = AnimaMotionInspectorPlugin.new(_composer)
+	_inspector_plugin = MotionInspectorPlugin.new(_composer)
 	add_inspector_plugin(_inspector_plugin)
 
 ## Removes editor-only Composer controls when the Anima plugin stops.

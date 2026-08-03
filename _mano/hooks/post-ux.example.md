@@ -14,7 +14,7 @@ Optional post-UX review after `mano ux` creates or updates the UX flow.
 
 Allow the review skill to read:
 - `_mano_output/ux-flow.md` — screen list, navigation structure, flow sequence, screen specs
-- `_mano_output/phase-[N]/phase-brief.md` — phase scope and goal
+- The exact `BRIEF` path from `state.js --current` — current owner-aware phase scope and goal
 - `_mano_output/design-brief.md` if it exists — visual inventory and shared components
 - `_mano_output/tech-spec.md` if it exists — for platform constraints that affect flow (offline, biometrics, etc.)
 

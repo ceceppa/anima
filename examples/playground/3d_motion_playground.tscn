@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://b0xctjcbe6hr3"]
+
+[ext_resource type="Script" uid="uid://cq8f4lt7hf23r" path="res://examples/playground/3d_motion_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="2"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://c2a1n6glahp8q" path="res://examples/playground/shared/components/card_3d.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ggsen"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stage"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0392157, 0.0705882, 0.141176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.14902, 0.196078, 0.294118, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="Environment" id="Environment_ggsen"]
+background_energy_multiplier = 16.0
+tonemap_mode = 1
+tonemap_exposure = 4.0
+sdfgi_enabled = true
+sdfgi_bounce_feedback = 1.73
+glow_levels/1 = 10.13
+glow_levels/2 = 14.15
+glow_levels/3 = 10.4
+glow_levels/4 = 12.62
+glow_levels/5 = 11.48
+glow_levels/6 = 11.48
+glow_bloom = 0.58
+glow_blend_mode = 0
+glow_hdr_threshold = 2.6
+glow_hdr_scale = 4.0
+glow_hdr_luminance_cap = 198.09
+glow_map_strength = 1.0
+volumetric_fog_enabled = true
+
+[node name="3DMotionPlayground" type="Control" unique_id=1132596835]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1177278641]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0235294, 0.0392157, 0.0862745, 1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=786889012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=414863510]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" parent="Margin/Content" unique_id=468921809 instance=ExtResource("3")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_ggsen")
+title = "3D Motion"
+subtitle = "The same Anima.on() convenience layer, driving a 3D Icosahedron Card instead of a flat one."
+icon = "✦"
+
+[node name="Stage" type="PanelContainer" parent="Margin/Content" unique_id=500102248]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stage")
+
+[node name="StageContent" type="VBoxContainer" parent="Margin/Content/Stage" unique_id=1147065330]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ExampleLine" type="Label" parent="Margin/Content/Stage/StageContent" unique_id=1707820924]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 14
+text = "Anima.on(card).move_by(Vector3(0.6, 0, 0), 0.4)"
+
+[node name="CardStage" type="Control" parent="Margin/Content/Stage/StageContent" unique_id=80687385]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Glow" type="TextureRect" parent="Margin/Content/Stage/StageContent/CardStage" unique_id=505576730]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Viewport3D" type="SubViewportContainer" parent="Margin/Content/Stage/StageContent/CardStage" unique_id=-2091106398]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Margin/Content/Stage/StageContent/CardStage/Viewport3D" unique_id=-2091106397]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(2720, 1554)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="Margin/Content/Stage/StageContent/CardStage/Viewport3D/SubViewport" unique_id=-2091106396]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.501, 1, 0, 4)
+environment = SubResource("Environment_ggsen")
+current = true
+size = 5.082
+
+[node name="Card" parent="Margin/Content/Stage/StageContent/CardStage/Viewport3D/SubViewport" unique_id=-2091106395 instance=ExtResource("4")]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="DockMargin" type="MarginContainer" parent="Margin/Content/Stage/StageContent" unique_id=-2089024243]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+
+[node name="DockRow" type="HBoxContainer" parent="Margin/Content/Stage/StageContent/DockMargin" unique_id=636025778]
+layout_mode = 2
+alignment = 1
+
+[node name="Selector" parent="Margin/Content/Stage/StageContent/DockMargin/DockRow" unique_id=1983606614 instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=1625657956 instance=ExtResource("6")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=93562702]

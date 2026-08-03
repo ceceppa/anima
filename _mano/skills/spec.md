@@ -21,9 +21,9 @@ This skill activates when the user types `mano spec`. When inputs are missing, f
 
 On activation:
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
-1. Run `node _mano/scripts/state.js --spec`. Its `SPEC INPUT` is the complete backlog-derived context for this skill: the current phase's exact `in-phase-[N]` item blocks plus unresolved `spec-gap` items. **Do not open `_mano_output/backlog.md` before or after this command.** Treat the projection as valid only when all of these integrity checks pass: the exact opening `--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---` and exact closing `--- END SPEC INPUT ---` sentinels are present; `STATUS: READY`, `PHASE:`, `BRIEF:`, `IN_PHASE_COUNT:`, and `SPEC_GAP_COUNT:` are present; `END_IN_PHASE_COUNT` and `END_SPEC_GAP_COUNT` equal their matching header counts; and the number and sequence of matching BEGIN/END item envelopes equals each count. **Any tool/runtime notice that output was truncated, elided, or omitted invalidates the projection regardless of which sentinels survived.** If the command fails or any integrity check fails, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result. Phase-item context is input evidence, not permission to expand the approved phase: if it conflicts with the phase brief, surface the conflict instead of silently combining them.
+1. Run `node _mano/scripts/state.js --spec`. Its `SPEC INPUT` is the complete backlog-derived context for this skill: the selected owner namespace's exact current-phase item blocks plus unresolved `spec-gap` items. **Do not open `_mano_output/backlog.md` before or after this command.** Treat the projection as valid only when all of these integrity checks pass: the exact opening `--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---` and exact closing `--- END SPEC INPUT ---` sentinels are present; `STATUS: READY`, `OWNER:`, `PHASE:`, `PHASE_ID:`, `PHASE_DIR:`, `BRIEF:`, `IN_PHASE_STATUS:`, `IN_PHASE_COUNT:`, and `SPEC_GAP_COUNT:` are present; `END_IN_PHASE_COUNT` and `END_SPEC_GAP_COUNT` equal their matching header counts; and the number and sequence of matching BEGIN/END item envelopes equals each count. **Any tool/runtime notice that output was truncated, elided, or omitted invalidates the projection regardless of which sentinels survived.** If the command fails or any integrity check fails, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result. Never construct `phase-N` from the numeric field; use the exact projected paths. Phase-item context is input evidence, not permission to expand the approved phase: if it conflicts with the phase brief, surface the conflict instead of silently combining them.
 <!-- /mano-rule: public-interface-contract-readiness -->
-2. Read the phase brief from `_mano_output/phase-[N]/phase-brief.md`.
+2. Read the phase brief from the exact `BRIEF` path printed by the projection.
 3. Read `_mano_output/tech-spec.md` if it exists.
 4. Read any package manifest and matching lockfile if they exist (`package.json` + `package-lock.json` / `pnpm-lock.yaml` / `yarn.lock` / `bun.lockb`).
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
@@ -59,7 +59,7 @@ Run one command per addressed item. Do not resolve a gap that was deferred, only
 - Phase brief (required — warn and proceed if missing)
 - Package manifest and lockfile if they exist (optional — sync the spec to real installed versions)
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
-- Current phase's exact `in-phase-[N]` backlog-item projection from `state.js --spec` (optional when no phase exists)
+- Current phase's exact owner-aware backlog-item projection from `state.js --spec` (optional when no phase exists)
 - Unresolved `spec-gap` projection from `state.js --spec` (optional when its count is zero)
 - Existing declaration/export surface for a named brownfield interface (optional; bounded reconciliation only)
 - Literal spec-gap context supplied directly by the user (optional)
@@ -166,7 +166,7 @@ Write to `_mano_output/tech-spec.md` (project-level, not per-phase).
 The spec captures **current-state decisions**. It is not history. Every time `mano spec` updates it:
 
 - **Replace stale decisions in place.** If a decision was superseded, update the existing section or row. Do not preserve old and new side by side.
-- **One-line replacement note maximum.** If the change is significant: `Replaced [old] with [new] in Phase [N].` Nothing more.
+- **One-line replacement note maximum.** If the change is significant: `Replaced [old] with [new] in [PHASE_ID].` Nothing more.
 - **No phase-specific sections.** Never add `## Phase 2 API Changes` or `## Phase 3 Updates`. Sections represent domains (`## API Contract`, `## Data Model`), not phases. Phases are in git history.
 - **Delete genuinely obsolete content.** Old constraints, replaced libraries, and phase-specific notes that no longer affect implementation should be removed, not archived inline.
 - **Keep the Current Technical Summary in sync.** Update it every time the spec changes.

@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cyusbpggmxmot"]
+
+[ext_resource type="Shader" uid="uid://bmpskcifbwjun" path="res://examples/playground/shared/materials/card_3d.gdshader" id="1"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1")
+shader_parameter/core_color = Color(0.309804, 0.27451, 0.898039, 1)
+shader_parameter/rim_color = Color(0.654902, 0.545098, 0.980392, 1)
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/progress = 0.0
+shader_parameter/base_alpha = 0.35
+shader_parameter/fresnel_power = 8.0
+shader_parameter/outline_strength = 1.498000071155
+shader_parameter/outline_width = 0.02999999932945

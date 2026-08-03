@@ -16,7 +16,7 @@ Optional post-spec review after `mano spec` creates, updates, or validates techn
 
 Allow the review skill to read:
 - `_mano_output/tech-spec.md` — technical decisions, dependencies, API contracts, data model, persistence, platform constraints
-- `_mano_output/phase-[N]/phase-brief.md` — current phase scope, intended outcome, assumptions, risks
+- The exact `BRIEF` path from `state.js --current` — current owner-aware phase scope, intended outcome, assumptions, risks
 - `_mano_output/openapi.yaml` if it exists — machine-readable API contract
 - project manifest and lockfile if they exist — actual installed dependencies and package manager evidence
 

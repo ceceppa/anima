@@ -18,11 +18,12 @@ On activation:
    ```
    node _mano/scripts/state.js --scope
    ```
+   The projection is also the only phase-identity source. Record its `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `IN_PHASE_STATUS`, and `REVIEW_HEADING_PREFIX`. Never construct a directory or backlog status from the number alone. With no owner configured these remain the legacy `phase-N` / `in-phase-N` forms; owner-scoped forms appear only after explicit `mano owner <slug>` opt-in.
    - `DECISION: STOP` → you can't scope a phase now. Relay the script's one-line reason (prefixed `[mano start]:`) and stop. Don't re-derive or re-explain it — for the full picture, run `node _mano/scripts/state.js --verbose`. You may note any artifact defect you happened to spot, but it never licenses advancing.
    - `DECISION: PROCEED` → act on `NEXT:`:
      - `scope-backlog` → **Path A.** The script prints a `SCOPE INPUT` block — the phase-scopeable `Status: backlog` items (with `spec-gap` / `rule-gap` already excluded), core product principles, and latest review. That is everything you need; go straight to Step 6 using it. **Do not open any file under `_mano_output/`** (no `backlog.md`, no `reviews.md`, and especially not the finished phase's folder — it's shipped). Don't greet conversationally.
      - `conversation` → **Path B** (new project).
-     - `resume-draft` → a previous run left a phase folder without a brief. The script prints all phase-scopeable item statuses (`spec-gap` / `rule-gap` excluded) and recent continuity in `SCOPE INPUT`. Do not infer which items were approved: show the likely `in-phase-[N]` items if any, then ask the user to confirm or restate the exact approved scope for this phase. Once confirmed, resume at Step 7; do not start a new phase.
+     - `resume-draft` → a previous run left the projected `PHASE_DIR` without a brief. The script prints all phase-scopeable item statuses (`spec-gap` / `rule-gap` excluded) and recent continuity in `SCOPE INPUT`. Do not infer which items were approved: show the likely items carrying the projected `IN_PHASE_STATUS`, then ask the user to confirm or restate the exact approved scope for this phase. Once confirmed, resume at Step 7; do not start a new phase.
 
    An explicit abandonment does not silently bypass closure. Tell the user to remove or cut unfinished story rows as appropriate, run `mano review` to record and close the phase, then re-run `mano start`. **Script failing?** Stop and report the error — do not derive the go/no-go by scanning `_mano_output/` yourself (see "Scripts are mandatory" in `_mano/workflow.md`).
 
@@ -69,7 +70,7 @@ On every run:
 
 Acceptable approval examples: "Approve", "Use this as Phase 1", "Go with backend CRUD", "Create the phase brief", "Yes, proceed". If the user only asks to start, analyse, plan, suggest, or use a PRD, that is not approval.
 
-Do not create `_mano_output/phase-[N]/phase-brief.md`, create stories, or mark backlog items as `in-phase-[N]` until the human explicitly confirms the phase scope.
+Do not create the projected `PHASE_DIR/phase-brief.md`, create stories, or stamp the projected `IN_PHASE_STATUS` until the human explicitly confirms the phase scope.
 
 Optional project-rule, technical, UX, and UI design artifacts are never created during `mano start`.
 
@@ -79,7 +80,7 @@ Every `mano start` follows the same pattern: understand the input → populate t
 
 ### Path A — Returning for a new phase (latest phase complete, backlog has items)
 
-Only valid when the script's verdict is `READY_FIRST_PHASE` or `READY_NEXT_PHASE` — i.e. the latest phase shipped and closed, or none exists yet. A populated backlog alone does NOT mean the previous phase is done; items marked `in-phase-[N]` are evidence the phase is still open, not finished. For any in-progress or not-closed verdict, do not enter Path A.
+Only valid when the script's verdict is `READY_FIRST_PHASE` or `READY_NEXT_PHASE` — i.e. the locally selected owner namespace has shipped and closed its latest phase, or none exists yet. Another owner's phase neither becomes this clone's active phase nor blocks it. A populated backlog alone does NOT mean this owner's previous phase is done; items carrying its projected in-phase status are evidence that phase is still open. For any in-progress or not-closed verdict, do not enter Path A.
 
 Skip intake. Go straight to Step 6.
 
@@ -213,7 +214,7 @@ Do not copy every principle or insight automatically.
 Note: "[Item title]" is broader than this phase. Phase [N] covers only [slice]. I'll narrow this item to the Phase [N] slice and move [deferred capability] to a separate backlog item.
 ```
 
-Do not silently mark a broad item `in-phase-[N]`.
+Do not silently mark a broad item with the projected `IN_PHASE_STATUS`.
 
 **7b — Clarify.** Check selected items together for problem and scope issues only:
 
@@ -240,7 +241,7 @@ Answer what's relevant, skip what isn't.
 
 If everything is clear, say so and move to 7c. Do not ask "still accurate?" — they've just seen the context.
 
-**7c — Draft the phase brief and finalise.** By this point the user has already approved the phase scope (Step 6) and answered every 7b clarification, so the brief is a rendering of decisions already made — do not pause for a separate "are you happy with the draft?" confirmation. Draft the brief, write it to the file, mark the approved items `in-phase-[N]`, and move to finalisation in the same turn. The artifact is the deliverable; report it through the canonical execution log rather than reproducing the brief in chat. If anything is wrong the user edits the file or re-runs `mano start`. The phase-scope approval from Step 6 is the gate; the brief draft is not a second one.
+**7c — Draft the phase brief and finalise.** By this point the user has already approved the phase scope (Step 6) and answered every 7b clarification, so the brief is a rendering of decisions already made — do not pause for a separate "are you happy with the draft?" confirmation. Draft the brief, write it to the exact projected `PHASE_DIR`, stamp approved items with the exact projected `IN_PHASE_STATUS`, and move to finalisation in the same turn. The artifact is the deliverable; report it through the canonical execution log rather than reproducing the brief in chat. If anything is wrong the user edits the file or re-runs `mano start`. The phase-scope approval from Step 6 is the gate; the brief draft is not a second one.
 
 ## Phase brief output
 
@@ -326,7 +327,7 @@ Rules:
 ```markdown
 ### [Short title]
 - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap
-- **Source:** Phase [N] / User idea / Review triage / Product brief   ← optional, omit if no meaningful source
+- **Source:** [PHASE_ID] / User idea / Review triage / Product brief   ← optional, omit if no meaningful source
 - **Context:**
   [Line 1 — what it is]
   [Line 2 — why it matters or key detail]
@@ -353,16 +354,16 @@ Rules:
 
 - Items stay in the backlog until they ship — they're not removed when pulled into a phase, just marked
 - Candidate items remain `Status: backlog` until human approval of the phase
-- After approval, only approved items move to `Status: in-phase-[N]`
+- After approval, only approved items move to the exact projected `IN_PHASE_STATUS` (`in-phase-N` in default mode, `in-owner-phase-N` after owner opt-in)
 - Resolved items remain in the file with `Status: resolved` for traceability
 
 ### Splitting an item when only a slice enters a phase
 
-A backlog item is `in-phase-[N]` only if **everything in its title and context** ships in that phase. If the approved phase covers only part of an item — a narrower version, fewer capabilities, a subset of what the title promises — you MUST split it before finalising. Do not mark a broad item `in-phase-[N]` when the phase delivers a slice of it.
+A backlog item may receive the projected `IN_PHASE_STATUS` only if **everything in its title and context** ships in that exact phase identity. If the approved phase covers only part of an item — a narrower version, fewer capabilities, a subset of what the title promises — you MUST split it before finalising. Do not stamp a broad item when the phase delivers only a slice of it.
 
 To split:
 1. Rewrite the original item in `backlog.md` so its title and context describe **only** the slice entering this phase — a direct hand-edit (the one place you edit `backlog.md` by hand instead of through the script). Leave its `Status: backlog`; Finalisation step 4's `assign` stamps it. The title must not name capabilities that are not in this phase.
-2. Add a new item for the deferred remainder via the script — title and context describing only the not-yet-built part — cross-referencing it in one line (e.g. "Extends the Phase [N] X once shipped"):
+2. Add a new item for the deferred remainder via the script — title and context describing only the not-yet-built part — cross-referencing it in one line (e.g. "Extends [PHASE_ID] X once shipped"):
    ```
    node _mano/scripts/backlog.js add --title "..." --type [type] --context "..."
    ```
@@ -371,7 +372,7 @@ To split:
 
 Splitting is the one case where editing an existing item's title and context is required rather than append-only. It is not removal — both halves remain traceable.
 
-**Self-check before finalising:** for every item you are about to mark `in-phase-[N]`, read its title and context out loud against the Phase Scope. If the item names or describes anything not in Phase Scope, it is not split correctly — split it.
+**Self-check before finalising:** for every item you are about to stamp with `IN_PHASE_STATUS`, read its title and context out loud against the Phase Scope. If the item names or describes anything not in Phase Scope, it is not split correctly — split it.
 
 ### Who can write to the backlog
 
@@ -385,14 +386,14 @@ Splitting is the one case where editing an existing item's title and context is 
 - **`mano rules`** may only mark a fully addressed item from `state.js --gaps rule-gap` as resolved, using `backlog.js resolve-gap`
 - No other skill may write to the backlog
 
-Item additions, `backlog → in-phase-[N]` stamps, phase-close sweeps, and targeted gap resolutions go through `_mano/scripts/backlog.js` (`add` / `assign` / `resolve` / `resolve-gap`). The script owns the item format and status changes so every writer produces the same shape. The only direct hand-edits to `backlog.md` are the `## Core Product Principles` section and an item's title/context when splitting.
+Item additions, `backlog → IN_PHASE_STATUS` stamps, phase-close sweeps, and targeted gap resolutions go through `_mano/scripts/backlog.js` (`add` / `assign` / `resolve` / `resolve-gap`). The script resolves the current owner independently and owns the item format and status changes. The only direct hand-edits to `backlog.md` are the `## Core Product Principles` section and an item's title/context when splitting.
 
 ## Finalisation
 
 Only finalise after explicit human approval of the phase scope.
 
-1. Create `_mano_output/phase-[N]/` — `[N]` is the `PHASE:` number the state script printed at activation. **Don't `ls` the output dir to re-derive it**; the script already told you.
-2. **Fill the blank scaffold — do not open a sibling brief.** Copy `_mano/templates/phase-brief.md` into `_mano_output/phase-[N]/phase-brief.md` and fill each section per the **Phase brief output** structure above, drawing content only from the `SCOPE INPUT` block and the 7b answers (include only the core product principles that affect this phase). The previous phase's `phase-[N-1]/phase-brief.md` **exists, and opening it is a trap**: it carries *that* phase's goal, scope, and "Not this phase" lines, and reading it to "see the shape" drags that stale scope into this brief. The blank template is the only shape you need. Don't `ls` the output dir hunting for a prior brief to model, and don't re-derive the phase number — the state script already reported the phase state and `PHASE: [N]`, and `phase-[N]/` (created in step 1) is the only folder this step writes to.
+1. Create the exact `PHASE_DIR` printed by the state script. **Do not `ls` the output dir, derive `phase-N`, or substitute another owner's folder.**
+2. **Fill the blank scaffold — do not open a sibling brief.** Copy `_mano/templates/phase-brief.md` into `PHASE_DIR/phase-brief.md` and fill each section per the **Phase brief output** structure above, drawing content only from the `SCOPE INPUT` block and the 7b answers (include only the core product principles that affect this phase). Record the projected owner in the template when `OWNER` is not legacy; omit the owner line in legacy mode. An earlier or another owner's phase brief may exist, and opening it is a trap: it carries that phase's scope. The blank template is the only shape you need.
 3. **Write ALL deferred items to the backlog via the script** — don't hand-write `### ` blocks into `backlog.md`. Everything mentioned as "later", "Phase 2", "deferred", or "not in this phase" during scoping MUST be added. One shell-safe call per item:
    ```
    node _mano/scripts/backlog.js add --title "..." --type feature --context "what it is\nwhy it matters"
@@ -406,7 +407,7 @@ Only finalise after explicit human approval of the phase scope.
    One `--title` per human-approved item. The script flips only items currently `Status: backlog` and reports any it can't match (wrong title, or already moved). If an approved item covers only a *slice* of a backlog item, split it (see **Splitting an item**) before assigning. Never mark candidate items in-phase before approval.
    **Script failing?** Stop and report the error — do not hand-edit `Status` lines.
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-For a user-facing or mobile phase, check both the cumulative `_mano_output/design-brief.md` and the newly approved phase's `_mano_output/phase-[N]/design-preview.html`. A preview in another phase, or a legacy root `_mano_output/design-preview.html`, does not cover this phase. Keep `mano ui` visible whenever the current preview is missing or the phase introduces visual or screen-composition work not covered by the design brief, even when every component is reused. Do not read another phase's preview to make this decision.
+For a user-facing or mobile phase, check both the cumulative `_mano_output/design-brief.md` and the newly approved phase's `PHASE_DIR/design-preview.html`. A preview in another phase or owner namespace, or a legacy root `_mano_output/design-preview.html`, does not cover this phase. Keep `mano ui` visible whenever the current preview is missing or the phase introduces visual or screen-composition work not covered by the design brief, even when every component is reused. Do not read another phase's preview to make this decision.
 <!-- /mano-rule: ui-phase-preview-ownership -->
 
 5. Suggest next actions based on which useful artifacts are still missing or stale. Check which of `tech-spec.md`, `ux-flow.md`, `design-brief.md`, and `project-rules.md` exist in `_mano_output/`, plus whether a current design preview exists when one is useful. Then emit a next-action block that:
@@ -421,8 +422,8 @@ For a user-facing or mobile phase, check both the cumulative `_mano_output/desig
 Use the canonical execution-log format. List only useful actions whose artifacts are missing or need refinement; put the recommended action first, but keep other genuinely valid options visible:
 
 ```text
-[mano start]: mano start — _mano_output/phase-[N]/phase-brief.md, _mano_output/backlog.md
-- Phase [N] scope locked: [short item list]
+[mano start]: mano start — [exact PHASE_DIR]/phase-brief.md, _mano_output/backlog.md
+- [PHASE_ID] scope locked: [short item list]
 - Backlog statuses updated
 ⚠ Verify: [embedded assumption worth checking — omit if none]
 
@@ -466,7 +467,7 @@ This list is the negative restatement of rules defined in full elsewhere. Where 
 - Do not read source code to enumerate the work or verify defects — a structural glance to ground a question is fine, mining the codebase for the work list is not — see **Boundaries** B5.
 - Do not suggest, draft, or advance to a new phase while the latest phase is in progress — the state script's `DECISION: STOP` is binding. Spotting defects does not license advancing.
 - Do not create optional project-rule, technical, UX, or UI design artifacts during `mano start`.
-- Do not write a phase brief, create a phase folder, create stories, or mark backlog items as `in-phase-[N]` before explicit human approval of the phase scope.
+- Do not write a phase brief, create the projected phase folder, create stories, or stamp the projected in-phase status before explicit human approval of the phase scope.
 - Do not put implementation tokens in the phase brief — specific hex values, pixel sizes, animation durations, function signatures, API contracts, file paths, or data-model decisions (schema fields, column names, storage shape). Applies everywhere in the brief, including the Assumption Log and Acknowledged Risks. Express the *constraint or intent*, not the *mechanism*. (This is the brief-output face of B1.) **Sole exemption:** the `## Stated Technical Preferences` pass-through block, which is a verbatim quoted record of a directive the user themselves stated — not `mano start` introducing or deciding tech. The exemption covers only verbatim transcription there; everywhere else, including paraphrasing those preferences into other sections, remains forbidden.
 - Do not skip scope sizing. Enforce the one-testable-layer rule even if the user asks for a larger dump.
 - Do not accept one-liners without pushing back.

@@ -15,7 +15,7 @@ This skill is a **pointer**, not a contract. The implementation contract is `AGE
 2. Implement only the selected story's acceptance criteria.
 3. Mark the story `done` via `node _mano/scripts/stories.js set-status` (the exact call is `AGENTS.md` step 11) — don't hand-edit the index table.
 
-**Determine the active phase and next story fresh from disk via `node _mano/scripts/state.js --next`, not from the chat** (AGENTS.md step 1 is authoritative). The script reads the filesystem this turn and reports the active phase + next pending story; a newer phase may have been added since the conversation's context was loaded. Trusting the loaded chat context here is the common way `mano dev` ends up reporting on a stale, already-closed phase instead of the open one.
+**Determine the active owner-scoped phase and next story fresh from disk via `node _mano/scripts/state.js --next`, not from the chat** (AGENTS.md step 1 is authoritative). Obey the exact `OWNER`, `PHASE_ID`, and `FILE`; never construct `phase-N` from the numeric phase. No configured owner preserves legacy `phase-N` behavior. Trusting loaded chat context here can select a stale phase or another teammate's work.
 
 ## Hard stops (from AGENTS.md — repeated here only so they are never skipped)
 

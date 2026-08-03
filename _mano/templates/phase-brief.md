@@ -1,5 +1,7 @@
 # Phase Brief — [Project Name] — Phase [N]
 
+<!-- Owner-scoped mode only: add `**Owner:** [slug]` below. Omit it entirely for default phase-N mode. -->
+
 <!-- Self-contained. Everything needed to understand this phase is here. -->
 
 ## Why This Phase

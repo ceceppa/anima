@@ -22,14 +22,14 @@
 
 Do not create phase sections such as `Phase 1`, `Complete in Phase`, or `Deferred`.
 Do not use checkbox task lists.
-Do not mark items as `in-phase-[N]` until the human has approved that phase scope.
+Do not stamp the current phase status until the human has approved that exact phase scope. Default mode uses `in-phase-N`; owner opt-in uses `in-owner-phase-N`.
 Current-phase implementation work belongs in `phase-brief.md` or the phase's story files, not as checklist tasks in the backlog.
 `Source` is optional provenance; omit it when there is no meaningful source.
 
 ### [Short title]
 - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap
-- **Source:** Phase [N] / User idea / Review triage / Product brief
+- **Source:** [PHASE_ID] / User idea / Review triage / Product brief
 - **Context:**
   What it is.
   Why it matters or key detail.
-- **Status:** backlog / in-phase-[N] / resolved
+- **Status:** backlog / in-phase-N / in-owner-phase-N / resolved

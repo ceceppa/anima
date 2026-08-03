@@ -215,3 +215,31 @@ No feedback logged.
 
 - A written usage guide for an editor tool is necessary but not sufficient — the user still wanted a runnable, hands-on example after reading it, suggesting editor-tooling discoverability needs both a guide and something to click through.
 - Comparing the v2 rebuild against the original v1 feature set surfaces real gaps (easing curves, pivot control) that a phase scoped purely around "convenience API + grid motion" wouldn't otherwise catch.
+
+---
+
+## Phase 8 Review — 2026-08-04
+
+### What worked
+
+- All four scoped capabilities shipped: full easing curve parity, 2D pivot control, a Motion Composer entry point reachable from any node carrying an Anima motion, and a 3D playground scene — 5 stories, all done, each with dedicated tests.
+- `Card3D`'s `MeshInstance3D` and shader material were refactored to be composed directly in `card_3d.tscn` via the editor instead of constructed in code, fixing a visual-debugging gap the original runtime-only construction created; a new project rule now covers this pattern generally.
+
+### What didn't
+
+- No feedback logged.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| The Phase 8 3D playground is a minimal, single-scene precursor, not a fuller set of 3D showcase scenes already noted in the backlog. | Those richer scenes need capabilities this phase doesn't build. | No verdict given — phase closed without an assumption review. | unconfirmed |
+| The Phase 8 Motion Composer entry point is a narrowed slice of the fuller per-node Anima Inspector section already noted in the backlog. | A reader could assume the full per-node behaviour section ships this phase. | No verdict given — phase closed without an assumption review. | unconfirmed |
+
+### Feedback that changes future scope
+
+No feedback logged.
+
+### What we learned
+
+- A component that builds its own children entirely in code (as `Card3D` originally did) is invisible in the Godot editor's viewport and Inspector until the scene runs — worth checking for the same pattern in any future component with fixed child nodes.

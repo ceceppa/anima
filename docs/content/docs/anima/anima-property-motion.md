@@ -18,6 +18,15 @@ Godot 4.x and Anima 2.x.
 
 See the class and member help in the Godot editor for a minimal, runnable example.
 
+## Enumerations
+
+### Pivot
+
+Restored Anima v1 anchor positions a scale or rotation motion can
+transform around, instead of the target's default origin. Only takes
+effect when [member target_property] is `scale`/`scale:x`/`scale:y` or
+`rotation` — see [member pivot] (`tech-spec.md` §Motion pivot control).
+
 ## Properties and constants
 
 ### target_property
@@ -52,6 +61,13 @@ target actually is, instead of moving to x = 40. Used by `move_by()`,
 rather than relative — that name is the [method relative] chain method
 below, and GDScript cannot declare a method with the same name as a
 property (see [method with_duration]).
+
+### pivot
+
+Anchor position a scale or rotation motion transforms around, restored
+from Anima v1. Ignored on any other property, or a target that supports
+neither `Control`'s native pivot nor an `offset`+`texture` pair
+(`tech-spec.md` §Motion pivot control).
 
 ## Methods
 
@@ -98,3 +114,8 @@ readability when a chain wants to say so explicitly.
 
 Marks [member to_value] as a delta added to the resolved start value
 instead of an absolute destination. See [member is_relative].
+
+### with_pivot
+
+See [method with_duration]. Sets [member pivot] directly — that name is
+the field above, and GDScript cannot declare a method with the same name.

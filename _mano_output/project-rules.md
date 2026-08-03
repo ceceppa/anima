@@ -44,6 +44,14 @@ addons/anima/
   editor/        # Composer, Inspector, and preview integration
 ```
 
+**What:** Every `addons/anima/editor/` panel state that currently has nothing actionable to show — no motion open, no group selected, an empty resolved-target list — states the concrete next action available from exactly that state, never a bare label or blank space with no path forward.
+
+**Why:** The reported confusion behind Phase 8's Motion Composer entry-point work was exactly this: a dead-end message with no next step. Stating this as a standing rule keeps the next empty state a panel adds from repeating it.
+
+**Pattern:**
+- Bad: `"Select a Group Motion to edit it, or select a compatible parent to add one."` shown with no indication of how to do either from where the author actually is.
+- Good: name the specific action reachable from this exact state — open a motion from the Inspector, pick a different motion from the graph, or add a group to the current selection.
+
 ## Naming
 
 **What:** Every GDScript type is declared with `class_name` in PascalCase, prefixed `Anima` (`AnimaMotion`, `AnimaSequence`, `AnimaPropertyMotion`, …). The file name mirrors the class name in snake_case.
@@ -327,6 +335,31 @@ func set_progress(t: float) -> void:
     ...
 ```
 
+**What:** The 3D counterpart of `Card` — the Icosahedron used by the 3D Motion Example Scene — is its own shared component under `examples/playground/shared/components/`, named `Card3D` (plain descriptive name, same convention as `Card`), never built inline in the 3D playground scene. Its source mesh lives under `examples/playground/models/`; its fresnel-rim/emissive-core look is a dedicated `ShaderMaterial` resource under `examples/playground/shared/materials/`, not shader code inline in the component script or scene. `Card3D` mirrors `Card`'s `set_progress(t)` contract — the same single runtime visual driver, translated to the 3D component's own emissive intensity, fresnel strength, and scale pulse — so a playground can swap between them without a different animation-driving API.
+
+**Why:** The 3D playground is the first of what could become more than one 3D example; keeping the mesh, shader, and motion-progress-driven visual language in one reusable component avoids the same duplication risk `Card`, `SelectorButton`, and `ExampleHeader` were already extracted to prevent.
+
+**Pattern:**
+```
+examples/playground/
+  models/
+    card.obj                   # Icosahedron source mesh
+  shared/
+    materials/
+      card_3d.gdshader          # fresnel rim + emissive core
+    components/
+      card_3d.tscn              # shared 3D card
+      card_3d.gd
+```
+```gdscript
+# examples/playground/shared/components/card_3d.gd
+class_name Card3D
+extends Node3D
+
+func set_progress(t: float) -> void:
+    ...  # drives emissive intensity, fresnel strength, and the same scale pulse Card uses
+```
+
 **What:** A toggle/segment-style item inside a selector (like the composition-type selector) is built from the shared `SelectorButton` component under `examples/playground/shared/components/` — never an ad-hoc `StyleBoxFlat` constructed inline in a scene script. Its content margins — `24px` left/right, `12px` top/bottom, `12px` corner radius — are the one canonical button-padding value for every button in an example scene, toggle or not; the shared theme's own Button style (`anima_examples.tres`) must match it.
 
 **Why:** This padding value existed only once, inline, in a scene script's ad-hoc `StyleBoxFlat` — it silently diverged from the shared theme's own Button style, which had no padding at all, and the mismatch went unnoticed until a real button visibly had no left/right margin. Pulling it into one shared component prevents that same drift on the next button a future example scene adds.
@@ -391,6 +424,25 @@ See **Editor-Authored Content** below for why these are exports, not setter meth
 title = "Composition"
 subtitle = "Combine simple animations into expressive flows."
 icon = "✦"
+```
+
+**What:** A component's fixed child nodes — a `MeshInstance3D` and its mesh/material, a `TextureRect`, or any other child that exists for the life of the scene — are added and wired up directly in the `.tscn` via the editor, not constructed and attached in `_ready()`/`_init()` with code (`MeshInstance3D.new()`, `add_child(...)`, a `ShaderMaterial.new()` assigned at runtime). Reserve runtime construction for children that genuinely can't exist until the scene runs — a count only known at runtime, a pooled/dynamic instance. This applies wherever a scene is being composed, not only `examples/playground/`: example components and `addons/anima/editor/` panels alike.
+
+**Why:** A child built entirely in code is invisible in the Godot editor's own scene tree and viewport until the scene actually runs — no mesh preview, no Inspector access to its material's shader parameters, nothing to click on while iterating. `Card3D` originally built its `MeshInstance3D` and `ShaderMaterial` in `_ready()`, which made it hard to visually debug for exactly this reason. Authoring the node in the `.tscn` instead makes it inspectable and editable the same way every other node in the project already is.
+
+**Pattern:**
+```gdscript
+# Bad — constructs and attaches the child entirely in code
+func _ready() -> void:
+    var mesh_instance := MeshInstance3D.new()
+    mesh_instance.mesh = preload("res://.../card.obj")
+    mesh_instance.material_override = ShaderMaterial.new()
+    add_child(mesh_instance)
+
+# Good — card_3d.tscn owns the MeshInstance3D node (mesh + material_override
+# assigned in the editor Inspector); the script only grabs it via @onready
+# and drives runtime-only values (e.g. a shader's `progress` parameter).
+@onready var _mesh_instance: MeshInstance3D = %MeshInstance
 ```
 
 ---

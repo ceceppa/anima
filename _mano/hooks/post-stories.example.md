@@ -12,9 +12,9 @@ Optional post-stories review after `mano stories` generates or updates story fil
 ## Inputs
 
 Allow the review skill to read:
-- `_mano_output/phase-[N]/stories/` — all story files for the current phase
-- `_mano_output/phase-[N]/stories/README.md` — story index
-- `_mano_output/phase-[N]/phase-brief.md` — phase scope, goal, exit criteria, acknowledged risks
+- The exact `PHASE_DIR/stories/` from `state.js --current` — all story files for the current owner-aware phase
+- The exact `STORIES` path from `state.js --current` — story index
+- The exact `BRIEF` path from `state.js --current` — phase scope, goal, exit criteria, acknowledged risks
 - `_mano_output/tech-spec.md` if it exists — to verify tech decisions appear in AC
 - `_mano_output/project-rules.md` if it exists — to verify relevant rules are translated into stories
 - `_mano_output/design-brief.md` if it exists — to verify visual contracts are referenced where needed

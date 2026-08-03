@@ -41,6 +41,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { phaseRef, phaseRouting } = require("./phase.js");
 
 const VALID_TYPES = ["bug", "refinement", "feature", "tech-debt", "test", "spec-gap", "rule-gap"];
 const GAP_TYPES = ["spec-gap", "rule-gap"];
@@ -50,8 +51,8 @@ const HELP = `mano backlog — deterministic writer for _mano_output/backlog.md
 
 Commands:
   add      append item(s) under '## Items'
-  assign   move approved items from 'Status: backlog' to 'in-phase-<N>'
-  resolve  mano review's close sweep: flip every 'in-phase-<N>' to 'resolved'
+  assign   move approved items from 'Status: backlog' to the configured phase
+  resolve  mano review's close sweep for the configured phase identity
   resolve-gap  flip one exact open spec-gap / rule-gap item to 'resolved'
 
 add — one item from flags (the shell-safe path):
@@ -66,15 +67,16 @@ add — many items at once:
   Items whose title already exists are skipped (exact, case-insensitive).
 
 assign:
-  --phase N         the phase the approved items enter (required)
+  --phase N         the configured owner's phase number (required)
   --title "..."     one per approved item, repeatable
+  Uses phase-N by default; owner opt-in uses <owner>-phase-N.
   Flips only non-gap items currently 'Status: backlog'; reports anything it
   can't. spec-gap / rule-gap items stay backlog-owned by mano spec / mano rules.
 
 resolve:
-  --phase N         the phase being closed (required)
-  Flips every item currently 'Status: in-phase-<N>' to 'resolved'. Not
-  title-scoped — it sweeps the whole phase. Matches only 'in-phase-<N>', so
+  --phase N         the configured owner's phase being closed (required)
+  Flips every item with that exact phase identity's in-phase status to
+  'resolved'. Not title-scoped — it never sweeps another owner's phase, so
   items still 'Status: backlog' (e.g. this review's freshly triaged items) are
   never touched.
 
@@ -130,6 +132,17 @@ function readText(p) {
 function fail(msg) {
   process.stderr.write(`[mano backlog] ${msg}\n`);
   process.exit(1);
+}
+
+function configuredPhase(args, command) {
+  if (args.phase == null || !/^\d+$/.test(String(args.phase)) || Number(args.phase) < 1) {
+    fail(`${command} needs --phase <N> (a positive integer).`);
+  }
+  try {
+    return phaseRef(phaseRouting(args.root).owner, Number(args.phase));
+  } catch (error) {
+    fail(`${command}: ${error.message}`);
+  }
 }
 
 // ---- shared format --------------------------------------------------------
@@ -269,15 +282,11 @@ function cmdAdd(args) {
 // ---- assign ---------------------------------------------------------------
 
 function cmdAssign(args) {
-  if (args.phase == null || !/^\d+$/.test(String(args.phase))) {
-    fail("assign needs --phase <N> (an integer).");
-  }
+  const ref = configuredPhase(args, "assign");
   if (args.titles.length === 0) fail("assign needs at least one --title.");
   if (args.titles.some((title) => typeof title !== "string" || !title.trim())) {
     fail("assign needs a non-empty value after every --title.");
   }
-  const phase = Number(args.phase);
-
   const file = backlogPath(args.root);
   const text = readText(file);
   if (text == null) fail(`assign: no backlog at ${file}.`);
@@ -333,7 +342,7 @@ function cmdAssign(args) {
           rec.type = protectedGaps.get(curKey);
           rec.outcome = "gap";
         }
-        else if (cur === "backlog") { lines[i] = `${m[1]}in-phase-${phase}`; rec.outcome = "assigned"; }
+        else if (cur === "backlog") { lines[i] = `${m[1]}${ref.inPhaseStatus}`; rec.outcome = "assigned"; }
         else rec.outcome = "skipped";
       }
     }
@@ -343,7 +352,7 @@ function cmdAssign(args) {
   const assigned = results.filter((r) => r.outcome === "assigned");
   if (assigned.length) fs.writeFileSync(file, lines.join("\n"));
 
-  process.stdout.write(`[mano backlog] assign → phase ${phase}: ${assigned.length} assigned` +
+  process.stdout.write(`[mano backlog] assign → ${ref.id}: ${assigned.length} assigned` +
     (results.length - assigned.length ? `, ${results.length - assigned.length} unchanged` : "") + "\n");
   for (const r of results) {
     if (r.outcome === "assigned") process.stdout.write(`  + ${r.title}\n`);
@@ -359,15 +368,12 @@ function cmdAssign(args) {
 // ---- resolve --------------------------------------------------------------
 
 // mano review's close sweep and the twin of assign: flip every item currently
-// `Status: in-phase-<N>` to `Status: resolved`. It matches only in-phase-<N>,
-// so freshly-added `Status: backlog` items (the items review triaged this same
+// carrying the configured phase's exact in-phase status to `Status: resolved`.
+// Freshly-added `Status: backlog` items (the items review triaged this same
 // turn) are never touched. Not title-scoped — it sweeps the whole phase.
 function cmdResolve(args) {
-  if (args.phase == null || !/^\d+$/.test(String(args.phase))) {
-    fail("resolve needs --phase <N> (an integer).");
-  }
-  const phase = Number(args.phase);
-  const want = `in-phase-${phase}`;
+  const ref = configuredPhase(args, "resolve");
+  const want = ref.inPhaseStatus;
 
   const file = backlogPath(args.root);
   const text = readText(file);
@@ -399,8 +405,8 @@ function cmdResolve(args) {
   }
 
   if (flipped.length) fs.writeFileSync(file, lines.join("\n"));
-  process.stdout.write(`[mano backlog] resolve → phase ${phase}: ${flipped.length} item(s) marked resolved\n`);
-  if (flipped.length === 0) process.stdout.write(`  (no items with Status: in-phase-${phase})\n`);
+  process.stdout.write(`[mano backlog] resolve → ${ref.id}: ${flipped.length} item(s) marked resolved\n`);
+  if (flipped.length === 0) process.stdout.write(`  (no items with Status: ${want})\n`);
   for (const t of flipped) process.stdout.write(`  + ${t}\n`);
 }
 

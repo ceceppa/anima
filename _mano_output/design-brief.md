@@ -44,6 +44,8 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 - **Order From** — a full-width segmented `SelectorDock` sits between the stage heading and grid. Its choices are Top, Bottom, Center, Together, Odd, Even, Random, and Index; `Top` is selected by default. It uses the existing single moving indicator rather than per-button fills.
 - **Formula control and picker** — the stage uses one compact control that names the selected formula. Its picker is a contained `surface` panel with formula names and one-line explanations; selected state uses the same moving indicator, white text, and stronger weight as `SelectorDock`. Formula families are grouped with quiet text labels, not decorative icons.
 - **Playback controls** — reuse the shared controls beneath the stage for restart and reverse only. Do not add timeline, rank, speed, or reduced-motion controls to this playground.
+- **3D Card** — an `Icosahedron` mesh (`examples/playground/models/card.obj`) replacing the 2D artwork `Card` for the 3D Motion Example Scene only. `v2_stuff/icosahedron.png` is a loose visual reference for treatment, not colour: borrow its faceted-glass look — translucent faces, a bright fresnel rim where each facet edge catches the light, and a soft emissive glow from the core — but recolour it to the app's own palette (`accent` violet core glow, `accent-soft` fresnel rim) instead of the reference's green, so the 3D scene reads as the same product as every 2D playground. No text or letter on any face. A custom `ShaderMaterial` drives the fresnel rim and emissive core; `StandardMaterial3D` alone can't produce the edge-glow. Motion progress drives the same visual language the 2D `Card` already uses, translated to 3D: emissive intensity and fresnel strength stand in for border colour and glow, and the existing scale pulse carries over unchanged.
+- **3D stage** — a `stage-bg` viewport background matching the 2D stages, an unlit/ambient key light so the shader's own emissive glow reads as the primary light source (no separate ambient scene lighting to colour-match), and the same restrained violet radial glow behind the card that the 2D stages already use.
 
 ## Screen composition — Composition Example Scene
 
@@ -58,3 +60,10 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 2. **Grid stage** — formula name and brief explanation sit above the Order From selector and a centered 5×5 Card grid; any selected tile can be the visible start point, without rank labels.
 3. **Order From and Formula controls** — set the grid's propagation order and formula without moving the stable stage.
 4. **Playback controls** — restart and reverse sit beneath the stage, without a timeline or playback-speed surface.
+
+## Screen composition — Phase 8 — 3D Motion Example Scene
+
+1. **ExampleHeader** — same fixed icon/title/subtitle treatment as every 2D playground, retitled for this scene.
+2. **3D stage** — the 3D Card (Icosahedron) centred in a `stage-bg` viewport with the same restrained violet radial glow the 2D stages use; the shader's own emissive glow is the primary light source.
+3. **Example line and SelectorDock** — a short read-only `Anima.on()` example plus the family selector, same placement and treatment as the 2D Convenience Motion Example Scene.
+4. **Playback controls** — restart and reverse only, same shared component as every other playground.

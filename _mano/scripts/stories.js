@@ -44,20 +44,21 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { phaseRef, phaseRouting } = require("./phase.js");
 
 const HEADER_ROW = "| # | Story | File | Status |";
 const SEPARATOR_ROW = "|---|-------|------|--------|";
 // A row whose first cell is an integer optionally followed by letters (3, 3a).
 const STORY_NUM = /^\d+[a-z]*$/i;
 
-const HELP = `mano stories-index — deterministic writer for phase-<N>/stories/README.md
+const HELP = `mano stories-index — deterministic writer for the configured phase's stories/README.md
 
 Commands:
   add-row     append/insert a story row (creates the index if absent)
   set-status  flip one or more rows to a new status (e.g. pending -> done)
 
 add-row:
-  --phase N         the phase whose index to write (required)
+  --phase N         the configured owner's phase number (required)
   --story <n>       row number: an integer (3) or sub-insertion (3a) (required)
   --title "..."     the story's short title (required)
   --file "..."      the story filename, e.g. story-3-widget-layout.md (required)
@@ -67,14 +68,15 @@ add-row:
   number already exists is skipped.
 
 set-status:
-  --phase N         the phase whose index to edit (required)
+  --phase N         the configured owner's phase number (required)
   --story <n>       row number to flip, repeatable (required)
   --status <s>      the new status, e.g. done (required)
   Reports any --story it can't find, and rows already at that status.
 
 A trailing positional argument = project root (default: current dir).
 
-This script writes. It owns the index row format and performs only edits
+With no owner configured it writes phase-N. Owner opt-in writes
+<owner>-phase-N. This script owns the index row format and performs only edits
 already decided by the skill and the human — it never decides scope or done.`;
 
 // ---- args -----------------------------------------------------------------
@@ -102,8 +104,8 @@ function parseArgs(argv) {
   return args;
 }
 
-function indexPath(root, phase) {
-  return path.join(root, "_mano_output", `phase-${phase}`, "stories", "README.md");
+function indexPath(root, ref) {
+  return path.join(root, ref.relativeDir, "stories", "README.md");
 }
 
 function readText(p) {
@@ -115,9 +117,14 @@ function fail(msg) {
   process.exit(1);
 }
 
-function requirePhase(args) {
-  if (args.phase == null || !/^\d+$/.test(String(args.phase))) {
-    fail(`${args.command} needs --phase <N> (an integer).`);
+function configuredPhase(args) {
+  if (args.phase == null || !/^\d+$/.test(String(args.phase)) || Number(args.phase) < 1) {
+    fail(`${args.command} needs --phase <N> (a positive integer).`);
+  }
+  try {
+    return phaseRef(phaseRouting(args.root).owner, Number(args.phase));
+  } catch (error) {
+    fail(`${args.command}: ${error.message}`);
   }
 }
 
@@ -160,15 +167,15 @@ function keyLess(a, b) {
 
 // ---- add-row --------------------------------------------------------------
 
-function freshIndex(project, phase, row) {
+function freshIndex(project, ref, row) {
   const title = project && String(project).trim()
-    ? `# Stories — ${String(project).trim()} — Phase ${phase}`
-    : `# Stories — Phase ${phase}`;
+    ? `# Stories — ${String(project).trim()} — Phase ${ref.number}${ref.owner ? ` — Owner: ${ref.owner}` : ""}`
+    : `# Stories — Phase ${ref.number}${ref.owner ? ` — Owner: ${ref.owner}` : ""}`;
   return `${title}\n\n${HEADER_ROW}\n${SEPARATOR_ROW}\n${row}\n`;
 }
 
 function cmdAddRow(args) {
-  requirePhase(args);
+  const ref = configuredPhase(args);
   if (args.stories.length !== 1) fail("add-row needs exactly one --story <n>.");
   const num = String(args.stories[0]).trim();
   if (!STORY_NUM.test(num)) fail(`add-row: --story "${num}" is not a valid number (e.g. 3 or 3a).`);
@@ -178,12 +185,12 @@ function cmdAddRow(args) {
   const status = (args.status && String(args.status).trim()) || "pending";
   const row = formatRow(num, String(args.title).trim(), String(args.file).trim(), status);
 
-  const file = indexPath(args.root, args.phase);
+  const file = indexPath(args.root, ref);
   const existing = readText(file);
 
   if (existing == null) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, freshIndex(args.project, args.phase, row));
+    fs.writeFileSync(file, freshIndex(args.project, ref, row));
     process.stdout.write(`[mano stories] add-row → created index, 1 row\n  + ${num} ${String(args.title).trim()}\n`);
     return;
   }
@@ -230,12 +237,12 @@ function cmdAddRow(args) {
 // ---- set-status -----------------------------------------------------------
 
 function cmdSetStatus(args) {
-  requirePhase(args);
+  const ref = configuredPhase(args);
   if (args.stories.length === 0) fail("set-status needs at least one --story <n>.");
   if (!args.status || !String(args.status).trim()) fail("set-status needs --status <s>.");
   const status = String(args.status).trim();
 
-  const file = indexPath(args.root, args.phase);
+  const file = indexPath(args.root, ref);
   const text = readText(file);
   if (text == null) fail(`set-status: no stories index at ${file}.`);
 

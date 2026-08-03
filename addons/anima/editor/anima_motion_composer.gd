@@ -36,7 +36,7 @@ func _ready() -> void:
 	if _title != null:
 		return
 	_title = Label.new()
-	_title.text = "Open an Anima motion from the Inspector."
+	_title.text = "Select a node with an Anima motion, or open one from the Inspector."
 	add_child(_title)
 
 	_motion_picker = OptionButton.new()
@@ -92,6 +92,11 @@ func has_scene_node_context() -> bool:
 ## Returns the author-facing explanation of the current scene-node context.
 func scene_node_context_message() -> String:
 	return session.scene_node_context_message()
+
+## Returns the workspace's own top status line — the next-step message shown
+## when nothing has been opened yet (`project-rules.md` §Editor Boundaries).
+func workspace_status_message() -> String:
+	return _title.text if _title != null else ""
 
 func _refresh_workspace() -> void:
 	if not is_node_ready():

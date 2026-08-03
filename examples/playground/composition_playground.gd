@@ -241,8 +241,9 @@ func _update_conditional_callout(delta: float) -> void:
 	var fade_end := CONDITIONAL_CALLOUT_DURATION + CONDITIONAL_CALLOUT_FADE
 
 	if _conditional_callout_elapsed >= fade_end:
-		_conditional_callout.visible = false
-		_conditional_callout_active = false
+		#_conditional_callout.visible = false
+		#_conditional_callout_active = false
+		pass
 	elif _conditional_callout_elapsed >= fade_start:
 		var fade_t := (_conditional_callout_elapsed - fade_start) / CONDITIONAL_CALLOUT_FADE
 		_conditional_callout.modulate.a = 1.0 - fade_t

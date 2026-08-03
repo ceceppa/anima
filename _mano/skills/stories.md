@@ -9,7 +9,7 @@ description: Use to break down a phase brief and any available supporting contex
 
 This skill writes stories a developer can pick up without a meeting and a non-technical person can read and verify. Prefix every message with `[mano stories]:`.
 
-**This skill only writes story files. It never edits, creates, or fixes source code, runs builds, or modifies any file outside `_mano_output/phase-[N]/stories/` — even if the chat history suggests implementation was in progress or the user previously asked for code changes.**
+**This skill only writes story files. It never edits, creates, or fixes source code, runs builds, or modifies any file outside the exact `PHASE_DIR/stories/` projected by `state.js --current` — even if the chat history suggests implementation was in progress or the user previously asked for code changes.**
 
 **This includes other Mano artifacts.** The phase brief, tech spec, UX flow, design brief, and project rules are *inputs* to `mano stories` — read-only. Never edit them, even when the user points out one is wrong. If the user says an input is stale, incorrect, or out of date (e.g. "that assumption in the brief is wrong"), that is a correction to *use* when generating stories and a thing to *flag*, not a license to edit the input. Apply the corrected understanding to the stories, and surface the staleness in your output so the owning skill (`mano start` for the brief, `mano spec` for the tech spec, etc.) can fix the source. Editing another skill's artifact is out of lane — it belongs to whoever owns that artifact, never to `mano stories`.
 
@@ -19,19 +19,21 @@ This skill activates when the user types `mano stories`. When inputs are missing
 
 Read every input fresh from disk — even if it already appears in the conversation context. Artifacts may have been edited earlier this same session (e.g. a spec extended then a decision backported); the filesystem is the source of truth, a context snapshot is not.
 
+First run `node _mano/scripts/state.js --current`. It is the only phase-directory discovery for this skill. If it fails, lacks `STATUS`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `STORIES`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Record the exact values and never construct `phase-N` from `PHASE`. Owner-scoped routing is opt-in; legacy projects still project `phase-N`.
+
 **Discard prior chat intent.** If the conversation before this command was about implementing, debugging, or modifying code, that context does not carry over. `mano stories` is a planning turn only. Treat the chat as if it were empty for the purpose of deciding what to do — your job this turn is to produce story files and nothing else. Do not "also" implement, "also" fix the bug under discussion, or "also" touch source code.
 
 ### Current phase boundary
 
-`mano stories` only plans stories for the current phase. Do not read, scan, or infer from other phase folders, previous phase briefs, previous phase stories, indexes, or historical phase output unless the user explicitly asks for a cross-phase audit.
+`mano stories` only plans stories for the exact projected `PHASE_ID`. Do not read, scan, or infer from other phase folders or owner namespaces, previous phase briefs, previous phase stories, indexes, or historical phase output unless the user explicitly asks for a cross-phase audit.
 
-Out of scope by default: `_mano_output/phase-[other]/` and everything beneath it, including completed stories from earlier phases. If baseline behaviour from an earlier phase seems necessary, do not inspect old phase files. Use the shared artifacts. If they do not define it, flag a story readiness gap.
+Out of scope by default: every phase directory other than the exact projected `PHASE_DIR`, including another owner's phase with the same number. If baseline behaviour from an earlier phase seems necessary, do not inspect old phase files. Use the shared artifacts. If they do not define it, flag a story readiness gap.
 
 ### Inputs
 
 Read this run, in this order:
-1. Current phase brief from `_mano_output/phase-[N]/phase-brief.md` (required)
-2. Current `_mano_output/phase-[N]/stories/README.md` and its indexed story files if the index exists — this determines fresh, re-run, and mid-build mode before pre-flight checks
+1. Current phase brief from the exact projected `BRIEF` path (required)
+2. Current projected `STORIES` index and its indexed story files if the index exists — this determines fresh, re-run, and mid-build mode before pre-flight checks
 3. `_mano_output/tech-spec.md` if it exists
 4. `_mano_output/ux-flow.md` if it exists
 5. `_mano_output/design-brief.md` if it exists — treat any dedicated section, subsection, token, or note as usable guidance and reference it directly
@@ -39,7 +41,7 @@ Read this run, in this order:
 
 Read all present artifacts unconditionally. Do not skip one because the phase appears to have no UI or no rules implications — the gap check (Step 0d) cannot surface conflicts from artifacts it was never given to read. When an index exists, classify the run before pre-flight: apply the checks only to new or explicitly affected pending stories, never to done or unrelated pending stories.
 
-**No phase brief → stop.** The phase brief is the one required input. If `_mano_output/phase-[N]/phase-brief.md` does not exist, do nothing: state that there is no phase brief to decompose and that `mano start` creates one. Do not proceed, do not improvise stories from other context.
+**No phase brief → stop.** The phase brief is the one required input. If the projected `BRIEF` does not exist, do nothing: state that there is no phase brief to decompose and that `mano start` creates one. Do not proceed, do not improvise stories from other context.
 
 Spec, UX, rules, and design brief are optional inputs, not required gates — do not warn that they are missing. If an artifact is absent but the phase brief is clear enough to create small testable stories, proceed silently. Only stop and offer the relevant Mano action when a *specific* missing artifact would force guessing for a *specific* story.
 
@@ -280,7 +282,7 @@ Verify the filename matches this contract before writing any story file.
 
 Run these before writing any stories. Resolve each before moving on.
 
-**0⊘. No-implementation gate (hard stop).** Before any other step, confirm the only file-writing tools you will call this turn target `_mano_output/phase-[N]/stories/` or its README. If you find yourself about to Edit, Write, or run a shell command that modifies any source file, config, build script, **another Mano artifact (the phase brief, tech spec, UX flow, design brief, project rules)**, or anything else outside `_mano_output/phase-[N]/stories/`, **stop immediately**. That is not a `mano stories` action. For source code it is implementation; for another artifact it is out-of-lane editing that belongs to the skill that owns it. Either way, belongs to a separate user-initiated turn. This applies even if the chat history shows implementation was the prior intent, even if a bug was just reported, even if the user just told you an input artifact is wrong, and even if it seems efficient to combine. Write the bug story; do not fix the bug. Flag the stale brief; do not edit the brief.
+**0⊘. No-implementation gate (hard stop).** Before any other step, confirm the only file-writing tools you will call this turn target the exact projected `PHASE_DIR/stories/` or its README. If you find yourself about to Edit, Write, or run a shell command that modifies any source file, config, build script, **another Mano artifact (the phase brief, tech spec, UX flow, design brief, project rules)**, another owner's phase, or anything else outside that directory, **stop immediately**. That is not a `mano stories` action. For source code it is implementation; for another artifact it is out-of-lane editing that belongs to the skill that owns it. Either way, belongs to a separate user-initiated turn. This applies even if the chat history shows implementation was the prior intent, even if a bug was just reported, even if the user just told you an input artifact is wrong, and even if it seems efficient to combine. Write the bug story; do not fix the bug. Flag the stale brief; do not edit the brief.
 
 **0a. Overloaded screens.** If a UX flow screen handles more than two primary actions (excluding back/close/cancel/continue unless they perform mutation or branching), flag it before story generation.
 
@@ -404,13 +406,13 @@ Report nothing in the execution log if the audit found nothing. If rewrites happ
 
 ### Step 1 — Write all stories to files
 
-Before writing, check whether `_mano_output/phase-[N]/stories/README.md` already exists and read the current phase's index and story files if it does:
+Before writing, rerun `node _mano/scripts/state.js --current`. Continue only when `OWNER`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `STORIES` exactly match the activation projection; otherwise write nothing and ask the user to rerun `mano stories`. Then check whether the projected stories index already exists and read the current phase's index and story files if it does:
 - **No index yet** → fresh generation: write the complete story set below.
 - **Index exists and the user reported new or changed work** → use **Mid-build additions** or update only pending stories explicitly affected by the request. Never regenerate the full set.
 - **Index exists and the command carries no concrete change request** → report the existing set and ask what should change; do not rewrite files merely because the command was re-run.
 - A row marked `done` is immutable on every path. Any change to shipped behaviour becomes a lettered insertion.
 
-For fresh generation, generate all stories and write them to `_mano_output/phase-[N]/stories/`. Do not print stories in the chat — write them to files only. This keeps context lean and lets multiple developers pick up stories simultaneously.
+For fresh generation, generate all stories and write them to the exact projected `PHASE_DIR/stories/`. Do not print stories in the chat — write them to files only. This keeps context lean and lets multiple developers pick up stories simultaneously.
 
 For each story:
 1. Short titles (max 6 words — scannable, not descriptive)
@@ -425,9 +427,9 @@ For each story:
 When all stories are written, output the execution log:
 
 ```
-[mano stories]: mano stories — _mano_output/phase-[N]/stories/README.md, story files listed below
-- 0. [title] — _mano_output/phase-[N]/stories/story-0-[slug].md   [only when a bootstrap story exists]
-- 1. [title] — _mano_output/phase-[N]/stories/story-1-[slug].md
+[mano stories]: mano stories — [exact PHASE_DIR]/stories/README.md, story files listed below
+- 0. [title] — [exact PHASE_DIR]/stories/story-0-[slug].md   [only when a bootstrap story exists]
+- 1. [title] — [exact PHASE_DIR]/stories/story-1-[slug].md
 - 2. ...
 ⚠ Verify: [embedded assumption worth checking — advisory, omit if none]
 ❓ Decide: [decision to confirm or change before the affected story is implemented, phrased as a question with the inferred value — omit if none]
@@ -453,7 +455,7 @@ Do not ask for per-story approval. The user reviews the files at their own pace 
 This is the shape `stories.js add-row` emits and `state.js` parses — a reference for readers, not a table to hand-write. The writer owns it.
 
 ```markdown
-# Stories — [Project Name] — Phase [N]
+# Stories — [Project Name] — Phase [N][ — Owner: owner-slug only after opt-in]
 
 | # | Story | File | Status |
 |---|-------|------|--------|
@@ -471,7 +473,7 @@ During implementation, the user may come back via `mano stories` to report a bug
 When the user reports something mid-build:
 
 1. Create a new story using sub-numbering based on the last completed story (e.g. `story-3a`, then `story-3b`). Sub-numbers attach to the most recently *completed* story, not to an upcoming one — even if the bug is about behaviour an upcoming story will introduce. Sub-numbering follows ship order, not scope order. Lettered insertions only block the subsequent number if explicitly marked as a blocker in story dependencies.
-2. Write the file as `_mano_output/phase-[N]/stories/story-[N][letter]-[slug].md`.
+2. Write the file inside the exact projected `PHASE_DIR/stories/` as `story-[N][letter]-[slug].md`.
 3. Add it to the index via the writer — it splices the lettered row (`3a`) into the right position automatically:
    ```
    node _mano/scripts/stories.js add-row --phase [N] --story [N][letter] --title "[title]" --file "story-[N][letter]-[slug].md"
@@ -480,7 +482,7 @@ When the user reports something mid-build:
 4. Output execution log:
 
 ```text
-[mano stories]: mano stories — _mano_output/phase-[N]/stories/README.md, _mano_output/phase-[N]/stories/story-[N][letter]-[slug].md
+[mano stories]: mano stories — [exact PHASE_DIR]/stories/README.md, [exact PHASE_DIR]/stories/story-[N][letter]-[slug].md
 - Inserted story [N][letter]: [title]
 
 [Optional hook block if active]

@@ -18,7 +18,7 @@ Allow the audit skill to read:
 - `_mano_output/project-rules.md` if it exists
 - `_mano_output/design-brief.md` if it exists
 - `_mano_output/ux-flow.md` if it exists — user-flow assumptions that may need updates after review
-- `_mano_output/phase-[N]/phase-brief.md` — phase that was just reviewed
+- The exact `BRIEF` path from `state.js --current` — owner-aware phase that was just reviewed
 
 Source code access for this hook: **allowed** but bounded. This is the only Mano hook where comparing artifacts to implementation is part of the job, since `mano review` is the drift-detection step. Inspection should be scoped to the modules and files that changed in the reviewed phase. Do not perform a project-wide audit unless the user explicitly asks.
 

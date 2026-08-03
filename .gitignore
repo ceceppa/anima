@@ -14,4 +14,4 @@ docs.old
 docs/public/
 docs/resources/_gen/
 .claude
-v2_stuff/*.jpg
+v2_stuff

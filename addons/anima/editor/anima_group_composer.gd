@@ -26,6 +26,11 @@ func show_motion(motion: AnimaMotion, scene_node: Node) -> void:
 	_scene_node = scene_node
 	_refresh()
 
+## Returns this view's own status line — including the next-step message
+## shown when the selected motion isn't a group (`project-rules.md` §Editor Boundaries).
+func status_message() -> String:
+	return _status.text if _status != null else ""
+
 ## Adds a new group to [param parent] and returns it, or returns `null` when the parent cannot contain children.
 func add_group(parent: AnimaMotion) -> AnimaGroupMotion:
 	if not can_add_group(parent):
@@ -109,7 +114,10 @@ func _refresh() -> void:
 	_setup.visible = _group != null
 	add_child(_setup)
 	if _group == null:
-		_set_status("Select a Group Motion to edit it, or select a compatible parent to add one.")
+		if _add_group_button.visible:
+			_set_status("This motion isn't a group — press Add Group Motion below, or pick a Group Motion from the dropdown above.")
+		else:
+			_set_status("This motion isn't a group and can't hold one — pick a Group Motion from the dropdown above.")
 		return
 	_build_setup()
 

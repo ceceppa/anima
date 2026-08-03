@@ -21,6 +21,44 @@ enum Kind {
 	DECAY,
 	CUSTOM_SAMPLED,
 	SPRING,
+	## Restored Anima v1 named curves — standard closed-form easing shapes,
+	## distinct from the tunable family-plus-parameter kinds above. `EASE`/
+	## `EASE_IN`/`EASE_OUT`/`EASE_IN_OUT` use the same shape as their `_QUAD`
+	## counterpart, a common default for a bare "ease" across engines and CSS.
+	EASE,
+	EASE_IN,
+	EASE_OUT,
+	EASE_IN_OUT,
+	EASE_IN_SINE,
+	EASE_OUT_SINE,
+	EASE_IN_OUT_SINE,
+	EASE_IN_QUAD,
+	EASE_OUT_QUAD,
+	EASE_IN_OUT_QUAD,
+	EASE_IN_CUBIC,
+	EASE_OUT_CUBIC,
+	EASE_IN_OUT_CUBIC,
+	EASE_IN_QUART,
+	EASE_OUT_QUART,
+	EASE_IN_OUT_QUART,
+	EASE_IN_QUINT,
+	EASE_OUT_QUINT,
+	EASE_IN_OUT_QUINT,
+	EASE_IN_EXPO,
+	EASE_OUT_EXPO,
+	EASE_IN_OUT_EXPO,
+	EASE_IN_CIRC,
+	EASE_OUT_CIRC,
+	EASE_IN_OUT_CIRC,
+	EASE_IN_BACK,
+	EASE_OUT_BACK,
+	EASE_IN_OUT_BACK,
+	EASE_IN_ELASTIC,
+	EASE_OUT_ELASTIC,
+	EASE_IN_OUT_ELASTIC,
+	EASE_IN_BOUNCE,
+	EASE_OUT_BOUNCE,
+	EASE_IN_OUT_BOUNCE,
 }
 
 ## Which parameter set a [constant Kind.SPRING] reads. [constant SIMPLE]
@@ -159,6 +197,66 @@ func evaluate(t: float) -> float:
 			return 1.0 - exp(-k * t)
 		Kind.CUSTOM_SAMPLED:
 			return _evaluate_custom_sampled(t)
+		Kind.EASE, Kind.EASE_IN_OUT, Kind.EASE_IN_OUT_QUAD:
+			return _poly_in_out(t, 2.0)
+		Kind.EASE_IN, Kind.EASE_IN_QUAD:
+			return _poly_in(t, 2.0)
+		Kind.EASE_OUT, Kind.EASE_OUT_QUAD:
+			return _poly_out(t, 2.0)
+		Kind.EASE_IN_SINE:
+			return 1.0 - cos(t * PI / 2.0)
+		Kind.EASE_OUT_SINE:
+			return sin(t * PI / 2.0)
+		Kind.EASE_IN_OUT_SINE:
+			return -(cos(PI * t) - 1.0) / 2.0
+		Kind.EASE_IN_CUBIC:
+			return _poly_in(t, 3.0)
+		Kind.EASE_OUT_CUBIC:
+			return _poly_out(t, 3.0)
+		Kind.EASE_IN_OUT_CUBIC:
+			return _poly_in_out(t, 3.0)
+		Kind.EASE_IN_QUART:
+			return _poly_in(t, 4.0)
+		Kind.EASE_OUT_QUART:
+			return _poly_out(t, 4.0)
+		Kind.EASE_IN_OUT_QUART:
+			return _poly_in_out(t, 4.0)
+		Kind.EASE_IN_QUINT:
+			return _poly_in(t, 5.0)
+		Kind.EASE_OUT_QUINT:
+			return _poly_out(t, 5.0)
+		Kind.EASE_IN_OUT_QUINT:
+			return _poly_in_out(t, 5.0)
+		Kind.EASE_IN_EXPO:
+			return 0.0 if t == 0.0 else pow(2.0, 10.0 * t - 10.0)
+		Kind.EASE_OUT_EXPO:
+			return 1.0 if t == 1.0 else 1.0 - pow(2.0, -10.0 * t)
+		Kind.EASE_IN_OUT_EXPO:
+			return _evaluate_ease_in_out_expo(t)
+		Kind.EASE_IN_CIRC:
+			return 1.0 - sqrt(1.0 - t * t)
+		Kind.EASE_OUT_CIRC:
+			return sqrt(1.0 - pow(t - 1.0, 2.0))
+		Kind.EASE_IN_OUT_CIRC:
+			return _evaluate_ease_in_out_circ(t)
+		Kind.EASE_IN_BACK:
+			return _EASE_BACK_C3 * t * t * t - _EASE_BACK_C1 * t * t
+		Kind.EASE_OUT_BACK:
+			return 1.0 + _EASE_BACK_C3 * pow(t - 1.0, 3.0) + _EASE_BACK_C1 * pow(t - 1.0, 2.0)
+		Kind.EASE_IN_OUT_BACK:
+			return _evaluate_ease_in_out_back(t)
+		Kind.EASE_IN_ELASTIC:
+			return _evaluate_ease_in_elastic(t)
+		Kind.EASE_OUT_ELASTIC:
+			return _evaluate_ease_out_elastic(t)
+		Kind.EASE_IN_OUT_ELASTIC:
+			return _evaluate_ease_in_out_elastic(t)
+		Kind.EASE_IN_BOUNCE:
+			return 1.0 - _evaluate_bounce(1.0 - t)
+		Kind.EASE_OUT_BOUNCE:
+			return _evaluate_bounce(t)
+		Kind.EASE_IN_OUT_BOUNCE:
+			return _evaluate_ease_in_out_bounce(t)
 		_:
 			return t
 
@@ -201,3 +299,66 @@ func _evaluate_custom_sampled(t: float) -> float:
 	var index: int = clampi(int(floor(scaled)), 0, custom_samples.size() - 2)
 	var local_t: float = scaled - index
 	return lerpf(custom_samples[index], custom_samples[index + 1], local_t)
+
+# Standard Penner/CSS constants for the restored EASE_*_BACK curves — fixed
+# presets, distinct from the tunable Kind.BACK's own back_overshoot field.
+const _EASE_BACK_C1 := 1.70158
+const _EASE_BACK_C3 := _EASE_BACK_C1 + 1.0
+const _EASE_BACK_C2 := _EASE_BACK_C1 * 1.525
+
+func _poly_in(t: float, power: float) -> float:
+	return pow(t, power)
+
+func _poly_out(t: float, power: float) -> float:
+	return 1.0 - pow(1.0 - t, power)
+
+func _poly_in_out(t: float, power: float) -> float:
+	if t < 0.5:
+		return pow(2.0, power - 1.0) * pow(t, power)
+	return 1.0 - pow(-2.0 * t + 2.0, power) / 2.0
+
+func _evaluate_ease_in_out_expo(t: float) -> float:
+	if t == 0.0:
+		return 0.0
+	if t == 1.0:
+		return 1.0
+	if t < 0.5:
+		return pow(2.0, 20.0 * t - 10.0) / 2.0
+	return (2.0 - pow(2.0, -20.0 * t + 10.0)) / 2.0
+
+func _evaluate_ease_in_out_circ(t: float) -> float:
+	if t < 0.5:
+		return (1.0 - sqrt(1.0 - pow(2.0 * t, 2.0))) / 2.0
+	return (sqrt(1.0 - pow(-2.0 * t + 2.0, 2.0)) + 1.0) / 2.0
+
+func _evaluate_ease_in_out_back(t: float) -> float:
+	if t < 0.5:
+		return (pow(2.0 * t, 2.0) * ((_EASE_BACK_C2 + 1.0) * 2.0 * t - _EASE_BACK_C2)) / 2.0
+	return (pow(2.0 * t - 2.0, 2.0) * ((_EASE_BACK_C2 + 1.0) * (t * 2.0 - 2.0) + _EASE_BACK_C2) + 2.0) / 2.0
+
+# Standard Penner elastic curves — fixed presets, distinct from the tunable
+# Kind.ELASTIC's own elastic_amplitude/elastic_period fields.
+const _EASE_ELASTIC_C4 := 2.0 * PI / 3.0
+const _EASE_ELASTIC_C5 := 2.0 * PI / 4.5
+
+func _evaluate_ease_in_elastic(t: float) -> float:
+	if t == 0.0 or t == 1.0:
+		return t
+	return -pow(2.0, 10.0 * t - 10.0) * sin((t * 10.0 - 10.75) * _EASE_ELASTIC_C4)
+
+func _evaluate_ease_out_elastic(t: float) -> float:
+	if t == 0.0 or t == 1.0:
+		return t
+	return pow(2.0, -10.0 * t) * sin((t * 10.0 - 0.75) * _EASE_ELASTIC_C4) + 1.0
+
+func _evaluate_ease_in_out_elastic(t: float) -> float:
+	if t == 0.0 or t == 1.0:
+		return t
+	if t < 0.5:
+		return -(pow(2.0, 20.0 * t - 10.0) * sin((20.0 * t - 11.125) * _EASE_ELASTIC_C5)) / 2.0
+	return (pow(2.0, -20.0 * t + 10.0) * sin((20.0 * t - 11.125) * _EASE_ELASTIC_C5)) / 2.0 + 1.0
+
+func _evaluate_ease_in_out_bounce(t: float) -> float:
+	if t < 0.5:
+		return (1.0 - _evaluate_bounce(1.0 - 2.0 * t)) / 2.0
+	return (1.0 + _evaluate_bounce(2.0 * t - 1.0)) / 2.0

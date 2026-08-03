@@ -31,6 +31,11 @@ Connects this setup surface to Godot's editor undo and redo history.
 
 Shows [param motion] when it is a group, or offers group creation for a compatible parent.
 
+### status_message
+
+Returns this view's own status line — including the next-step message
+shown when the selected motion isn't a group (`project-rules.md` §Editor Boundaries).
+
 ### add_group
 
 Adds a new group to [param parent] and returns it, or returns `null` when the parent cannot contain children.

@@ -298,13 +298,13 @@
   PRD.md §16.3.
 - **Status:** backlog
 
-### Anima Inspector section for ordinary nodes
+### Anima Inspector entry point for ordinary nodes
 - **Type:** feature
 - **Source:** PRD.md
 - **Context:**
-  Selecting a supported node shows an "Anima" section: an Enable Anima toggle before activation, then Lifecycle/Defaults/Layout/States/Shared Element/Accessibility groups plus Open Motion Composer / Remove Anima after.
-  PRD.md §16.4, §20.2.
-- **Status:** backlog
+  Selecting a supported node with an Anima motion shows an "Anima" Inspector section with an Open Motion Composer entry point and a next-step message when there's nothing to show yet — today the only way in is expanding an AnimaMotion resource field, with no guidance from a plain node selection.
+  Narrowed from "Anima Inspector section for ordinary nodes" (PRD.md §16.4, §20.2) to this entry-point slice; see "Anima Inspector behaviour section (Enable/Lifecycle/Defaults/Layout/States/Shared Element/Accessibility)" for the deferred remainder.
+- **Status:** resolved
 
 ### Undo/redo for all Anima Inspector edits
 - **Type:** feature
@@ -2804,7 +2804,7 @@
 - **Context:**
   Only a handful of AnimaEase.Kind curves exist today. Anima v1 shipped 34: Linear, Ease, Ease In/Out/In-Out, plus In/Out/In-Out variants of Sine, Quad, Cubic, Quart, Quint, Expo, Circ, Back, Elastic, Bounce.
   User compared directly against the old addon and flagged the gap during Phase 7 review.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Add motion pivot control
 - **Type:** feature
@@ -2812,7 +2812,7 @@
 - **Context:**
   Anima v1 let an author set a motion's pivot point (ANIMA.PIVOT: 9 anchor positions - corners, edge-centers, center) so scale/rotation transform around a chosen point instead of the default. No equivalent exists in Anima 2 today.
   Old example: Anima.Node(self).anima_scale_x(0.8).anima_pivot(ANIMA.PIVOT.CENTER)
-- **Status:** backlog
+- **Status:** resolved
 
 ### Add a 3D playground scene with an Icosahedron Card
 - **Type:** feature
@@ -2820,12 +2820,20 @@
 - **Context:**
   A new examples/playground/ scene demonstrating Anima on a Node3D target (Anima.on() already supports Vector3 position/scale for Node3D). Reuses the same shared header and footer/playback-controls as the 2D playground; the 'Card' becomes a 3D icosahedron mesh (examples/playground/models/card.obj) styled to resemble v2_stuff/icosahedron.png, no text.
   Request surfaced directly from the user via mano ui, interrupted before any design work was captured.
-- **Status:** backlog
+- **Status:** resolved
 
-### Iterate on the Motion Composer dock usability
+### Further Motion Composer usability beyond the entry point
 - **Type:** refinement
 - **Source:** User idea
 - **Context:**
-  The current Anima bottom-panel dock (Motion Composer / Group Composer / Property Motion Composer / Group Inspector) works but the user finds it limited and confusing to use, beyond what the written guide or a hands-on example alone fix -- likely needs UX iteration on the panel itself (layout, discoverability, guidance), not just documentation.
-  Distinct from 'Showcase examples/editor/ tooling', which only adds a hands-on example scene; this item is about the dock's own usability.
+  The reported confusion ("select a node, nothing happens") is addressed in Phase 8 by "Anima Inspector entry point for ordinary nodes." This item covers usability beyond that entry point: whether the panel still has other dead ends (an empty graph, unclear switching between editing a group vs. a property motion vs. Inspection view) once a developer can actually reach it.
+  Narrowed from "Iterate on the Motion Composer dock usability" once the concrete pain point was identified; revisit after the Phase 8 entry point ships and real usage shows whether more is needed.
+- **Status:** backlog
+
+### Anima Inspector behaviour section (Enable/Lifecycle/Defaults/Layout/States/Shared Element/Accessibility)
+- **Type:** feature
+- **Source:** Phase 8 scoping
+- **Context:**
+  The fuller per-node behaviour system from PRD.md §16.4, §20.2: an Enable Anima toggle before activation, then Lifecycle/Defaults/Layout/States/Shared Element/Accessibility groups, plus Remove Anima.
+  Extends the Phase 8 Motion Composer entry point (Anima Inspector entry point for ordinary nodes) once shipped; deferred because this per-node behaviour system (AnimaBehaviour-equivalent) doesn't exist yet.
 - **Status:** backlog

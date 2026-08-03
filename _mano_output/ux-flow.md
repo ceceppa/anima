@@ -99,9 +99,28 @@
 **What happens on action:**
 - Selecting a formula closes the picker and returns to the Grid Motion Example Scene, where the 5×5 grid immediately demonstrates it with the currently selected order and start point.
 
+## 3D Motion Example Scene
+
+**How it's accessed:** Open the 3D-motion playground scene in the Godot editor and run it.
+
+**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+
+**What the user sees:**
+- The same shared example header and playback controls as the 2D Convenience Motion Example Scene.
+- A single 3D Icosahedron Card in place of the 2D artwork Card, styled after the provided reference image with no text on it.
+- A selector for the convenience-motion families that are valid for a 3D target, and a short read-only `Anima.on()` example for the selected one.
+
+**What the user can do:**
+- Choose a motion family.
+- Restart the selected motion or play it in reverse.
+
+**What happens on action:**
+- Choosing a family changes the example line and replays the matching motion on the 3D card.
+- Restart and reverse replay the same selected motion from its recorded state, the same way the 2D playground's controls do.
+
 ## Motion Composer — Workspace
 
-**How it's accessed:** Select an authored Anima motion in Godot’s Inspector and choose Open in Motion Composer. The Anima bottom panel opens with that motion as the current resource graph.
+**How it's accessed:** Either select an authored Anima motion resource in Godot's Inspector and choose Open in Motion Composer, or select any scene node that carries an Anima motion — an "Anima" Inspector section on the node itself offers the same Open in Motion Composer action, without first having to find and expand the motion resource field. Either path opens the Anima bottom panel with that motion as the current resource graph.
 
 **How the user gets back:** Close the bottom panel or select a different motion resource in the Inspector to begin a new workspace session.
 
@@ -109,6 +128,7 @@
 - The current motion and its place in the opened resource graph.
 - The selected motion’s editing view.
 - The currently selected scene node, or a clear message that a node must be selected before targets can be resolved or previewed.
+- If nothing has been opened yet, a message explaining what to do next (select a node with an Anima motion, or open one from the Inspector) instead of a blank panel.
 
 **What the user can do:**
 - Select a motion in the opened graph, including its parent, to change what they are editing.
@@ -130,6 +150,7 @@
 - Settings for playback, distribution, ordering, filters, completion, reverse order, and empty or invalid targets.
 - Only settings that apply to the selected option.
 - Inspect and Preview controls for this same group.
+- When the selected motion isn't itself a group, a message naming what to do next: select a Group Motion elsewhere in the graph, or add one to the current selection if it can hold one.
 
 **What the user can do:**
 - Configure one Group Motion.

@@ -19,23 +19,26 @@ The agent should execute `mano review`'s review flow directly in chat. Do not te
 If the user's activation message already includes substantive review feedback after `mano review`, treat that text as Step 2 review input once the pre-review gate is clear. Do not ignore inline feedback just because it arrived in the same message as the command.
 
 On activation:
-1. Read `_mano_output/phase-[N]/stories/README.md` to check story completion status.
-2. Read `_mano_output/reviews.md` if it exists to check whether Phase [N] already has a review entry.
-3. If Phase [N] already has a review entry, treat this as a follow-up review focused on what changed after the fix work.
-4. After the pre-review gate below is clear, if that review entry exists but `_mano_output/backlog.md` still contains any `Status: in-phase-[N]` items, the prior close was interrupted. Repair the already-approved close sweep before follow-up triage:
+1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails, lacks `STATUS`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, `STORIES`, `IN_PHASE_STATUS`, and `REVIEW_HEADING_PREFIX`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Record the exact values; never construct `phase-N` or a review heading from the number.
+2. Read the exact projected `STORIES` path to check story completion status.
+3. Read `_mano_output/reviews.md` if it exists to check for an H2 review heading that begins with the exact projected `REVIEW_HEADING_PREFIX` and then adds ` — [Date]`. An owner-scoped prefix must never match a legacy or different-owner heading.
+4. If that exact review entry already exists, treat this as a follow-up review focused on what changed after the fix work.
+5. After the pre-review gate below is clear, if that review entry exists but `_mano_output/backlog.md` still contains any items with the exact projected `IN_PHASE_STATUS`, the prior close was interrupted. Repair the already-approved close sweep before follow-up triage:
    ```
    node _mano/scripts/backlog.js resolve --phase [N]
    ```
    If the script fails, stop and report the error — do not flip statuses by hand. After a successful repair, stop with this repair log; do not combine it with follow-up triage and do not ask the user to re-confirm the review they already logged:
    ```text
    [mano review]: mano review — _mano_output/backlog.md
-   - Repaired interrupted Phase [N] close sweep
+   - Repaired interrupted [PHASE_ID] close sweep
 
    [Optional hook block if active]
 
    Next:
    - `mano review` — continue the follow-up review if there is new feedback
    ```
+
+At the beginning of every later turn in this multi-turn review, rerun `node _mano/scripts/state.js --current`. Continue only when `OWNER`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, `STORIES`, `IN_PHASE_STATUS`, and `REVIEW_HEADING_PREFIX` exactly match the activation projection. If ownership or phase state changed, write nothing and ask the user to invoke `mano review` again. Running this deterministic projection is part of review routing, not implementation investigation.
 
 ## Pre-review gate
 
@@ -50,7 +53,7 @@ If any stories are not marked `done`, **refuse and stop**. Review does not manag
 I can't review a phase that isn't complete, and managing story status isn't my job. Depending on what's true:
 
 - Still unimplemented → run `mano dev` to finish them.
-- Implemented but the index is stale → mark them `done` in `_mano_output/phase-[N]/stories/README.md` yourself, then re-run `mano review`.
+- Implemented but the index is stale → mark them `done` in the exact projected stories index yourself, then re-run `mano review`.
 - Abandoned → remove them from the README index, then re-run `mano review`.
 ```
 
@@ -80,7 +83,7 @@ If the activation message already contains substantive review feedback, skip the
 **STEP 1 — Read the phase brief to get the phase goal and its Assumption Log. If the activation message does not already contain substantive feedback, your entire response must be ONLY this format:**
 
 ```
-[mano review]: Review initiated. Phase [N] goal: "[phase goal]"
+[mano review]: Review initiated. [PHASE_ID] goal: "[phase goal]"
 
 This phase assumed:
 1. [assumption — verbatim from the brief's Assumption Log]
@@ -110,7 +113,7 @@ When the user replies with their feedback, or when substantive feedback was alre
 Present the triaged list to the user for confirmation:
 
 ```
-[mano review]: Feedback Triaged. Phase [N] goal: "[phase goal]"
+[mano review]: Feedback Triaged. [PHASE_ID] goal: "[phase goal]"
 
 🐛 Defects:
 1. [one sentence with enough context]
@@ -144,9 +147,9 @@ When the user confirms (e.g., "close it", "yes"):
 
    One item — shell-safe flags:
    ```
-   node _mano/scripts/backlog.js add --title "[short title]" --type [type] --context "[what it is; why it matters]" --source "Phase [N] review"
+   node _mano/scripts/backlog.js add --title "[short title]" --type [type] --context "[what it is; why it matters]" --source "[PHASE_ID] review"
    ```
-   Several items — write a JSON array to a temp file with your file tool (no shell quoting), each element `{ "title", "type", "context", "source": "Phase [N] review" }`, and pass it:
+   Several items — write a JSON array to a temp file with your file tool (no shell quoting), each element `{ "title", "type", "context", "source": "[PHASE_ID] review" }`, and pass it:
    ```
    node _mano/scripts/backlog.js add --file [tmp].json
    ```
@@ -155,7 +158,7 @@ When the user confirms (e.g., "close it", "yes"):
    ```markdown
    ### [Short title]
    - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap
-   - **Source:** Phase [N] review
+   - **Source:** [PHASE_ID] review
    - **Context:**
      [what it is; why it matters]
    - **Status:** backlog
@@ -164,7 +167,7 @@ When the user confirms (e.g., "close it", "yes"):
    ```
    node _mano/scripts/backlog.js resolve --phase [N]
    ```
-   It flips every item currently `Status: in-phase-[N]` to `resolved` — the whole phase in one call — which is what officially closes the phase and satisfies `mano start`'s completion gate on the next phase. It matches only `in-phase-[N]`, so the items you just triaged (still `Status: backlog`) are structurally safe — never touched. **Script failing?** Stop and report the error — do not flip statuses by hand.
+   It flips every item carrying the current owner's exact projected `IN_PHASE_STATUS` to `resolved` — the whole phase in one call — which officially closes that owner-scoped phase. It never matches another owner's in-phase status, and the items you just triaged remain `Status: backlog`. **Script failing?** Stop and report the error — do not flip statuses by hand.
 3. If `_mano_output/reviews.md` does not exist, create it with the top-level title.
 4. **Always append** the new review entry at the **bottom** of `_mano_output/reviews.md`. Never insert between existing entries.
 5. Fill the template sections concretely.
@@ -175,8 +178,8 @@ Use the canonical execution-log format defined in `_mano/workflow.md` ("Canonica
 ```
 [mano review]: mano review — _mano_output/backlog.md, _mano_output/reviews.md
 - Triaged items inserted to backlog
-- Phase [N] items marked resolved
-- Phase [N] closed
+- [PHASE_ID] items marked resolved
+- [PHASE_ID] closed
 ⚠ Verify: [material triage decision worth checking — omit if none]
 
 [Optional hook block if active]
@@ -188,7 +191,7 @@ That is your complete response.
 
 ## Follow-up review
 
-Use this path only if Phase [N] already has a review entry in `_mano_output/reviews.md` and the user has completed follow-up fix work.
+Use this path only if `_mano_output/reviews.md` already contains an H2 whose prefix exactly matches the projected `REVIEW_HEADING_PREFIX` and the user has completed follow-up fix work.
 
 This is also a multi-turn conversation. Each step is ONE message. After sending the message, do NOTHING else until the user replies.
 
@@ -201,7 +204,7 @@ If the activation message already contains substantive follow-up feedback, skip 
 **STEP 1 — If the activation message does not already contain substantive follow-up feedback, your entire response must be ONLY this format:**
 
 ```
-[mano review]: Phase [N] follow-up review. We already logged the main review for this phase.
+[mano review]: [PHASE_ID] follow-up review. We already logged the main review for this phase.
 
 Tell me what changed after the fixes — what's resolved, what's still broken, what's still rough, and anything new that showed up.
 ```
@@ -217,7 +220,7 @@ When the user replies, or when substantive follow-up feedback was already includ
 Present the triaged outcomes for confirmation:
 
 ```
-[mano review]: Follow-up Triaged. Phase [N]
+[mano review]: Follow-up Triaged. [PHASE_ID]
 
 ✅ Resolved:
 1. [one sentence]
@@ -246,13 +249,13 @@ When the user confirms (e.g., "close it", "yes"):
 1. Read `_mano_output/backlog.md`.
 2. Match resolved items to existing backlog items and flip each to `Status: resolved` by hand (these are specific `backlog` items now fixed — a title-scoped edit, not the `resolve --phase` sweep).
 3. Append any still open / new ideas to the backlog **via `node _mano/scripts/backlog.js add`** (same flags / `--file` as the standard STEP 3.1) — don't hand-write the blocks. **Script failing?** Stop and report the error.
-4. **Do not create a new `## Phase [N] Follow-up Review` section.** Find the existing `## Phase [N] Review` entry in `_mano_output/reviews.md` and append an `### Addendum — [Date]` subsection directly under it (before the next `---` separator). Use the addendum structure from `_mano/templates/phase-review.md`.
+4. **Do not create a new follow-up review section.** Find the existing owner-aware H2 that begins with the exact projected `REVIEW_HEADING_PREFIX` and append an `### Addendum — [Date]` subsection directly under it (before the next `---` separator). Use the addendum structure from `_mano/templates/phase-review.md`.
 
 Output execution log (canonical format, see `_mano/workflow.md`):
 ```
 [mano review]: mano review — _mano_output/backlog.md, _mano_output/reviews.md
 - Follow-up statuses updated in backlog
-- Addendum appended to Phase [N] review entry
+- Addendum appended to [PHASE_ID] review entry
 
 [Optional hook block if active]
 
@@ -265,8 +268,8 @@ That is your complete response.
 
 `mano review` must use `_mano/templates/phase-review.md` as the source of truth for review entries.
 
-- Standard review: use the `Phase [N] Review` structure from the template.
-- Follow-up review: do not create a new `## Phase [N] Follow-up Review` heading. Append an `### Addendum — [Date]` subsection to the existing `## Phase [N] Review` entry, using the addendum structure from the template.
+- Standard review: append ` — [Date]` to the exact projected `REVIEW_HEADING_PREFIX`, then use the structure from the template.
+- Follow-up review: do not create a new follow-up heading. Append an `### Addendum — [Date]` subsection to the existing H2 with that exact prefix, using the addendum structure from the template.
 - If `_mano_output/reviews.md` does not exist yet, create it with the template title first, then append real entries.
 - The example sections in `_mano/templates/phase-review.md` are structural references only. Do not copy them verbatim into the live file.
 - Keep each appended entry concise and concrete. Write for someone who was not in the room.

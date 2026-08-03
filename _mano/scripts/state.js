@@ -28,6 +28,8 @@
  *                                 implementer needn't ls or reopen the index
  *   node state.js --ui            for mano ui: the active phase's exact brief
  *                                 and phase-local preview paths
+ *   node state.js --current       exact owner-scoped phase identity and paths
+ *                                 for planning skills such as stories/review
  *   node state.js --spec          for mano spec: print current-phase source
  *                                 items plus open spec-gap items
  *   node state.js --gaps <type>   narrow gap-only diagnostic projection for
@@ -41,13 +43,19 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const {
+  phaseRef,
+  phaseRouting,
+  reviewHeadingPattern,
+} = require("./phase.js");
 
 const GAP_TYPES = ["spec-gap", "rule-gap"];
 
 function parseArgs(argv) {
   const args = {
     root: process.cwd(), json: false, verbose: false,
-    scope: false, next: false, ui: false, spec: false, gaps: null, help: false,
+    scope: false, next: false, ui: false, current: false,
+    spec: false, gaps: null, help: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -56,6 +64,7 @@ function parseArgs(argv) {
     else if (a === "--scope") args.scope = true;
     else if (a === "--next") args.next = true;
     else if (a === "--ui") args.ui = true;
+    else if (a === "--current") args.current = true;
     else if (a === "--spec") args.spec = true;
     else if (a === "--gaps") {
       const candidate = argv[i + 1];
@@ -71,7 +80,7 @@ function parseArgs(argv) {
 const HELP = `mano state — read-only projections of _mano_output/
 
 Usage:
-  node state.js [projectRoot] [--scope | --next | --ui | --spec | --gaps <type>] [--verbose] [--json]
+  node state.js [projectRoot] [--scope | --next | --ui | --current | --spec | --gaps <type>] [--verbose] [--json]
 
   projectRoot   directory containing _mano_output/ (default: current dir)
   --scope       on a PROCEED to scope-backlog or resume-draft, also print the
@@ -82,6 +91,9 @@ Usage:
   --ui          for mano ui: report the current phase brief and phase-local
                 design preview paths without exposing backlog content or
                 scanning phase folders in the prompt
+  --current     report the configured owner and exact current phase identity,
+                directory, brief, stories index, backlog status, and review
+                heading without exposing artifact contents
   --spec        for mano spec: report the current phase brief path, exact
                 in-phase-N backlog items, and open spec-gap items without
                 exposing the rest of backlog.md
@@ -118,28 +130,7 @@ function readGapText(p) {
   }
 }
 
-function listDirs(p) {
-  try {
-    return fs.readdirSync(p, { withFileTypes: true })
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name);
-  } catch { return []; }
-}
-
 // ---- parsers (one per format, kept tiny and faithful) ---------------------
-
-// Highest-numbered phase-[N] folder. Returns null if none.
-function latestPhase(outputDir) {
-  let max = null;
-  for (const name of listDirs(outputDir)) {
-    const m = /^phase-(\d+)$/.exec(name);
-    if (m) {
-      const n = Number(m[1]);
-      if (max === null || n > max) max = n;
-    }
-  }
-  return max;
-}
 
 // Stories index: | # | Story | File | Status |. A row counts as a story when
 // its first cell is a story number — an integer or a sub-row like 3a. Returns
@@ -309,27 +300,29 @@ function scanGaps(projectRoot, type) {
 function scanSpec(projectRoot) {
   const outputDir = path.join(projectRoot, "_mano_output");
   const backlog = readGapText(path.join(outputDir, "backlog.md"));
-  const phase = latestPhase(outputDir);
-  if (phase !== null && backlog === null) {
+  const routing = phaseRouting(projectRoot, outputDir);
+  const ref = routing.latest;
+  const phase = ref ? ref.number : null;
+  if (ref && backlog === null) {
     throw new Error(
-      `active phase ${phase} exists but _mano_output/backlog.md is missing; ` +
+      `active phase ${phase} (${ref.id}) exists but _mano_output/backlog.md is missing; ` +
       "cannot produce authoritative current-phase input",
     );
   }
-  if (phase !== null && !/^##\s+Items\s*$/im.test(backlog)) {
+  if (ref && !/^##\s+Items\s*$/im.test(backlog)) {
     throw new Error(
-      `active phase ${phase} exists but _mano_output/backlog.md has no canonical ## Items section; ` +
+      `active phase ${phase} (${ref.id}) exists but _mano_output/backlog.md has no canonical ## Items section; ` +
       "cannot produce authoritative current-phase input",
     );
   }
   assertBacklogItemsWellFormed(backlog);
-  const briefPath = phase === null
+  const briefPath = ref === null
     ? null
-    : `_mano_output/phase-${phase}/phase-brief.md`;
+    : `${ref.relativeDir}/phase-brief.md`;
   const briefExists = briefPath !== null && exists(path.join(projectRoot, briefPath));
   const briefStatus = briefExists ? "present" : "missing";
-  const inPhaseStatus = phase === null ? "unavailable" : `in-phase-${phase}`;
-  const inPhaseItems = phase === null
+  const inPhaseStatus = ref === null ? "unavailable" : ref.inPhaseStatus;
+  const inPhaseItems = ref === null
     ? []
     : extractBacklogItems(backlog, { status: inPhaseStatus });
   const specGapItems = extractBacklogItems(backlog, {
@@ -341,7 +334,11 @@ function scanSpec(projectRoot) {
     // READY means the projection completed authoritatively. Phase/brief
     // availability is separate and does not make a valid projection fail.
     status: "READY",
+    owner: routing.owner,
+    ownerSource: routing.ownerSource,
     phase,
+    phaseId: ref ? ref.id : null,
+    phaseDir: ref ? ref.relativeDir : null,
     briefPath,
     briefExists,
     briefStatus,
@@ -358,7 +355,6 @@ function scanSpec(projectRoot) {
 // to reject a phase that is already reviewed and has no reopened story work;
 // it never exposes backlog content or opens prior/root preview contents.
 function scanUi(projectRoot) {
-  const outputDir = path.join(projectRoot, "_mano_output");
   const projectState = scan(projectRoot);
   const phase = projectState.phase;
   const designBriefPath = "_mano_output/design-brief.md";
@@ -366,7 +362,10 @@ function scanUi(projectRoot) {
   const ui = {
     projectRoot,
     status: "BLOCKED",
+    owner: projectState.owner,
     phase,
+    phaseId: projectState.phaseId,
+    phaseDir: projectState.phaseDir,
     briefPath: null,
     previewPath: null,
     previewExists: false,
@@ -379,12 +378,12 @@ function scanUi(projectRoot) {
 
   if (phase === null) return ui;
 
-  ui.briefPath = `_mano_output/phase-${phase}/phase-brief.md`;
-  ui.previewPath = `_mano_output/phase-${phase}/design-preview.html`;
+  ui.briefPath = `${projectState.phaseDir}/phase-brief.md`;
+  ui.previewPath = `${projectState.phaseDir}/design-preview.html`;
   const briefExists = exists(path.join(projectRoot, ui.briefPath));
   ui.previewExists = exists(path.join(projectRoot, ui.previewPath));
   if (!briefExists) {
-    ui.route = `mano start — finish the draft for phase ${phase}; its phase-brief.md is missing.`;
+    ui.route = `mano start — finish the draft for ${projectState.phaseId}; its phase-brief.md is missing.`;
     return ui;
   }
 
@@ -394,8 +393,8 @@ function scanUi(projectRoot) {
   );
   if (projectState.reviewEntry && !reopenedStoryWork) {
     ui.route = projectState.closed
-      ? `mano start — phase ${phase} is already reviewed; scope the next phase before running mano ui.`
-      : `mano review — phase ${phase} has a review entry but its close sweep still needs repair.`;
+      ? `mano start — ${projectState.phaseId} is already reviewed; scope the next phase before running mano ui.`
+      : `mano review — ${projectState.phaseId} has a review entry but its close sweep still needs repair.`;
     return ui;
   }
 
@@ -421,34 +420,39 @@ function extractCoreProductPrinciples(text) {
   return out ? out.join("\n").replace(/\s+$/, "") : null;
 }
 
-// The latest `## Phase N Review` section's text. Prefers the section for phase
-// `n` (the phase just closed); falls back to the highest-numbered review.
-// null when reviews.md has none.
-function extractLatestReview(text, n) {
+// The latest review in the configured owner's namespace. Owned review headings
+// are `## Phase N Review — Owner: <slug>`; legacy headings remain supported.
+function extractLatestReview(text, ref, selectedOwner = null) {
   if (text === null) return null;
-  const heading = /^##\s+Phase\s+(\d+)\s+Review\b/i;
+  const heading = /^##\s+Phase\s+(\d+)\s+Review(?:\s+—\s+Owner:\s+([a-z0-9][a-z0-9-]*))?(?:\s+—\s+.+)?\s*$/i;
   const sections = [];
   let cur = null;
   for (const line of text.split("\n")) {
     const m = heading.exec(line);
-    if (m) { if (cur) sections.push(cur); cur = { phase: Number(m[1]), lines: [line] }; }
+    if (m) {
+      if (cur) sections.push(cur);
+      cur = { phase: Number(m[1]), owner: m[2] ? m[2].toLowerCase() : null, lines: [line] };
+    }
     else if (cur) {
       if (/^##\s+/.test(line)) { sections.push(cur); cur = null; } // non-review h2 ends it
       else cur.lines.push(line);
     }
   }
   if (cur) sections.push(cur);
-  if (sections.length === 0) return null;
-  let pick = n !== null ? sections.find((sec) => sec.phase === n) : null;
-  if (!pick) pick = sections.reduce((a, b) => (b.phase >= a.phase ? b : a));
+  const owner = ref ? ref.owner : selectedOwner;
+  const matchingOwner = sections.filter((section) => section.owner === owner);
+  if (matchingOwner.length === 0) return null;
+  let pick = ref
+    ? matchingOwner.find((section) => section.phase === ref.number)
+    : null;
+  if (!pick) pick = matchingOwner.reduce((a, b) => (b.phase >= a.phase ? b : a));
   return pick.lines.join("\n").replace(/\s+$/, "");
 }
 
-// True if reviews.md text has a `## Phase N Review` heading.
-function hasReviewEntry(text, n) {
+// True if reviews.md has the exact heading for this phase identity.
+function hasReviewEntry(text, ref) {
   if (text === null) return false;
-  const re = new RegExp(`^##\\s+Phase\\s+${n}\\s+Review\\b`, "im");
-  return re.test(text);
+  return reviewHeadingPattern(ref).test(text);
 }
 
 // ---- state assembly -------------------------------------------------------
@@ -459,7 +463,16 @@ function scan(projectRoot) {
     projectRoot,
     outputDir,
     outputExists: exists(outputDir),
+    owner: null,
+    ownerSource: null,
+    ownerMode: "legacy",
+    otherOwners: [],
     phase: null,            // latest phase number, or null
+    phaseId: null,
+    phaseDir: null,
+    phaseRef: null,
+    inPhaseStatus: null,
+    reviewHeading: null,
     briefExists: false,
     stories: null,          // { total, done, openTitles } or null
     reviewEntry: false,
@@ -472,6 +485,12 @@ function scan(projectRoot) {
     _backlogText: null,     // raw text, kept for scope extraction; not serialized
     _reviewsText: null,
   };
+
+  const routing = phaseRouting(projectRoot, outputDir);
+  s.owner = routing.owner;
+  s.ownerSource = routing.ownerSource;
+  s.ownerMode = routing.mode;
+  s.otherOwners = routing.otherOwners;
 
   if (!s.outputExists) return finalize(s);
 
@@ -493,15 +512,20 @@ function scan(projectRoot) {
     status: "backlog", type: "rule-gap",
   }).length;
 
-  const n = latestPhase(outputDir);
-  s.phase = n;
+  const ref = routing.latest;
+  s.phaseRef = ref;
+  s.phase = ref ? ref.number : null;
+  s.phaseId = ref ? ref.id : null;
+  s.phaseDir = ref ? ref.relativeDir : null;
+  s.inPhaseStatus = ref ? ref.inPhaseStatus : null;
+  s.reviewHeading = ref ? ref.reviewHeading : null;
 
-  if (n !== null) {
-    const phaseDir = path.join(outputDir, `phase-${n}`);
+  if (ref) {
+    const phaseDir = path.join(projectRoot, ref.relativeDir);
     s.briefExists = exists(path.join(phaseDir, "phase-brief.md"));
     s.stories = readStories(path.join(phaseDir, "stories", "README.md"));
-    s.reviewEntry = hasReviewEntry(s._reviewsText, n);
-    s.inPhaseRemaining = s.backlog[`in-phase-${n}`] || 0;
+    s.reviewEntry = hasReviewEntry(s._reviewsText, ref);
+    s.inPhaseRemaining = s.backlog[ref.inPhaseStatus] || 0;
   }
 
   return finalize(s);
@@ -512,7 +536,7 @@ function finalize(s) {
   const storiesAllDone = !!(s.stories && s.stories.total > 0 && s.stories.done === s.stories.total);
   const storiesMissing = !s.stories || s.stories.total === 0;
   // Gate condition 3: reviewed/closed — review is mandatory, and its close sweep
-  // must have moved every item for this phase off `in-phase-<N>`.
+  // must have moved every item for this exact phase identity off its in-phase status.
   const closed = s.reviewEntry && s.inPhaseRemaining === 0;
 
   let verdict, action;
@@ -524,7 +548,7 @@ function finalize(s) {
     // Output dir exists but no phase folder (e.g. fresh `mano import`).
     if (s.scopeableBacklogItems > 0) {
       verdict = "READY_FIRST_PHASE";
-      action = `Backlog has ${s.scopeableBacklogItems} phase-scopeable item(s) and no phase exists yet. mano start scopes phase 1 (Path A).`;
+      action = `Backlog has ${s.scopeableBacklogItems} phase-scopeable item(s) and no phase exists yet for ${s.owner || "legacy routing"}. mano start scopes phase 1 (Path A).`;
     } else if (s.gaps["spec-gap"] > 0 || s.gaps["rule-gap"] > 0) {
       verdict = "GAPS_ONLY";
       const routes = [];
@@ -538,35 +562,35 @@ function finalize(s) {
   } else if (!s.briefExists) {
     // Edge case: phase folder without a brief — a prior start didn't finalise.
     verdict = "RESUME_DRAFT";
-    action = `phase-${s.phase}/ exists without phase-brief.md — a previous mano start didn't finalise. Resume drafting phase ${s.phase}; do NOT start a new phase.`;
+    action = `${s.phaseId}/ exists without phase-brief.md — a previous mano start didn't finalise. Resume drafting ${s.phaseId}; do NOT start a new phase.`;
   } else if (storiesMissing) {
     verdict = "PHASE_IN_PROGRESS";
-    action = `Phase ${s.phase} has a brief but no stories yet. Not complete — run mano stories. mano start must NOT scope a next phase.`;
+    action = `${s.phaseId} has a brief but no stories yet. Not complete — run mano stories. mano start must NOT scope a next phase.`;
   } else if (!storiesAllDone) {
     verdict = "PHASE_IN_PROGRESS";
-    action = `Phase ${s.phase} has open stories (${s.stories.done}/${s.stories.total} done). Not complete — run mano dev. mano start must NOT scope a next phase.`;
+    action = `${s.phaseId} has open stories (${s.stories.done}/${s.stories.total} done). Not complete — run mano dev. mano start must NOT scope a next phase.`;
   } else if (!closed) {
     verdict = "PHASE_BUILT_NOT_CLOSED";
     const blockers = [];
     if (!s.reviewEntry) blockers.push("no review entry");
-    if (s.inPhaseRemaining > 0) blockers.push(`${s.inPhaseRemaining} item(s) still in-phase-${s.phase}`);
+    if (s.inPhaseRemaining > 0) blockers.push(`${s.inPhaseRemaining} item(s) still ${s.inPhaseStatus}`);
     const repair = s.reviewEntry
       ? "The review entry exists but its backlog close sweep is incomplete — re-run mano review to repair it."
       : "Run mano review.";
-    action = `Phase ${s.phase} is built (stories all done) but not closed — ${blockers.join("; ")}. ${repair} mano start must NOT scope a next phase.`;
+    action = `${s.phaseId} is built (stories all done) but not closed — ${blockers.join("; ")}. ${repair} mano start must NOT scope a next phase.`;
   } else {
     // Phase complete.
     if (s.scopeableBacklogItems > 0) {
       verdict = "READY_NEXT_PHASE";
-      action = `Phase ${s.phase} is complete. mano start may scope phase ${s.phase + 1} from the ${s.scopeableBacklogItems} phase-scopeable backlog item(s) (Path A).`;
+      action = `${s.phaseId} is complete. mano start may scope phase ${s.phase + 1} for ${s.owner || "legacy routing"} from the ${s.scopeableBacklogItems} phase-scopeable backlog item(s) (Path A).`;
     } else {
       verdict = "COMPLETE_BACKLOG_EMPTY";
       const routes = [];
       if (s.gaps["spec-gap"] > 0) routes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
       if (s.gaps["rule-gap"] > 0) routes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
       action = routes.length
-        ? `Phase ${s.phase} is complete and no phase-scopeable backlog items remain. Open gaps: ${routes.join("; ")}. Address them with their owning skill; mano start has nothing to scope.`
-        : `Phase ${s.phase} is complete and no items have Status: backlog. Nothing to scope — add backlog items (or mano import a doc) before mano start.`;
+        ? `${s.phaseId} is complete and no phase-scopeable backlog items remain. Open gaps: ${routes.join("; ")}. Address them with their owning skill; mano start has nothing to scope.`
+        : `${s.phaseId} is complete and no items have Status: backlog. Nothing to scope — add backlog items (or mano import a doc) before mano start.`;
     }
   }
 
@@ -593,7 +617,15 @@ function finalize(s) {
   // resume-draft finishes the current one.
   if (s.next === "scope-backlog") s.targetPhase = (s.phase || 0) + 1;
   else if (s.next === "resume-draft") s.targetPhase = s.phase;
+  else if (s.next === "conversation") s.targetPhase = 1;
   else s.targetPhase = null;
+  const targetRef = s.targetPhase === null
+    ? null
+    : phaseRef(s.owner, s.targetPhase);
+  s.targetPhaseId = targetRef ? targetRef.id : null;
+  s.targetPhaseDir = targetRef ? targetRef.relativeDir : null;
+  s.targetInPhaseStatus = targetRef ? targetRef.inPhaseStatus : null;
+  s.targetReviewHeading = targetRef ? targetRef.reviewHeading : null;
 
   // Attach the exact material mano start needs so the skill never has to reopen
   // backlog.md / reviews.md itself. A resume-draft includes every phase-scopeable
@@ -609,7 +641,7 @@ function finalize(s) {
         status: "backlog",
         excludeTypes: GAP_TYPES,
       }),
-      latestReview: extractLatestReview(s._reviewsText, s.phase),
+      latestReview: extractLatestReview(s._reviewsText, s.phaseRef, s.owner),
     };
   } else if (s.next === "resume-draft") {
     s.scope = {
@@ -618,7 +650,7 @@ function finalize(s) {
       backlogItems: extractBacklogItems(s._backlogText, {
         excludeTypes: GAP_TYPES,
       }),
-      latestReview: extractLatestReview(s._reviewsText, s.phase),
+      latestReview: extractLatestReview(s._reviewsText, s.phaseRef, s.owner),
     };
   }
   return s;
@@ -626,12 +658,19 @@ function finalize(s) {
 
 // ---- rendering ------------------------------------------------------------
 
-// Default output: the go/no-go the skill acts on. Three lines, nothing more.
+// Default output: the go/no-go plus the exact owner-scoped destination.
 function renderDecision(s) {
   const L = [];
   L.push(`DECISION: ${s.decision}`);
   if (s.next) L.push(`NEXT: ${s.next}`);
-  if (s.targetPhase != null) L.push(`PHASE: ${s.targetPhase}`);
+  L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
+  if (s.targetPhase != null) {
+    L.push(`PHASE: ${s.targetPhase}`);
+    L.push(`PHASE_ID: ${s.targetPhaseId}`);
+    L.push(`PHASE_DIR: ${s.targetPhaseDir}`);
+    L.push(`IN_PHASE_STATUS: ${s.targetInPhaseStatus}`);
+    L.push(`REVIEW_HEADING_PREFIX: ${s.targetReviewHeading}`);
+  }
   L.push(s.action);
   return L.join("\n");
 }
@@ -642,10 +681,12 @@ function renderEvidence(s) {
   const L = [];
   L.push("mano · project state");
   L.push(`root: ${s.projectRoot}` + (s.outputExists ? "  (_mano_output/ found)" : "  (no _mano_output/)"));
+  L.push(`owner: ${s.owner || "none (legacy phase-N mode)"}` + (s.ownerSource ? `  (${s.ownerSource})` : ""));
+  if (s.otherOwners.length) L.push(`other owner namespaces: ${s.otherOwners.join(", ")}`);
   L.push("");
 
   if (s.outputExists && s.phase !== null) {
-    L.push(`latest phase: ${s.phase}`);
+    L.push(`latest phase: ${s.phaseId}`);
     L.push(`  phase-brief.md:        ${s.briefExists ? "present" : "MISSING"}`);
     if (s.stories) {
       L.push(`  stories:               ${s.stories.done}/${s.stories.total} done`);
@@ -656,7 +697,7 @@ function renderEvidence(s) {
       L.push(`  stories:               none (no stories/README.md)`);
     }
     L.push(`  reviewed (reviews.md): ${s.reviewEntry ? "yes" : "no"}`);
-    L.push(`  in-phase-${s.phase} items:      ${s.inPhaseRemaining} remaining`);
+    L.push(`  ${s.inPhaseStatus} items:      ${s.inPhaseRemaining} remaining`);
     L.push("");
   }
 
@@ -735,7 +776,10 @@ function renderGapsJson(g) {
 function renderSpec(spec) {
   const L = ["--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
   L.push(`STATUS: ${spec.status}`);
+  L.push(`OWNER: ${spec.owner || "none (legacy phase-N mode)"}`);
   L.push(`PHASE: ${spec.phase === null ? "none" : spec.phase}`);
+  L.push(`PHASE_ID: ${spec.phaseId || "none"}`);
+  L.push(`PHASE_DIR: ${spec.phaseDir || "missing"}`);
   L.push(`BRIEF: ${spec.briefPath || "missing"}`);
   L.push(`BRIEF_STATUS: ${spec.briefStatus}`);
   L.push(`IN_PHASE_STATUS: ${spec.inPhaseStatus}`);
@@ -781,7 +825,10 @@ function renderSpecJson(spec) {
 function renderUi(ui) {
   const L = ["--- UI INPUT (from the state script — do not scan phase folders) ---"];
   L.push(`STATUS: ${ui.status}`);
+  L.push(`OWNER: ${ui.owner || "none (legacy phase-N mode)"}`);
   L.push(`PHASE: ${ui.phase === null ? "none" : ui.phase}`);
+  L.push(`PHASE_ID: ${ui.phaseId || "none"}`);
+  L.push(`PHASE_DIR: ${ui.phaseDir || "missing"}`);
   L.push(`BRIEF: ${ui.briefPath || "missing"}`);
   L.push(`PREVIEW: ${ui.previewPath || "unavailable"}`);
   L.push(`PREVIEW_STATUS: ${ui.previewExists ? "present" : "missing"}`);
@@ -796,6 +843,24 @@ function renderUiJson(ui) {
   return JSON.stringify(ui, null, 2);
 }
 
+// Exact phase routing for skills that need paths but not artifact contents.
+function renderCurrent(s) {
+  const L = ["--- CURRENT PHASE (from the state script — do not scan phase folders) ---"];
+  L.push(`STATUS: ${s.phaseRef ? "READY" : "NO_PHASE"}`);
+  L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
+  L.push(`OWNER_MODE: ${s.ownerMode}`);
+  L.push(`PHASE: ${s.phase === null ? "none" : s.phase}`);
+  L.push(`PHASE_ID: ${s.phaseId || "none"}`);
+  L.push(`PHASE_DIR: ${s.phaseDir || "missing"}`);
+  L.push(`BRIEF: ${s.phaseDir ? `${s.phaseDir}/phase-brief.md` : "missing"}`);
+  L.push(`BRIEF_STATUS: ${s.briefExists ? "present" : "missing"}`);
+  L.push(`STORIES: ${s.phaseDir ? `${s.phaseDir}/stories/README.md` : "missing"}`);
+  L.push(`STORIES_STATUS: ${s.stories ? "present" : "missing"}`);
+  L.push(`IN_PHASE_STATUS: ${s.inPhaseStatus || "unavailable"}`);
+  L.push(`REVIEW_HEADING_PREFIX: ${s.reviewHeading || "unavailable"}`);
+  return L.join("\n");
+}
+
 // The mano dev projection: what to implement right now, computed fresh from
 // disk. Surfaces the active phase, the FIRST pending story (in file order) with
 // its file path, and the ordered story list — so the implementer needn't ls for
@@ -804,6 +869,7 @@ function renderUiJson(ui) {
 // earlier pending one (that bypass stays the user's call — AGENTS.md step 5).
 function renderNext(s) {
   const L = [];
+  L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
 
   // Nothing to implement: no project / no phase folder.
   if (!s.outputExists || s.phase === null) {
@@ -813,26 +879,30 @@ function renderNext(s) {
   }
   // Phase exists but isn't ready for dev — point at the skill that owns the gap.
   if (!s.briefExists) {
-    L.push(`DEV: phase ${s.phase} draft is unfinished — no phase-brief.md. Finish mano start. Nothing for mano dev yet.`);
+    L.push(`DEV: ${s.phaseId} draft is unfinished — no phase-brief.md. Finish mano start. Nothing for mano dev yet.`);
     L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
     return L.join("\n");
   }
   if (!s.stories || s.stories.total === 0) {
-    L.push(`DEV: phase ${s.phase} has a brief but no stories yet — run mano stories. Nothing for mano dev yet.`);
+    L.push(`DEV: ${s.phaseId} has a brief but no stories yet — run mano stories. Nothing for mano dev yet.`);
     L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
     return L.join("\n");
   }
 
   const next = s.stories.rows.find((r) => r.status !== "done") || null;
   if (!next) {
-    L.push(`DEV: phase ${s.phase} — nothing to implement.`);
+    L.push(`DEV: ${s.phaseId} — nothing to implement.`);
     L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
     L.push(`All ${s.stories.total} stories are done. The phase is built but NOT closed — run mano review. Do NOT scope or start a new phase before review closes this one.`);
   } else {
-    L.push(`DEV: phase ${s.phase} — next pending story.`);
+    L.push(`DEV: ${s.phaseId} — next pending story.`);
     L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
     L.push(`STORY: ${next.num}`);
-    L.push(`FILE: _mano_output/phase-${s.phase}/stories/${next.file}`);
+    L.push(`FILE: ${s.phaseDir}/stories/${next.file}`);
     L.push("Read that story file first, then follow AGENTS.md steps 6-10 for any required tech-spec or project-rules context; implement only its acceptance criteria; then mark it done via stories.js set-status (step 11).");
   }
 
@@ -851,7 +921,15 @@ function renderJson(s) {
   return JSON.stringify({
     projectRoot: s.projectRoot,
     outputExists: s.outputExists,
+    owner: s.owner,
+    ownerSource: s.ownerSource,
+    ownerMode: s.ownerMode,
+    otherOwners: s.otherOwners,
     phase: s.phase,
+    phaseId: s.phaseId,
+    phaseDir: s.phaseDir,
+    inPhaseStatus: s.inPhaseStatus,
+    reviewHeading: s.reviewHeading,
     briefExists: s.briefExists,
     stories: s.stories,
     storiesAllDone: s.storiesAllDone,
@@ -866,6 +944,10 @@ function renderJson(s) {
     decision: s.decision,
     next: s.next,
     targetPhase: s.targetPhase,
+    targetPhaseId: s.targetPhaseId,
+    targetPhaseDir: s.targetPhaseDir,
+    targetInPhaseStatus: s.targetInPhaseStatus,
+    targetReviewHeading: s.targetReviewHeading,
     verdict: s.verdict,
     action: s.action,
     scope: s.scope,
@@ -881,27 +963,48 @@ function main() {
     process.exit(0);
   }
   if (args.spec) {
-    if (args.scope || args.next || args.ui || args.gaps !== null || args.verbose) {
-      process.stderr.write("[mano state] --spec cannot be combined with --scope, --next, --ui, --gaps, or --verbose.\n");
+    if (args.scope || args.next || args.ui || args.current || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --spec cannot be combined with --scope, --next, --ui, --current, --gaps, or --verbose.\n");
       process.exit(1);
     }
     let spec;
     try {
       spec = scanSpec(args.root);
     } catch (error) {
-      process.stderr.write(`[mano state] cannot read _mano_output/backlog.md — ${error.message}\n`);
+      process.stderr.write(`[mano state] cannot project spec input — ${error.message}\n`);
       process.exit(1);
     }
     process.stdout.write((args.json ? renderSpecJson(spec) : renderSpec(spec)) + "\n");
     process.exit(0);
   }
   if (args.ui) {
-    if (args.scope || args.next || args.spec || args.gaps !== null || args.verbose) {
-      process.stderr.write("[mano state] --ui cannot be combined with --scope, --next, --spec, --gaps, or --verbose.\n");
+    if (args.scope || args.next || args.current || args.spec || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --ui cannot be combined with --scope, --next, --current, --spec, --gaps, or --verbose.\n");
       process.exit(1);
     }
-    const ui = scanUi(args.root);
+    let ui;
+    try {
+      ui = scanUi(args.root);
+    } catch (error) {
+      process.stderr.write(`[mano state] cannot resolve current phase — ${error.message}\n`);
+      process.exit(1);
+    }
     process.stdout.write((args.json ? renderUiJson(ui) : renderUi(ui)) + "\n");
+    process.exit(0);
+  }
+  if (args.current) {
+    if (args.scope || args.next || args.ui || args.spec || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --current cannot be combined with --scope, --next, --ui, --spec, --gaps, or --verbose.\n");
+      process.exit(1);
+    }
+    let current;
+    try {
+      current = scan(args.root);
+    } catch (error) {
+      process.stderr.write(`[mano state] cannot resolve current phase — ${error.message}\n`);
+      process.exit(1);
+    }
+    process.stdout.write((args.json ? renderJson(current) : renderCurrent(current)) + "\n");
     process.exit(0);
   }
   if (args.gaps !== null) {
@@ -909,8 +1012,8 @@ function main() {
       process.stderr.write(`[mano state] --gaps requires exactly one of: ${GAP_TYPES.join(", ")}.\n`);
       process.exit(1);
     }
-    if (args.scope || args.next || args.ui || args.spec || args.verbose) {
-      process.stderr.write("[mano state] --gaps cannot be combined with --scope, --next, --ui, --spec, or --verbose.\n");
+    if (args.scope || args.next || args.ui || args.current || args.spec || args.verbose) {
+      process.stderr.write("[mano state] --gaps cannot be combined with --scope, --next, --ui, --current, --spec, or --verbose.\n");
       process.exit(1);
     }
     let gaps;
@@ -923,7 +1026,13 @@ function main() {
     process.stdout.write((args.json ? renderGapsJson(gaps) : renderGaps(gaps)) + "\n");
     process.exit(0);
   }
-  const s = scan(args.root);
+  let s;
+  try {
+    s = scan(args.root);
+  } catch (error) {
+    process.stderr.write(`[mano state] cannot resolve current phase — ${error.message}\n`);
+    process.exit(1);
+  }
   let out;
   if (args.json) {
     out = renderJson(s);

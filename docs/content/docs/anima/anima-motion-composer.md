@@ -56,3 +56,8 @@ Returns whether a selected scene node can supply group target context.
 ### scene_node_context_message
 
 Returns the author-facing explanation of the current scene-node context.
+
+### workspace_status_message
+
+Returns the workspace's own top status line — the next-step message shown
+when nothing has been opened yet (`project-rules.md` §Editor Boundaries).

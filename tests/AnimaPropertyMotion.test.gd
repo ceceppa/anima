@@ -195,6 +195,103 @@ func test_fixed_preview_duration_finishes_at_configured_time_regardless_of_physi
 	var elapsed: float = (finished_frame + 1) / 60.0
 	assert_almost_eq(elapsed, 0.2, 1.0 / 60.0)
 
+func test_with_pivot_sets_the_pivot_field_and_returns_self():
+	var motion := AnimaPropertyMotion.new()
+
+	var result := motion.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+
+	assert_eq(motion.pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_same(result, motion)
+
+func test_pivot_resolves_each_anchor_position_on_a_control():
+	var expected := {
+		AnimaPropertyMotion.Pivot.TOP_LEFT: Vector2(0.0, 0.0),
+		AnimaPropertyMotion.Pivot.TOP_CENTER: Vector2(50.0, 0.0),
+		AnimaPropertyMotion.Pivot.TOP_RIGHT: Vector2(100.0, 0.0),
+		AnimaPropertyMotion.Pivot.CENTER_LEFT: Vector2(0.0, 40.0),
+		AnimaPropertyMotion.Pivot.CENTER: Vector2(50.0, 40.0),
+		AnimaPropertyMotion.Pivot.CENTER_RIGHT: Vector2(100.0, 40.0),
+		AnimaPropertyMotion.Pivot.BOTTOM_LEFT: Vector2(0.0, 80.0),
+		AnimaPropertyMotion.Pivot.BOTTOM_CENTER: Vector2(50.0, 80.0),
+		AnimaPropertyMotion.Pivot.BOTTOM_RIGHT: Vector2(100.0, 80.0),
+	}
+
+	for pivot in expected:
+		var control := Control.new()
+		add_child_autofree(control)
+		control.size = Vector2(100.0, 80.0)
+
+		var motion := AnimaPropertyMotion.new()
+		motion.target_property = NodePath("scale")
+		motion.to_value = Vector2(1.2, 1.2)
+		motion.duration = 0.3
+		motion.pivot = pivot
+
+		var instance = motion.create_runtime()
+		instance.advance(control, 1.0 / 60.0)
+
+		assert_eq(control.pivot_offset, expected[pivot], "pivot %s should resolve to %s" % [pivot, expected[pivot]])
+
+func test_pivot_leaves_a_non_scale_rotation_motion_unaffected():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.size = Vector2(100.0, 80.0)
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("modulate:a")
+	motion.to_value = 0.5
+	motion.duration = 0.3
+	motion.pivot = AnimaPropertyMotion.Pivot.BOTTOM_RIGHT
+
+	var instance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_eq(control.pivot_offset, Vector2.ZERO, "pivot should be ignored for a property other than scale/rotation")
+
+func test_pivot_on_an_unsupported_target_does_not_error():
+	var target := Node2D.new()
+	add_child_autofree(target)
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("rotation")
+	motion.to_value = 0.5
+	motion.duration = 0.1
+	motion.pivot = AnimaPropertyMotion.Pivot.CENTER
+
+	var instance = motion.create_runtime()
+	var finished := false
+	for i in range(10):
+		finished = instance.advance(target, 1.0 / 60.0)
+
+	assert_true(finished, "an unsupported pivot target should still finish normally")
+
+func test_pivot_on_a_sprite2d_like_node_does_not_visibly_shift_the_artwork():
+	var image := Image.create(20, 10, false, Image.FORMAT_RGBA8)
+	var sprite := Sprite2D.new()
+	add_child_autofree(sprite)
+	sprite.texture = ImageTexture.create_from_image(image)
+	sprite.global_position = Vector2(200.0, 150.0)
+
+	var transform_before := sprite.global_transform
+	var original_offset := sprite.offset
+	var original_global_position := sprite.global_position
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("scale")
+	motion.to_value = Vector2(1.5, 1.5)
+	motion.duration = 0.3
+	motion.pivot = AnimaPropertyMotion.Pivot.BOTTOM_RIGHT
+
+	var instance = motion.create_runtime()
+	instance.advance(sprite, 1.0 / 60.0)
+
+	assert_ne(sprite.offset, original_offset, "pivot should have shifted the sprite's offset")
+
+	var effective_before: Vector2 = original_global_position + transform_before.basis_xform(original_offset)
+	var effective_after: Vector2 = sprite.global_position + transform_before.basis_xform(sprite.offset)
+	assert_almost_eq(effective_before.x, effective_after.x, 0.01, "artwork should not visibly shift when pivot is applied")
+	assert_almost_eq(effective_before.y, effective_after.y, 0.01, "artwork should not visibly shift when pivot is applied")
+
 func test_manual_mode_never_finishes_on_its_own():
 	var target := Node2D.new()
 	add_child_autofree(target)

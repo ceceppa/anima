@@ -21,7 +21,7 @@ When inputs are missing, follow the missing-input protocol in `_mano/workflow.md
 
 On activation:
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-1. Run `node _mano/scripts/state.js --ui`. Its `UI INPUT` is the only phase-directory discovery for this skill. Do not list or scan phase folders yourself. If the command fails or its output lacks the `UI INPUT`, `STATUS`, `PHASE`, `BRIEF`, and `PREVIEW` lines, stop and report the exact failure.
+1. Run `node _mano/scripts/state.js --ui`. Its `UI INPUT` is the only phase-directory discovery for this skill. Do not list or scan phase folders yourself. If the command fails or its output lacks the `UI INPUT`, `STATUS`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `PREVIEW` lines, stop and report the exact failure. Use the exact projected paths; never construct `phase-N` from the number.
 2. `STATUS: BLOCKED` → relay the script's route and stop without writing anything. A phase brief is required because the preview must have an unambiguous phase owner; do not offer to continue without one.
 3. `STATUS: READY` → read the exact `BRIEF` path printed by the script.
 4. Read `_mano_output/ux-flow.md` if it exists — know what screens and navigation exist before designing components.
@@ -30,7 +30,7 @@ On activation:
 7. Read design-relevant requirements only when they are included in the current phase brief, existing design brief, UX flow, project rules, or explicitly provided context.
 8. Read `_mano_output/design-brief.md` if it exists and extend it as the project-wide foundation.
 9. Read the exact current-phase `PREVIEW` path only when the projection reports it as present; this is a same-phase rerun input. Never read an earlier phase's preview or the legacy root `_mano_output/design-preview.html`.
-10. Immediately before the first write—especially after the preference checkpoint pauses the flow—run `node _mano/scripts/state.js --ui` again. Continue only if it still reports `STATUS: READY` with the same `PHASE`, `BRIEF`, and `PREVIEW`. If any value changed or the phase became blocked, write nothing; report that project state changed and ask the user to invoke `mano ui` again so the new phase context is read fresh.
+10. Immediately before the first write—especially after the preference checkpoint pauses the flow—run `node _mano/scripts/state.js --ui` again. Continue only if it still reports `STATUS: READY` with the same `OWNER`, `PHASE_ID`, `BRIEF`, and `PREVIEW`. If any value changed or the phase became blocked, write nothing; report that project state changed and ask the user to invoke `mano ui` again so the new phase context is read fresh.
 <!-- /mano-rule: ui-phase-preview-ownership -->
 
 ## Inputs
@@ -50,7 +50,7 @@ On activation:
 Establish the visual language with two different ownership lifecycles:
 
 - `_mano_output/design-brief.md` is the project-wide, cumulative, canonical visual contract. Extend or correct it in place only when the current phase adds or changes design guidance.
-- `_mano_output/phase-[N]/design-preview.html` is a non-canonical, self-contained snapshot for Phase N. Create it when the current UI-relevant phase needs a preview; update it only while that same phase is active. A later phase creates its own file and never reads, rewrites, deletes, or folds an earlier preview into the new one.
+- The exact projected `PREVIEW` path inside `PHASE_DIR` is a non-canonical, self-contained snapshot for that phase identity. Create it when the current UI-relevant phase needs a preview; update it only while that same owner-scoped phase is active. A later or differently owned phase creates its own file and never reads, rewrites, deletes, or folds an earlier preview into the new one.
 
 The legacy root `_mano_output/design-preview.html` is not an input or output. Leave it byte-for-byte untouched; its phase cannot be inferred safely. Do not migrate it automatically.
 <!-- /mano-rule: ui-phase-preview-ownership -->
@@ -138,18 +138,18 @@ If the HTML preview includes a sample screen or composed mockup, the design brie
 The markdown brief does not need to reproduce the full mockup visually, but it must capture the structure well enough that someone reading only `design-brief.md` understands what the sample screen is composed of.
 
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-Keep prior phase composition entries. Add or update the current one under `## Screen Composition` using `### Phase [N] — [Screen Name]`. Do not delete an earlier composition merely because its preview is not the current phase's file. If an older entry lacks a phase label, preserve it unless the user explicitly asks to repair historical attribution; do not guess its phase.
+Keep prior phase composition entries. Add or update the current one under `## Screen Composition` using `### [exact PHASE_ID] — [Screen Name]`. The owner-qualified identity prevents two owners' Phase 1 entries from colliding. Do not delete an earlier composition merely because its preview is not the current phase's file. If an older entry lacks a phase label, preserve it unless the user explicitly asks to repair historical attribution; do not guess its phase.
 <!-- /mano-rule: ui-phase-preview-ownership -->
 
 ### Step 3 — Generate HTML preview
 
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-Write the exact current-phase `PREVIEW` path from `state.js --ui`: `_mano_output/phase-[N]/design-preview.html`. It is one self-contained file with no external dependencies.
+Write the exact current-phase `PREVIEW` path from `state.js --ui`. It is one self-contained file with no external dependencies.
 
 **Only include current-phase components and screen composition already described in the design brief.** The preview demonstrates what this phase agreed, not the project's full history or what might be needed later. Include the relevant colour and typography context, every component used by this phase's sample, and one representative screen mockup using real content from the phase brief.
 
 Before writing, enforce the ownership boundary:
-- The target must be inside the active `phase-[N]/` printed by the script.
+- The target must be inside the exact active `PHASE_DIR` printed by the script.
 - On a same-phase rerun, update only that phase's preview.
 - Never create or edit `_mano_output/design-preview.html`.
 - Never open, copy into, or edit another phase's preview.
@@ -163,7 +163,7 @@ Use the canonical execution-log format defined in `_mano/workflow.md` ("Canonica
 
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
 ```
-[mano ui]: mano ui — _mano_output/design-brief.md, _mano_output/phase-[N]/design-preview.html
+[mano ui]: mano ui — _mano_output/design-brief.md, [exact PREVIEW path]
 - Aesthetics: [brief summary of style/palette used or extended]
 ⚠ Verify: [embedded assumption worth checking — omit if none]
 
