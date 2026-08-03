@@ -1,7 +1,7 @@
 extends ExamplePlayground
 
 const GRID_SIZE := Vector2i(5, 5)
-const SELECTOR_BUTTON := preload("res://examples/shared/components/selector_button.tscn")
+const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
 enum OrderFrom { TOP, BOTTOM, CENTER, TOGETHER, ODD, EVEN, RANDOM, INDEX }
 
@@ -49,8 +49,8 @@ const FORMULA_DESCRIPTIONS := {
 	AnimaGridMotion.DistanceFormula.ANTI_DIAGONAL: "Distance along the anti-diagonal.",
 	AnimaGridMotion.DistanceFormula.CLOCKWISE: "A wave sweeping clockwise from 12 o'clock around the start tile.",
 	AnimaGridMotion.DistanceFormula.ANTICLOCKWISE: "A wave sweeping anticlockwise from 12 o'clock around the start tile.",
-	AnimaGridMotion.DistanceFormula.SPIRAL_INWARD: "A clockwise spiral traveling toward the start tile.",
-	AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD: "A clockwise spiral traveling away from the start tile.",
+	AnimaGridMotion.DistanceFormula.SPIRAL_INWARD: "Peels the grid inward from its top-left corner, ring by ring. Ignores the tapped tile — it traces the grid's own shape.",
+	AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD: "The same spiral in reverse: starts at the centre and expands outward. Ignores the tapped tile too.",
 	AnimaGridMotion.DistanceFormula.SERPENTINE_ROW: "Alternating left-right traversal, row by row.",
 	AnimaGridMotion.DistanceFormula.SERPENTINE_COLUMN: "Alternating top-bottom traversal, column by column.",
 }
@@ -74,7 +74,7 @@ func _ready() -> void:
 	for row in GRID_SIZE.y:
 		for col in GRID_SIZE.x:
 			var index := row * GRID_SIZE.x + col
-			var card: Card = preload("res://examples/shared/components/card.tscn").instantiate()
+			var card: Card = preload("res://examples/playground/shared/components/card.tscn").instantiate()
 			card.custom_minimum_size = Vector2(96, 96)
 			card.atlas_index = index % 12
 			card.mouse_filter = Control.MOUSE_FILTER_STOP

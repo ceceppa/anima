@@ -5,7 +5,7 @@ enum Ordering { FIRST, LAST, CENTER, ODD, EVEN, RANDOM, INDEX }
 
 const PLAYBACK_LABELS := ["Sequential", "Parallel", "Staggered"]
 const ORDER_LABELS := ["First", "Last", "Center", "Odd", "Even", "Random", "Index"]
-const SELECTOR_BUTTON := preload("res://examples/shared/components/selector_button.tscn")
+const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
 const ORDER_DESCRIPTIONS := {
 	Ordering.FIRST: "Starts at the first card in the collection.",

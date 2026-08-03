@@ -1,7 +1,7 @@
 extends "res://addons/gut/test.gd"
 
 func _make_header() -> ExampleHeader:
-	var header: ExampleHeader = preload("res://examples/shared/components/example_header.tscn").instantiate()
+	var header: ExampleHeader = preload("res://examples/playground/shared/components/example_header.tscn").instantiate()
 	add_child_autofree(header)
 	return header
 
@@ -21,7 +21,7 @@ func test_icon_export_updates_the_icon_glyph():
 	assert_eq(header.get_node("%IconLabel").text, "✦")
 
 func test_exported_values_apply_when_set_before_the_node_enters_the_tree():
-	var header: ExampleHeader = preload("res://examples/shared/components/example_header.tscn").instantiate()
+	var header: ExampleHeader = preload("res://examples/playground/shared/components/example_header.tscn").instantiate()
 	header.title = "Composition"
 	header.subtitle = "Combine simple animations into expressive flows."
 	header.icon = "✦"

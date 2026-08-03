@@ -9,11 +9,11 @@
     "releases":{
         "9.7.1":{
             "godot_min":"4.7",
-            "godot_max":"4.99"
+            "godot_max":"4.7.999"
         },
         "9.7.0":{
             "godot_min":"4.7",
-            "godot_max":"4.99"
+            "godot_max":"4.7.999"
         },
         "9.6.1":{
             "godot_min":"4.6",

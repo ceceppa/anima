@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://examples/shared/components/example_header.gd" id="1"]
+[ext_resource type="Script" uid="uid://bbubcuat4omx7" path="res://examples/playground/shared/components/example_header.gd" id="1"]
 
 [node name="ExampleHeader" type="PanelContainer"]
 layout_mode = 2

@@ -42,9 +42,18 @@ enum DistanceFormula {
 	CLOCKWISE,
 	## Polar-angle wave, anticlockwise from 12 o'clock around [member start_point].
 	ANTICLOCKWISE,
-	## Angular traversal ordered away from [member start_point].
+	## Traversal that peels the grid's own rectangle inward from its corners,
+	## in reverse — starts at the centre-most cell and expands outward,
+	## finishing at the corner [constant SPIRAL_INWARD] starts from. Traces
+	## the shape of the grid itself, not a wave from [member start_point] —
+	## see [constant SPIRAL_INWARD].
 	SPIRAL_OUTWARD,
-	## Angular traversal ordered toward [member start_point].
+	## The classic "spiral matrix" traversal: starts at the grid's top-left
+	## corner and peels its rectangle inward one ring at a time — top row
+	## left-to-right, right column top-to-bottom, bottom row right-to-left,
+	## left column bottom-to-top, then the next ring in. This is the one
+	## formula that ignores [member start_point]: the path comes from [member
+	## grid_dimensions]'s own rectangle, not from a chosen point.
 	SPIRAL_INWARD,
 	## Alternating row-wise traversal, reversing direction on each successive row.
 	SERPENTINE_ROW,

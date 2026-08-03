@@ -89,7 +89,7 @@ func _ready() -> void:
 	_style_glow()
 
 	for type in CompositionType.values():
-		var button: SelectorButton = preload("res://examples/shared/components/selector_button.tscn").instantiate()
+		var button: SelectorButton = preload("res://examples/playground/shared/components/selector_button.tscn").instantiate()
 		button.text = TYPE_LABELS[type]
 		button.pressed.connect(_select_type.bind(type))
 		_selector.add_item(button)
@@ -186,7 +186,7 @@ func _select_type(type: CompositionType) -> void:
 
 	for card_index in demo.cards.size():
 		var card_info: Dictionary = demo.cards[card_index]
-		var card: Card = preload("res://examples/shared/components/card.tscn").instantiate()
+		var card: Card = preload("res://examples/playground/shared/components/card.tscn").instantiate()
 		_card_row.add_child(card)
 		card.atlas_index = card_index
 		card.set_progress(0.0)

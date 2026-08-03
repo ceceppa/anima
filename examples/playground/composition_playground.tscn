@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bbxtvbpvxfod2"]
 
-[ext_resource type="Script" uid="uid://cywi7ohm2iphf" path="res://examples/composition_playground.gd" id="1"]
-[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="1_lyx8s"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/example_header.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/shared/components/selector_dock.tscn" id="4"]
+[ext_resource type="Script" uid="uid://cywi7ohm2iphf" path="res://examples/playground/composition_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="1_lyx8s"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7k6g3"]
 content_margin_left = 32.0

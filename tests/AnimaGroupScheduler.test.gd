@@ -395,7 +395,34 @@ func test_a_different_valid_start_point_changes_the_propagation_and_is_not_restr
 	assert_has(second_wave, targets[1])
 	assert_has(second_wave, targets[3])
 
-func test_spiral_outward_orders_strictly_by_distance_then_clockwise_angle_with_no_simultaneous_waves():
+## Spiral is the classic "peel the matrix inward from its own edges" order —
+## a property of the grid's own rectangle, not of the chosen start point (see
+## AnimaGroupScheduler._ranks_spiral). For a 3x3 grid, row-major index order,
+## the clockwise inward path is: top row left-to-right, right column
+## top-to-bottom, bottom row right-to-left, left column bottom-to-top, then
+## whatever's left in the centre.
+func test_spiral_inward_peels_the_grid_clockwise_from_the_top_left_corner():
+	var targets := _make_nodes(9)
+	var grid := _grid(AnimaGridMotion.DistanceFormula.SPIRAL_INWARD)
+	grid.spiral_direction = AnimaGridMotion.SpiralDirection.CLOCKWISE
+
+	var schedule := AnimaGroupScheduler.derive(grid, targets)
+
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	assert_eq(order, [
+		targets[0], targets[1], targets[2], # top row, left to right
+		targets[5], targets[8],             # right column, top to bottom
+		targets[7], targets[6],             # bottom row, right to left
+		targets[3],                         # left column, bottom to top
+		targets[4],                         # centre, last
+	])
+	for i in range(order.size() - 1):
+		assert_ne(schedule.entries[i].rank, schedule.entries[i + 1].rank, "a spiral is a strict traversal, never a simultaneous wave")
+
+func test_spiral_outward_reverses_the_inward_traversal():
 	var targets := _make_nodes(9)
 	var grid := _grid(AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD)
 	grid.spiral_direction = AnimaGridMotion.SpiralDirection.CLOCKWISE
@@ -407,22 +434,42 @@ func test_spiral_outward_orders_strictly_by_distance_then_clockwise_angle_with_n
 		order.append(entry.target)
 
 	assert_eq(order, [
-		targets[4], # start point
-		targets[1], targets[5], targets[7], targets[3], # orthogonal ring, clockwise from 12
-		targets[2], targets[8], targets[6], targets[0], # diagonal ring, clockwise from 1:30
+		targets[4],
+		targets[3],
+		targets[6], targets[7],
+		targets[8], targets[5],
+		targets[2], targets[1], targets[0],
 	])
-	for i in range(order.size() - 1):
-		assert_ne(schedule.entries[i].rank, schedule.entries[i + 1].rank, "a spiral is a strict traversal, never a simultaneous wave")
 
-func test_spiral_inward_reverses_the_outward_traversal():
+func test_spiral_counterclockwise_mirrors_the_clockwise_traversal():
 	var targets := _make_nodes(9)
 	var grid := _grid(AnimaGridMotion.DistanceFormula.SPIRAL_INWARD)
-	grid.spiral_direction = AnimaGridMotion.SpiralDirection.CLOCKWISE
+	grid.spiral_direction = AnimaGridMotion.SpiralDirection.COUNTERCLOCKWISE
 
 	var schedule := AnimaGroupScheduler.derive(grid, targets)
 
-	assert_eq(schedule.entries[schedule.entries.size() - 1].target, targets[4], "inward spiral should reach the start point last")
-	assert_eq(schedule.entries[0].target, targets[2], "inward spiral should start at the far ring")
+	var order: Array[Node] = []
+	for entry in schedule.entries:
+		order.append(entry.target)
+
+	assert_eq(order, [
+		targets[0], targets[3], targets[6], # left column, top to bottom
+		targets[7], targets[8],             # bottom row, left to right
+		targets[5], targets[2],             # right column, bottom to top
+		targets[1],                         # top row, right to left
+		targets[4],                         # centre, last
+	])
+
+func test_spiral_ignores_the_chosen_start_point_since_it_traces_the_grids_own_rectangle():
+	var with_default_start := AnimaGroupScheduler.derive(
+		_grid(AnimaGridMotion.DistanceFormula.SPIRAL_INWARD, Vector2i(3, 3), Vector2i(1, 1)), _make_nodes(9)
+	)
+	var with_corner_start := AnimaGroupScheduler.derive(
+		_grid(AnimaGridMotion.DistanceFormula.SPIRAL_INWARD, Vector2i(3, 3), Vector2i(0, 0)), _make_nodes(9)
+	)
+
+	for i in with_default_start.entries.size():
+		assert_eq(with_default_start.entries[i].rank, with_corner_start.entries[i].rank)
 
 func test_serpentine_row_zigzags_alternating_direction_each_row():
 	var targets := _make_nodes(6)

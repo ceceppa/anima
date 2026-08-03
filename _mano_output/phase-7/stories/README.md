@@ -15,3 +15,5 @@
 | 10 | Document new motion APIs | story-10-document-new-motion-apis.md | done |
 | 11 | Showcase target-bound motion | story-11-showcase-target-bound-motion.md | done |
 | 12 | Showcase grid motion | story-12-showcase-grid-motion.md | done |
+| 12a | Motion Composer guide | story-12a-motion-composer-guide.md | done |
+| 12b | Showcase remaining convenience families | story-12b-showcase-remaining-convenience-families.md | done |

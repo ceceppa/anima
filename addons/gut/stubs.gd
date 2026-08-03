@@ -1,10 +1,10 @@
 # -------------
 # {
-# 	object(script or instance):{
+# 	object(script or instance) or StringName(native class name):{
 # 		method_name1: [StubParams, StubParams],
 # 		method_name2: [StubParams, StubParams]
 # 	},
-# 	object(script or instance):{
+# 	object(script or instance) or StringName(native class name):{
 # 		method_name1: [StubParams, StubParams],
 # 		method_name2: [StubParams, StubParams]
 # 	}
@@ -13,9 +13,11 @@ var stubs = {}
 
 func _normalize_stub_target(target):
 	var to_return = null
-	if(typeof(target) == TYPE_OBJECT or GutUtils.is_native_class(target)):
+	if(GutUtils.is_native_class(target)):
+		to_return = GutUtils.strutils.type2str(target)
+	elif(typeof(target) == TYPE_OBJECT):
 		to_return = target
-	if(typeof(target) == TYPE_STRING):
+	elif(typeof(target) == TYPE_STRING):
 		if(FileAccess.file_exists(target)):
 			to_return = load(target)
 		else:
@@ -42,8 +44,8 @@ func _get_entries_matching_target(target):
 				match_on.push_front(trav)
 			else:
 				var type_name = current.get_instance_base_type()
-				trav = GutUtils.class_ref_by_name[type_name]
-				match_on.push_front(trav)
+				match_on.push_front(type_name)
+				trav = null
 				done = true
 
 		if(trav == null):
@@ -80,6 +82,18 @@ func get_all_stubs(thing, method):
 			matches.append_array(stubs[entry][method])
 	return matches
 
+
+func get_default_stub(thing, method):
+	var obj = _normalize_stub_target(thing)
+	var match_on = _get_entries_matching_target(obj)
+	var to_return = null
+	for entry in match_on:
+		if(stubs.has(entry) and stubs[entry].has(method)):
+			var method_stubs = stubs[entry][method]
+			for stub in method_stubs:
+				if(stub.is_script_default):
+					to_return = stub
+	return to_return
 
 func to_s():
 	var text = ''

@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://catfct3sc6jw8"]
 
-[ext_resource type="Script" uid="uid://cf0k15nok4fxb" path="res://examples/group_motion_playground.gd" id="1"]
-[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="2"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/example_header.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/shared/components/card.tscn" id="4"]
-[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/shared/components/selector_dock.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/playback_controls.tscn" id="7"]
+[ext_resource type="Script" uid="uid://cf0k15nok4fxb" path="res://examples/playground/group_motion_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="2"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/playground/shared/components/card.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xfwvc"]
 content_margin_left = 32.0
@@ -158,5 +158,4 @@ size_flags_horizontal = 6
 
 [node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=1076318812 instance=ExtResource("7")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2

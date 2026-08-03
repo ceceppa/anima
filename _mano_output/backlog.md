@@ -1681,7 +1681,7 @@
   opacity → modulate:a (values outside 0..1 are allowed by default with a validation warning, not clamped or rejected; self_modulate:a stays out until a concrete use case justifies a second method, §28.5); colour → modulate, spelled .color() to match Godot's own Color naming (§12.7); size (Control only initially; must document container/minimum-size/anchor/layout-recalculation interaction, and steer container-controlled nodes toward Layout Transition instead, §12.8/§28.6 — the same steer applies to position on layout-owned Control properties, allowed with a validation warning rather than blocked).
   Generic .property() delegates directly to Motion.animate(); an optional shader_parameter convenience may use a dedicated adapter and may be deferred from the minimum release.
   PRD4.md §12.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Motion modifiers on convenience motions
 - **Type:** feature
@@ -1689,7 +1689,7 @@
 - **Context:**
   Shared modifier API: .from()/.from_current(), .duration(), .ease(), .delay(), .interruption(), .reversibility() (property motions default to automatic reversal where values/easing support it), .relative() (generic escape hatch — docs should prefer semantic methods like move_by()), .repeat()/.alternate() (exact looping API owned by the broader motion system, not this feature).
   PRD4.md §13.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### No implicit multi-property composition
 - **Type:** feature
@@ -1698,7 +1698,7 @@
   Chaining a second property method directly (e.g. .position().opacity()) is not supported, since the first call already returns a motion, not the factory.
   Parallel intent between two properties on the same target must be explicit via with() or Motion.parallel().
   PRD4.md §5, §14.4.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Relational choreography integration for convenience motions
 - **Type:** feature
@@ -1707,7 +1707,7 @@
   Motions created through Anima.on() work with then() and with() like any other motion.
   Multiple consecutive with() calls after one then() form one Parallel group of everything chained since that then(), not nested pairs.
   PRD4.md §14.1-§14.3.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Group-item convenience API (Anima.item())
 - **Type:** feature
@@ -1716,7 +1716,7 @@
   Anima.item() -> AnimaItemMotionFactory: resolves its target separately per Group Animation target rather than binding one fixed node.
   Exposes the same convenience property methods as Anima.on() where meaningful: position, move_by, scale, rotation, opacity, colour, size, generic property.
   PRD4.md §15.1-§15.4.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Group item context for dynamic convenience destinations
 - **Type:** feature
@@ -1734,7 +1734,7 @@
   Validated when the motion is created (if target and property are already known), in the Motion Composer, before playback, during compilation, and at runtime if the target's type changed since creation.
   Type-mismatch and unsupported-target errors must name the expected type/property and suggest a fix (e.g. "use property() or select a CanvasItem target").
   PRD4.md §16.1-§16.4.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Variant-typed signature compensation
 - **Type:** tech-debt
@@ -1752,7 +1752,7 @@
   A motion created and played immediately may hold a runtime object reference; a motion saved as a resource must use AnimaTargetReference instead (explicit NodePath / relative-to-playback-root / current-context-target / current-group-item / named-target).
   Saving a motion still holding an unsafe live reference must convert it to a scene-relative reference, prompt for a resolution mode, or refuse to save — never persist a live object reference silently.
   PRD4.md §17.1-§17.3.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Reserved context-target convenience (future)
 - **Type:** feature
@@ -1770,7 +1770,7 @@
   A convenience-created motion displays its resolved target/property/from/to/duration/ease like any property motion, using the semantic convenience name (Opacity, Position, Scale, Rotation, Colour, Size) rather than only the raw property path.
   An advanced field shows the underlying Godot property path (e.g. "Underlying property: modulate:a").
   PRD4.md §18.1-§18.2.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Motion Composer: round-trip editing and origin metadata
 - **Type:** feature
@@ -1779,7 +1779,7 @@
   Editing a convenience-created motion in the Composer edits the canonical resource directly; the editor is not required to regenerate the original source-code expression that created it — the resource is the shared model.
   Optional editor-only, non-runtime-affecting metadata may record which convenience call created a motion (e.g. "Created through: Anima.on().opacity()").
   PRD4.md §18.3-§18.4.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Motion Composer: generic property selector
 - **Type:** feature
@@ -1787,7 +1787,7 @@
 - **Context:**
   For generic .property() motions, the Composer offers a searchable target-property list with type information, current value, common-property shortcuts, and validation.
   PRD4.md §18.5.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Native Animation compilation parity for convenience motions
 - **Type:** feature
@@ -1796,7 +1796,7 @@
   A convenience-created motion compiles identically to the equivalent explicit AnimaPropertyMotion — same property path and values, no compiler distinction between the two authoring styles.
   The compile report may retain the semantic name (e.g. "Panel opacity → modulate:a").
   PRD4.md §19.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Reversal parity for convenience motions
 - **Type:** feature
@@ -1805,7 +1805,7 @@
   Convenience motions use standard property reversal and easing-mirroring rules.
   A motion without an explicit .from() must record its resolved starting value so reverse playback returns to the value actually observed at start (e.g. 0.42), not an arbitrary default.
   PRD4.md §20.1-§20.2.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Interruption parity for convenience motions
 - **Type:** feature
@@ -1813,7 +1813,7 @@
 - **Context:**
   Convenience motions use the standard property-ownership and interruption system exclusively — no convenience-specific interruption implementation is permitted.
   PRD4.md §20.3.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Anima V1 migration for the target-bound API
 - **Type:** feature
@@ -1832,7 +1832,7 @@
   First tutorial example uses Anima.on().opacity().from().play(); a composition example shows then()/with(); an escape-hatch progression shows .property() then Motion.animate() for advanced/structural work.
   Explicit equivalence documentation demonstrates that Anima.on() and Motion.animate() produce the same resource, framing the levels as layered rather than competing.
   PRD4.md §21.1-§21.4.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Convenience-layer performance requirements
 - **Type:** tech-debt
@@ -1840,7 +1840,7 @@
 - **Context:**
   Must add negligible runtime overhead versus constructing the equivalent canonical motion directly: lightweight factory creation, no playback-state allocation in convenience methods, cacheable property resolution where safe, no per-frame convenience-layer logic, created motions use the normal runtime evaluator, and reusing a factory must not retain previously generated motions.
   PRD4.md §23.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Convenience API unit test coverage
 - **Type:** test
@@ -1848,7 +1848,7 @@
 - **Context:**
   Null-target rejection, correct stored target reference, independent motions from repeated calls, opacity maps to modulate:a, position resolves per target type (Control/Node2D/Node3D), scale/rotation/colour mapping, size target-support validation, generic-property delegation, duration parameter application and .duration()-overrides-positional precedence, .from() vs omitted-.from() start mode.
   PRD4.md §24.1.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Convenience-vs-canonical equivalence tests
 - **Type:** test
@@ -1856,7 +1856,7 @@
 - **Context:**
   For every convenience method, the resulting canonical resource is compared against the equivalent Motion.animate() output to catch the two APIs diverging.
   PRD4.md §24.2.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Convenience API integration test coverage
 - **Type:** test
@@ -1864,7 +1864,7 @@
 - **Context:**
   then()/with() composition, reverse playback, mid-flight retargeting, group-item usage, resource serialization, Motion Composer editing, native Animation compilation, target removal before and during playback.
   PRD4.md §24.3.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Convenience API validation test coverage
 - **Type:** test
@@ -1872,7 +1872,7 @@
 - **Context:**
   Invalid target class, invalid destination type, missing generic property, unsupported size() target, incorrect Vector2/Vector3 position type, a saved motion still holding an unsafe live target reference.
   PRD4.md §24.4.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### PRD4's suggested minimum viable Anima.on() release
 - **Type:** feature
@@ -1880,7 +1880,7 @@
 - **Context:**
   The document's own proposed first-release slice: Anima.on(), reusable factory, position/move_by/scale/rotation/opacity/color/property, optional positional duration, .from()/.duration()/.ease(), then()/with() compatibility, normal reverse and interruption support, canonical-equivalence tests, and Anima.Node() migration documentation.
   Foundation-conflict note for `mano start`: this MVP list already spans PRD4.md's own §26 delivery phases 1 and 2 together, and explicitly excludes Anima.item() (deferred to ship alongside Group Animation rather than the first Anima.on() milestone) — this tension between "minimum useful release" and the phased delivery plan is unresolved in the source and should be settled during phase scoping, not assumed either way.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### AnimaKeyframeMotion resource
 - **Type:** feature
@@ -2781,11 +2781,51 @@
 - **Source:** Phase 7 scope
 - **Context:**
   Add grid-based group choreography from a chosen point, defaulting to FROM_TOP. Support Euclidean, Manhattan, Chebyshev, Row, Column, Diagonal, Anti-diagonal, Clockwise, Anticlockwise, spiral inward/outward, and serpentine row/column propagation.
-- **Status:** in-phase-7
+- **Status:** resolved
 
 ### Convenience and Grid motion playground showcase
 - **Type:** feature
 - **Source:** Phase 7 scope
 - **Context:**
   Provide runnable demonstrations for the v2 target-bound convenience API and Grid motion, including a 5x5 GridContainer of Cards. Use v2_stuff/ex2.jpg only as visual reference for the Grid showcase.
-- **Status:** in-phase-7
+- **Status:** resolved
+
+### Showcase examples/editor/ tooling
+- **Type:** feature
+- **Source:** User idea
+- **Context:**
+  Runnable showcase scenes under examples/editor/ (per project-rules.md §Example Scenes) demonstrating how to use the addons/anima/editor/ tools — Motion Composer, Group Composer, Property Motion Composer, Group Inspector — directly in the Godot editor.
+  User has no hands-on way to learn the editor tooling today; complements the written Motion Composer guide (docs/content/docs/guides/motion-composer) with something to actually open and try.
+- **Status:** backlog
+
+### Restore Anima v1 easing curve parity
+- **Type:** refinement
+- **Source:** Phase 7 review
+- **Context:**
+  Only a handful of AnimaEase.Kind curves exist today. Anima v1 shipped 34: Linear, Ease, Ease In/Out/In-Out, plus In/Out/In-Out variants of Sine, Quad, Cubic, Quart, Quint, Expo, Circ, Back, Elastic, Bounce.
+  User compared directly against the old addon and flagged the gap during Phase 7 review.
+- **Status:** backlog
+
+### Add motion pivot control
+- **Type:** feature
+- **Source:** Phase 7 review
+- **Context:**
+  Anima v1 let an author set a motion's pivot point (ANIMA.PIVOT: 9 anchor positions - corners, edge-centers, center) so scale/rotation transform around a chosen point instead of the default. No equivalent exists in Anima 2 today.
+  Old example: Anima.Node(self).anima_scale_x(0.8).anima_pivot(ANIMA.PIVOT.CENTER)
+- **Status:** backlog
+
+### Add a 3D playground scene with an Icosahedron Card
+- **Type:** feature
+- **Source:** User idea
+- **Context:**
+  A new examples/playground/ scene demonstrating Anima on a Node3D target (Anima.on() already supports Vector3 position/scale for Node3D). Reuses the same shared header and footer/playback-controls as the 2D playground; the 'Card' becomes a 3D icosahedron mesh (examples/playground/models/card.obj) styled to resemble v2_stuff/icosahedron.png, no text.
+  Request surfaced directly from the user via mano ui, interrupted before any design work was captured.
+- **Status:** backlog
+
+### Iterate on the Motion Composer dock usability
+- **Type:** refinement
+- **Source:** User idea
+- **Context:**
+  The current Anima bottom-panel dock (Motion Composer / Group Composer / Property Motion Composer / Group Inspector) works but the user finds it limited and confusing to use, beyond what the written guide or a hands-on example alone fix -- likely needs UX iteration on the panel itself (layout, discoverability, guidance), not just documentation.
+  Distinct from 'Showcase examples/editor/ tooling', which only adds a hands-on example scene; this item is about the dock's own usability.
+- **Status:** backlog

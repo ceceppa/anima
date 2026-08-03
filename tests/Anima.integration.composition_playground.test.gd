@@ -12,7 +12,7 @@ func _selector_buttons(selector: SelectorDock) -> Array:
 	return buttons
 
 func test_selecting_each_composition_type_completes_every_card():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -41,7 +41,7 @@ func test_selecting_each_composition_type_completes_every_card():
 				assert_almost_eq(card.progress, 1.0, 0.001, "every card should reach full progress for %s" % button.text)
 
 func test_stage_position_and_size_stay_fixed_across_type_switches():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var stage: PanelContainer = scene.get_node("%Stage")
@@ -58,7 +58,7 @@ func test_stage_position_and_size_stay_fixed_across_type_switches():
 	_tick(scene, 200) # let the final demo finish before the scene is freed
 
 func test_selecting_each_type_shows_its_matching_title_and_description():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var expected := {
@@ -81,7 +81,7 @@ func test_selecting_each_type_shows_its_matching_title_and_description():
 		_tick(scene, 200) # let each demo finish before selecting the next
 
 func test_selecting_the_same_type_twice_shows_the_same_counter_value():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -97,7 +97,7 @@ func test_selecting_the_same_type_twice_shows_the_same_counter_value():
 	_tick(scene, 200)
 
 func test_background_glow_is_subtle_and_stays_fixed_across_type_switches():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var stage: PanelContainer = scene.get_node("%Stage")
@@ -119,7 +119,7 @@ func test_background_glow_is_subtle_and_stays_fixed_across_type_switches():
 	_tick(scene, 200)
 
 func test_selector_dock_moves_indicator_and_selects_exactly_one_item():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 	await get_tree().process_frame
 
@@ -141,7 +141,7 @@ func test_selector_dock_moves_indicator_and_selects_exactly_one_item():
 	_tick(scene, 200) # let the demo selected above finish before the scene is freed
 
 func test_sequence_card_b_waits_for_card_a_to_complete():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -156,7 +156,7 @@ func test_sequence_card_b_waits_for_card_a_to_complete():
 	_tick(scene, 200)
 
 func test_parallel_cards_start_at_the_same_time():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -171,7 +171,7 @@ func test_parallel_cards_start_at_the_same_time():
 	_tick(scene, 200)
 
 func test_stagger_activation_travels_across_the_cards():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -187,7 +187,7 @@ func test_stagger_activation_travels_across_the_cards():
 	_tick(scene, 200)
 
 func test_repeat_card_completes_and_restarts_at_least_twice():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -209,7 +209,7 @@ func test_repeat_card_completes_and_restarts_at_least_twice():
 	assert_gt(restarts, 1, "the same card should complete and restart at least twice")
 
 func test_conditional_shows_one_card_with_a_branch_callout():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -250,7 +250,7 @@ func test_conditional_shows_one_card_with_a_branch_callout():
 		assert_lt(cards[0].modulate.a, Card.DIM_ALPHA, "the false branch should dim below the card's resting look")
 
 func test_race_loser_card_freezes_short_of_full_progress():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var selector: SelectorDock = scene.get_node("%Selector")
@@ -275,7 +275,7 @@ func test_race_loser_card_freezes_short_of_full_progress():
 	assert_almost_eq(progresses[1], 1.0, 0.001, "the winning card should reach full progress")
 
 func test_spacing_matches_design_brief_scale():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var content: VBoxContainer = scene.get_node("Margin/Content")
@@ -291,7 +291,7 @@ func test_spacing_matches_design_brief_scale():
 	_tick(scene, 200)
 
 func test_playground_end_to_end_header_stage_dock_stay_fixed_across_all_types():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	var header: ExampleHeader = scene.get_node("%Header")
@@ -312,7 +312,7 @@ func test_playground_end_to_end_header_stage_dock_stay_fixed_across_all_types():
 	_tick(scene, 200)
 
 func test_selecting_a_new_type_while_playing_cancels_the_previous_one():
-	var scene: Control = preload("res://examples/composition_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)
 
 	_tick(scene, 5)

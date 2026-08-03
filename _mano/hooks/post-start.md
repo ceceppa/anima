@@ -44,6 +44,10 @@ Focus on:
 - missing or over-broad backlog items
 - Core Product Principles preservation
 - contradictions with the source brief
+- whether the phase scope includes the right demo coverage for the work it introduces
+- for runtime-facing work, whether the phase should include a playground demo under `examples/playground/`
+- for editor-facing work, whether the phase should include an editor demo under `examples/editor/`
+- whether any phase that introduces a new or changed runtime or editor capability is missing a matching example/demo plan
 
 Report issues, risks, contradictions, and suggested improvements.
 

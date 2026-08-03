@@ -1,7 +1,7 @@
 extends "res://addons/gut/test.gd"
 
 func _open_scene() -> Control:
-	var scene: Control = preload("res://examples/grid_motion_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/grid_motion_playground.tscn").instantiate()
 	add_child_autofree(scene)
 	await get_tree().process_frame
 	return scene

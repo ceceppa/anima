@@ -227,8 +227,12 @@ static func _resolve_grid_origin(order: AnimaGroupOrder, count: int, columns: in
 static func _ranks_grid_formula(grid: AnimaGridMotion, count: int) -> Array[int]:
 	var columns := maxi(grid.grid_dimensions.x, 1)
 	var rows := maxi(grid.grid_dimensions.y, 1)
-	var start := Vector2(grid.start_point.x, grid.start_point.y)
 
+	if grid.distance_formula == AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD \
+		or grid.distance_formula == AnimaGridMotion.DistanceFormula.SPIRAL_INWARD:
+		return _ranks_spiral(grid, count, columns, rows)
+
+	var start := Vector2(grid.start_point.x, grid.start_point.y)
 	var raw_ranks: Array[int] = []
 	for index in count:
 		var row := index / columns
@@ -236,6 +240,76 @@ static func _ranks_grid_formula(grid: AnimaGridMotion, count: int) -> Array[int]
 		var cell := Vector2(float(col), float(row))
 		raw_ranks.append(_grid_formula_rank(grid, cell, start, row, col, columns, rows))
 	return _densify_ranks(raw_ranks)
+
+## Ranks every resolved cell by its position along a clockwise (or, per
+## [member AnimaGridMotion.spiral_direction], anticlockwise) traversal that
+## peels [param columns] × [param rows] rectangle inward from its own
+## corners, one ring at a time — the classic "spiral matrix" order, starting
+## at the top-left corner. [constant AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD]
+## is that same path in reverse (innermost cell first, outward to the corner
+## it started from). Unlike every other formula, this path comes from the
+## grid's own rectangle, not from [member AnimaGridMotion.start_point] — a
+## spiral anchored at an arbitrary interior point stops tracing a rectangle
+## the moment it reaches that point's own edge, which reads as broken rather
+## than as a grid-shaped spiral.
+static func _ranks_spiral(grid: AnimaGridMotion, count: int, columns: int, rows: int) -> Array[int]:
+	var path := _spiral_path(columns, rows, grid.spiral_direction == AnimaGridMotion.SpiralDirection.COUNTERCLOCKWISE)
+	if grid.distance_formula == AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD:
+		path.reverse()
+
+	var rank_by_cell := {}
+	for i in path.size():
+		rank_by_cell[path[i]] = i
+
+	var ranks: Array[int] = []
+	for index in count:
+		var row := index / columns
+		var col := index % columns
+		ranks.append(rank_by_cell.get(Vector2i(col, row), path.size()))
+	return ranks
+
+## Clockwise (or, mirrored, anticlockwise) spiral cell order for a [param
+## columns] × [param rows] rectangle, starting at its top-left corner and
+## peeling inward one ring at a time.
+static func _spiral_path(columns: int, rows: int, counterclockwise: bool) -> Array[Vector2i]:
+	var path: Array[Vector2i] = []
+	var top := 0
+	var bottom := rows - 1
+	var left := 0
+	var right := columns - 1
+
+	while top <= bottom and left <= right:
+		if counterclockwise:
+			for row in range(top, bottom + 1):
+				path.append(Vector2i(left, row))
+			left += 1
+			for col in range(left, right + 1):
+				path.append(Vector2i(col, bottom))
+			bottom -= 1
+			if left <= right:
+				for row in range(bottom, top - 1, -1):
+					path.append(Vector2i(right, row))
+				right -= 1
+			if top <= bottom:
+				for col in range(right, left - 1, -1):
+					path.append(Vector2i(col, top))
+				top += 1
+		else:
+			for col in range(left, right + 1):
+				path.append(Vector2i(col, top))
+			top += 1
+			for row in range(top, bottom + 1):
+				path.append(Vector2i(right, row))
+			right -= 1
+			if top <= bottom:
+				for col in range(right, left - 1, -1):
+					path.append(Vector2i(col, bottom))
+				bottom -= 1
+			if left <= right:
+				for row in range(bottom, top - 1, -1):
+					path.append(Vector2i(left, row))
+				left += 1
+	return path
 
 ## Remaps arbitrary (but order- and tie-preserving) rank keys to a dense
 ## `0..distinct-1` sequence. [constant AnimaGridMotion.DistanceFormula.CLOCKWISE]/
@@ -280,10 +354,6 @@ static func _grid_formula_rank(grid: AnimaGridMotion, cell: Vector2, start: Vect
 			return _angular_rank(cell, start, true)
 		AnimaGridMotion.DistanceFormula.ANTICLOCKWISE:
 			return _angular_rank(cell, start, false)
-		AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD:
-			return _spiral_rank(cell, start, grid.spiral_direction, true)
-		AnimaGridMotion.DistanceFormula.SPIRAL_INWARD:
-			return _spiral_rank(cell, start, grid.spiral_direction, false)
 		AnimaGridMotion.DistanceFormula.SERPENTINE_ROW:
 			return row * columns + (col if row % 2 == 0 else columns - 1 - col)
 		AnimaGridMotion.DistanceFormula.SERPENTINE_COLUMN:
@@ -315,20 +385,3 @@ static func _angular_rank(cell: Vector2, start: Vector2, clockwise: bool) -> int
 	if not clockwise:
 		bearing = fposmod(TAU - bearing, TAU)
 	return int(round(bearing * 1000.0))
-
-## Shared rank for the two spiral formulas — primarily ordered by distance
-## from [param start] (ascending for outward, descending for inward), with
-## the 12-o'clock angle (swept per [param spiral_direction]) breaking ties
-## within the same ring so a spiral is a strict cell-by-cell traversal, not a
-## set of simultaneous waves.
-static func _spiral_rank(cell: Vector2, start: Vector2, spiral_direction: AnimaGridMotion.SpiralDirection, outward: bool) -> int:
-	var distance_key := int(round(cell.distance_to(start) * 1000.0))
-	var bearing := _clockwise_bearing(cell, start)
-	if spiral_direction == AnimaGridMotion.SpiralDirection.COUNTERCLOCKWISE:
-		bearing = fposmod(TAU - bearing, TAU)
-	var angle_key := int(round(bearing * 100.0))
-	# Reversing for inward flips which radial extreme sorts first without
-	# reversing the angular sweep within a ring — a large sentinel keeps the
-	# inverted key positive for any grid this formula is realistically used on.
-	var radial_key := distance_key if outward else (10_000_000 - distance_key)
-	return radial_key * 1000 + angle_key

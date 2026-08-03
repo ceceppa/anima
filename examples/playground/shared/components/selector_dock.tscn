@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ci7wgfqrot35x"]
 
-[ext_resource type="Script" uid="uid://mrqmaw7nnvwo" path="res://examples/shared/components/selector_dock.gd" id="1"]
+[ext_resource type="Script" uid="uid://mrqmaw7nnvwo" path="res://examples/playground/shared/components/selector_dock.gd" id="1"]
 
 [node name="SelectorDock" type="PanelContainer" unique_id=1780750057]
 size_flags_horizontal = 3

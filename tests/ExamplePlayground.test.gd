@@ -1,6 +1,6 @@
 extends "res://addons/gut/test.gd"
 
-const PlaygroundRoot := preload("res://examples/shared/components/example_playground.gd")
+const PlaygroundRoot := preload("res://examples/playground/shared/components/example_playground.gd")
 
 func test_shared_playground_root_can_enter_the_scene_tree():
 	var playground: Control = PlaygroundRoot.new()

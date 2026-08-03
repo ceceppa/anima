@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://diijionma5yuo"]
 
-[ext_resource type="Script" uid="uid://cr6dle5acbvjx" path="res://examples/grid_motion_playground.gd" id="1"]
-[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="2"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/example_header.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/shared/components/selector_dock.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/playback_controls.tscn" id="5"]
+[ext_resource type="Script" uid="uid://cr6dle5acbvjx" path="res://examples/playground/grid_motion_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="2"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f4u0c"]
 content_margin_left = 32.0
@@ -154,5 +154,4 @@ layout_mode = 2
 
 [node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=605429258 instance=ExtResource("5")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2

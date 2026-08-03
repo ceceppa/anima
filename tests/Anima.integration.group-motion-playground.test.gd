@@ -1,7 +1,7 @@
 extends "res://addons/gut/test.gd"
 
 func test_group_motion_playground_opens_and_selector_starts_a_public_group_playback():
-	var scene: Control = preload("res://examples/group_motion_playground.tscn").instantiate()
+	var scene: Control = preload("res://examples/playground/group_motion_playground.tscn").instantiate()
 	add_child_autofree(scene)
 	await get_tree().process_frame
 

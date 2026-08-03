@@ -1,23 +1,45 @@
 extends ExamplePlayground
 
-enum Family { MOVE_BY, SCALE, ROTATION, OPACITY, COLOR }
+enum Family {
+	POSITION, POSITION_X, POSITION_Y, MOVE_BY,
+	SCALE, SCALE_BY, ROTATION, ROTATE_BY,
+	OPACITY, COLOR, SIZE, PROPERTY,
+}
 
-const FAMILY_ORDER := [Family.MOVE_BY, Family.SCALE, Family.ROTATION, Family.OPACITY, Family.COLOR]
+const FAMILY_ORDER := [
+	Family.POSITION, Family.POSITION_X, Family.POSITION_Y, Family.MOVE_BY,
+	Family.SCALE, Family.SCALE_BY, Family.ROTATION, Family.ROTATE_BY,
+	Family.OPACITY, Family.COLOR, Family.SIZE, Family.PROPERTY,
+]
 const FAMILY_LABELS := {
+	Family.POSITION: "Position",
+	Family.POSITION_X: "Position X",
+	Family.POSITION_Y: "Position Y",
 	Family.MOVE_BY: "Move By",
 	Family.SCALE: "Scale",
+	Family.SCALE_BY: "Scale By",
 	Family.ROTATION: "Rotation",
+	Family.ROTATE_BY: "Rotate By",
 	Family.OPACITY: "Opacity",
 	Family.COLOR: "Colour",
+	Family.SIZE: "Size",
+	Family.PROPERTY: "Property",
 }
 const FAMILY_EXAMPLES := {
+	Family.POSITION: "Anima.on(card).position(card.position + Vector2(60, -40), 0.4)",
+	Family.POSITION_X: "Anima.on(card).position_x(card.position.x + 60, 0.4)",
+	Family.POSITION_Y: "Anima.on(card).position_y(card.position.y - 40, 0.4)",
 	Family.MOVE_BY: "Anima.on(card).move_by(Vector2(60, 0), 0.4)",
 	Family.SCALE: "Anima.on(card).scale(Vector2(1.3, 1.3), 0.4)",
+	Family.SCALE_BY: "Anima.on(card).scale_by(Vector2(-0.2, -0.2), 0.4)",
 	Family.ROTATION: "Anima.on(card).rotation(0.35, 0.4)",
+	Family.ROTATE_BY: "Anima.on(card).rotate_by(-0.35, 0.4)",
 	Family.OPACITY: "Anima.on(card).opacity(0.2, 0.4)",
 	Family.COLOR: "Anima.on(card).color(Color(1.0, 0.4, 0.6), 0.4)",
+	Family.SIZE: "Anima.on(card).size(Vector2(280, 280), 0.4)",
+	Family.PROPERTY: "Anima.on(card).property(NodePath(\"modulate:b\"), 0.5, 0.4)",
 }
-const SELECTOR_BUTTON := preload("res://examples/shared/components/selector_button.tscn")
+const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
 ## Peak alpha of the stage's background glow — deliberately well below
 ## Card.GLOW_PEAK_ALPHA so it never competes with the animating card.
@@ -26,17 +48,27 @@ const GLOW_ALPHA := 0.08
 @onready var _selector: SelectorDock = %Selector
 @onready var _example_line: Label = %ExampleLine
 @onready var _card: Card = %Card
+@onready var _card_center: Control = %CardCenter
 @onready var _glow: TextureRect = %Glow
 @onready var _controls: PlaybackControls = %PlaybackControls
 
 var _selected_family: Family = Family.MOVE_BY
 var _active_playback: AnimaPlayback = null
-var _base_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	super._ready()
 	_style_glow()
-	_base_position = _card.position
+
+	# CardCenter is a plain Control, not a CenterContainer: a CenterContainer
+	# re-asserts its own centering on every layout pass, fighting the
+	# convenience motion's direct writes to Card.position — a Card that
+	# looked centred on the first play would jump back to the container's
+	# top-left corner from underneath a later one. Centring here once (and
+	# again only when either box's actual size changes) leaves `position`
+	# fully owned by whichever motion is currently animating it in between.
+	_card_center.resized.connect(_recenter_card)
+	_card.resized.connect(_recenter_card)
+	_recenter_card()
 
 	for family in FAMILY_ORDER:
 		var button: SelectorButton = SELECTOR_BUTTON.instantiate()
@@ -77,23 +109,41 @@ func reverse() -> void:
 	_active_playback.reverse()
 
 func _reset_card() -> void:
-	_card.position = _base_position
+	_card.size = _card.custom_minimum_size
+	_recenter_card()
 	_card.scale = Vector2.ONE
 	_card.rotation = 0.0
 	_card.modulate = Color.WHITE
 
+func _recenter_card() -> void:
+	_card.position = (_card_center.size - _card.size) / 2.0
+
 func _build_motion() -> AnimaPropertyMotion:
 	match _selected_family:
+		Family.POSITION:
+			return Anima.on(_card).position(_card.position + Vector2(60.0, -40.0), 0.4)
+		Family.POSITION_X:
+			return Anima.on(_card).position_x(_card.position.x + 60.0, 0.4)
+		Family.POSITION_Y:
+			return Anima.on(_card).position_y(_card.position.y - 40.0, 0.4)
 		Family.MOVE_BY:
 			return Anima.on(_card).move_by(Vector2(60.0, 0.0), 0.4)
 		Family.SCALE:
 			return Anima.on(_card).scale(Vector2(1.3, 1.3), 0.4)
+		Family.SCALE_BY:
+			return Anima.on(_card).scale_by(Vector2(-0.2, -0.2), 0.4)
 		Family.ROTATION:
 			return Anima.on(_card).rotation(0.35, 0.4)
+		Family.ROTATE_BY:
+			return Anima.on(_card).rotate_by(-0.35, 0.4)
 		Family.OPACITY:
 			return Anima.on(_card).opacity(0.2, 0.4)
-		_:
+		Family.COLOR:
 			return Anima.on(_card).color(Color(1.0, 0.4, 0.6), 0.4)
+		Family.SIZE:
+			return Anima.on(_card).size(Vector2(280.0, 280.0), 0.4)
+		_:
+			return Anima.on(_card).property(NodePath("modulate:b"), 0.5, 0.4)
 
 ## Restrained depth behind the card — design-brief.md §Component guide
 ## "Content stage", the same treatment `composition_playground.gd` uses.

@@ -1,10 +1,10 @@
 extends "res://addons/gut/test.gd"
 
 func _make_dock(count: int) -> SelectorDock:
-	var dock: SelectorDock = preload("res://examples/shared/components/selector_dock.tscn").instantiate()
+	var dock: SelectorDock = preload("res://examples/playground/shared/components/selector_dock.tscn").instantiate()
 	add_child_autofree(dock)
 	for i in range(count):
-		var button: SelectorButton = preload("res://examples/shared/components/selector_button.tscn").instantiate()
+		var button: SelectorButton = preload("res://examples/playground/shared/components/selector_button.tscn").instantiate()
 		button.text = "Item %d" % i
 		dock.add_item(button)
 	return dock

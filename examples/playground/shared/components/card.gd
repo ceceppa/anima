@@ -3,7 +3,7 @@ extends PanelContainer
 
 const ATLAS_COLUMNS := 4
 const ATLAS_CELL_SIZE := Vector2(384, 341)
-const CARD_ATLAS := preload("res://examples/images/cards.jpg")
+const CARD_ATLAS := preload("res://examples/playground/images/cards.jpg")
 const BORDER_START := Color(0.117647, 0.160784, 0.231373, 1.0)
 const BORDER_END := Color(0.176471, 0.831373, 0.74902, 1.0)
 const DIM_ALPHA := 0.5

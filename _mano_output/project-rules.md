@@ -207,32 +207,70 @@ Use Godot's `[ClassName]`, `[method Class.name]`, and `[param name]` reference s
 - Include Determinism, Performance notes, Reduced motion, or Interruption behaviour only when the API has that behaviour.
 - Generation tooling and the Hugo pipeline are defined by `_mano_output/tech-spec.md`; do not add a second documentation format inline.
 
+**What:** Every script added under `addons/anima/editor/` ships with a companion usage guide at `docs/content/docs/guides/<slug>/index.md` — under the dedicated `Guides` section, not nested inside `anima/` — written in the same story that adds the script. Unlike the generated API pages above, this is hand-written prose covering what the tool is for and how to use it from inside the Godot editor: where the panel/dock lives, what each control does, and a short numbered walkthrough. It documents editor workflow, not public members, so it is not the "second explanation" the rule above warns against. If a step is clearer with a screenshot, embed an `![alt](placeholder.png)` reference to an image co-located in the same guide folder (Hugo leaf-bundle style) and add an HTML comment directly below it stating exactly what to capture — panel name, editor state, what must be visible. Capture the screenshot directly when able to drive the Godot editor UI; otherwise leave the placeholder and comment for the user to capture manually.
+
+**Why:** An editor tool only reads as a shipped feature once someone can find and drive it; the generated class page documents its public API, not the dock someone opens in the Godot editor or what pressing each control does. Guides live in their own top-level `Guides` section — sibling to `Anima Addon`, with its own `docs/content/docs/guides/_index.md` menu entry (`weight`, `title`, `icon` front matter, matching `anima/_index.md`'s pattern) — because a workflow walkthrough and a generated API reference are different kinds of page a reader browses separately, not a subsection of the class reference.
+
+**Pattern:**
+```
+docs/content/docs/guides/motion-composer/
+  index.md
+  panel-default.png          # placeholder until captured
+```
+```md
+---
+title: "Motion Composer"
+---
+
+## What it does
+...
+
+## How to use it
+1. Select a node with an `AnimaMotion` resource assigned.
+2. Open the **Motion Composer** dock from the bottom panel.
+
+![Motion Composer default state](panel-default.png)
+<!-- PLACEHOLDER: screenshot needed — Motion Composer dock, docked open, a single AnimaPropertyMotion selected, default/empty state -->
+```
+
 ## Example Scenes
 
-**What:** UI-facing example/demo scenes (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (artwork cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/shared/`, not duplicated per example scene.
+**What:** `examples/` splits by what a scene demonstrates. A scene an author *runs* to see the runtime motion API in action — driven by `Anima.play()`, restart/reverse controls, the shared theme and components below — lives under `examples/playground/`. A scene that showcases an `addons/anima/editor/` tool itself — something an author *opens in the Godot editor* to see a panel like the Motion Composer at work, not something that runs as a game — lives under `examples/editor/`.
+
+**Why:** These are two different audiences and two different ways of consuming the example: playing a scene versus opening it and driving the editor around it. Keeping them in separate top-level folders keeps `examples/playground/`'s shared runtime chrome (theme, `Card`, `PlaybackControls`, `SelectorDock`, …) from being assumed by editor-tooling showcases that don't need it.
+
+**Pattern:**
+```
+examples/
+  playground/     # runtime motion scenes — Anima.play(), restart/reverse controls
+  editor/         # showcase scenes for addons/anima/editor/ tools — opened in the Godot editor, not run
+```
+
+**What:** UI-facing example/demo scenes under `examples/playground/` (starting with this phase's composition example) use a custom Godot `Theme` resource applied at the scene root — never the engine's default, unthemed control styling. Reusable visual pieces (artwork cards, playback control bars, tab strips, and similar) are built as their own scenes/scripts under `examples/playground/shared/`, not duplicated per example scene.
 
 **Why:** The design brief calls for a custom, dark, luminous scene rather than stock Godot widget styling; shared, themed components keep example scenes consistent.
 
 **Pattern:**
 ```
 examples/
-  shared/
-    theme/
-      anima_examples.tres       # custom Theme resource, applied at each example scene's root
-    components/
-      example_header.tscn       # icon + title + subtitle (+ optional counter), shared by every example scene
-      example_header.gd
-      card.tscn                 # shared artwork card animated by Anima
-      card.gd
-      playback_controls.tscn    # restart/play-pause/speed, etc.
-      playback_controls.gd
-      selector_dock.tscn        # owns the shared background + the sliding selected-item indicator
-      selector_dock.gd
-      selector_button.tscn      # one item inside a SelectorDock — label colour/weight only, no own fill
-      selector_button.gd
-  images/
-    cards.jpg                  # 4 × 3 Card artwork atlas
-  composition_playground.tscn   # this phase's example scene, composed from the shared components above
+  playground/
+    shared/
+      theme/
+        anima_examples.tres       # custom Theme resource, applied at each example scene's root
+      components/
+        example_header.tscn       # icon + title + subtitle (+ optional counter), shared by every example scene
+        example_header.gd
+        card.tscn                 # shared artwork card animated by Anima
+        card.gd
+        playback_controls.tscn    # restart/play-pause/speed, etc.
+        playback_controls.gd
+        selector_dock.tscn        # owns the shared background + the sliding selected-item indicator
+        selector_dock.gd
+        selector_button.tscn      # one item inside a SelectorDock — label colour/weight only, no own fill
+        selector_button.gd
+    images/
+      cards.jpg                  # 4 × 3 Card artwork atlas
+    composition_playground.tscn   # this phase's example scene, composed from the shared components above
 ```
 
 **What:** Every runnable playground scene extends the shared `ExamplePlayground`
@@ -245,14 +283,14 @@ are added.
 
 **Pattern:**
 ```gdscript
-# examples/shared/components/example_playground.gd
+# examples/playground/shared/components/example_playground.gd
 class_name ExamplePlayground
 extends Control
 
 func _ready() -> void:
     apply_hidpi_scale()
 
-# examples/a_playground.gd
+# examples/playground/a_playground.gd
 extends ExamplePlayground
 
 func _ready() -> void:
@@ -266,18 +304,18 @@ func _ready() -> void:
 
 **Pattern:**
 ```
-# examples/shared/components/card.gd
+# examples/playground/shared/components/card.gd
 class_name Card
 extends PanelContainer
 ```
 
-**What:** `Card` draws from the single `examples/images/cards.jpg` atlas through Godot's Region feature. The atlas is 1536×1023 pixels, arranged as four columns by three rows; every card region is 384×341 pixels. Scene authoring selects a zero-based cell index in row-major order and derives the Region offset from that index. The component has no state enum or letter-label fallback. `set_progress(t)` remains the only runtime visual driver, animating the frame's border, glow, opacity, and scale.
+**What:** `Card` draws from the single `examples/playground/images/cards.jpg` atlas through Godot's Region feature. The atlas is 1536×1023 pixels, arranged as four columns by three rows; every card region is 384×341 pixels. Scene authoring selects a zero-based cell index in row-major order and derives the Region offset from that index. The component has no state enum or letter-label fallback. `set_progress(t)` remains the only runtime visual driver, animating the frame's border, glow, opacity, and scale.
 
 **Why:** One atlas keeps related artwork together and makes every Card selection deterministic. Fixed regions prevent accidental cropping drift or stretched art across examples.
 
 **Pattern:**
 ```
-# examples/shared/components/card.gd
+# examples/playground/shared/components/card.gd
 class_name Card
 extends PanelContainer
 
@@ -289,13 +327,13 @@ func set_progress(t: float) -> void:
     ...
 ```
 
-**What:** A toggle/segment-style item inside a selector (like the composition-type selector) is built from the shared `SelectorButton` component under `examples/shared/components/` — never an ad-hoc `StyleBoxFlat` constructed inline in a scene script. Its content margins — `24px` left/right, `12px` top/bottom, `12px` corner radius — are the one canonical button-padding value for every button in an example scene, toggle or not; the shared theme's own Button style (`anima_examples.tres`) must match it.
+**What:** A toggle/segment-style item inside a selector (like the composition-type selector) is built from the shared `SelectorButton` component under `examples/playground/shared/components/` — never an ad-hoc `StyleBoxFlat` constructed inline in a scene script. Its content margins — `24px` left/right, `12px` top/bottom, `12px` corner radius — are the one canonical button-padding value for every button in an example scene, toggle or not; the shared theme's own Button style (`anima_examples.tres`) must match it.
 
 **Why:** This padding value existed only once, inline, in a scene script's ad-hoc `StyleBoxFlat` — it silently diverged from the shared theme's own Button style, which had no padding at all, and the mismatch went unnoticed until a real button visibly had no left/right margin. Pulling it into one shared component prevents that same drift on the next button a future example scene adds.
 
 **Pattern:**
 ```
-# examples/shared/components/selector_button.gd
+# examples/playground/shared/components/selector_button.gd
 class_name SelectorButton
 extends Button
 
@@ -309,7 +347,7 @@ func set_selected(selected: bool) -> void:
 
 **Pattern:**
 ```
-# examples/shared/components/selector_dock.gd
+# examples/playground/shared/components/selector_dock.gd
 class_name SelectorDock
 extends PanelContainer
 
@@ -317,13 +355,13 @@ func select(index: int) -> void:
     ...  # animates the shared indicator to the SelectorButton at `index`
 ```
 
-**What:** Every example scene's top-level header is the shared `ExampleHeader` component under `examples/shared/components/` (icon + title + subtitle) — never a scene-specific title `Label` built inline. The per-type counter lives on the stage's own type-title row (it changes as the user switches composition type), not on `ExampleHeader`.
+**What:** Every example scene's top-level header is the shared `ExampleHeader` component under `examples/playground/shared/components/` (icon + title + subtitle) — never a scene-specific title `Label` built inline. The per-type counter lives on the stage's own type-title row (it changes as the user switches composition type), not on `ExampleHeader`.
 
 **Why:** `design-brief.md` scopes the header as reusable across every future example scene; building it once now, the same way `Card` and `SelectorButton` were extracted, prevents it being reimplemented (and drifting) per scene later.
 
 **Pattern:**
 ```
-# examples/shared/components/example_header.gd
+# examples/playground/shared/components/example_header.gd
 class_name ExampleHeader
 extends PanelContainer
 
@@ -339,7 +377,7 @@ See **Editor-Authored Content** below for why these are exports, not setter meth
 
 **Pattern:**
 ```
-# examples/shared/components/example_header.gd
+# examples/playground/shared/components/example_header.gd
 @export var title: String = "":
     set(value):
         title = value
@@ -347,7 +385,7 @@ See **Editor-Authored Content** below for why these are exports, not setter meth
             _title.text = value
 ```
 ```
-# examples/composition_playground.tscn — authored in the editor Inspector,
+# examples/playground/composition_playground.tscn — authored in the editor Inspector,
 # not assigned in composition_playground.gd
 [node name="Header" parent="..." instance=ExtResource("...")]
 title = "Composition"

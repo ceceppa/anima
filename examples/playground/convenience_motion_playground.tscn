@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://euc1rn18g8i2"]
 
-[ext_resource type="Script" uid="uid://co411jj5y51ok" path="res://examples/convenience_motion_playground.gd" id="1"]
-[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/shared/theme/anima_examples.tres" id="2"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/example_header.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/shared/components/card.tscn" id="4"]
-[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/shared/components/selector_dock.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://examples/shared/components/playback_controls.tscn" id="6"]
+[ext_resource type="Script" uid="uid://co411jj5y51ok" path="res://examples/playground/convenience_motion_playground.gd" id="1"]
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="2"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/playground/shared/components/card.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lllc5"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mwbe8"]
 content_margin_left = 32.0
 content_margin_top = 24.0
 content_margin_right = 32.0
@@ -71,7 +71,7 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=368921809 instance=ExtResource("3")]
-theme_override_styles/panel = SubResource("StyleBoxFlat_lllc5")
+theme_override_styles/panel = SubResource("StyleBoxFlat_mwbe8")
 title = "Convenience Motion"
 subtitle = "Author.on() a common change by name, then compose, reverse, and replay it like any other motion."
 icon = "✦"
@@ -106,7 +106,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CardCenter" type="CenterContainer" parent="Margin/Content/Stage/StageContent/CardStage" unique_id=2103860898]
+[node name="CardCenter" type="Control" parent="Margin/Content/Stage/StageContent/CardStage" unique_id=2103860898]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -116,7 +117,7 @@ grow_vertical = 2
 
 [node name="Card" parent="Margin/Content/Stage/StageContent/CardStage/CardCenter" unique_id=538402453 instance=ExtResource("4")]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
 
 [node name="DockMargin" type="MarginContainer" parent="Margin/Content/Stage/StageContent" unique_id=2105943053]
 layout_mode = 2

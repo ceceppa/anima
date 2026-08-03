@@ -1,7 +1,7 @@
 extends "res://addons/gut/test.gd"
 
 func _make_button() -> SelectorButton:
-	var button: SelectorButton = preload("res://examples/shared/components/selector_button.tscn").instantiate()
+	var button: SelectorButton = preload("res://examples/playground/shared/components/selector_button.tscn").instantiate()
 	add_child_autofree(button)
 	return button
 

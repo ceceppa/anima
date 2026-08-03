@@ -182,3 +182,36 @@ No feedback logged.
 ### What we learned
 
 - A shared playground foundation only provides a consistent experience after existing demos are deliberately migrated to it.
+
+---
+
+## Phase 7 Review — 2026-08-04
+
+### What worked
+
+- The convenience layer (`Anima.on()` / `Anima.item()`) shipped with full parity to canonical motions across Composer editing, native compilation, reversal, and interruption, confirmed by dedicated parity tests.
+- Grid motion propagation covers all 13 planned distance formulas, including a reworked boundary-peel spiral that matches the grid's own rectangle shape after user feedback during hands-on testing.
+- Both playground showcases (target-bound and grid) plus a written Motion Composer guide give a developer more than one way to see the new API working.
+
+### What didn't
+
+- The Motion Composer editor dock, while functional and now documented, still wasn't discoverable enough on its own — the user needed a written guide plus, per this review, a hands-on `examples/editor/` showcase before feeling oriented in it.
+- The formula/order selectors and the Card recentering behaviour needed several rounds of live UI fixes (selector wrapping, spiral shape, sliding-indicator parity, `CenterContainer`-vs-motion conflict) that only surfaced once the user actually ran the playgrounds in the editor.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| Grid motion defaults to `FROM_TOP`; clockwise and anticlockwise start at 12 o'clock and use the chosen point as their centre. | Existing expectations may require a different default or angular origin. | Confirmed by user review. | confirmed |
+| The selected Grid formulas are sufficient for the first Grid motion release. | Further traversal types could require a change to the public Grid authoring surface. | Confirmed by user review. | confirmed |
+
+### Feedback that changes future scope
+
+- Anima v1's easing curve set (34 kinds) is significantly larger than what `AnimaEase.Kind` covers today — restoring parity is now backlogged.
+- Anima v1 supported a motion pivot point (`ANIMA.PIVOT`, 9 anchor positions) for scale/rotation transforms; Anima 2 has no equivalent yet — now backlogged as a new capability.
+- A hands-on `examples/editor/` showcase for the `addons/anima/editor/` tooling is backlogged; the written guide alone hasn't been enough for the user to feel oriented in the Motion Composer dock.
+
+### What we learned
+
+- A written usage guide for an editor tool is necessary but not sufficient — the user still wanted a runnable, hands-on example after reading it, suggesting editor-tooling discoverability needs both a guide and something to click through.
+- Comparing the v2 rebuild against the original v1 feature set surfaces real gaps (easing curves, pivot control) that a phase scoped purely around "convenience API + grid motion" wouldn't otherwise catch.
