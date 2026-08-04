@@ -336,6 +336,7 @@ function scanSpec(projectRoot) {
     status: "READY",
     owner: routing.owner,
     ownerSource: routing.ownerSource,
+    runMode: routing.runMode,
     phase,
     phaseId: ref ? ref.id : null,
     phaseDir: ref ? ref.relativeDir : null,
@@ -363,6 +364,7 @@ function scanUi(projectRoot) {
     projectRoot,
     status: "BLOCKED",
     owner: projectState.owner,
+    runMode: projectState.runMode,
     phase,
     phaseId: projectState.phaseId,
     phaseDir: projectState.phaseDir,
@@ -466,6 +468,8 @@ function scan(projectRoot) {
     owner: null,
     ownerSource: null,
     ownerMode: "legacy",
+    runMode: "manual",
+    runModeSource: null,
     otherOwners: [],
     phase: null,            // latest phase number, or null
     phaseId: null,
@@ -490,6 +494,8 @@ function scan(projectRoot) {
   s.owner = routing.owner;
   s.ownerSource = routing.ownerSource;
   s.ownerMode = routing.mode;
+  s.runMode = routing.runMode;
+  s.runModeSource = routing.runModeSource;
   s.otherOwners = routing.otherOwners;
 
   if (!s.outputExists) return finalize(s);
@@ -664,6 +670,7 @@ function renderDecision(s) {
   L.push(`DECISION: ${s.decision}`);
   if (s.next) L.push(`NEXT: ${s.next}`);
   L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
+  L.push(`MODE: ${s.runMode}`);
   if (s.targetPhase != null) {
     L.push(`PHASE: ${s.targetPhase}`);
     L.push(`PHASE_ID: ${s.targetPhaseId}`);
@@ -777,6 +784,7 @@ function renderSpec(spec) {
   const L = ["--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
   L.push(`STATUS: ${spec.status}`);
   L.push(`OWNER: ${spec.owner || "none (legacy phase-N mode)"}`);
+  L.push(`MODE: ${spec.runMode}`);
   L.push(`PHASE: ${spec.phase === null ? "none" : spec.phase}`);
   L.push(`PHASE_ID: ${spec.phaseId || "none"}`);
   L.push(`PHASE_DIR: ${spec.phaseDir || "missing"}`);
@@ -826,6 +834,7 @@ function renderUi(ui) {
   const L = ["--- UI INPUT (from the state script — do not scan phase folders) ---"];
   L.push(`STATUS: ${ui.status}`);
   L.push(`OWNER: ${ui.owner || "none (legacy phase-N mode)"}`);
+  L.push(`MODE: ${ui.runMode}`);
   L.push(`PHASE: ${ui.phase === null ? "none" : ui.phase}`);
   L.push(`PHASE_ID: ${ui.phaseId || "none"}`);
   L.push(`PHASE_DIR: ${ui.phaseDir || "missing"}`);
@@ -849,6 +858,7 @@ function renderCurrent(s) {
   L.push(`STATUS: ${s.phaseRef ? "READY" : "NO_PHASE"}`);
   L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
   L.push(`OWNER_MODE: ${s.ownerMode}`);
+  L.push(`MODE: ${s.runMode}`);
   L.push(`PHASE: ${s.phase === null ? "none" : s.phase}`);
   L.push(`PHASE_ID: ${s.phaseId || "none"}`);
   L.push(`PHASE_DIR: ${s.phaseDir || "missing"}`);
@@ -870,6 +880,7 @@ function renderCurrent(s) {
 function renderNext(s) {
   const L = [];
   L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
+  L.push(`MODE: ${s.runMode}`);
 
   // Nothing to implement: no project / no phase folder.
   if (!s.outputExists || s.phase === null) {

@@ -27,8 +27,11 @@ Examples:
 - `mano review` → read `_mano/skills/review.md` and follow that flow
 - `mano dev` → implement the next pending story; read `_mano/skills/dev.md` and follow the "Implementing a story" contract below
 - `mano continue` → read `_mano/workflow.md` and determine the next useful Mano action
+- `mano mode [auto|manual]` → read `_mano/skills/mode.md`; show or set whether finished actions chain automatically
 
 Note: `mano dev` is the one Mano command that produces code. Every other command above is planning only. `mano dev` runs the "Implementing a story" contract in this file; `_mano/skills/dev.md` is a thin pointer back here.
+
+**Run mode.** Every `state.js` projection prints `MODE: manual|auto`. In `manual` (the default) each command hands back when it finishes. In `auto`, after the human has approved a phase scope, each finished action runs the next one automatically through to `mano dev yolo` — but it pauses for **any** question (a `❓ Decide:`, a clarifying question, an ambiguous next action, hook findings, a gate or blocker) and **never runs `mano review` or scopes a new phase**. Auto mode changes who types the next command; it never changes what a skill may write or which decisions are the human's. The full contract is `_mano/workflow.md` → **Run Mode: manual and auto**.
 
 If a platform skill named `mano` is not available, that is not an error. Continue by using the local `_mano/` files.
 

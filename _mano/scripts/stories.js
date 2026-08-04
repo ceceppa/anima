@@ -149,7 +149,11 @@ function rowStoryNum(line) {
 }
 
 function formatRow(num, title, file, status) {
-  return `| ${num} | ${title} | ${file} | ${status} |`;
+  const cell = (v) => String(v)
+    .replace(/\r?\n/g, " ")
+    .replace(/\|/g, " / ")
+    .trim();
+  return `| ${cell(num)} | ${cell(title)} | ${cell(file)} | ${cell(status)} |`;
 }
 
 // Sort key so 3 < 3a < 3b < 4 < 10.

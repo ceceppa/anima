@@ -246,11 +246,26 @@ function buildWithItems(existing, blocks) {
     return `# Backlog\n\n${ITEMS_HEADING}\n\n${body}\n`;
   }
   const trimmed = existing.replace(/\s+$/, "");
-  if (!new RegExp(`^${ITEMS_HEADING}\\s*$`, "m").test(trimmed)) {
+  const lines = trimmed.split("\n");
+
+  const itemsIdx = lines.findIndex((l) => new RegExp(`^${ITEMS_HEADING}\\s*$`, "i").test(l));
+  if (itemsIdx === -1) {
     // File exists (e.g. only Core Product Principles so far) but no Items section.
     return `${trimmed}\n\n${ITEMS_HEADING}\n\n${body}\n`;
   }
-  return `${trimmed}\n\n${body}\n`;
+
+  // Insert before the next top-level section after "## Items" (or at EOF).
+  let insertAt = lines.length;
+  for (let i = itemsIdx + 1; i < lines.length; i++) {
+    if (/^##\s+/.test(lines[i])) {
+      insertAt = i;
+      break;
+    }
+  }
+
+  const before = lines.slice(0, insertAt).join("\n").replace(/\s+$/, "");
+  const after = lines.slice(insertAt).join("\n").replace(/^\s+/, "");
+  return after ? `${before}\n\n${body}\n\n${after}\n` : `${before}\n\n${body}\n`;
 }
 
 function cmdAdd(args) {
