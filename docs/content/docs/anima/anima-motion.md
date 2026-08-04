@@ -25,6 +25,19 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 Which sibling instant [member delay] is measured from, inside an [AnimaSequence].
 
+### CompletionValuePolicy
+
+The value left on the target once a playback reaches [constant
+AnimaPlayback.State.FINISHED] — whether by playing to the end naturally or
+via [method AnimaPlayback.complete]. Unrelated to [constant
+AnimaGroupMotion.CompletionPolicy] / [constant AnimaParallel.CompletionPolicy],
+which decide *when* a composite counts as done, never what value is left
+behind — see tech-spec.md's Key technical decisions.
+
+### CancellationValuePolicy
+
+The value left on the target when [method AnimaPlayback.cancel] is called.
+
 ## Properties and constants
 
 ### display_name
@@ -46,7 +59,23 @@ Which sibling instant [member delay] is measured from.
 
 ### speed
 
-Playback speed multiplier.
+Playback speed multiplier applied regardless of direction — pairs with
+[member forward_speed]/[member reverse_speed], which apply only for their
+matching direction. Set via [method with_speed].
+
+### forward_speed
+
+Multiplier applied only while this motion plays forward (root-level
+playback only — see tech-spec.md §Speed, direction, and reduced motion).
+Composes with [member speed] and [AnimaPlayback.speed_scale].
+
+### reverse_speed
+
+Multiplier applied only while this motion plays in reverse — via [method
+AnimaPlayback.reverse] or [method Anima.play_backwards] — instead of
+[member forward_speed]. Lets a motion's structural reverse (e.g. a closing
+animation) play at a different pace than its forward run without
+duplicating the motion or hand-adjusting durations.
 
 ### tags
 
@@ -65,6 +94,16 @@ motion begins playing — including a fresh reversed run (see [method on_started
 
 Optional callback [AnimaPlayback] invokes exactly once, immediately before
 it reports a successful finish — never on cancellation (see [method on_completed]).
+
+### completion_value_policy
+
+The value left behind once this motion's playback finishes — natural finish
+or [method AnimaPlayback.complete]. See [enum CompletionValuePolicy].
+
+### cancellation_value_policy
+
+The value left behind when this motion's playback is cancelled. See
+[enum CancellationValuePolicy].
 
 ## Methods
 

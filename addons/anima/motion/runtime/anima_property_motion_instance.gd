@@ -131,16 +131,49 @@ func build_reversed() -> AnimaMotion:
 	reversed.duration = property_motion.duration
 	reversed.ease = property_motion.ease
 	reversed.speed = property_motion.speed
+	reversed.forward_speed = property_motion.forward_speed
+	reversed.reverse_speed = property_motion.reverse_speed
 	reversed.delay = property_motion.delay
 	reversed.delay_basis = property_motion.delay_basis
 	reversed.on_started_callback = property_motion.on_started_callback
 	reversed.on_completed_callback = property_motion.on_completed_callback
 	return reversed
 
+## Restores [param target]'s property to the value captured when this
+## instance began advancing. A no-op if nothing has been captured yet.
+func restore_initial(target: Node) -> void:
+	if not _from_value_captured:
+		return
+	var property_motion := motion as AnimaPropertyMotion
+	target.set_indexed(property_motion.target_property, _from_value)
+
+## Applies this motion's authored end value to [param target] immediately —
+## capturing a start value first (a zero-length advance) if nothing has been
+## captured yet. A SPRING-eased motion is force-settled to its spring target
+## instead, since it has no fixed to-value curve.
+func force_complete(target: Node) -> void:
+	if not _from_value_captured:
+		advance(target, 0.0)
+
+	var property_motion := motion as AnimaPropertyMotion
+	if property_motion.ease.kind == AnimaEase.Kind.SPRING:
+		_spring_value = _spring_target
+		_spring_velocity = 0.0
+		target.set_indexed(property_motion.target_property, _spring_value)
+		return
+
+	_elapsed = _resolved_duration
+	target.set_indexed(property_motion.target_property, _to_value)
+
 ## Advances a SPRING-eased motion one physics step (semi-implicit Euler on a
 ## damped harmonic oscillator) instead of evaluating a normalized-time curve.
+## Both the elapsed clock and the simulation step itself scale by [member
+## AnimaMotion.speed] — previously only elapsed did, so speed/speed_scale
+## changed when a spring was considered settled without changing how fast it
+## visibly moved (tech-spec.md §Speed, direction, and reduced motion).
 func _advance_spring(target: Node, property_motion: AnimaPropertyMotion, delta: float) -> bool:
 	var easing := property_motion.ease
+	var scaled_delta := delta * motion.speed
 
 	if not _spring_initialized:
 		_spring_value = float(_from_value)
@@ -148,7 +181,7 @@ func _advance_spring(target: Node, property_motion: AnimaPropertyMotion, delta: 
 		_spring_target = float(_to_value)
 		_spring_initialized = true
 
-	_elapsed += delta * motion.speed
+	_elapsed += scaled_delta
 
 	var stiffness_damping := easing.spring_stiffness_and_damping()
 	var stiffness: float = stiffness_damping.x
@@ -156,8 +189,8 @@ func _advance_spring(target: Node, property_motion: AnimaPropertyMotion, delta: 
 	var mass: float = maxf(easing.spring_mass, 0.001)
 
 	var acceleration: float = (stiffness * (_spring_target - _spring_value) - damping * _spring_velocity) / mass
-	_spring_velocity += acceleration * delta
-	_spring_value += _spring_velocity * delta
+	_spring_velocity += acceleration * scaled_delta
+	_spring_value += _spring_velocity * scaled_delta
 
 	target.set_indexed(property_motion.target_property, _spring_value)
 

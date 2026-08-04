@@ -2173,7 +2173,7 @@
 - **Context:**
   cancel() stops without claiming completion (keeps current visual values, cancels pending children, emits cancellation not completion, releases ownership). complete() reaches the valid final state (applies final values, resolves cleanup, processes markers, emits completion once). revert() restores the state captured before playback affected the target. reverse() plays the current execution backwards from its current progress. Reverse and revert are explicitly not equivalent.
   PRD5.md §10.1.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Completion and cancellation behaviour policies
 - **Type:** feature
@@ -2181,7 +2181,7 @@
 - **Context:**
   Completion: KEEP_FINAL / RESTORE_INITIAL. Cancellation: KEEP_CURRENT (recommended default) / RESTORE_INITIAL / COMPLETE.
   PRD5.md §10.2-§10.3.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Pre-animation snapshots
 - **Type:** feature
@@ -2189,7 +2189,7 @@
 - **Context:**
   Snapshots may capture property values, target identity, layout rectangle, parent, child index, visibility, focus state, and temporary presentation state. Used for reverse playback, dynamic-value reversal, revert(), layout transitions, editor preview, reduced-motion completion, and interrupted transitions.
   PRD5.md §10.4.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Progress-based playback evaluation and seeking
 - **Type:** feature
@@ -2221,7 +2221,7 @@
 - **Context:**
   Every motion and playback may define forward_speed/reverse_speed (default 1.0), e.g. an opening motion at 1.0x and its structural reverse (closing) at 1.5x, without duplicating the motion or hand-adjusting durations. A playback may also set a general .speed() multiplier affecting both directions.
   PRD5.md §13.1-§13.3.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Effective speed calculation model
 - **Type:** feature
@@ -2229,7 +2229,7 @@
 - **Context:**
   effective speed = scope speed x playback speed x parent motion speed x local motion speed x direction speed. Authored duration itself never changes — speed is a playback multiplier, not a destructive edit to the motion definition. Implementations may simplify how many levels are exposed initially, but the model stays consistent.
   PRD5.md §13.4-§13.5.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Speed and direction kept as separate concepts
 - **Type:** feature
@@ -2237,7 +2237,7 @@
 - **Context:**
   Negative speed must never be used to reverse playback (speed values must stay greater than zero); direction is switched via reverse(), pacing via set_speed(). Mid-flight direction changes preserve current progress exactly, change direction and reverse speed immediately, don't snap values, don't re-resolve dynamic values, and reschedule pending structural events backwards while keeping execution history valid.
   PRD5.md §13.6-§13.7.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Group speed scaling
 - **Type:** feature
@@ -2245,7 +2245,7 @@
 - **Context:**
   A group's speed multiplier scales its entire generated schedule together — item-motion durations, stagger intervals, sequential gaps, delays, marker timing, and generated start offsets — as one coherent schedule, not independently. Target order still follows the group's reverse-order policy.
   PRD5.md §13.8.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Nested speed multiplier composition
 - **Type:** feature
@@ -2253,7 +2253,7 @@
 - **Context:**
   Speed multipliers at different levels (item motion, group, playback) compose multiplicatively (e.g. 1.2x item x 1.5x group = 1.8x effective) — the Motion Inspector must show how the final value was produced.
   PRD5.md §13.9.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Spring simulation speed scaling
 - **Type:** feature
@@ -2261,7 +2261,7 @@
 - **Context:**
   Timeline-based easing scales directly through time; physical springs instead scale simulation delta (frame delta x effective speed) to preserve authored spring characteristics while changing real-time duration. Physical retargeting (retarget_to_start()) stays distinct from exact timeline reversal (reverse_timeline()).
   PRD5.md §13.10.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Speed effect on markers
 - **Type:** feature
@@ -2277,7 +2277,7 @@
 - **Context:**
   evaluated delta = supplied manual delta x effective speed.
   PRD5.md §13.12.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Reduced-motion speed override
 - **Type:** feature
@@ -2285,7 +2285,7 @@
 - **Context:**
   Reduced-motion policy may override speed by completing immediately, selecting a simpler motion, removing stagger, or applying a dedicated reduced-motion speed.
   PRD5.md §13.13.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Motion Composer and Inspector: speed tooling
 - **Type:** feature
@@ -2301,7 +2301,7 @@
 - **Context:**
   Recommended defaults: target freed -> cancel affected motion safely; playback root freed -> cancel whole playback; target hidden -> continue; scene tree paused -> follow selected clock; target reparented -> continue if references remain valid; layout target removed -> follow layout-exit policy.
   PRD5.md §14.1-§14.2.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Playback cleanup requirements on cancellation
 - **Type:** feature
@@ -2309,7 +2309,7 @@
 - **Context:**
   Cancellation must disconnect signals, release property ownership, stop pending callbacks, release layout overlays, clear runtime records, and emit exactly one terminal result.
   PRD5.md §14.3.
-- **Status:** backlog
+- **Status:** in-phase-11
 
 ### Live Motion Inspector
 - **Type:** feature
@@ -2839,13 +2839,6 @@
   Extends the Phase 8 Motion Composer entry point (Anima Inspector entry point for ordinary nodes) once shipped; deferred because this per-node behaviour system (AnimaBehaviour-equivalent) doesn't exist yet.
 - **Status:** backlog
 
-### Motion Composer attachment mechanism requires exposing a script property
-- **Type:** bug
-- **Source:** Phase 9 review
-- **Context:**
-  The Motion Composer's entry point only appears when a node's script exports an AnimaMotion-typed field (AnimaMotionFieldScanner/AnimaMotionInspectorPlugin). This was rejected as the product direction -- attaching a motion to a node must not require modifying that node's script. The intended mechanism is an 'Enable Anima' toggle stored via metadata, matching the already-backlogged 'Anima Inspector behaviour section' item, not an exported field.
-- **Status:** backlog
-
 ### Redirect Motion Composer work toward the full PRD vision
 - **Type:** refinement
 - **Source:** Phase 9 review
@@ -2900,4 +2893,19 @@
 - **Context:**
   User decision: no temporary Anima.Node() alias or migration API in code, to keep the codebase clean. Instead ship a migration guide (documentation) at the very end of the v2 rollout.
   Overrides the optional-alias suggestion inside "Anima V1 migration for the target-bound API"; that item's naming-migration content still stands, its alias option does not.
+- **Status:** backlog
+
+### Reverse vs play_backwards
+- **Type:** tech-debt
+- **Source:** User idea
+- **Context:**
+  One thing I noticed: V2 has `reverse` that reverse the animation, so if it hasn't been played it plays it, if has been played it reverse it.
+  V1 had `play_backwards` that actually played any given animation backwards. So I could define an animation for a component, if the component was already visible on scene load I could play the show animation but in reverse. The reverse does not let me do that tho. We either introduce backwards or reverse needs to alway play a animation in reverse. Let's discuss this first tho
+- **Status:** backlog
+
+### Demo selector
+- **Type:** feature
+- **Source:** User idea
+- **Context:**
+  To have a demo selector for the playground example added. It needs to have two "tabs": 2D and 3D
 - **Status:** backlog

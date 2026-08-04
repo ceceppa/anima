@@ -35,7 +35,7 @@ const GLOW_ALPHA := 0.08
 
 @onready var _selector: SelectorDock = %Selector
 @onready var _example_line: Label = %ExampleLine
-@onready var _card: Card3D = %Card
+@onready var _card: Node3D = %Card
 @onready var _glow: TextureRect = %Glow
 @onready var _controls: PlaybackControls = %PlaybackControls
 

@@ -102,6 +102,34 @@ func build_reversed_item_motions() -> Dictionary:
 				reversed_by_target[item.target] = reversed_motion
 	return reversed_by_target
 
+## Restores every started item's own captured initial value on its own
+## resolved target — [param _target] is ignored, the same way [method advance]'s
+## root only matters for resolution, which has already happened by the time
+## anything has started.
+func restore_initial(_target: Node) -> void:
+	for item in _items:
+		if item.started and item.instance != null:
+			item.instance.restore_initial(item.target)
+
+## Forces every resolved item to its own final state, regardless of [member
+## AnimaGroupMotion.completion_policy] — completing the group visually means
+## every item reaches its authored end state, not only the one item that
+## would otherwise decide completion.
+func force_complete(root: Node) -> void:
+	if not _resolved:
+		_resolve(root)
+	if _cancelled:
+		return
+
+	var group := motion as AnimaGroupMotion
+	for item in _items:
+		if not is_instance_valid(item.target):
+			continue
+		if not item.started:
+			_start_item(group, item)
+		item.instance.force_complete(item.target)
+		item.finished = true
+
 func _resolve(root: Node) -> void:
 	_resolved = true
 	var group := motion as AnimaGroupMotion

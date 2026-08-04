@@ -2,7 +2,9 @@
 
 ## Visual direction
 
-`v2_stuff/ex2.jpg` is a loose visual reference only: borrow its midnight background, restrained violet glow, contained stage, and clear control hierarchy. The Grid example keeps the already-agreed shared components and deliberately omits its rank badges, timeline, speed controls, and reduced-motion switch.
+`v2_stuff/ex2.jpg` is a loose visual reference only: borrow its midnight background, restrained violet glow, contained stage, and clear control hierarchy. The Grid example keeps the already-agreed shared components and still omits its own rank badges and timeline — those stay specific to the Grid stage visualization, not the shared control bar.
+
+**Phase 11 supersedes the earlier "no speed or reduced-motion controls" stance for the shared `PlaybackControls` bar.** That bar now needs to demonstrate `complete()`, `revert()`, a speed change, and the global reduced-motion flag end-to-end (see `phase-11/phase-brief.md` Exit Criteria). `v2_stuff/ex2.jpg`'s bottom transport bar is the concrete reference for this addition — its speed control and "Reduced motion" toggle are what's borrowed here (translated into this project's own component vocabulary below); its scrub slider and elapsed/total time readout are not, since progress-based seeking is explicitly a separate, not-yet-selected backlog item.
 
 ## Accessibility target
 
@@ -10,7 +12,7 @@ WCAG 2.1 AA. Every text pairing below meets the normal-text target unless explic
 
 ## Framework / component library
 
-This is a Godot scene. A custom Godot Theme is applied at the scene root; existing shared components remain the only visual building blocks: `ExampleHeader`, `Card`, `SelectorDock`, and `SelectorButton`. No new shared component is introduced by this brief.
+This is a Godot scene. A custom Godot Theme is applied at the scene root; shared components are the only visual building blocks: `ExampleHeader`, `Card`, `SelectorDock`, `SelectorButton`, and, as of Phase 11, `ToggleSwitch` (see Component guide) — no new component beyond that one.
 
 ## Colour palette
 
@@ -43,7 +45,10 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 - **Grid stage** — a wide `stage-bg` panel holding a true 5×5 Card grid. Cards use a 10px gap and a consistent landscape ratio. A thin `accent-soft` ring plus a compact “Start” label identifies the chosen origin; any tile can be the origin, so it is never presented as inherently central. The marker is distinct from the animation glow and never shows a rank number.
 - **Order From** — a full-width segmented `SelectorDock` sits between the stage heading and grid. Its choices are Top, Bottom, Center, Together, Odd, Even, Random, and Index; `Top` is selected by default. It uses the existing single moving indicator rather than per-button fills.
 - **Formula control and picker** — the stage uses one compact control that names the selected formula. Its picker is a contained `surface` panel with formula names and one-line explanations; selected state uses the same moving indicator, white text, and stronger weight as `SelectorDock`. Formula families are grouped with quiet text labels, not decorative icons.
-- **Playback controls** — two circular icon buttons, 96px diameter, restart and reverse only — still no timeline, rank, speed, or reduced-motion controls added. Each button fills flat with `accent` (a `StyleBoxFlat`, not a gradient — a gradient fill can't carry a border) and gets a 2px `accent-soft` border, corner radius 48px (half the button size, so it stays a true circle). No glow — tried behind each button at 24% opacity per an earlier pass, dropped for reading as visual noise rather than depth; the buttons rely on the flat fill and border alone for definition. Icon graphics are `examples/playground/images/play.svg` (restart) and `reverse.svg`, supplied by the user — real artwork, no longer the ⟲/↶ placeholder glyphs.
+- **Playback controls** — a row of four circular icon buttons, 96px diameter: restart, reverse, complete, revert (in that order). Each button fills flat with `accent` (a `StyleBoxFlat`, not a gradient — a gradient fill can't carry a border) and gets a 2px `accent-soft` border, corner radius 48px (half the button size, so it stays a true circle). No glow — tried behind each button at 24% opacity per an earlier pass, dropped for reading as visual noise rather than depth; the buttons rely on the flat fill and border alone for definition. Icon graphics are `examples/playground/images/play.svg` (restart) and `reverse.svg`, supplied by the user, real artwork; `complete.svg` (a checkmark) and `revert.svg` (a counter-clockwise arrow to a starting mark) are new this phase and start as the same kind of placeholder glyph restart/reverse used before their own artwork arrived (✓ and ↺) — swap for real artwork the same way, no rush.
+- **Speed control** — reuses `SelectorDock`/`SelectorButton` as a compact 3-item dock (`0.5×`, `1×`, `2×`) to the right of the button row — the same moving-`accent`-indicator selection pattern already used for Order From and Formula, not a new dropdown widget. `1×` is selected by default.
+- **Reduced-motion toggle** — new `ToggleSwitch` component (below) paired with a `text-secondary` "Reduced motion" label, sitting at the far right of the same control row — directly mirrors `v2_stuff/ex2.jpg`'s bottom-right toggle.
+- **ToggleSwitch** (new) — a 40×22px pill track, 18px circular thumb inset 2px. Off: `surface` track, `border` 1px outline, thumb `text-secondary`. On: `accent` track fill, no outline, thumb `text-primary` (white), slid to the right edge. State changes are an immediate snap, not an eased slide — this is a settings switch, not an animated demo subject. Contrast: `text-primary` thumb on `accent` track 6.4:1 ✅ AA (same pairing already verified for Playback controls' icon-on-`accent` treatment).
 - **3D Card** — an `Icosahedron` mesh (`examples/playground/models/card.obj`) replacing the 2D artwork `Card` for the 3D Motion Example Scene only. `v2_stuff/icosahedron.png` is a loose visual reference for treatment, not colour: borrow its faceted-glass look — translucent faces, a bright fresnel rim where each facet edge catches the light, and a soft emissive glow from the core — but recolour it to the app's own palette (`accent` violet core glow, `accent-soft` fresnel rim) instead of the reference's green, so the 3D scene reads as the same product as every 2D playground. No text or letter on any face. A custom `ShaderMaterial` drives the fresnel rim and emissive core; `StandardMaterial3D` alone can't produce the edge-glow. Motion progress drives the same visual language the 2D `Card` already uses, translated to 3D: emissive intensity and fresnel strength stand in for border colour and glow, and the existing scale pulse carries over unchanged.
 - **3D stage** — a `stage-bg` viewport background matching the 2D stages, an unlit/ambient key light so the shader's own emissive glow reads as the primary light source (no separate ambient scene lighting to colour-match), and the same restrained violet radial glow behind the card that the 2D stages already use.
 
@@ -59,11 +64,17 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 1. **ExampleHeader** — fixed Grid Motion title and explanatory subtitle.
 2. **Grid stage** — formula name and brief explanation sit above the Order From selector and a centered 5×5 Card grid; any selected tile can be the visible start point, without rank labels.
 3. **Order From and Formula controls** — set the grid's propagation order and formula without moving the stable stage.
-4. **Playback controls** — restart and reverse sit beneath the stage, without a timeline or playback-speed surface.
+4. **Playback controls** — the shared four-button-plus-speed-plus-toggle bar (see Component guide) sits beneath the stage; the grid visualization itself still shows no rank badges or timeline.
 
 ## Screen composition — Phase 8 — 3D Motion Example Scene
 
 1. **ExampleHeader** — same fixed icon/title/subtitle treatment as every 2D playground, retitled for this scene.
 2. **3D stage** — the 3D Card (Icosahedron) centred in a `stage-bg` viewport with the same restrained violet radial glow the 2D stages use; the shader's own emissive glow is the primary light source.
 3. **Example line and SelectorDock** — a short read-only `Anima.on()` example plus the family selector, same placement and treatment as the 2D Convenience Motion Example Scene.
-4. **Playback controls** — restart and reverse only, same shared component as every other playground.
+4. **Playback controls** — the same shared bar as every other playground (see Component guide).
+
+## Screen composition — phase-11 — Motion Playback Controls
+
+1. **ExampleHeader** — reuses whichever playground scene the developer opens; not changed by this phase.
+2. **Content stage / Card row** — unchanged; this phase's controls sit in the existing playback-controls row beneath any stage.
+3. **Playback controls row** — four circular buttons (restart, reverse, complete, revert) in established order, left-aligned; a 3-item Speed `SelectorDock` (`0.5×`/`1×`/`2×`) to their right; the `ToggleSwitch` + "Reduced motion" label at the far right. One row, no wrap, matching `v2_stuff/ex2.jpg`'s left-to-right control hierarchy (transport → speed → accessibility switch).

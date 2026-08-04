@@ -23,3 +23,19 @@ func advance(_target: Node, _delta: float) -> bool:
 ## and [AnimaParallelInstance].
 func build_reversed() -> AnimaMotion:
 	return null
+
+## Restores [param target] to the value captured when this instance began
+## advancing, for [method AnimaPlayback.revert] and a
+## [constant AnimaMotion.CompletionValuePolicy.RESTORE_INITIAL] /
+## [constant AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL] outcome. A
+## no-op by default — every subtype overrides this explicitly (see
+## [AnimaPropertyMotionInstance], [AnimaSequenceInstance], [AnimaParallelInstance]).
+func restore_initial(_target: Node) -> void:
+	pass
+
+## Forces this instance to its valid final state immediately, applying every
+## active leaf's authored end value(s) — for [method AnimaPlayback.complete]
+## and a [constant AnimaMotion.CancellationValuePolicy.COMPLETE] outcome. A
+## no-op by default — every subtype overrides this explicitly.
+func force_complete(_target: Node) -> void:
+	pass

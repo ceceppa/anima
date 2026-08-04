@@ -13,6 +13,13 @@ var active_playbacks: Array[AnimaPlayback] = []
 static func get_singleton() -> AnimaRuntime:
 	if _instance == null:
 		_instance = AnimaRuntime.new()
+		# Explicit rather than the PROCESS_MODE_INHERIT default: this singleton
+		# attaches directly under the true scene tree root, so an inherited mode
+		# would otherwise depend on whatever that root's own process_mode
+		# happens to be (host-application-specific, not something Anima owns) —
+		# stopping when the tree pauses is Anima's own lifecycle-safe default
+		# (tech-spec.md §Lifecycle-safe playback policies), not a inherited accident.
+		_instance.process_mode = Node.PROCESS_MODE_PAUSABLE
 		# Deferred: the first Anima.play() call often happens inside a node's
 		# own _ready(), while the scene tree root is still mid-add_child() for
 		# the scene itself — a direct add_child() here would be rejected.

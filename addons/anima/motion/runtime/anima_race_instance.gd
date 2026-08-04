@@ -31,3 +31,20 @@ func advance(target: Node, delta: float) -> bool:
 		if finished:
 			return true
 	return false
+
+## Restores every child's own captured initial value — see [method
+## AnimaMotionInstance.restore_initial].
+func restore_initial(target: Node) -> void:
+	for child_instance in _child_instances:
+		child_instance.restore_initial(target)
+
+## Forces the first child to its final state — a race's own notion of
+## "complete" is having a winner, so completing early declares the first
+## child the winner and force-completes only it, leaving the rest untouched
+## the same way a natural race finish does. See [method
+## AnimaMotionInstance.force_complete].
+func force_complete(target: Node) -> void:
+	if _child_instances.is_empty():
+		return
+	_child_instances[0].force_complete(target)
+	_child_finished[0] = true

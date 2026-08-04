@@ -1,0 +1,270 @@
+<title>Anima — Phase 11 Design Preview</title>
+<style>
+  :root {
+    --bg: #060A16;
+    --surface: #11182A;
+    --stage-bg: #0A1224;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A8B4CC;
+    --accent: #7C3AED;
+    --accent-soft: #A78BFA;
+    --positive: #2DD4BF;
+    --border: #26324B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .note {
+    max-width: 760px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  .note b { color: var(--text-primary); }
+  .scene {
+    width: 100%;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: radial-gradient(circle at 30% 30%, var(--accent-soft), var(--accent));
+    flex-shrink: 0;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; margin: 0; }
+  .header p { font-size: 14px; color: var(--text-secondary); margin: 2px 0 0; }
+
+  .stage {
+    margin: 24px 32px 0;
+    background: var(--stage-bg);
+    border-radius: 24px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto -20%;
+    height: 260px;
+    background: radial-gradient(circle, rgba(124,58,237,0.28), transparent 70%);
+    pointer-events: none;
+  }
+  .stage-title { font-size: 20px; font-weight: 700; margin: 0 0 4px; position: relative; }
+  .stage-desc { font-size: 14px; color: var(--text-secondary); margin: 0 0 20px; position: relative; }
+
+  .cards { display: flex; gap: 16px; position: relative; }
+  .card {
+    flex: 1;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: linear-gradient(160deg, #1c2440, #0e1526);
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+  .card.active {
+    border-color: var(--accent-soft);
+    box-shadow: 0 0 0 2px var(--accent-soft), 0 8px 24px rgba(124,58,237,0.35);
+  }
+  .card::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: rgba(6,10,22,0.28);
+    border-radius: inherit;
+  }
+
+  .controls-row {
+    margin: 24px 32px 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .transport { display: flex; gap: 12px; }
+  .icon-btn {
+    width: 96px; height: 96px;
+    border-radius: 48px;
+    background: var(--accent);
+    border: 2px solid var(--accent-soft);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .icon-btn svg { width: 28px; height: 28px; }
+  .icon-btn .glyph { font-size: 30px; line-height: 1; }
+  .icon-btn .label {
+    position: absolute;
+    margin-top: 68px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  .transport-item { position: relative; display: flex; flex-direction: column; align-items: center; }
+
+  .speed-dock {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 4px;
+    gap: 2px;
+    position: relative;
+  }
+  .speed-btn {
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+  }
+  .speed-btn.selected {
+    background: var(--accent);
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  .reduced-motion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+  .reduced-motion span { font-size: 13px; color: var(--text-secondary); }
+  .toggle {
+    width: 40px; height: 22px;
+    border-radius: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+  }
+  .toggle .thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 8px;
+    background: var(--text-secondary);
+  }
+  .toggle.on {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .toggle.on .thumb {
+    left: 20px;
+    background: var(--text-primary);
+  }
+
+  .legend {
+    width: 100%; max-width: 760px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .legend div { display: flex; align-items: center; gap: 6px; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; }
+</style>
+
+<div class="note">
+  <b>Phase 11 — Motion Playback Controls.</b> Adds <code>complete()</code> and <code>revert()</code> as two more circular transport buttons, a 3-step speed control, and a reduced-motion switch to the shared <code>PlaybackControls</code> bar used by every playground scene. Reference: <code>v2_stuff/ex2.jpg</code>'s bottom control row (speed + reduced-motion), translated into this project's existing button and <code>SelectorDock</code> idioms rather than a new scrub-timeline widget — progress-based seeking stays out of scope this phase.
+</div>
+
+<div class="scene">
+  <div class="header">
+    <div class="icon"></div>
+    <div>
+      <h1>Playback Control</h1>
+      <p>Cancel, complete, revert, and reverse — with speed and reduced motion</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-title">Complete / Revert</div>
+    <div class="stage-desc">Force a motion to its end value, or snap it back to where it started.</div>
+    <div class="cards">
+      <div class="card active"></div>
+      <div class="card"></div>
+      <div class="card"></div>
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <div class="transport">
+      <div class="transport-item">
+        <div class="icon-btn" title="Restart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 1 2.6 5.9"/><path d="M4 6v6h6"/></svg>
+        </div>
+        <span class="label">Restart</span>
+      </div>
+      <div class="transport-item">
+        <div class="icon-btn" title="Reverse">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 5 8 12l9 7"/></svg>
+        </div>
+        <span class="label">Reverse</span>
+      </div>
+      <div class="transport-item">
+        <div class="icon-btn" title="Complete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <span class="label">Complete</span>
+      </div>
+      <div class="transport-item">
+        <div class="icon-btn" title="Revert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 6v6h6"/></svg>
+        </div>
+        <span class="label">Revert</span>
+      </div>
+    </div>
+
+    <div class="speed-dock">
+      <div class="speed-btn">0.5×</div>
+      <div class="speed-btn selected">1×</div>
+      <div class="speed-btn">2×</div>
+    </div>
+
+    <div class="reduced-motion">
+      <span>Reduced motion</span>
+      <div class="toggle"><div class="thumb"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="scene" style="padding: 24px 32px;">
+  <div class="controls-row" style="margin: 0; padding: 0; border: none;">
+    <div class="reduced-motion" style="margin-left: 0;">
+      <span>Reduced motion — on state</span>
+      <div class="toggle on"><div class="thumb"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="legend">
+  <div><span class="swatch" style="background:var(--accent)"></span>accent — buttons, selected speed, on-toggle</div>
+  <div><span class="swatch" style="background:var(--accent-soft)"></span>accent-soft — button border, active card</div>
+  <div><span class="swatch" style="background:var(--surface)"></span>surface — dock, off-toggle track</div>
+  <div><span class="swatch" style="background:var(--text-secondary)"></span>text-secondary — labels, off-thumb</div>
+</div>

@@ -33,6 +33,18 @@ resolved run — the captured start and effective end values swapped, so
 reverse playback returns to what was actually observed at start, even for
 a relative (`move_by`-style) motion. `null` before any value is captured.
 
+### restore_initial
+
+Restores [param target]'s property to the value captured when this
+instance began advancing. A no-op if nothing has been captured yet.
+
+### force_complete
+
+Applies this motion's authored end value to [param target] immediately —
+capturing a start value first (a zero-length advance) if nothing has been
+captured yet. A SPRING-eased motion is force-settled to its spring target
+instead, since it has no fixed to-value curve.
+
 ### retarget_spring
 
 Redirects a still-moving spring to a new destination, preserving its

@@ -42,6 +42,22 @@ func advance(target: Node, delta: float) -> bool:
 			return false
 	return true
 
+## Restores every child's own captured initial value (see [method
+## AnimaMotionInstance.restore_initial]) — safe even for a child that never
+## captured one, since each subtype's own override guards that internally.
+func restore_initial(target: Node) -> void:
+	for child_instance in _child_instances:
+		child_instance.restore_initial(target)
+
+## Forces every child to its own final state together — see [method
+## AnimaMotionInstance.force_complete]. Applies to every child regardless of
+## [member AnimaParallel.completion_policy], since completing the group
+## visually means every animating property reaches its authored end state,
+## not only the one tracked child that would otherwise decide completion.
+func force_complete(target: Node) -> void:
+	for child_instance in _child_instances:
+		child_instance.force_complete(target)
+
 ## Builds a reversed [AnimaParallel]: every child that captured a start value
 ## gets its own reversed motion, still played together. `null` when no child
 ## has captured one yet.
@@ -53,6 +69,8 @@ func build_reversed() -> AnimaMotion:
 			reversed.children.append(reversed_child)
 	if reversed.children.is_empty():
 		return null
+	reversed.forward_speed = motion.forward_speed
+	reversed.reverse_speed = motion.reverse_speed
 	reversed.on_started_callback = motion.on_started_callback
 	reversed.on_completed_callback = motion.on_completed_callback
 	return reversed

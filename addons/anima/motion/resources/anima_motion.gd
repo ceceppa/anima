@@ -10,6 +10,35 @@ enum DelayBasis {
 	AFTER_PREVIOUS_STARTS,
 }
 
+## The value left on the target once a playback reaches [constant
+## AnimaPlayback.State.FINISHED] — whether by playing to the end naturally or
+## via [method AnimaPlayback.complete]. Unrelated to [constant
+## AnimaGroupMotion.CompletionPolicy] / [constant AnimaParallel.CompletionPolicy],
+## which decide *when* a composite counts as done, never what value is left
+## behind — see tech-spec.md's Key technical decisions.
+enum CompletionValuePolicy {
+	## Leave the motion's authored end value in place. Today's implicit behaviour.
+	KEEP_FINAL,
+	## Re-apply the value captured before playback started, immediately after
+	## [signal AnimaPlayback.finished] reports success.
+	RESTORE_INITIAL,
+}
+
+## The value left on the target when [method AnimaPlayback.cancel] is called.
+enum CancellationValuePolicy {
+	## Leave whatever value was showing at the moment of cancellation. Today's
+	## actual behaviour — cancelling simply stops advancing.
+	KEEP_CURRENT,
+	## Re-apply the value captured before playback started.
+	RESTORE_INITIAL,
+	## Apply the motion's authored end value(s), the same value [method
+	## AnimaPlayback.complete] would produce — but [signal AnimaPlayback.finished]
+	## still reports `false` and [member on_completed_callback] still never
+	## fires; this changes only the value cancellation leaves behind, not the
+	## fact that it was a cancellation.
+	COMPLETE,
+}
+
 ## Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
 @export var display_name: String = ""
 ## Disabled motions are skipped by every composite that contains them.
@@ -19,8 +48,20 @@ enum DelayBasis {
 @export var delay: float = 0.0
 ## Which sibling instant [member delay] is measured from.
 @export var delay_basis: DelayBasis = DelayBasis.AFTER_PREVIOUS_ENDS
-## Playback speed multiplier.
+## Playback speed multiplier applied regardless of direction — pairs with
+## [member forward_speed]/[member reverse_speed], which apply only for their
+## matching direction. Set via [method with_speed].
 @export var speed: float = 1.0
+## Multiplier applied only while this motion plays forward (root-level
+## playback only — see tech-spec.md §Speed, direction, and reduced motion).
+## Composes with [member speed] and [AnimaPlayback.speed_scale].
+@export var forward_speed: float = 1.0
+## Multiplier applied only while this motion plays in reverse — via [method
+## AnimaPlayback.reverse] or [method Anima.play_backwards] — instead of
+## [member forward_speed]. Lets a motion's structural reverse (e.g. a closing
+## animation) play at a different pace than its forward run without
+## duplicating the motion or hand-adjusting durations.
+@export var reverse_speed: float = 1.0
 ## Optional categorisation metadata — no logic reads or filters on this.
 @export var tags: Array[String] = []
 ## Optional free-form metadata — no logic reads this.
@@ -31,6 +72,12 @@ enum DelayBasis {
 ## Optional callback [AnimaPlayback] invokes exactly once, immediately before
 ## it reports a successful finish — never on cancellation (see [method on_completed]).
 @export var on_completed_callback: Callable = Callable()
+## The value left behind once this motion's playback finishes — natural finish
+## or [method AnimaPlayback.complete]. See [enum CompletionValuePolicy].
+@export var completion_value_policy: CompletionValuePolicy = CompletionValuePolicy.KEEP_FINAL
+## The value left behind when this motion's playback is cancelled. See
+## [enum CancellationValuePolicy].
+@export var cancellation_value_policy: CancellationValuePolicy = CancellationValuePolicy.KEEP_CURRENT
 
 ## Reports this motion's duration kind and (when known) its length in seconds.
 ## Every subtype must override this explicitly.

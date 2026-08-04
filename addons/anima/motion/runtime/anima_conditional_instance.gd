@@ -21,3 +21,15 @@ func advance(target: Node, delta: float) -> bool:
 	if _branch_instance == null:
 		return true
 	return _branch_instance.advance(target, delta)
+
+## Restores the selected branch's own captured initial value — see [method
+## AnimaMotionInstance.restore_initial].
+func restore_initial(target: Node) -> void:
+	if _branch_instance != null:
+		_branch_instance.restore_initial(target)
+
+## Forces the selected branch to its final state — see [method
+## AnimaMotionInstance.force_complete].
+func force_complete(target: Node) -> void:
+	if _branch_instance != null:
+		_branch_instance.force_complete(target)

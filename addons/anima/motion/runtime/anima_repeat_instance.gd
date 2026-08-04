@@ -28,6 +28,8 @@ func _build_iteration_instance(iteration: int) -> Variant:
 		reversed.duration = original.duration
 		reversed.ease = original.ease
 		reversed.speed = original.speed
+		reversed.forward_speed = original.forward_speed
+		reversed.reverse_speed = original.reverse_speed
 		return reversed.create_runtime()
 	return repeat.child.create_runtime()
 
@@ -57,6 +59,20 @@ func advance(target: Node, delta: float) -> bool:
 
 	return false
 
+## Restores the current iteration's own captured initial value — see [method
+## AnimaMotionInstance.restore_initial].
+func restore_initial(target: Node) -> void:
+	if _current_instance != null:
+		_current_instance.restore_initial(target)
+
+## Forces the current iteration to its final state — a repeat's own notion of
+## "complete" is the current iteration reaching its end, not exhausting
+## [member AnimaRepeat.count] (which may be indefinite) — see [method
+## AnimaMotionInstance.force_complete].
+func force_complete(target: Node) -> void:
+	if _current_instance != null:
+		_current_instance.force_complete(target)
+
 ## Builds a reversed [AnimaRepeat]: the currently-active iteration's own
 ## reversed motion (see [method AnimaMotionInstance.build_reversed]), repeated
 ## the same [member AnimaRepeat.count] times with the same [member
@@ -79,6 +95,8 @@ func build_reversed() -> AnimaMotion:
 	reversed.count = repeat.count
 	reversed.delay_between = repeat.delay_between
 	reversed.alternate = repeat.alternate
+	reversed.forward_speed = repeat.forward_speed
+	reversed.reverse_speed = repeat.reverse_speed
 	reversed.on_started_callback = repeat.on_started_callback
 	reversed.on_completed_callback = repeat.on_completed_callback
 	return reversed

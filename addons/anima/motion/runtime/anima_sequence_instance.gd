@@ -57,6 +57,25 @@ func advance(target: Node, delta: float) -> bool:
 			return false
 	return true
 
+## Restores every started child's own captured initial value (see [method
+## AnimaMotionInstance.restore_initial]). A child that never started has
+## nothing to restore.
+func restore_initial(target: Node) -> void:
+	for state in _states:
+		if state.started:
+			state.instance.restore_initial(target)
+
+## Forces every child to its own final state, starting any that have not
+## begun yet (so a sequence completes end-to-end, not just its started
+## prefix) — see [method AnimaMotionInstance.force_complete].
+func force_complete(target: Node) -> void:
+	for state in _states:
+		if not state.started:
+			state.started = true
+			state.instance = state.child.create_runtime()
+		state.instance.force_complete(target)
+		state.finished = true
+
 ## Builds a reversed [AnimaSequence]: each started child's own reversed
 ## motion, in reverse start order, keeping each child's own delay/delay_basis.
 ## `null` when no child has started yet.
@@ -76,6 +95,8 @@ func build_reversed() -> AnimaMotion:
 			reversed.children.append(reversed_child)
 	if reversed.children.is_empty():
 		return null
+	reversed.forward_speed = motion.forward_speed
+	reversed.reverse_speed = motion.reverse_speed
 	reversed.on_started_callback = motion.on_started_callback
 	reversed.on_completed_callback = motion.on_completed_callback
 	return reversed

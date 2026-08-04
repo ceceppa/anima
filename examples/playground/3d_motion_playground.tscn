@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://c2a1n6glahp8q" path="res://examples/playground/shared/components/card_3d.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ggsen"]
 content_margin_left = 32.0
@@ -35,11 +35,9 @@ corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
 
 [sub_resource type="Environment" id="Environment_ggsen"]
-background_energy_multiplier = 16.0
 tonemap_mode = 1
 tonemap_exposure = 4.0
 sdfgi_enabled = true
-sdfgi_bounce_feedback = 1.73
 glow_levels/1 = 10.13
 glow_levels/2 = 14.15
 glow_levels/3 = 10.4
@@ -52,7 +50,6 @@ glow_hdr_threshold = 2.6
 glow_hdr_scale = 4.0
 glow_hdr_luminance_cap = 198.09
 glow_map_strength = 1.0
-volumetric_fog_enabled = true
 
 [node name="3DMotionPlayground" type="Control" unique_id=1132596835]
 layout_mode = 3
@@ -140,7 +137,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="Margin/Content/Stage/StageContent/CardStage/Viewport3D" unique_id=-2091106397]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(2720, 1554)
+size = Vector2i(2720, 1537)
 render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="Margin/Content/Stage/StageContent/CardStage/Viewport3D/SubViewport" unique_id=-2091106396]

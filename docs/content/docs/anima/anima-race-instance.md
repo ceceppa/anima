@@ -25,3 +25,16 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 Completes as soon as any child finishes. Once this returns true, the
 caller stops calling advance() on this instance entirely — which is the
 "cancel" for every other child: they simply never advance again.
+
+### restore_initial
+
+Restores every child's own captured initial value — see [method
+AnimaMotionInstance.restore_initial].
+
+### force_complete
+
+Forces the first child to its final state — a race's own notion of
+"complete" is having a winner, so completing early declares the first
+child the winner and force-completes only it, leaving the rest untouched
+the same way a natural race finish does. See [method
+AnimaMotionInstance.force_complete].

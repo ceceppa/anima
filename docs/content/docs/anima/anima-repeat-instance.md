@@ -26,6 +26,18 @@ Advances the current repetition; once it finishes, either waits out
 delay_between and starts the next repetition, or completes if that was the
 last one. A negative [member AnimaRepeat.count] never completes on its own.
 
+### restore_initial
+
+Restores the current iteration's own captured initial value — see [method
+AnimaMotionInstance.restore_initial].
+
+### force_complete
+
+Forces the current iteration to its final state — a repeat's own notion of
+"complete" is the current iteration reaching its end, not exhausting
+[member AnimaRepeat.count] (which may be indefinite) — see [method
+AnimaMotionInstance.force_complete].
+
 ### build_reversed
 
 Builds a reversed [AnimaRepeat]: the currently-active iteration's own

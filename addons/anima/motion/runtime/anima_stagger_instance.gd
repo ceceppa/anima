@@ -52,3 +52,21 @@ func advance(_target: Node, delta: float) -> bool:
 		if not entry.finished:
 			return false
 	return true
+
+## Restores every started entry's own captured initial value on its own
+## target — [param _target] is ignored, the same way [method advance]'s is.
+func restore_initial(_target: Node) -> void:
+	for entry in _entries:
+		if entry.started and entry.instance != null:
+			entry.instance.restore_initial(entry.target)
+
+## Forces every entry to its own final state on its own target, starting any
+## that have not begun yet.
+func force_complete(_target: Node) -> void:
+	var stagger := motion as AnimaStagger
+	for entry in _entries:
+		if not entry.started:
+			entry.started = true
+			entry.instance = stagger.template.create_runtime()
+		entry.instance.force_complete(entry.target)
+		entry.finished = true

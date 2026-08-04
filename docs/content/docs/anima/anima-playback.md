@@ -46,10 +46,12 @@ Which lifecycle stage this playback is in.
 
 ### speed_scale
 
-A multiplier applied to every frame this playback advances by. `1.0` is
-normal speed; `2.0` runs twice as fast; `0.5` runs at half speed. When
-[member motion] is an [AnimaGroupMotion], every active item shares this
-same scaled delta, so changing it affects the whole group as one playback.
+A multiplier applied to every frame this playback advances by, on top of
+[member AnimaMotion.forward_speed]/[member AnimaMotion.reverse_speed] (see
+[method _advance]). `1.0` is normal speed; `2.0` runs twice as fast; `0.5`
+runs at half speed. When [member motion] is an [AnimaGroupMotion], every
+active item shares this same scaled delta, so changing it affects the
+whole group as one playback.
 
 ## Methods
 
@@ -63,7 +65,38 @@ Continues playback from wherever [method pause] froze it.
 
 ### cancel
 
-Stops playback and resolves [signal finished] as not-successful.
+Stops playback and resolves [signal finished] as not-successful. The value
+left on [member target] follows [member AnimaMotion.cancellation_value_policy]:
+[constant AnimaMotion.CancellationValuePolicy.KEEP_CURRENT] (default) leaves
+whatever was showing at the moment of cancellation — today's actual
+behaviour, unchanged. [constant AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL]
+re-applies the pre-animation snapshot. [constant AnimaMotion.CancellationValuePolicy.COMPLETE]
+applies the motion's authored end value(s) — the same value [method complete]
+would produce — but this is still reported as a cancellation: [signal finished]
+still emits `false` and [member AnimaMotion.on_completed_callback] never fires.
+
+### complete
+
+Forces this playback to its valid final state immediately: applies every
+active motion's authored end value(s), fires [member
+AnimaMotion.on_completed_callback] and [signal finished] as a successful
+finish exactly once — the same as a natural finish — then applies [member
+AnimaMotion.completion_value_policy]. [constant AnimaMotion.CompletionValuePolicy.KEEP_FINAL]
+(default) leaves that end value in place. [constant
+AnimaMotion.CompletionValuePolicy.RESTORE_INITIAL] re-applies the
+pre-animation snapshot immediately after [signal finished] reports success.
+A no-op past [constant State.FINISHED]/[constant State.CANCELLED].
+
+### revert
+
+Unconditionally restores [member target] to the value captured before
+playback started, and stops playback: [constant State.CANCELLED], [signal
+finished] emits `false`. Unlike [method cancel], the value left behind is
+never affected by [member AnimaMotion.cancellation_value_policy] — revert()
+always restores. This is why revert and [method reverse] are not
+equivalent: reverse() keeps playback running, now backward, from wherever
+it was; revert() stops it and snaps to the start. A no-op past [constant
+State.FINISHED]/[constant State.CANCELLED].
 
 ### retarget
 
@@ -90,3 +123,12 @@ Returns `false` (and pushes an error, not silently ignored) when nothing
 has been captured yet to reverse to, for every motion kind — the caller
 can react (e.g. [method Anima.play_backwards] instead) rather than this
 call being a silent no-op that leaves the original forward run untouched.
+
+### step
+
+Manually advances this playback by exactly [param delta] seconds, scaled
+by the same effective speed (speed_scale × direction) [method _advance]
+already applies for the automatic per-frame path — for tests, tools, or
+frame-stepped debugging that want to drive playback themselves instead of
+relying on [AnimaRuntime]'s own per-frame loop. No separate clock-mode
+selection; this is a direct-drive entry point only.

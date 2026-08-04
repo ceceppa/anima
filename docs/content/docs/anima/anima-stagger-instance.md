@@ -24,3 +24,13 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 Ignores the target this instance's own advance() receives — each entry
 drives its own target from `targets`, per AnimaStagger's contract.
+
+### restore_initial
+
+Restores every started entry's own captured initial value on its own
+target — [param _target] is ignored, the same way [method advance]'s is.
+
+### force_complete
+
+Forces every entry to its own final state on its own target, starting any
+that have not begun yet.

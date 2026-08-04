@@ -59,3 +59,17 @@ to hand to a fresh [method restart_from_record] call so each item replays
 backward to what it actually started from, instead of repeating its
 original forward motion. A target that never started this run has no
 entry — there is nothing captured to reverse it to.
+
+### restore_initial
+
+Restores every started item's own captured initial value on its own
+resolved target — [param _target] is ignored, the same way [method advance]'s
+root only matters for resolution, which has already happened by the time
+anything has started.
+
+### force_complete
+
+Forces every resolved item to its own final state, regardless of [member
+AnimaGroupMotion.completion_policy] — completing the group visually means
+every item reaches its authored end state, not only the one item that
+would otherwise decide completion.

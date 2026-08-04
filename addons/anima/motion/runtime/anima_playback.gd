@@ -20,12 +20,26 @@ var motion: AnimaMotion
 var target: Node
 ## Which lifecycle stage this playback is in.
 var state: State = State.PLAYING
-## A multiplier applied to every frame this playback advances by. `1.0` is
-## normal speed; `2.0` runs twice as fast; `0.5` runs at half speed. When
-## [member motion] is an [AnimaGroupMotion], every active item shares this
-## same scaled delta, so changing it affects the whole group as one playback.
+## A multiplier applied to every frame this playback advances by, on top of
+## [member AnimaMotion.forward_speed]/[member AnimaMotion.reverse_speed] (see
+## [method _advance]). `1.0` is normal speed; `2.0` runs twice as fast; `0.5`
+## runs at half speed. When [member motion] is an [AnimaGroupMotion], every
+## active item shares this same scaled delta, so changing it affects the
+## whole group as one playback.
 var speed_scale: float = 1.0
 
+## Whether [member target] was actually supplied, captured once at construction
+## — a Godot node comparing itself as equal to `null` once freed means
+## [code]target != null[/code] can no longer answer this reliably later
+## (see [method _advance]'s target-freed check), so this is captured while
+## [member target] is still known-good.
+var _has_target: bool = false
+## Whether this playback is currently running backward — selects [member
+## AnimaMotion.reverse_speed] over [member AnimaMotion.forward_speed] in
+## [method _advance]. Set once at construction ([param p_start_reversed]) and
+## flipped on every successful [method reverse], so repeated direction
+## changes keep selecting the correct multiplier.
+var _is_reversed: bool = false
 var _instance: Variant = null
 ## Seconds still to wait, at the root level, before [member motion]'s own
 ## [member AnimaMotion.delay] lets playback actually reach the target — see
@@ -46,6 +60,8 @@ var _runtime: AnimaRuntime = null
 func _init(p_motion: AnimaMotion, p_target: Node = null, p_start_reversed: bool = false) -> void:
 	motion = p_motion
 	target = p_target
+	_has_target = p_target != null
+	_is_reversed = p_start_reversed
 	_instance = motion.create_runtime()
 	if p_start_reversed:
 		_instance.advance(target, 0.0)
@@ -83,11 +99,67 @@ func resume() -> void:
 	if state == State.PAUSED:
 		state = State.PLAYING
 
-## Stops playback and resolves [signal finished] as not-successful.
+## Stops playback and resolves [signal finished] as not-successful. The value
+## left on [member target] follows [member AnimaMotion.cancellation_value_policy]:
+## [constant AnimaMotion.CancellationValuePolicy.KEEP_CURRENT] (default) leaves
+## whatever was showing at the moment of cancellation — today's actual
+## behaviour, unchanged. [constant AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL]
+## re-applies the pre-animation snapshot. [constant AnimaMotion.CancellationValuePolicy.COMPLETE]
+## applies the motion's authored end value(s) — the same value [method complete]
+## would produce — but this is still reported as a cancellation: [signal finished]
+## still emits `false` and [member AnimaMotion.on_completed_callback] never fires.
 func cancel() -> void:
-	if state == State.PLAYING or state == State.PAUSED:
-		state = State.CANCELLED
-		finished.emit(false)
+	if state != State.PLAYING and state != State.PAUSED:
+		return
+
+	match motion.cancellation_value_policy:
+		AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL:
+			_instance.restore_initial(target)
+		AnimaMotion.CancellationValuePolicy.COMPLETE:
+			_instance.force_complete(target)
+		_: # KEEP_CURRENT
+			pass
+
+	state = State.CANCELLED
+	finished.emit(false)
+
+## Forces this playback to its valid final state immediately: applies every
+## active motion's authored end value(s), fires [member
+## AnimaMotion.on_completed_callback] and [signal finished] as a successful
+## finish exactly once — the same as a natural finish — then applies [member
+## AnimaMotion.completion_value_policy]. [constant AnimaMotion.CompletionValuePolicy.KEEP_FINAL]
+## (default) leaves that end value in place. [constant
+## AnimaMotion.CompletionValuePolicy.RESTORE_INITIAL] re-applies the
+## pre-animation snapshot immediately after [signal finished] reports success.
+## A no-op past [constant State.FINISHED]/[constant State.CANCELLED].
+func complete() -> void:
+	if state != State.PLAYING and state != State.PAUSED:
+		return
+
+	_instance.force_complete(target)
+	state = State.FINISHED
+	if motion.on_completed_callback.is_valid():
+		motion.on_completed_callback.call()
+	finished.emit(true)
+
+	if motion.completion_value_policy == AnimaMotion.CompletionValuePolicy.RESTORE_INITIAL:
+		_instance.restore_initial(target)
+
+## Unconditionally restores [member target] to the value captured before
+## playback started, and stops playback: [constant State.CANCELLED], [signal
+## finished] emits `false`. Unlike [method cancel], the value left behind is
+## never affected by [member AnimaMotion.cancellation_value_policy] — revert()
+## always restores. This is why revert and [method reverse] are not
+## equivalent: reverse() keeps playback running, now backward, from wherever
+## it was; revert() stops it and snaps to the start. A no-op past [constant
+## State.FINISHED]/[constant State.CANCELLED].
+func revert() -> void:
+	if state != State.PLAYING and state != State.PAUSED:
+		return
+
+	_instance.restore_initial(target)
+	state = State.CANCELLED
+	finished.emit(false)
 
 ## Redirects a still-moving SPRING-eased AnimaPropertyMotion to a new
 ## destination, preserving its current value/velocity instead of restarting
@@ -123,6 +195,7 @@ func reverse() -> bool:
 		push_error("AnimaPlayback.reverse() has nothing captured to reverse yet — play this motion at least one frame first.")
 		return false
 
+	_is_reversed = not _is_reversed
 	state = State.PLAYING
 	_reset_delay()
 	_fire_started()
@@ -164,11 +237,25 @@ func _reverse_in_place() -> bool:
 	_instance = motion.create_runtime()
 	return true
 
+## Manually advances this playback by exactly [param delta] seconds, scaled
+## by the same effective speed (speed_scale × direction) [method _advance]
+## already applies for the automatic per-frame path — for tests, tools, or
+## frame-stepped debugging that want to drive playback themselves instead of
+## relying on [AnimaRuntime]'s own per-frame loop. No separate clock-mode
+## selection; this is a direct-drive entry point only.
+func step(delta: float) -> void:
+	_advance(delta)
+
 func _advance(delta: float) -> void:
 	if state != State.PLAYING:
 		return
 
-	var scaled_delta := delta * speed_scale
+	if _has_target and not is_instance_valid(target):
+		cancel()
+		return
+
+	var direction_speed: float = motion.reverse_speed if _is_reversed else motion.forward_speed
+	var scaled_delta := delta * speed_scale * direction_speed
 	if _delay_remaining > 0.0:
 		_delay_remaining -= scaled_delta
 		if _delay_remaining > 0.0:
