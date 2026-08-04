@@ -1591,7 +1591,7 @@
   Chosen name over Anima.Node()/Anima.target()/Anima.for_node() — shorter, more readable, avoids confusion with Godot's own Node type (PRD4.md §28.2).
   Design principle: make common property animation concise and discoverable without creating a second motion architecture.
   PRD4.md §1, §3, §9.1.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### AnimaTargetMotionFactory
 - **Type:** feature
@@ -1600,7 +1600,7 @@
   RefCounted factory bound to one target reference; must not hold current property selection, motion, duration, easing, playback, or velocity state.
   Safe to keep and reuse to create multiple independent motions against the same target.
   PRD4.md §9.2.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Factory immutability and independent motions per call
 - **Type:** feature
@@ -1609,7 +1609,7 @@
   Every convenience property method call creates a new, independent motion; calling one method must never mutate a motion an earlier call already returned.
   During construction, fluent modifier methods may mutate the newly created motion and return self; once a motion is shared or saved it should be treated as a definition, not active runtime state (§28.4).
   PRD4.md §9.3.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Canonical equivalence guarantee
 - **Type:** feature
@@ -1618,7 +1618,7 @@
   Every Anima.on() convenience call must produce a motion equivalent to the matching Motion.animate() call — no convenience-specific runtime, easing, reversal, interruption, or scheduling logic, to avoid a second motion architecture that has to stay in sync.
   Convenience methods return AnimaPropertyMotion directly (or a specialised subclass with the standard modifier API) rather than a separate convenience-builder type, where practical (§28.3).
   PRD4.md §2.4, §3, §9.4.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Three-level motion-authoring hierarchy
 - **Type:** feature
@@ -1637,7 +1637,7 @@
   The generic Motion.animate() accepts target/property/destination positionally instead.
   Both positional duration and .duration() are supported (§28.1) — positional for beginner examples where the named method already makes the meaning clear, .duration() when inherited defaults or advanced modifiers are being demonstrated; if both are given, .duration() wins and the editor/debug mode may warn about the redundancy.
   PRD4.md §2.2, §10.1-§10.3, §13.2.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Convenience duration default and inheritance chain
 - **Type:** feature
@@ -1646,7 +1646,7 @@
   When duration is omitted, resolution order is: motion-specific override (if supplied later) → node-behaviour default → motion-theme default → global Anima default.
   The resolved value must not be copied into the motion prematurely when inheritance is intended, so a later default change still applies.
   PRD4.md §10.4.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Starting-value semantics (current-at-start vs explicit)
 - **Type:** feature
@@ -1655,7 +1655,7 @@
   Default: Anima captures the property's value at the moment that specific motion begins, not when it's authored or composed.
   .from(value) sets an explicit start instead; the target is only assigned that starting value when the property motion itself begins — never during an earlier wait/delay elsewhere in the same chain.
   PRD4.md §11.1-§11.2.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Relative destination convenience methods
 - **Type:** feature
@@ -1663,7 +1663,7 @@
 - **Context:**
   move_by(), rotate_by(), and a generic property_by() compute their destination from the property value captured when the motion begins, rather than an absolute destination.
   PRD4.md §11.3-§11.4.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Reserved future starting-value modes
 - **Type:** feature
@@ -1744,7 +1744,7 @@
   Since GDScript can't provide type-safe overloads for every supported node class, some convenience methods accept Variant.
   Compensated through documentation, runtime validation, editor warnings, and typed generated C# wrappers where practical.
   PRD4.md §16.5.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Target-reference storage modes for convenience motions
 - **Type:** feature
@@ -2860,7 +2860,7 @@
   V1 exposed a combinatorial loop_* method family: loop, loop_in_circle, loop_in_circle_with_delay, loop_in_circle_with_speed, loop_in_circle_with_delay_and_speed, loop_backwards, loop_backwards_with_speed, loop_backwards_with_delay, loop_backwards_with_delay_and_speed, loop_with_delay, loop_with_speed, loop_times_with_delay, loop_times_with_delay_and_speed.
   User direction: v2 uses the term "repeat" instead of "loop", expressed through composable named modifiers (count, direction mode, delay, speed) rather than one method per combination.
   Extends "Convenience-method positional argument policy", which already lists loop as a named modifier but not at this level of detail.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Playback direction/speed/delay convenience family incl. conditional backwards (v1 parity)
 - **Type:** feature
@@ -2868,7 +2868,7 @@
 - **Context:**
   V1 exposed play, play_with_delay, play_with_speed, play_backwards, play_backwards_with_delay, play_backwards_with_speed, and a data-driven play_as_backwards_when(condition) that picks forward/backward at play time from a boolean.
   Most of this maps onto named modifiers already covered by "Convenience-method positional argument policy" (delay, reverse policy, clock/speed); the conditional-direction pattern (play_as_backwards_when) is not yet captured anywhere.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Easing Demo (v1 parity, scope TBD)
 - **Type:** feature
@@ -2884,7 +2884,7 @@
 - **Context:**
   Playing a motion backwards currently appears either missing or broken. Needs to work across every currently-buildable motion kind: single node, sequence, parallel, group, and grid.
   Relates to the already-scoped "Reversible-motion acceptance criteria (epic)". Keyframe reversal is tracked separately by the "Keyframe reversal" item since keyframes aren't built yet.
-- **Status:** in-phase-10
+- **Status:** resolved
 
 ### Backward playback for keyframe motions
 - **Type:** bug

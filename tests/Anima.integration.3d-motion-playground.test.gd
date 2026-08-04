@@ -65,3 +65,25 @@ func test_restart_and_reverse_replay_the_selected_motions_actual_recorded_run():
 	for i in range(30):
 		restarted._advance(1.0 / 60.0)
 	assert_almost_eq(card.position.x, moved_x, 0.01, "restart should play the selected family forward again")
+
+## Regression: pressing reverse before the auto-started motion had captured
+## even one frame used to silently no-op (AnimaPlayback.reverse() had
+## nothing to reverse to), leaving the original forward run untouched.
+func test_pressing_reverse_before_anything_has_played_still_reverses():
+	var scene: Control = preload("res://examples/playground/3d_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.restart_pressed.emit()
+	var original_playback: AnimaPlayback = scene.get("_active_playback")
+	controls.reverse_pressed.emit() # same frame as restart — nothing captured yet
+	assert_push_error("nothing captured to reverse")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	assert_ne(playback, original_playback, "reverse() failing natively should fall back to a fresh play_backwards() run, not leave the original forward playback untouched")
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "the fallback reversed run should still play through and finish")

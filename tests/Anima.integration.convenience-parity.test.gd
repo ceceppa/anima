@@ -119,6 +119,80 @@ func test_generic_property_matches_a_direct_motion_to_call():
 
 	assert_almost_eq(convenience.position.x, canonical.position.x, 0.01, "[property] convenience and canonical results should match")
 
+func test_property_by_matches_a_canonical_relative_property_motion():
+	var convenience: Control = add_child_autofree(Control.new())
+	var canonical: Control = add_child_autofree(Control.new())
+
+	_run(Anima.on(convenience).property_by(NodePath("modulate:a"), -0.4, 0.2), convenience)
+	var canonical_motion := Motion.to(NodePath("modulate:a"), -0.4)
+	canonical_motion.duration = 0.2
+	canonical_motion.is_relative = true
+	_run(canonical_motion, canonical)
+
+	assert_almost_eq(convenience.modulate.a, canonical.modulate.a, 0.001, "[property_by] convenience and canonical results should match")
+
+func test_on_started_and_on_completed_match_their_canonical_equivalents():
+	var convenience: Node2D = add_child_autofree(Node2D.new())
+	var canonical: Node2D = add_child_autofree(Node2D.new())
+	var convenience_events: Array[String] = []
+	var canonical_events: Array[String] = []
+
+	var convenience_motion := Anima.on(convenience).position(Vector2(10.0, 0.0), 0.1)
+	convenience_motion.on_started(func(): convenience_events.append("started"))
+	convenience_motion.on_completed(func(): convenience_events.append("completed"))
+
+	var canonical_motion := Motion.to(NodePath("position"), Vector2(10.0, 0.0)).with_duration(0.1)
+	canonical_motion.on_started(func(): canonical_events.append("started"))
+	canonical_motion.on_completed(func(): canonical_events.append("completed"))
+
+	_run(convenience_motion, convenience, 10)
+	_run(canonical_motion, canonical, 10)
+
+	assert_eq(convenience_events, ["started", "completed"], "[on_started/on_completed] convenience motion should fire the same lifecycle events")
+	assert_eq(convenience_events, canonical_events, "[on_started/on_completed] convenience and canonical lifecycle events should match")
+
+func test_with_speed_matches_its_canonical_equivalent():
+	var convenience: Node2D = add_child_autofree(Node2D.new())
+	var canonical: Node2D = add_child_autofree(Node2D.new())
+
+	# duration 1.0 at 4x speed finishes in ~0.25s of simulated time; 20 frames
+	# at 1/60s (~0.33s) is enough to let both playbacks finish and unregister,
+	# rather than leaking an active playback the runtime keeps ticking after the test ends.
+	_run(Anima.on(convenience).position(Vector2(100.0, 0.0), 1.0).with_speed(4.0), convenience, 20)
+	_run(Motion.to(NodePath("position"), Vector2(100.0, 0.0)).with_duration(1.0).with_speed(4.0), canonical, 20)
+
+	assert_almost_eq(convenience.position.x, canonical.position.x, 0.01, "[with_speed] convenience and canonical results should match")
+	assert_almost_eq(convenience.position.x, 100.0, 0.01)
+
+func test_repeat_matches_its_canonical_motion_repeat_equivalent():
+	var convenience: Node2D = add_child_autofree(Node2D.new())
+	var canonical: Node2D = add_child_autofree(Node2D.new())
+	convenience.position.x = 0.0
+	canonical.position.x = 0.0
+
+	_run(Anima.on(convenience).position(Vector2(10.0, 0.0), 0.1).repeat(2), convenience, 20)
+	var canonical_child := Motion.to(NodePath("position"), Vector2(10.0, 0.0)).with_duration(0.1)
+	_run(Motion.repeat(canonical_child, 2), canonical, 20)
+
+	assert_almost_eq(convenience.position.x, canonical.position.x, 0.01, "[repeat] convenience-chained repeat and canonical Motion.repeat() should match")
+
+func test_play_backwards_matches_playing_forward_then_reversing():
+	var convenience: Node2D = add_child_autofree(Node2D.new())
+	var canonical: Node2D = add_child_autofree(Node2D.new())
+
+	var canonical_playback := Anima.play(Anima.on(canonical).position(Vector2(10.0, 0.0), 0.1), canonical)
+	for i in range(10):
+		canonical_playback._advance(1.0 / 60.0)
+	canonical_playback.reverse()
+	for i in range(10):
+		canonical_playback._advance(1.0 / 60.0)
+
+	var convenience_playback := Anima.play_backwards(Anima.on(convenience).position(Vector2(10.0, 0.0), 0.1), convenience)
+	for i in range(10):
+		convenience_playback._advance(1.0 / 60.0)
+
+	assert_almost_eq(convenience.position.x, canonical.position.x, 0.01, "[play_backwards] should match playing forward then reversing")
+
 func test_anima_item_motions_match_their_on_factory_equivalents():
 	var via_item: Control = add_child_autofree(Control.new())
 	var via_on: Control = add_child_autofree(Control.new())
@@ -389,3 +463,26 @@ func test_reusing_a_factory_does_not_retain_previously_generated_motions():
 
 	assert_ne(first.get_instance_id(), second.get_instance_id(), "each factory call should build an independent motion")
 	assert_eq(first.to_value, Vector2(1.0, 0.0), "an earlier built motion should be unaffected by a later factory call")
+
+func test_two_different_methods_from_the_same_factory_build_independent_motions():
+	var target: Control = add_child_autofree(Control.new())
+	var factory := Anima.on(target)
+
+	var position_motion := factory.position(Vector2(5.0, 0.0))
+	var opacity_motion := factory.opacity(0.5)
+
+	assert_ne(position_motion.get_instance_id(), opacity_motion.get_instance_id())
+	position_motion.to_value = Vector2(99.0, 99.0)
+	assert_eq(opacity_motion.to_value, 0.5, "changing one motion built from the factory should not affect an earlier one built from the same factory")
+
+func test_reusing_a_factory_after_an_earlier_motion_has_played_still_builds_a_correct_motion():
+	var target: Node2D = add_child_autofree(Node2D.new())
+	var factory := Anima.on(target)
+
+	var first := factory.position(Vector2(5.0, 0.0), 0.1)
+	_run(first, target, 10)
+	assert_almost_eq(target.position.x, 5.0, 0.01)
+
+	var second := factory.position(Vector2(20.0, 0.0), 0.1)
+	_run(second, target, 10)
+	assert_almost_eq(target.position.x, 20.0, 0.01, "a factory call made after an earlier motion already played should still build a correct, independent motion")

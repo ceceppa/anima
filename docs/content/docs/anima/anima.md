@@ -51,6 +51,17 @@ var group := Motion.group(collection, Motion.to(NodePath("modulate:a"), 1.0))
 Anima.play(group, $CardRow) # $CardRow's children are the group's targets
 ```
 
+### play_backwards
+
+Same as [method play], except playback begins already running backward —
+no prior forward run needed. Captures [param motion]'s start/end with one
+zero-length frame (so nothing visibly moves first), then reverses in
+place, the same way [method AnimaPlayback.reverse] would after a forward
+run — see [method AnimaMotionInstance.build_reversed]. To choose direction
+from a condition at play time, branch between [method play] and this
+method (v1's `play_as_backwards_when`); no dedicated third method exists
+for it.
+
 ### play_referenced
 
 Resolves [param target_reference] then plays [param motion] against that

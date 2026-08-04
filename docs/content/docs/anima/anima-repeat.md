@@ -26,7 +26,8 @@ The motion to repeat.
 
 ### count
 
-How many times [member child] plays. Always finite this phase.
+How many times [member child] plays. A negative value (the [method
+AnimaMotion.repeat] chain method's default) repeats indefinitely instead.
 
 ### delay_between
 
@@ -44,6 +45,7 @@ identically.
 
 Sums [member child]'s duration across every repetition plus the delays
 between them, once [member child] itself reports a fixed duration.
+Reports [constant AnimaDuration.Kind.INFINITE] for a negative [member count].
 
 ### create_runtime
 

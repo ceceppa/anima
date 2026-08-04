@@ -25,6 +25,12 @@ enum DelayBasis {
 @export var tags: Array[String] = []
 ## Optional free-form metadata — no logic reads this.
 @export var metadata: Dictionary = {}
+## Optional callback [AnimaPlayback] invokes exactly once, at the moment this
+## motion begins playing — including a fresh reversed run (see [method on_started]).
+@export var on_started_callback: Callable = Callable()
+## Optional callback [AnimaPlayback] invokes exactly once, immediately before
+## it reports a successful finish — never on cancellation (see [method on_completed]).
+@export var on_completed_callback: Callable = Callable()
 
 ## Reports this motion's duration kind and (when known) its length in seconds.
 ## Every subtype must override this explicitly.
@@ -88,3 +94,38 @@ func _grouped_with(existing: AnimaMotion, other: AnimaMotion) -> AnimaParallel:
 		parallel.children.append(existing)
 	parallel.children.append(other)
 	return parallel
+
+## Sets [member on_started_callback], invoked exactly once by [AnimaPlayback]
+## when this motion begins playing. Returns self so calls can keep chaining.
+func on_started(callback: Callable) -> AnimaMotion:
+	on_started_callback = callback
+	return self
+
+## Sets [member on_completed_callback], invoked exactly once by [AnimaPlayback]
+## immediately before it reports a successful finish — never on cancellation.
+## Returns self so calls can keep chaining.
+func on_completed(callback: Callable) -> AnimaMotion:
+	on_completed_callback = callback
+	return self
+
+## Wraps this motion in a new [AnimaRepeat] that plays it [param count] times
+## — the same resource [method Motion.repeat] would build, now reachable as a
+## chain call on any motion, including one built through [method Anima.on].
+## [param count] defaults to `-1`, which repeats indefinitely instead of a
+## fixed number of times. [param alternate] `true` ping-pongs every other
+## iteration between forward and backward (v1's `loop_in_circle`) instead of
+## repeating identically.
+func repeat(count: int = -1, alternate: bool = false) -> AnimaRepeat:
+	var result := AnimaRepeat.new()
+	result.child = self
+	result.count = count
+	result.alternate = alternate
+	return result
+
+## Sets [member speed] directly. Named `with_speed` rather than `speed()` for
+## the same reason as `with_duration`/`with_ease`/`with_delay` on
+## [AnimaPropertyMotion] — a bare method name would collide with the field of
+## the same name. Returns self so calls can keep chaining.
+func with_speed(value: float) -> AnimaMotion:
+	speed = value
+	return self

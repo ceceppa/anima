@@ -1,6 +1,11 @@
 ## Mode
 suggest
 
+<!-- Two kinds of hook. `suggest` (this one) produces findings: Mano asks
+     before running it and you approve each finding. Change this to `command`
+     and add a `## Command` section naming one command to instead run that
+     command automatically, every time, after this skill. See hooks/README.md. -->
+
 ## Purpose
 Optional post-UI review after `mano ui` creates or updates the design brief and current phase preview.
 
@@ -57,7 +62,7 @@ Do not modify any files. Report findings only. If the user wants changes made, t
 
 ## Instruction for Mano
 
-When this hook is active, do not run it automatically.
+When this hook is active, do not run it automatically. (This applies to `## Mode: suggest`, which is what this file declares. If you change `## Mode` to `command`, the mode wins over this line and the command runs automatically — see hooks/README.md.)
 
 After the related Mano skill completes, mention that the hook is available and ask whether to run it.
 

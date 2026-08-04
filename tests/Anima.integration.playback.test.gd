@@ -15,6 +15,56 @@ func test_playing_a_motion_with_no_setup_reaches_end_value():
 	assert_almost_eq(node.position.x, 100.0, 0.01)
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 
+## Regression: a playback is removed from AnimaRuntime.active_playbacks when
+## it finishes or is cancelled (see AnimaRuntime._track), so it stops being
+## advanced every frame. reverse() setting state back to PLAYING used to be a
+## no-op through the real runtime loop for exactly that reason — every other
+## reverse test in this addon calls playback._advance() directly, which
+## bypasses AnimaRuntime._process() entirely and never exercised this path.
+## AnimaRuntime.ensure_tracked() (called from reverse()) re-adds it.
+func test_reverse_after_a_natural_finish_is_still_advanced_by_the_runtime():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 1.0 / 6.0
+
+	var playback := Anima.play(motion, node)
+	simulate(AnimaRuntime.get_singleton(), 10, 1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(node.position.x, 10.0, 0.01)
+
+	playback.reverse()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+
+	simulate(AnimaRuntime.get_singleton(), 10, 1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "the runtime should have kept advancing the reversed run on its own")
+	assert_almost_eq(node.position.x, 0.0, 0.01)
+
+## Same regression, for cancel() instead of a natural finish — cancel also
+## removes the playback from AnimaRuntime.active_playbacks via the same
+## `finished` signal.
+func test_reverse_after_cancel_is_still_advanced_by_the_runtime():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 1.0
+
+	var playback := Anima.play(motion, node)
+	simulate(AnimaRuntime.get_singleton(), 30, 1.0 / 60.0)
+	playback.cancel()
+	assert_eq(playback.state, AnimaPlayback.State.CANCELLED)
+	var value_at_cancel: float = node.position.x
+	assert_gt(value_at_cancel, 0.0)
+
+	playback.reverse()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+
+	simulate(AnimaRuntime.get_singleton(), 60, 1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "the runtime should have kept advancing the reversed run after a cancel, too")
+	assert_almost_eq(node.position.x, 0.0, 0.01)
+
 func test_second_motion_on_same_node_plays_independently():
 	var node: Node2D = add_child_autofree(Node2D.new())
 

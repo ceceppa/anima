@@ -22,12 +22,30 @@ static func get_singleton() -> AnimaRuntime:
 ## Starts playing [param motion] against [param target] and tracks it in
 ## [member active_playbacks] until it finishes.
 func play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
-	var playback := AnimaPlayback.new(motion, target)
+	return _track(AnimaPlayback.new(motion, target))
+
+## Same as [method play], except playback begins already running backward —
+## see [method AnimaPlayback._init]'s `p_start_reversed` and [method Anima.play_backwards].
+func play_backwards(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
+	return _track(AnimaPlayback.new(motion, target, true))
+
+func _track(playback: AnimaPlayback) -> AnimaPlayback:
+	playback._runtime = self
 	active_playbacks.append(playback)
 	playback.finished.connect(func(_success: bool) -> void:
 		active_playbacks.erase(playback)
 	)
 	return playback
+
+## Re-adds [param playback] to [member active_playbacks] if it isn't already
+## there. A playback that already finished or was cancelled was removed (see
+## [method _track]) so it stops being advanced every frame; [method
+## AnimaPlayback.reverse] calls this to resume being ticked after it sets the
+## playback back to [constant AnimaPlayback.State.PLAYING] — otherwise
+## nothing would ever call [method AnimaPlayback._advance] on it again.
+func ensure_tracked(playback: AnimaPlayback) -> void:
+	if not active_playbacks.has(playback):
+		active_playbacks.append(playback)
 
 func _process(delta: float) -> void:
 	for playback in active_playbacks.duplicate():

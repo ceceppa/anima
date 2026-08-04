@@ -1,43 +1,68 @@
 # Mano Hooks
 
-Hooks are optional reminders for post-skill checks.
+Hooks are optional post-skill steps that belong to your project.
 
-They do not run automatically.
-
-A hook becomes active only when you copy or rename an `.example.md` file to remove `.example`.
-
-Example:
+A hook becomes active only when you copy or rename an `.example.md` file to remove `.example`:
 
 ```text
 hooks/post-spec.example.md  -> inactive
 hooks/post-spec.md          -> active
 ```
 
-When an active hook exists, Mano should mention it after the related skill finishes and ask whether to run it.
+There is one hook slot per skill: `post-import`, `post-start`, `post-spec`, `post-rules`, `post-ux`, `post-ui`, `post-stories`, `post-review`.
 
-Hooks are useful for optional external review, validation, or specialist checks that are specific to your project.
+## Two kinds of hook
 
-## Suggest-only mode
+A hook's `## Mode` section says what kind it is. The two produce different things, so they are treated differently:
 
-For now, hooks use suggest-only mode.
+| `## Mode` | Produces | When it runs | Approval |
+|-----------|----------|--------------|----------|
+| `suggest` (default) | findings — an opinion you have to weigh | Mano asks first; runs automatically in `mano mode auto` | Findings need your per-item approval before anything is edited |
+| `command` | an exit code — a mechanical side effect | Always, every time, in both modes | None — writing the hook file is the authorization |
 
-This means Mano should:
+A hook with no `## Mode` section is `suggest`, so hooks written before command mode existed keep working unchanged.
+
+The line between them is *judgement vs mechanism*. A specialist review is an opinion, and an opinion arriving before you have formed your own changes what you think — so you are asked first. Syncing a tracker or regenerating an index has no opinion in it, you want it done every time, and being asked each time is just a chore.
+
+## Suggest hooks
+
+Use these for optional external review, validation, or specialist checks. Mano will:
+
 - detect the active hook
-- mention it in the final chat response
-- explain its purpose briefly
-- ask whether to run it
-- wait for explicit user confirmation
+- mention it after the related skill finishes, with its purpose
+- ask whether to run it, and wait for you
 
-Mano should not:
-- run hooks automatically
-- print the hook's suggested prompt unless the user asks
-- mention specific external skill names in generic output
-- modify files through a hook unless the user explicitly asks
+Mano will not print the hook's prompt unless you ask, name specific external skills in generic output, or modify files from a hook's findings without your approval.
 
-## Writing project-specific hooks
+To point one at a third-party or specialist skill, copy an example file and replace `[external-review-command]` with your command.
 
-The `.example.md` files are generic templates.
+## Command hooks
 
-To use a third-party or specialist skill, copy an example file and replace `[external-review-command]` with your chosen command in the active project hook.
+Use these for deterministic follow-up work your project always wants done — syncing a backlog to an external tracker, regenerating an index, notifying a system.
 
-Keep hooks advisory. Do not put mandatory hidden workflow steps here.
+Name exactly one command in a `## Command` section:
+
+```markdown
+# post-import hook
+
+## Mode
+command
+
+## Command
+node scripts/sync-backlog.js
+```
+
+Mano runs it from the project root after the skill's artifacts are written, and reports it in one line of the execution log. To run the same script after several skills, create one hook file per skill — `post-import.md`, `post-start.md`, `post-review.md` — each naming the command.
+
+What Mano will not do:
+
+- ask you first, or treat it as a suggestion — the file is the authorization
+- take the command from anywhere but the `## Command` section
+- retry it, fix your script, or edit an artifact to compensate for what it did not do
+- inspect or second-guess what it does — it is your script in your repository
+
+If it fails, Mano reports the exact error and stops there. In `mano mode auto`, a failed command hook pauses the chain.
+
+## Keep hooks honest
+
+A `suggest` hook is advisory — do not hide a mandatory step in one. A `command` hook *is* a step your project always runs, which is the point, but it stays visible: you declared it in a file, and Mano reports it every time it runs.

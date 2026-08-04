@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/playground/shared/components/card.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mwbe8"]
 content_margin_left = 32.0

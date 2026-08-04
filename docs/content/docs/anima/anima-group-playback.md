@@ -45,4 +45,17 @@ resolution itself only happens once, on the first call.
 Restarts this playback from [param record] instead of resolving and
 scheduling again. Used by [method AnimaPlayback.reverse] so a reverse
 replays the exact recorded sequence rather than a fresh — and
-potentially different — resolution.
+potentially different — resolution. [param reversed_item_motions] is the
+per-target map [method build_reversed_item_motions] produced from the run
+being reversed; a target missing from it plays the ordinary forward
+[member AnimaGroupMotion.item_motion] instead (it never started, so it has
+nothing of its own to reverse to).
+
+### build_reversed_item_motions
+
+Builds a per-target map of each started item's own reversed motion (see
+[method AnimaMotionInstance.build_reversed]), for [method AnimaPlayback.reverse]
+to hand to a fresh [method restart_from_record] call so each item replays
+backward to what it actually started from, instead of repeating its
+original forward motion. A target that never started this run has no
+entry — there is nothing captured to reverse it to.

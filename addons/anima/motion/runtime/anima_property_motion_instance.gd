@@ -8,6 +8,10 @@ var _elapsed: float = 0.0
 var _from_value: Variant = null
 var _to_value: Variant = null
 var _from_value_captured: bool = false
+## The duration this run actually uses — [member AnimaPropertyMotion.duration]
+## when explicitly positive, otherwise resolved once at capture time through
+## the duration chain (see [method _resolve_duration]).
+var _resolved_duration: float = 0.0
 
 ## Spring-only state ([constant AnimaEase.Kind.SPRING]) — a stateful
 ## simulation, not a `t`-normalized evaluate() like every other ease.
@@ -27,19 +31,36 @@ func advance(target: Node, delta: float) -> bool:
 			_from_value = target.get_indexed(property_motion.target_property)
 		_to_value = _from_value + property_motion.to_value if property_motion.is_relative else property_motion.to_value
 		_from_value_captured = true
+		_resolved_duration = _resolve_duration(target, property_motion)
 		_apply_pivot(target, property_motion)
 
 	if property_motion.ease.kind == AnimaEase.Kind.SPRING:
 		return _advance_spring(target, property_motion, delta)
 
 	_elapsed += delta * motion.speed
-	var duration := property_motion.duration
+	var duration := _resolved_duration
 	var t: float = 1.0 if duration <= 0.0 else clampf(_elapsed / duration, 0.0, 1.0)
 	var eased_t := property_motion.ease.evaluate(t)
 
 	target.set_indexed(property_motion.target_property, lerp(_from_value, _to_value, eased_t))
 
 	return t >= 1.0 or is_equal_approx(t, 1.0)
+
+## Resolves the duration this run actually uses: [member AnimaPropertyMotion.duration]
+## when explicitly positive (an explicit `.with_duration()`/positional call
+## always wins); otherwise the chain tech-spec.md §Target-bound authoring
+## contract defines — [param target]'s attached [AnimaBehaviour.default_duration]
+## when one is attached, else the project-level [member Anima.default_duration].
+## Read live at capture time rather than authoring time, so a default changed
+## after the motion was built but before it plays still applies.
+func _resolve_duration(target: Node, property_motion: AnimaPropertyMotion) -> float:
+	if property_motion.duration > 0.0:
+		return property_motion.duration
+
+	var behaviour := Anima.get_behaviour(target)
+	if behaviour != null:
+		return behaviour.default_duration
+	return Anima.default_duration
 
 ## Normalized (x, y) position of each [enum AnimaPropertyMotion.Pivot] anchor
 ## within a target's own bounds — `(0, 0)` is the top-left corner, `(1, 1)`
@@ -112,6 +133,8 @@ func build_reversed() -> AnimaMotion:
 	reversed.speed = property_motion.speed
 	reversed.delay = property_motion.delay
 	reversed.delay_basis = property_motion.delay_basis
+	reversed.on_started_callback = property_motion.on_started_callback
+	reversed.on_completed_callback = property_motion.on_completed_callback
 	return reversed
 
 ## Advances a SPRING-eased motion one physics step (semi-implicit Euler on a

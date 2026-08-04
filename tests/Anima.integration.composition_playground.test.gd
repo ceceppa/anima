@@ -155,6 +155,54 @@ func test_sequence_card_b_waits_for_card_a_to_complete():
 
 	_tick(scene, 200)
 
+## Regression: the Cards here are a hand-rolled elapsed-time simulation
+## (_demo_elapsed / _card_segments), decoupled from _playback — which plays
+## the real composition against an invisible placeholder node, never a Card.
+## AnimaPlayback.reverse() working correctly was not enough on its own;
+## nothing told this scene's own visual clock to run backward, so pressing
+## reverse looked like it did nothing.
+func test_reverse_plays_the_cards_backward_after_completion():
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
+	add_child_autofree(scene)
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	selector.get_item(0).pressed.emit() # Sequence — A(0-0.6), B(0.6-1.2), C(1.2-1.8)
+
+	var card_row: HBoxContainer = scene.get_node("%CardRow")
+	_tick(scene, 200) # well past the 1.8s total forward duration
+	var cards := card_row.get_children()
+	for card in cards:
+		assert_almost_eq(card.progress, 1.0, 0.001, "every card should have reached full progress before reversing")
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.reverse_pressed.emit()
+	_tick(scene, 200) # well past the same 1.8s duration, now running backward
+
+	for card in cards:
+		assert_almost_eq(card.progress, 0.0, 0.001, "reversing should play every card back to its starting progress, not leave them stuck at 1.0")
+
+## Regression: pressing reverse before the auto-started composition had
+## captured even one frame used to silently no-op (AnimaPlayback.reverse()
+## had nothing to reverse to), leaving the real playback stuck playing
+## forward untouched even though the button was pressed.
+func test_pressing_reverse_before_anything_has_played_still_reverses():
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.restart_pressed.emit()
+	var original_playback: AnimaPlayback = scene.get("_playback")
+	controls.reverse_pressed.emit() # same frame as restart — nothing captured yet
+	assert_push_error("nothing captured to reverse")
+
+	var playback: AnimaPlayback = scene.get("_playback")
+	assert_ne(playback, original_playback, "reverse() failing natively should fall back to a fresh play_backwards() run, not leave the original forward playback untouched")
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+
+	_tick(scene, 200)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "the fallback reversed run should still play through and finish")
+
 func test_parallel_cards_start_at_the_same_time():
 	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
 	add_child_autofree(scene)

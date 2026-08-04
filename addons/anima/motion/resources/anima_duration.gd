@@ -34,6 +34,10 @@ static func estimated(p_seconds: float) -> AnimaDuration:
 static func dynamic() -> AnimaDuration:
 	return AnimaDuration.new(Kind.DYNAMIC, 0.0)
 
+## Builds a [constant Kind.INFINITE] duration (never finishes on its own).
+static func infinite() -> AnimaDuration:
+	return AnimaDuration.new(Kind.INFINITE, 0.0)
+
 ## Worst-kind-wins: the least certain kind among a composite's children.
 static func worst_kind(durations: Array[AnimaDuration]) -> Kind:
 	var result := Kind.FIXED

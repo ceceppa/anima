@@ -5,9 +5,9 @@
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/playground/shared/components/card.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="7"]
+[ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="7"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xfwvc"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w5r0q"]
 content_margin_left = 32.0
 content_margin_top = 24.0
 content_margin_right = 32.0
@@ -72,7 +72,7 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=1934436438 instance=ExtResource("3")]
-theme_override_styles/panel = SubResource("StyleBoxFlat_xfwvc")
+theme_override_styles/panel = SubResource("StyleBoxFlat_w5r0q")
 title = "Group Motion"
 subtitle = "Coordinate one motion across a collection of artwork cards."
 icon = "✦"
@@ -141,7 +141,6 @@ text = "Playback"
 [node name="PlaybackSelector" parent="Margin/Content/Stage/StageContent/HBoxContainer" unique_id=1028358552 instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Margin/Content/Stage/StageContent" unique_id=1053052962]
 layout_mode = 2
@@ -154,7 +153,6 @@ text = "Ordering"
 [node name="OrderSelector" parent="Margin/Content/Stage/StageContent/HBoxContainer2" unique_id=1201445042 instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
 
 [node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=1076318812 instance=ExtResource("7")]
 unique_name_in_owner = true

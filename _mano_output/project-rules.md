@@ -146,6 +146,23 @@ static func get_singleton() -> AnimaRuntime:
 - Pass that record to runtime, preview, tracing, and reverse operations instead of recomputing schedule state independently.
 - Follow the group contract in `tech-spec.md`; do not add uncontracted configuration fields inline.
 
+## Signal Connections
+
+**What:** Connect a signal through the editor/scene file — the Node panel's drag-and-connect, which produces a `[connection signal="..." from="..." to="..." method="..."]` line in the `.tscn` — whenever both the emitting node and the receiving node/method already exist in that scene at edit time. Only connect with GDScript (`.connect()`) when the emitting node doesn't exist until runtime — an instantiated template, a node built in a loop, or similar — where there is no scene-file node to wire.
+
+**Why:** An editor-declared connection is visible and editable directly in the `.tscn`/Node panel without opening the script, and is Godot's own default authoring path; a code-only connection for a node that was already sitting in the scene is a second, harder-to-discover source of the same wiring, and is easy to leave stale or duplicated when a node is renamed, removed, or reconnected.
+
+**Pattern:**
+```
+# Preferred — an editor-connected signal on a node already in the scene:
+[connection signal="reverse_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_reverse_pressed"]
+
+# GDScript only when the node doesn't exist until runtime:
+for family in FAMILY_ORDER:
+    var button: SelectorButton = SELECTOR_BUTTON.instantiate()
+    button.pressed.connect(select_family.bind(family))
+```
+
 ## Patterns
 
 **What:** Every `AnimaMotion` subtype implements all three base-contract methods explicitly — `estimate_duration()`, `create_runtime()`, `validate()`. Never rely on an inherited default that silently returns a zero, empty, or no-op result.
@@ -486,6 +503,21 @@ func _ready() -> void:
 # assigned in the editor Inspector); the script only grabs it via @onready
 # and drives runtime-only values (e.g. a shader's `progress` parameter).
 @onready var _mesh_instance: MeshInstance3D = %MeshInstance
+```
+
+**What:** Any `examples/playground/shared/components/` element that needs a genuine radial gradient fill or a soft accent glow — a stage background, a card frame — builds it with a `GradientTexture2D` set to `fill = GradientTexture2D.FILL_RADIAL`, the same technique the stage background glow already uses. Never a second mechanism for the same look — no inline shader, no hand-drawn `_draw()` override. This doesn't cover a genuinely flat fill (e.g. the playback buttons' flat `accent` fill and border) — a gradient/glow was tried there and dropped for reading as visual noise; `StyleBoxFlat` is the right tool for a flat colour with a border, not a workaround this rule forbids.
+
+**Why:** The radial-gradient technique is already proven and reused across every 2D playground's stage background; a different mechanism for the same visual effect elsewhere would only fork how one look is achieved, with no benefit, and make the next glow/gradient addition a fresh decision instead of a known pattern.
+
+**Pattern:**
+```gdscript
+var gradient := Gradient.new()
+gradient.set_color(0, accent_soft)  # centre highlight
+gradient.set_color(1, accent)       # edge
+
+var texture := GradientTexture2D.new()
+texture.gradient = gradient
+texture.fill = GradientTexture2D.FILL_RADIAL
 ```
 
 ---

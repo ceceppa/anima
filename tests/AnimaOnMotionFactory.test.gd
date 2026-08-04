@@ -63,6 +63,23 @@ func test_property_with_empty_path_fails_validation():
 	assert_null(motion)
 	assert_push_error("NodePath")
 
+func test_property_by_delegates_to_the_named_path_and_is_relative():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).property_by(NodePath("modulate:a"), -0.5)
+
+	assert_eq(motion.target_property, NodePath("modulate:a"))
+	assert_eq(motion.to_value, -0.5)
+	assert_eq(motion.is_relative, true)
+
+func test_property_by_with_empty_path_fails_validation():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).property_by(NodePath(), 1.0)
+
+	assert_null(motion)
+	assert_push_error("NodePath")
+
 func test_property_delegates_to_the_named_path_with_no_class_restriction():
 	var node3d: Node3D = add_child_autofree(Node3D.new())
 

@@ -178,7 +178,7 @@ Examples:
 
 Ignore `.example.md` hooks.
 
-Hooks are suggest-only. Do not run them automatically.
+A hook's `## Mode` section decides how it runs. `suggest` (the default, and the kind assumed everywhere below) produces findings and is never run automatically in manual mode — ask first. `command` names one command in a `## Command` section and **always runs, in both modes**, after the artifacts are written: the hook file is the authorization, so do not ask. Report it in one line of the execution log, take the command only from the hook file, and on failure report the exact error without retrying, fixing the user's script, or hand-editing artifacts to compensate. Full contract: `_mano/workflow.md` → **Optional Post-Skill Hooks**.
 
 <!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
 When a just-run `post-start`, `post-spec`, or `post-rules` hook has printed
@@ -190,7 +190,7 @@ and must not be edited here. Apply the smallest selected change and preserve
 unmentioned content and adjacent values.
 <!-- /mano-rule: post-hook-findings-triage -->
 
-If an active hook exists, mention it in the final response before the next-action block:
+If an active `suggest` hook exists, mention it in the final response before the next-action block (a `command` hook has already run — report it in the execution log instead):
 
 ```text
 Active post-[skill] hook found: `_mano/hooks/post-[skill].md`.
@@ -205,7 +205,7 @@ Do not mention specific third-party or external skill names in generic Mano outp
 
 Do not print the hook's suggested prompt unless the user asks to run or view the hook.
 
-Do not execute hooks without explicit user confirmation.
+Do not execute a `suggest` hook without explicit user confirmation.
 
 Do not write hook suggestions into generated artifacts.
 <!-- MANO:END -->

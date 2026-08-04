@@ -142,7 +142,7 @@ func test_reversing_a_non_group_playback_returns_to_the_actual_start_value():
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 	assert_almost_eq(node.position.x, 10.0, 0.01)
 
-	playback.reverse()
+	assert_true(playback.reverse(), "reverse() should report success once something has actually been captured")
 	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
 	for i in range(6):
 		playback._advance(1.0 / 60.0)
@@ -157,6 +157,94 @@ func test_reversing_a_playback_with_nothing_captured_yet_reports_an_error():
 	add_child_autofree(node)
 
 	var playback := Anima.play(motion, node)
-	playback.reverse()
+	var succeeded := playback.reverse()
 	assert_push_error("nothing captured to reverse")
+	assert_false(succeeded, "reverse() should report failure so a caller can react instead of assuming it worked")
 	playback.cancel()
+
+func test_reversing_a_group_returns_every_item_to_its_starting_value():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group_with_children(root, 3, 0.05)
+
+	var playback := Anima.play(group, root)
+	for i in range(20):
+		playback._advance(0.02)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	for child in root.get_children():
+		assert_almost_eq(child.position.x, 10.0, 0.01, "every item should have reached the forward destination")
+
+	playback.reverse()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+	for i in range(20):
+		playback._advance(0.02)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	for child in root.get_children():
+		assert_almost_eq(child.position.x, 0.0, 0.01, "every item should return to where it actually started")
+
+func test_reversing_a_group_with_nested_sequence_item_motion_returns_to_start():
+	var root := Node.new()
+	add_child_autofree(root)
+	for i in 2:
+		root.add_child(Node2D.new())
+
+	var step_one := AnimaPropertyMotion.new()
+	step_one.target_property = NodePath("position:x")
+	step_one.to_value = 10.0
+	step_one.duration = 0.05
+	var step_two := AnimaPropertyMotion.new()
+	step_two.target_property = NodePath("position:y")
+	step_two.to_value = 20.0
+	step_two.duration = 0.05
+
+	var item_sequence := AnimaSequence.new()
+	item_sequence.children = [step_one, step_two]
+
+	var group := AnimaGroupMotion.new()
+	group.target_collection = AnimaTargetCollection.new()
+	group.item_motion = item_sequence
+	group.playback_mode = AnimaGroupMotion.PlaybackMode.PARALLEL
+
+	var playback := Anima.play(group, root)
+	for i in range(20):
+		playback._advance(0.02)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	for child in root.get_children():
+		assert_almost_eq(child.position.x, 10.0, 0.01)
+		assert_almost_eq(child.position.y, 20.0, 0.01)
+
+	playback.reverse()
+	for i in range(20):
+		playback._advance(0.02)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	for child in root.get_children():
+		assert_almost_eq(child.position.x, 0.0, 0.01, "nested item motion should reverse back to its own starting value")
+		assert_almost_eq(child.position.y, 0.0, 0.01, "nested item motion should reverse back to its own starting value")
+
+func test_on_started_and_on_completed_fire_once_for_a_group():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group_with_children(root, 2, 0.05)
+	var events: Array[String] = []
+	group.on_started(func(): events.append("started"))
+	group.on_completed(func(): events.append("completed"))
+
+	var playback := Anima.play(group, root)
+	assert_eq(events, ["started"])
+	for i in range(20):
+		playback._advance(0.02)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_eq(events, ["started", "completed"])
+
+func test_reversing_a_group_with_no_resolved_targets_reports_an_error():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group_with_children(root, 0) # no children to resolve
+	group.empty_group_policy = AnimaGroupMotion.EmptyGroupPolicy.COMPLETE
+
+	var playback := Anima.play(group, root)
+	playback._advance(0.001)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	var succeeded := playback.reverse()
+	assert_push_error("nothing captured to reverse")
+	assert_false(succeeded, "reverse() should report failure so a caller can react instead of assuming it worked")

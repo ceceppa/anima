@@ -115,3 +115,23 @@ func test_restart_and_reverse_replay_the_same_selected_grid_configuration():
 	assert_eq(restarted.state, AnimaPlayback.State.FINISHED)
 	var restarted_instance := restarted._instance as AnimaGroupPlayback
 	assert_eq(restarted_instance.execution_record.entries[0].target, forward_first, "restart should replay the same tapped start point forward again")
+
+## Regression: pressing reverse before the auto-started grid had captured
+## even one frame used to silently no-op (AnimaPlayback.reverse() had
+## nothing to reverse to), leaving the original forward run untouched.
+func test_pressing_reverse_before_anything_has_played_still_reverses():
+	var scene := await _open_scene()
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.restart_pressed.emit()
+	var original_playback: AnimaPlayback = scene.get("_active_playback")
+	controls.reverse_pressed.emit() # same frame as restart — nothing captured yet
+	assert_push_error("nothing captured to reverse")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	assert_ne(playback, original_playback, "reverse() failing natively should fall back to a fresh play_backwards() run, not leave the original forward playback untouched")
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+
+	for i in range(200):
+		playback._advance(0.02)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "the fallback reversed run should still play through and finish")

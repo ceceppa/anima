@@ -23,6 +23,18 @@ func test_move_by_offsets_from_the_actual_start_value():
 
 	assert_almost_eq(node.position.x, 50.0, 0.01)
 
+func test_property_by_produces_the_same_result_as_move_by_for_an_equivalent_property():
+	var move_by_node: Node2D = add_child_autofree(Node2D.new())
+	move_by_node.position = Vector2(10.0, 0.0)
+	var property_by_node: Node2D = add_child_autofree(Node2D.new())
+	property_by_node.position = Vector2(10.0, 0.0)
+
+	_play(Anima.on(move_by_node).move_by(Vector2(40.0, 0.0), 0.5), move_by_node)
+	_play(Anima.on(property_by_node).property_by(NodePath("position"), Vector2(40.0, 0.0), 0.5), property_by_node)
+
+	assert_almost_eq(property_by_node.position.x, move_by_node.position.x, 0.01)
+	assert_almost_eq(property_by_node.position.x, 50.0, 0.01)
+
 func test_scale_and_rotation_change_a_control_target():
 	var control: Control = add_child_autofree(Control.new())
 

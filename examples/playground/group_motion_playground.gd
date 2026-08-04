@@ -66,23 +66,36 @@ func select_order(ordering: Ordering) -> void:
 	restart()
 
 ## Restarts the currently selected group combination from its first visible card.
-func restart() -> void:
+func restart(play := true) -> void:
 	if active_playback != null and active_playback.state == AnimaPlayback.State.PLAYING:
 		active_playback.cancel()
 	for card in _cards():
 		card.set_progress(0.0)
 	_group = _build_group()
+
 	active_playback = Anima.play(_group, self)
 
 ## Replays this run's resolved card collection in reverse order and returns the
-## decorative cards to their resting appearance.
+## decorative cards to their resting appearance. If nothing has been captured
+## yet, starts the same group motion already reversed instead of leaving the
+## original forward run untouched.
 func reverse() -> void:
 	if active_playback == null:
 		restart()
-	active_playback._advance(0.0)
-	var item := _group.item_motion as AnimaPropertyMotion
-	item.to_value = 0.0
-	active_playback.reverse()
+		return
+
+	if not active_playback.reverse():
+		var motion := active_playback.motion
+		var target := active_playback.target
+		# The original playback is still validly PLAYING forward — it just
+		# failed to reverse in place. Cancel it before discarding the
+		# reference, or it stays registered with AnimaRuntime and keeps
+		# getting ticked (eventually against a freed target) after nothing
+		# in this scene can reach it anymore.
+		if active_playback.state == AnimaPlayback.State.PLAYING:
+			active_playback.cancel()
+		
+		active_playback = Anima.play_backwards(motion, target)
 
 func _cards() -> Array[Card]:
 	var cards: Array[Card] = []

@@ -29,9 +29,10 @@ func advance(target: Node, delta: float) -> bool:
 	if _child_instances.is_empty():
 		return true
 
+	var scaled_delta := delta * motion.speed
 	for i in range(_child_instances.size()):
 		if not _child_finished[i]:
-			_child_finished[i] = _child_instances[i].advance(target, delta)
+			_child_finished[i] = _child_instances[i].advance(target, scaled_delta)
 
 	if _completion_index >= 0:
 		return _child_finished[_completion_index]
@@ -50,4 +51,8 @@ func build_reversed() -> AnimaMotion:
 		var reversed_child: AnimaMotion = child_instance.build_reversed()
 		if reversed_child != null:
 			reversed.children.append(reversed_child)
-	return reversed if not reversed.children.is_empty() else null
+	if reversed.children.is_empty():
+		return null
+	reversed.on_started_callback = motion.on_started_callback
+	reversed.on_completed_callback = motion.on_completed_callback
+	return reversed

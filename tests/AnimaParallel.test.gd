@@ -96,4 +96,29 @@ func test_named_child_policy_finishes_as_soon_as_named_child_finishes():
 
 	assert_almost_eq(node.position.y, 20.0, 0.01)
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+func test_reversing_a_finished_parallel_returns_every_child_to_its_start_value():
+	var node := Node2D.new()
+	autofree(node)
+
+	var parallel := AnimaParallel.new()
+	parallel.children = [
+		_make_child("position:x", 10.0, 0.2),
+		_make_child("position:y", 20.0, 0.2),
+	]
+
+	var playback := AnimaPlayback.new(parallel, node)
+	for i in range(3):
+		playback._advance(0.1)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(node.position.x, 10.0, 0.01)
+	assert_almost_eq(node.position.y, 20.0, 0.01)
+
+	playback.reverse()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+	for i in range(3):
+		playback._advance(0.1)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(node.position.x, 0.0, 0.01, "reversing a parallel should return every child to its starting value")
+	assert_almost_eq(node.position.y, 0.0, 0.01, "reversing a parallel should return every child to its starting value")
 	assert_lt(node.position.x, 10.0)

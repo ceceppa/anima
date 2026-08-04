@@ -270,3 +270,32 @@ No feedback logged.
 ### What we learned
 
 - Phase 8 and 9's incremental dock fixes were validated against passing tests and each phase's own acceptance criteria, but never compared against the original PRD reference image until this review — checking new editor-tooling work against its own source reference earlier would likely have caught the direction mismatch sooner.
+
+---
+
+## Phase 10 Review — 2026-08-05
+
+### What worked
+
+- All 7 phase stories shipped and marked done, plus two mid-build additions (7a, 7b) for playback-control styling.
+- Acknowledged Risk 3 ("the reverse-playback issue may be a regression... rather than a gap") held up: story 1 traced it to a genuine implementation bug — a group's items never reversed their own motion, only their order — not a missing feature.
+
+### What didn't
+
+- Stories 7a and 7b (playback-button styling) fell outside the phase's own Phase Goal (the `Anima.on()` API) — added mid-build by direct request rather than scoped through `mano start`, and flagged as such at the time.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| The reverse-playback fix only needs to cover motion kinds already buildable today (single node, sequence, parallel, group, grid); keyframe reverse is a separate, later slice once KeyFrames exist. | If keyframes share the same reversal machinery, splitting the fix could mean revisiting this phase's reverse work when KeyFrames ship. | No verdict given — phase closed without an assumption review. | inconclusive |
+| The built-in animation presets (Phase 12 candidate) will be authored as convenience calls through `Anima.on()` rather than a separate mechanism. | If presets need a different invocation path, this phase's API surface may need rework once that phase starts. | No verdict given — phase closed without an assumption review. | inconclusive |
+| `Anima.on()`/`Anima.item()` shipped a working baseline in Phase 7; this phase hardens and closes gaps, and the reverse-playback issue is a regression or an untested case rather than something never built. | If the reverse issue is a deeper architectural gap, stories could duplicate Phase 7 work or scope the wrong fix. | No verdict given — phase closed without an assumption review. | inconclusive |
+
+### Feedback that changes future scope
+
+No feedback logged.
+
+### What we learned
+
+- The playback-button styling work (7a, 7b) surfaced two real runtime bugs unrelated to styling itself — `AnimaPlayback.reverse()` silently no-opping when nothing was captured yet, and a discarded-but-uncancelled playback leaking into `AnimaRuntime` — both found only because the user exercised the actual playground UI, not through the phase's own test suite.

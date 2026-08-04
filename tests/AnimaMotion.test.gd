@@ -10,6 +10,8 @@ func test_default_values():
 	assert_eq(motion.speed, 1.0)
 	assert_eq(motion.tags, [])
 	assert_eq(motion.metadata, {})
+	assert_false(motion.on_started_callback.is_valid())
+	assert_false(motion.on_completed_callback.is_valid())
 
 func _leaf(display_name: String) -> AnimaMotion:
 	var motion := AnimaMotion.new()
@@ -80,3 +82,47 @@ func test_then_after_with_starts_a_new_step_leaving_the_earlier_group_intact():
 	assert_eq(result.children[0].children, [a, b])
 	assert_true(result.children[1] is AnimaParallel)
 	assert_eq(result.children[1].children, [c, d])
+
+func test_on_started_sets_callback_and_returns_self():
+	var motion := AnimaMotion.new()
+	var callback := func(): pass
+
+	var result := motion.on_started(callback)
+
+	assert_eq(result, motion)
+	assert_eq(motion.on_started_callback, callback)
+
+func test_on_completed_sets_callback_and_returns_self():
+	var motion := AnimaMotion.new()
+	var callback := func(): pass
+
+	var result := motion.on_completed(callback)
+
+	assert_eq(result, motion)
+	assert_eq(motion.on_completed_callback, callback)
+
+func test_repeat_wraps_the_motion_in_an_animarepeat():
+	var motion := _leaf("a")
+
+	var result := motion.repeat(3, true)
+
+	assert_true(result is AnimaRepeat)
+	assert_eq(result.child, motion)
+	assert_eq(result.count, 3)
+	assert_eq(result.alternate, true)
+
+func test_repeat_defaults_to_indefinite_non_alternating():
+	var motion := _leaf("a")
+
+	var result := motion.repeat()
+
+	assert_eq(result.count, -1)
+	assert_eq(result.alternate, false)
+
+func test_with_speed_sets_speed_and_returns_self():
+	var motion := AnimaMotion.new()
+
+	var result := motion.with_speed(2.0)
+
+	assert_eq(result, motion)
+	assert_eq(motion.speed, 2.0)

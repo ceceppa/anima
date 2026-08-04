@@ -124,6 +124,21 @@ func property(path: NodePath, to: Variant, duration: float = 0.0) -> AnimaProper
 	_stamp_origin(motion, "property")
 	return motion
 
+## Same as [method property], except [param delta] is added to whatever
+## [param path] actually holds when the motion begins, instead of replacing
+## it — the generic counterpart to [method move_by]/[method rotate_by]/
+## [method scale_by] for any other property.
+func property_by(path: NodePath, delta: Variant, duration: float = 0.0) -> AnimaPropertyMotion:
+	if path.is_empty():
+		push_error("Anima.on(...).property_by() needs a non-empty NodePath.")
+		return null
+
+	var motion := Motion.to(path, delta)
+	motion.duration = duration
+	motion.is_relative = true
+	_stamp_origin(motion, "property_by")
+	return motion
+
 func _vector_leaf(method_name: String, property_name: String, value: Variant, duration: float, relative: bool) -> AnimaPropertyMotion:
 	if target == null:
 		return _fail(method_name, "a target — Anima.on(null) already reported this")

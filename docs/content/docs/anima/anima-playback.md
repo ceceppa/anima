@@ -74,14 +74,19 @@ shape — composites and non-SPRING eases have no defined retarget behaviour.
 
 ### reverse
 
-Reverses this playback, returning the target to what was actually observed
-when the run began. For an [AnimaGroupMotion] (including [AnimaGridMotion]),
-reuses its recorded target sequence instead of resolving and scheduling it
-again — a [constant AnimaGroupOrder.Kind.RANDOM] order does not reshuffle —
-and restarts this same playback from the top, respecting [member
-AnimaGroupMotion.reverse_order_policy]. For a leaf [AnimaPropertyMotion] or
-an [AnimaSequence]/[AnimaParallel] composition of them (e.g. a target-bound
-motion authored through [method Anima.on]), replaces [member motion] with a
-freshly built reversed motion and restarts playback against it — see
-[method AnimaMotionInstance.build_reversed]. An error (not silently
-ignored) when nothing has been captured yet to reverse to.
+Reverses this playback, returning every target to what was actually
+observed when the run began. For an [AnimaGroupMotion] (including
+[AnimaGridMotion]), reuses its recorded target sequence instead of
+resolving and scheduling it again — a [constant AnimaGroupOrder.Kind.RANDOM]
+order does not reshuffle — replays each started item's own reversed motion
+(see [method AnimaGroupPlayback.build_reversed_item_motions]) instead of
+its original forward one, and restarts this same playback from the top,
+respecting [member AnimaGroupMotion.reverse_order_policy] for item order.
+For a leaf [AnimaPropertyMotion] or an [AnimaSequence]/[AnimaParallel]
+composition of them (e.g. a target-bound motion authored through [method
+Anima.on]), replaces [member motion] with a freshly built reversed motion
+and restarts playback against it — see [method AnimaMotionInstance.build_reversed].
+Returns `false` (and pushes an error, not silently ignored) when nothing
+has been captured yet to reverse to, for every motion kind — the caller
+can react (e.g. [method Anima.play_backwards] instead) rather than this
+call being a silent no-op that leaves the original forward run untouched.

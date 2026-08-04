@@ -145,12 +145,22 @@ func restart() -> void:
 	_active_playback = Anima.play(_grid_motion, self)
 
 ## Replays the resolved tile sequence backward through its actually-recorded
-## run — the same public AnimaPlayback.reverse() any group already has.
+## run — the same public AnimaPlayback.reverse() any group already has. If
+## nothing has been captured yet, starts the same grid motion already
+## reversed instead of leaving the original forward run untouched.
 func reverse() -> void:
 	if _active_playback == null:
 		restart()
 		return
-	_active_playback.reverse()
+	if not _active_playback.reverse():
+		var motion := _active_playback.motion
+		var target := _active_playback.target
+		# The original playback is still validly PLAYING forward — cancel it
+		# before discarding the reference, or it stays registered with
+		# AnimaRuntime and keeps getting ticked after nothing here can reach it.
+		if _active_playback.state == AnimaPlayback.State.PLAYING:
+			_active_playback.cancel()
+		_active_playback = Anima.play_backwards(motion, target)
 
 func _cards() -> Array[Card]:
 	var cards: Array[Card] = []

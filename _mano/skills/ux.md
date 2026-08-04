@@ -79,7 +79,7 @@ Ignore this file:
 
 If an active `post-ux.md` hook exists, prepare the generic hook block for the final chat response.
 
-Do not run the hook automatically.
+Check the hook's `## Mode` first: a `command` hook runs automatically in both modes and is reported in the execution log, never as a suggestion (`_mano/workflow.md` → **Optional Post-Skill Hooks**). Do not run a `suggest` hook automatically.
 
 Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook.
 

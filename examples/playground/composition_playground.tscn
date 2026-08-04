@@ -4,8 +4,9 @@
 [ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="1_lyx8s"]
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="5_0cbyn"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mpv4"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0cbyn"]
 content_margin_left = 32.0
 content_margin_top = 24.0
 content_margin_right = 32.0
@@ -54,7 +55,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=941379105 instance=ExtResource("3")]
 unique_name_in_owner = true
-theme_override_styles/panel = SubResource("StyleBoxFlat_3mpv4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_0cbyn")
 title = "Composition"
 subtitle = "See how simple animations come together in expressive flows."
 icon = "✦"
@@ -144,3 +145,10 @@ alignment = 1
 [node name="Selector" parent="Margin/Content/Stage/StageContent/DockMargin/DockRow" unique_id=230794907 instance=ExtResource("4")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="PlaybackControls" parent="Margin/Content" unique_id=1589438617 instance=ExtResource("5_0cbyn")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="restart_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_restart_pressed"]
+[connection signal="reverse_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_reverse_pressed"]

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Anima — Playback Controls preview</title>
+<style>
+  :root {
+    --bg: #060A16;
+    --surface: #11182A;
+    --stage-bg: #0A1224;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A8B4CC;
+    --accent: #7C3AED;
+    --accent-soft: #A78BFA;
+    --border: #26324B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 32px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  p.subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 24px;
+  }
+  .stage {
+    background: var(--stage-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--text-primary);
+    border: 2px solid var(--accent-soft);
+  }
+  .btn .icon {
+    display: block;
+    width: 36px;
+    height: 36px;
+  }
+  .label-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .label-block span {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .legend {
+    margin-top: 8px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .swatch-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .note {
+    max-width: 640px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 24px;
+  }
+  code {
+    color: var(--text-primary);
+    background: var(--surface);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <h1>Playback controls — flat fill + border, no glow</h1>
+  <p class="subtitle">Restart and reverse only, per design-brief.md §Component guide "Playback controls". Icons are the real supplied artwork (<code>play.svg</code> / <code>reverse.svg</code>), not placeholder glyphs.</p>
+
+  <div class="stage">
+    <div class="row">
+      <div class="label-block">
+        <div class="btn">
+          <svg class="icon" viewBox="0 0 1.92 1.92" fill="none">
+            <path stroke="#F8FAFC" stroke-linejoin="round" stroke-width="0.20445" d="m 1.5451303,0.68256102 c 0.1472039,0.0920023 0.2208057,0.13800346 0.2460553,0.19688501 a 0.20444967,0.20444967 0 0 1 0,0.16110637 c -0.02525,0.058882 -0.098851,0.1048826 -0.2460553,0.196885 L 0.85388607,1.6694396 C 0.6905308,1.7715622 0.60885315,1.8225724 0.54148694,1.8171544 A 0.20444967,0.20444967 0 0 1 0.39366988,1.7352724 C 0.35339328,1.680991 0.35339328,1.5846952 0.35339328,1.3920013 V 0.527997 c 0,-0.19269381 0,-0.28898957 0.0402765,-0.34327097 a 0.20444967,0.20444967 0 0 1 0.14781716,-0.0818821 c 0.0674684,-0.005418 0.14904386,0.045592 0.31239913,0.14771486 z"/>
+          </svg>
+        </div>
+        <span>Restart (play.svg)</span>
+      </div>
+      <div class="label-block">
+        <div class="btn">
+          <svg class="icon" viewBox="0 0 1.92 1.92">
+            <path fill="#F8FAFC" d="M 1.189121,0.27428555 V 1.6457141 L 0.4896923,0.95999985 Z m -0.1920001,-0.192 c -0.3565715,0.3428572 -0.9051429,0.8777143 -0.9051429,0.8777143 0,0 0.5485714,0.53485705 0.9051429,0.87771425 0.0548572,0.054857 0.1234286,0.082286 0.1920001,0.082286 0.1508571,0 0.2742857,-0.1234286 0.2742857,-0.2742857 V 0.27428555 c 0,-0.1508571 -0.1234286,-0.2742857 -0.2742857,-0.2742857 -0.068572,0 -0.1371429,0.027429 -0.1920001,0.082286"/>
+          </svg>
+        </div>
+        <span>Reverse (reverse.svg)</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="swatch-row"><div class="swatch" style="background:#7C3AED"></div>accent #7C3AED — flat fill</div>
+      <div class="swatch-row"><div class="swatch" style="background:#A78BFA"></div>accent-soft #A78BFA — 2px border</div>
+      <div class="swatch-row"><div class="swatch" style="background:#F8FAFC"></div>text-primary #F8FAFC — icon artwork colour</div>
+    </div>
+  </div>
+
+  <p class="note">
+    Both buttons get the same treatment — neither is styled as more "primary" than the other. Fill: flat <code>accent</code>, a <code>StyleBoxFlat</code> so it can carry a border. Border: 2px <code>accent-soft</code>. Corner radius: 48px (half the 96px button, keeping it a true circle). No glow — an earlier pass tried one behind each button and dropped it for reading as visual noise rather than depth; the flat fill and border carry the definition on their own now.
+  </p>
+</body>
+</html>

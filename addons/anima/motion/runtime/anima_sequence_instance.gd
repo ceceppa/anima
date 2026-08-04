@@ -37,7 +37,8 @@ func advance(target: Node, delta: float) -> bool:
 	if _states.is_empty():
 		return true
 
-	_elapsed += delta
+	var scaled_delta := delta * motion.speed
+	_elapsed += scaled_delta
 
 	for state in _states:
 		if state.finished:
@@ -49,7 +50,7 @@ func advance(target: Node, delta: float) -> bool:
 			state.started = true
 			state.instance = state.child.create_runtime()
 
-		state.finished = state.instance.advance(target, delta)
+		state.finished = state.instance.advance(target, scaled_delta)
 
 	for state in _states:
 		if not state.finished:
@@ -73,4 +74,8 @@ func build_reversed() -> AnimaMotion:
 		var reversed_child: AnimaMotion = state.instance.build_reversed()
 		if reversed_child != null:
 			reversed.children.append(reversed_child)
-	return reversed if not reversed.children.is_empty() else null
+	if reversed.children.is_empty():
+		return null
+	reversed.on_started_callback = motion.on_started_callback
+	reversed.on_completed_callback = motion.on_completed_callback
+	return reversed

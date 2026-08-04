@@ -50,6 +50,10 @@ Builds a [constant Kind.ESTIMATED] duration of [param p_seconds].
 
 Builds a [constant Kind.DYNAMIC] duration (no known length).
 
+### infinite
+
+Builds a [constant Kind.INFINITE] duration (never finishes on its own).
+
 ### worst_kind
 
 Worst-kind-wins: the least certain kind among a composite's children.

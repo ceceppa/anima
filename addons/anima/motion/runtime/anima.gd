@@ -11,6 +11,13 @@ const BEHAVIOUR_META_KEY := "_anima_behaviour"
 ## for discovery.
 const BEHAVIOUR_GROUP := "_anima_enabled"
 
+## Project-level fallback duration (seconds) a convenience-authored
+## [AnimaPropertyMotion] uses when it has no explicit duration and its target
+## has no attached [AnimaBehaviour] (whose own [member AnimaBehaviour.default_duration]
+## takes precedence). Read live when a motion begins, so a later change here
+## still applies to any motion authored (but not yet played) before it.
+static var default_duration: float = 0.3
+
 ## Plays [param motion] against [param target] and returns the resulting
 ## [AnimaPlayback]. [param target] is optional when [param motion] supplies
 ## its own targets (e.g. [AnimaStagger], which ignores [param target]
@@ -28,6 +35,17 @@ const BEHAVIOUR_GROUP := "_anima_enabled"
 ## ```
 static func play(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
 	return AnimaRuntime.get_singleton().play(motion, target)
+
+## Same as [method play], except playback begins already running backward —
+## no prior forward run needed. Captures [param motion]'s start/end with one
+## zero-length frame (so nothing visibly moves first), then reverses in
+## place, the same way [method AnimaPlayback.reverse] would after a forward
+## run — see [method AnimaMotionInstance.build_reversed]. To choose direction
+## from a condition at play time, branch between [method play] and this
+## method (v1's `play_as_backwards_when`); no dedicated third method exists
+## for it.
+static func play_backwards(motion: AnimaMotion, target: Node = null) -> AnimaPlayback:
+	return AnimaRuntime.get_singleton().play_backwards(motion, target)
 
 ## Resolves [param target_reference] then plays [param motion] against that
 ## node. Supply [param scene_root] for a saved scene-relative reference or

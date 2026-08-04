@@ -23,4 +23,16 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 ### advance
 
 Advances the current repetition; once it finishes, either waits out
-delay_between and starts the next repetition, or completes if that was the last one.
+delay_between and starts the next repetition, or completes if that was the
+last one. A negative [member AnimaRepeat.count] never completes on its own.
+
+### build_reversed
+
+Builds a reversed [AnimaRepeat]: the currently-active iteration's own
+reversed motion (see [method AnimaMotionInstance.build_reversed]), repeated
+the same [member AnimaRepeat.count] times with the same [member
+AnimaRepeat.delay_between] and [member AnimaRepeat.alternate] — the same
+"freshly built reversed motion, restart from the top" rule already applied
+to a leaf/[AnimaSequence]/[AnimaParallel] reversal, extended to [AnimaRepeat]
+instead of carved out as a special case. `null` before any iteration has
+captured a value yet.

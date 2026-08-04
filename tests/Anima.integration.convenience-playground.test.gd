@@ -12,7 +12,7 @@ func test_the_playground_shows_the_shared_header_card_example_line_selector_and_
 	assert_not_null(scene.find_child("Header", true, false))
 
 	var selector: SelectorDock = scene.get_node("%Selector")
-	assert_eq(selector.get_item_count(), 12, "one item per showcased Anima.on() family")
+	assert_eq(selector.get_item_count(), 13, "one item per showcased Anima.on() family")
 
 func test_selecting_each_family_produces_a_visible_card_run_matching_the_shown_example():
 	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
@@ -27,7 +27,7 @@ func test_selecting_each_family_produces_a_visible_card_run_matching_the_shown_e
 
 		var playback: AnimaPlayback = scene.get("_active_playback")
 		assert_not_null(playback, "selecting a family should start a public AnimaPlayback")
-		assert_true(playback.motion is AnimaPropertyMotion, "every showcased family builds a single AnimaPropertyMotion")
+		assert_true(playback.motion is AnimaPropertyMotion or playback.motion is AnimaRepeat, "every showcased family builds a single AnimaPropertyMotion, or an AnimaRepeat wrapping one")
 		assert_string_contains(example_line.text, "Anima.on(card)", "the shown example line should match the family actually playing")
 
 		for i in range(30):
@@ -65,6 +65,35 @@ func test_resetting_the_card_uses_the_current_centred_position_not_a_stale_snaps
 
 	assert_eq(card.position, expected_position, "resetting should recentre against the container's actual current size, not a value captured once at _ready()")
 
+## Regression: pressing reverse before the just-restarted run had captured
+## even one frame used to silently no-op (AnimaPlayback.reverse() had
+## nothing to reverse to), leaving the original forward run playing
+## untouched — the card would end up having moved forward and stayed there,
+## not returned to rest. restart() then reverse_pressed() in the same frame,
+## with no tick in between, deterministically forces the zero-capture case.
+func test_pressing_reverse_before_anything_has_played_still_reverses():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var card: Card = scene.get_node("%Card")
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+
+	controls.restart_pressed.emit()
+	var base_x := card.position.x
+	var original_playback: AnimaPlayback = scene.get("_active_playback")
+	controls.reverse_pressed.emit() # same frame as restart — nothing captured yet
+	assert_push_error("nothing captured to reverse")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	assert_ne(playback, original_playback, "reverse() failing natively should fall back to a fresh play_backwards() run, not leave the original forward playback untouched")
+
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(card.position.x, base_x, 0.5, "reversing before anything played should end back at rest, not have moved forward and stayed there")
+
 func test_restart_and_reverse_replay_the_selected_motions_actual_recorded_run():
 	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
 	add_child_autofree(scene)
@@ -94,3 +123,45 @@ func test_restart_and_reverse_replay_the_selected_motions_actual_recorded_run():
 	for i in range(30):
 		restarted._advance(1.0 / 60.0)
 	assert_almost_eq(card.position.x, moved_x, 0.01, "restart should play the selected family forward again")
+
+## Exercises the phase goal end-to-end: lifecycle callbacks, repeat, and
+## playback-direction control together on one motion, with reverse producing
+## a correct, predictable end state — the concrete form of "A developer can
+## write Anima.on(node) to animate a property with lifecycle callbacks,
+## repeat, and playback-direction control" (phase-10 phase-brief.md "Phase Goal").
+func test_chained_family_demonstrates_callbacks_repeat_and_reverse_together():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var example_line: Label = scene.get_node("%ExampleLine")
+	var card: Card = scene.get_node("%Card")
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+
+	var chained_index := selector.get_item_count() - 1
+	selector.get_item(chained_index).pressed.emit()
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	assert_true(playback.motion is AnimaRepeat, "the chained family should repeat its move_by motion")
+	assert_string_contains(example_line.text, "started", "on_started should already have fired and be reflected in the example line")
+
+	var base_x := card.position.x
+	# move_by has no explicit .from(), so each of the 2 repetitions moves
+	# another 50px from wherever the card actually is when it starts —
+	# base -> base+50 -> base+100, not two identical 0-to-50 legs.
+	for i in range(30): # two 0.2s iterations — enough to finish both
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_string_contains(example_line.text, "completed", "on_completed should have fired once the whole repeat run finished")
+	assert_almost_eq(card.position.x, base_x + 100.0, 0.5, "two accumulating move_by repetitions of +50px each should land 100px on from the base position")
+
+	controls.reverse_pressed.emit()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	# Reverse replays the last captured leg (base+50 -> base+100, mirrored)
+	# for both repeat iterations, so it lands back at base+50, not base+0 —
+	# the same "actually observed run, not full history" rule reverse()
+	# already applies to every other motion kind.
+	assert_almost_eq(card.position.x, base_x + 50.0, 0.5, "reversing the chained repeat should return through its actually-recorded last leg")

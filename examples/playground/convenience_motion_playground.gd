@@ -3,13 +3,13 @@ extends ExamplePlayground
 enum Family {
 	POSITION, POSITION_X, POSITION_Y, MOVE_BY,
 	SCALE, SCALE_BY, ROTATION, ROTATE_BY,
-	OPACITY, COLOR, SIZE, PROPERTY,
+	OPACITY, COLOR, SIZE, PROPERTY, CHAINED,
 }
 
 const FAMILY_ORDER := [
 	Family.POSITION, Family.POSITION_X, Family.POSITION_Y, Family.MOVE_BY,
 	Family.SCALE, Family.SCALE_BY, Family.ROTATION, Family.ROTATE_BY,
-	Family.OPACITY, Family.COLOR, Family.SIZE, Family.PROPERTY,
+	Family.OPACITY, Family.COLOR, Family.SIZE, Family.PROPERTY, Family.CHAINED,
 ]
 const FAMILY_LABELS := {
 	Family.POSITION: "Position",
@@ -24,6 +24,7 @@ const FAMILY_LABELS := {
 	Family.COLOR: "Colour",
 	Family.SIZE: "Size",
 	Family.PROPERTY: "Property",
+	Family.CHAINED: "Chained",
 }
 const FAMILY_EXAMPLES := {
 	Family.POSITION: "Anima.on(card).position(card.position + Vector2(60, -40), 0.4)",
@@ -38,6 +39,7 @@ const FAMILY_EXAMPLES := {
 	Family.COLOR: "Anima.on(card).color(Color(1.0, 0.4, 0.6), 0.4)",
 	Family.SIZE: "Anima.on(card).size(Vector2(280, 280), 0.4)",
 	Family.PROPERTY: "Anima.on(card).property(NodePath(\"modulate:b\"), 0.5, 0.4)",
+	Family.CHAINED: "Anima.on(card).move_by(Vector2(50, 0), 0.2).repeat(2).on_started(...).on_completed(...)",
 }
 const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
@@ -101,12 +103,23 @@ func restart() -> void:
 
 ## Reverses the currently selected motion through its actually-recorded run —
 ## the same public AnimaPlayback.reverse() a canonical motion uses
-## (tech-spec.md §Key technical decisions), no convenience-specific path.
+## (tech-spec.md §Key technical decisions), no convenience-specific path. If
+## nothing has been captured yet (pressed before even one frame played),
+## starts the same motion already reversed instead of leaving the original
+## forward run untouched — see AnimaPlayback.reverse()'s return value.
 func reverse() -> void:
 	if _active_playback == null:
 		restart()
 		return
-	_active_playback.reverse()
+	if not _active_playback.reverse():
+		var motion := _active_playback.motion
+		var target := _active_playback.target
+		# The original playback is still validly PLAYING forward — cancel it
+		# before discarding the reference, or it stays registered with
+		# AnimaRuntime and keeps getting ticked after nothing here can reach it.
+		if _active_playback.state == AnimaPlayback.State.PLAYING:
+			_active_playback.cancel()
+		_active_playback = Anima.play_backwards(motion, target)
 
 func _reset_card() -> void:
 	_card.size = _card.custom_minimum_size
@@ -118,7 +131,7 @@ func _reset_card() -> void:
 func _recenter_card() -> void:
 	_card.position = (_card_center.size - _card.size) / 2.0
 
-func _build_motion() -> AnimaPropertyMotion:
+func _build_motion() -> AnimaMotion:
 	match _selected_family:
 		Family.POSITION:
 			return Anima.on(_card).position(_card.position + Vector2(60.0, -40.0), 0.4)
@@ -142,13 +155,28 @@ func _build_motion() -> AnimaPropertyMotion:
 			return Anima.on(_card).color(Color(1.0, 0.4, 0.6), 0.4)
 		Family.SIZE:
 			return Anima.on(_card).size(Vector2(280.0, 280.0), 0.4)
-		_:
+		Family.PROPERTY:
 			return Anima.on(_card).property(NodePath("modulate:b"), 0.5, 0.4)
+		_:
+			return _build_chained_motion()
+
+## Demonstrates the lifecycle-callback and repeat chain modifiers together —
+## `.repeat()` comes before `.on_started()`/`.on_completed()` so the
+## callbacks land on the [AnimaRepeat] [AnimaPlayback] actually reads, not on
+## the leaf motion it wraps. Fires once each per full repeat run, not once
+## per iteration. Shown through the same read-only example line every other
+## family uses, appended with each event as it actually fires.
+func _build_chained_motion() -> AnimaMotion:
+	var base_text := FAMILY_EXAMPLES[Family.CHAINED]
+	return Anima.on(_card).move_by(Vector2(50.0, 0.0), 0.2) \
+		.repeat(2) \
+		.on_started(func(): _example_line.text = base_text + "  →  started") \
+		.on_completed(func(): _example_line.text = base_text + "  →  started  →  completed")
 
 ## Restrained depth behind the card — design-brief.md §Component guide
 ## "Content stage", the same treatment `composition_playground.gd` uses.
 func _style_glow() -> void:
-	var accent := Color(0.309804, 0.27451, 0.898039, 1.0)
+	var accent := Color(0.486275, 0.227451, 0.929412, 1.0) # design-brief.md accent #7C3AED
 	var gradient := Gradient.new()
 	gradient.set_color(0, Color(accent.r, accent.g, accent.b, GLOW_ALPHA))
 	gradient.set_color(1, Color(accent.r, accent.g, accent.b, 0.0))

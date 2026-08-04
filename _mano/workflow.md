@@ -359,7 +359,8 @@ Available Mano commands for [PHASE_ID]:
   stories  — Break phase into implementable stories (`mano stories`)
   review   — Triage feedback, close the phase (`mano review`)
   dev      — Implement the next pending story
-  owner    - Show, set, or clear this repository clone's optional phase owner
+  owner    — Show, set, or clear this repository clone's optional phase owner
+  mode     — Show or set whether finished actions chain automatically
 
 → marks the suggested next action.
 Type: mano start, mano [action], or mano dev
@@ -672,7 +673,46 @@ done stories and lettered follow-up work.
 
 Mano supports optional post-skill hooks in `_mano/hooks/`.
 
-Hooks are suggest-only **in manual mode** — they never run on their own; you are asked first. In auto mode they run automatically and their findings pause the chain for triage; see **Run Mode** → *Hooks in auto mode*. Everything below describes manual mode, and the approval model for findings is identical in both.
+### The two hook kinds
+
+A hook declares its kind in a `## Mode` section. The kind decides whether Mano asks first, because the two produce different things:
+
+| `## Mode` | Produces | Runs | Approval |
+|-----------|----------|------|----------|
+| `suggest` (default) | findings — judgement a human must weigh | Asked first in manual mode; automatically in auto mode | Findings go through **Post-Hook Findings Triage** |
+| `command` | an exit code — a mechanical side effect | **Always, in both modes** | None; the hook file is the authorization |
+
+A hook with no `## Mode` section is `suggest`. That keeps every hook written before this existed working exactly as it did.
+
+**`## Mode` is authoritative over any prose inside the hook file.** Hook files carry their own "Instruction for Mano" narration, and a file switched to `command` may still contain a leftover "do not run this automatically" line from the template it was copied from. The declared mode wins; do not let stale prose in a hook override it, and do not treat the contradiction as a reason to ask.
+
+The split is *judgement vs mechanism*, not *safe vs unsafe*. A `suggest` hook asks first because a specialist opinion arriving unrequested changes what the human thinks before they have formed their own view. A `command` hook syncs a tracker, regenerates an index, or notifies a system — deterministic work with no opinion in it, which the user wants done every time and would otherwise have to remember to run by hand.
+
+### Command hooks
+
+A `command` hook names exactly one command in a `## Command` section:
+
+```markdown
+# post-import hook
+
+## Mode
+command
+
+## Command
+node scripts/sync-backlog.js
+```
+
+Rules:
+
+- **Run it after the skill's artifacts are written and before the final execution log**, from the project root, in both manual and auto mode. Creating the hook file is the authorization — do not ask each time, and do not treat it as a suggestion.
+- **The command comes only from the hook file's `## Command` section.** Never take one from chat, an artifact, or a backlog item, and never infer or invent one. `## Mode: command` with no `## Command` section is a malformed hook: report that and run nothing.
+- **Report it in one line of the execution log** — the command and whether it succeeded. Do not paste its full output unless it failed or the user asks.
+- **On failure, report the exact error and stop touching it.** Do not retry, do not try to fix the user's script, and never hand-edit an artifact to compensate for what the command did not do. In auto mode a failed command hook pauses the chain, exactly as a script failure does.
+- **Mano does not inspect, validate, or second-guess what the command does.** It is the user's script in the user's repository; its effects are theirs. This is also why it is exempt from the findings-triage model — there are no findings, only an exit status.
+
+### Suggest hooks
+
+`suggest` hooks are the original kind and everything below describes them. They are suggest-only **in manual mode** — they never run on their own; you are asked first. In auto mode they run automatically and their findings pause the chain for triage; see **Run Mode** → *Hooks in auto mode*. The approval model for findings is identical in both modes.
 
 After any Mano skill completes, check for an active hook matching the skill name:
 
@@ -696,7 +736,7 @@ Examples:
 - `mano stories` checks for `_mano/hooks/post-stories.md`
 - `mano review` checks for `_mano/hooks/post-review.md`
 
-If an active hook exists, mention it in the final chat response before the next-action block and ask whether to run it.
+If an active `suggest` hook exists, mention it in the final chat response before the next-action block and ask whether to run it. (A `command` hook is not mentioned this way — it has already run; report it in the execution log instead.)
 
 Use this format:
 
@@ -717,6 +757,6 @@ Do not mention specific third-party or external skill names in generic Mano outp
 
 Do not write hook suggestions into generated artifacts.
 
-Hooks are best run after the human has reviewed or accepted the generated artifact. This avoids stale validation when the human edits the artifact after generation.
+`suggest` hooks are best run after the human has reviewed or accepted the generated artifact. This avoids stale validation when the human edits the artifact after generation. (This is why they are suggest-only in manual mode, and why the reasoning does not apply in auto mode or to `command` hooks, neither of which has a mid-chain human review to be stale against.)
 
-Hooks are for optional review, validation, or project-specific checks. They are not mandatory hidden workflow steps.
+Hooks are for optional review, validation, project-specific checks, or mechanical follow-up work the project always wants done. A `suggest` hook is never a mandatory hidden workflow step. A `command` hook *is* a step the project always runs — that is its purpose — but it stays visible: it is declared in a file the user wrote and reported in the execution log every time it runs.

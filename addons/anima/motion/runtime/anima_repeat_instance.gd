@@ -11,7 +11,7 @@ var _delay_elapsed: float = 0.0
 func _init(p_motion: AnimaMotion) -> void:
 	super._init(p_motion)
 	var repeat := motion as AnimaRepeat
-	if repeat.child != null and repeat.count > 0:
+	if repeat.child != null and repeat.count != 0:
 		_current_instance = _build_iteration_instance(0)
 
 ## Odd iterations (0-indexed: 1, 3, 5, ...) reverse an AnimaPropertyMotion
@@ -32,25 +32,53 @@ func _build_iteration_instance(iteration: int) -> Variant:
 	return repeat.child.create_runtime()
 
 ## Advances the current repetition; once it finishes, either waits out
-## delay_between and starts the next repetition, or completes if that was the last one.
+## delay_between and starts the next repetition, or completes if that was the
+## last one. A negative [member AnimaRepeat.count] never completes on its own.
 func advance(target: Node, delta: float) -> bool:
 	var repeat := motion as AnimaRepeat
-	if repeat.child == null or repeat.count <= 0:
+	if repeat.child == null or repeat.count == 0:
 		return true
 
+	var scaled_delta := delta * repeat.speed
 	if _waiting_for_delay:
-		_delay_elapsed += delta
+		_delay_elapsed += scaled_delta
 		if _delay_elapsed < repeat.delay_between:
 			return false
 		_waiting_for_delay = false
 		_iteration += 1
 		_current_instance = _build_iteration_instance(_iteration)
 
-	var child_finished: bool = _current_instance.advance(target, delta)
+	var child_finished: bool = _current_instance.advance(target, scaled_delta)
 	if child_finished:
-		if _iteration + 1 >= repeat.count:
+		if repeat.count > 0 and _iteration + 1 >= repeat.count:
 			return true
 		_waiting_for_delay = true
 		_delay_elapsed = 0.0
 
 	return false
+
+## Builds a reversed [AnimaRepeat]: the currently-active iteration's own
+## reversed motion (see [method AnimaMotionInstance.build_reversed]), repeated
+## the same [member AnimaRepeat.count] times with the same [member
+## AnimaRepeat.delay_between] and [member AnimaRepeat.alternate] — the same
+## "freshly built reversed motion, restart from the top" rule already applied
+## to a leaf/[AnimaSequence]/[AnimaParallel] reversal, extended to [AnimaRepeat]
+## instead of carved out as a special case. `null` before any iteration has
+## captured a value yet.
+func build_reversed() -> AnimaMotion:
+	if _current_instance == null:
+		return null
+
+	var reversed_child: AnimaMotion = _current_instance.build_reversed()
+	if reversed_child == null:
+		return null
+
+	var repeat := motion as AnimaRepeat
+	var reversed := AnimaRepeat.new()
+	reversed.child = reversed_child
+	reversed.count = repeat.count
+	reversed.delay_between = repeat.delay_between
+	reversed.alternate = repeat.alternate
+	reversed.on_started_callback = repeat.on_started_callback
+	reversed.on_completed_callback = repeat.on_completed_callback
+	return reversed

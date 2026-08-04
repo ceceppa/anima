@@ -56,6 +56,16 @@ Optional categorisation metadata — no logic reads or filters on this.
 
 Optional free-form metadata — no logic reads this.
 
+### on_started_callback
+
+Optional callback [AnimaPlayback] invokes exactly once, at the moment this
+motion begins playing — including a fresh reversed run (see [method on_started]).
+
+### on_completed_callback
+
+Optional callback [AnimaPlayback] invokes exactly once, immediately before
+it reports a successful finish — never on cancellation (see [method on_completed]).
+
 ## Methods
 
 ### estimate_duration
@@ -90,3 +100,31 @@ the whole chain when no [method then] preceded it. Multiple consecutive
 `.with()` calls join one growing group rather than nesting
 (`a.then(b).with(c).with(d)` is `b`, `c`, and `d` all starting together,
 after `a`).
+
+### on_started
+
+Sets [member on_started_callback], invoked exactly once by [AnimaPlayback]
+when this motion begins playing. Returns self so calls can keep chaining.
+
+### on_completed
+
+Sets [member on_completed_callback], invoked exactly once by [AnimaPlayback]
+immediately before it reports a successful finish — never on cancellation.
+Returns self so calls can keep chaining.
+
+### repeat
+
+Wraps this motion in a new [AnimaRepeat] that plays it [param count] times
+— the same resource [method Motion.repeat] would build, now reachable as a
+chain call on any motion, including one built through [method Anima.on].
+[param count] defaults to `-1`, which repeats indefinitely instead of a
+fixed number of times. [param alternate] `true` ping-pongs every other
+iteration between forward and backward (v1's `loop_in_circle`) instead of
+repeating identically.
+
+### with_speed
+
+Sets [member speed] directly. Named `with_speed` rather than `speed()` for
+the same reason as `with_duration`/`with_ease`/`with_delay` on
+[AnimaPropertyMotion] — a bare method name would collide with the field of
+the same name. Returns self so calls can keep chaining.

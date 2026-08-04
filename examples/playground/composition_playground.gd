@@ -82,6 +82,17 @@ var _tracking: bool = false
 var _playback: AnimaPlayback = null
 var _current_targets: Array[Node] = []
 
+## Whether the Card visuals are currently running _demo_elapsed backward.
+## The Cards are a hand-rolled elapsed-time simulation, decoupled from
+## _playback (which plays the real composition against an invisible
+## placeholder target — see _make_placeholder) — AnimaPlayback.reverse()
+## alone has nothing to say about which direction this scene's own clock
+## runs, so reverse has to flip it explicitly.
+var _playing_backwards: bool = false
+## Upper clamp for _demo_elapsed — the latest freeze point across every
+## card, i.e. how long the forward demo takes to finish.
+var _total_duration: float = 0.0
+
 func _ready() -> void:
 	super._ready()
 
@@ -128,7 +139,7 @@ func _style_stage() -> void:
 ## alternative, kept subtle enough to stay less prominent than any card's own
 ## glow (story-5).
 func _style_glow() -> void:
-	var accent := Color(0.309804, 0.27451, 0.898039, 1.0)
+	var accent := Color(0.486275, 0.227451, 0.929412, 1.0) # design-brief.md accent #7C3AED
 	var gradient := Gradient.new()
 	gradient.set_color(0, Color(accent.r, accent.g, accent.b, GLOW_ALPHA))
 	gradient.set_color(1, Color(accent.r, accent.g, accent.b, 0.0))
@@ -209,6 +220,10 @@ func _select_type(type: CompositionType) -> void:
 		_card_freeze_at.append(card_info.get("freeze_at", segments[-1].y))
 
 	_demo_elapsed = 0.0
+	_playing_backwards = false
+	_total_duration = 0.0
+	for freeze_at in _card_freeze_at:
+		_total_duration = maxf(_total_duration, freeze_at)
 	_tracking = true
 	_playback = Anima.play(composition, target)
 
@@ -443,7 +458,7 @@ func _process(delta: float) -> void:
 	if not _tracking:
 		return
 
-	_demo_elapsed += delta
+	_demo_elapsed = clampf(_demo_elapsed + (-delta if _playing_backwards else delta), 0.0, _total_duration)
 	var all_completed := true
 
 	for i in range(_cards.size()):
@@ -469,8 +484,36 @@ func _process(delta: float) -> void:
 		if _selected_type == CompositionType.CONDITIONAL:
 			_apply_conditional_transform(_cards[i], t)
 
-		if _demo_elapsed < freeze_at:
+		if _playing_backwards:
+			if _demo_elapsed > 0.0:
+				all_completed = false
+		elif _demo_elapsed < freeze_at:
 			all_completed = false
 
 	if all_completed:
 		_tracking = false
+
+## Reverses the real composition (see AnimaPlayback.reverse — replays each
+## started child's own recorded run, whichever motion kind it is) and flips
+## the direction this scene's own Card-visual clock runs, so the two stay in
+## sync even though the Cards aren't the composition's real target. If
+## nothing has been captured yet, starts the same composition already
+## reversed instead of leaving the original forward run untouched.
+func _on_playback_controls_reverse_pressed() -> void:
+	if not _playback.reverse():
+		var motion := _playback.motion
+		var target := _playback.target
+		# The original playback is still validly PLAYING forward — cancel it
+		# before discarding the reference, or it stays registered with
+		# AnimaRuntime and keeps getting ticked after nothing here can reach it.
+		if _playback.state == AnimaPlayback.State.PLAYING:
+			_playback.cancel()
+		_playback = Anima.play_backwards(motion, target)
+	_playing_backwards = not _playing_backwards
+	_tracking = true
+
+func _on_playback_controls_restart_pressed() -> void:
+	if _playback != null and _playback.state == AnimaPlayback.State.PLAYING:
+		_playback.cancel()
+
+	_select_type(_selected_type)

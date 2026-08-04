@@ -76,6 +76,26 @@ func test_reversing_a_completed_grid_run_replays_the_recorded_execution_in_rever
 		playback._advance(1.0 / 60.0)
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 
+func test_reversing_a_grid_run_returns_every_tile_to_its_starting_value():
+	var root := Node.new()
+	add_child_autofree(root)
+	var grid := _make_grid(root, Vector2i(3, 3), Vector2i(1, 1)) # default ROW formula — a wave-based traversal with rank ties
+
+	var playback := Anima.play(grid, root)
+	for i in range(60):
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	for child in root.get_children():
+		assert_almost_eq(child.modulate.a, 0.0, 0.01, "every tile should have reached the forward destination")
+
+	playback.reverse()
+	assert_eq(playback.state, AnimaPlayback.State.PLAYING)
+	for i in range(60):
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	for child in root.get_children():
+		assert_almost_eq(child.modulate.a, 1.0, 0.01, "every tile should return to where it actually started")
+
 func test_a_static_deterministic_grid_motion_is_eligible_and_compiles_to_a_native_animation():
 	var root := Node.new()
 	add_child_autofree(root)

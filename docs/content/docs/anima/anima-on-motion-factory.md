@@ -99,3 +99,10 @@ Layout Transition instead — it does not block the motion.
 Generic escape hatch for any other property. Delegates directly to
 [method Motion.to] — the same canonical resource direct authoring would
 build, with no target-class restriction of its own.
+
+### property_by
+
+Same as [method property], except [param delta] is added to whatever
+[param path] actually holds when the motion begins, instead of replacing
+it — the generic counterpart to [method move_by]/[method rotate_by]/
+[method scale_by] for any other property.

@@ -537,7 +537,7 @@ Never silently edit approved work.
 
 After `mano stories` completes, check whether `_mano/hooks/post-stories.md` exists. Ignore `_mano/hooks/post-stories.example.md`.
 
-If `_mano/hooks/post-stories.md` exists, prepare the generic hook block for the final chat response. Do not run the hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
+If `_mano/hooks/post-stories.md` exists, prepare the generic hook block for the final chat response. Check its `## Mode` first: a `command` hook runs automatically in both modes (report it in the execution log, never as a suggestion) — see `_mano/workflow.md` → **Optional Post-Skill Hooks**. The rest of this section describes a `suggest` hook. Do not run a `suggest` hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
 
 This step is required even when no stories update was needed. Mention it before the next-action block.
 

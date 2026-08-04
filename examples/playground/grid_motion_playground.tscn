@@ -154,5 +154,4 @@ layout_mode = 2
 
 [node name="PlaybackControls" parent="Margin/Content/Stage/StageContent" unique_id=605429258 instance=ExtResource("5")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
