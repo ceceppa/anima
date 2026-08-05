@@ -16,7 +16,7 @@ A developer can open one Godot scene, press play, and watch the full ~15-second 
 
 ## Phase Scope
 
-- A dark-fantasy RPG inventory showcase scene composed of the four scripted beats: items rippling into a 5x5 inventory grid, a vanilla-Godot-vs-`Anima.grid()` code comparison, three grid formulas demonstrated back-to-back with their triggering code line shown live, and a 4x4 matrix of 16 inner 5x5 grids animating together into a closing logo/call-to-action
+- A dark-fantasy RPG inventory showcase scene composed of the four scripted beats: items rippling into a MxN inventory grid, a vanilla-Godot-vs-`Anima.grid()` code comparison, three grid formulas demonstrated back-to-back with their triggering code line shown live, and a 4x4 matrix of 16 inner 5x5 grids animating together into a closing logo/call-to-action
 - The closing matrix plays its 16 inner grids in a centre-outward wave, one whole inner grid's own animation starting per wave, with the delay between waves exposed as an adjustable value
 - Text overlays for each scene's banner/caption content, as simple placeholder copy the user can revise directly
 - The scene consumes whatever RPG art (background, inventory frame, item icons) the user places under its own assets location; sourcing or creating that art is not part of this phase

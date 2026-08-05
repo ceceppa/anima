@@ -1,0 +1,245 @@
+[gd_scene format=3 uid="uid://ddc8un66mm7uo"]
+
+[ext_resource type="Script" uid="uid://dwev8yjg6en04" path="res://examples/showcase/grid/grid_showcase.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cwvid6dr06cwb" path="res://examples/showcase/grid/assets/background.jpg" id="2_kn4dr"]
+[ext_resource type="PackedScene" uid="uid://ctmocm52x17e8" path="res://examples/showcase/grid/layer_1.tscn" id="3_7w7w2"]
+
+[node name="GridShowcase" type="Control" unique_id=655796644]
+custom_minimum_size = Vector2(1920, 1080)
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="TextureRect" parent="." unique_id=2068646293]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_kn4dr")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Layer1" parent="." unique_id=1423342204 instance=ExtResource("3_7w7w2")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="Scene2" type="Control" parent="." unique_id=416609966]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VanillaPanel" type="Panel" parent="Scene2" unique_id=805660022]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VanillaLabel" type="Label" parent="Scene2/VanillaPanel" unique_id=661518816]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 500.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 22
+text = "Vanilla Godot"
+
+[node name="VanillaCode" type="Label" parent="Scene2/VanillaPanel" unique_id=757158834]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 48.0
+offset_top = 100.0
+offset_right = 912.0
+offset_bottom = 980.0
+theme_override_font_sizes/font_size = 20
+
+[node name="AnimaPanel" type="Panel" parent="Scene2" unique_id=58974867]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AnimaLabel" type="Label" parent="Scene2/AnimaPanel" unique_id=2127324436]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 500.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 22
+text = "Anima"
+
+[node name="AnimaCode" type="Label" parent="Scene2/AnimaPanel" unique_id=2036678352]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 48.0
+offset_top = 100.0
+offset_right = 912.0
+offset_bottom = 980.0
+theme_override_font_sizes/font_size = 20
+
+[node name="Banner2" type="Label" parent="Scene2" unique_id=1373840699]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -700.0
+offset_top = 64.0
+offset_right = 700.0
+offset_bottom = 140.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "From 25 lines of math to 1 line."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Scene3" type="Control" parent="." unique_id=647320445]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CaptionBar" type="Label" parent="Scene3" unique_id=634700550]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -450.0
+offset_top = -100.0
+offset_right = 450.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="Scene4" type="Control" parent="." unique_id=1114919087]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Matrix" type="Control" parent="Scene4" unique_id=1338335764]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Dim" type="ColorRect" parent="Scene4" unique_id=1576341221]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="LogoCta" type="Control" parent="Scene4" unique_id=1950668279]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -160.0
+offset_right = 260.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Logo" type="TextureRect" parent="Scene4/LogoCta" unique_id=1312380593]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -48.0
+offset_right = 48.0
+offset_bottom = 96.0
+grow_horizontal = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CtaLine1" type="Label" parent="Scene4/LogoCta" unique_id=1197940189]
+unique_name_in_owner = true
+layout_mode = 1
+offset_top = 112.0
+offset_right = 520.0
+offset_bottom = 156.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = "ANIMA FOR GODOT 4"
+horizontal_alignment = 1
+
+[node name="CtaLine2" type="Label" parent="Scene4/LogoCta" unique_id=1059646517]
+unique_name_in_owner = true
+layout_mode = 1
+offset_top = 168.0
+offset_right = 520.0
+offset_bottom = 200.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "15+ Built-in Formulas • Open Source"
+horizontal_alignment = 1
+
+[node name="CtaLine3" type="Label" parent="Scene4/LogoCta" unique_id=1508425394]
+unique_name_in_owner = true
+layout_mode = 1
+offset_top = 204.0
+offset_right = 520.0
+offset_bottom = 236.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Link in Comments"
+horizontal_alignment = 1

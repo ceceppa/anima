@@ -2956,3 +2956,12 @@
   A game-inspired showcase scene distinct from the dev-facing playgrounds — built for social media, not testing. Dark fantasy aesthetic; 4-scene storyboard: items rippling into a 5x5 RPG inventory grid, a vanilla-Godot-vs-Anima.grid() code comparison, three grid formulas shown back-to-back with their live code line, and a 4x4 matrix of 16 grids animating into a logo/CTA finale.
   Full storyboard (visual theme, timing, exact text overlays) given by the user during the phase-12 review — ask them for it again when this is scoped. The v2_stuff/prd-social-media.md file contains more detailed info regarding this
 - **Status:** in-phase-13
+
+### Anima.grid(container) convenience shorthand
+- **Type:** feature
+- **Source:** User request during phase-13 dev conversation
+- **Context:**
+  No Anima.grid()/Anima.item()-style convenience factory exists for grid motions today — playing one means hand-building an AnimaTargetCollection + AnimaGridMotion (target_collection, grid_dimensions, distance_formula, item_motion, distribution) and calling Anima.play(motion, target), unlike Anima.on()'s one-line ergonomics for property motions.
+  A quick Anima.grid(container) entry point (sensible defaults for grid_dimensions/distance_formula, chainable modifiers mirroring Anima.on()) would remove that boilerplate for the common case.
+  Found while building the Phase 13 showcase (examples/showcase/grid/inventory_grid.gd), which currently hand-builds the AnimaGridMotion directly.
+- **Status:** backlog

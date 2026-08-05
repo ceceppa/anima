@@ -540,6 +540,27 @@ func _ready() -> void:
 @onready var _mesh_instance: MeshInstance3D = %MeshInstance
 ```
 
+**What:** A known, fixed image or shader asset — a background, a frame, an icon whose file path is known at authoring time — is assigned as an `ext_resource` directly in the `.tscn` (or set on the node's property in the editor Inspector), never fetched with `load(...)`/`preload(...)`/`ResourceLoader` in a script. This applies wherever a scene is being composed, the same scope as the fixed-child-nodes rule above. It does not cover a resource whose *count* or *identity* genuinely isn't known until runtime (e.g. scanning a folder of user-supplied icons where the number of files varies) — that case still needs code to discover and load what's actually present, the same "count only known at runtime" exception the fixed-child-nodes rule already carves out. It also doesn't cover a texture generated procedurally with no source file (a placeholder swatch, a `GradientTexture2D`) — there's no asset path to leak out of the `.tscn` in the first place.
+
+**Why:** A `load("res://...")` path string in a script is invisible to the editor's own dependency tracking and preview until the scene actually runs, and can fail silently at runtime with no compile-time signal — the `.tscn`'s `ext_resource` table is the one place every asset a scene depends on is already declared and inspectable, and a code-based load duplicates that without the editor ever knowing about it.
+
+**Pattern:**
+```gdscript
+# Bad — loads a known, fixed asset by path string at runtime
+func _ready() -> void:
+    _background.texture = load("res://examples/showcase/grid/assets/background.jpg")
+
+# Good — the .tscn's own ext_resource assigns it; the script only reads the node
+# [ext_resource type="Texture2D" path="res://.../background.jpg" id="2"]
+# [node name="Background" type="TextureRect" parent="."]
+# texture = ExtResource("2")
+
+# Still fine — the set of files isn't known until the scene runs
+func _discover_icon_paths() -> Array:
+    var dir := DirAccess.open("res://.../assets/icons")
+    ...
+```
+
 **What:** Any `examples/playground/shared/components/` element that needs a genuine radial gradient fill or a soft accent glow — a stage background, a card frame — builds it with a `GradientTexture2D` set to `fill = GradientTexture2D.FILL_RADIAL`, the same technique the stage background glow already uses. Never a second mechanism for the same look — no inline shader, no hand-drawn `_draw()` override. This doesn't cover a genuinely flat fill (e.g. the playback buttons' flat `accent` fill and border) — a gradient/glow was tried there and dropped for reading as visual noise; `StyleBoxFlat` is the right tool for a flat colour with a border, not a workaround this rule forbids.
 
 **Why:** The radial-gradient technique is already proven and reused across every 2D playground's stage background; a different mechanism for the same visual effect elsewhere would only fork how one look is achieved, with no benefit, and make the next glow/gradient addition a fresh decision instead of a known pattern.

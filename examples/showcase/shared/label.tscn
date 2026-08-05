@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://klfp21swkcqx"]
+
+[ext_resource type="FontFile" uid="uid://dmxcp08tqg8hq" path="res://examples/showcase/Montserrat-Black.ttf" id="1_ciy7p"]
+
+[node name="Label" type="Label" unique_id=1150949138]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -700.0
+offset_top = 64.0
+offset_right = 700.0
+offset_bottom = 140.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("1_ciy7p")
+theme_override_font_sizes/font_size = 42
+text = "Grid animations in Godot without nested math loops."
+horizontal_alignment = 1
+autowrap_mode = 2

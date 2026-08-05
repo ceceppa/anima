@@ -1,0 +1,118 @@
+[gd_scene format=3 uid="uid://ctmocm52x17e8"]
+
+[ext_resource type="Script" uid="uid://cvxbhhytddn0x" path="res://examples/showcase/grid/layer_1.gd" id="1_1uv8f"]
+[ext_resource type="PackedScene" uid="uid://klfp21swkcqx" path="res://examples/showcase/shared/label.tscn" id="1_t3tup"]
+[ext_resource type="Texture2D" uid="uid://dapqghdso2fyx" path="res://examples/showcase/grid/assets/inventory.png" id="2_pee11"]
+[ext_resource type="PackedScene" uid="uid://6cvv7i7dc81s" path="res://examples/showcase/grid/inventory_grid.tscn" id="4_grid"]
+
+[node name="Control" type="Control" unique_id=1423342204]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1uv8f")
+
+[node name="Scrim" type="ColorRect" parent="." unique_id=1167961039]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="InventoryLayer" type="Control" parent="." unique_id=112154304]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="InventoryFrame" type="TextureRect" parent="InventoryLayer" unique_id=1025398448]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -458.0
+offset_top = -313.5
+offset_right = 458.0
+offset_bottom = 313.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2.5, 2.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2_pee11")
+
+[node name="InventoryContent" type="Control" parent="InventoryLayer/InventoryFrame" unique_id=27969242]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 84.5
+offset_right = -39.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InventoryGrid" parent="InventoryLayer/InventoryFrame/InventoryContent" unique_id=1275956834 instance=ExtResource("4_grid")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="SlotGrid" type="ItemList" parent="InventoryLayer" unique_id=32883995]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -332.0
+offset_top = -332.0
+offset_right = 332.0
+offset_bottom = 332.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Scene1Banner" type="Control" parent="." unique_id=1855154238]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Banner" parent="Scene1Banner" unique_id=1150949138 instance=ExtResource("1_t3tup")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1300, 0)
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = -264.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 120
+text = "No more nested math loops for ui grids"
+vertical_alignment = 1
