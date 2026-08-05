@@ -43,6 +43,21 @@ func _ready() -> void:
 		_order_selector.add_item(order_button)
 	_controls.restart_pressed.connect(restart)
 	_controls.reverse_pressed.connect(reverse)
+	_controls.complete_pressed.connect(func() -> void:
+		if active_playback != null:
+			active_playback.complete()
+	)
+	_controls.revert_pressed.connect(func() -> void:
+		if active_playback != null:
+			active_playback.revert()
+	)
+	_controls.speed_selected.connect(func(speed: float) -> void:
+		if active_playback != null:
+			active_playback.speed_scale = speed
+	)
+	_controls.reduced_motion_toggled.connect(func(enabled: bool) -> void:
+		Anima.reduced_motion = enabled
+	)
 	_playback_selector.select(selected_playback)
 	_order_selector.select(selected_order)
 	_order_description.text = ORDER_DESCRIPTIONS[selected_order]
@@ -72,6 +87,10 @@ func restart(play := true) -> void:
 	for card in _cards():
 		card.set_progress(0.0)
 	_group = _build_group()
+	# 0.0 means complete immediately when reduced motion is active — the
+	# web's "remove the motion" sense of reduced motion, not just a slower
+	# play-through (tech-spec.md §Speed, direction, and reduced motion).
+	_group.reduced_motion_speed = 0.0
 
 	active_playback = Anima.play(_group, self)
 

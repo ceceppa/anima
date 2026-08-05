@@ -18,6 +18,36 @@ const BEHAVIOUR_GROUP := "_anima_enabled"
 ## still applies to any motion authored (but not yet played) before it.
 static var default_duration: float = 0.3
 
+## Global reduced-motion switch. `false` by default. A target whose attached
+## [AnimaBehaviour] sets [member AnimaBehaviour.reduced_motion] to [constant
+## AnimaBehaviour.ReducedMotion.ENABLED] or [constant
+## AnimaBehaviour.ReducedMotion.DISABLED] always wins locally regardless of
+## this switch; a target with no attached behaviour, or one left at
+## [constant AnimaBehaviour.ReducedMotion.SYSTEM] (the default), follows this
+## switch — the "system-preference adapter" that enum's own documentation
+## anticipated. When active for a motion, its [member
+## AnimaMotion.reduced_motion_speed] (if set) replaces the effective speed
+## outright, superseding whatever speed was otherwise chosen (tech-spec.md
+## §Speed, direction, and reduced motion).
+static var reduced_motion: bool = false
+
+## Resolves whether reduced motion is active for [param target] right now,
+## per the three-way rule documented on [member reduced_motion]. Shared by
+## [AnimaPlayback] and [AnimaGroupPlayback] so both consult the exact same rule.
+static func is_reduced_motion_active(target: Node) -> bool:
+	if target == null:
+		return reduced_motion
+	var behaviour := get_behaviour(target)
+	if behaviour == null:
+		return reduced_motion
+	match behaviour.reduced_motion:
+		AnimaBehaviour.ReducedMotion.ENABLED:
+			return true
+		AnimaBehaviour.ReducedMotion.DISABLED:
+			return false
+		_: # SYSTEM
+			return reduced_motion
+
 ## Plays [param motion] against [param target] and returns the resulting
 ## [AnimaPlayback]. [param target] is optional when [param motion] supplies
 ## its own targets (e.g. [AnimaStagger], which ignores [param target]

@@ -299,3 +299,36 @@ No feedback logged.
 ### What we learned
 
 - The playback-button styling work (7a, 7b) surfaced two real runtime bugs unrelated to styling itself — `AnimaPlayback.reverse()` silently no-opping when nothing was captured yet, and a discarded-but-uncancelled playback leaking into `AnimaRuntime` — both found only because the user exercised the actual playground UI, not through the phase's own test suite.
+
+---
+
+## Phase 11 Review — 2026-08-05
+
+### What worked
+
+- All 8 stories (1–6, plus mid-build 6a and 6b) shipped and marked done: cancel/complete/revert value policies, target-freed safety, forward/reverse speed and direction, spring speed scaling and manual stepping, the reduced-motion override, and the playground demo wiring.
+- `mano spec`'s existing-interface check caught a real collision before it shipped as a bug: `AnimaBehaviour.ReducedMotion { SYSTEM, ENABLED, DISABLED }` already existed from an earlier phase, and its own doc comment ("until a system-preference adapter is introduced") named exactly the gap this phase's `Anima.reduced_motion` needed to fill. Reconciling the two before implementation avoided two competing reduced-motion mechanisms shipping side by side.
+- Story 2's target-freed safety net traces directly to and closes the exact `AnimaRuntime` leak the Phase 10 review flagged — the fix (an `is_instance_valid()` check, not the originally-specced `tree_exiting` signal, which would have false-positived on ordinary reparenting) was caught and corrected during implementation itself.
+
+### What didn't
+
+- Story 6's own tests only verified that `PlaybackControls` emits its signals when its buttons are pressed — none exercised the full chain through to the actual `AnimaPlayback`/`Anima` call in a real playground scene. That gap shipped a playground where Complete, Revert, and the reduced-motion toggle all visually did nothing (Complete/Revert behaved like a plain stop; reduced motion had no motion configured to override). Story 6a fixed both the wiring bug and the test-coverage gap that let it ship.
+- Reduced motion's design changed twice after its own story (5) was already marked done: first the `AnimaBehaviour` reconciliation (before any code was written, caught by `mano spec`), then a second, later revision in this same chat redefining what "reduced" means at all — from "play at a different speed" to "complete immediately," after a direct question about whether slowing motion down actually serves the accessibility need it's meant for.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| A minimal on/off reduced-motion flag is a deliberately narrowed version of the deferred "Global reduced-motion setting" item (full System/Enabled/Disabled tri-state). | Phase 11's boolean model collapses a distinction the deferred item needs, forcing rework when the full tri-state setting ships. | The tri-state wasn't deferred — `AnimaBehaviour.ReducedMotion` already existed. The predicted rework happened, but as a same-phase reconciliation (`Anima.reduced_motion` became the adapter `SYSTEM` was already waiting for) rather than a future rebuild. The field's own meaning then changed again later (slow → complete-immediately). | invalidated |
+| Group motions and spring motions already exist as shipped runtime capabilities from earlier phases. | If either doesn't actually exist yet, the corresponding speed-scaling item can't be built as scoped. | Both existed exactly as assumed; story 4's spring fix worked directly against existing spring code and found a real pre-existing bug (speed wasn't scaling the physics integration, only the elapsed-time bookkeeping). | confirmed |
+| The existing motion playground (used to catch Phase 10's reverse/cleanup bugs) is available as the demo surface for this phase's exit criteria. | If no such playground exists or lacks playback controls, exit criteria would need a different demo path. | All five existing playground scenes were available and got the new controls wired into their shared `PlaybackControls` component. Springs specifically have no playground demo yet, so the speed-scaling fix is GUT-tested but not visually verified — assumed true, not independently confirmed. | confirmed |
+
+### Feedback that changes future scope
+
+- No playground scene demos a spring-eased motion. Story 4's spring speed scaling fix has only test coverage, never a visual one — captured as a new backlog item ("Spring-motion playground demo") for a future phase.
+
+### What we learned
+
+- An existing-interface check during `mano spec` is worth its cost even when nothing in the phase brief hints at a collision — `AnimaBehaviour.ReducedMotion` was invisible from the brief and the backlog alone, and only surfaced by checking actual declarations before committing to a new mechanism.
+- "Reduced motion" defaulting to "play it slower" is the wrong instinct relative to the web's own `prefers-reduced-motion` convention (remove the motion, don't extend exposure to it) — worth carrying forward as a product default for any future accessibility-adjacent work, not just this phase's field.
+- A shared UI component's own signal-emission tests are not integration coverage. `PlaybackControls` emitting `complete_pressed` when its button is pressed proves nothing about what happens downstream — the actual defect lived entirely in each playground's own handler, which nothing but a real end-to-end test could catch.

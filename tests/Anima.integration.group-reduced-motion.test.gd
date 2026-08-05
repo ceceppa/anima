@@ -45,6 +45,39 @@ func test_reduced_motion_starts_every_group_target_without_staggering_and_finish
 	assert_signal_emit_count(normal_playback, "finished", 1)
 	assert_signal_emit_count(reduced_playback, "finished", 1)
 
+## The exact gap AnimaBehaviour.ReducedMotion.SYSTEM's own doc comment named
+## as missing ("until a system-preference adapter is introduced") —
+## Anima.reduced_motion is that adapter.
+func test_global_reduced_motion_switch_starts_a_default_behaviour_group_without_staggering():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group(root)
+
+	Anima.reduced_motion = true
+	var playback := Anima.play(group, root)
+	playback._advance(0.05)
+
+	for target in root.get_children():
+		assert_gt(target.modulate.a, 0.0, "the global switch should collapse a SYSTEM-default group to parallel, same as an explicitly ENABLED behaviour")
+	playback.cancel()
+	Anima.reduced_motion = false
+
+func test_global_reduced_motion_switch_does_not_affect_a_disabled_behaviour_group():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group(root)
+	var behaviour := AnimaBehaviour.new()
+	behaviour.reduced_motion = AnimaBehaviour.ReducedMotion.DISABLED
+	Anima.attach_behaviour(root, behaviour)
+
+	Anima.reduced_motion = true
+	var playback := Anima.play(group, root)
+	playback._advance(0.05)
+
+	assert_eq(root.get_child(1).modulate.a, 0.0, "a DISABLED behaviour should keep its authored stagger even while the global switch is on")
+	playback.cancel()
+	Anima.reduced_motion = false
+
 func test_cancelling_reduced_motion_group_notifies_once():
 	var root := Node.new()
 	add_child_autofree(root)

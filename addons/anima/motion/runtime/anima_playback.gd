@@ -254,8 +254,18 @@ func _advance(delta: float) -> void:
 		cancel()
 		return
 
-	var direction_speed: float = motion.reverse_speed if _is_reversed else motion.forward_speed
-	var scaled_delta := delta * speed_scale * direction_speed
+	if motion.reduced_motion_speed == 0.0 and Anima.is_reduced_motion_active(target):
+		# 0.0 as a literal multiplier would freeze the motion forever — the
+		# opposite of a reduced-motion outcome — so it's a sentinel for
+		# "complete immediately" instead, reusing complete()'s own
+		# value-policy and callback/signal contract as-is.
+		complete()
+		return
+
+	var effective_speed: float = speed_scale * (motion.reverse_speed if _is_reversed else motion.forward_speed)
+	if motion.reduced_motion_speed > 0.0 and Anima.is_reduced_motion_active(target):
+		effective_speed = motion.reduced_motion_speed
+	var scaled_delta := delta * effective_speed
 	if _delay_remaining > 0.0:
 		_delay_remaining -= scaled_delta
 		if _delay_remaining > 0.0:

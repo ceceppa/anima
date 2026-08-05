@@ -95,6 +95,21 @@ func _ready() -> void:
 
 	_controls.restart_pressed.connect(restart)
 	_controls.reverse_pressed.connect(reverse)
+	_controls.complete_pressed.connect(func() -> void:
+		if _active_playback != null:
+			_active_playback.complete()
+	)
+	_controls.revert_pressed.connect(func() -> void:
+		if _active_playback != null:
+			_active_playback.revert()
+	)
+	_controls.speed_selected.connect(func(speed: float) -> void:
+		if _active_playback != null:
+			_active_playback.speed_scale = speed
+	)
+	_controls.reduced_motion_toggled.connect(func(enabled: bool) -> void:
+		Anima.reduced_motion = enabled
+	)
 
 	_order_selector.select(ORDER_ORDER.find(_selected_order))
 	_reflect_selected_formula()
@@ -142,6 +157,10 @@ func restart() -> void:
 		card.set_progress(0.0)
 
 	_grid_motion = _build_grid_motion()
+	# 0.0 means complete immediately when reduced motion is active — the
+	# web's "remove the motion" sense of reduced motion, not just a slower
+	# play-through (tech-spec.md §Speed, direction, and reduced motion).
+	_grid_motion.reduced_motion_speed = 0.0
 	_active_playback = Anima.play(_grid_motion, self)
 
 ## Replays the resolved tile sequence backward through its actually-recorded

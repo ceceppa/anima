@@ -78,6 +78,14 @@ enum CancellationValuePolicy {
 ## The value left behind when this motion's playback is cancelled. See
 ## [enum CancellationValuePolicy].
 @export var cancellation_value_policy: CancellationValuePolicy = CancellationValuePolicy.KEEP_CURRENT
+## Overrides how this motion plays when reduced motion is active for the
+## playing target (see [method Anima.is_reduced_motion_active]). `< 0.0`
+## (the default) means no override. `> 0.0` replaces the normal `speed_scale
+## × direction_speed` product outright. `0.0` means complete immediately
+## instead — the same outcome [method AnimaPlayback.complete] produces —
+## since a literal `0.0` multiplier would freeze the motion forever rather
+## than reduce it.
+@export var reduced_motion_speed: float = -1.0
 
 ## Reports this motion's duration kind and (when known) its length in seconds.
 ## Every subtype must override this explicitly.

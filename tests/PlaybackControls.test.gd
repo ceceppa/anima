@@ -48,6 +48,51 @@ func test_restart_and_reverse_buttons_are_square_and_equally_sized():
 	assert_eq(restart_button.custom_minimum_size.x, restart_button.custom_minimum_size.y, "a circular button should be authored square")
 	assert_eq(restart_button.custom_minimum_size, reverse_button.custom_minimum_size, "restart and reverse should be the same size — neither more prominent than the other")
 
+func test_complete_pressed_signal_fires_when_button_is_pressed():
+	var controls: PlaybackControls = preload("res://examples/playground/shared/components/playback_controls.tscn").instantiate()
+	add_child_autofree(controls)
+
+	watch_signals(controls)
+	controls.get_node("%CompleteButton").pressed.emit()
+
+	assert_signal_emitted(controls, "complete_pressed")
+
+func test_revert_pressed_signal_fires_when_button_is_pressed():
+	var controls: PlaybackControls = preload("res://examples/playground/shared/components/playback_controls.tscn").instantiate()
+	add_child_autofree(controls)
+
+	watch_signals(controls)
+	controls.get_node("%RevertButton").pressed.emit()
+
+	assert_signal_emitted(controls, "revert_pressed")
+
+func test_speed_dock_defaults_to_1x_and_emits_the_selected_speed():
+	var controls: PlaybackControls = preload("res://examples/playground/shared/components/playback_controls.tscn").instantiate()
+	add_child_autofree(controls)
+	await get_tree().process_frame # SelectorDock.select()'s first call awaits a frame
+
+	var dock: SelectorDock = controls.get_node("%SpeedDock")
+	assert_eq(dock.get_item_count(), 3)
+	assert_eq(dock.selected_index, PlaybackControls.DEFAULT_SPEED_INDEX)
+
+	watch_signals(controls)
+	dock.get_item(2).pressed.emit()
+
+	assert_signal_emitted_with_parameters(controls, "speed_selected", [2.0])
+	assert_eq(dock.selected_index, 2, "pressing a speed button should visually select it")
+
+func test_reduced_motion_toggle_emits_when_toggled():
+	var controls: PlaybackControls = preload("res://examples/playground/shared/components/playback_controls.tscn").instantiate()
+	add_child_autofree(controls)
+
+	var toggle: ToggleSwitch = controls.get_node("%ReducedMotionToggle")
+	assert_false(toggle.enabled, "reduced motion should default off")
+
+	watch_signals(controls)
+	toggle.enabled = true
+
+	assert_signal_emitted_with_parameters(controls, "reduced_motion_toggled", [true])
+
 func test_restart_and_reverse_buttons_use_real_icon_artwork_not_text_glyphs():
 	var controls: PlaybackControls = preload("res://examples/playground/shared/components/playback_controls.tscn").instantiate()
 	add_child_autofree(controls)

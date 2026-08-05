@@ -66,6 +66,69 @@ func test_restart_and_reverse_replay_the_selected_motions_actual_recorded_run():
 		restarted._advance(1.0 / 60.0)
 	assert_almost_eq(card.position.x, moved_x, 0.01, "restart should play the selected family forward again")
 
+func test_complete_pressed_snaps_the_card_to_its_end_value():
+	var scene: Control = preload("res://examples/playground/3d_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var card: Card3D = scene.get_node("%Card")
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+
+	selector.get_item(4).pressed.emit() # Move By
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	playback._advance(0.05) # partway through, nowhere near finished
+	var partial_x := card.position.x
+
+	controls.complete_pressed.emit()
+
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_ne(card.position.x, partial_x, "complete() should snap to the end value, not leave the card at its partial position")
+
+func test_revert_pressed_snaps_the_card_back_to_its_starting_value():
+	var scene: Control = preload("res://examples/playground/3d_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var card: Card3D = scene.get_node("%Card")
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+
+	selector.get_item(4).pressed.emit() # Move By
+	var base_x := card.position.x
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	playback._advance(0.2)
+	assert_ne(card.position.x, base_x, "sanity: the card should have moved")
+
+	controls.revert_pressed.emit()
+
+	assert_eq(playback.state, AnimaPlayback.State.CANCELLED)
+	assert_almost_eq(card.position.x, base_x, 0.01, "revert() should snap back to the pre-animation value")
+
+## Regression: toggling reduced motion never set reduced_motion_speed on any
+## demo motion, so there was nothing for the global switch to override —
+## the toggle visibly did nothing regardless of its state.
+## Reduced motion means "skip to the end" (the web's prefers-reduced-motion
+## sense), not a slower play-through — tech-spec.md §Speed, direction, and
+## reduced motion's reduced_motion_speed == 0.0 sentinel.
+func test_reduced_motion_toggle_completes_the_motion_immediately():
+	var scene: Control = preload("res://examples/playground/3d_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+
+	selector.get_item(4).pressed.emit() # Move By
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	assert_eq(playback.motion.reduced_motion_speed, 0.0, "the played motion should set the complete-immediately sentinel")
+
+	controls.reduced_motion_toggled.emit(true)
+	playback._advance(0.001) # any nonzero frame should be enough to complete
+
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "reduced motion on should complete the motion immediately")
+	controls.reduced_motion_toggled.emit(false)
+
 ## Regression: pressing reverse before the auto-started motion had captured
 ## even one frame used to silently no-op (AnimaPlayback.reverse() had
 ## nothing to reverse to), leaving the original forward run untouched.

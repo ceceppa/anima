@@ -755,6 +755,119 @@ func test_step_respects_effective_speed():
 	assert_almost_eq(node.position.x, 50.0, 0.01, "step() should scale by speed_scale the same way the automatic path does")
 	playback.cancel()
 
+func test_reduced_motion_off_leaves_reduced_motion_speed_unused():
+	Anima.reduced_motion = false
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.reduced_motion_speed = 999.0
+
+	var node := Node2D.new()
+	autofree(node)
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.05)
+
+	assert_almost_eq(node.position.x, 5.0, 0.5, "with the global switch off, reduced_motion_speed must not apply")
+	playback.cancel()
+
+func test_reduced_motion_on_applies_reduced_motion_speed_with_no_behaviour():
+	Anima.reduced_motion = true
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.reduced_motion_speed = 10.0
+
+	var node := Node2D.new()
+	autofree(node)
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.05)
+
+	assert_almost_eq(node.position.x, 50.0, 0.5, "with the global switch on and no behaviour attached, reduced_motion_speed replaces the effective speed")
+	playback.cancel()
+	Anima.reduced_motion = false
+
+func test_reduced_motion_on_with_no_override_speed_is_unaffected():
+	Anima.reduced_motion = true
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	# reduced_motion_speed left at the default -1.0 (no override)
+
+	var node := Node2D.new()
+	autofree(node)
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.05)
+
+	assert_almost_eq(node.position.x, 5.0, 0.5, "no reduced_motion_speed set means reduced motion has no effect")
+	playback.cancel()
+	Anima.reduced_motion = false
+
+func test_reduced_motion_speed_zero_completes_immediately_instead_of_freezing():
+	Anima.reduced_motion = true
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.reduced_motion_speed = 0.0
+	var call_count := [0]
+	motion.on_completed(func(): call_count[0] += 1)
+
+	var node := Node2D.new()
+	autofree(node)
+	var playback := AnimaPlayback.new(motion, node)
+	watch_signals(playback)
+	playback._advance(0.05) # a literal 0.0 multiplier would leave this at 0.0 forever
+
+	assert_almost_eq(node.position.x, 100.0, 0.01, "0.0 should mean complete immediately, not freeze the motion")
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_eq(call_count[0], 1, "completing via the reduced-motion sentinel should still fire the normal completion callback")
+	assert_signal_emitted_with_parameters(playback, "finished", [true])
+	Anima.reduced_motion = false
+
+func test_behaviour_enabled_applies_reduced_motion_speed_even_with_global_switch_off():
+	Anima.reduced_motion = false
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.reduced_motion_speed = 10.0
+
+	var node := Node2D.new()
+	autofree(node)
+	var behaviour := AnimaBehaviour.new()
+	behaviour.reduced_motion = AnimaBehaviour.ReducedMotion.ENABLED
+	Anima.attach_behaviour(node, behaviour)
+
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.05)
+
+	assert_almost_eq(node.position.x, 50.0, 0.5, "an ENABLED behaviour should apply the override even while the global switch is off")
+	playback.cancel()
+
+func test_behaviour_disabled_ignores_reduced_motion_speed_even_with_global_switch_on():
+	Anima.reduced_motion = true
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.reduced_motion_speed = 10.0
+
+	var node := Node2D.new()
+	autofree(node)
+	var behaviour := AnimaBehaviour.new()
+	behaviour.reduced_motion = AnimaBehaviour.ReducedMotion.DISABLED
+	Anima.attach_behaviour(node, behaviour)
+
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.05)
+
+	assert_almost_eq(node.position.x, 5.0, 0.5, "a DISABLED behaviour should ignore the override even while the global switch is on")
+	playback.cancel()
+	Anima.reduced_motion = false
+
 func test_with_speed_also_applies_when_playing_backwards():
 	var motion := AnimaPropertyMotion.new()
 	motion.target_property = NodePath("position:x")

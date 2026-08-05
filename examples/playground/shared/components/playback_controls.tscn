@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://bpinhrbptk130" path="res://examples/playground/shared/components/playback_controls.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://b6rfwyvyc8evc" path="res://examples/playground/images/play.svg" id="2_2q4n7"]
 [ext_resource type="Texture2D" uid="uid://bdtajc6n1t5ro" path="res://examples/playground/images/reverse.svg" id="3_6rbyw"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4_speed"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/toggle_switch.tscn" id="5_toggle"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6rbyw"]
 bg_color = Color(0.486275, 0.227451, 0.929412, 1)
@@ -17,11 +19,15 @@ corner_radius_bottom_right = 48
 corner_radius_bottom_left = 48
 
 [node name="PlaybackControls" type="HBoxContainer" unique_id=406085379]
-theme_override_constants/separation = 48
+theme_override_constants/separation = 24
 alignment = 1
 script = ExtResource("1")
 
-[node name="RestartButton" type="Button" parent="." unique_id=2039137889]
+[node name="Transport" type="HBoxContainer" parent="." unique_id=1932929416]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="RestartButton" type="Button" parent="Transport" unique_id=2039137889]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -36,7 +42,7 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_6rbyw")
 icon = ExtResource("2_2q4n7")
 icon_alignment = 1
 
-[node name="ReverseButton" type="Button" parent="." unique_id=1883881417]
+[node name="ReverseButton" type="Button" parent="Transport" unique_id=1883881417]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -50,3 +56,62 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_6rbyw")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_6rbyw")
 icon = ExtResource("3_6rbyw")
 icon_alignment = 1
+
+[node name="CompleteButton" type="Button" parent="Transport" unique_id=-1255829406]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+tooltip_text = "Complete"
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_colors/font_pressed_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_colors/font_hover_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_6rbyw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6rbyw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6rbyw")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_6rbyw")
+text = "✓"
+
+[node name="RevertButton" type="Button" parent="Transport" unique_id=-1255829405]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+tooltip_text = "Revert"
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_colors/font_pressed_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_colors/font_hover_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_6rbyw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6rbyw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6rbyw")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_6rbyw")
+text = "↺"
+
+[node name="Control" type="Control" parent="." unique_id=1684956561]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="SpeedDock" parent="." unique_id=999445498 instance=ExtResource("4_speed")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="ReducedMotionRow" type="HBoxContainer" parent="." unique_id=1267422110]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+alignment = 2
+
+[node name="ReducedMotionLabel" type="Label" parent="ReducedMotionRow" unique_id=553293575]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.658824, 0.705882, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Reduced motion"
+vertical_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="ReducedMotionRow" unique_id=1553079233]
+layout_mode = 2
+
+[node name="ReducedMotionToggle" parent="ReducedMotionRow/CenterContainer" unique_id=113422788 instance=ExtResource("5_toggle")]
+unique_name_in_owner = true
+layout_mode = 2

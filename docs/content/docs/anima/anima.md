@@ -33,6 +33,12 @@ for discovery.
 
 ## Methods
 
+### is_reduced_motion_active
+
+Resolves whether reduced motion is active for [param target] right now,
+per the three-way rule documented on [member reduced_motion]. Shared by
+[AnimaPlayback] and [AnimaGroupPlayback] so both consult the exact same rule.
+
 ### play
 
 Plays [param motion] against [param target] and returns the resulting

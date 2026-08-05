@@ -56,11 +56,14 @@ func advance(target: Node, delta: float) -> bool:
 		_:
 			return _advance_staggered(scaled_delta)
 
+## Whether this group should collapse to parallel playback instead of its
+## authored sequential/staggered mode — the same three-way resolution
+## [method Anima.is_reduced_motion_active] applies for speed overrides,
+## extended here to close the exact gap [constant
+## AnimaBehaviour.ReducedMotion.SYSTEM]'s own doc comment named as missing
+## ("until a system-preference adapter is introduced").
 func _uses_reduced_motion(root: Node) -> bool:
-	if root == null:
-		return false
-	var behaviour := Anima.get_behaviour(root)
-	return behaviour != null and behaviour.reduced_motion == AnimaBehaviour.ReducedMotion.ENABLED
+	return Anima.is_reduced_motion_active(root)
 
 ## Restarts this playback from [param record] instead of resolving and
 ## scheduling again. Used by [method AnimaPlayback.reverse] so a reverse

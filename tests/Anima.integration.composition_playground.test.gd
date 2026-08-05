@@ -181,6 +181,87 @@ func test_reverse_plays_the_cards_backward_after_completion():
 	for card in cards:
 		assert_almost_eq(card.progress, 0.0, 0.001, "reversing should play every card back to its starting progress, not leave them stuck at 1.0")
 
+## Regression: pressing complete used to jump _demo_elapsed straight to
+## _total_duration but then set _tracking = false *before* running the one
+## _process(0.0) meant to reflect it, so _process's own "if not _tracking:
+## return" guard bailed out before the Cards ever updated — visually
+## indistinguishable from a plain stop.
+func test_complete_snaps_every_card_to_full_progress_immediately():
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
+	add_child_autofree(scene)
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	selector.get_item(0).pressed.emit() # Sequence
+	_tick(scene, 5) # partway through, nowhere near finished
+
+	var card_row: HBoxContainer = scene.get_node("%CardRow")
+	var cards := card_row.get_children()
+	var found_partial := false
+	for card in cards:
+		if card.progress < 1.0:
+			found_partial = true
+	assert_true(found_partial, "sanity: the demo should still be partway through")
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.complete_pressed.emit()
+
+	for card in cards:
+		assert_almost_eq(card.progress, 1.0, 0.001, "complete() should snap every card to full progress immediately, not just stop wherever it was")
+
+## Regression: pressing revert had the identical _tracking-before-_process
+## ordering bug as complete — the Cards never visibly reset.
+func test_revert_snaps_every_card_back_to_rest_immediately():
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
+	add_child_autofree(scene)
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	selector.get_item(0).pressed.emit() # Sequence
+	_tick(scene, 200) # let it finish
+
+	var card_row: HBoxContainer = scene.get_node("%CardRow")
+	var cards := card_row.get_children()
+	for card in cards:
+		assert_almost_eq(card.progress, 1.0, 0.001, "sanity: the demo should have finished")
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.revert_pressed.emit()
+
+	for card in cards:
+		assert_almost_eq(card.progress, 0.0, 0.001, "revert() should snap every card back to its resting progress immediately, not just stop wherever it was")
+
+## Regression: toggling reduced motion never reached this scene's own
+## Card-visual clock (only the invisible placeholder _playback), so the
+## Cards visibly ran at the same pace whether the toggle was on or off.
+## Reduced motion means "skip to the end" (the web's prefers-reduced-motion
+## sense — remove the motion, don't just slow it down), not a slower
+## play-through — matching AnimaPlayback._advance()'s own
+## reduced_motion_speed == 0.0 sentinel (tech-spec.md §Speed, direction, and
+## reduced motion).
+func test_reduced_motion_toggle_completes_the_cards_immediately():
+	var scene: Control = preload("res://examples/playground/composition_playground.tscn").instantiate()
+	add_child_autofree(scene)
+
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	var card_row: HBoxContainer = scene.get_node("%CardRow")
+
+	selector.get_item(0).pressed.emit() # Sequence
+	controls.reduced_motion_toggled.emit(true)
+	_tick(scene, 1) # a single frame should already be enough to complete
+
+	for card in card_row.get_children():
+		assert_almost_eq(card.progress, 1.0, 0.001, "reduced motion on should skip straight to full progress, not play through slowly")
+
+	controls.reduced_motion_toggled.emit(false)
+
+	selector.get_item(0).pressed.emit() # restart, reduced motion now off
+	_tick(scene, 1)
+	var found_partial := false
+	for card in card_row.get_children():
+		if card.progress < 1.0:
+			found_partial = true
+	assert_true(found_partial, "sanity: with reduced motion off, one frame should not be enough to finish the demo")
+
 ## Regression: pressing reverse before the auto-started composition had
 ## captured even one frame used to silently no-op (AnimaPlayback.reverse()
 ## had nothing to reverse to), leaving the real playback stuck playing

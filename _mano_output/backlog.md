@@ -1889,7 +1889,7 @@
 - **Context:**
   First-class AnimaMotion describing one or more properties at normalised offsets across a duration (CSS-inspired keyframes): Anima.on($Panel).keyframes({"from": {...}, 50: {...}, "to": {...}}).duration(0.6).
   PRD5.md §5.1-§5.2.
-- **Status:** backlog
+- **Status:** in-phase-12
 
 ### Keyframe grouped-offset declarations
 - **Type:** feature
@@ -1897,7 +1897,7 @@
 - **Context:**
   One declaration may target multiple offsets at once, e.g. ["from", 10]: {...} — preserved from Anima V1. Flattening/normalisation happens internally; developers never call the flattening engine directly.
   PRD5.md §5.3.
-- **Status:** backlog
+- **Status:** in-phase-12
 
 ### Keyframe offset normalisation and parsing
 - **Type:** feature
@@ -1905,7 +1905,7 @@
 - **Context:**
   Parser must: flatten grouped offsets, validate them, normalise to 0.0-1.0 ("from"=0.0, "to"=1.0, numbers as percentages), sort them, detect duplicate property declarations at the same offset, and generate canonical keyframe tracks. Input declaration order must not determine playback order.
   PRD5.md §5.4.
-- **Status:** backlog
+- **Status:** in-phase-12
 
 ### Multi-property keyframes with semantic names
 - **Type:** feature
@@ -1913,7 +1913,7 @@
 - **Context:**
   One keyframe block may animate several properties at once. Convenience names resolve to canonical properties (opacity->modulate:a, position->position, scale->scale, rotation->rotation, color->modulate, size->size); arbitrary property paths are also supported directly.
   PRD5.md §5.5.
-- **Status:** backlog
+- **Status:** in-phase-12
 
 ### Programmatic keyframe construction (Motion.keyframes())
 - **Type:** feature
@@ -1921,7 +1921,7 @@
 - **Context:**
   A fluent alternative to the dictionary form: Motion.keyframes().at(["from", 10], {...}).at([23, 50], {...}).duration(0.6). Both forms must produce the same AnimaKeyframeMotion.
   PRD5.md §5.6.
-- **Status:** backlog
+- **Status:** in-phase-12
 
 ### Per-segment keyframe easing and reserved metadata
 - **Type:** feature
@@ -1929,13 +1929,21 @@
 - **Context:**
   Each keyframe segment may set its own easing via a reserved key (_ease); other reserved keys are anticipated (_hold, _marker, _callback) under a clear namespace so they can't collide with real property names. Reserved metadata is stored separately from animated properties in the canonical resource.
   PRD5.md §5.7.
-- **Status:** backlog
+- **Status:** in-phase-12
 
-### Keyframe reversal
+### Keyframe reversal (literal values)
 - **Type:** feature
 - **Source:** PRD5.md
 - **Context:**
-  Automatic reversal: keyframe order reverses, offset becomes 1.0 - original_offset, segment easing mirrors, resolved dynamic values are reused from the execution record (not recalculated). Pure property tracks reverse automatically; callback/side-effect tracks need explicit backward behaviour.
+  Automatic reversal for keyframes with literal (fixed) values: keyframe order reverses, offset becomes 1.0 - original_offset, segment easing mirrors. Pure property tracks reverse automatically; callback/side-effect tracks need explicit backward behaviour.
+  PRD5.md §5.8. Narrowed at phase-12 scoping — the dynamic-value-reuse half of the original PRD5 description moves to "Keyframe reversal: dynamic-value reuse" below, since AnimaValue doesn't exist yet.
+- **Status:** in-phase-12
+
+### Keyframe reversal: dynamic-value reuse
+- **Type:** feature
+- **Source:** PRD5.md
+- **Context:**
+  When a keyframe reverses, any resolved dynamic value must be reused from the execution record, not recalculated. Extends "Keyframe reversal (literal values)" and "Dynamic values inside keyframes" — deferred until AnimaValue ships.
   PRD5.md §5.8.
 - **Status:** backlog
 
@@ -2173,7 +2181,7 @@
 - **Context:**
   cancel() stops without claiming completion (keeps current visual values, cancels pending children, emits cancellation not completion, releases ownership). complete() reaches the valid final state (applies final values, resolves cleanup, processes markers, emits completion once). revert() restores the state captured before playback affected the target. reverse() plays the current execution backwards from its current progress. Reverse and revert are explicitly not equivalent.
   PRD5.md §10.1.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Completion and cancellation behaviour policies
 - **Type:** feature
@@ -2181,7 +2189,7 @@
 - **Context:**
   Completion: KEEP_FINAL / RESTORE_INITIAL. Cancellation: KEEP_CURRENT (recommended default) / RESTORE_INITIAL / COMPLETE.
   PRD5.md §10.2-§10.3.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Pre-animation snapshots
 - **Type:** feature
@@ -2189,7 +2197,7 @@
 - **Context:**
   Snapshots may capture property values, target identity, layout rectangle, parent, child index, visibility, focus state, and temporary presentation state. Used for reverse playback, dynamic-value reversal, revert(), layout transitions, editor preview, reduced-motion completion, and interrupted transitions.
   PRD5.md §10.4.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Progress-based playback evaluation and seeking
 - **Type:** feature
@@ -2221,7 +2229,7 @@
 - **Context:**
   Every motion and playback may define forward_speed/reverse_speed (default 1.0), e.g. an opening motion at 1.0x and its structural reverse (closing) at 1.5x, without duplicating the motion or hand-adjusting durations. A playback may also set a general .speed() multiplier affecting both directions.
   PRD5.md §13.1-§13.3.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Effective speed calculation model
 - **Type:** feature
@@ -2229,7 +2237,7 @@
 - **Context:**
   effective speed = scope speed x playback speed x parent motion speed x local motion speed x direction speed. Authored duration itself never changes — speed is a playback multiplier, not a destructive edit to the motion definition. Implementations may simplify how many levels are exposed initially, but the model stays consistent.
   PRD5.md §13.4-§13.5.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Speed and direction kept as separate concepts
 - **Type:** feature
@@ -2237,7 +2245,7 @@
 - **Context:**
   Negative speed must never be used to reverse playback (speed values must stay greater than zero); direction is switched via reverse(), pacing via set_speed(). Mid-flight direction changes preserve current progress exactly, change direction and reverse speed immediately, don't snap values, don't re-resolve dynamic values, and reschedule pending structural events backwards while keeping execution history valid.
   PRD5.md §13.6-§13.7.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Group speed scaling
 - **Type:** feature
@@ -2245,7 +2253,7 @@
 - **Context:**
   A group's speed multiplier scales its entire generated schedule together — item-motion durations, stagger intervals, sequential gaps, delays, marker timing, and generated start offsets — as one coherent schedule, not independently. Target order still follows the group's reverse-order policy.
   PRD5.md §13.8.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Nested speed multiplier composition
 - **Type:** feature
@@ -2253,7 +2261,7 @@
 - **Context:**
   Speed multipliers at different levels (item motion, group, playback) compose multiplicatively (e.g. 1.2x item x 1.5x group = 1.8x effective) — the Motion Inspector must show how the final value was produced.
   PRD5.md §13.9.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Spring simulation speed scaling
 - **Type:** feature
@@ -2261,7 +2269,7 @@
 - **Context:**
   Timeline-based easing scales directly through time; physical springs instead scale simulation delta (frame delta x effective speed) to preserve authored spring characteristics while changing real-time duration. Physical retargeting (retarget_to_start()) stays distinct from exact timeline reversal (reverse_timeline()).
   PRD5.md §13.10.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Speed effect on markers
 - **Type:** feature
@@ -2277,7 +2285,7 @@
 - **Context:**
   evaluated delta = supplied manual delta x effective speed.
   PRD5.md §13.12.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Reduced-motion speed override
 - **Type:** feature
@@ -2285,7 +2293,7 @@
 - **Context:**
   Reduced-motion policy may override speed by completing immediately, selecting a simpler motion, removing stagger, or applying a dedicated reduced-motion speed.
   PRD5.md §13.13.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Motion Composer and Inspector: speed tooling
 - **Type:** feature
@@ -2301,7 +2309,7 @@
 - **Context:**
   Recommended defaults: target freed -> cancel affected motion safely; playback root freed -> cancel whole playback; target hidden -> continue; scene tree paused -> follow selected clock; target reparented -> continue if references remain valid; layout target removed -> follow layout-exit policy.
   PRD5.md §14.1-§14.2.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Playback cleanup requirements on cancellation
 - **Type:** feature
@@ -2309,7 +2317,7 @@
 - **Context:**
   Cancellation must disconnect signals, release property ownership, stop pending callbacks, release layout overlays, clear runtime records, and emit exactly one terminal result.
   PRD5.md §14.3.
-- **Status:** in-phase-11
+- **Status:** resolved
 
 ### Live Motion Inspector
 - **Type:** feature
@@ -2885,7 +2893,7 @@
 - **Context:**
   Extends "Backward playback missing/broken across motion types" once KeyFrames ship — the same reverse requirement applies to keyframe motions.
   Extends "Keyframe reversal", which already covers the reversal design; this cross-reference just carries the user's explicit ask forward so it isn't dropped.
-- **Status:** backlog
+- **Status:** in-phase-12
 
 ### V1→V2 migration: docs-only, no code alias (user decision)
 - **Type:** tech-debt
@@ -2909,3 +2917,17 @@
 - **Context:**
   To have a demo selector for the playground example added. It needs to have two "tabs": 2D and 3D
 - **Status:** backlog
+
+### Spring-motion playground demo
+- **Type:** feature
+- **Source:** phase-11 review
+- **Context:**
+  No playground scene currently demos a spring-eased motion; story 4 (Phase 11) fixed spring speed scaling but it is only GUT-tested, never visually verified. Add a spring demo scene/card so speed changes on a spring are actually visible.
+- **Status:** in-phase-12
+
+### Keyframes playground demo family
+- **Type:** feature
+- **Source:** phase-12 scoping
+- **Context:**
+  Add a Keyframes family to the convenience motion playground, alongside Position/Scale/Rotation/etc., so authored keyframe motions (AnimaKeyframeMotion) are visually demoable, not just GUT-tested.
+- **Status:** in-phase-12

@@ -55,6 +55,21 @@ func _ready() -> void:
 
 	_controls.restart_pressed.connect(restart)
 	_controls.reverse_pressed.connect(reverse)
+	_controls.complete_pressed.connect(func() -> void:
+		if _active_playback != null:
+			_active_playback.complete()
+	)
+	_controls.revert_pressed.connect(func() -> void:
+		if _active_playback != null:
+			_active_playback.revert()
+	)
+	_controls.speed_selected.connect(func(speed: float) -> void:
+		if _active_playback != null:
+			_active_playback.speed_scale = speed
+	)
+	_controls.reduced_motion_toggled.connect(func(enabled: bool) -> void:
+		Anima.reduced_motion = enabled
+	)
 	_selector.select(FAMILY_ORDER.find(_selected_family))
 	restart()
 
@@ -74,7 +89,12 @@ func restart() -> void:
 		_active_playback.cancel()
 	_reset_card()
 	_example_line.text = FAMILY_EXAMPLES[_selected_family]
-	_active_playback = Anima.play(_build_motion(), _card)
+	var motion := _build_motion()
+	# 0.0 means complete immediately when reduced motion is active — the
+	# web's "remove the motion" sense of reduced motion, not just a slower
+	# play-through (tech-spec.md §Speed, direction, and reduced motion).
+	motion.reduced_motion_speed = 0.0
+	_active_playback = Anima.play(motion, _card)
 
 ## Reverses the currently selected motion through its actually-recorded run —
 ## the same public AnimaPlayback.reverse() the 2D playground's controls use.

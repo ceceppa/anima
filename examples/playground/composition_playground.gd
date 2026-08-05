@@ -92,6 +92,15 @@ var _playing_backwards: bool = false
 ## Upper clamp for _demo_elapsed — the latest freeze point across every
 ## card, i.e. how long the forward demo takes to finish.
 var _total_duration: float = 0.0
+## Set from PlaybackControls' speed dock — scales this scene's own Card-visual
+## clock the same way it scales _playback (which the Cards aren't the real
+## target of, so PlaybackControls' selection has to reach both explicitly).
+var _speed_scale: float = 1.0
+## Set from PlaybackControls' reduced-motion toggle. When true, the Card-visual
+## clock jumps straight to _total_duration (or 0.0 when reversed) instead of
+## advancing at _speed_scale's pace — the same "complete immediately" outcome
+## AnimaPlayback._advance() produces via reduced_motion_speed == 0.0.
+var _reduced_motion_enabled: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -225,6 +234,13 @@ func _select_type(type: CompositionType) -> void:
 	for freeze_at in _card_freeze_at:
 		_total_duration = maxf(_total_duration, freeze_at)
 	_tracking = true
+	# 0.0 means complete immediately when reduced motion is active — see
+	# PlaybackControls' "Reduced motion" toggle (tech-spec.md §Speed,
+	# direction, and reduced motion). This only reaches the real (invisible)
+	# placeholder playback, not the separate Card-visual clock — see
+	# _process()'s own _reduced_motion_enabled branch for why the visible
+	# demo still needs its own handling.
+	composition.reduced_motion_speed = 0.0
 	_playback = Anima.play(composition, target)
 
 	if type == CompositionType.CONDITIONAL:
@@ -458,7 +474,15 @@ func _process(delta: float) -> void:
 	if not _tracking:
 		return
 
-	_demo_elapsed = clampf(_demo_elapsed + (-delta if _playing_backwards else delta), 0.0, _total_duration)
+	if _reduced_motion_enabled:
+		# Complete immediately — the web's "remove the motion" sense of
+		# reduced motion, matching AnimaPlayback._advance()'s own
+		# reduced_motion_speed == 0.0 sentinel (tech-spec.md §Speed,
+		# direction, and reduced motion) — not just a slower play-through.
+		_demo_elapsed = 0.0 if _playing_backwards else _total_duration
+	else:
+		var scaled_delta := delta * _speed_scale
+		_demo_elapsed = clampf(_demo_elapsed + (-scaled_delta if _playing_backwards else scaled_delta), 0.0, _total_duration)
 	var all_completed := true
 
 	for i in range(_cards.size()):
@@ -517,3 +541,45 @@ func _on_playback_controls_restart_pressed() -> void:
 		_playback.cancel()
 
 	_select_type(_selected_type)
+
+## Forces the real composition to its end value and jumps this scene's own
+## Card-visual clock straight to _total_duration (every card's last pulse),
+## then applies one immediate _process(0.0) so the Cards reflect it without
+## waiting for the next real frame.
+func _on_playback_controls_complete_pressed() -> void:
+	if _playback != null:
+		_playback.complete()
+	_demo_elapsed = _total_duration
+	_playing_backwards = false
+	# _tracking may already be false if the demo had already finished on its
+	# own (_process's own "if all_completed: _tracking = false") — force it
+	# true for this one forced update, or _process's guard bails out before
+	# the Cards ever see the new _demo_elapsed.
+	_tracking = true
+	_process(0.0)
+	_tracking = false
+
+## Reverts the real composition to its pre-animation state and resets this
+## scene's own Card-visual clock to zero, then applies one immediate
+## _process(0.0) so the Cards reflect it without waiting for the next frame.
+func _on_playback_controls_revert_pressed() -> void:
+	if _playback != null:
+		_playback.revert()
+	_demo_elapsed = 0.0
+	_playing_backwards = false
+	# _tracking may already be false if the demo had already finished on its
+	# own (_process's own "if all_completed: _tracking = false") — force it
+	# true for this one forced update, or _process's guard bails out before
+	# the Cards ever see the new _demo_elapsed.
+	_tracking = true
+	_process(0.0)
+	_tracking = false
+
+func _on_playback_controls_speed_selected(speed: float) -> void:
+	_speed_scale = speed
+	if _playback != null:
+		_playback.speed_scale = speed
+
+func _on_playback_controls_reduced_motion_toggled(enabled: bool) -> void:
+	Anima.reduced_motion = enabled
+	_reduced_motion_enabled = enabled

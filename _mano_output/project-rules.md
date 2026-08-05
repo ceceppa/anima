@@ -184,6 +184,26 @@ func validate() -> Array[String]:
     return errors
 ```
 
+## Node Liveness
+
+**What:** Check whether a `Node` reference is still alive with `is_instance_valid(node)`, never `node != null` / `node == null`. If code needs to distinguish "a reference was ever supplied" from "it's alive right now," capture the former in its own `bool` at the point the reference is still known-good — a freed `Node` still compares equal to `null` via `==`/`!=`, so a later plain null-check can no longer tell the two cases apart.
+
+**Why:** A freed, non-`RefCounted` `Object` still compares equal to `null` via `==`/`!=` in this engine version — a plain `target != null` guard silently stops working the moment the exact thing it's supposed to catch (a freed target) happens, which is precisely the failure mode this rule prevents.
+
+**Pattern:**
+```gdscript
+var _has_target: bool = false
+
+func _init(p_target: Node = null) -> void:
+    target = p_target
+    _has_target = p_target != null  # captured while target is still known-good
+
+func _advance() -> void:
+    if _has_target and not is_instance_valid(target):
+        cancel()
+        return
+```
+
 ## Derived Scheduling
 
 **What:** Resolve, filter, order, rank, and schedule a target collection once per execution through shared group helpers. Consumers use the resulting execution record rather than recalculating order or start offsets.
