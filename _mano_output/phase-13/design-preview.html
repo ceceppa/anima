@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Phase 13 — Grid Showcase design preview</title>
+<style>
+  :root {
+    --scrim: rgba(0,0,0,0.55);
+    --text: #FFFFFF;
+    --frame-gold: #C9A227;
+    --slot-bg: rgba(26,18,11,0.8);
+    --code-vanilla-bg: #2A0E0E;
+    --code-vanilla-accent: #E24A4A;
+    --code-anima-bg: #0E2A17;
+    --code-anima-accent: #4ADE80;
+    --caption-bg: rgba(0,0,0,0.6);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 24px 80px;
+    background: #0b0b0d;
+    color: #e8e8ec;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.lede { color: #9a9aa5; margin: 0 0 32px; font-size: 14px; max-width: 720px; }
+  h2 { font-size: 16px; color: #9a9aa5; text-transform: uppercase; letter-spacing: 0.06em; margin: 48px 0 16px; }
+
+  /* Canvas mockup */
+  .canvas {
+    width: 100%;
+    max-width: 1280px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background:
+      linear-gradient(var(--scrim), var(--scrim)),
+      radial-gradient(ellipse at 50% 40%, #3a2a1c 0%, #140d09 70%);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .canvas .bg-note {
+    position: absolute; bottom: 12px; left: 12px;
+    font-size: 11px; color: rgba(255,255,255,0.4);
+  }
+
+  .banner {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 78%;
+    text-align: center;
+    font-weight: 800;
+    font-size: clamp(20px, 3vw, 40px);
+    color: var(--text);
+    text-shadow: 0 4px 12px rgba(0,0,0,0.85);
+  }
+
+  .inventory {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3.2%;
+    width: 40%;
+    aspect-ratio: 1 / 1;
+  }
+  .slot {
+    background: var(--slot-bg);
+    border: 3px solid var(--frame-gold);
+    border-radius: 8px;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+  }
+  .slot.filled {
+    background: linear-gradient(135deg, #7c5a1a, #4a3a12);
+  }
+
+  /* Code comparison panel */
+  .code-canvas { display: flex; height: 100%; }
+  .code-panel {
+    flex: 1;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .code-panel.vanilla { background: var(--code-vanilla-bg); border-right: 4px solid var(--frame-gold); }
+  .code-panel.anima { background: var(--code-anima-bg); }
+  .code-label { font-weight: 700; font-size: 15px; }
+  .code-panel.vanilla .code-label { color: var(--code-vanilla-accent); }
+  .code-panel.anima .code-label { color: var(--code-anima-accent); }
+  .code-body { font-family: Consolas, Menlo, monospace; font-size: 12px; line-height: 1.6; color: #d8d8dc; white-space: pre; }
+
+  .caption-bar {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--caption-bg);
+    color: var(--text);
+    font-family: Consolas, Menlo, monospace;
+    font-weight: 600;
+    font-size: clamp(10px, 1.4vw, 15px);
+    padding: 10px 24px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  /* Finale matrix */
+  .matrix-canvas {
+    position: relative;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--frame-gold);
+  }
+  .mini-grid {
+    background: #140d09;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    padding: 8%;
+  }
+  .mini-slot { background: var(--slot-bg); border: 1px solid var(--frame-gold); border-radius: 2px; }
+  .matrix-dim {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  }
+  .matrix-dim .logo-mark {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #7C3AED, #2c1560);
+  }
+  .matrix-dim .cta-line1 { font-weight: 800; font-size: clamp(18px, 2.6vw, 32px); color: var(--text); text-shadow: 0 4px 12px rgba(0,0,0,0.85); }
+  .matrix-dim .cta-line2 { font-weight: 700; font-size: clamp(11px, 1.4vw, 16px); color: var(--text); text-shadow: 0 4px 12px rgba(0,0,0,0.85); }
+
+  /* Storyboard strip */
+  .strip { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
+  .frame {
+    width: 220px;
+    aspect-ratio: 16/9;
+    border-radius: 6px;
+    border: 1px solid #26324b;
+    position: relative;
+    overflow: hidden;
+    background: #140d09;
+  }
+  .frame .tag {
+    position: absolute; top: 6px; left: 6px;
+    font-size: 10px; font-weight: 700; color: #fff;
+    background: rgba(0,0,0,0.55); padding: 2px 6px; border-radius: 4px;
+  }
+  .frame .time {
+    position: absolute; bottom: 6px; right: 6px;
+    font-size: 10px; color: #9a9aa5;
+  }
+
+  /* Palette + type */
+  .swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+  .swatch { width: 160px; }
+  .swatch .chip { height: 56px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); }
+  .swatch .label { font-size: 12px; margin-top: 6px; color: #c8c8cf; }
+  .swatch .hex { font-size: 11px; color: #7a7a85; font-family: Consolas, Menlo, monospace; }
+
+  .type-sample { margin-bottom: 12px; }
+  .type-sample .meta { font-size: 11px; color: #7a7a85; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Phase 13 — Grid Showcase</h1>
+<p class="lede">Visual system for the RPG-style social-media showcase (<code>examples/showcase/grid/</code>). Separate from the dev-facing playground palette in <code>design-brief.md</code> — this is content for a viewer scrolling a feed, not a developer testing an API. Backgrounds shown below are placeholders standing in for the user-supplied dark-fantasy art (already at <code>examples/showcase/grid/assets/background.jpg</code>).</p>
+
+<h2>Scene 1 — The Inventory Hook (0:00–0:02) — primary mockup</h2>
+<div class="canvas">
+  <div class="banner">Grid animations in Godot without nested math loops.</div>
+  <div class="inventory">
+    <div class="slot filled"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div>
+    <div class="slot"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div>
+    <div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot"></div>
+    <div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot filled"></div>
+    <div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div>
+  </div>
+  <div class="bg-note">background art placeholder — dark, blurred tavern/dungeon (user-supplied)</div>
+</div>
+
+<h2>Storyboard — all four scenes in sequence</h2>
+<div class="strip">
+  <div class="frame">
+    <div class="tag">1 — Hook</div>
+    <div class="inventory" style="width:60%;">
+      <div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div>
+      <div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div>
+      <div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div>
+      <div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div>
+      <div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot filled"></div>
+    </div>
+    <div class="time">0:00–0:02</div>
+  </div>
+
+  <div class="frame">
+    <div class="tag">2 — Code</div>
+    <div class="code-canvas">
+      <div class="code-panel vanilla" style="padding:8%;">
+        <div class="code-label" style="font-size:10px;">Vanilla Godot</div>
+        <div class="code-body" style="font-size:6px;">for x in range(cols):&#10;  for y in range(rows):&#10;    ...</div>
+      </div>
+      <div class="code-panel anima" style="padding:8%;">
+        <div class="code-label" style="font-size:10px;">Anima</div>
+        <div class="code-body" style="font-size:6px;">Anima.grid($Grid)&#10;  .play()</div>
+      </div>
+    </div>
+    <div class="time">0:02–0:05</div>
+  </div>
+
+  <div class="frame">
+    <div class="tag">3 — Formulas</div>
+    <div class="inventory" style="width:55%;">
+      <div class="slot"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot"></div>
+      <div class="slot filled"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot filled"></div>
+      <div class="slot"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot filled"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot filled"></div><div class="slot"></div><div class="slot"></div>
+    </div>
+    <div class="caption-bar" style="font-size:8px; padding:4px 10px; bottom:8%;">Anima.grid($Grid).from_center().play()</div>
+    <div class="time">0:05–0:12</div>
+  </div>
+
+  <div class="frame">
+    <div class="tag">4 — Finale</div>
+    <div class="matrix-canvas">
+      <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+      <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+      <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+      <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+      <div class="matrix-dim">
+        <div class="logo-mark"></div>
+        <div class="cta-line1" style="font-size:10px;">ANIMA FOR GODOT 4</div>
+        <div class="cta-line2" style="font-size:7px;">15+ Built-in Formulas • Open Source</div>
+      </div>
+    </div>
+    <div class="time">0:12–0:15</div>
+  </div>
+</div>
+
+<h2>Code comparison card — secondary composition (Scene 2)</h2>
+<div class="canvas">
+  <div class="code-canvas">
+    <div class="code-panel vanilla">
+      <div class="code-label">Vanilla Godot</div>
+      <div class="code-body">for x in range(cols):
+  for y in range(rows):
+    var i := x + y * cols
+    var t := i * 0.05
+    get_child(i).modulate.a = 0.0
+    var tw := create_tween()
+    tw.tween_property(
+      get_child(i), "modulate:a", 1.0, 0.3
+    ).set_delay(t)
+    # ...16 more lines of rank math</div>
+    </div>
+    <div class="code-panel anima">
+      <div class="code-label">Anima</div>
+      <div class="code-body">Anima.grid($Grid).play()</div>
+    </div>
+  </div>
+  <div class="banner" style="top:6%; font-size:clamp(16px,2.4vw,30px);">From 25 lines of math to 1 line.</div>
+</div>
+
+<h2>Finale matrix — secondary composition (Scene 4, full size)</h2>
+<div class="canvas">
+  <div class="matrix-canvas">
+    <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+    <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+    <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+    <div class="mini-grid"><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div><div class="mini-slot"></div></div>
+    <div class="matrix-dim">
+      <div class="logo-mark"></div>
+      <div class="cta-line1">ANIMA FOR GODOT 4</div>
+      <div class="cta-line2">15+ Built-in Formulas • Open Source</div>
+      <div class="cta-line2">Link in Comments</div>
+    </div>
+  </div>
+</div>
+
+<h2>Palette</h2>
+<div class="swatches">
+  <div class="swatch"><div class="chip" style="background:#000000cc;"></div><div class="label">showcase-scrim</div><div class="hex">#000000 @ 55%</div></div>
+  <div class="swatch"><div class="chip" style="background:#FFFFFF; border:1px solid #333;"></div><div class="label">showcase-text</div><div class="hex">#FFFFFF</div></div>
+  <div class="swatch"><div class="chip" style="background:#C9A227;"></div><div class="label">frame-gold</div><div class="hex">#C9A227</div></div>
+  <div class="swatch"><div class="chip" style="background:#1A120B;"></div><div class="label">slot-bg</div><div class="hex">#1A120B @ 80%</div></div>
+  <div class="swatch"><div class="chip" style="background:#2A0E0E;"></div><div class="label">code-vanilla-bg</div><div class="hex">#2A0E0E</div></div>
+  <div class="swatch"><div class="chip" style="background:#E24A4A;"></div><div class="label">code-vanilla-accent</div><div class="hex">#E24A4A</div></div>
+  <div class="swatch"><div class="chip" style="background:#0E2A17;"></div><div class="label">code-anima-bg</div><div class="hex">#0E2A17</div></div>
+  <div class="swatch"><div class="chip" style="background:#4ADE80;"></div><div class="label">code-anima-accent</div><div class="hex">#4ADE80</div></div>
+  <div class="swatch"><div class="chip" style="background:#000000; opacity:0.6;"></div><div class="label">caption-bg</div><div class="hex">#000000 @ 60%</div></div>
+</div>
+
+<h2>Typography samples</h2>
+<div class="type-sample">
+  <div class="meta">Scene banner — Inter 800, 56px, showcase-text, drop shadow</div>
+  <div style="font-weight:800; font-size:32px; color:#fff; text-shadow:0 4px 12px rgba(0,0,0,0.85); background:#140d09; padding:16px; border-radius:6px;">Grid animations in Godot without nested math loops.</div>
+</div>
+<div class="type-sample">
+  <div class="meta">Code panel label — Inter 700, 22px</div>
+  <div style="font-weight:700; font-size:22px; color:#4ADE80; background:#0E2A17; padding:12px; border-radius:6px; display:inline-block;">Anima</div>
+</div>
+<div class="type-sample">
+  <div class="meta">Caption bar — monospace 600, 22px</div>
+  <div class="caption-bar" style="position:static; display:inline-block;">Anima.grid($Grid).from_center().play()</div>
+</div>
+
+</body>
+</html>
