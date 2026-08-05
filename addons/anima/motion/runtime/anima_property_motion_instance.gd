@@ -119,6 +119,9 @@ func _supports_offset_pivot(target: Node) -> bool:
 ## resolved run — the captured start and effective end values swapped, so
 ## reverse playback returns to what was actually observed at start, even for
 ## a relative (`move_by`-style) motion. `null` before any value is captured.
+## The easing is mirrored ([method AnimaEase.mirrored]), not replayed as-is —
+## an ease-in segment reversed should look like ease-out, the same rule
+## keyframe reversal already applies.
 func build_reversed() -> AnimaMotion:
 	if not _from_value_captured:
 		return null
@@ -129,7 +132,7 @@ func build_reversed() -> AnimaMotion:
 	reversed.from_value = _to_value
 	reversed.to_value = _from_value
 	reversed.duration = property_motion.duration
-	reversed.ease = property_motion.ease
+	reversed.ease = property_motion.ease.mirrored()
 	reversed.speed = property_motion.speed
 	reversed.forward_speed = property_motion.forward_speed
 	reversed.reverse_speed = property_motion.reverse_speed

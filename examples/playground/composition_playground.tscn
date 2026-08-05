@@ -150,9 +150,9 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
+[connection signal="complete_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_complete_pressed"]
+[connection signal="reduced_motion_toggled" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_reduced_motion_toggled"]
 [connection signal="restart_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_restart_pressed"]
 [connection signal="reverse_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_reverse_pressed"]
-[connection signal="complete_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_complete_pressed"]
 [connection signal="revert_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_revert_pressed"]
 [connection signal="speed_selected" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_speed_selected"]
-[connection signal="reduced_motion_toggled" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_reduced_motion_toggled"]

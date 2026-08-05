@@ -69,3 +69,15 @@ group.order.kind = AnimaGroupOrder.Kind.CENTRED
 
 Anima.play(group, $CardRow)
 ```
+
+### keyframes
+
+Builds an [AnimaKeyframeMotion]. [param initial], if non-empty, is parsed
+immediately (the dictionary authoring form); the returned motion also
+accepts further [method AnimaKeyframeMotion.at] calls (the fluent form) —
+both produce the exact same resource.
+
+```gdscript
+var a := Motion.keyframes({"from": {"opacity": 0.0}, "to": {"opacity": 1.0}})
+var b := Motion.keyframes().at("from", {"opacity": 0.0}).at("to", {"opacity": 1.0})
+```

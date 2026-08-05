@@ -1889,7 +1889,7 @@
 - **Context:**
   First-class AnimaMotion describing one or more properties at normalised offsets across a duration (CSS-inspired keyframes): Anima.on($Panel).keyframes({"from": {...}, 50: {...}, "to": {...}}).duration(0.6).
   PRD5.md §5.1-§5.2.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Keyframe grouped-offset declarations
 - **Type:** feature
@@ -1897,7 +1897,7 @@
 - **Context:**
   One declaration may target multiple offsets at once, e.g. ["from", 10]: {...} — preserved from Anima V1. Flattening/normalisation happens internally; developers never call the flattening engine directly.
   PRD5.md §5.3.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Keyframe offset normalisation and parsing
 - **Type:** feature
@@ -1905,7 +1905,7 @@
 - **Context:**
   Parser must: flatten grouped offsets, validate them, normalise to 0.0-1.0 ("from"=0.0, "to"=1.0, numbers as percentages), sort them, detect duplicate property declarations at the same offset, and generate canonical keyframe tracks. Input declaration order must not determine playback order.
   PRD5.md §5.4.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Multi-property keyframes with semantic names
 - **Type:** feature
@@ -1913,7 +1913,7 @@
 - **Context:**
   One keyframe block may animate several properties at once. Convenience names resolve to canonical properties (opacity->modulate:a, position->position, scale->scale, rotation->rotation, color->modulate, size->size); arbitrary property paths are also supported directly.
   PRD5.md §5.5.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Programmatic keyframe construction (Motion.keyframes())
 - **Type:** feature
@@ -1921,7 +1921,7 @@
 - **Context:**
   A fluent alternative to the dictionary form: Motion.keyframes().at(["from", 10], {...}).at([23, 50], {...}).duration(0.6). Both forms must produce the same AnimaKeyframeMotion.
   PRD5.md §5.6.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Per-segment keyframe easing and reserved metadata
 - **Type:** feature
@@ -1929,7 +1929,7 @@
 - **Context:**
   Each keyframe segment may set its own easing via a reserved key (_ease); other reserved keys are anticipated (_hold, _marker, _callback) under a clear namespace so they can't collide with real property names. Reserved metadata is stored separately from animated properties in the canonical resource.
   PRD5.md §5.7.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Keyframe reversal (literal values)
 - **Type:** feature
@@ -1937,7 +1937,7 @@
 - **Context:**
   Automatic reversal for keyframes with literal (fixed) values: keyframe order reverses, offset becomes 1.0 - original_offset, segment easing mirrors. Pure property tracks reverse automatically; callback/side-effect tracks need explicit backward behaviour.
   PRD5.md §5.8. Narrowed at phase-12 scoping — the dynamic-value-reuse half of the original PRD5 description moves to "Keyframe reversal: dynamic-value reuse" below, since AnimaValue doesn't exist yet.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Keyframe reversal: dynamic-value reuse
 - **Type:** feature
@@ -2893,7 +2893,7 @@
 - **Context:**
   Extends "Backward playback missing/broken across motion types" once KeyFrames ship — the same reverse requirement applies to keyframe motions.
   Extends "Keyframe reversal", which already covers the reversal design; this cross-reference just carries the user's explicit ask forward so it isn't dropped.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### V1→V2 migration: docs-only, no code alias (user decision)
 - **Type:** tech-debt
@@ -2923,11 +2923,36 @@
 - **Source:** phase-11 review
 - **Context:**
   No playground scene currently demos a spring-eased motion; story 4 (Phase 11) fixed spring speed scaling but it is only GUT-tested, never visually verified. Add a spring demo scene/card so speed changes on a spring are actually visible.
-- **Status:** in-phase-12
+- **Status:** resolved
 
 ### Keyframes playground demo family
 - **Type:** feature
 - **Source:** phase-12 scoping
 - **Context:**
   Add a Keyframes family to the convenience motion playground, alongside Position/Scale/Rotation/etc., so authored keyframe motions (AnimaKeyframeMotion) are visually demoable, not just GUT-tested.
-- **Status:** in-phase-12
+- **Status:** resolved
+
+### Mirror easing on AnimaPropertyMotion reversal
+- **Type:** refinement
+- **Source:** phase-12 spec
+- **Context:**
+  AnimaPropertyMotionInstance.build_reversed() carries its single ease through unchanged on reversal, so a reversed EASE_IN segment still looks like EASE_IN instead of the correctly-reversed EASE_OUT shape. AnimaEase.mirrored() (added in phase-12 for keyframe reversal, ported from Anima v1's get_mirrored_easing()) already does this swap; apply it here too for the same fidelity.
+- **Status:** resolved
+
+### True backward-trajectory replay for spring (and other simulated) eases
+- **Type:** feature
+- **Source:** User question during Phase 12 dev conversation, after trying the Spring demo's Reverse button
+- **Context:**
+  Reversing a SPRING-eased motion currently rebuilds a fresh spring simulation with swapped endpoints (AnimaEase.mirrored() leaves SPRING unchanged by design), so the settle/overshoot reappears at the new endpoint instead of unwinding from where it played forward.
+  User wants reverse to instead replay the actual forward trajectory backward in time, so the wobble unwinds from the same side it originally settled on.
+  Would need frame-by-frame trajectory recording during the forward run and reverse-order sample playback — a new mechanism, since every motion kind today rebuilds and re-simulates forward rather than replaying recorded history.
+  Deliberately deferred for future experimentation; current fresh-simulation reverse behavior is intentional and unchanged for now.
+- **Status:** backlog
+
+### RPG-style social media showcase demo for Anima.grid()
+- **Type:** feature
+- **Source:** phase-12 review
+- **Context:**
+  A game-inspired showcase scene distinct from the dev-facing playgrounds — built for social media, not testing. Dark fantasy aesthetic; 4-scene storyboard: items rippling into a 5x5 RPG inventory grid, a vanilla-Godot-vs-Anima.grid() code comparison, three grid formulas shown back-to-back with their live code line, and a 4x4 matrix of 16 grids animating into a logo/CTA finale.
+  Full storyboard (visual theme, timing, exact text overlays) given by the user during the phase-12 review — ask them for it again when this is scoped. The v2_stuff/prd-social-media.md file contains more detailed info regarding this
+- **Status:** backlog

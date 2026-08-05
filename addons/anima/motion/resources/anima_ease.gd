@@ -162,6 +162,46 @@ func spring_estimated_seconds() -> float:
 	# ln(100) ≈ 4.6 time constants to decay a settling envelope to ~1%.
 	return 4.6 / (damping_ratio * angular_frequency)
 
+## Named `EASE_IN_*`/`EASE_OUT_*` kinds mirrored to their opposite — ported
+## from Anima v1's own `get_mirrored_easing()`. A kind with no entry here
+## (`LINEAR`, every `EASE_IN_OUT_*` variant, and every parameterised family
+## kind — `SPRING`, `CUBIC_BEZIER`, etc.) has no opposite shape and mirrors
+## to itself.
+const _MIRRORED_KIND := {
+	Kind.EASE_IN: Kind.EASE_OUT,
+	Kind.EASE_OUT: Kind.EASE_IN,
+	Kind.EASE_IN_SINE: Kind.EASE_OUT_SINE,
+	Kind.EASE_OUT_SINE: Kind.EASE_IN_SINE,
+	Kind.EASE_IN_QUAD: Kind.EASE_OUT_QUAD,
+	Kind.EASE_OUT_QUAD: Kind.EASE_IN_QUAD,
+	Kind.EASE_IN_CUBIC: Kind.EASE_OUT_CUBIC,
+	Kind.EASE_OUT_CUBIC: Kind.EASE_IN_CUBIC,
+	Kind.EASE_IN_QUART: Kind.EASE_OUT_QUART,
+	Kind.EASE_OUT_QUART: Kind.EASE_IN_QUART,
+	Kind.EASE_IN_QUINT: Kind.EASE_OUT_QUINT,
+	Kind.EASE_OUT_QUINT: Kind.EASE_IN_QUINT,
+	Kind.EASE_IN_EXPO: Kind.EASE_OUT_EXPO,
+	Kind.EASE_OUT_EXPO: Kind.EASE_IN_EXPO,
+	Kind.EASE_IN_CIRC: Kind.EASE_OUT_CIRC,
+	Kind.EASE_OUT_CIRC: Kind.EASE_IN_CIRC,
+	Kind.EASE_IN_BACK: Kind.EASE_OUT_BACK,
+	Kind.EASE_OUT_BACK: Kind.EASE_IN_BACK,
+	Kind.EASE_IN_ELASTIC: Kind.EASE_OUT_ELASTIC,
+	Kind.EASE_OUT_ELASTIC: Kind.EASE_IN_ELASTIC,
+	Kind.EASE_IN_BOUNCE: Kind.EASE_OUT_BOUNCE,
+	Kind.EASE_OUT_BOUNCE: Kind.EASE_IN_BOUNCE,
+}
+
+## Returns a copy of this ease with [member kind] swapped for its named
+## opposite (see [constant _MIRRORED_KIND]) — same curve family, opposite
+## direction. Every other field (amplitude, period, overshoot, spring/bezier
+## parameters, etc.) survives via [method Resource.duplicate]; a kind with no
+## mirror entry returns an otherwise-identical copy.
+func mirrored() -> AnimaEase:
+	var result := duplicate() as AnimaEase
+	result.kind = _MIRRORED_KIND.get(kind, kind)
+	return result
+
 ## Returns the eased value for normalized time [param t] (`0.0`-`1.0`).
 ## Not implemented for [constant Kind.SPRING] — that kind is stateful and is
 ## advanced frame-by-frame instead (see anima_property_motion.gd).

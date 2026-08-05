@@ -4,12 +4,14 @@ enum Family {
 	POSITION, POSITION_X, POSITION_Y, MOVE_BY,
 	SCALE, SCALE_BY, ROTATION, ROTATE_BY,
 	OPACITY, COLOR, SIZE, PROPERTY, CHAINED,
+	KEYFRAMES, SPRING,
 }
 
 const FAMILY_ORDER := [
 	Family.POSITION, Family.POSITION_X, Family.POSITION_Y, Family.MOVE_BY,
 	Family.SCALE, Family.SCALE_BY, Family.ROTATION, Family.ROTATE_BY,
 	Family.OPACITY, Family.COLOR, Family.SIZE, Family.PROPERTY, Family.CHAINED,
+	Family.KEYFRAMES, Family.SPRING,
 ]
 const FAMILY_LABELS := {
 	Family.POSITION: "Position",
@@ -25,6 +27,8 @@ const FAMILY_LABELS := {
 	Family.SIZE: "Size",
 	Family.PROPERTY: "Property",
 	Family.CHAINED: "Chained",
+	Family.KEYFRAMES: "Keyframes",
+	Family.SPRING: "Spring",
 }
 const FAMILY_EXAMPLES := {
 	Family.POSITION: "Anima.on(card).position(card.position + Vector2(60, -40), 0.4)",
@@ -40,6 +44,8 @@ const FAMILY_EXAMPLES := {
 	Family.SIZE: "Anima.on(card).size(Vector2(280, 280), 0.4)",
 	Family.PROPERTY: "Anima.on(card).property(NodePath(\"modulate:b\"), 0.5, 0.4)",
 	Family.CHAINED: "Anima.on(card).move_by(Vector2(50, 0), 0.2).repeat(2).on_started(...).on_completed(...)",
+	Family.KEYFRAMES: "Motion.keyframes({\"from\": {...}, 30: {...}, 70: {...}, \"to\": {...}}).with_duration(0.9)",
+	Family.SPRING: "Anima.on(card).position_x(card.position.x + 80, 0.0).with_ease(spring)",
 }
 const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
@@ -56,6 +62,12 @@ const GLOW_ALPHA := 0.08
 
 var _selected_family: Family = Family.MOVE_BY
 var _active_playback: AnimaPlayback = null
+## The Speed dock's current selection — applied to every freshly built
+## AnimaPlayback in restart(), not just whichever one happened to be active
+## when the dock last fired. Without this, restart() (selecting a new
+## family, or pressing Restart) silently drops back to 1x every time,
+## since a new AnimaPlayback always starts at its own default speed_scale.
+var _selected_speed: float = 1.0
 
 func _ready() -> void:
 	super._ready()
@@ -89,6 +101,7 @@ func _ready() -> void:
 			_active_playback.revert()
 	)
 	_controls.speed_selected.connect(func(speed: float) -> void:
+		_selected_speed = speed
 		if _active_playback != null:
 			_active_playback.speed_scale = speed
 	)
@@ -120,6 +133,7 @@ func restart() -> void:
 	# play-through (tech-spec.md §Speed, direction, and reduced motion).
 	motion.reduced_motion_speed = 0.0
 	_active_playback = Anima.play(motion, _card)
+	_active_playback.speed_scale = _selected_speed
 
 ## Reverses the currently selected motion through its actually-recorded run —
 ## the same public AnimaPlayback.reverse() a canonical motion uses
@@ -177,8 +191,12 @@ func _build_motion() -> AnimaMotion:
 			return Anima.on(_card).size(Vector2(280.0, 280.0), 0.4)
 		Family.PROPERTY:
 			return Anima.on(_card).property(NodePath("modulate:b"), 0.5, 0.4)
-		_:
+		Family.CHAINED:
 			return _build_chained_motion()
+		Family.KEYFRAMES:
+			return _build_keyframe_motion()
+		_:
+			return _build_spring_motion() # Family.SPRING
 
 ## Demonstrates the lifecycle-callback and repeat chain modifiers together —
 ## `.repeat()` comes before `.on_started()`/`.on_completed()` so the
@@ -188,10 +206,47 @@ func _build_motion() -> AnimaMotion:
 ## family uses, appended with each event as it actually fires.
 func _build_chained_motion() -> AnimaMotion:
 	var base_text := FAMILY_EXAMPLES[Family.CHAINED]
-	return Anima.on(_card).move_by(Vector2(50.0, 0.0), 0.2) \
-		.repeat(2) \
+	var repeated := Anima.on(_card).move_by(Vector2(50.0, 0.0), 0.2).repeat(2)
+	# Without a pause, two identical, non-eased legs concatenate into one
+	# seamless glide across the full distance — the repeat is genuinely
+	# running twice, but reads as a single motion. This makes the break
+	# between repetitions visible.
+	repeated.delay_between = 0.15
+	return repeated \
 		.on_started(func(): _example_line.text = base_text + "  →  started") \
 		.on_completed(func(): _example_line.text = base_text + "  →  started  →  completed")
+
+## Demonstrates a multi-property keyframe motion: opacity, position, and
+## scale each follow their own track through the same four offsets, showing
+## the mid-point stops (30%, 70%) as visible pass-through states, not just a
+## straight start-to-end interpolation.
+func _build_keyframe_motion() -> AnimaKeyframeMotion:
+	var base := _card.position
+	return Motion.keyframes({
+		"from": {"opacity": 1.0, "position": base, "scale": Vector2.ONE},
+		30: {"opacity": 0.4, "position": base + Vector2(40.0, -30.0), "scale": Vector2(0.85, 0.85)},
+		70: {"opacity": 1.0, "position": base + Vector2(80.0, 0.0), "scale": Vector2(1.15, 1.15)},
+		"to": {"opacity": 1.0, "position": base, "scale": Vector2.ONE},
+	}).with_duration(0.9)
+
+## Demonstrates a spring-eased motion — the physics-simulated ease driven by
+## AnimaPropertyMotionInstance._advance_spring(), not a fixed-duration curve;
+## `duration` stays 0.0 since springs settle by simulation, not a timer.
+## `.position_x()`, not `.position()`: _advance_spring() casts its captured
+## from/to values with `float(...)`, which only produces a real number for an
+## already-scalar property — a Vector2 target silently simulates toward 0.0
+## and never visibly moves. Springs are scalar-only today.
+## `spring_bounce = 0.6` (damping_ratio 0.4) is deliberately well above the
+## critically-damped default — a low bounce (e.g. 0.15, damping_ratio 0.85)
+## overshoots by well under a pixel at this travel distance, which reads as
+## no bounce at all; this value overshoots by roughly a quarter of the total
+## travel, visibly distinguishing a spring from every other eased family here.
+func _build_spring_motion() -> AnimaPropertyMotion:
+	var spring := AnimaEase.new()
+	spring.kind = AnimaEase.Kind.SPRING
+	spring.spring_response = 0.3
+	spring.spring_bounce = 0.6
+	return Anima.on(_card).position_x(_card.position.x + 80.0, 0.0).with_ease(spring)
 
 ## Restrained depth behind the card — design-brief.md §Component guide
 ## "Content stage", the same treatment `composition_playground.gd` uses.

@@ -111,6 +111,21 @@ func size(to: Vector2, duration: float = 0.0) -> AnimaPropertyMotion:
 	_stamp_origin(motion, "size")
 	return motion
 
+## Builds an [AnimaKeyframeMotion] for [member target] the same way [method
+## Motion.keyframes] does — [param initial], if non-empty, is parsed
+## immediately, and the result also accepts further [method
+## AnimaKeyframeMotion.at] calls. Unlike every semantic method above, no
+## target-class validation happens here: a keyframe's tracks can name any
+## property, so there is no single expected value type to check against.
+func keyframes(initial: Dictionary = {}, duration: float = 0.0) -> AnimaKeyframeMotion:
+	if target == null:
+		push_error("Anima.on(...).keyframes() needs a target — Anima.on(null) already reported this.")
+		return null
+
+	var motion := Motion.keyframes(initial)
+	motion.duration = duration
+	return motion
+
 ## Generic escape hatch for any other property. Delegates directly to
 ## [method Motion.to] — the same canonical resource direct authoring would
 ## build, with no target-class restriction of its own.

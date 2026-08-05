@@ -202,6 +202,71 @@ func test_reversing_fires_on_started_again():
 	playback.reverse()
 	assert_eq(call_count[0], 2, "reversing starts a new run from the target's perspective")
 
+## Regression: reversing used to replay the exact same easing shape backward
+## — an EASE_IN segment still looked like EASE_IN played in reverse, instead
+## of the correctly-mirrored EASE_OUT ([method AnimaEase.mirrored], the same
+## rule keyframe reversal already applies). Sampling several points through
+## the reversed run and comparing against a motion built directly with the
+## mirrored ease — not just start/end values — is what actually proves the
+## curve shape changed, not just its declared kind.
+func test_reversing_mirrors_the_easing_shape_not_just_the_endpoints():
+	var ease_in := AnimaEase.new()
+	ease_in.kind = AnimaEase.Kind.EASE_IN
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.from_value = 0.0
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.ease = ease_in
+
+	var node := Node2D.new()
+	autofree(node)
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.1) # capture the from value before reversing
+	playback.reverse()
+	assert_eq(playback.motion.ease.kind, AnimaEase.Kind.EASE_OUT, "EASE_IN reversed should mirror to EASE_OUT")
+
+	var ease_out := AnimaEase.new()
+	ease_out.kind = AnimaEase.Kind.EASE_OUT
+	var expected_motion := AnimaPropertyMotion.new()
+	expected_motion.target_property = NodePath("position:x")
+	expected_motion.from_value = 100.0
+	expected_motion.to_value = 0.0
+	expected_motion.duration = 1.0
+	expected_motion.ease = ease_out
+
+	var expected_node := Node2D.new()
+	autofree(expected_node)
+	var expected_playback := AnimaPlayback.new(expected_motion, expected_node)
+
+	for i in range(10):
+		playback._advance(0.1)
+		expected_playback._advance(0.1)
+		assert_almost_eq(node.position.x, expected_node.position.x, 0.01, "the reversed run should trace the same curve as a motion authored directly with the mirrored ease, at every sampled point, not just its endpoints")
+
+## An easing with no mirror counterpart (e.g. a symmetric in-out curve) should
+## look identical whichever direction it plays — AnimaEase.mirrored() already
+## no-ops for these kinds, so reversal must not change the shape at all.
+func test_reversing_an_ease_with_no_mirror_is_unaffected():
+	var ease_in_out := AnimaEase.new()
+	ease_in_out.kind = AnimaEase.Kind.EASE_IN_OUT
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.from_value = 0.0
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.ease = ease_in_out
+
+	var node := Node2D.new()
+	autofree(node)
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(0.1)
+	playback.reverse()
+
+	assert_eq(playback.motion.ease.kind, AnimaEase.Kind.EASE_IN_OUT, "an ease with no mirror counterpart should stay the same kind after reversal")
+
 func test_retarget_twice_in_quick_succession_ends_at_the_most_recent_target():
 	var playback := _make_spring_playback(100.0)
 

@@ -32,6 +32,9 @@ Builds a new [AnimaPropertyMotion] that reverses this instance's actually
 resolved run — the captured start and effective end values swapped, so
 reverse playback returns to what was actually observed at start, even for
 a relative (`move_by`-style) motion. `null` before any value is captured.
+The easing is mirrored ([method AnimaEase.mirrored]), not replayed as-is —
+an ease-in segment reversed should look like ease-out, the same rule
+keyframe reversal already applies.
 
 ### restore_initial
 

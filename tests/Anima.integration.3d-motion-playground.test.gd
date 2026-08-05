@@ -20,7 +20,7 @@ func test_selecting_each_family_produces_a_visible_run_matching_the_shown_exampl
 	await get_tree().process_frame
 	var selector: SelectorDock = scene.get_node("%Selector")
 	var example_line: Label = scene.get_node("%ExampleLine")
-	var card: Card3D = scene.get_node("%Card")
+	var card: Node3D = scene.get_node("%Card")
 
 	for index in selector.get_item_count():
 		selector.get_item(index).pressed.emit()
@@ -41,7 +41,7 @@ func test_restart_and_reverse_replay_the_selected_motions_actual_recorded_run():
 	add_child_autofree(scene)
 	await get_tree().process_frame
 	var selector: SelectorDock = scene.get_node("%Selector")
-	var card: Card3D = scene.get_node("%Card")
+	var card: Node3D = scene.get_node("%Card")
 	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
 
 	selector.get_item(4).pressed.emit() # Move By
@@ -72,7 +72,7 @@ func test_complete_pressed_snaps_the_card_to_its_end_value():
 	await get_tree().process_frame
 
 	var selector: SelectorDock = scene.get_node("%Selector")
-	var card: Card3D = scene.get_node("%Card")
+	var card: Node3D = scene.get_node("%Card")
 	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
 
 	selector.get_item(4).pressed.emit() # Move By
@@ -91,7 +91,7 @@ func test_revert_pressed_snaps_the_card_back_to_its_starting_value():
 	await get_tree().process_frame
 
 	var selector: SelectorDock = scene.get_node("%Selector")
-	var card: Card3D = scene.get_node("%Card")
+	var card: Node3D = scene.get_node("%Card")
 	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
 
 	selector.get_item(4).pressed.emit() # Move By

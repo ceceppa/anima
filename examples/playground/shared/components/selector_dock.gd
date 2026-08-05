@@ -5,7 +5,7 @@ const INDICATOR_BG := Color(0.309804, 0.27451, 0.898039, 1.0) # accent
 const INDICATOR_RADIUS := 12
 const MOVE_DURATION := 0.26
 
-@onready var _items_box: HBoxContainer = %Items
+@onready var _items_box: HFlowContainer = %Items
 
 ## The indicator's logical target, updated synchronously on every select() —
 ## independent of how far the animated (tweened) visual has actually moved,

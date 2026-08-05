@@ -332,3 +332,39 @@ No feedback logged.
 - An existing-interface check during `mano spec` is worth its cost even when nothing in the phase brief hints at a collision — `AnimaBehaviour.ReducedMotion` was invisible from the brief and the backlog alone, and only surfaced by checking actual declarations before committing to a new mechanism.
 - "Reduced motion" defaulting to "play it slower" is the wrong instinct relative to the web's own `prefers-reduced-motion` convention (remove the motion, don't extend exposure to it) — worth carrying forward as a product default for any future accessibility-adjacent work, not just this phase's field.
 - A shared UI component's own signal-emission tests are not integration coverage. `PlaybackControls` emitting `complete_pressed` when its button is pressed proves nothing about what happens downstream — the actual defect lived entirely in each playground's own handler, which nothing but a real end-to-end test could catch.
+
+---
+
+## Phase 12 Review — 2026-08-06
+
+### What worked
+
+- All 6 core stories (1–6) plus five mid-build additions (6a–6e) shipped and marked done: the `AnimaKeyframeMotion` resource/track/stop model, dual dictionary/fluent authoring surfaces, offset parsing and evaluation, literal-value reversal with `AnimaEase.mirrored()`'s ease-ownership-shift, and the Keyframes/Spring playground demos.
+- The v1-ported `AnimaEase.mirrored()` table (from the user's own `get_mirrored_easing()`) dropped in cleanly and was reused a second time in-phase (story 6) to fix the same easing-replayed-not-mirrored gap on ordinary `AnimaPropertyMotion` reversal — a single mechanism covering two motion kinds.
+- Manual, hands-on testing of the shipped demos (not just the automated suite) caught five real defects the automated tests missed entirely — 6a through 6e — each traced to a precise root cause before being fixed.
+
+### What didn't
+
+- The Spring demo's chosen `spring_bounce` (0.15, damping_ratio 0.85) overshot by well under a pixel — technically a spring, but visually indistinguishable from a plain eased motion (6a).
+- `AnimaKeyframeMotionInstance` never got `force_complete()`/`restore_initial()` overrides, so Complete/Revert silently no-opped on a running Keyframes motion — the same "buttons behave like a plain stop" defect Phase 11 already fixed for every other motion kind (6d).
+- The convenience playground's Speed control set `speed_scale` only on whichever `AnimaPlayback` happened to be active at that moment; `restart()` always built a fresh playback at the default speed, so the selection silently reset on every restart or family switch (6b).
+- The Chained family's two identical, non-eased `move_by` legs concatenated into one seamless glide — functionally two repetitions, but visually indistinguishable from one motion of twice the distance (6c).
+- Reversing a repeated *relative* motion replayed the same absolute captured segment for every repetition instead of continuing backward — `AnimaPropertyMotionInstance.build_reversed()` drops `is_relative`, and `AnimaRepeatInstance` re-derives each iteration from that same literal value. The existing test only checked the final resting position, which landed in the right place by coincidence, masking a visibly wrong intermediate path (6e).
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| This phase's keyframe values are deliberately literal/fixed only; the deferred `AnimaValue`/"Dynamic values inside keyframes" work will extend (not replace) this model once built. | If dynamic-value support needs a different internal keyframe-track representation, this phase's model could need rework rather than a clean extension. | Held for the whole phase — every keyframe value shipped literal, and reversal, evaluation, and both authoring surfaces were all built against that assumption without friction. | confirmed |
+| The convenience motion playground (used for every other leaf-motion family so far) is the right place to add both the Keyframes and spring demos. | If either demo doesn't fit that playground's existing UI pattern, a different or new scene may be needed. | Both families dropped into the existing `Family` enum/selector pattern with no new UI mechanism needed — the playground scaled cleanly to 15 families. | confirmed |
+
+### Feedback that changes future scope
+
+- The convenience/composition playgrounds are useful for development but not built to be shown off — a new backlog item ("RPG-style social media showcase demo for `Anima.grid()`") captures a game-inspired, marketing-facing showcase scene as a distinct future surface, not a playground extension.
+
+### What we learned
+
+- A motion-instance subtype that skips overriding `force_complete()`/`restore_initial()` fails silently — the base class no-ops rather than erroring, so a new leaf type (this phase's `AnimaKeyframeMotionInstance`) can ship with working `advance()`/`build_reversed()` and still leave Complete/Revert completely broken, undetected until someone actually presses the buttons.
+- A demo can be functionally correct and still fail its own purpose if the effect it's meant to show is too subtle to see (6a) or visually indistinguishable from the case it's meant to contrast with (6c) — "it plays the right values" is not the same bar as "a viewer can see what's different about it."
+- A test that only asserts the final resting value of a multi-step motion can pass while the path to get there is visibly wrong (6e) — intermediate-state assertions, not just endpoint assertions, are what actually catch a reversal/repetition bug.
+- `is_relative` is a property of the *authored* motion, not something `build_reversed()` currently preserves onto the motion it produces — worth checking for the same gap anywhere else relative motions get rebuilt rather than replayed.

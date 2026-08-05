@@ -90,6 +90,23 @@ func build_reversed() -> AnimaMotion:
 		return null
 
 	var repeat := motion as AnimaRepeat
+	# When the repeated child is itself relative (move_by-style), each
+	# reversed repetition must keep continuing backward from wherever the
+	# target actually is — not replay the same captured absolute segment
+	# `count` times — the same way the forward relative repeat keeps
+	# continuing forward. `_current_instance.build_reversed()` above already
+	# derived the correct one-shot delta and mirrored ease from the last
+	# observed leg; re-deriving it as a relative motion with that same delta
+	# and a live-captured start (`from_value = null`) makes every new
+	# iteration capture its own current position again, exactly like the
+	# forward repeat already does. Everything else `build_reversed()`
+	# resolved (ease, duration, speed, callbacks) is untouched.
+	if repeat.child is AnimaPropertyMotion and (repeat.child as AnimaPropertyMotion).is_relative and reversed_child is AnimaPropertyMotion:
+		var reversed_property := reversed_child as AnimaPropertyMotion
+		reversed_property.to_value = reversed_property.to_value - reversed_property.from_value
+		reversed_property.from_value = null
+		reversed_property.is_relative = true
+
 	var reversed := AnimaRepeat.new()
 	reversed.child = reversed_child
 	reversed.count = repeat.count

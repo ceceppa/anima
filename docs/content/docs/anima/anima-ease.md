@@ -148,6 +148,14 @@ for the runtime instance that simulates a SPRING-eased motion frame by frame.
 A rough settle-time estimate for a SPRING ease, derived from its parameters —
 used by AnimaPropertyMotion.estimate_duration() to report AnimaDuration.ESTIMATED.
 
+### mirrored
+
+Returns a copy of this ease with [member kind] swapped for its named
+opposite (see [constant _MIRRORED_KIND]) — same curve family, opposite
+direction. Every other field (amplitude, period, overshoot, spring/bezier
+parameters, etc.) survives via [method Resource.duplicate]; a kind with no
+mirror entry returns an otherwise-identical copy.
+
 ### evaluate
 
 Returns the eased value for normalized time [param t] (`0.0`-`1.0`).

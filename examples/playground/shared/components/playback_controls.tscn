@@ -25,6 +25,7 @@ script = ExtResource("1")
 
 [node name="Transport" type="HBoxContainer" parent="." unique_id=1932929416]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/separation = 48
 
 [node name="RestartButton" type="Button" parent="Transport" unique_id=2039137889]
@@ -94,7 +95,6 @@ layout_mode = 2
 [node name="SpeedDock" parent="." unique_id=999445498 instance=ExtResource("4_speed")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 1
 
 [node name="ReducedMotionRow" type="HBoxContainer" parent="." unique_id=1267422110]
 layout_mode = 2

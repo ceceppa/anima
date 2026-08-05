@@ -94,6 +94,15 @@ the target's size or position is actually owned by a parent [Container]
 or by its own anchors, this produces an editor warning steering toward a
 Layout Transition instead — it does not block the motion.
 
+### keyframes
+
+Builds an [AnimaKeyframeMotion] for [member target] the same way [method
+Motion.keyframes] does — [param initial], if non-empty, is parsed
+immediately, and the result also accepts further [method
+AnimaKeyframeMotion.at] calls. Unlike every semantic method above, no
+target-class validation happens here: a keyframe's tracks can name any
+property, so there is no single expected value type to check against.
+
 ### property
 
 Generic escape hatch for any other property. Delegates directly to
