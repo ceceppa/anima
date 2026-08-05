@@ -309,15 +309,30 @@ title: "Motion Composer"
 
 ## Example Scenes
 
-**What:** `examples/` splits by what a scene demonstrates. A scene an author *runs* to see the runtime motion API in action — driven by `Anima.play()`, restart/reverse controls, the shared theme and components below — lives under `examples/playground/`. A scene that showcases an `addons/anima/editor/` tool itself — something an author *opens in the Godot editor* to see a panel like the Motion Composer at work, not something that runs as a game — lives under `examples/editor/`.
+**What:** `examples/` splits by what a scene demonstrates. A scene an author *runs* to see the runtime motion API in action — driven by `Anima.play()`, restart/reverse controls, the shared theme and components below — lives under `examples/playground/`. A scene that showcases an `addons/anima/editor/` tool itself — something an author *opens in the Godot editor* to see a panel like the Motion Composer at work, not something that runs as a game — lives under `examples/editor/`. A scripted, self-contained scene built to be captured (screen-recorded or exported via Godot's Movie Writer) for marketing/social content, rather than to demo an API to a developer, lives under `examples/showcase/`.
 
-**Why:** These are two different audiences and two different ways of consuming the example: playing a scene versus opening it and driving the editor around it. Keeping them in separate top-level folders keeps `examples/playground/`'s shared runtime chrome (theme, `Card`, `PlaybackControls`, `SelectorDock`, …) from being assumed by editor-tooling showcases that don't need it.
+**Why:** These are three different audiences and three different ways of consuming the example: playing a scene, opening it and driving the editor around it, or watching a fixed sequence play through once for capture. Keeping them in separate top-level folders keeps `examples/playground/`'s shared runtime chrome (theme, `Card`, `PlaybackControls`, `SelectorDock`, …) from being assumed by scenes that don't need it — an editor-tooling showcase, or a showcase scene with no restart/reverse controls at all.
 
 **Pattern:**
 ```
 examples/
   playground/     # runtime motion scenes — Anima.play(), restart/reverse controls
   editor/         # showcase scenes for addons/anima/editor/ tools — opened in the Godot editor, not run
+  showcase/       # scripted scenes built for external capture — no dev playback controls
+```
+
+**What:** A scene under `examples/showcase/<name>/` is self-contained: its own scene tree, its own visual assets under `examples/showcase/<name>/assets/`, and its own script — never `examples/playground/shared/`'s theme or components (`Card`, `PlaybackControls`, `SelectorDock`, `ExampleHeader`). It plays its full sequence automatically from `_ready()` with no button press or other input required, since the point is a clean, deterministic capture, not an author interacting with it. Any timing value a human will want to retune between takes (a stagger delay, a scene-transition point) is an `@export` on the scene's own script, following the existing Editor-Authored Content rule below, not a hardcoded literal.
+
+**Why:** A showcase scene targets a viewer on social media, not a developer evaluating the API — reusing the playground's dev-facing restart/reverse/speed controls or shared theme would show the wrong chrome in the capture. Keeping its assets scoped under its own `assets/` folder (rather than the shared `examples/playground/images/`) keeps art supplied for one specific piece of content from being mistaken for reusable playground artwork.
+
+**Pattern:**
+```
+examples/showcase/
+  grid/
+    assets/
+      background.jpg
+    grid_showcase.tscn
+    grid_showcase.gd        # plays the full sequence in _ready(); no restart/reverse controls
 ```
 
 **What:** The `examples/editor/` showcase for the Motion Composer's four editor panels is one scene, `motion_composer_showcase.tscn`, holding four labelled nodes — one carrying an authored Group Motion, one carrying an authored Property Motion, one carrying a compiled/resolved group ready for inspection, and one with no motion assigned — not four separate scene files. It uses plain Godot nodes with no shared theme or `examples/playground/shared/` component; `examples/editor/` scenes are opened and clicked through, not run, so the playground's runtime visual chrome does not apply.

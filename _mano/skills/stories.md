@@ -470,6 +470,13 @@ During implementation, the user may come back via `mano stories` to report a bug
 
 **`mano stories` writes story files. `mano stories` never writes or fixes code.** When a user reports a bug, `mano stories` creates a bug story — it does not go fix the code.
 
+**Step 0 pre-flight still applies.** A mid-build story is a new story, so it runs the same readiness and gap checks as any other — 0c (missing domain structure), 0c.1 (public-interface readiness, which writes *no* story files and routes to `mano spec`), and 0d (artifact gap check, routing to `mano ui` / `mano ux` / `mano spec` / `mano rules` by gap type). The short flows below describe what is *different* about a mid-build run; they never replace Step 0. Arriving mid-phase is not a reason for a story to be less ready than one written at the start of the phase — it is a reason to be more careful, because the artifacts were written before this work was in scope.
+
+There are two kinds of mid-build addition, and they differ only in whether the work is already a backlog item:
+
+- **Emergent work** — a bug or gap found while building, not in the backlog. Write the lettered story and nothing else. This is the flow immediately below.
+- **An existing backlog item the user pulls in** — needs the item assigned to this phase first. See **Pulling a backlog item into the open phase** after this flow.
+
 When the user reports something mid-build:
 
 1. Create a new story using sub-numbering based on the last completed story (e.g. `story-3a`, then `story-3b`). Sub-numbers attach to the most recently *completed* story, not to an upcoming one — even if the bug is about behaviour an upcoming story will introduce. Sub-numbering follows ship order, not scope order. Lettered insertions only block the subsequent number if explicitly marked as a blocker in story dependencies.
@@ -490,6 +497,43 @@ When the user reports something mid-build:
 Next:
 - `mano dev` — implement the next pending story
 ```
+
+<!-- mano-rule: id=mid-phase-addition-owner; incident=stories-assigned-backlog-item-out-of-lane; model=not-recorded; date=2026-08-05; eval=stories-midphase-assign -->
+### Pulling a backlog item into the open phase
+
+When the user names an **exact existing backlog item** to bring into the phase already being built ("bring in *Mirror easing on reversal*"), `mano stories` may assign it and write its story. The full rule is `_mano/workflow.md` → **Mid-phase additions**; this is the procedure.
+
+**Check the goal first.** Read the phase brief's goal. If the named item would change that goal rather than fit inside it, this is the next phase, not an addition — say so and stop:
+
+```text
+[mano stories]: "[item]" changes the phase-[N] goal ("[goal]") rather than fitting inside it.
+That makes it the next phase, not an addition. Finish phase-[N], then `mano start` picks it up.
+```
+
+Do not assign it, do not write the story, do not offer to shrink it to fit. If it fits the existing goal, proceed:
+
+1. **Assign the item to this phase via the writer** — one `--title` per item the user named exactly:
+   ```
+   node _mano/scripts/backlog.js assign --phase [N] --title "[exact backlog title]"
+   ```
+   **Script failing?** Stop and report the error — never hand-edit a status. If the script reports no matching item, the work is not in the backlog: treat it as ordinary emergent work (the lettered-story flow above) and do not invent a backlog item for it.
+2. Write the story with the same lettered flow as above (steps 1–3) — including Step 0 pre-flight. If 0c.1 blocks or 0d finds a gap, the item stays assigned and the story is not written: report the gap and route it, exactly as on any other path. Assignment is not a commitment to produce a story this turn.
+3. **Flag the scope change — do not record it yourself.** The phase now contains work its brief does not describe, and `mano review` reads that brief for the phase goal and Assumption Log. The brief belongs to `mano start`; never edit it here.
+
+```text
+[mano stories]: mano stories — [exact PHASE_DIR]/stories/README.md, [exact PHASE_DIR]/stories/story-[N][letter]-[slug].md
+- Assigned "[item]" to [PHASE_ID]
+- Inserted story [N][letter]: [title]
+⚠ Verify: [PHASE_ID] scope grew — its brief doesn't mention "[item]". Add a line to [PHASE_DIR]/phase-brief.md if you want it on the record before review.
+
+[Optional hook block if active]
+
+Next:
+- `mano dev` — implement the next pending story
+```
+
+Never select items yourself, never assign more than the user named, and never assign to a phase that does not already exist with approved scope. Adding to an open phase is the human's call, made in the message that names the item.
+<!-- /mano-rule: mid-phase-addition-owner -->
 
 <!-- mano-rule: id=post-stories-hook-findings-triage; incident=post-stories-hook-findings; model=not-recorded; date=2026-05-29; eval=pending -->
 ## Addressing post-stories hook findings

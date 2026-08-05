@@ -74,11 +74,29 @@ At the approval, state the chain you intend to run before starting it, so the us
 
 A `⚠ Verify:` is advisory by definition and does **not** pause the chain. Collect them instead (below).
 
+**Every pause is named.** When one of the conditions above fires, say which one, in the closing block. A chain that hands back without naming a pause condition is a bug, not a pause — the two look identical to the user, and only the named version tells them whether to answer something or re-run the command.
+
+Two things that are **not** pause conditions, because they are the most tempting places to stop:
+
+- **A `Next:` block listing more than one action.** Several *listed* options is the ordinary shape of a log, not a fork. It is a fork only when the "Single obvious next action gates" genuinely cannot resolve which comes first. An option that is explicitly conditional on another (`mano stories` — *once visual direction is settled*) is resolved, not ambiguous: run the one it depends on.
+- **Finishing an action successfully.** Completion is the trigger to continue, not to hand back.
+
 ### Hooks in auto mode
 
 Post-skill hooks **run automatically in auto mode** — the inverse of the manual-mode default, and deliberate. Hooks are normally suggest-only because they are best run after the human has reviewed the artifact; in auto mode the human is deliberately not reviewing mid-chain, so the hook is the only check that runs at all. Running it adds signal exactly where signal was removed.
 
 Approval is unchanged: **running a hook approves the review, not the edits.** Findings still go through **Post-Hook Findings Triage** with explicitly numbered selections. Because that triage needs an answer, hook findings pause the chain under the normal pause rule. A hook that reports nothing does not pause it.
+
+### Continuing is an action, not an announcement
+
+**To continue the chain, invoke the next action in the same turn. Never end a turn with a statement of intent.** A line like "Continuing the auto-mode chain — running `mano ui` next" followed by the turn ending is the chain silently stopping while claiming the opposite: the user is left holding a promise instead of a result, and no pause condition fired to explain it.
+
+- ❌ finished log → `Next:` options → "Continuing — running `mano ui` next." → *turn ends*
+- ✅ finished log → `mano ui` runs → its log → … → closing block when the chain stops
+
+If you have written words describing what you are about to run, you have not run it. Either invoke it now, or name the pause condition (**The pause rule**) that stopped you. There is no third state where the chain is notionally continuing but nothing is executing.
+
+**Between actions there is no `Next:` block and no transition line.** This is the one place a skill's canonical execution log is trimmed: `Next:` exists to tell a human which command to type, and mid-chain nobody is typing one. Offering options *and* claiming to continue is the contradiction that produces the failure above. `Next:` returns in the closing block, once the chain has actually stopped.
 
 ### What the chain prints
 
@@ -227,14 +245,19 @@ Whenever a skill suggests what to do next, base that suggestion on the artifacts
 - Prefer the shortest path that adds useful clarity for the current phase.
 - Use this decision tree when evaluating next steps for the planning stage:
   ```
+  Phase introduces a new category of file/example/module/component
+  whose naming, placement, or shared format will repeat?
+  └─ yes → keep `mano rules` in the options, however mature project-rules.md is
+
   Phase is user-facing or mobile?
   ├─ design coverage or the current visual preview missing/stale? → suggest `mano ui` (do not auto-run stories)
   ├─ project-rules still default? → list `mano rules` + `mano stories` as options
   └─ design coverage, visual preview, and useful rules present? → suggest `mano stories`
-  
+
   Phase is non-user-facing (backend/infra)?
   └─ go straight to `mano stories` unless tech is genuinely fuzzy (suggest `mano spec`)
   ```
+  The first branch exists because the others are asymmetric: `mano ui` is gated on a **phase-scoped** artifact (`PHASE_DIR/design-preview.html`), which is missing at the start of every phase, while `mano rules` was gated only on `project-rules still default?` — a **project-lifetime** condition that can never fire again once the file is customised. Existence of `project-rules.md` proves earlier categories were homed; it says nothing about a category this phase introduces. Judge rules by what the phase adds, not by whether the file has been written before.
 
 ## State detection — relying on context
 
@@ -549,7 +572,7 @@ Rules:
 - `❓ Decide:` is the stronger channel: the artifact carries a decision the skill made provisionally (or found open) that the user should confirm or change **before the next command runs**. Phrase it as a direct question with the provisional value stated — "Defaulted `MISSING_X` severity to `warn` (same reasoning as `LONG_Y`) — confirm or change before `mano stories`?" — never as a passive observation. The test for which line to use: if your verify text says "confirm before [next step]", it is misfiled — that's a `❓ Decide:`. While the decision is open, the owning artifact must carry the same hedge at the value itself (e.g. an inline `⚠️ Note: provisional`), so a later skill reading the artifact sees the open decision without needing this chat.
 - **`Next:` must agree with `❓ Decide:`.** When a decide line is present, present the dependent command as conditional on the decision (`mano stories` — once the severity call above is confirmed), never as unconditionally ready. The two lines share one message; a decide line saying "confirm before stories are written" above a `Next:` saying "ready to decompose" is exactly the contradiction this rule forbids.
 - **Capture the answer.** When the user replies to a `❓ Decide:` — confirming or changing the value — apply it: update the owning artifact in place (the provisional value becomes a stated decision; drop the "guess"/provisional hedging) and respond with a one-line changelog. A decision that lives only in chat is not captured; the artifact is the record.
-- `Next:` keeps the existing next-action options; it is not boilerplate and stays.
+- `Next:` keeps the existing next-action options; it is not boilerplate and stays. **One exception:** in auto mode, an action that is handing off to the next action in the chain omits `Next:` entirely — see **Run Mode** → *Continuing is an action, not an announcement*. Nobody is choosing a next command mid-chain, and printing options there produces a log that offers a choice and continues past it in the same breath. `Next:` still appears on the action that ends the chain.
 
 Reason fully; externalize sparingly. Terse output is a rule about *display*, not *cognition*. Judgment-heavy skills (scoping, story decomposition, spec, rules, review) must still do the deliberation their contract requires — specificity, branching-flow, exhaustiveness, anti-rationalization gates. Do not shortcut that thinking to save chat volume; under-reasoning a planning decision is far more expensive than over-explaining one, because the bad decision propagates into every downstream artifact. The discipline is: do the reasoning internally, let the artifact carry the conclusions (each artifact is self-contained by design), and put only the changelog, flags, and genuine unresolved questions in chat. Do not narrate the deliberation itself. Mechanical steps (status updates, file writes, hook checks) carry no judgment worth narrating — just act and report.
 
@@ -592,6 +615,21 @@ Other skills should not edit the backlog except for narrow gap-resolution status
 - `mano rules` must run `node _mano/scripts/state.js --gaps rule-gap`; that projection is its only backlog read. After updating project rules, it may mark only a fully addressed projected item resolved via `backlog.js resolve-gap --type rule-gap --title "..."`.
 
 Neither skill opens `backlog.md`, even when the user asks it to handle backlog gaps; the read-only projection and targeted writer are the complete interface. Skills should not inspect the backlog for general project memory unless their role explicitly owns that context.
+
+<!-- mano-rule: id=mid-phase-addition-owner; incident=stories-assigned-backlog-item-out-of-lane; model=not-recorded; date=2026-08-05; eval=stories-midphase-assign -->
+### Mid-phase additions
+
+One more narrow exception, for work the human pulls into a phase that is already open and being built:
+
+- `mano stories` may assign an **exact backlog item the user named** to the **already-approved active** phase, via `backlog.js assign --phase [N] --title "..."`, and then write its story. It never chooses items itself, never scopes, and never assigns to a phase that does not already exist and hold approved scope.
+
+This is not a second scoping skill. `mano start` owns assignment because assignment is normally part of *selecting* what a phase contains — a judgement needing approval. When the human names one exact item to add to a phase already in flight, that judgement has been made and stated directly; only the mechanical step remains. `mano start`'s `DECISION: STOP` blocks *advancing to a new phase*, which is a different operation and stays blocked.
+
+Two hard limits:
+
+- **If the addition changes the phase goal, it is not an addition — it is the next phase.** Say so and stop; do not assign, do not write the story. Small phases are what make the review gate meaningful, and quietly growing one to fit new work is how that gate stops meaning anything.
+- **Never edit the phase brief to record the change.** The brief belongs to `mano start`. Flag it instead: the phase now contains work its brief does not describe, and `mano review` reads that brief for the phase goal and Assumption Log. Surface it with `⚠ Verify:` so the human can add a line themselves if they want it recorded — use and flag, never edit another skill's artifact.
+<!-- /mano-rule: mid-phase-addition-owner -->
 
 ## Skill Tightening
 

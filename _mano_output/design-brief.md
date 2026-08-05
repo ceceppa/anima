@@ -73,6 +73,53 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 3. **Example line and SelectorDock** — a short read-only `Anima.on()` example plus the family selector, same placement and treatment as the 2D Convenience Motion Example Scene.
 4. **Playback controls** — the same shared bar as every other playground (see Component guide).
 
+## Showcase: Grid — visual direction
+
+A deliberately separate visual system from the rest of this brief — a scripted, self-contained scene for social-media capture (`examples/showcase/grid/`), not another dev-facing playground. It targets a viewer scrolling a feed, not a developer evaluating the API, so it does not reuse the shared Theme, `ExampleHeader`, `Card`, `SelectorDock`, or the palette above. `v2_stuff/prd-social-media.md` is the source storyboard (scenes, timing, exact copy); this section is its visual system. The user supplies all art (background, inventory frame art, item icons, logo) under `examples/showcase/grid/assets/` — this brief defines the UI chrome and layout around that art, not the art itself.
+
+**Canvas.** 1920×1080 (16:9 landscape) — matches both the user's own inspiration reference (`v2_stuff/showcase-grid.mp4`, 1280×720) and the already-supplied `assets/background.jpg` (1672×941), and suits every platform in `v2_stuff/socials/` (bluesky, linkedin, reddit) better than a vertical-only format.
+
+**Palette.**
+
+| Token | Value | Use |
+|---|---|---|
+| `showcase-scrim` | `#000000` @ 55% | Dark overlay over the supplied background image — guarantees text/UI legibility regardless of that image's own brightness; not a substitute for the drop-shadow below |
+| `showcase-text` | `#FFFFFF` | All on-screen banner, caption, and CTA text |
+| `showcase-text-shadow` | `#000000` @ 85%, 0/4px offset, 12px blur | Drop shadow behind every text block, placed outside the central focus area per the storyboard's own direction |
+| `frame-gold` | `#C9A227` | Inventory-slot border, finale-matrix divider lines — the one warm RPG accent against an otherwise near-neutral dark scene |
+| `slot-bg` | `#1A120B` @ 80% | Empty/filled inventory slot background |
+| `code-vanilla-bg` | `#2A0E0E` | "Vanilla Godot" code panel |
+| `code-vanilla-accent` | `#E24A4A` | "Vanilla Godot" panel border/label |
+| `code-anima-bg` | `#0E2A17` | "Anima" code panel |
+| `code-anima-accent` | `#4ADE80` | "Anima" panel border/label |
+| `caption-bg` | `#000000` @ 60% | Bottom-center live-code caption bar |
+
+Contrast: `showcase-text` (#FFFFFF) is guaranteed ≥ 4.5:1 (AA) against any supplied background by the 55% black scrim alone (worst case: a pure-white source image scrimmed to ~50% grey, itself already ~4.6:1 against white; the drop shadow adds a further dark halo directly behind each glyph on top of that). `showcase-text` on `code-vanilla-bg`/`code-anima-bg`/`caption-bg` all exceed 12:1.
+
+**Typography.** Same family as the rest of the project (Inter) for consistency — the RPG feel comes from the frame art and palette, not a novelty display font. Banner/caption text is Inter ExtraBold (800); code-panel text is a monospace fallback (`Consolas, Menlo, monospace`) sized to stay readable at 1080p without crowding the panel.
+
+- Scene banners (Scene 1's hook line, Scene 4's "ANIMA FOR GODOT 4"): 56px/800, `showcase-text`, max width 1400px, centred, top-anchored at y=64px.
+- Scene 4 sub-lines ("15+ Built-in Formulas • Open Source", "Link in Comments"): 28px/700, `showcase-text`.
+- Code panel header labels ("Vanilla Godot" / "Anima"): 22px/700, matching accent colour.
+- Code panel body: 20px/500 monospace.
+- Bottom caption bar (live code line, Scene 3): 22px/600 monospace, `showcase-text`.
+
+**Component guide (showcase-only).**
+
+- **Inventory frame** — centred 5×5 grid. Slot: 120×120px, 16px gap (total grid 664×664px), `slot-bg` fill, 3px `frame-gold` border, 8px corner radius, 40%-opacity inset shadow for depth. An empty slot shows border only; a filled slot's item art fills the slot with an 8px inset margin.
+- **Scene banner** — top-centred text block per the Typography spec above, always inside the `showcase-scrim` + drop shadow treatment; never placed over the busiest part of the background art.
+- **Code comparison card** — full-bleed two-panel layout: `code-vanilla-bg` panel left (960px), `code-anima-bg` panel right (960px), 4px centre gutter in `frame-gold`. Each panel: header label top, code body below, 48px internal padding.
+- **Formula caption bar** — a `caption-bg` pill, 900px max-width, centred, 64px from the bottom edge, 16px vertical padding, showing the single active line of code per formula per the storyboard.
+- **Finale matrix** — a 4×4 arrangement of 16 miniature inventory frames, each a scaled-down version of the main Inventory frame component (same slot/border treatment, 5× smaller), separated by 2px `frame-gold` divider lines. At 13.5s, a full-bleed `showcase-scrim` layer at 70% opacity dims the matrix behind the closing logo/CTA text, per the storyboard.
+- **Logo/CTA block** — the existing `logo.svg` (repo root) centred over the dimmed finale matrix, with the two sub-line text rows beneath it per Typography above.
+
+## Screen composition — phase-13 — Grid Showcase
+
+1. **Scene 1 — Inventory Hook (0:00–0:02):** Inventory frame centred over the scrimmed background; slots fill with supplied item art as the scene banner text is visible top-centre.
+2. **Scene 2 — Code Comparison (0:02–0:05):** Hard cut to the full-bleed Code comparison card; scene banner text repositions to this scene's header line.
+3. **Scene 3 — Formula Showcase (0:05–0:12):** Hard cut back to the Inventory frame; the Formula caption bar updates as each of the three formulas plays.
+4. **Scene 4 — Finale Matrix & CTA (0:12–0:15):** Hard cut to the Finale matrix; at 13.5s the scrim dims it and the Logo/CTA block fades in centred.
+
 ## Screen composition — phase-11 — Motion Playback Controls
 
 1. **ExampleHeader** — reuses whichever playground scene the developer opens; not changed by this phase.

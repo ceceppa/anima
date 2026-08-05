@@ -33,6 +33,8 @@ Note: `mano dev` is the one Mano command that produces code. Every other command
 
 **Run mode.** Every `state.js` projection prints `MODE: manual|auto`. In `manual` (the default) each command hands back when it finishes. In `auto`, after the human has approved a phase scope, each finished action runs the next one automatically through to `mano dev yolo` — but it pauses for **any** question (a `❓ Decide:`, a clarifying question, an ambiguous next action, hook findings, a gate or blocker) and **never runs `mano review` or scopes a new phase**. Auto mode changes who types the next command; it never changes what a skill may write or which decisions are the human's. The full contract is `_mano/workflow.md` → **Run Mode: manual and auto**.
 
+**Continuing the chain means invoking the next action in the same turn — never announcing it.** Ending a turn on "Continuing — running `mano ui` next" stops the chain while claiming to continue it. Mid-chain, omit the `Next:` block (nobody is typing a command); it returns only in the closing block, on the action that actually ends the chain. Every hand-back names its pause condition; a chain that stops without naming one is a bug.
+
 If a platform skill named `mano` is not available, that is not an error. Continue by using the local `_mano/` files.
 
 The skill name uses a **hyphen, never a colon**: `mano import` → `mano-import` (read `_mano/skills/import.md`), not `mano:import`. The colon form is plugin-namespace syntax and matches no Mano skill. If a `mano <action>` seems unavailable, try the hyphenated `mano-<action>` before concluding it doesn't exist.
