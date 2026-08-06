@@ -8,8 +8,8 @@ var _current_instance: Variant = null
 var _waiting_for_delay: bool = false
 var _delay_elapsed: float = 0.0
 
-func _init(p_motion: AnimaMotion) -> void:
-	super._init(p_motion)
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
+	super._init(p_motion, p_value_context)
 	var repeat := motion as AnimaRepeat
 	if repeat.child != null and repeat.count != 0:
 		_current_instance = _build_iteration_instance(0)

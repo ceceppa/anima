@@ -192,6 +192,26 @@ const _MIRRORED_KIND := {
 	Kind.EASE_OUT_BOUNCE: Kind.EASE_IN_BOUNCE,
 }
 
+## Coerces [param value] into an [AnimaEase]: returned unchanged if it
+## already is one; wrapped in a fresh [AnimaEase] (only [member kind] set,
+## every other field at its own default) if it's a bare [enum Kind] value —
+## so a caller who only needs a named curve, the common case, never has to
+## construct and configure a whole resource for it (the same shorthand Anima
+## v1 offered). Reports an error and returns a default `AnimaEase.new()`
+## (`Kind.LINEAR`) for any other input type. Used by [method
+## AnimaKeyframeMotion.with_ease] and [method AnimaGridMotionFactory.with_ease]
+## (`tech-spec.md` §Easing curve library) — not by [member AnimaPropertyMotion.ease]
+## or its own `with_ease()`, which keep their existing `AnimaEase`-only signature.
+static func from(value: Variant) -> AnimaEase:
+	if value is AnimaEase:
+		return value
+	if typeof(value) == TYPE_INT:
+		var result := AnimaEase.new()
+		result.kind = value
+		return result
+	push_error("AnimaEase.from(): expected an AnimaEase or an AnimaEase.Kind, got %s" % type_string(typeof(value)))
+	return AnimaEase.new()
+
 ## Returns a copy of this ease with [member kind] swapped for its named
 ## opposite (see [constant _MIRRORED_KIND]) — same curve family, opposite
 ## direction. Every other field (amplitude, period, overshoot, spring/bezier

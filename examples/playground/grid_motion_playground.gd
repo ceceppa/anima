@@ -187,21 +187,26 @@ func _cards() -> Array[Card]:
 		cards.append(child as Card)
 	return cards
 
+## Built through the [method Anima.grid] shorthand rather than hand-assembling
+## an [AnimaTargetCollection] and [AnimaGridMotion] directly. This scene's
+## explicit, tap-selected card collection and odd/even filter sit outside
+## what the shorthand's own chain methods cover, so they're configured on the
+## exposed [member AnimaGridMotionFactory.motion] afterward — the same
+## escape hatch `tech-spec.md` §Grid convenience shorthand documents for
+## anyone who needs more than the convenience surface itself.
 func _build_grid_motion() -> AnimaGridMotion:
-	var collection := AnimaTargetCollection.new()
-	collection.kind = AnimaTargetCollection.Kind.EXPLICIT
-	collection.reference_data = _cards()
+	var factory := Anima.grid(self) \
+		.with_dimensions(GRID_SIZE) \
+		.with_start_point(_start_point) \
+		.with_distance_formula(_selected_formula) \
+		.with_item_motion(Anima.item().property(NodePath("progress"), 1.0, 0.28).from(0.0)) \
+		.with_stagger_interval(0.1)
 
-	var grid := AnimaGridMotion.new()
-	grid.target_collection = collection
-	grid.grid_dimensions = GRID_SIZE
-	grid.start_point = _start_point
-	grid.distance_formula = _selected_formula
-	grid.item_motion = Anima.item().property(NodePath("progress"), 1.0, 0.28).from(0.0)
-	grid.distribution.stagger_interval = 0.1
-	grid.reverse_order_policy = AnimaGroupMotion.ReverseOrderPolicy.REVERSE_EXECUTION
-	_configure_order(grid)
-	return grid
+	factory.motion.target_collection.kind = AnimaTargetCollection.Kind.EXPLICIT
+	factory.motion.target_collection.reference_data = _cards()
+	factory.motion.reverse_order_policy = AnimaGroupMotion.ReverseOrderPolicy.REVERSE_EXECUTION
+	_configure_order(factory.motion)
+	return factory.motion
 
 func _configure_order(grid: AnimaGridMotion) -> void:
 	match _selected_order:

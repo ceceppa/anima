@@ -52,6 +52,12 @@ var _delay_remaining: float = 0.0
 ## `null` for a playback built directly (e.g. most of this addon's own
 ## tests), which the caller is responsible for advancing itself.
 var _runtime: AnimaRuntime = null
+## Arbitrary data an [AnimaValue] built with [method AnimaValue.context] can
+## read during this playback (see [member AnimaValueContext.context_data]).
+## Mutate this dictionary in place before playback resolves any value that
+## reads it — reassigning the whole dictionary after construction leaves an
+## already-built context pointing at the old one.
+var context_data: Dictionary = {}
 
 ## [param p_start_reversed] is [method Anima.play_backwards]'s entry point:
 ## captures [param p_motion]'s start/end with one zero-length frame, then
@@ -62,7 +68,7 @@ func _init(p_motion: AnimaMotion, p_target: Node = null, p_start_reversed: bool 
 	target = p_target
 	_has_target = p_target != null
 	_is_reversed = p_start_reversed
-	_instance = motion.create_runtime()
+	_instance = motion.create_runtime(_build_value_context())
 	if p_start_reversed:
 		_instance.advance(target, 0.0)
 		if not _reverse_in_place():
@@ -75,6 +81,16 @@ func _init(p_motion: AnimaMotion, p_target: Node = null, p_start_reversed: bool 
 			_instance.advance(target, 0.0)
 	_reset_delay()
 	_fire_started()
+
+## Builds the root-level [AnimaValueContext] passed to [method AnimaMotion.create_runtime]
+## — [member target] as both target and root, sharing this playback's own
+## [member context_data] (see [member AnimaValueContext.context_data]). A
+## group/grid item resolves against its own, separately-built context instead
+## (`tech-spec.md` §Dynamic values).
+func _build_value_context() -> AnimaValueContext:
+	var context := AnimaValueContext.new(target)
+	context.context_data = context_data
+	return context
 
 ## Invokes [member AnimaMotion.on_started_callback] on the current [member motion],
 ## if one was set, exactly once per run — called on initial play and again on
@@ -234,7 +250,7 @@ func _reverse_in_place() -> bool:
 		return false
 
 	motion = reversed_motion
-	_instance = motion.create_runtime()
+	_instance = motion.create_runtime(_build_value_context())
 	return true
 
 ## Manually advances this playback by exactly [param delta] seconds, scaled

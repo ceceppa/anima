@@ -32,8 +32,8 @@ func estimate_duration() -> AnimaDuration:
 	return AnimaDuration.fixed(total)
 
 ## Builds the runtime instance that replays [member child].
-func create_runtime() -> Variant:
-	return AnimaRepeatInstance.new(self)
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaRepeatInstance.new(self, context)
 
 ## Requires [member child].
 func validate() -> Array[String]:

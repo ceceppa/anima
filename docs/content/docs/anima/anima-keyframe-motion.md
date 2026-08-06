@@ -73,6 +73,15 @@ Sets [member duration] directly. Named `with_duration` rather than
 collide with the field of the same name. Returns self so calls can keep
 chaining.
 
+### with_ease
+
+Sets [member default_ease] directly, accepting either a full [AnimaEase]
+or a bare [enum AnimaEase.Kind] (coerced via [method AnimaEase.from] —
+`tech-spec.md` §Easing curve library). Named `with_ease` for the same
+`with_`-prefix reason as [method with_duration]. Returns self so calls can
+keep chaining — e.g. directly onto [method AnimaOnMotionFactory.keyframes]'s
+own returned motion (`tech-spec.md` §Keyframe interface).
+
 ### parse_dictionary
 
 Parses [param source] (the dictionary authoring form) into [member tracks]
@@ -89,7 +98,8 @@ chain-resolved rather than explicit.
 
 ### create_runtime
 
-Builds the runtime instance that advances every track together.
+Builds the runtime instance that advances every track together. See
+[method AnimaMotion.create_runtime] for [param context].
 
 ### validate
 

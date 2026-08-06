@@ -126,6 +126,9 @@ Every subtype must override this explicitly.
 
 Builds the runtime instance that [method AnimaMotionInstance.advance]s this
 motion frame by frame. Every subtype must override this explicitly.
+[param context] is the per-resolution context an [AnimaValue]-typed field
+resolves against, supplied by [AnimaPlayback] (or a group/grid item's own
+context — see `tech-spec.md` §Dynamic values); `null` when none applies.
 
 ### validate
 

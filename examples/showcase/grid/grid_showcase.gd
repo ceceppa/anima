@@ -60,9 +60,10 @@ var _current_beat: int = -1
 var _dim_triggered: bool = false
 var _active_playbacks: Array[AnimaPlayback] = []
 
-## Icon art the inventory slots animate in — populated from
-## `assets/icons/` if present, else an obvious placeholder swatch.
-var _icon_nodes: Array[TextureRect] = []
+## Icon art each Scene-4 mini-grid's slots animate in — populated from
+## `assets/icons/` if present, else an obvious placeholder swatch. Scene 1's
+## own inventory grid is a separate concern entirely, owned by `%Layer1`
+## (`layer_1.gd`/`inventory_grid.gd`) — this scene only tells it when to play.
 var _mini_grids: Array[Control] = []
 var _mini_icon_nodes: Array[Array] = [] # Array[Array[TextureRect]], one inner array per mini-grid
 
@@ -220,19 +221,21 @@ func _build_finale_matrix() -> void:
 			_mini_icon_nodes.append(mini_icons)
 
 ## Scene 1 (0:00-0:02) — items ripple into the empty inventory grid while the
-## opening banner reads (`v2_stuff/prd-social-media.md` Scene 1).
+## opening banner reads (`v2_stuff/prd-social-media.md` Scene 1). `%Layer1`
+## (`layer_1.gd`) owns the actual grid/banner content and its own reveal —
+## this only shows it and tells it to play.
 func _play_scene1() -> void:
 	%Layer1.visible = true
 	_scene2.visible = false
 	_scene3.visible = false
 	_scene4.visible = false
-	_reset_icons(_icon_nodes)
-	_play_formula(Formula.RADIAL, _icon_nodes)
+	%Layer1.play()
 
 ## Scene 2 (0:02-0:05) — hard cut to the full-screen code comparison
 ## (`v2_stuff/prd-social-media.md` Scene 2). Code text is illustrative
 ## placeholder copy — story-2's own scope explicitly excludes final wording.
 func _play_scene2() -> void:
+	%Layer1.visible = false
 	_scene2.visible = true
 	_scene3.visible = false
 	_scene4.visible = false
@@ -241,8 +244,15 @@ func _play_scene2() -> void:
 
 ## Scene 3 (0:05-0:12) — cuts back to the inventory grid and replays it with
 ## three different formulas back-to-back, the live triggering code line shown
-## in the caption bar (`v2_stuff/prd-social-media.md` Scene 3).
+## in the caption bar (`v2_stuff/prd-social-media.md` Scene 3). Reuses the
+## same `%Layer1` grid Scene 1 shows.
+##
+## `%InventoryGrid.play()` doesn't take a formula argument yet — every replay
+## here uses its one built-in formula, only the caption text actually cycles
+## per formula. Wiring a real per-formula replay through is follow-up work,
+## not this fix.
 func _play_scene3() -> void:
+	%Layer1.visible = true
 	_scene2.visible = false
 	_scene3.visible = true
 	_scene4.visible = false
@@ -257,8 +267,7 @@ func _advance_scene3(_delta: float) -> void:
 	_scene3_formula_index = index
 	var formula: Formula = SCENE3_FORMULA_ORDER[index]
 	_caption_bar.text = FORMULA_CAPTIONS[formula]
-	_reset_icons(_icon_nodes)
-	_play_formula(formula, _icon_nodes)
+	%Layer1.play()
 
 ## Scene 4 (0:12-0:15) — the finale matrix: the centre-most mini-grid starts
 ## first, the rest follow one at a time spiralling outward, each a fixed
@@ -266,6 +275,7 @@ func _advance_scene3(_delta: float) -> void:
 ## technical decisions) — the adjustable [member finale_wave_delay].
 ## Formulas cycle across the matrix so it isn't 16 identical animations.
 func _play_scene4() -> void:
+	%Layer1.visible = false
 	_scene2.visible = false
 	_scene3.visible = false
 	_scene4.visible = true

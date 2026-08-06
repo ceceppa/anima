@@ -127,3 +127,20 @@ func test_create_runtime_returns_a_keyframe_motion_instance():
 	motion.parse_dictionary({"to": {"opacity": 1.0}})
 
 	assert_true(motion.create_runtime() is AnimaKeyframeMotionInstance)
+
+func test_with_ease_sets_default_ease_and_returns_self():
+	var motion := AnimaKeyframeMotion.new()
+	var ease := AnimaEase.new()
+	ease.kind = AnimaEase.Kind.EASE_IN_OUT
+
+	var returned := motion.with_ease(ease)
+
+	assert_eq(returned, motion)
+	assert_eq(motion.default_ease, ease)
+
+func test_with_ease_accepts_a_bare_kind():
+	var motion := AnimaKeyframeMotion.new()
+
+	motion.with_ease(AnimaEase.Kind.EASE_IN_OUT)
+
+	assert_eq(motion.default_ease.kind, AnimaEase.Kind.EASE_IN_OUT)

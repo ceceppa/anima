@@ -4,14 +4,14 @@ enum Family {
 	POSITION, POSITION_X, POSITION_Y, MOVE_BY,
 	SCALE, SCALE_BY, ROTATION, ROTATE_BY,
 	OPACITY, COLOR, SIZE, PROPERTY, CHAINED,
-	KEYFRAMES, SPRING,
+	KEYFRAMES, SPRING, DYNAMIC_VALUES,
 }
 
 const FAMILY_ORDER := [
 	Family.POSITION, Family.POSITION_X, Family.POSITION_Y, Family.MOVE_BY,
 	Family.SCALE, Family.SCALE_BY, Family.ROTATION, Family.ROTATE_BY,
 	Family.OPACITY, Family.COLOR, Family.SIZE, Family.PROPERTY, Family.CHAINED,
-	Family.KEYFRAMES, Family.SPRING,
+	Family.KEYFRAMES, Family.SPRING, Family.DYNAMIC_VALUES,
 ]
 const FAMILY_LABELS := {
 	Family.POSITION: "Position",
@@ -29,6 +29,7 @@ const FAMILY_LABELS := {
 	Family.CHAINED: "Chained",
 	Family.KEYFRAMES: "Keyframes",
 	Family.SPRING: "Spring",
+	Family.DYNAMIC_VALUES: "Dynamic Values",
 }
 const FAMILY_EXAMPLES := {
 	Family.POSITION: "Anima.on(card).position(card.position + Vector2(60, -40), 0.4)",
@@ -46,6 +47,7 @@ const FAMILY_EXAMPLES := {
 	Family.CHAINED: "Anima.on(card).move_by(Vector2(50, 0), 0.2).repeat(2).on_started(...).on_completed(...)",
 	Family.KEYFRAMES: "Motion.keyframes({\"from\": {...}, 30: {...}, 70: {...}, \"to\": {...}}).with_duration(0.9)",
 	Family.SPRING: "Anima.on(card).position_x(card.position.x + 80, 0.0).with_ease(spring)",
+	Family.DYNAMIC_VALUES: "Motion.to(\"position:x\", AnimaValue.target(\"position:x\").add(AnimaValue.target(\"size:x\")))",
 }
 const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
@@ -195,8 +197,10 @@ func _build_motion() -> AnimaMotion:
 			return _build_chained_motion()
 		Family.KEYFRAMES:
 			return _build_keyframe_motion()
+		Family.SPRING:
+			return _build_spring_motion()
 		_:
-			return _build_spring_motion() # Family.SPRING
+			return _build_dynamic_value_motion() # Family.DYNAMIC_VALUES
 
 ## Demonstrates the lifecycle-callback and repeat chain modifiers together —
 ## `.repeat()` comes before `.on_started()`/`.on_completed()` so the
@@ -247,6 +251,30 @@ func _build_spring_motion() -> AnimaPropertyMotion:
 	spring.spring_response = 0.3
 	spring.spring_bounce = 0.6
 	return Anima.on(_card).position_x(_card.position.x + 80.0, 0.0).with_ease(spring)
+
+## Demonstrates a dynamic value standalone, combined arithmetically, and
+## inside a keyframe, chained through the same `.then()` composition CHAINED
+## already uses. `slide_by_own_width` reads two of the card's own live
+## properties (its position and its size) and adds them — standalone and
+## combined at once, resolved fresh each run regardless of the card's actual
+## current width. `pulse` then dips opacity to half of whatever it resolves
+## to at that keyframe step, demonstrating a dynamic value inside a keyframe
+## (`tech-spec.md` §Dynamic values). `Anima.on()`'s convenience methods take a
+## fixed `float`/`Vector2`, not an [AnimaValue], so this uses [Motion]'s
+## canonical `.to()`/`.keyframes()` authoring instead, the same as KEYFRAMES.
+func _build_dynamic_value_motion() -> AnimaMotion:
+	var slide_by_own_width := Motion.to(
+		NodePath("position:x"),
+		AnimaValue.target(NodePath("position:x")).add(AnimaValue.target(NodePath("size:x"))),
+	).with_duration(0.4)
+
+	var pulse := Motion.keyframes({
+		"from": {"scale": Vector2.ONE},
+		50: {"scale": Vector2(1.15, 1.15), "opacity": AnimaValue.target(NodePath("modulate:a")).multiply(0.5)},
+		"to": {"scale": Vector2.ONE, "opacity": 1.0},
+	}).with_duration(0.5)
+
+	return slide_by_own_width.then(pulse)
 
 ## Restrained depth behind the card — design-brief.md §Component guide
 ## "Content stage", the same treatment `composition_playground.gd` uses.

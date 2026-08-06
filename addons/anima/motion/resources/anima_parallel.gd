@@ -58,8 +58,8 @@ func estimate_duration() -> AnimaDuration:
 	return completion_child.estimate_duration() if completion_child != null else AnimaDuration.fixed(0.0)
 
 ## Builds the runtime instance that plays every enabled child together.
-func create_runtime() -> Variant:
-	return AnimaParallelInstance.new(self)
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaParallelInstance.new(self, context)
 
 ## Validates every child recursively.
 func validate() -> Array[String]:

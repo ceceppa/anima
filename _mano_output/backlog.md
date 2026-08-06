@@ -1962,7 +1962,7 @@
   A dynamic value (AnimaValue) resolves against the current playback context: func resolve(context: AnimaValueContext) -> Variant. A motion property may accept a fixed value, an AnimaValue, or a supported callable wrapper instead.
   Preserves Anima V1's dynamic-expression capability (e.g. "-.:size:x" meaning "negative width of the current target") in typed form.
   PRD5.md §6.1-§6.2.
-- **Status:** backlog
+- **Status:** in-phase-14
 
 ### Typed dynamic value API (Value.*)
 - **Type:** feature
@@ -1970,7 +1970,7 @@
 - **Context:**
   The primary Anima 2 API expresses dynamic values through typed expressions, e.g. .from(Value.target(^"size:x").negative()). Works standalone and inside a Group, where each item resolves its own value independently.
   PRD5.md §6.3.
-- **Status:** backlog
+- **Status:** in-phase-14
 
 ### Dynamic value sources
 - **Type:** feature
@@ -1978,7 +1978,7 @@
 - **Context:**
   Value.constant(), Value.target(property), Value.node(path, property), Value.root(property), Value.context(key), Value.group_index(), Value.group_count(), Value.group_normalised_index(), Value.grid_row(), Value.grid_column().
   PRD5.md §6.4.
-- **Status:** backlog
+- **Status:** in-phase-14
 
 ### Dynamic value arithmetic composition
 - **Type:** feature
@@ -1986,7 +1986,7 @@
 - **Context:**
   Structural arithmetic chainable on a Value: add/subtract/multiply/divide/negative/absolute/minimum/maximum/clamp/map, plus vector helpers x()/y()/z()/component().
   PRD5.md §6.5.
-- **Status:** backlog
+- **Status:** in-phase-14
 
 ### Dynamic value callable fallback
 - **Type:** feature
@@ -1994,7 +1994,7 @@
 - **Context:**
   Value.call(func(context): ...) covers calculations that can't be expressed structurally; must be marked runtime-only, potentially non-serialisable, potentially non-compilable, and potentially unavailable in editor preview.
   PRD5.md §6.6.
-- **Status:** backlog
+- **Status:** in-phase-14
 
 ### Dynamic value resolution timing policy
 - **Type:** feature
@@ -2010,7 +2010,7 @@
 - **Context:**
   Any keyframe property value may be a dynamic Value instead of a fixed literal.
   PRD5.md §6.8.
-- **Status:** backlog
+- **Status:** in-phase-14
 
 ### Dynamic value execution record
 - **Type:** feature
@@ -2955,7 +2955,7 @@
 - **Context:**
   A game-inspired showcase scene distinct from the dev-facing playgrounds — built for social media, not testing. Dark fantasy aesthetic; 4-scene storyboard: items rippling into a 5x5 RPG inventory grid, a vanilla-Godot-vs-Anima.grid() code comparison, three grid formulas shown back-to-back with their live code line, and a 4x4 matrix of 16 grids animating into a logo/CTA finale.
   Full storyboard (visual theme, timing, exact text overlays) given by the user during the phase-12 review — ask them for it again when this is scoped. The v2_stuff/prd-social-media.md file contains more detailed info regarding this
-- **Status:** in-phase-13
+- **Status:** resolved
 
 ### Anima.grid(container) convenience shorthand
 - **Type:** feature
@@ -2964,4 +2964,27 @@
   No Anima.grid()/Anima.item()-style convenience factory exists for grid motions today — playing one means hand-building an AnimaTargetCollection + AnimaGridMotion (target_collection, grid_dimensions, distance_formula, item_motion, distribution) and calling Anima.play(motion, target), unlike Anima.on()'s one-line ergonomics for property motions.
   A quick Anima.grid(container) entry point (sensible defaults for grid_dimensions/distance_formula, chainable modifiers mirroring Anima.on()) would remove that boilerplate for the common case.
   Found while building the Phase 13 showcase (examples/showcase/grid/inventory_grid.gd), which currently hand-builds the AnimaGridMotion directly.
-- **Status:** backlog
+- **Status:** in-phase-14
+
+### Complete the RPG-grid showcase once dynamic values and Anima.grid() land
+- **Type:** feature
+- **Source:** phase-13 review
+- **Context:**
+  Phase 13's showcase scene (examples/showcase/grid/) could not be fully completed as originally envisioned — the icon-pulse animation in Scene 1's inventory grid needs each icon to animate relative to its own current/fitted scale, which keyframes can't express today (literal values only). The shipped scene works around this with a shared literal scale across all icons, documented as a known limitation. Once both prerequisite backlog items land — "Dynamic values inside keyframes" and "Anima.grid(container) convenience shorthand" — revisit the showcase to replace the workaround with real per-icon dynamic values and, if useful, the simpler Anima.grid() call.
+- **Status:** in-phase-14
+
+### Dynamic value composition across multiple property references
+- **Type:** feature
+- **Source:** User request during phase-14 scoping, v1 parity check
+- **Context:**
+  v1's dynamic-value formulas (addons/anima/utils/tween_utils.gd calculate_dynamic_value, anima.ceceppa.me/docs/guides/dynamic-value) could combine several independent property references, potentially from different nodes, inside one arithmetic expression (e.g. one node's width plus another's height), not just a single reference against a literal.
+  AnimaValue's arithmetic composition should let one AnimaValue take another AnimaValue as an operand (not only a literal), so this v1 capability carries forward. Extends "Dynamic value arithmetic composition".
+- **Status:** in-phase-14
+
+### Dynamic Values / Anima.grid() playground demo
+- **Type:** feature
+- **Source:** phase-14 post-start hook review
+- **Context:**
+  Every earlier phase introducing a new leaf motion capability (Keyframes, Spring, Grid formulas, the convenience API) shipped a dedicated demo family in the existing convenience-motion playground, which already scales to many families via its Family enum/selector pattern.
+  Phase 14's dynamic values and Anima.grid() shorthand should get the same treatment: a demo showing a dynamic value standalone, one inside a keyframe, two dynamic values combined arithmetically, and Anima.grid() as a one-liner — not just the narrower RPG-showcase icon-pulse fix.
+- **Status:** in-phase-14

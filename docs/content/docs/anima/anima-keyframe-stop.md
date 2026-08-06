@@ -29,7 +29,9 @@ Normalised position within the motion's duration, from 0.0 ("from") to 1.0 ("to"
 
 ### value
 
-This stop's value for its track's property.
+This stop's value for its track's property — a fixed literal, or an
+[AnimaValue] resolved against the animated target the same way one is
+anywhere else a value is accepted (`tech-spec.md` §Dynamic values).
 
 ### ease
 

@@ -5,9 +5,26 @@ extends RefCounted
 
 ## The motion resource this instance is advancing.
 var motion: AnimaMotion
+## The per-resolution context an [AnimaValue]-typed field resolves against,
+## supplied by [method AnimaMotion.create_runtime]. `null` for an instance
+## built with no context — see [method _resolve_dynamic]'s fallback.
+var value_context: AnimaValueContext = null
 
-func _init(p_motion: AnimaMotion) -> void:
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	motion = p_motion
+	value_context = p_value_context
+
+## Resolves [param value] through [member value_context] when it is an
+## [AnimaValue] — a fresh target-only context when none was supplied, the
+## same "root defaults to the animated node" behaviour Anima v1 used for a
+## plain, non-group motion — or returns [param value] unchanged for a literal.
+func _resolve_dynamic(value: Variant, target: Node) -> Variant:
+	if not (value is AnimaValue):
+		return value
+	var context: AnimaValueContext = value_context
+	if context == null:
+		context = AnimaValueContext.new(target)
+	return (value as AnimaValue).resolve(context)
 
 ## Advances playback by delta seconds and applies the motion's effect to target.
 ## Returns true once the motion has finished.

@@ -177,28 +177,30 @@ func test_play_reveals_every_icon_via_a_grid_motion_without_touching_the_tiles()
 
 ## Verifies the CSS `@keyframes pulse`-equivalent shape itself (scale up and
 ## back), not just the final revealed state — a final-state-only check can't
-## tell a pulse apart from a motion that never scaled at all.
-##
-## Known, accepted limitation (see _build_item_motion()'s own doc comment):
-## every icon pulses to the SAME literal 1.15 scale, not 1.15x its own
-## resting scale, since keyframes can't yet reference a target's own current
-## value (the deferred AnimaValue work). This test asserts the shared value
-## the current implementation actually produces, not the per-icon-relative
-## behaviour a future AnimaValue-based version should have instead.
-func test_play_pulses_every_icons_scale_to_the_shared_peak_and_back_to_one():
+## tell a pulse apart from a motion that never scaled at all. Two icons are
+## given deliberately different resting scales, so a regression back to
+## Phase 13's shared-literal-scale workaround (every icon snapping to the
+## same peak/rest value regardless of its own fitted size) would fail this
+## test even though a single-icon check couldn't tell the difference.
+func test_play_pulses_every_icons_scale_relative_to_its_own_resting_scale():
 	var grid := _make_grid()
 	await get_tree().process_frame
 
 	var icons: Array = grid.get("_icon_nodes")
+	assert_gt(icons.size(), 1, "sanity: at least two icons are needed to prove per-icon, not shared, scaling")
+	icons[0].scale = Vector2(0.4, 0.4)
+	icons[1].scale = Vector2(0.8, 0.8)
+
 	var playback: AnimaPlayback = grid.play()
 
-	var max_scale_x := 0.0
+	var peak_x: Array = [0.0, 0.0]
 	for i in range(60): # 1s — comfortably covers the grid's own stagger + fade
 		playback._advance(1.0 / 60.0)
-		for icon in icons:
-			max_scale_x = maxf(max_scale_x, icon.scale.x)
+		peak_x[0] = maxf(peak_x[0], icons[0].scale.x)
+		peak_x[1] = maxf(peak_x[1], icons[1].scale.x)
 
-	assert_true(max_scale_x > 1.1, "every icon should visibly pulse toward the shared 1.15 peak, not just fade in at a fixed size")
+	assert_almost_eq(peak_x[0], 0.4 + 0.15, 0.01, "an icon should peak 0.15 above its own resting scale")
+	assert_almost_eq(peak_x[1], 0.8 + 0.15, 0.01, "a differently-sized icon should peak 0.15 above its own resting scale, not another icon's")
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
-	for icon in icons:
-		assert_almost_eq(icon.scale.x, 1.0, 0.01, "every icon should settle back to scale 1.0 (the shared literal) once the pulse finishes")
+	assert_almost_eq(icons[0].scale.x, 0.4, 0.01, "an icon should settle back to its own resting scale, not a shared literal")
+	assert_almost_eq(icons[1].scale.x, 0.8, 0.01, "a differently-sized icon should settle back to its own resting scale, not a shared literal")

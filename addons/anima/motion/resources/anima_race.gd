@@ -33,8 +33,8 @@ func estimate_duration() -> AnimaDuration:
 	return AnimaDuration.fixed(fastest)
 
 ## Builds the runtime instance that races every enabled child.
-func create_runtime() -> Variant:
-	return AnimaRaceInstance.new(self)
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaRaceInstance.new(self, context)
 
 ## Validates every child recursively.
 func validate() -> Array[String]:

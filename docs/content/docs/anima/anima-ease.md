@@ -148,6 +148,19 @@ for the runtime instance that simulates a SPRING-eased motion frame by frame.
 A rough settle-time estimate for a SPRING ease, derived from its parameters —
 used by AnimaPropertyMotion.estimate_duration() to report AnimaDuration.ESTIMATED.
 
+### from
+
+Coerces [param value] into an [AnimaEase]: returned unchanged if it
+already is one; wrapped in a fresh [AnimaEase] (only [member kind] set,
+every other field at its own default) if it's a bare [enum Kind] value —
+so a caller who only needs a named curve, the common case, never has to
+construct and configure a whole resource for it (the same shorthand Anima
+v1 offered). Reports an error and returns a default `AnimaEase.new()`
+(`Kind.LINEAR`) for any other input type. Used by [method
+AnimaKeyframeMotion.with_ease] and [method AnimaGridMotionFactory.with_ease]
+(`tech-spec.md` §Easing curve library) — not by [member AnimaPropertyMotion.ease]
+or its own `with_ease()`, which keep their existing `AnimaEase`-only signature.
+
 ### mirrored
 
 Returns a copy of this ease with [member kind] swapped for its named

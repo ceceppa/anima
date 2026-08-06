@@ -6,6 +6,13 @@ extends AnimaMotionInstance
 var _elapsed: float = 0.0
 var _resolved_duration: float = 0.0
 var _duration_resolved: bool = false
+## Each track's stops resolved once, in parallel with [member
+## AnimaKeyframeMotion.tracks] — a stop whose authored value is an
+## [AnimaValue] is resolved here; a literal passes through unchanged. Never
+## mutates the authored [AnimaKeyframeStop]s themselves (`project-rules.md`
+## §Architecture — resources hold authored config only).
+var _resolved_values: Array = []
+var _values_resolved: bool = false
 
 ## Advances this motion by [param delta] seconds and writes every track's
 ## current value to [param target]. Returns `true` once finished.
@@ -15,33 +22,50 @@ func advance(target: Node, delta: float) -> bool:
 	if not _duration_resolved:
 		_resolved_duration = _resolve_duration(target, keyframe_motion)
 		_duration_resolved = true
+	if not _values_resolved:
+		_resolve_values(keyframe_motion, target)
 
 	_elapsed += delta * motion.speed
 	var t: float = 1.0 if _resolved_duration <= 0.0 else clampf(_elapsed / _resolved_duration, 0.0, 1.0)
 
-	for track in keyframe_motion.tracks:
-		target.set_indexed(track.property_path, _evaluate_track(track, keyframe_motion, t))
+	for track_index in keyframe_motion.tracks.size():
+		var track: AnimaKeyframeTrack = keyframe_motion.tracks[track_index]
+		target.set_indexed(track.property_path, _evaluate_track(track, _resolved_values[track_index], keyframe_motion, t))
 
 	return t >= 1.0 or is_equal_approx(t, 1.0)
 
+## Resolves every track's stop values once — [member _resolved_values][i][j]
+## is track i's stop j, parallel to [member AnimaKeyframeTrack.stops].
+func _resolve_values(keyframe_motion: AnimaKeyframeMotion, target: Node) -> void:
+	_resolved_values.clear()
+	for track in keyframe_motion.tracks:
+		var stop_values: Array = []
+		for stop in track.stops:
+			stop_values.append(_resolve_dynamic(stop.value, target))
+		_resolved_values.append(stop_values)
+	_values_resolved = true
+
 ## Restores every track's starting value — for [method AnimaPlayback.revert]
 ## and a [constant AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL]
-## outcome. Keyframe values are always literal this phase, so a track's first
-## stop *is* its starting value — no separate capture-on-first-advance step
-## is needed the way [AnimaPropertyMotionInstance] needs one for an omittable
-## `from_value`.
+## outcome. Resolves first if nothing has advanced yet, the same way [method
+## force_complete] does, so a dynamic-valued stop is never applied unresolved.
 func restore_initial(target: Node) -> void:
 	var keyframe_motion := motion as AnimaKeyframeMotion
-	for track in keyframe_motion.tracks:
-		target.set_indexed(track.property_path, track.stops[0].value)
+	if not _values_resolved:
+		_resolve_values(keyframe_motion, target)
+	for track_index in keyframe_motion.tracks.size():
+		target.set_indexed(keyframe_motion.tracks[track_index].property_path, _resolved_values[track_index][0])
 
 ## Forces every track to its authored end value immediately — for [method
 ## AnimaPlayback.complete] and a [constant AnimaMotion.CompletionValuePolicy]
-## outcome; see [method restore_initial] for why no captured state is needed.
+## outcome; resolves first if nothing has advanced yet (see [method restore_initial]).
 func force_complete(target: Node) -> void:
 	var keyframe_motion := motion as AnimaKeyframeMotion
-	for track in keyframe_motion.tracks:
-		target.set_indexed(track.property_path, track.stops[track.stops.size() - 1].value)
+	if not _values_resolved:
+		_resolve_values(keyframe_motion, target)
+	for track_index in keyframe_motion.tracks.size():
+		var stop_values: Array = _resolved_values[track_index]
+		target.set_indexed(keyframe_motion.tracks[track_index].property_path, stop_values[stop_values.size() - 1])
 
 ## Resolves the duration this run actually uses — the same chain
 ## [method AnimaPropertyMotionInstance._resolve_duration] applies: an
@@ -58,18 +82,21 @@ func _resolve_duration(target: Node, keyframe_motion: AnimaKeyframeMotion) -> fl
 	return Anima.default_duration
 
 ## Evaluates one track at global progress [param t]: before the first stop or
-## after the last, clamps to that boundary stop's value (no extrapolation); a
-## single-stop track holds its one value for the whole motion; otherwise
-## interpolates between the bracketing pair using the arriving stop's own
-## easing, or [member AnimaKeyframeMotion.default_ease] when it has none.
-func _evaluate_track(track: AnimaKeyframeTrack, keyframe_motion: AnimaKeyframeMotion, t: float) -> Variant:
+## after the last, clamps to that boundary stop's resolved value (no
+## extrapolation); a single-stop track holds its one value for the whole
+## motion; otherwise interpolates between the bracketing pair's resolved
+## values using the arriving stop's own easing, or [member
+## AnimaKeyframeMotion.default_ease] when it has none. [param resolved_values]
+## is this track's own entry in [member _resolved_values] — parallel to
+## [param track]'s own [member AnimaKeyframeTrack.stops].
+func _evaluate_track(track: AnimaKeyframeTrack, resolved_values: Array, keyframe_motion: AnimaKeyframeMotion, t: float) -> Variant:
 	var stops := track.stops
 	if stops.size() == 1:
-		return stops[0].value
+		return resolved_values[0]
 	if t <= stops[0].offset:
-		return stops[0].value
+		return resolved_values[0]
 	if t >= stops[stops.size() - 1].offset:
-		return stops[stops.size() - 1].value
+		return resolved_values[stops.size() - 1]
 
 	for i in range(stops.size() - 1):
 		var stop_a: AnimaKeyframeStop = stops[i]
@@ -78,9 +105,9 @@ func _evaluate_track(track: AnimaKeyframeTrack, keyframe_motion: AnimaKeyframeMo
 			var u: float = 0.0 if is_equal_approx(stop_a.offset, stop_b.offset) \
 				else (t - stop_a.offset) / (stop_b.offset - stop_a.offset)
 			var ease: AnimaEase = stop_b.ease if stop_b.ease != null else keyframe_motion.default_ease
-			return lerp(stop_a.value, stop_b.value, ease.evaluate(u))
+			return lerp(resolved_values[i], resolved_values[i + 1], ease.evaluate(u))
 
-	return stops[stops.size() - 1].value
+	return resolved_values[stops.size() - 1]
 
 ## Builds a reversed [AnimaKeyframeMotion]: every stop's offset becomes
 ## `1.0 - offset`, but easing *ownership* also shifts by one stop, not just

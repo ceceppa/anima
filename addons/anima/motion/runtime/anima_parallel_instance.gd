@@ -7,8 +7,8 @@ var _child_instances: Array = []
 var _child_finished: Array[bool] = []
 var _completion_index: int = -1
 
-func _init(p_motion: AnimaMotion) -> void:
-	super._init(p_motion)
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
+	super._init(p_motion, p_value_context)
 
 	var parallel := motion as AnimaParallel
 	var completion_child := parallel.get_completion_child()

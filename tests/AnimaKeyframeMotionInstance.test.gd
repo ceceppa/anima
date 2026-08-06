@@ -1,5 +1,81 @@
 extends "res://addons/gut/test.gd"
 
+func test_dynamic_value_stop_resolves_against_the_animated_target():
+	var node := Node2D.new()
+	autofree(node)
+	node.scale = Vector2(4.0, 4.0)
+
+	var motion := Motion.keyframes({
+		"from": {"position:x": 0.0},
+		"to": {"position:x": AnimaValue.target(NodePath("scale:x"))},
+	})
+	motion.duration = 1.0
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(node, 1.0)
+
+	assert_almost_eq(node.position.x, 4.0, 0.01)
+
+func test_each_stops_own_dynamic_value_resolves_independently():
+	var node := Node2D.new()
+	autofree(node)
+	node.scale = Vector2(2.0, 0.0)
+	node.rotation = 9.0
+
+	var motion := Motion.keyframes({
+		"from": {"position:x": AnimaValue.target(NodePath("scale:x"))},
+		"to": {"position:x": AnimaValue.target(NodePath("rotation"))},
+	})
+	motion.duration = 1.0
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(node, 0.0)
+	assert_almost_eq(node.position.x, 2.0, 0.01)
+
+	instance.advance(node, 1.0)
+	assert_almost_eq(node.position.x, 9.0, 0.01)
+
+func test_mixed_literal_and_dynamic_values_play_together():
+	var node := Node2D.new()
+	autofree(node)
+	node.scale = Vector2(5.0, 0.0)
+
+	var motion := Motion.keyframes({
+		"from": {"position:x": 0.0, "position:y": AnimaValue.target(NodePath("scale:x"))},
+		"to": {"position:x": 10.0, "position:y": 20.0},
+	})
+	motion.duration = 1.0
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(node, 0.0)
+	assert_almost_eq(node.position.x, 0.0, 0.01)
+	assert_almost_eq(node.position.y, 5.0, 0.01)
+
+	instance.advance(node, 1.0)
+	assert_almost_eq(node.position.x, 10.0, 0.01)
+	assert_almost_eq(node.position.y, 20.0, 0.01)
+
+func test_an_arithmetic_combination_as_a_step_value_resolves_the_same_as_a_plain_motion():
+	var node := Node2D.new()
+	autofree(node)
+	node.scale = Vector2(3.0, 0.0)
+	var plain_node := Node2D.new()
+	autofree(plain_node)
+	plain_node.scale = Vector2(3.0, 0.0)
+
+	var combined := AnimaValue.constant(10.0).add(AnimaValue.target(NodePath("scale:x")))
+
+	var motion := Motion.keyframes({"from": {"position:x": 0.0}, "to": {"position:x": combined}})
+	motion.duration = 1.0
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(node, 1.0)
+
+	var plain_motion := Motion.to(NodePath("position:x"), combined).with_duration(1.0)
+	var plain_instance: AnimaPropertyMotionInstance = plain_motion.create_runtime()
+	plain_instance.advance(plain_node, 1.0)
+
+	assert_almost_eq(node.position.x, plain_node.position.x, 0.01)
+
 func test_two_stop_track_animates_from_first_to_second_value():
 	var motion := Motion.keyframes({"from": {"position:x": 0.0}, "to": {"position:x": 100.0}})
 	motion.duration = 1.0

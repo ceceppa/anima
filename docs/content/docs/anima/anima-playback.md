@@ -53,6 +53,14 @@ runs at half speed. When [member motion] is an [AnimaGroupMotion], every
 active item shares this same scaled delta, so changing it affects the
 whole group as one playback.
 
+### context_data
+
+Arbitrary data an [AnimaValue] built with [method AnimaValue.context] can
+read during this playback (see [member AnimaValueContext.context_data]).
+Mutate this dictionary in place before playback resolves any value that
+reads it — reassigning the whole dictionary after construction leaves an
+already-built context pointing at the old one.
+
 ## Methods
 
 ### pause

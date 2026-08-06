@@ -7,8 +7,8 @@ var _branch_instance: Variant = null
 
 ## Selects the branch exactly once, here at construction — never re-evaluates
 ## `condition` afterward, per tech-spec.md's "at most once per play" rule.
-func _init(p_motion: AnimaMotion) -> void:
-	super._init(p_motion)
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
+	super._init(p_motion, p_value_context)
 
 	var conditional := motion as AnimaConditional
 	var branch: AnimaMotion = conditional._select_branch()

@@ -5,42 +5,27 @@ func _make_scene() -> Control:
 	add_child_autofree(scene)
 	return scene
 
-func test_opening_the_scene_shows_the_inventory_hook_with_slots_that_ripple_in():
+## Scene 1's own grid/banner content and ripple-in behaviour is `%Layer1`'s
+## (`InventoryHookLayer`/`InventoryGrid`) responsibility, already covered by
+## `Anima.integration.grid-showcase-inventory-hook.test.gd`. This orchestrator
+## only needs to show it at the right time and tell it to play.
+func test_opening_the_scene_shows_and_plays_layer1_for_scene_1():
 	var scene := _make_scene()
 	await get_tree().process_frame
 
-	assert_true(scene.get_node("%Scene1Banner").visible, "Scene 1's banner should be visible immediately on open")
-	assert_true(scene.get_node("%InventoryLayer").visible, "the inventory frame should be visible for Scene 1")
-	assert_eq(scene.get_node("%Scene1Banner/Banner").text, "Grid animations in Godot without nested math loops.")
+	assert_true(scene.get_node("%Layer1").visible, "Layer1 (Scene 1's grid/banner) should be visible immediately on open")
 
-	var icons: Array = scene.get("_icon_nodes")
-	assert_eq(icons.size(), 25, "sanity: a 5x5 grid should have 25 icon nodes")
-	for icon in icons:
-		# < 0.1, not an exact 0.0 — the scene's own _process() (real per-frame
-		# ticking, so it plays correctly when just opened and run normally)
-		# already advanced by whatever tiny real delta the one awaited frame
-		# above took, on top of manual stepping below.
-		assert_lt(icon.modulate.a, 0.1, "slots should start essentially empty")
-
-	for i in range(60): # 1s into the 0:00-0:02 window
-		scene._advance_show(1.0 / 60.0)
-
-	var any_visible := false
-	for icon in icons:
-		if icon.modulate.a > 0.5:
-			any_visible = true
-			break
-	assert_true(any_visible, "at least some slots should have visibly filled in by partway through Scene 1")
-
-func test_missing_icon_assets_fall_back_to_a_visible_placeholder_not_a_gap():
+func test_finale_matrix_missing_icon_assets_fall_back_to_a_visible_placeholder_not_a_gap():
 	var scene := _make_scene()
 	await get_tree().process_frame
 
-	# assets/icons/ does not exist in this repo yet — every slot must still
+	# assets/icons/ existing or not, every Scene-4 mini-grid slot must still
 	# have a real, visible texture instead of an invisible gap.
-	var icons: Array = scene.get("_icon_nodes")
-	for icon in icons:
-		assert_not_null(icon.texture, "a slot should always have a texture (real icon or placeholder), never a blank gap")
+	var mini_icons: Array = scene.get("_mini_icon_nodes")
+	assert_gt(mini_icons.size(), 0, "sanity: the finale matrix should have mini-grids")
+	for mini in mini_icons:
+		for icon in mini:
+			assert_not_null(icon.texture, "a finale-matrix slot should always have a texture (real icon or placeholder), never a blank gap")
 
 func test_scene_2_hard_cuts_to_the_code_comparison_and_hides_the_inventory():
 	var scene := _make_scene()
@@ -50,8 +35,7 @@ func test_scene_2_hard_cuts_to_the_code_comparison_and_hides_the_inventory():
 		scene._advance_show(1.0 / 60.0)
 
 	assert_true(scene.get_node("%Scene2").visible, "Scene 2's code comparison should be visible")
-	assert_false(scene.get_node("%InventoryLayer").visible, "the inventory frame should be hidden during Scene 2")
-	assert_false(scene.get_node("%Scene1Banner").visible, "Scene 1's banner should be hidden during Scene 2")
+	assert_false(scene.get_node("%Layer1").visible, "Layer1 (Scene 1's grid/banner) should be hidden during Scene 2")
 	assert_eq(scene.get_node("%Banner2").text, "From 25 lines of math to 1 line.")
 	assert_eq(scene.get_node("%VanillaLabel").text, "Vanilla Godot")
 	assert_eq(scene.get_node("%AnimaLabel").text, "Anima")
@@ -72,7 +56,7 @@ func test_scene_3_cuts_back_to_the_grid_and_cycles_through_different_formula_cap
 			if not seen_captions.has(caption):
 				seen_captions.append(caption)
 
-	assert_true(scene.get_node("%InventoryLayer").visible, "the inventory frame should be visible again by the end of Scene 3")
+	assert_true(scene.get_node("%Layer1").visible, "Layer1 (the inventory grid) should be visible again by the end of Scene 3")
 	assert_gt(seen_captions.size(), 1, "at least two different formula caption lines should have appeared in sequence")
 
 func test_scene_4_finale_matrix_starts_the_centre_grid_first_then_spirals_outward():
@@ -169,7 +153,7 @@ func test_full_sequence_plays_all_four_scenes_automatically_end_to_end():
 	var scene := _make_scene()
 	await get_tree().process_frame
 
-	var saw_scene1: bool = scene.get_node("%Scene1Banner").visible
+	var saw_scene1: bool = scene.get_node("%Layer1").visible
 	var saw_scene2 := false
 	var saw_scene3 := false
 	var saw_scene4 := false

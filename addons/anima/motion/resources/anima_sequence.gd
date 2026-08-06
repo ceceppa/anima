@@ -58,8 +58,8 @@ func estimate_duration() -> AnimaDuration:
 	return AnimaDuration.fixed(latest_end)
 
 ## Builds the runtime instance that plays each child per [method compute_schedule].
-func create_runtime() -> Variant:
-	return AnimaSequenceInstance.new(self)
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaSequenceInstance.new(self, context)
 
 ## Validates every child recursively.
 func validate() -> Array[String]:

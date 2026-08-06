@@ -6,8 +6,8 @@ extends AnimaMotionInstance
 var _child_instances: Array = []
 var _child_finished: Array[bool] = []
 
-func _init(p_motion: AnimaMotion) -> void:
-	super._init(p_motion)
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
+	super._init(p_motion, p_value_context)
 
 	var race := motion as AnimaRace
 	for child in race.children:

@@ -78,7 +78,8 @@ reports `ESTIMATED` (a settle-time estimate derived from its parameters).
 
 ### create_runtime
 
-Builds the runtime instance that animates [member target_property].
+Builds the runtime instance that animates [member target_property]. See
+[method AnimaMotion.create_runtime] for [param context].
 
 ### validate
 

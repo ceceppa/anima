@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://jvyroduybhxj" path="res://addons/anima/motion/resources/anima_group_motion.gd" id="3"]
 [ext_resource type="Script" uid="uid://dnpl6t8rbyvcq" path="res://addons/anima/motion/resources/anima_sequence.gd" id="3_re3mu"]
 [ext_resource type="Script" uid="uid://d3i8cumr8wg6m" path="res://addons/anima/motion/resources/anima_target_collection.gd" id="4"]
-[ext_resource type="Resource" uid="uid://cn0hdvq0qnxk6" path="res://v2_stuff/anima_motion.tres" id="5_jfj6u"]
 [ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/playground/shared/components/card.tscn" id="7_ttw26"]
 
 [sub_resource type="Resource" id="Resource_m5xtv"]
@@ -28,9 +27,12 @@ from_value = 0.0
 to_value = 1.0
 duration = 0.4
 
-[sub_resource type="Resource" id="Resource_wkndk"]
-script = ExtResource("3_re3mu")
-metadata/_custom_type_script = "uid://dnpl6t8rbyvcq"
+[sub_resource type="Resource" id="PropertyMotion_resolved_item"]
+script = ExtResource("2")
+target_property = NodePath("modulate:a")
+from_value = 0.0
+to_value = 1.0
+duration = 0.3
 
 [sub_resource type="Resource" id="TargetCollection_resolved"]
 script = ExtResource("4")
@@ -38,7 +40,7 @@ script = ExtResource("4")
 [sub_resource type="Resource" id="GroupMotion_resolved"]
 script = ExtResource("3")
 target_collection = SubResource("TargetCollection_resolved")
-item_motion = SubResource("Resource_wkndk")
+item_motion = SubResource("PropertyMotion_resolved_item")
 playback_mode = 0
 
 [node name="MotionComposerShowcase" type="Node" unique_id=1692062898]
@@ -55,15 +57,6 @@ motion = SubResource("PropertyMotion_authored")
 script = ExtResource("1")
 motion = SubResource("GroupMotion_resolved")
 
-[node name="Target1" type="Node2D" parent="ResolvedGroupExample" unique_id=1554123235]
-visible = false
-
-[node name="Target2" type="Node2D" parent="ResolvedGroupExample" unique_id=348315482]
-visible = false
-
-[node name="Target3" type="Node2D" parent="ResolvedGroupExample" unique_id=1037945059]
-visible = false
-
 [node name="Card" parent="ResolvedGroupExample" unique_id=1034242710 instance=ExtResource("7_ttw26")]
 
 [node name="Card2" parent="ResolvedGroupExample" unique_id=994508988 instance=ExtResource("7_ttw26")]
@@ -72,4 +65,3 @@ visible = false
 
 [node name="EmptyExample" type="Node" parent="." unique_id=462381532]
 script = ExtResource("1")
-motion = ExtResource("5_jfj6u")

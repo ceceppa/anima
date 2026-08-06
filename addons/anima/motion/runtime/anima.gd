@@ -120,6 +120,18 @@ static func on(target: Node) -> AnimaOnMotionFactory:
 static func item() -> AnimaItemMotionFactory:
 	return AnimaItemMotionFactory.new()
 
+## Returns a factory for playing [param container]'s children as a grid with
+## one line — `Anima.grid(container).with_item_motion(pulse).play()` —
+## instead of hand-building an [AnimaTargetCollection] and [AnimaGridMotion]
+## and calling [method play] separately (`tech-spec.md` §Grid convenience
+## shorthand). Reports an error and returns `null` when [param container] is
+## `null`, the same as [method on].
+static func grid(container: Node) -> AnimaGridMotionFactory:
+	if container == null:
+		push_error("Anima.grid() requires a non-null container.")
+		return null
+	return AnimaGridMotionFactory.new(container)
+
 ## Attaches [param behaviour] to [param node] via node metadata — [param node]'s
 ## class and script are unchanged. Retrieve it later with [method get_behaviour].
 static func attach_behaviour(node: Node, behaviour: AnimaBehaviour) -> void:

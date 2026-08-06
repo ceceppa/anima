@@ -40,6 +40,12 @@ enum Blocker {
 	## for example, a [constant AnimaEase.Kind.SPRING] ease, which settles on
 	## its own schedule instead of a fixed duration.
 	ITEM_MOTION_NOT_FIXED_DURATION,
+	## The item motion's [member AnimaPropertyMotion.from_value] or [member
+	## AnimaPropertyMotion.to_value] is an [AnimaValue], resolved per-item at
+	## runtime — the same "runtime-only source blocks static compilation"
+	## rule [constant RUNTIME_ONLY_TARGETS]/[constant LIVE_MEMBERSHIP] already
+	## enforce, applied to this new source of runtime-only-ness.
+	DYNAMIC_VALUE,
 }
 
 ## How many samples each item's eased curve is baked into. Every [AnimaEase]
@@ -86,6 +92,11 @@ static func check_eligibility(group: AnimaGroupMotion, root: Node) -> Eligibilit
 		return result
 
 	var item := group.item_motion as AnimaPropertyMotion
+	if item.from_value is AnimaValue or item.to_value is AnimaValue:
+		result.blocker = Blocker.DYNAMIC_VALUE
+		result.message = "This group's item motion uses a dynamic value, resolved per item at runtime — there's nothing fixed to bake into a native curve."
+		return result
+
 	if item.ease.kind == AnimaEase.Kind.CALLABLE:
 		result.blocker = Blocker.CALLBACK_DEPENDENT
 		result.message = "This group's item motion uses a Callable ease, which can't be baked into fixed keyframes."

@@ -29,16 +29,14 @@ current value to [param target]. Returns `true` once finished.
 
 Restores every track's starting value — for [method AnimaPlayback.revert]
 and a [constant AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL]
-outcome. Keyframe values are always literal this phase, so a track's first
-stop *is* its starting value — no separate capture-on-first-advance step
-is needed the way [AnimaPropertyMotionInstance] needs one for an omittable
-`from_value`.
+outcome. Resolves first if nothing has advanced yet, the same way [method
+force_complete] does, so a dynamic-valued stop is never applied unresolved.
 
 ### force_complete
 
 Forces every track to its authored end value immediately — for [method
 AnimaPlayback.complete] and a [constant AnimaMotion.CompletionValuePolicy]
-outcome; see [method restore_initial] for why no captured state is needed.
+outcome; resolves first if nothing has advanced yet (see [method restore_initial]).
 
 ### build_reversed
 

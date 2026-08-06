@@ -54,6 +54,9 @@ var _rows: int = 0
 
 func _ready() -> void:
 	_build_tile_grid()
+	
+	if get_parent() is Window:
+		play()
 
 ## Rebuilds the tile grid from scratch: clears any previously duplicated
 ## tiles and icons, computes how many whole tiles fit along each axis, and
@@ -181,49 +184,37 @@ static func _grid_origin(container: Vector2, tile: Vector2, columns: int, rows: 
 ## against the same clock (`tech-spec.md` §Keyframe motions).
 const _ITEM_DURATION := 0.3
 
-## ⚠️ Known limitation, accepted deliberately for now: keyframes are
-## literal-valued only today — there is no way yet to write "this target's
-## own current scale" inside a keyframe declaration (the deferred
-## `AnimaValue`/"Dynamic values inside keyframes" work, still unbuilt —
-## phase-12 phase-brief.md's Not This Phase). Every icon's resting scale
-## actually differs (fit to its own texture by [method _icon_scale]), but
-## this one shared literal (`Vector2.ONE`) snaps every icon to the SAME
-## scale for the pulse regardless of its own fitted size — the correct,
-## intended shape once `AnimaValue` exists is `"scale": ":scale"` /
-## `":scale*1.15"`-style dynamic references instead of these literals, so
-## this stays [AnimaGridMotion]-driven (not a per-icon workaround) ready for
-## that swap in a later phase.
-func _build_item_motion() -> AnimaKeyframeMotion:
-	var pulse := Motion.keyframes({
-		"from": {"opacity": 0.0, "scale": Vector2.ONE},
-		50: {"scale": Vector2(1.15, 1.15)},
-		"to": {"opacity": 1.0, "scale": Vector2.ONE},
-	}).with_duration(_ITEM_DURATION)
-	pulse.default_ease = AnimaEase.new()
-	pulse.default_ease.kind = AnimaEase.Kind.EASE_IN_OUT
-	return pulse
-
 ## Plays a grid-driven reveal on the icon layer only — the (static) tile
 ## frames underneath are untouched, since [member _icons] is its own sibling
-## layer built exactly for this (see the class doc comment above). There is
-## no `Anima.grid(...)` convenience shorthand; a grid motion is an
-## [AnimaGridMotion] resource played the same way any other motion is,
-## through [method Anima.play] — the same pattern
-## `examples/playground/grid_motion_playground.gd` already uses.
+## layer built exactly for this (see the class doc comment above). One
+## fluent statement built on [method Anima.grid]: [method
+## AnimaGridMotionFactory.keyframes] parses the same CSS `@keyframes
+## pulse`-equivalent shape [member _ITEM_DURATION] describes — fading in
+## across the whole run while scale pulses up 15% and back at the midpoint —
+## and [method AnimaGridMotionFactory.with_duration]/[method
+## AnimaGridMotionFactory.with_ease] configure it in place
+## (`tech-spec.md` §Grid convenience shorthand). Each icon's own current
+## scale (its real fitted size, set once by [method _icon_scale] before this
+## ever plays) drives both the resting and peak keyframe values through
+## [AnimaValue] — resolved independently per icon by the grid's own per-item
+## context (`tech-spec.md` §Dynamic values), so an icon fit to a small
+## texture pulses to 1.15× *its own* scale, not another icon's.
+## [member Anima.grid]'s [code]CHILDREN[/code] default resolves against
+## whatever node the motion is actually played on — [member _icons], not
+## this component — so it picks up exactly the icon [Sprite2D] nodes
+## [method _build_tile_grid] added, in the same row-major order
+## [member AnimaGridMotion.grid_dimensions] expects, and never touches the
+## tile frames.
 func play() -> AnimaPlayback:
-	var collection := AnimaTargetCollection.new()
-	collection.kind = AnimaTargetCollection.Kind.CHILDREN
-
-	var grid := AnimaGridMotion.new()
-	grid.target_collection = collection
-	grid.grid_dimensions = Vector2i(_columns, _rows)
-	grid.distance_formula = AnimaGridMotion.DistanceFormula.EUCLIDEAN
-	grid.start_point = Vector2i(_columns / 2, _rows / 2)
-	grid.item_motion = _build_item_motion()
-	grid.distribution.stagger_interval = 0.05
-
-	# CHILDREN resolves against whatever node the motion is actually played
-	# on — _icons, not this component — so it picks up exactly the icon
-	# Sprite2D nodes _build_tile_grid() added, in the same row-major order
-	# grid_dimensions expects, and never touches the tile frames.
-	return Anima.play(grid, _icons)
+	return Anima.grid(_icons) \
+		.with_dimensions(Vector2i(_columns, _rows)) \
+		.with_distance_formula(AnimaGridMotion.DistanceFormula.EUCLIDEAN) \
+		.with_start_point(Vector2i(_columns / 2, _rows / 2)) \
+		.with_stagger_interval(0.05) \
+		.keyframes({
+			"from": {"opacity": 0.0, "scale": AnimaValue.target(NodePath("scale"))},
+			50: {"scale": AnimaValue.target(NodePath("scale")).add(Vector2(0.25, 0.25))},
+			"to": {"opacity": 1.0, "scale": AnimaValue.target(NodePath("scale"))},
+		}, _ITEM_DURATION) \
+		.with_ease(AnimaEase.Kind.EASE_IN_OUT) \
+		.play()

@@ -13,8 +13,8 @@ class _EntryState:
 var _elapsed: float = 0.0
 var _entries: Array[_EntryState] = []
 
-func _init(p_motion: AnimaMotion) -> void:
-	super._init(p_motion)
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
+	super._init(p_motion, p_value_context)
 
 	var stagger := motion as AnimaStagger
 	if stagger.template == null or stagger.targets.is_empty():

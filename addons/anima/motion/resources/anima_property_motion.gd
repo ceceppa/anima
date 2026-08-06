@@ -55,9 +55,10 @@ func estimate_duration() -> AnimaDuration:
 		return AnimaDuration.estimated(ease.spring_estimated_seconds())
 	return AnimaDuration.fixed(duration)
 
-## Builds the runtime instance that animates [member target_property].
-func create_runtime() -> Variant:
-	return AnimaPropertyMotionInstance.new(self)
+## Builds the runtime instance that animates [member target_property]. See
+## [method AnimaMotion.create_runtime] for [param context].
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaPropertyMotionInstance.new(self, context)
 
 ## Requires [member target_property].
 func validate() -> Array[String]:

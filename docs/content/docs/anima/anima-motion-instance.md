@@ -24,6 +24,12 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 The motion resource this instance is advancing.
 
+### value_context
+
+The per-resolution context an [AnimaValue]-typed field resolves against,
+supplied by [method AnimaMotion.create_runtime]. `null` for an instance
+built with no context — see [method _resolve_dynamic]'s fallback.
+
 ## Methods
 
 ### advance

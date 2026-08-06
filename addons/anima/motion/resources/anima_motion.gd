@@ -95,7 +95,10 @@ func estimate_duration() -> AnimaDuration:
 
 ## Builds the runtime instance that [method AnimaMotionInstance.advance]s this
 ## motion frame by frame. Every subtype must override this explicitly.
-func create_runtime() -> Variant:
+## [param context] is the per-resolution context an [AnimaValue]-typed field
+## resolves against, supplied by [AnimaPlayback] (or a group/grid item's own
+## context — see `tech-spec.md` §Dynamic values); `null` when none applies.
+func create_runtime(context: AnimaValueContext = null) -> Variant:
 	push_error("AnimaMotion.create_runtime() must be overridden by a subtype")
 	return null
 

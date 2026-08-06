@@ -201,3 +201,25 @@ func test_custom_sampled_interpolates_between_configured_samples():
 	assert_almost_eq(easing.evaluate(0.5), 0.5, 0.0001)
 	assert_almost_eq(easing.evaluate(1.0), 1.0, 0.0001)
 	assert_almost_eq(easing.evaluate(0.25), 0.25, 0.0001)
+
+func test_from_returns_an_already_built_ease_unchanged():
+	var ease := AnimaEase.new()
+	ease.kind = AnimaEase.Kind.SPRING
+	ease.spring_bounce = 0.6
+
+	var result := AnimaEase.from(ease)
+
+	assert_eq(result, ease)
+
+func test_from_wraps_a_bare_kind_into_a_fresh_ease():
+	var result := AnimaEase.from(AnimaEase.Kind.EASE_IN_OUT)
+
+	assert_true(result is AnimaEase)
+	assert_eq(result.kind, AnimaEase.Kind.EASE_IN_OUT)
+
+func test_from_with_an_invalid_type_reports_an_error_and_returns_a_default_ease():
+	var result := AnimaEase.from("not an ease")
+
+	assert_true(result is AnimaEase)
+	assert_eq(result.kind, AnimaEase.Kind.LINEAR)
+	assert_push_error("expected an AnimaEase")

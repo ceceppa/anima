@@ -26,10 +26,11 @@ func advance(target: Node, delta: float) -> bool:
 	var property_motion := motion as AnimaPropertyMotion
 
 	if not _from_value_captured:
-		_from_value = property_motion.from_value
+		_from_value = _resolve_dynamic(property_motion.from_value, target)
 		if _from_value == null:
 			_from_value = target.get_indexed(property_motion.target_property)
-		_to_value = _from_value + property_motion.to_value if property_motion.is_relative else property_motion.to_value
+		var resolved_to: Variant = _resolve_dynamic(property_motion.to_value, target)
+		_to_value = _from_value + resolved_to if property_motion.is_relative else resolved_to
 		_from_value_captured = true
 		_resolved_duration = _resolve_duration(target, property_motion)
 		_apply_pivot(target, property_motion)

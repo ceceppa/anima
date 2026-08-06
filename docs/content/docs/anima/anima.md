@@ -99,6 +99,15 @@ Returns a factory for authoring a common per-item change against an
 supplies each item's own target when it plays
 (`tech-spec.md` §Target-bound authoring contract).
 
+### grid
+
+Returns a factory for playing [param container]'s children as a grid with
+one line — `Anima.grid(container).with_item_motion(pulse).play()` —
+instead of hand-building an [AnimaTargetCollection] and [AnimaGridMotion]
+and calling [method play] separately (`tech-spec.md` §Grid convenience
+shorthand). Reports an error and returns `null` when [param container] is
+`null`, the same as [method on].
+
 ### attach_behaviour
 
 Attaches [param behaviour] to [param node] via node metadata — [param node]'s

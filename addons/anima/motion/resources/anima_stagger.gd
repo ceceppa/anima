@@ -76,8 +76,8 @@ func estimate_duration() -> AnimaDuration:
 	return AnimaDuration.fixed(total)
 
 ## Builds the runtime instance that plays [member template] across [member targets].
-func create_runtime() -> Variant:
-	return AnimaStaggerInstance.new(self)
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaStaggerInstance.new(self, context)
 
 ## Requires [member template], and one [member custom_order] entry per target
 ## when [member order] is [constant Order.CUSTOM].

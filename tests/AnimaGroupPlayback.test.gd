@@ -181,3 +181,70 @@ func test_empty_group_with_complete_policy_finishes_immediately_as_a_no_op():
 	playback._advance(0.016)
 
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+func test_each_item_resolves_a_dynamic_value_against_its_own_target():
+	var targets := _make_targets(3)
+	targets[0].scale = Vector2(1.0, 0.0)
+	targets[1].scale = Vector2(2.0, 0.0)
+	targets[2].scale = Vector2(3.0, 0.0)
+
+	var group := _make_group(targets, AnimaGroupMotion.PlaybackMode.PARALLEL)
+	group.item_motion.to_value = AnimaValue.target(NodePath("scale:x"))
+
+	var playback := AnimaPlayback.new(group, null)
+	playback._advance(group.item_motion.duration)
+
+	assert_almost_eq(targets[0].position.x, 1.0, 0.01)
+	assert_almost_eq(targets[1].position.x, 2.0, 0.01)
+	assert_almost_eq(targets[2].position.x, 3.0, 0.01)
+
+func test_each_item_resolves_its_own_group_index_and_count():
+	var targets := _make_targets(3)
+	var group := _make_group(targets, AnimaGroupMotion.PlaybackMode.PARALLEL)
+	group.item_motion.to_value = AnimaValue.group_index().multiply(100.0).add(AnimaValue.group_count())
+
+	var playback := AnimaPlayback.new(group, null)
+	playback._advance(group.item_motion.duration)
+
+	assert_almost_eq(targets[0].position.x, 3.0, 0.01)
+	assert_almost_eq(targets[1].position.x, 103.0, 0.01)
+	assert_almost_eq(targets[2].position.x, 203.0, 0.01)
+
+func test_root_resolves_the_groups_own_container_not_an_individual_item():
+	var container: Node2D = Node2D.new()
+	autofree(container)
+	container.scale = Vector2(99.0, 0.0)
+	var targets := _make_targets(2)
+	targets[0].scale = Vector2(1.0, 0.0)
+	targets[1].scale = Vector2(2.0, 0.0)
+
+	var group := _make_group(targets, AnimaGroupMotion.PlaybackMode.PARALLEL)
+	group.item_motion.to_value = AnimaValue.root(NodePath("scale:x"))
+
+	var playback := AnimaPlayback.new(group, container)
+	playback._advance(group.item_motion.duration)
+
+	assert_almost_eq(targets[0].position.x, 99.0, 0.01)
+	assert_almost_eq(targets[1].position.x, 99.0, 0.01)
+
+func test_grid_item_resolves_its_own_row_and_column():
+	var targets := _make_targets(4)
+
+	var collection := AnimaTargetCollection.new()
+	collection.kind = AnimaTargetCollection.Kind.EXPLICIT
+	collection.reference_data = targets
+
+	var grid := AnimaGridMotion.new()
+	grid.target_collection = collection
+	grid.grid_dimensions = Vector2i(2, 2)
+	grid.playback_mode = AnimaGroupMotion.PlaybackMode.PARALLEL
+	grid.item_motion = _make_property_motion(0.1)
+	grid.item_motion.to_value = AnimaValue.grid_row().multiply(10.0).add(AnimaValue.grid_column())
+
+	var playback := AnimaPlayback.new(grid, null)
+	playback._advance(0.1)
+
+	assert_almost_eq(targets[0].position.x, 0.0, 0.01)
+	assert_almost_eq(targets[1].position.x, 1.0, 0.01)
+	assert_almost_eq(targets[2].position.x, 10.0, 0.01)
+	assert_almost_eq(targets[3].position.x, 11.0, 0.01)

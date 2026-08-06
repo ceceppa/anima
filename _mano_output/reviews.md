@@ -368,3 +368,34 @@ No feedback logged.
 - A demo can be functionally correct and still fail its own purpose if the effect it's meant to show is too subtle to see (6a) or visually indistinguishable from the case it's meant to contrast with (6c) — "it plays the right values" is not the same bar as "a viewer can see what's different about it."
 - A test that only asserts the final resting value of a multi-step motion can pass while the path to get there is visibly wrong (6e) — intermediate-state assertions, not just endpoint assertions, are what actually catch a reversal/repetition bug.
 - `is_relative` is a property of the *authored* motion, not something `build_reversed()` currently preserves onto the motion it produces — worth checking for the same gap anywhere else relative motions get rebuilt rather than replayed.
+
+---
+
+## Phase 13 Review — 2026-08-07
+
+### What worked
+
+- All 6 stories (1–4, plus mid-build additions 4a and 4b) shipped and marked done: the four scripted beats (Inventory Hook, Code Comparison, Formula Showcase, Finale Matrix + full-sequence integration), an auto-fit centred tile grid, and icons composed into their own animatable `%Icons` layer.
+- The Scene 1 grid was restructured into a dedicated `InventoryGrid`/`%Layer1` component architecture, kept fully deterministic (no real-time timers) so the whole ~15s sequence still steps and tests synchronously end-to-end.
+- The new "known/fixed image assets belong in the `.tscn` as `ext_resource`, never `load()`/`preload()` in script" rule was proposed and applied immediately, with an explicit, called-out exception for the one genuinely runtime-count-unknown case (scanning the icons folder).
+
+### What didn't
+
+- The showcase could not be completed as originally scoped. Scene 1's icon-pulse animation needs each icon to animate relative to its own current/fitted scale, which today's literal-only keyframes can't express — the shipped scene falls back to a shared literal scale across all icons, called out in code as a known, deliberate limitation rather than hidden.
+- A per-icon workaround (baking each icon's own scale into its own individually-delayed motion) was built once to make the pulse look visually correct, then explicitly reverted as "cheating" relative to the architecturally-intended shared-`AnimaGridMotion` design — the real fix needs dynamic keyframe values, not a per-icon special case.
+- Scene 3's formula-cycling only partially reaches the new `InventoryGrid` component: `%InventoryGrid.play()` doesn't take a formula argument yet, so only the caption text cycles per formula today, not the replayed motion itself.
+
+### Assumption results
+
+| Assumption | Predicted | Actual | Action |
+|-----------|-----------|--------|--------|
+| The 4x4 matrix's centre-outward wave, where each wave step starts one whole inner grid's own animation, is achievable with Anima's existing group/composition primitives, with no new runtime capability. | If nesting one grid motion as a single group "item" isn't actually supported today, this phase's finale scene needs new runtime work, not just composition. | Invalidated per user review — the showcase could not be completed. | invalidated |
+
+### Feedback that changes future scope
+
+- A new backlog item ("Complete the RPG-grid showcase once dynamic values and Anima.grid() land") tracks finishing this scene once its two blocking prerequisites — "Dynamic values inside keyframes" and "Anima.grid(container) convenience shorthand," both already backlogged — actually ship.
+
+### What we learned
+
+- A capability gap can stay invisible until a showcase actually depends on it: literal-only keyframes were sufficient through Phase 12's own scope, and only broke down here because each icon's resting scale is genuinely different (fit to its own texture), which a shared literal pulse value can't honor.
+- A workaround that makes a demo look right can still be the wrong call if it hides a real capability gap instead of tracking it — reverting to the architecturally-honest (if visually imperfect) design kept the gap visible and backlogged instead of quietly papered over.

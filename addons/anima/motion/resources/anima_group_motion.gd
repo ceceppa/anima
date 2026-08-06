@@ -68,8 +68,9 @@ func estimate_duration() -> AnimaDuration:
 	return item_motion.estimate_duration() if item_motion != null else AnimaDuration.fixed(0.0)
 
 ## Builds the runtime instance that resolves, schedules, and plays this group.
-func create_runtime() -> Variant:
-	return AnimaGroupPlayback.new(self)
+## See [method AnimaMotion.create_runtime] for [param context].
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaGroupPlayback.new(self, context)
 
 ## Returns messages describing missing or incompatible authored group settings.
 func validate() -> Array[String]:

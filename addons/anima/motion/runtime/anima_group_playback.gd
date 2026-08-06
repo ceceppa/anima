@@ -16,6 +16,11 @@ class _ItemState:
 	var instance: Variant = null
 	var started: bool = false
 	var finished: bool = false
+	## This item's position in start order — backs [member AnimaValueContext.group_index].
+	var index: int = 0
+	## This item's position in the resolved list before ordering — backs
+	## [member AnimaValueContext.grid_row]/[member AnimaValueContext.grid_column].
+	var original_index: int = 0
 
 var _items: Array[_ItemState] = []
 var _resolved := false
@@ -81,6 +86,8 @@ func restart_from_record(record: AnimaExecutionRecord, reversed_item_motions: Di
 		var item := _ItemState.new()
 		item.target = entry.target
 		item.start_offset = entry.start_offset
+		item.index = _items.size()
+		item.original_index = entry.original_index
 		_items.append(item)
 
 	_resolved = true
@@ -153,12 +160,37 @@ func _resolve(root: Node) -> void:
 		var item := _ItemState.new()
 		item.target = entry.target
 		item.start_offset = entry.start_offset
+		item.index = _items.size()
+		item.original_index = entry.original_index
 		_items.append(item)
 
 func _start_item(group: AnimaGroupMotion, item: _ItemState) -> void:
 	item.started = true
 	var item_motion: AnimaMotion = _reversed_item_motions.get(item.target, group.item_motion)
-	item.instance = item_motion.create_runtime()
+	item.instance = item_motion.create_runtime(_build_item_context(group, item))
+
+## Builds the per-item [AnimaValueContext] an [AnimaValue] inside [param
+## item]'s own motion resolves against: [member AnimaValueContext.target] is
+## this item's own resolved node; [member AnimaValueContext.root] is the
+## group's own container (this playback's own [member value_context], never
+## another item) — the concrete "root means the group's container" decision
+## (`tech-spec.md` §Dynamic values). Group-position fields read from [param
+## item]'s own [member _ItemState.index]/[member _ItemState.original_index],
+## already retained on the execution record — no separate per-item tracking
+## is added (`project-rules.md` §Architecture).
+func _build_item_context(group: AnimaGroupMotion, item: _ItemState) -> AnimaValueContext:
+	var context := AnimaValueContext.new(item.target)
+	context.root = value_context.target if value_context != null else item.target
+	if value_context != null:
+		context.context_data = value_context.context_data
+	context.group_index = item.index
+	context.group_count = _items.size()
+	context.group_normalised_index = float(item.index) / float(maxi(_items.size() - 1, 1))
+	var grid := group as AnimaGridMotion
+	if grid != null and grid.grid_dimensions.x > 0:
+		context.grid_row = item.original_index / grid.grid_dimensions.x
+		context.grid_column = item.original_index % grid.grid_dimensions.x
+	return context
 
 ## Advances one item, applying [member AnimaGroupMotion.invalid_target_policy]
 ## when its target has left the scene since it was resolved.

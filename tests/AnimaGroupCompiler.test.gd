@@ -211,3 +211,24 @@ func test_revalidating_after_a_change_updates_eligibility():
 	group.order.kind = AnimaGroupOrder.Kind.FORWARD
 	var eligible := AnimaGroupCompiler.check_eligibility(group, root)
 	assert_true(eligible.is_eligible())
+
+func test_item_motion_with_a_dynamic_to_value_blocks_with_its_own_reason():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group(root, 1)
+	group.item_motion.to_value = AnimaValue.target(NodePath("scale:x"))
+
+	var eligibility := AnimaGroupCompiler.check_eligibility(group, root)
+
+	assert_eq(eligibility.blocker, AnimaGroupCompiler.Blocker.DYNAMIC_VALUE)
+	assert_false(eligibility.message.is_empty())
+
+func test_item_motion_with_a_dynamic_from_value_blocks_with_its_own_reason():
+	var root := Node.new()
+	add_child_autofree(root)
+	var group := _make_group(root, 1)
+	group.item_motion.from_value = AnimaValue.target(NodePath("scale:x"))
+
+	var eligibility := AnimaGroupCompiler.check_eligibility(group, root)
+
+	assert_eq(eligibility.blocker, AnimaGroupCompiler.Blocker.DYNAMIC_VALUE)

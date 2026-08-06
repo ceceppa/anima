@@ -79,6 +79,16 @@ func with_duration(value: float) -> AnimaKeyframeMotion:
 	duration = value
 	return self
 
+## Sets [member default_ease] directly, accepting either a full [AnimaEase]
+## or a bare [enum AnimaEase.Kind] (coerced via [method AnimaEase.from] —
+## `tech-spec.md` §Easing curve library). Named `with_ease` for the same
+## `with_`-prefix reason as [method with_duration]. Returns self so calls can
+## keep chaining — e.g. directly onto [method AnimaOnMotionFactory.keyframes]'s
+## own returned motion (`tech-spec.md` §Keyframe interface).
+func with_ease(value: Variant) -> AnimaKeyframeMotion:
+	default_ease = AnimaEase.from(value)
+	return self
+
 ## Parses [param source] (the dictionary authoring form) into [member tracks]
 ## in one pass — one [method at] call per top-level key, in whatever order
 ## [Dictionary] iteration provides; each track ends up offset-sorted
@@ -132,9 +142,10 @@ func _track_for(property_path: NodePath) -> AnimaKeyframeTrack:
 func estimate_duration() -> AnimaDuration:
 	return AnimaDuration.fixed(duration)
 
-## Builds the runtime instance that advances every track together.
-func create_runtime() -> Variant:
-	return AnimaKeyframeMotionInstance.new(self)
+## Builds the runtime instance that advances every track together. See
+## [method AnimaMotion.create_runtime] for [param context].
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaKeyframeMotionInstance.new(self, context)
 
 ## Returns messages describing missing tracks, empty tracks, or duplicate
 ## stops at the same offset on the same track.

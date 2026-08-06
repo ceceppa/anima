@@ -12,7 +12,7 @@ func test_the_playground_shows_the_shared_header_card_example_line_selector_and_
 	assert_not_null(scene.find_child("Header", true, false))
 
 	var selector: SelectorDock = scene.get_node("%Selector")
-	assert_eq(selector.get_item_count(), 15, "one item per showcased family, including Keyframes and Spring")
+	assert_eq(selector.get_item_count(), 16, "one item per showcased family, including Keyframes, Spring, and Dynamic Values")
 
 func test_selecting_each_family_produces_a_visible_card_run_matching_the_shown_example():
 	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
@@ -32,6 +32,9 @@ func test_selecting_each_family_produces_a_visible_card_run_matching_the_shown_e
 		if button_text == "Keyframes":
 			assert_true(playback.motion is AnimaKeyframeMotion, "the Keyframes family should build an AnimaKeyframeMotion")
 			assert_string_contains(example_line.text, "Motion.keyframes(", "the shown example line should match the Keyframes family")
+		elif button_text == "Dynamic Values":
+			assert_true(playback.motion is AnimaSequence, "the Dynamic Values family chains a standalone dynamic-value motion into a keyframe one")
+			assert_string_contains(example_line.text, "AnimaValue.target(", "the shown example line should match the Dynamic Values family")
 		else:
 			assert_true(playback.motion is AnimaPropertyMotion or playback.motion is AnimaRepeat, "every other showcased family builds a single AnimaPropertyMotion, or an AnimaRepeat wrapping one")
 			assert_string_contains(example_line.text, "Anima.on(card)", "the shown example line should match the family actually playing")
@@ -316,3 +319,59 @@ func test_selected_speed_persists_across_restart_and_family_switches():
 	selector.get_item(1).pressed.emit() # switch family
 	var switched: AnimaPlayback = scene.get("_active_playback")
 	assert_eq(switched.speed_scale, 2.0, "switching families should also keep the previously selected speed")
+
+func _select_family(scene: Control, label: String) -> void:
+	var selector: SelectorDock = scene.get_node("%Selector")
+	for i in selector.get_item_count():
+		if selector.get_item(i).text == label:
+			selector.get_item(i).pressed.emit()
+			return
+	fail_test("no selector item labelled '%s' was found" % label)
+
+## Story-14.6: the Dynamic Values family demonstrates a standalone dynamic
+## value (the slide, which also combines two dynamic values via .add()) and
+## a dynamic value inside a keyframe step (the pulse's opacity dip), in one
+## selection.
+func test_dynamic_values_family_demonstrates_a_standalone_value_and_a_dynamic_keyframe_step():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var card: Card = scene.get_node("%Card")
+	_select_family(scene, "Dynamic Values")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	var start_x := card.position.x
+	var start_width := card.size.x
+
+	for i in range(24): # 0.4s — the standalone slide's own duration
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(card.position.x, start_x + start_width, 1.0, "the standalone dynamic value should slide the card by exactly its own width")
+
+	for i in range(15): # to ~0.65s global — the keyframe pulse's own mid-point
+		playback._advance(1.0 / 60.0)
+	assert_lt(card.modulate.a, 1.0, "the keyframe's dynamic opacity step should visibly dip partway through the pulse")
+
+	for i in range(20): # comfortably past the 0.9s total sequence duration
+		playback._advance(1.0 / 60.0)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(card.modulate.a, 1.0, 0.01, "opacity should settle back to fully visible once the pulse completes")
+
+func test_dynamic_values_family_restarts_and_reverses_like_any_other_family():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	_select_family(scene, "Dynamic Values")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	for i in range(10):
+		playback._advance(1.0 / 60.0)
+
+	controls.reverse_pressed.emit()
+	var reversed: AnimaPlayback = scene.get("_active_playback")
+	assert_not_null(reversed, "reverse should keep a public AnimaPlayback active, the same as any other family")
+
+	controls.restart_pressed.emit()
+	var restarted: AnimaPlayback = scene.get("_active_playback")
+	assert_not_null(restarted, "restart should keep a public AnimaPlayback active, the same as any other family")
+	assert_eq(restarted.state, AnimaPlayback.State.PLAYING)

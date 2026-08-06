@@ -14,8 +14,8 @@ class _ChildState:
 var _elapsed: float = 0.0
 var _states: Array[_ChildState] = []
 
-func _init(p_motion: AnimaMotion) -> void:
-	super._init(p_motion)
+func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
+	super._init(p_motion, p_value_context)
 
 	var sequence := motion as AnimaSequence
 	var enabled_children: Array[AnimaMotion] = []

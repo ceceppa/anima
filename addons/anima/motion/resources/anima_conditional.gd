@@ -33,8 +33,8 @@ func _select_branch() -> AnimaMotion:
 	return when_true if condition.call() else when_false
 
 ## Builds the runtime instance, selecting the branch once (see [method _select_branch]).
-func create_runtime() -> Variant:
-	return AnimaConditionalInstance.new(self)
+func create_runtime(context: AnimaValueContext = null) -> Variant:
+	return AnimaConditionalInstance.new(self, context)
 
 ## Requires [member condition], [member when_true], and [member when_false].
 func validate() -> Array[String]:
