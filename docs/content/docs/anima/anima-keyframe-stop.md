@@ -37,3 +37,10 @@ anywhere else a value is accepted (`tech-spec.md` §Dynamic values).
 
 Easing for the segment arriving at this stop, from the previous stop's
 offset to this one. `null` falls back to [member AnimaKeyframeMotion.default_ease].
+
+### pivot
+
+An [enum AnimaPropertyMotion.Pivot] declared inline with this stop, or
+`null` when not declared here. Authoring convenience only — pivot
+resolves once for the whole motion, not per stop (`tech-spec.md`
+§Keyframe motions, "Pivot"). Never constructed by hand; see [member ease].

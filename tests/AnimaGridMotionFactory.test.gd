@@ -142,3 +142,35 @@ func test_with_ease_accepts_a_bare_kind():
 
 	var item_motion := factory.motion.item_motion as AnimaKeyframeMotion
 	assert_eq(item_motion.default_ease.kind, AnimaEase.Kind.EASE_IN_OUT)
+
+func test_with_pivot_sets_pivot_on_a_property_item_motion():
+	var container := Node.new()
+	add_child_autofree(container)
+
+	var factory := AnimaGridMotionFactory.new(container) \
+		.with_item_motion(Anima.item().opacity(0.0, 0.0)) \
+		.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+
+	var item_motion := factory.motion.item_motion as AnimaPropertyMotion
+	assert_eq(item_motion.pivot, AnimaPropertyMotion.Pivot.CENTER)
+
+func test_with_pivot_sets_default_pivot_on_a_keyframe_item_motion():
+	var container := Node.new()
+	add_child_autofree(container)
+
+	var factory := AnimaGridMotionFactory.new(container) \
+		.keyframes({"from": {"scale": Vector2.ONE}, "to": {"scale": Vector2(1.1, 1.1)}}) \
+		.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+
+	var item_motion := factory.motion.item_motion as AnimaKeyframeMotion
+	assert_eq(item_motion.default_pivot, AnimaPropertyMotion.Pivot.CENTER)
+
+func test_with_pivot_with_no_item_motion_reports_an_error_and_stays_chainable():
+	var container := Node.new()
+	add_child_autofree(container)
+
+	var factory := AnimaGridMotionFactory.new(container)
+	var returned := factory.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+
+	assert_eq(returned, factory, "with_pivot() should still return the factory even when it can't apply")
+	assert_push_error("requires an item motion")

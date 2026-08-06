@@ -39,6 +39,9 @@ const _SEMANTIC_PROPERTY_PATHS := {
 @export var duration: float = 0.0
 ## Easing used for a stop that doesn't set its own [member AnimaKeyframeStop.ease].
 @export var default_ease: AnimaEase = AnimaEase.new()
+## Pivot used when no stop declares its own [member AnimaKeyframeStop.pivot]
+## (`tech-spec.md` §Keyframe motions, "Pivot").
+@export var default_pivot: AnimaPropertyMotion.Pivot = AnimaPropertyMotion.Pivot.NONE
 
 ## Merges one authored keyframe declaration into [member tracks] and returns
 ## self, so calls can keep chaining. [param offsets] is `"from"`, `"to"`, a
@@ -46,13 +49,16 @@ const _SEMANTIC_PROPERTY_PATHS := {
 ## declaration — the same [param values] block applies to every resolved
 ## offset). [param values]' non-underscore keys are property declarations —
 ## a semantic name ([member _SEMANTIC_PROPERTY_PATHS]) or a raw property
-## path; a `_ease` key sets the resulting stop(s)' easing. Other
-## underscore-prefixed keys (`_hold`, `_marker`, `_callback`) are reserved
-## for a future phase and are accepted without error, never treated as a
-## property.
+## path; a `_ease` key sets the resulting stop(s)' easing, and a `_pivot`
+## key declares a pivot inline with this stop (authoring convenience only —
+## pivot still resolves once for the whole motion, see §Keyframe motions).
+## Other underscore-prefixed keys (`_hold`, `_marker`, `_callback`) are
+## reserved for a future phase and are accepted without error, never treated
+## as a property.
 func at(offsets: Variant, values: Dictionary) -> AnimaKeyframeMotion:
 	var resolved_offsets := _resolve_offsets(offsets)
 	var stop_ease: AnimaEase = values.get("_ease")
+	var stop_pivot = values.get("_pivot")
 
 	for resolved_offset in resolved_offsets:
 		for key in values:
@@ -65,6 +71,7 @@ func at(offsets: Variant, values: Dictionary) -> AnimaKeyframeMotion:
 			stop.offset = resolved_offset
 			stop.value = values[key]
 			stop.ease = stop_ease
+			stop.pivot = stop_pivot
 			track.stops.append(stop)
 			track.stops.sort_custom(func(a: AnimaKeyframeStop, b: AnimaKeyframeStop) -> bool: return a.offset < b.offset)
 
@@ -87,6 +94,15 @@ func with_duration(value: float) -> AnimaKeyframeMotion:
 ## own returned motion (`tech-spec.md` §Keyframe interface).
 func with_ease(value: Variant) -> AnimaKeyframeMotion:
 	default_ease = AnimaEase.from(value)
+	return self
+
+## Sets [member default_pivot] directly. Named `with_pivot` for the same
+## `with_`-prefix reason as [method with_duration]; a separate method from
+## [method with_ease] since pivot and easing are unrelated settings that
+## happen to share the same resolve-once timing (`tech-spec.md` §Keyframe
+## motions, "Pivot"). Returns self so calls can keep chaining.
+func with_pivot(value: AnimaPropertyMotion.Pivot) -> AnimaKeyframeMotion:
+	default_pivot = value
 	return self
 
 ## Parses [param source] (the dictionary authoring form) into [member tracks]

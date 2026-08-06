@@ -144,3 +144,27 @@ func test_with_ease_accepts_a_bare_kind():
 	motion.with_ease(AnimaEase.Kind.EASE_IN_OUT)
 
 	assert_eq(motion.default_ease.kind, AnimaEase.Kind.EASE_IN_OUT)
+
+func test_with_pivot_sets_default_pivot_and_returns_self():
+	var motion := AnimaKeyframeMotion.new()
+
+	var returned := motion.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+
+	assert_eq(returned, motion)
+	assert_eq(motion.default_pivot, AnimaPropertyMotion.Pivot.CENTER)
+
+func test_default_pivot_starts_at_none():
+	var motion := AnimaKeyframeMotion.new()
+
+	assert_eq(motion.default_pivot, AnimaPropertyMotion.Pivot.NONE)
+
+func test_pivot_reserved_key_parses_into_the_matching_stops():
+	var motion := AnimaKeyframeMotion.new()
+	motion.parse_dictionary({
+		"from": {"scale": Vector2.ONE, "_pivot": AnimaPropertyMotion.Pivot.CENTER},
+		"to": {"scale": Vector2(1.1, 1.1)},
+	})
+
+	var track: AnimaKeyframeTrack = motion.tracks[0]
+	assert_eq(track.stops[0].pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_null(track.stops[1].pivot)

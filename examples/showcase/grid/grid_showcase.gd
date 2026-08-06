@@ -72,6 +72,9 @@ var _scene3_formula_index: int = -1
 
 func _ready() -> void:
 	_build_finale_matrix()
+	
+	await get_tree().create_timer(1).timeout
+
 	_play_scene1()
 
 func _process(delta: float) -> void:

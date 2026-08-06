@@ -20,6 +20,3 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2")
-
-[node name="Icons" type="Node2D" parent="." unique_id=461758596]
-unique_name_in_owner = true

@@ -12,5 +12,5 @@
 | 7a | Grid factory .keyframes() shorthand | story-7a-grid-factory-keyframes.md | done |
 | 7b | One-line inventory pulse | story-7b-inventory-pulse-one-liner.md | done |
 | 7c | AnimaEase.from() Kind shorthand | story-7c-ease-kind-shorthand.md | done |
-| 7d | Keyframe pivot support | story-7d-keyframe-pivot.md | pending |
-| 7e | Icons nested under their own tile | story-7e-icons-nested-in-tile.md | pending |
+| 7d | Keyframe pivot support | story-7d-keyframe-pivot.md | done |
+| 7e | Icons nested under their own tile | story-7e-icons-nested-in-tile.md | done |

@@ -92,6 +92,13 @@ full [AnimaEase] or a bare [enum AnimaEase.Kind], coerced via [method
 AnimaEase.from] (`tech-spec.md` §Easing curve library). Same missing- or
 incompatible-item-motion error behaviour as [method with_duration].
 
+### with_pivot
+
+Sets the currently-configured [member AnimaGroupMotion.item_motion]'s
+pivot — [member AnimaPropertyMotion.pivot] or [member
+AnimaKeyframeMotion.default_pivot], whichever applies. Same missing- or
+incompatible-item-motion error behaviour as [method with_duration].
+
 ### play
 
 Plays [member motion] against [member container] — [code]Anima.play(motion, container)[/code].

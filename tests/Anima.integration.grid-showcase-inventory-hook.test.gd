@@ -69,7 +69,7 @@ func test_a_container_too_small_for_even_one_tile_places_no_tiles():
 	assert_eq(tiles.size(), 0, "no tiles should be placed when the container can't fit even one")
 	assert_false(grid.get_node("%Tile").visible, "the template tile itself should also be hidden, not left dangling on screen")
 
-func test_every_tile_has_a_matching_icon_under_icons_no_larger_than_the_configured_ratio():
+func test_every_tile_has_a_matching_centred_icon_no_larger_than_the_configured_ratio():
 	var grid := _make_grid()
 	await get_tree().process_frame
 
@@ -77,20 +77,18 @@ func test_every_tile_has_a_matching_icon_under_icons_no_larger_than_the_configur
 	var tile_size: Vector2 = tile.get_rect().size * tile.scale
 	var tiles: Array = grid.get("_tiles")
 	var icons: Array = grid.get("_icon_nodes")
-	var icons_node: Node = grid.get_node("%Icons")
 	assert_gt(tiles.size(), 0, "sanity: at least one tile should be placed")
 	assert_eq(icons.size(), tiles.size(), "there should be exactly one icon per tile")
 
 	for i in tiles.size():
 		var placed_tile: Sprite2D = tiles[i]
 		var icon: Sprite2D = icons[i]
-		assert_eq(icon.get_parent(), icons_node, "an icon should be a child of %Icons, not of its tile — so Anima.grid($Icons) can animate the icon layer independently")
+		assert_eq(icon.get_parent(), placed_tile, "an icon should be a child of its own tile, not a separate shared layer")
+		assert_eq(icon.position, Vector2.ZERO, "an icon should sit at its tile's own local centre")
 		assert_not_null(icon.texture, "the icon should always have a real texture (real icon or placeholder)")
-		assert_almost_eq(icon.position.x, placed_tile.position.x, 0.01, "the icon should sit at the same position as its matching tile")
-		assert_almost_eq(icon.position.y, placed_tile.position.y, 0.01, "the icon should sit at the same position as its matching tile")
 
 		var native: Vector2 = icon.texture.get_size()
-		var visible_size: Vector2 = native * icon.scale
+		var visible_size: Vector2 = native * icon.scale * placed_tile.scale
 		assert_true(visible_size.x <= tile_size.x * grid.max_icon_ratio + 0.5, "the icon's width should never exceed the configured ratio of its tile")
 		assert_true(visible_size.y <= tile_size.y * grid.max_icon_ratio + 0.5, "the icon's height should never exceed the configured ratio of its tile")
 
@@ -116,91 +114,56 @@ func test_missing_icon_assets_still_render_using_the_established_placeholder():
 	var placeholder: Texture2D = grid._icon_texture([], 0)
 	assert_not_null(placeholder, "an empty icon set should still produce a real, visible placeholder texture")
 
-## Regression: %Icons used to be a plain Node. A Sprite2D only inherits its
-## ancestors' 2D transform through a chain of CanvasItem parents, so a
-## plain-Node ancestor made every icon render relative to the viewport
-## instead of to InventoryGrid's own (possibly scaled/offset) position —
-## invisible testing InventoryGrid alone, obvious once nested inside
-## layer_1's scaled InventoryFrame. Wrapping in a scaled, offset Node2D
-## reproduces that real nesting.
-func test_icons_track_their_tiles_even_under_a_scaled_offset_ancestor():
-	var ancestor := Node2D.new()
-	ancestor.position = Vector2(200.0, 150.0)
-	ancestor.scale = Vector2(2.5, 2.5)
-	add_child_autofree(ancestor)
-
-	var wrapper := Control.new()
-	wrapper.size = Vector2(600.0, 600.0)
-	ancestor.add_child(wrapper)
-
-	var grid: Control = preload("res://examples/showcase/grid/inventory_grid.tscn").instantiate()
-	wrapper.add_child(grid)
+func test_play_reveals_every_tile_via_a_grid_motion_carrying_its_icon_along():
+	var grid := _make_grid()
 	await get_tree().process_frame
 
 	var tiles: Array = grid.get("_tiles")
 	var icons: Array = grid.get("_icon_nodes")
 	assert_gt(tiles.size(), 0, "sanity: at least one tile should be placed")
-
-	for i in tiles.size():
-		var tile: Sprite2D = tiles[i]
-		var icon: Sprite2D = icons[i]
-		var tile_global: Vector2 = tile.global_position
-		var icon_global: Vector2 = icon.global_position
-		assert_almost_eq(icon_global.x, tile_global.x, 0.5, "an icon's world position should track its tile even under a scaled/offset ancestor")
-		assert_almost_eq(icon_global.y, tile_global.y, 0.5, "an icon's world position should track its tile even under a scaled/offset ancestor")
-		# Sanity: the ancestor's transform should have actually moved the icon
-		# away from its own raw local (pre-transform) position — proves
-		# inheritance is real, not accidentally skipped (the exact bug this
-		# test guards against).
-		assert_true(icon_global.distance_to(icon.position) > 50.0, "sanity: the icon's world position should differ meaningfully from its untransformed local position")
-
-func test_play_reveals_every_icon_via_a_grid_motion_without_touching_the_tiles():
-	var grid := _make_grid()
-	await get_tree().process_frame
-
-	var icons: Array = grid.get("_icon_nodes")
-	var tiles: Array = grid.get("_tiles")
-	assert_gt(icons.size(), 0, "sanity: at least one icon should be placed")
+	for tile in tiles:
+		assert_almost_eq(tile.modulate.a, 0.0, 0.01, "sanity: tiles should start hidden before play() reveals them")
 	for icon in icons:
-		assert_almost_eq(icon.modulate.a, 0.0, 0.01, "sanity: icons should start hidden before play() reveals them")
+		assert_almost_eq(icon.modulate.a, 1.0, 0.01, "sanity: an icon's own modulate should start fully opaque — its tile owns the reveal, not the icon itself")
 
 	var playback: AnimaPlayback = grid.play()
 	assert_not_null(playback, "play() should return a real AnimaPlayback")
-	for i in range(60): # 1s — comfortably covers the grid's own stagger + fade
+	for i in range(300): # comfortably covers the grid's own stagger plus the current pulse duration
 		playback._advance(1.0 / 60.0)
 
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
-	for icon in icons:
-		assert_almost_eq(icon.modulate.a, 1.0, 0.01, "every icon should be fully revealed once the grid motion finishes")
 	for tile in tiles:
-		assert_almost_eq(tile.modulate.a, 1.0, 0.01, "the tile frames themselves should be untouched by play() — only the icon layer animates")
+		assert_almost_eq(tile.modulate.a, 1.0, 0.01, "every tile should be fully revealed once the grid motion finishes")
+	for icon in icons:
+		assert_almost_eq(icon.modulate.a, 1.0, 0.01, "an icon's own modulate should stay untouched by play() — it only ever inherits visibility from its tile")
 
 ## Verifies the CSS `@keyframes pulse`-equivalent shape itself (scale up and
 ## back), not just the final revealed state — a final-state-only check can't
-## tell a pulse apart from a motion that never scaled at all. Two icons are
-## given deliberately different resting scales, so a regression back to
-## Phase 13's shared-literal-scale workaround (every icon snapping to the
-## same peak/rest value regardless of its own fitted size) would fail this
-## test even though a single-icon check couldn't tell the difference.
-func test_play_pulses_every_icons_scale_relative_to_its_own_resting_scale():
+## tell a pulse apart from a motion that never scaled at all. Two tiles are
+## given deliberately different resting scales — real tiles are all uniform
+## duplicates, but forcing a difference here proves the pulse resolves each
+## tile's own scale independently rather than a shared literal, the same
+## per-item guarantee the icon pulse relied on before tiles took over the
+## reveal.
+func test_play_pulses_every_tiles_scale_relative_to_its_own_resting_scale():
 	var grid := _make_grid()
 	await get_tree().process_frame
 
-	var icons: Array = grid.get("_icon_nodes")
-	assert_gt(icons.size(), 1, "sanity: at least two icons are needed to prove per-icon, not shared, scaling")
-	icons[0].scale = Vector2(0.4, 0.4)
-	icons[1].scale = Vector2(0.8, 0.8)
+	var tiles: Array = grid.get("_tiles")
+	assert_gt(tiles.size(), 1, "sanity: at least two tiles are needed to prove per-tile, not shared, scaling")
+	tiles[0].scale = Vector2(0.4, 0.4)
+	tiles[1].scale = Vector2(0.8, 0.8)
 
 	var playback: AnimaPlayback = grid.play()
 
 	var peak_x: Array = [0.0, 0.0]
-	for i in range(60): # 1s — comfortably covers the grid's own stagger + fade
+	for i in range(300): # comfortably covers the grid's own stagger plus the current pulse duration
 		playback._advance(1.0 / 60.0)
-		peak_x[0] = maxf(peak_x[0], icons[0].scale.x)
-		peak_x[1] = maxf(peak_x[1], icons[1].scale.x)
+		peak_x[0] = maxf(peak_x[0], tiles[0].scale.x)
+		peak_x[1] = maxf(peak_x[1], tiles[1].scale.x)
 
-	assert_almost_eq(peak_x[0], 0.4 + 0.15, 0.01, "an icon should peak 0.15 above its own resting scale")
-	assert_almost_eq(peak_x[1], 0.8 + 0.15, 0.01, "a differently-sized icon should peak 0.15 above its own resting scale, not another icon's")
+	assert_almost_eq(peak_x[0], 0.4 + 0.25, 0.01, "a tile should peak 0.25 above its own resting scale")
+	assert_almost_eq(peak_x[1], 0.8 + 0.25, 0.01, "a differently-scaled tile should peak 0.25 above its own resting scale, not another tile's")
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
-	assert_almost_eq(icons[0].scale.x, 0.4, 0.01, "an icon should settle back to its own resting scale, not a shared literal")
-	assert_almost_eq(icons[1].scale.x, 0.8, 0.01, "a differently-sized icon should settle back to its own resting scale, not a shared literal")
+	assert_almost_eq(tiles[0].scale.x, 0.4, 0.01, "a tile should settle back to its own resting scale, not a shared literal")
+	assert_almost_eq(tiles[1].scale.x, 0.8, 0.01, "a differently-scaled tile should settle back to its own resting scale, not a shared literal")

@@ -50,6 +50,11 @@ else [member Anima.default_duration]) at playback time.
 
 Easing used for a stop that doesn't set its own [member AnimaKeyframeStop.ease].
 
+### default_pivot
+
+Pivot used when no stop declares its own [member AnimaKeyframeStop.pivot]
+(`tech-spec.md` §Keyframe motions, "Pivot").
+
 ## Methods
 
 ### at
@@ -60,10 +65,12 @@ self, so calls can keep chaining. [param offsets] is `"from"`, `"to"`, a
 declaration — the same [param values] block applies to every resolved
 offset). [param values]' non-underscore keys are property declarations —
 a semantic name ([member _SEMANTIC_PROPERTY_PATHS]) or a raw property
-path; a `_ease` key sets the resulting stop(s)' easing. Other
-underscore-prefixed keys (`_hold`, `_marker`, `_callback`) are reserved
-for a future phase and are accepted without error, never treated as a
-property.
+path; a `_ease` key sets the resulting stop(s)' easing, and a `_pivot`
+key declares a pivot inline with this stop (authoring convenience only —
+pivot still resolves once for the whole motion, see §Keyframe motions).
+Other underscore-prefixed keys (`_hold`, `_marker`, `_callback`) are
+reserved for a future phase and are accepted without error, never treated
+as a property.
 
 ### with_duration
 
@@ -81,6 +88,14 @@ or a bare [enum AnimaEase.Kind] (coerced via [method AnimaEase.from] —
 `with_`-prefix reason as [method with_duration]. Returns self so calls can
 keep chaining — e.g. directly onto [method AnimaOnMotionFactory.keyframes]'s
 own returned motion (`tech-spec.md` §Keyframe interface).
+
+### with_pivot
+
+Sets [member default_pivot] directly. Named `with_pivot` for the same
+`with_`-prefix reason as [method with_duration]; a separate method from
+[method with_ease] since pivot and easing are unrelated settings that
+happen to share the same resolve-once timing (`tech-spec.md` §Keyframe
+motions, "Pivot"). Returns self so calls can keep chaining.
 
 ### parse_dictionary
 

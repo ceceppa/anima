@@ -13,5 +13,4 @@ class_name InventoryHookLayer
 extends Control
 
 func play() -> void:
-	%Scrim.hide()
 	%InventoryGrid.play()

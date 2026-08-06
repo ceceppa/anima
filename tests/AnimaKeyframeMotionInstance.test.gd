@@ -248,3 +248,77 @@ func test_integration_through_anima_play():
 
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 	assert_almost_eq(node.position.x, 100.0, 0.01)
+
+func test_default_pivot_resolves_a_scale_tracks_anchor_on_a_control():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.size = Vector2(100.0, 80.0)
+
+	var motion := Motion.keyframes({"from": {"scale": Vector2.ONE}, "to": {"scale": Vector2(1.2, 1.2)}})
+	motion.duration = 0.1
+	motion.default_pivot = AnimaPropertyMotion.Pivot.CENTER
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_eq(control.pivot_offset, Vector2(50.0, 40.0))
+
+func test_a_stops_own_pivot_declaration_is_used_when_default_pivot_is_none():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.size = Vector2(100.0, 80.0)
+
+	var motion := Motion.keyframes({
+		"from": {"scale": Vector2.ONE, "_pivot": AnimaPropertyMotion.Pivot.BOTTOM_RIGHT},
+		"to": {"scale": Vector2(1.2, 1.2)},
+	})
+	motion.duration = 0.1
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_eq(control.pivot_offset, Vector2(100.0, 80.0))
+
+func test_the_first_declared_stop_pivot_wins_when_more_than_one_stop_declares_one():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.size = Vector2(100.0, 80.0)
+
+	var motion := Motion.keyframes({
+		"from": {"scale": Vector2.ONE, "_pivot": AnimaPropertyMotion.Pivot.TOP_LEFT},
+		50: {"scale": Vector2(1.1, 1.1), "_pivot": AnimaPropertyMotion.Pivot.BOTTOM_RIGHT},
+		"to": {"scale": Vector2(1.2, 1.2)},
+	})
+	motion.duration = 0.1
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_eq(control.pivot_offset, Vector2(0.0, 0.0), "the first-declared stop's pivot (scanning offset order) should win")
+
+func test_no_pivot_declared_anywhere_leaves_the_control_unaffected():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.size = Vector2(100.0, 80.0)
+
+	var motion := Motion.keyframes({"from": {"scale": Vector2.ONE}, "to": {"scale": Vector2(1.2, 1.2)}})
+	motion.duration = 0.1
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_eq(control.pivot_offset, Vector2.ZERO, "no declared pivot should leave the native pivot_offset untouched")
+
+func test_pivot_is_ignored_for_a_motion_with_no_scale_or_rotation_track():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.size = Vector2(100.0, 80.0)
+
+	var motion := Motion.keyframes({"from": {"opacity": 0.0}, "to": {"opacity": 1.0}})
+	motion.duration = 0.1
+	motion.default_pivot = AnimaPropertyMotion.Pivot.CENTER
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_eq(control.pivot_offset, Vector2.ZERO, "pivot should be ignored when no track animates scale/rotation")

@@ -103,6 +103,22 @@ func with_ease(value: Variant) -> AnimaGridMotionFactory:
 		push_error("AnimaGridMotionFactory.with_ease() only applies to a property or keyframe item motion.")
 	return self
 
+## Sets the currently-configured [member AnimaGroupMotion.item_motion]'s
+## pivot — [member AnimaPropertyMotion.pivot] or [member
+## AnimaKeyframeMotion.default_pivot], whichever applies. Same missing- or
+## incompatible-item-motion error behaviour as [method with_duration].
+func with_pivot(value: AnimaPropertyMotion.Pivot) -> AnimaGridMotionFactory:
+	if motion.item_motion == null:
+		push_error("AnimaGridMotionFactory.with_pivot() requires an item motion — call with_item_motion() or keyframes() first.")
+		return self
+	if motion.item_motion is AnimaPropertyMotion:
+		(motion.item_motion as AnimaPropertyMotion).pivot = value
+	elif motion.item_motion is AnimaKeyframeMotion:
+		(motion.item_motion as AnimaKeyframeMotion).default_pivot = value
+	else:
+		push_error("AnimaGridMotionFactory.with_pivot() only applies to a property or keyframe item motion.")
+	return self
+
 ## Plays [member motion] against [member container] — [code]Anima.play(motion, container)[/code].
 ## Reports an error and returns `null` when [method with_item_motion] was
 ## never called, instead of playing an empty grid.

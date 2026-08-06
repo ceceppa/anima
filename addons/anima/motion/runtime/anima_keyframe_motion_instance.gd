@@ -13,6 +13,7 @@ var _duration_resolved: bool = false
 ## §Architecture — resources hold authored config only).
 var _resolved_values: Array = []
 var _values_resolved: bool = false
+var _pivot_applied: bool = false
 
 ## Advances this motion by [param delta] seconds and writes every track's
 ## current value to [param target]. Returns `true` once finished.
@@ -24,6 +25,9 @@ func advance(target: Node, delta: float) -> bool:
 		_duration_resolved = true
 	if not _values_resolved:
 		_resolve_values(keyframe_motion, target)
+	if not _pivot_applied:
+		_resolve_and_apply_pivot(keyframe_motion, target)
+		_pivot_applied = true
 
 	_elapsed += delta * motion.speed
 	var t: float = 1.0 if _resolved_duration <= 0.0 else clampf(_elapsed / _resolved_duration, 0.0, 1.0)
@@ -44,6 +48,40 @@ func _resolve_values(keyframe_motion: AnimaKeyframeMotion, target: Node) -> void
 			stop_values.append(_resolve_dynamic(stop.value, target))
 		_resolved_values.append(stop_values)
 	_values_resolved = true
+
+## Resolves the one pivot value this motion uses (`tech-spec.md` §Keyframe
+## motions, "Pivot"): scans [param keyframe_motion]'s tracks in order, each
+## track's stops in offset order, for the first non-`null` [member
+## AnimaKeyframeStop.pivot]; falls back to [member
+## AnimaKeyframeMotion.default_pivot] when none is declared anywhere. Applies
+## it via the shared [method AnimaMotionInstance._apply_pivot_to] only when
+## the resolved pivot isn't [constant AnimaPropertyMotion.Pivot.NONE] and at
+## least one track's canonical property is `scale`/`rotation` — the same
+## gate [method AnimaPropertyMotionInstance._apply_pivot] uses.
+func _resolve_and_apply_pivot(keyframe_motion: AnimaKeyframeMotion, target: Node) -> void:
+	var declared_pivot: Variant = null
+	for track in keyframe_motion.tracks:
+		for stop in track.stops:
+			if stop.pivot != null:
+				declared_pivot = stop.pivot
+				break
+		if declared_pivot != null:
+			break
+
+	var resolved_pivot: AnimaPropertyMotion.Pivot = declared_pivot if declared_pivot != null else keyframe_motion.default_pivot
+	if resolved_pivot == AnimaPropertyMotion.Pivot.NONE:
+		return
+
+	var applies_to_a_track := false
+	for track in keyframe_motion.tracks:
+		var base_property := String(track.property_path).split(":")[0]
+		if base_property == "scale" or base_property == "rotation":
+			applies_to_a_track = true
+			break
+	if not applies_to_a_track:
+		return
+
+	_apply_pivot_to(target, resolved_pivot)
 
 ## Restores every track's starting value — for [method AnimaPlayback.revert]
 ## and a [constant AnimaMotion.CancellationValuePolicy.RESTORE_INITIAL]

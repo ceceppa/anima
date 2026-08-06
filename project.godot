@@ -24,6 +24,10 @@ window/size/viewport_width=2880
 window/size/viewport_height=1980
 window/stretch/mode="canvas_items"
 
+[editor]
+
+movie_writer/movie_file="/Users/asenese/Projects/anima/v2_stuff/movie/grid2.avi"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/anima/plugin.cfg", "res://addons/gut/plugin.cfg")

@@ -1,11 +1,11 @@
 ## Fills its own bounds with as many whole clones of the authored [member
 ## _tile] template as actually fit, each centred, spaced at least
-## [member min_gap] apart — and gives each tile position a matching icon
-## loaded from `assets/icons/`, sized to at most [member max_icon_ratio] of
-## the tile (`project-rules.md` §Example Scenes' auto-fit tile grid). Icons
-## are children of [member _icons], siblings of the tiles rather than nested
-## under them, specifically so an [AnimaGridMotion] played on [member _icons]
-## (see [method play]) can animate the icon layer independently of the
+## [member min_gap] apart — and gives each tile a matching icon loaded from
+## `assets/icons/`, sized to at most [member max_icon_ratio] of the tile
+## (`project-rules.md` §Example Scenes' auto-fit tile grid). Each icon is a
+## child of its own tile, centred within it — [method play] targets the
+## tracked [member _icon_nodes] directly rather than relying on a shared
+## parent layer, so the icons still animate independently of the
 ## (non-animated) tile frames underneath.
 class_name InventoryGrid
 extends Control
@@ -32,23 +32,17 @@ const ICONS_DIR := "res://examples/showcase/grid/assets/icons"
 			_build_tile_grid()
 
 @onready var _tile: Sprite2D = %Tile
-## Must stay a [Node2D] (or another [CanvasItem]), never a plain [Node] — a
-## Sprite2D's 2D transform only inherits through a chain of CanvasItem
-## parents, so a plain-Node ancestor here would make every icon render
-## relative to the viewport instead of to this component's own (possibly
-## scaled) position in the scene.
-@onready var _icons: Node2D = %Icons
 
 ## Every tile currently in the grid, including the original authored
 ## [member _tile] (always kept as the first entry, never freed).
 var _tiles: Array[Sprite2D] = []
 ## Every icon currently placed, one per tile, in the same order as
-## [member _tiles] — parented under [member _icons], not under their
-## matching tile.
+## [member _tiles] — each parented under its own matching tile, centred
+## within it.
 var _icon_nodes: Array[Sprite2D] = []
 ## The fitted grid's own column/row count, resolved by the last
-## [method _build_tile_grid] — [member _icons]' children fill this shape in
-## the same row-major order [AnimaGridMotion.grid_dimensions] expects.
+## [method _build_tile_grid] — [member _icon_nodes] fills this shape in the
+## same row-major order [AnimaGridMotion.grid_dimensions] expects.
 var _columns: int = 0
 var _rows: int = 0
 
@@ -59,10 +53,10 @@ func _ready() -> void:
 		play()
 
 ## Rebuilds the tile grid from scratch: clears any previously duplicated
-## tiles and icons, computes how many whole tiles fit along each axis, and
-## places a tile plus a matching icon (parented under [member _icons], not
-## the tile) at each resolved position, centred within this component's own
-## bounds.
+## tiles and icons, computes how many whole tiles fit along each axis, places
+## every tile at its resolved position first, then gives each one its own
+## centred icon in a second pass — duplicating tiles before any icon exists
+## keeps a duplicated tile from also duplicating tile 0's icon as a child.
 func _build_tile_grid() -> void:
 	var tile_size: Vector2 = _tile.get_rect().size * _tile.scale
 	var container_size: Vector2 = size
@@ -75,9 +69,6 @@ func _build_tile_grid() -> void:
 		if tile != _tile and is_instance_valid(tile):
 			tile.queue_free()
 	_tiles.clear()
-	for icon in _icon_nodes:
-		if is_instance_valid(icon):
-			icon.queue_free()
 	_icon_nodes.clear()
 
 	if columns <= 0 or rows <= 0:
@@ -85,7 +76,6 @@ func _build_tile_grid() -> void:
 		return
 
 	_tile.visible = true
-	var icon_paths := _discover_icon_paths()
 	var origin := _grid_origin(container_size, tile_size, columns, rows, min_gap)
 	for row in rows:
 		for col in columns:
@@ -94,24 +84,34 @@ func _build_tile_grid() -> void:
 			if index > 0:
 				%Tiles.add_child(tile)
 			tile.visible = true
-			var center := origin + Vector2(col, row) * (tile_size + Vector2(min_gap, min_gap)) + tile_size / 2.0
-			tile.position = center
+			tile.position = origin + Vector2(col, row) * (tile_size + Vector2(min_gap, min_gap)) + tile_size / 2.0
+			tile.modulate.a = 0.0
 			_tiles.append(tile)
-			_icon_nodes.append(_build_icon(center, tile_size, icon_paths, index))
 
-## Creates one icon under [member _icons] at [param center] (the same
-## position its matching tile sits at), showing one of [param icon_paths],
-## scaled to at most [member max_icon_ratio] of [param tile_size] while
-## preserving its own aspect ratio. A sibling of every other icon, not a
-## child of its tile — [member _icons] is the whole layer `Anima.grid()`
-## animates independently of the (static) tile frames.
-func _build_icon(center: Vector2, tile_size: Vector2, icon_paths: Array, index: int) -> Sprite2D:
+	var icon_paths := _discover_icon_paths()
+	for index in _tiles.size():
+		var icon = _build_icon(_tiles[index], tile_size, icon_paths, index)
+		
+		_icon_nodes.append(icon)
+
+## Creates one icon as a child of [param tile], centred within it — a plain
+## [Sprite2D] at local [constant Vector2.ZERO] already renders centred on its
+## parent's own origin, since both this component's tiles and every icon
+## keep [member Sprite2D.centered]'s default of `true`. Shows one of [param
+## icon_paths], scaled to at most [member max_icon_ratio] of [param
+## tile_size] (the tile's own world-space size) while preserving its own
+## aspect ratio — divided by [param tile]'s own [member Node2D.scale] since
+## the icon's [member Node2D.scale] is now in the tile's local space, not
+## world space, and would otherwise compound with it. Starts at full opacity
+## — [method play] fades/pulses [param tile] itself, and Godot's own
+## [member CanvasItem.modulate] cascades that to every child, this icon
+## included, so the icon needs no reveal state of its own.
+func _build_icon(tile: Sprite2D, tile_size: Vector2, icon_paths: Array, index: int) -> Sprite2D:
 	var icon := Sprite2D.new()
-	_icons.add_child(icon)
-	icon.position = center
+	tile.add_child(icon)
+	icon.position = Vector2.ZERO
 	icon.texture = _icon_texture(icon_paths, index)
-	icon.scale = _icon_scale(icon.texture, tile_size)
-	icon.modulate.a = 0.0
+	icon.scale = _icon_scale(icon.texture, tile_size) / tile.scale
 	return icon
 
 ## The uniform scale that fits [param texture]'s native size inside
@@ -177,36 +177,33 @@ static func _grid_origin(container: Vector2, tile: Vector2, columns: int, rows: 
 	)
 	return (container - used) / 2.0
 
-## One CSS `@keyframes pulse`-equivalent reveal, shared by every icon: fades
-## in across the whole run while scale pulses up 15% and back at the
+## One CSS `@keyframes pulse`-equivalent reveal, shared by every tile: fades
+## in across the whole run while scale pulses up and back at the
 ## midpoint — a single [AnimaKeyframeMotion] rather than two separate
 ## motions, since `scale` and `opacity` are independent tracks evaluated
-## against the same clock (`tech-spec.md` §Keyframe motions).
+## against the same clock (`tech-spec.md` §Keyframe motions). Each tile's own
+## icon child is carried along for free — Godot's own [member
+## CanvasItem.modulate]/transform inheritance means animating the tile
+## already fades and scales its icon with it, no second motion needed.
 const _ITEM_DURATION := 0.3
 
-## Plays a grid-driven reveal on the icon layer only — the (static) tile
-## frames underneath are untouched, since [member _icons] is its own sibling
-## layer built exactly for this (see the class doc comment above). One
-## fluent statement built on [method Anima.grid]: [method
-## AnimaGridMotionFactory.keyframes] parses the same CSS `@keyframes
+## Plays a grid-driven reveal on the tiles — icon and frame together, since
+## every icon is now a child of its own tile. Built on [method Anima.grid]:
+## [method AnimaGridMotionFactory.keyframes] parses the same CSS `@keyframes
 ## pulse`-equivalent shape [member _ITEM_DURATION] describes — fading in
-## across the whole run while scale pulses up 15% and back at the midpoint —
+## across the whole run while scale pulses up and back at the midpoint —
 ## and [method AnimaGridMotionFactory.with_duration]/[method
 ## AnimaGridMotionFactory.with_ease] configure it in place
-## (`tech-spec.md` §Grid convenience shorthand). Each icon's own current
-## scale (its real fitted size, set once by [method _icon_scale] before this
-## ever plays) drives both the resting and peak keyframe values through
-## [AnimaValue] — resolved independently per icon by the grid's own per-item
-## context (`tech-spec.md` §Dynamic values), so an icon fit to a small
-## texture pulses to 1.15× *its own* scale, not another icon's.
-## [member Anima.grid]'s [code]CHILDREN[/code] default resolves against
-## whatever node the motion is actually played on — [member _icons], not
-## this component — so it picks up exactly the icon [Sprite2D] nodes
-## [method _build_tile_grid] added, in the same row-major order
-## [member AnimaGridMotion.grid_dimensions] expects, and never touches the
-## tile frames.
+## (`tech-spec.md` §Grid convenience shorthand). Each tile's own current
+## scale drives both the resting and peak keyframe values through
+## [AnimaValue] — resolved independently per tile by the grid's own per-item
+## context (`tech-spec.md` §Dynamic values). Every tile — the original
+## template and every duplicate [method _build_tile_grid] adds — ends up a
+## direct child of `%Tiles`, so [method Anima.grid]'s own [code]CHILDREN[/code]
+## default resolves exactly the tile set with no override needed, back to a
+## single fluent statement.
 func play() -> AnimaPlayback:
-	return Anima.grid(_icons) \
+	return Anima.grid(%Tiles) \
 		.with_dimensions(Vector2i(_columns, _rows)) \
 		.with_distance_formula(AnimaGridMotion.DistanceFormula.EUCLIDEAN) \
 		.with_start_point(Vector2i(_columns / 2, _rows / 2)) \
