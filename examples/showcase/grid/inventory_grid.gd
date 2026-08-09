@@ -213,5 +213,5 @@ func play() -> AnimaPlayback:
 			50: {"scale": AnimaValue.target(NodePath("scale")).add(Vector2(0.25, 0.25))},
 			"to": {"opacity": 1.0, "scale": AnimaValue.target(NodePath("scale"))},
 		}, _ITEM_DURATION) \
-		.with_ease(AnimaEase.Kind.EASE_IN_OUT) \
+		.with_ease(AnimaEase.Kind.EASE_OUT_BACK) \
 		.play()
