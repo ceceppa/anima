@@ -133,7 +133,7 @@ Next:
 
 After `mano import` completes, check whether `_mano/hooks/post-import.md` exists. Ignore `_mano/hooks/post-import.example.md`.
 
-If an active `post-import.md` hook exists, mention it in the final response before the next-action line. Check its `## Mode` first: a `command` hook runs automatically in both modes (report it in the execution log, never as a suggestion) — see `_mano/workflow.md` → **Optional Post-Skill Hooks**. The rest of this section describes a `suggest` hook. Do not run a `suggest` hook automatically. Do not mention specific third-party skill names or the hook's suggested prompt unless the user explicitly asks to run or inspect it. Do not write hook suggestions into generated artifacts.
+If an active `post-import.md` hook exists, check its `## Mode`. A `command` hook runs automatically in both modes. Import is before phase approval, so a `suggest` hook asks with the generic `Run it now?` block even when `MODE: auto`; only an armed auto chain runs suggest hooks automatically. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names or the hook's suggested prompt unless the user explicitly asks to run or inspect it. Do not write hook suggestions into generated artifacts.
 
 ## Forbidden
 

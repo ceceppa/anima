@@ -6,6 +6,10 @@
 
 <!-- Specific: "React Native with Expo (managed), TypeScript" not just "React Native". -->
 
+## Project Scaffold
+
+<!-- Greenfield only. If the chosen generator expects an empty target, record its exact guarded command using `node _mano/scripts/scaffold.js run ... -- ... {target}`. Omit when the application is already scaffolded or no generator is needed. -->
+
 ## Libraries & Dependencies
 
 <!-- Use exact versions only when syncing from a real manifest or lockfile. Otherwise keep the install command provisional instead of inventing a version number here. -->

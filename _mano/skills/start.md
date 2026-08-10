@@ -18,11 +18,11 @@ On activation:
    ```
    node _mano/scripts/state.js --scope
    ```
-   The projection is also the only phase-identity source. Record its `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `IN_PHASE_STATUS`, and `REVIEW_HEADING_PREFIX`. Never construct a directory or backlog status from the number alone. With no owner configured these remain the legacy `phase-N` / `in-phase-N` forms; owner-scoped forms appear only after explicit `mano owner <slug>` opt-in.
+   The projection is also the only phase-identity and mode source. Record its `MODE`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `IN_PHASE_STATUS`, and `REVIEW_HEADING_PREFIX`. Never construct a directory or backlog status from the number alone. With no owner configured these remain the legacy `phase-N` / `in-phase-N` forms; owner-scoped forms appear only after explicit `mano owner <slug>` opt-in.
    - `DECISION: STOP` → you can't scope a phase now. Relay the script's one-line reason (prefixed `[mano start]:`) and stop. Don't re-derive or re-explain it — for the full picture, run `node _mano/scripts/state.js --verbose`. You may note any artifact defect you happened to spot, but it never licenses advancing.
      **Route, don't dead-end.** `STOP` blocks *advancing to a new phase*; it does not mean nothing can be done. If the user asked to **add specific work to the phase that is already open**, add one line pointing at the path that owns it — `` `mano stories "[what they named]"` — adds it to the open [PHASE_ID] `` (see `_mano/workflow.md` → **Mid-phase additions**). Add this line only when they asked to add work; a plain `mano start` on an in-progress phase still just relays the reason and stops. Never assign a backlog item or write a story yourself here.
    - `DECISION: PROCEED` → act on `NEXT:`:
-     - `scope-backlog` → **Path A.** The script prints a `SCOPE INPUT` block — the phase-scopeable `Status: backlog` items (with `spec-gap` / `rule-gap` already excluded), core product principles, and latest review. That is everything you need; go straight to Step 6 using it. **Do not open any file under `_mano_output/`** (no `backlog.md`, no `reviews.md`, and especially not the finished phase's folder — it's shipped). Don't greet conversationally.
+     - `scope-backlog` → **Path A.** The script prints a `SCOPE INPUT` block — the phase-scopeable `Status: backlog` items (with `spec-gap` / `rule-gap` already excluded), core product principles, and latest review. That is everything you need for scope; go straight to Step 6 using it. **Do not open any file under `_mano_output/` to choose scope** (no `backlog.md`, no `reviews.md`, and especially not the finished phase's folder — it's shipped). The only exception is the narrow auto-chain planning read in Step 6 after a candidate scope exists. Don't greet conversationally.
      - `conversation` → **Path B** (new project).
      - `resume-draft` → a previous run left the projected `PHASE_DIR` without a brief. The script prints all phase-scopeable item statuses (`spec-gap` / `rule-gap` excluded) and recent continuity in `SCOPE INPUT`. Do not infer which items were approved: show the likely items carrying the projected `IN_PHASE_STATUS`, then ask the user to confirm or restate the exact approved scope for this phase. Once confirmed, resume at Step 7; do not start a new phase.
 
@@ -43,10 +43,10 @@ Provide detail to minimize clarifying queries.
 
 - The state script's `SCOPE INPUT` block — on Path A it carries phase-scopeable `Status: backlog` items; on `resume-draft` it carries all phase-scopeable statuses so the human can restore the lost approved subset. Gap types are excluded in both modes. Both include `## Core Product Principles` and the latest review, so you never reopen `backlog.md` / `reviews.md` to scope.
 - `_mano_output/backlog.md` — owned here: created on Path B and stamped at Step 7; on Path A you write to it but don't read it to scope
-- `_mano_output/project-rules.md` only if it already exists and is explicitly relevant to scoping
+- `_mano_output/project-rules.md` only if it already exists and is explicitly relevant to scoping, or as one of the narrow project-level artifact reads used to plan an auto chain after candidate scope exists
 - PRD or reference document if provided by the user
 
-`mano start` does not read tech specs, design briefs, UX flows, or project rules unless the user deliberately provides them to clarify scope, or they already exist and materially affect the phase boundary.
+`mano start` does not read tech specs, design briefs, UX flows, or project rules unless the user deliberately provides them to clarify scope, they already exist and materially affect the phase boundary, or `MODE: auto` requires the narrow Step 6 check to propose an accurate chain. That check is for action selection only and never opens a prior phase folder, preview, backlog, review, or source file.
 
 ## Role
 
@@ -135,6 +135,8 @@ Then proceed to Step 6.
 
 Work from the state script's `SCOPE INPUT` block (the phase-scopeable `Status: backlog` items, `## Core Product Principles`, and latest review) — it's already in context from activation, so don't reopen `backlog.md`, `reviews.md`, or the completed phase's folder. The projection has already removed `spec-gap` and `rule-gap` items. Estimate complexity of each remaining item based on its context.
 
+If the latest review records `Evidence` as `none` and the candidate phase depends on that phase's inconclusive assumptions, surface one non-blocking line with the suggestion: `⚠ Previous [PHASE_ID] closed without evidence; assumptions relevant to this scope remain inconclusive.` Do not block the new phase, manufacture a validation task, or repeat the warning when the candidate scope is unrelated. The human decides whether to validate later or continue knowingly.
+
 **Hard constraint: one independently verifiable outcome per phase.** A phase should deliver one cohesive capability or retire one meaningful risk that can be validated without work planned for a later phase. It may cross backend, frontend, storage, or other layers when that is the smallest complete slice; keep each layer to the minimum required for the outcome. Do not bundle unrelated outcomes simply because they share infrastructure. Treat internal prerequisites as part of the outcome rather than separate phase-scope items, while recording them explicitly in the phase brief and stories.
 
 Ask: "At the end of this phase, can someone demonstrate the capability or verify that the risk has been retired using clear acceptance criteria?" If not, reshape the scope.
@@ -160,7 +162,7 @@ Prioritise:
 [X] more items in backlog.
 
 What to do?
-1. ✅ Go with this — Draft brief from these items.
+1. ✅ Go with this — Approve this scope.
 2. ✏️ Adjust — Add/remove items.
 3. 🎯 I know what I want — List items.
 4. 📋 Show full backlog.
@@ -181,10 +183,15 @@ After presenting, stop. Do not continue to Step 7 until the user explicitly appr
 
 ```text
 → Auto mode: [the actions this phase needs, in order] → dev yolo
-  Reply `go`, or edit it (`skip rules`, `add ux`). Pauses for any question; stops before review.
+  Reply `1` or `go` — both approve this scope and run the chain above.
+  Edit and approve together (`go, skip rules`; `1, add ux`). Pauses for questions; stops before review.
 ```
 
-Propose only the actions the phase genuinely needs, on the same judgement used for the `Next:` block. The approval reply arms the chain; an edit in that reply replaces it. See `_mano/workflow.md` → **Run Mode: manual and auto** for what the chain may and may not do.
+In auto mode, replace option 1's description with `Approve this scope and run the auto chain shown below.` An edit without `1` or `go` changes the proposal but does not approve or arm it. Never make one approval token scope-only and the other auto-arming; `1` and `go` are exact synonyms.
+
+Before proposing that line, inspect only the existing project-level planning artifacts needed to decide whether this candidate scope requires `spec`, `ux`, `rules`, or `ui`: `_mano_output/tech-spec.md`, `_mano_output/ux-flow.md`, `_mano_output/project-rules.md`, and `_mano_output/design-brief.md`. Read only relevant sections when possible. Never open the backlog, reviews, source, a prior phase folder, or another phase's preview for this check. This narrow read is permitted only after the candidate scope exists, so it cannot influence which backlog items are selected.
+
+Propose only the actions the phase genuinely needs, applying `_mano/workflow.md` → **Planning coverage for user-facing phases** before showing the chain. In auto mode, a missing exact UX flow or design/preview for material new interaction or visual work means include `ux` / `ui`; do not reinterpret “optional” as “omit unless forced.” The human may explicitly remove either in the approval reply. That reply arms the exact ordered chain; preserve its remaining actions across pauses rather than recomputing optional branches after each action. See `_mano/workflow.md` → **Run Mode: manual and auto** for the rest of the chain contract.
 
 ### Step 7 — Validate, clarify, and draft brief
 
@@ -236,6 +243,13 @@ Do not silently mark a broad item with the projected `IN_PHASE_STATUS`.
 
 **Demo-sketch checkpoint.** Before drafting the brief, write out the Exit Criteria as a concrete user-action sequence — open the app, what loads, what the user does, what happens next, what proves it worked. If that sequence requires nouns you cannot ground in either Phase 1 or this brief (e.g. "the workspace," "the default view," "the starting state"), surface them as scope-gap questions here. Do not draft the brief with hand-wavy placeholders for system state the implementer will have to invent.
 
+**Validation-plan checkpoint.** Derive a lightweight plan for how the human can learn from the completed phase:
+
+- **Decision this informs** — the product, scope, or direction decision the result can inform next.
+- **Evidence to gather** — what the human will use, show, play, or measure. This can be direct use, feedback from another person, an observed workflow, or a concrete technical measurement; do not require external users when self-use or objective verification fits the phase.
+
+The plan is not a success prediction and Mano does not make the decision. It makes the intended evidence path visible before implementation. Infer it from the approved goal and Exit Criteria when clear. If either line would be invented, ask one focused 7b question. Do not add market research, business metrics, or a heavyweight experiment to a small phase unless the user requested them.
+
 **Foundation-conflict check.** Scan the remaining `Status: backlog` items. For each Phase Scope concept, ask: does a deferred backlog item later subdivide, replace, or generalise this concept? Common patterns: a single pool that later splits (e.g. "income" → received vs. expected once invoices land), a global setting that later becomes per-record (e.g. flat tax % → per-transaction rate), a singular entity that later becomes plural. Where this is true, the implementer needs to know now so the Phase 1 model extends rather than gets reworked. Record each such case as an Assumption Log row stating the concept is *deliberately a narrowed version* of a deferred backlog item, with the risk being "Phase 1 model collapses the distinction and the deferred item forces a rework." Do not design the solution — just flag the boundary so it isn't baked in by accident.
 
 If clarifications are needed:
@@ -286,6 +300,8 @@ Each phase brief carries everything needed to understand the phase. No external 
      - Close and reopen app: data unchanged
 
   If the sequence cannot be written without ambiguity, the phase scope is unclear or scattered across disconnected pieces. This is the script used to verify the phase at review time.
+
+- **Validation plan** — always include two concise lines: `Decision this informs` and `Evidence to gather`. The decision belongs to the human; phrase it as what the result may help them decide, never as a decision Mano will make. Evidence states what will be used, shown, played, or measured after implementation. Keep this distinct from Exit Criteria: Exit Criteria proves the capability was built; the Validation Plan says how the human will learn whether it is worth keeping, changing, or extending. For a purely technical phase, a concrete measurement or observed integration result is valid evidence.
 
 - **Assumption log** — include only assumptions whose failure would materially change the phase. Zero is acceptable. Always include any concept the Foundation-conflict check (Step 7b) flagged as a deliberately-narrowed version of a deferred backlog item — that boundary failing silently is exactly the kind of assumption this section exists to capture.
 
@@ -394,6 +410,7 @@ Splitting is the one case where editing an existing item's title and context is 
 - **`mano spec`** may only mark a fully addressed spec-gap item from `state.js --spec` as resolved, using `backlog.js resolve-gap`
 <!-- /mano-rule: public-interface-contract-readiness -->
 - **`mano rules`** may only mark a fully addressed item from `state.js --gaps rule-gap` as resolved, using `backlog.js resolve-gap`
+- **`mano stories`** may make only the narrow mid-phase `backlog.js assign` mutation for an exact user-named item in an already-approved active phase; it never hand-edits the file or chooses an item itself
 - No other skill may write to the backlog
 
 Item additions, `backlog → IN_PHASE_STATUS` stamps, phase-close sweeps, and targeted gap resolutions go through `_mano/scripts/backlog.js` (`add` / `assign` / `resolve` / `resolve-gap`). The script resolves the current owner independently and owns the item format and status changes. The only direct hand-edits to `backlog.md` are the `## Core Product Principles` section and an item's title/context when splitting.
@@ -417,7 +434,7 @@ Only finalise after explicit human approval of the phase scope.
    One `--title` per human-approved item. The script flips only items currently `Status: backlog` and reports any it can't match (wrong title, or already moved). If an approved item covers only a *slice* of a backlog item, split it (see **Splitting an item**) before assigning. Never mark candidate items in-phase before approval.
    **Script failing?** Stop and report the error — do not hand-edit `Status` lines.
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-For a user-facing or mobile phase, check both the cumulative `_mano_output/design-brief.md` and the newly approved phase's `PHASE_DIR/design-preview.html`. A preview in another phase or owner namespace, or a legacy root `_mano_output/design-preview.html`, does not cover this phase. Keep `mano ui` visible whenever the current preview is missing or the phase introduces visual or screen-composition work not covered by the design brief, even when every component is reused. Do not read another phase's preview to make this decision.
+For a user-facing or mobile phase, check both the cumulative `_mano_output/design-brief.md` and the newly approved phase's `PHASE_DIR/design-preview.html`. A preview in another phase or owner namespace, or a legacy root `_mano_output/design-preview.html`, does not cover this phase. Keep `mano ui` visible whenever the current preview is missing or the phase introduces visual or screen-composition work not covered by the design brief, even when every component is reused. A familiar or “canonical” widget (keyboard, table, form, toolbar) does not define this phase's composition, responsive layout, hierarchy, states, or accessibility treatment. Do not read another phase's preview to make this decision.
 <!-- /mano-rule: ui-phase-preview-ownership -->
 
 <!-- mano-rule: id=rules-new-category-trigger; incident=start-omitted-rules-for-new-artifact-category; model=not-recorded; date=2026-08-06; eval=start-suggests-rules-for-new-category -->
@@ -426,7 +443,7 @@ Keep `mano rules` visible whenever the phase introduces a **new kind of thing wh
 The test is whether the convention constrains **how future work is written** rather than **what this phase does**. "Showcase examples live in `x/` and are named `y`" is a rule — it binds every future showcase. "This demo runs 8 seconds per layout" is a value, and belongs to its owning artifact, not to rules; the rule version is "every showcase uses the shared per-layout duration defined there." Do not suggest `mano rules` for a domain algorithm or a one-off decision wearing a convention's clothes.
 <!-- /mano-rule: rules-new-category-trigger -->
 
-5. Suggest next actions based on which useful artifacts are still missing or stale. Check which of `tech-spec.md`, `ux-flow.md`, `design-brief.md`, and `project-rules.md` exist in `_mano_output/`, plus whether a current design preview exists when one is useful. Then emit a next-action block that:
+5. Suggest next actions based on which useful artifacts are still missing or stale. Revalidate which of `tech-spec.md`, `ux-flow.md`, `design-brief.md`, and `project-rules.md` exist in `_mano_output/`, plus whether a current design preview exists when one is useful. In auto mode, compare this with the approved chain snapshot; do not silently replace that chain. If finalisation exposes material UX/UI work omitted without an explicit human `skip ux` / `skip ui`, the approved plan is invalid: pause and propose the corrected remaining chain. If the human explicitly skipped it, preserve that decision. Then emit a next-action block that:
    - Lists only artifacts that don't exist yet or need refinement (skipping ones that are already present and current)
    - Ends with a clear **recommended next step** — whichever single action is most likely to unblock implementation. Default recommendation is `mano stories` when the phase is self-contained (pure visual, pure refactor, or the brief already captures the full behaviour contract). Default to `mano spec` first when the phase introduces new data, new APIs, new external dependencies, or new integration points.
    - **"Incremental on existing tech" is not the same as "no new external API."** Recommend `mano spec` first whenever *any* of these hold, even if no new external dependency is added:
@@ -469,9 +486,9 @@ UX, UI, stories, or source code without editing those targets.
 
 After `mano start`, check whether `_mano/hooks/post-start.md` exists. Ignore `_mano/hooks/post-start.example.md`.
 
-If `_mano/hooks/post-start.md` exists, prepare the generic hook block for the final chat response, including its closing `Run it now?` question line. Check its `## Mode` first: a `command` hook runs automatically in both modes (report it in the execution log, never as a suggestion) — see `_mano/workflow.md` → **Optional Post-Skill Hooks**. The rest of this section describes a `suggest` hook. Do not run a `suggest` hook automatically — **unless the run mode is `auto`**, where the hook runs on its own and its findings pause the chain for triage (`_mano/workflow.md` → **Run Mode** → *Hooks in auto mode*); in that case the run replaces the suggestion block rather than adding to it. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
+If `_mano/hooks/post-start.md` exists, check its `## Mode`. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; after the phase approval arms the auto chain it runs automatically and pauses only when findings require triage. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
 
-This step is required even when no scoping update was needed. Mention it in the final chat response before the next-action block.
+This check is required even when no scoping update was needed. In manual or unarmed runs, mention an active suggest hook before the next-action block; during an armed auto chain, run it instead.
 
 ## Forbidden
 

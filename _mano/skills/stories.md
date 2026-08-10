@@ -9,7 +9,7 @@ description: Use to break down a phase brief and any available supporting contex
 
 This skill writes stories a developer can pick up without a meeting and a non-technical person can read and verify. Prefix every message with `[mano stories]:`.
 
-**This skill only writes story files. It never edits, creates, or fixes source code, runs builds, or modifies any file outside the exact `PHASE_DIR/stories/` projected by `state.js --current` — even if the chat history suggests implementation was in progress or the user previously asked for code changes.**
+**This skill only writes story files. It never edits, creates, or fixes source code, runs builds, or modifies any file outside the exact `PHASE_DIR/stories/` projected by `state.js --current` — except for the single deterministic `backlog.js assign` call allowed by “Pulling a backlog item into the open phase” when the user names an exact existing item. Even then, never hand-edit the backlog.**
 
 **This includes other Mano artifacts.** The phase brief, tech spec, UX flow, design brief, and project rules are *inputs* to `mano stories` — read-only. Never edit them, even when the user points out one is wrong. If the user says an input is stale, incorrect, or out of date (e.g. "that assumption in the brief is wrong"), that is a correction to *use* when generating stories and a thing to *flag*, not a license to edit the input. Apply the corrected understanding to the stories, and surface the staleness in your output so the owning skill (`mano start` for the brief, `mano spec` for the tech spec, etc.) can fix the source. Editing another skill's artifact is out of lane — it belongs to whoever owns that artifact, never to `mano stories`.
 
@@ -19,7 +19,7 @@ This skill activates when the user types `mano stories`. When inputs are missing
 
 Read every input fresh from disk — even if it already appears in the conversation context. Artifacts may have been edited earlier this same session (e.g. a spec extended then a decision backported); the filesystem is the source of truth, a context snapshot is not.
 
-First run `node _mano/scripts/state.js --current`. It is the only phase-directory discovery for this skill. If it fails, lacks `STATUS`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `STORIES`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Record the exact values and never construct `phase-N` from `PHASE`. Owner-scoped routing is opt-in; legacy projects still project `phase-N`.
+First run `node _mano/scripts/state.js --current`. It is the only phase-directory discovery for this skill. If it fails, lacks `STATUS`, `MODE`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `STORIES`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Record the exact values and never construct `phase-N` from `PHASE`. Owner-scoped routing is opt-in; legacy projects still project `phase-N`.
 
 **Discard prior chat intent.** If the conversation before this command was about implementing, debugging, or modifying code, that context does not carry over. `mano stories` is a planning turn only. Treat the chat as if it were empty for the purpose of deciding what to do — your job this turn is to produce story files and nothing else. Do not "also" implement, "also" fix the bug under discussion, or "also" touch source code.
 
@@ -138,7 +138,9 @@ Example:
 - **Do not:** no inline colour values (see `project-rules.md §Colour constants`); no new auth logic in this story
 ```
 
-For `story-0` and setup/dependency stories: point to the exact package-manager, dependency, and install-command section in the tech spec. AGENTS.md step 7 requires the implementer to read it; do not create a second copy in the story.
+For `story-0` and setup/dependency stories: point to the exact package-manager, dependency, scaffold, and install-command sections in the tech spec. AGENTS.md step 7 requires the implementer to read them; do not create a second copy in the story.
+
+**Greenfield scaffold gate.** If the application does not have a real manifest yet and bootstrap requires a generator that expects an empty directory, the tech spec must provide a `## Project Scaffold` command through `node _mano/scripts/scaffold.js run`, with a literal `{target}` destination. Put that requirement in `story-0`'s Implementation Reference. A raw generator aimed at `.`, the project root, or a temporary child followed by manual moving/copying is not developer-ready: stop and route the missing guarded command to `mano spec`. Never instruct development to move, rename, delete, or temporarily hide `_mano`, `_mano_output`, `.git`, `AGENTS.md`, or any existing file.
 
 For stateful frontend stories: name what persists across restart, what stays transient, and which module owns it. Include a persistence criterion in `Done when` too — do not bury it only here.
 
@@ -282,7 +284,7 @@ Verify the filename matches this contract before writing any story file.
 
 Run these before writing any stories. Resolve each before moving on.
 
-**0⊘. No-implementation gate (hard stop).** Before any other step, confirm the only file-writing tools you will call this turn target the exact projected `PHASE_DIR/stories/` or its README. If you find yourself about to Edit, Write, or run a shell command that modifies any source file, config, build script, **another Mano artifact (the phase brief, tech spec, UX flow, design brief, project rules)**, another owner's phase, or anything else outside that directory, **stop immediately**. That is not a `mano stories` action. For source code it is implementation; for another artifact it is out-of-lane editing that belongs to the skill that owns it. Either way, belongs to a separate user-initiated turn. This applies even if the chat history shows implementation was the prior intent, even if a bug was just reported, even if the user just told you an input artifact is wrong, and even if it seems efficient to combine. Write the bug story; do not fix the bug. Flag the stale brief; do not edit the brief.
+**0⊘. No-implementation gate (hard stop).** Before any other step, confirm the only file-writing tools you will call this turn target the exact projected `PHASE_DIR/stories/` or its README. The sole exception is the exact `backlog.js assign` command in **Pulling a backlog item into the open phase**, and only after the user names an exact existing item for the already-approved active phase. If you find yourself about to Edit, Write, or run any other shell command that modifies a source file, config, build script, **another Mano artifact (the phase brief, tech spec, UX flow, design brief, project rules, or backlog)**, another owner's phase, or anything else outside that directory, **stop immediately**. That is not a `mano stories` action. For source code it is implementation; for another artifact it is out-of-lane editing that belongs to the skill that owns it. Either way, belongs to a separate user-initiated turn. This applies even if the chat history shows implementation was the prior intent, even if a bug was just reported, even if the user just told you an input artifact is wrong, and even if it seems efficient to combine. Write the bug story; do not fix the bug. Flag the stale brief; do not edit the brief.
 
 **0a. Overloaded screens.** If a UX flow screen handles more than two primary actions (excluding back/close/cancel/continue unless they perform mutation or branching), flag it before story generation.
 
@@ -357,6 +359,8 @@ Use the relevant Mano action for the gap type:
 - Coding convention, accessibility enforcement, reusable implementation contract → `mano rules`
 
 Do not invent final design, UX, rules, or technical contracts inside stories. If the user chooses to continue with a temporary note, mark it clearly in `Notes` as temporary and bounded.
+
+**The options require a human answer.** After presenting a material gap, stop. Never choose option 2 or 3 yourself because the artifact is optional, the approved auto chain omitted it, the control is familiar/canonical, or enough implementation can be guessed. In an armed auto chain this is a named pause with the remaining chain preserved. Continue without the owning artifact only after the human explicitly chooses that path; an explicit `skip ux` / `skip ui` in the approved chain already counts as that choice.
 
 If sufficient guidance exists, do not warn. Include a compact pointer in `Implementation Reference` instead:
 
@@ -581,13 +585,13 @@ Never silently edit approved work.
 
 After `mano stories` completes, check whether `_mano/hooks/post-stories.md` exists. Ignore `_mano/hooks/post-stories.example.md`.
 
-If `_mano/hooks/post-stories.md` exists, prepare the generic hook block for the final chat response. Check its `## Mode` first: a `command` hook runs automatically in both modes (report it in the execution log, never as a suggestion) — see `_mano/workflow.md` → **Optional Post-Skill Hooks**. The rest of this section describes a `suggest` hook. Do not run a `suggest` hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
+If `_mano/hooks/post-stories.md` exists, check its `## Mode`. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
 
-This step is required even when no stories update was needed. Mention it before the next-action block.
+This check is required even when no stories update was needed. In manual or unarmed runs, mention an active suggest hook before the next-action block; during an armed auto chain, run it instead.
 
 ## Forbidden
 
-- Do not write to `_mano_output/backlog.md`. If story planning reveals deferred work, output a suggested backlog item in the execution log and tell the user to run `mano start` or edit the backlog manually.
+- Do not hand-edit `_mano_output/backlog.md`. The only backlog mutation allowed here is `backlog.js assign` for an exact user-named item under **Pulling a backlog item into the open phase**. If ordinary story planning reveals deferred work, output a suggested backlog item in the execution log and tell the user to run `mano start` or edit the backlog manually.
 - **Do not modify a story marked as `done` in the README index.** The file is immutable. Create a new sub-numbered story (e.g. story-4a) that describes the change and references the original. This applies even if the user explicitly asks — explain why and offer the sub-numbered alternative.
 - **Do not write or fix code.** `mano stories` creates story files. If a user reports a bug, create a bug story. Do not touch source code, fix issues, or implement changes directly.
 - **Do not add `Test:` AC unless the tech spec or `project-rules.md` defines a testing convention** that applies to this story.

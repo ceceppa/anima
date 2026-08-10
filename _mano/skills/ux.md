@@ -20,7 +20,7 @@ This skill activates when the user types `mano ux`.
 When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
 
 On activation:
-1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails, lacks `STATUS`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Never construct `phase-N` from the number.
+1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails, lacks `STATUS`, `MODE`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Never construct `phase-N` from the number.
 2. Read the exact projected `BRIEF` path.
 3. Read `_mano_output/ux-flow.md` if it exists.
 4. Read `_mano_output/tech-spec.md` if it exists — know what's technically possible.
@@ -77,15 +77,15 @@ Ignore this file:
 
 `_mano/hooks/post-ux.example.md`
 
-If an active `post-ux.md` hook exists, prepare the generic hook block for the final chat response.
+If an active `post-ux.md` suggest hook exists in a manual or unarmed run, prepare the generic hook block for the final chat response. During an armed auto chain, run it instead.
 
-Check the hook's `## Mode` first: a `command` hook runs automatically in both modes and is reported in the execution log, never as a suggestion (`_mano/workflow.md` → **Optional Post-Skill Hooks**). Do not run a `suggest` hook automatically.
+Check the hook's `## Mode` first. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage (`_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**).
 
 Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook.
 
 This step is required even when no UX update was needed.
 
-Mention it in the final chat response before the next-action block.
+In manual or unarmed runs, mention it in the final chat response before the next-action block. During an armed auto chain, do not print the suggestion block.
 
 This applies whether the skill:
 - created an artifact
@@ -93,7 +93,7 @@ This applies whether the skill:
 - checked existing artifacts and decided no update was needed
 
 Do not print the hook's suggested prompt unless the user asks to run or view the hook.
-Do not execute the hook without explicit user confirmation.
+Do not execute a `suggest` hook without explicit user confirmation in manual or unarmed runs. An armed auto chain is the workflow-defined exception.
 Do not write hook suggestions into generated artifacts.
 
 ## After completion

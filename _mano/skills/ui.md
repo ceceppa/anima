@@ -21,7 +21,7 @@ When inputs are missing, follow the missing-input protocol in `_mano/workflow.md
 
 On activation:
 <!-- mano-rule: id=ui-phase-preview-ownership; incident=cross-phase-preview-overwrite; model=codex; date=2026-08-03; eval=ui-phase-preview,ui-no-phase-preview -->
-1. Run `node _mano/scripts/state.js --ui`. Its `UI INPUT` is the only phase-directory discovery for this skill. Do not list or scan phase folders yourself. If the command fails or its output lacks the `UI INPUT`, `STATUS`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `PREVIEW` lines, stop and report the exact failure. Use the exact projected paths; never construct `phase-N` from the number.
+1. Run `node _mano/scripts/state.js --ui`. Its `UI INPUT` is the only phase-directory discovery for this skill. Do not list or scan phase folders yourself. If the command fails or its output lacks the `UI INPUT`, `STATUS`, `MODE`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `PREVIEW` lines, stop and report the exact failure. Use the exact projected paths; never construct `phase-N` from the number.
 2. `STATUS: BLOCKED` → relay the script's route and stop without writing anything. A phase brief is required because the preview must have an unambiguous phase owner; do not offer to continue without one.
 3. `STATUS: READY` → read the exact `BRIEF` path printed by the script.
 4. Read `_mano_output/ux-flow.md` if it exists — know what screens and navigation exist before designing components.
@@ -227,15 +227,15 @@ Ignore this file:
 
 `_mano/hooks/post-ui.example.md`
 
-If an active `post-ui.md` hook exists, prepare the generic hook block for the final chat response.
+If an active `post-ui.md` suggest hook exists in a manual or unarmed run, prepare the generic hook block for the final chat response. During an armed auto chain, run it instead.
 
-Check the hook's `## Mode` first: a `command` hook runs automatically in both modes and is reported in the execution log, never as a suggestion (`_mano/workflow.md` → **Optional Post-Skill Hooks**). Do not run a `suggest` hook automatically.
+Check the hook's `## Mode` first. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage (`_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**).
 
 Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook.
 
 This step is required even when no UI update was needed.
 
-Mention it in the final chat response before the next-action block.
+In manual or unarmed runs, mention it in the final chat response before the next-action block. During an armed auto chain, do not print the suggestion block.
 
 This applies whether the skill:
 - created an artifact
@@ -243,7 +243,7 @@ This applies whether the skill:
 - checked existing artifacts and decided no update was needed
 
 Do not print the hook's suggested prompt unless the user asks to run or view the hook.
-Do not execute the hook without explicit user confirmation.
+Do not execute a `suggest` hook without explicit user confirmation in manual or unarmed runs. An armed auto chain is the workflow-defined exception.
 Do not write hook suggestions into generated artifacts.
 
 ## Forbidden

@@ -46,6 +46,7 @@ const path = require("node:path");
 const {
   phaseRef,
   phaseRouting,
+  resolveConfiguredMode,
   reviewHeadingPattern,
 } = require("./phase.js");
 
@@ -285,8 +286,11 @@ function assertBacklogItemsWellFormed(text) {
 function scanGaps(projectRoot, type) {
   const backlog = readGapText(path.join(projectRoot, "_mano_output", "backlog.md"));
   const items = extractBacklogItems(backlog, { status: "backlog", type });
+  const run = resolveConfiguredMode(projectRoot);
   return {
     projectRoot,
+    runMode: run.mode,
+    runModeSource: run.source,
     type,
     status: "backlog",
     count: items.length,
@@ -337,6 +341,7 @@ function scanSpec(projectRoot) {
     owner: routing.owner,
     ownerSource: routing.ownerSource,
     runMode: routing.runMode,
+    runModeSource: routing.runModeSource,
     phase,
     phaseId: ref ? ref.id : null,
     phaseDir: ref ? ref.relativeDir : null,
@@ -365,6 +370,7 @@ function scanUi(projectRoot) {
     status: "BLOCKED",
     owner: projectState.owner,
     runMode: projectState.runMode,
+    runModeSource: projectState.runModeSource,
     phase,
     phaseId: projectState.phaseId,
     phaseDir: projectState.phaseDir,
@@ -758,6 +764,7 @@ function renderScope(s) {
 // backlog.md is both unnecessary and forbidden.
 function renderGaps(g) {
   const L = ["--- GAP INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
+  L.push(`MODE: ${g.runMode}`);
   L.push(`TYPE: ${g.type}`);
   L.push(`STATUS: ${g.status}`);
   L.push(`COUNT: ${g.count}`);
@@ -935,6 +942,8 @@ function renderJson(s) {
     owner: s.owner,
     ownerSource: s.ownerSource,
     ownerMode: s.ownerMode,
+    runMode: s.runMode,
+    runModeSource: s.runModeSource,
     otherOwners: s.otherOwners,
     phase: s.phase,
     phaseId: s.phaseId,

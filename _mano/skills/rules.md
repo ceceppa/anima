@@ -18,8 +18,8 @@ This skill defines project rules that are useful now — not rules for a project
 This skill activates when the user types `mano rules`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
 
 On activation:
-1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails or lacks `STATUS`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, stop and report the exact failure. `STATUS: NO_PHASE` is allowed for a gap-only rules update; in that case there is no phase brief to read. Never construct `phase-N` from the number.
-2. Run `node _mano/scripts/state.js --gaps rule-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `rule-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `TYPE: rule-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
+1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails or lacks `STATUS`, `MODE`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, stop and report the exact failure. `STATUS: NO_PHASE` is allowed for a gap-only rules update; in that case there is no phase brief to read. Never construct `phase-N` from the number.
+2. Run `node _mano/scripts/state.js --gaps rule-gap`. Its `GAP INPUT` is the complete backlog-derived context for this skill: only unresolved `rule-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `MODE:`, `TYPE: rule-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result.
 3. Read `_mano_output/tech-spec.md` if it exists. If it doesn't, warn the user that the rules will be higher-level and offer to proceed from the phase brief or run `mano spec` first.
 4. Read `_mano_output/ux-flow.md` and `_mano_output/design-brief.md` if they exist.
 5. Read `_mano_output/project-rules.md` if it exists.
@@ -276,9 +276,9 @@ artifact on another skill's behalf. A direct `project-rules.md` correction is
 
 After `mano rules` completes, check whether `_mano/hooks/post-rules.md` exists. Ignore `_mano/hooks/post-rules.example.md`.
 
-If `_mano/hooks/post-rules.md` exists, prepare the generic hook block for the final chat response. Check its `## Mode` first: a `command` hook runs automatically in both modes (report it in the execution log, never as a suggestion) — see `_mano/workflow.md` → **Optional Post-Skill Hooks**. The rest of this section describes a `suggest` hook. Do not run a `suggest` hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
+If `_mano/hooks/post-rules.md` exists, check its `## Mode`. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
 
-This step is required even when no rules update was needed. Mention it in the final chat response before the next-action block.
+This check is required even when no rules update was needed. In manual or unarmed runs, mention an active suggest hook before the next-action block; during an armed auto chain, run it instead.
 
 ## After completion
 

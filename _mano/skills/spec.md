@@ -21,7 +21,7 @@ This skill activates when the user types `mano spec`. When inputs are missing, f
 
 On activation:
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
-1. Run `node _mano/scripts/state.js --spec`. Its `SPEC INPUT` is the complete backlog-derived context for this skill: the selected owner namespace's exact current-phase item blocks plus unresolved `spec-gap` items. **Do not open `_mano_output/backlog.md` before or after this command.** Treat the projection as valid only when all of these integrity checks pass: the exact opening `--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---` and exact closing `--- END SPEC INPUT ---` sentinels are present; `STATUS: READY`, `OWNER:`, `PHASE:`, `PHASE_ID:`, `PHASE_DIR:`, `BRIEF:`, `IN_PHASE_STATUS:`, `IN_PHASE_COUNT:`, and `SPEC_GAP_COUNT:` are present; `END_IN_PHASE_COUNT` and `END_SPEC_GAP_COUNT` equal their matching header counts; and the number and sequence of matching BEGIN/END item envelopes equals each count. **Any tool/runtime notice that output was truncated, elided, or omitted invalidates the projection regardless of which sentinels survived.** If the command fails or any integrity check fails, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result. Never construct `phase-N` from the numeric field; use the exact projected paths. Phase-item context is input evidence, not permission to expand the approved phase: if it conflicts with the phase brief, surface the conflict instead of silently combining them.
+1. Run `node _mano/scripts/state.js --spec`. Its `SPEC INPUT` is the complete backlog-derived context for this skill: the selected owner namespace's exact current-phase item blocks plus unresolved `spec-gap` items. **Do not open `_mano_output/backlog.md` before or after this command.** Treat the projection as valid only when all of these integrity checks pass: the exact opening `--- SPEC INPUT (from the state script — do NOT open _mano_output/backlog.md) ---` and exact closing `--- END SPEC INPUT ---` sentinels are present; `STATUS: READY`, `MODE:`, `OWNER:`, `PHASE:`, `PHASE_ID:`, `PHASE_DIR:`, `BRIEF:`, `IN_PHASE_STATUS:`, `IN_PHASE_COUNT:`, and `SPEC_GAP_COUNT:` are present; `END_IN_PHASE_COUNT` and `END_SPEC_GAP_COUNT` equal their matching header counts; and the number and sequence of matching BEGIN/END item envelopes equals each count. **Any tool/runtime notice that output was truncated, elided, or omitted invalidates the projection regardless of which sentinels survived.** If the command fails or any integrity check fails, stop and report the exact failure; do not inspect the script source, another skill such as `start.md`, or the backlog to reconstruct its result. Never construct `phase-N` from the numeric field; use the exact projected paths. Phase-item context is input evidence, not permission to expand the approved phase: if it conflicts with the phase brief, surface the conflict instead of silently combining them.
 <!-- /mano-rule: public-interface-contract-readiness -->
 2. Read the phase brief from the exact `BRIEF` path printed by the projection.
 3. Read `_mano_output/tech-spec.md` if it exists.
@@ -241,6 +241,18 @@ When a package manager is detectable, name it explicitly and use matching comman
 
 Include developer tooling (linting, formatting, type-checking, testing, codegen) when it's a meaningful project decision. If the stack makes the choice obvious or it's pure boilerplate, keep it compact.
 
+### Greenfield scaffold safety
+
+When the project has no real application manifest yet and the chosen stack normally begins with a project generator, add a `## Project Scaffold` section containing the exact generator command wrapped by Mano's staged runner:
+
+```bash
+node _mano/scripts/scaffold.js run --name [stable-project-slug] -- [generator command with {target} as its destination]
+```
+
+`{target}` is a literal required token, not prose. The runner replaces it with an empty directory outside the project, preflights the generated tree, and merges only non-conflicting files. Never specify `.` or the project root as the generator's destination. Never prescribe moving `_mano`, `_mano_output`, `.git`, `AGENTS.md`, or any existing project file out of the way and restoring it later. Do not use a raw generator command plus `cp`, `mv`, `rsync`, or manual cleanup as an alternative.
+
+Keep the wrapper only for creation of the application scaffold. Ordinary dependency additions still use the package-manager install commands above. If the app already has a real manifest or lockfile, reconcile the spec with it instead of proposing a new scaffold.
+
 ## Domain model completeness check
 
 When the phase includes domain mechanics, game rules, workflows, entities, state machines, or non-trivial business logic, `mano spec` must define the minimum data model needed to implement and test the phase.
@@ -331,9 +343,9 @@ targets.
 
 After the spec decision is complete, always check whether `_mano/hooks/post-spec.md` exists. Ignore `_mano/hooks/post-spec.example.md`.
 
-If `_mano/hooks/post-spec.md` exists, prepare the generic hook block for the final chat response. Check its `## Mode` first: a `command` hook runs automatically in both modes (report it in the execution log, never as a suggestion) — see `_mano/workflow.md` → **Optional Post-Skill Hooks**. The rest of this section describes a `suggest` hook. Do not run a `suggest` hook automatically. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
+If `_mano/hooks/post-spec.md` exists, check its `## Mode`. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
 
-This step is required even when no spec update was needed. Mention it in the final chat response before the next-action block.
+This check is required even when no spec update was needed. In manual or unarmed runs, mention an active suggest hook before the next-action block; during an armed auto chain, run it instead.
 
 ## After completion
 

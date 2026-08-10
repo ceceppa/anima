@@ -46,6 +46,13 @@
 
 <!-- What a real person can do when this phase is done. -->
 
+## Validation Plan
+
+<!-- Keep this lightweight. The human owns the decision; Mano helps make the evidence path explicit before implementation. -->
+
+- **Decision this informs:** [What the human may decide after experiencing the result]
+- **Evidence to gather:** [What will be used, shown, played, or measured]
+
 ## Assumption Log
 
 | Assumption | Risk if wrong |

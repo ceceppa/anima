@@ -39,7 +39,7 @@ If a platform skill named `mano` is not available, that is not an error. Continu
 
 The skill name uses a **hyphen, never a colon**: `mano import` → `mano-import` (read `_mano/skills/import.md`), not `mano:import`. The colon form is plugin-namespace syntax and matches no Mano skill. If a `mano <action>` seems unavailable, try the hyphenated `mano-<action>` before concluding it doesn't exist.
 
-Only use external/platform skills when the user explicitly invokes them or when a Mano hook asks whether to run one and the user confirms.
+Only use external/platform skills when the user explicitly invokes them or an active Mano hook authorizes the review: explicit confirmation for a suggest hook in manual or unarmed runs, or the automatic suggest-hook rule during an armed auto chain. Running the review never authorizes applying its findings.
 
 ### Implementing a story
 
@@ -56,7 +56,7 @@ For each snapshotted story, follow steps 6–11 as its own AC-bounded implementa
 **`yolo` is an execution-count override, not a scope or safety override.** It does not waive story order, acceptance criteria, project rules, required verification, gap stops, script-failure stops, or any prohibition. Stop at the first blocked or failed story: keep earlier completed rows `done`, leave the current and later rows pending, do not skip or roll back, and report the blocker plus any partial edits. YOLO grants no authority beyond ordinary `mano dev`: story-required implementation actions remain allowed, but it never commits, pushes, runs `mano review`, or starts another phase merely because `yolo` was supplied.
 <!-- /mano-rule: dev-yolo-batch -->
 
-1. **Find what to implement by running the state script — do not `ls` for the phase or infer it from the conversation.** Run `node _mano/scripts/state.js --next`. It reads the filesystem *this turn* and reports the selected `OWNER`, exact `PHASE_ID`, numeric `PHASE`, next pending story (`STORY:` / `FILE:`), and full ordered story list. Obey its `OWNER`/`PHASE_ID`/`STORY`/`FILE`; never construct `phase-N` from the number. With no owner configured, the projection preserves legacy `phase-N` routing. If it reports nothing to implement, follow the line it prints and stop. **If the script cannot run, stop and report the exact failure — do not scan for the phase by hand or guess it from context.**
+1. **Find what to implement by running the state script — do not `ls` for the phase or infer it from the conversation.** Run `node _mano/scripts/state.js --next`. It reads the filesystem *this turn* and reports `MODE`, the selected `OWNER`, exact `PHASE_ID`, numeric `PHASE`, next pending story (`STORY:` / `FILE:`), and full ordered story list. If `MODE` or any routing field is absent, stop and report the malformed projection. Obey its `OWNER`/`PHASE_ID`/`STORY`/`FILE`; never construct `phase-N` from the number. With no owner configured, the projection preserves legacy `phase-N` routing. If it reports nothing to implement, follow the line it prints and stop. **If the script cannot run, stop and report the exact failure — do not scan for the phase by hand or guess it from context.** Refresh `MODE` on every later state read; a change affects the handoff after the current safe unit, not story routing.
 2. The script's `Stories` block is the exact active phase's stories index, normalized — it already applies "Status is the only signal" and marks the next pending row with `→`. Use it for steps 3–5; do not open another owner or phase index.
 3. **Hard stops.** If every story in the index is already `done`, STOP. Do not start, scope, or plan a new phase. All stories being done means the phase is built, not closed: `mano review` is mandatory before `mano start` can scope another phase. Output one line stating that the phase is built and must be closed with `mano review`, then stop. Do not call the phase complete or present `mano start` as an equal option. If a user-requested story does not exist but other rows are still pending, stop and say the requested number was not found; name the actual next pending story from the state output. Do not describe that phase as built or complete. These are hard stops, not guidelines.
 
@@ -72,6 +72,8 @@ For each snapshotted story, follow steps 6–11 as its own AC-bounded implementa
 <!-- /mano-rule: public-interface-contract-readiness -->
 7. If the story is bootstrap, setup, tooling, infrastructure, or dependency-related, also read `_mano_output/tech-spec.md` before implementing. Treat library choices, package-manager choice, and install commands there as normative unless the story file already repeats them exactly.
 8. Execute install commands exactly as written. Do not merge separate command groups, switch tools, or normalize mixed-tool instructions into a single package-manager invocation unless the story or tech spec explicitly tells you to. In particular, keep `npx expo install` commands separate from `npm install` or other package-manager commands so Expo can resolve SDK-compatible versions.
+
+   **Greenfield scaffold safety is a hard stop.** A project generator that creates an application root or requires an empty destination may run only through the exact guarded command in `_mano_output/tech-spec.md §Project Scaffold`: `node _mano/scripts/scaffold.js run ... -- ... {target}`. Never aim a raw generator at `.`, the project root, or a temporary child that you later merge by hand. Never move, rename, delete, or temporarily hide existing files to make the root look empty—especially `_mano`, `_mano_output`, `.git`, `AGENTS.md`, `CLAUDE.md`, or `.cursorrules`. Do not substitute `cp`, `mv`, `rsync`, or a hand-written merge. If the guarded command is absent, malformed, fails, or reports a collision, stop and report it; route an absent/malformed command to `mano spec`, and never improvise around a runner failure. `yolo` and auto mode do not relax this rule.
 9. If the story involves user-entered state, forms, onboarding drafts, settings, or other local data, check whether the story or tech spec says that data should persist across app restarts. If it should, treat restart persistence as part of the required behaviour, not as an optional enhancement.
 10. Read `_mano_output/project-rules.md` only when the story explicitly points to a rule there, something remains ambiguous after reading the story and any mandatory tech-spec pre-read, or you need fuller context behind a rule already summarized in the story.
 11. After implementing, mark the story `done` via the index writer — do **not** hand-edit the README table:
@@ -82,7 +84,7 @@ For each snapshotted story, follow steps 6–11 as its own AC-bounded implementa
 12. **Final step — output exactly one line, then stop.** Your entire chat response for the implementation is a single line: `Story [N] done — status updated in stories/README.md`. Do NOT precede it with a recap, a "let me summarize what was done", a ✅ checklist of created files, an "AC met" list, or any narrative. The story already contains the acceptance criteria; restating them is pure noise. Exactly two additions are permitted, and only when one genuinely applies: (a) a short note for a real deviation — an AC you could not meet, an assumption you made, follow-up needed; and (b) a project-relevant decision worth preserving (a colour value, dimension, performance budget, accessibility measurement, architectural pattern, or library quirk discovered in practice), surfaced with an offer to capture it in the right artifact per "Implementation Output Discipline" below. Neither applies → the one line is the whole response. Nothing else is permitted. This is a hard stop, not a guideline.
 
 <!-- mano-rule: id=dev-yolo-batch; incident=explicit-yolo-stopped-after-one-story; model=codex; date=2026-08-03; eval=dev-yolo-batch,dev-yolo-blocker,dev-default-single -->
-**YOLO-only override to step 12:** do not output or stop after each successfully checkpointed story. When every story in the initial snapshot is done and a final state read shows no pending rows in that phase, output exactly one aggregate line — `Stories [comma-and-space-separated story numbers] done — statuses updated in stories/README.md` — then stop; for stories 1 through 3, the literal line is `Stories 1, 2, 3 done — statuses updated in stories/README.md`. That final no-pending state is the YOLO batch's success check; do not also emit step 3's ordinary phase-built / `mano review` response or append any suffix. If the initial snapshot contained one story, use the ordinary singular line. If the batch stops early or new pending work appears, output one concise deviation line naming the completed story numbers, the current pending story, and the blocker; never claim the phase is built.
+**YOLO-only override to step 12:** do not output or stop after each successfully checkpointed story. When every story in the initial snapshot is done and a final state read shows no pending rows in that phase, output exactly one aggregate line — `Stories [comma-and-space-separated story numbers] done — statuses updated in stories/README.md` — then stop; for stories 1 through 3, the literal line is `Stories 1, 2, 3 done — statuses updated in stories/README.md`. That final no-pending state is the YOLO batch's success check; do not also emit step 3's ordinary phase-built / `mano review` response or append any suffix. If the initial snapshot contained one story, use the ordinary singular line. If the batch stops early or new pending work appears, output one concise deviation line naming the completed story numbers, the current pending story, and the blocker; never claim the phase is built. **Auto-chain exception:** when `mano dev yolo` is the terminal action of an armed `mano mode auto` chain, this aggregate/deviation line is the dev action log, then emit the required `[mano auto]` closing block from `_mano/workflow.md`. That closing block is not an implementation summary and is the only permitted content after the line.
 <!-- /mano-rule: dev-yolo-batch -->
 
 ## Implementation Output Discipline
@@ -92,7 +94,7 @@ When implementing a Mano story, the implementing agent writes code and updates t
 It also does not print these to chat. After implementing, the only required chat output is a single line confirming the story is done and its status was moved to `done` in the stories README — for example: `Story 4 done — status updated in stories/README.md`. Do not restate acceptance criteria, list "AC Met", enumerate created files, or write an implementation summary. The acceptance criteria already live in the story; echoing them back adds no information and only grows the conversation. Report only deviations: AC that could not be met, assumptions made, or follow-up needed. If there are none, the one-line confirmation is the complete response.
 
 <!-- mano-rule: id=dev-yolo-batch; incident=explicit-yolo-stopped-after-one-story; model=codex; date=2026-08-03; eval=dev-yolo-batch,dev-yolo-blocker,dev-default-single -->
-In YOLO mode, "after implementing" means after the whole initial snapshot, not after each story. Produce no interim chat messages; the aggregate or interrupted-batch line defined above is the single implementation response.
+In YOLO mode, "after implementing" means after the whole initial snapshot, not after each story. Produce no interim chat messages; the aggregate or interrupted-batch line defined above is the single implementation response, except for the required auto-chain closing block when this batch is the last action of an armed auto run.
 <!-- /mano-rule: dev-yolo-batch -->
 
 If implementation produces project-relevant decisions worth preserving — colour values, dimensions, performance budgets, accessibility measurements, architectural patterns, technique choices, library quirks discovered in practice — the agent surfaces them in chat and offers to capture them in the appropriate artifact:
@@ -180,7 +182,7 @@ Examples:
 
 Ignore `.example.md` hooks.
 
-A hook's `## Mode` section decides how it runs. `suggest` (the default, and the kind assumed everywhere below) produces findings and is never run automatically in manual mode — ask first. `command` names one command in a `## Command` section and **always runs, in both modes**, after the artifacts are written: the hook file is the authorization, so do not ask. Report it in one line of the execution log, take the command only from the hook file, and on failure report the exact error without retrying, fixing the user's script, or hand-editing artifacts to compensate. Full contract: `_mano/workflow.md` → **Optional Post-Skill Hooks**.
+A hook's `## Mode` section decides how it runs. `suggest` (the default, and the kind assumed everywhere below) produces findings and is never run automatically in manual mode or an unarmed run — ask first. During an armed auto chain it runs automatically. `command` names one command in a `## Command` section and **always runs, in both modes**, after the artifacts are written: the hook file is the authorization, so do not ask. Report it in one line of the execution log, take the command only from the hook file, and on failure report the exact error without retrying, fixing the user's script, or hand-editing artifacts to compensate. Full contract: `_mano/workflow.md` → **Optional Post-Skill Hooks**.
 
 <!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
 When a just-run `post-start`, `post-spec`, or `post-rules` hook has printed
@@ -192,7 +194,7 @@ and must not be edited here. Apply the smallest selected change and preserve
 unmentioned content and adjacent values.
 <!-- /mano-rule: post-hook-findings-triage -->
 
-If an active `suggest` hook exists, mention it in the final response before the next-action block (a `command` hook has already run — report it in the execution log instead):
+In manual mode or an unarmed run, if an active `suggest` hook exists, mention it in the final response before the next-action block (a `command` hook has already run — report it in the execution log instead):
 
 ```text
 Active post-[skill] hook found: `_mano/hooks/post-[skill].md`.
@@ -201,13 +203,13 @@ Active post-[skill] hook found: `_mano/hooks/post-[skill].md`.
 -> Run it now? (yes / not yet)
 ```
 
-The `Run it now?` line is part of the template, not optional — omitting it means the user was never asked.
+In manual mode or an unarmed run, the `Run it now?` line is part of the template, not optional — omitting it means the user was never asked. During an armed auto chain, run the `suggest` hook automatically; no suggestion block is printed. No findings means continue, while findings pause for numbered triage under `_mano/workflow.md`.
 
 Do not mention specific third-party or external skill names in generic Mano output.
 
 Do not print the hook's suggested prompt unless the user asks to run or view the hook.
 
-Do not execute a `suggest` hook without explicit user confirmation.
+Do not execute a `suggest` hook without explicit user confirmation in manual mode or an unarmed run. An armed auto chain is the explicit exception defined by `_mano/workflow.md`.
 
 Do not write hook suggestions into generated artifacts.
 <!-- MANO:END -->

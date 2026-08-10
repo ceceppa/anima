@@ -2,7 +2,9 @@
 suggest
 
 <!-- Two kinds of hook. `suggest` (this one) produces findings: Mano asks
-     before running it and you approve each finding. Change this to `command`
+     before running it in manual/unarmed runs, runs it during an armed auto
+     chain, and you approve
+     each finding. Change this to `command`
      and add a `## Command` section naming one command to instead run that
      command automatically, every time, after this skill. See hooks/README.md. -->
 
@@ -56,12 +58,12 @@ Do not modify any files. Report findings only. If the user wants changes made, t
 
 ## Instruction for Mano
 
-When this hook is active, do not run it automatically. (This applies to `## Mode: suggest`, which is what this file declares. If you change `## Mode` to `command`, the mode wins over this line and the command runs automatically — see hooks/README.md.)
+When this hook is active in a manual or unarmed run, do not run it automatically. During an armed auto chain, run this `suggest` hook automatically and pause only when findings require triage. If you change `## Mode` to `command`, the command runs automatically in both modes — see hooks/README.md.
 
-After the related Mano skill completes, mention that the hook is available and ask whether to run it.
+In a manual or unarmed run, after the related Mano skill completes, mention that the hook is available and ask whether to run it.
 
 Do not print the hook's suggested prompt unless the user asks to run or view the hook.
 
 Do not mention specific external skill names in generic Mano output.
 
-Do not execute the hook without explicit user confirmation.
+Do not execute the hook without explicit user confirmation in a manual or unarmed run. An armed auto chain is the exception above.

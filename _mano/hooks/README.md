@@ -17,7 +17,7 @@ A hook's `## Mode` section says what kind it is. The two produce different thing
 
 | `## Mode` | Produces | When it runs | Approval |
 |-----------|----------|--------------|----------|
-| `suggest` (default) | findings — an opinion you have to weigh | Mano asks first; runs automatically in `mano mode auto` | Findings need your per-item approval before anything is edited |
+| `suggest` (default) | findings — an opinion you have to weigh | Mano asks first in manual or unarmed runs; runs automatically during an armed auto chain | Findings need your per-item approval before anything is edited |
 | `command` | an exit code — a mechanical side effect | Always, every time, in both modes | None — writing the hook file is the authorization |
 
 A hook with no `## Mode` section is `suggest`, so hooks written before command mode existed keep working unchanged.
@@ -29,8 +29,8 @@ The line between them is *judgement vs mechanism*. A specialist review is an opi
 Use these for optional external review, validation, or specialist checks. Mano will:
 
 - detect the active hook
-- mention it after the related skill finishes, with its purpose
-- ask whether to run it, and wait for you
+- in manual mode or an unarmed run, mention it after the related skill finishes, ask whether to run it, and wait for you
+- during an armed auto chain, run it after the related skill; continue when it has no findings, or pause for per-item triage when it does
 
 Mano will not print the hook's prompt unless you ask, name specific external skills in generic output, or modify files from a hook's findings without your approval.
 
