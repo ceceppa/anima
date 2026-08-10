@@ -122,9 +122,9 @@ func test_play_reveals_every_tile_via_a_grid_motion_carrying_its_icon_along():
 	var icons: Array = grid.get("_icon_nodes")
 	assert_gt(tiles.size(), 0, "sanity: at least one tile should be placed")
 	for tile in tiles:
-		assert_almost_eq(tile.modulate.a, 0.0, 0.01, "sanity: tiles should start hidden before play() reveals them")
+		assert_almost_eq(tile.modulate.a, 1.0, 0.01, "sanity: a freshly built tile starts opaque — play() is what hides it again right before animating the reveal")
 	for icon in icons:
-		assert_almost_eq(icon.modulate.a, 1.0, 0.01, "sanity: an icon's own modulate should start fully opaque — its tile owns the reveal, not the icon itself")
+		assert_almost_eq(icon.modulate.a, 0.0, 0.01, "sanity: a freshly built icon starts hidden — play() makes it opaque immediately, so it only becomes visible as its own tile's modulate rises during the reveal")
 
 	var playback: AnimaPlayback = grid.play()
 	assert_not_null(playback, "play() should return a real AnimaPlayback")
@@ -162,8 +162,8 @@ func test_play_pulses_every_tiles_scale_relative_to_its_own_resting_scale():
 		peak_x[0] = maxf(peak_x[0], tiles[0].scale.x)
 		peak_x[1] = maxf(peak_x[1], tiles[1].scale.x)
 
-	assert_almost_eq(peak_x[0], 0.4 + 0.25, 0.01, "a tile should peak 0.25 above its own resting scale")
-	assert_almost_eq(peak_x[1], 0.8 + 0.25, 0.01, "a differently-scaled tile should peak 0.25 above its own resting scale, not another tile's")
+	assert_almost_eq(peak_x[0], 0.4 + 0.15, 0.01, "a tile should peak 0.15 above its own resting scale (AnimaGridMotionFactory.DEFAULT_ITEM_MOTION)")
+	assert_almost_eq(peak_x[1], 0.8 + 0.15, 0.01, "a differently-scaled tile should peak 0.15 above its own resting scale, not another tile's")
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 	assert_almost_eq(tiles[0].scale.x, 0.4, 0.01, "a tile should settle back to its own resting scale, not a shared literal")
 	assert_almost_eq(tiles[1].scale.x, 0.8, 0.01, "a differently-scaled tile should settle back to its own resting scale, not a shared literal")

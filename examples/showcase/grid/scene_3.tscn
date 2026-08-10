@@ -1,0 +1,166 @@
+[gd_scene format=3 uid="uid://dplktaq1c58e3"]
+
+[ext_resource type="Script" uid="uid://ci3r4grcll1ox" path="res://examples/showcase/grid/scene_3.gd" id="1_j1qsw"]
+[ext_resource type="PackedScene" uid="uid://6cvv7i7dc81s" path="res://examples/showcase/grid/inventory_grid.tscn" id="2_jtx2b"]
+[ext_resource type="Texture2D" uid="uid://cwvid6dr06cwb" path="res://examples/showcase/grid/assets/background.jpg" id="2_wsp2t"]
+[ext_resource type="PackedScene" uid="uid://klfp21swkcqx" path="res://examples/showcase/shared/label.tscn" id="4_e0wbu"]
+[ext_resource type="Texture2D" uid="uid://cvw04k6wdfjv0" path="res://examples/showcase/shared/logo.png" id="5_4yuk7"]
+[ext_resource type="Shader" uid="uid://bh7aipfjhjwua" path="res://examples/showcase/grid/scene_3.gdshader" id="5_ipodl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ipodl"]
+shader = ExtResource("5_ipodl")
+shader_parameter/bg_color = Color(0.08, 0.09, 0.12, 0.85)
+shader_parameter/border_color = Color(0.2, 0.25, 0.35, 0.5)
+shader_parameter/glow_color = Color(1, 0.75, 0.2, 1)
+shader_parameter/aspect_ratio = 10.0
+shader_parameter/corner_radius = 0.3950000187625
+shader_parameter/border_width = 0.010000000475
+shader_parameter/line_length = 0.94800004340006
+shader_parameter/speed = 1.800000323
+shader_parameter/glow_intensity = 4.150000149625
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4yuk7"]
+
+[node name="Scene3" type="Control" unique_id=163781644]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_j1qsw")
+
+[node name="Background" type="TextureRect" parent="." unique_id=95545529]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_wsp2t")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Scrim" type="ColorRect" parent="." unique_id=988085007]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="InventoryGrid" parent="." unique_id=697095800 instance=ExtResource("2_jtx2b")]
+unique_name_in_owner = true
+layout_mode = 1
+tile_scale = 2.0
+min_gap = 36.0
+
+[node name="Label" parent="." unique_id=1150949138 instance=ExtResource("4_e0wbu")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = -52.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 48
+text = "Anima.Grid(%Grid).radial().play()"
+vertical_alignment = 1
+autowrap_mode = 0
+
+[node name="OverlayBg" type="ColorRect" parent="." unique_id=457689545]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Control2" type="CenterContainer" parent="." unique_id=1335415034]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label3" parent="Control2" unique_id=1580916577 instance=ExtResource("4_e0wbu")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 120
+text = "13+ Built-in Formulas and more..."
+vertical_alignment = 1
+autowrap_mode = 0
+
+[node name="Control" type="Control" parent="." unique_id=928861085]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Control" unique_id=1360600979]
+material = SubResource("ShaderMaterial_ipodl")
+layout_mode = 0
+offset_left = 440.0
+offset_top = 1015.0
+offset_right = 2448.0
+offset_bottom = 1222.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_4yuk7")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/Panel" unique_id=336835526]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+metadata/_edit_lock_ = true
+
+[node name="Label2" parent="Control/Panel/MarginContainer" unique_id=1679890726 instance=ExtResource("4_e0wbu")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 96
+text = "https://github.com/ceceppa/anima"
+vertical_alignment = 1
+autowrap_mode = 0
+
+[node name="Label3" parent="Control" unique_id=984016823 instance=ExtResource("4_e0wbu")]
+layout_mode = 1
+anchors_preset = 8
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -999.0
+offset_top = 464.0
+offset_right = 999.0
+offset_bottom = 763.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 120
+text = "Open source Animation library
+for Godot"
+vertical_alignment = 1
+autowrap_mode = 0
+
+[node name="Logo" type="Sprite2D" parent="Control" unique_id=648383307]
+position = Vector2(1378, 608)
+texture = ExtResource("5_4yuk7")

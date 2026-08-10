@@ -1,0 +1,184 @@
+[gd_scene format=3 uid="uid://ceihkwuay2yg2"]
+
+[ext_resource type="Script" uid="uid://bnx5utnqx0uti" path="res://examples/showcase/grid/scene_2.gd" id="1_boxtn"]
+[ext_resource type="PackedScene" uid="uid://klfp21swkcqx" path="res://examples/showcase/shared/label.tscn" id="1_myjcb"]
+[ext_resource type="Texture2D" uid="uid://bneowquirlwnu" path="res://examples/showcase/grid/assets/vanilla-code.png" id="2_boxtn"]
+[ext_resource type="Shader" uid="uid://cyxl6kwgdv52r" path="res://examples/showcase/grid/scene_2.gdshader" id="3_f7ki5"]
+[ext_resource type="Texture2D" uid="uid://bv0cyt1t4ey45" path="res://examples/showcase/grid/assets/anima-code.png" id="5_boxtn"]
+[ext_resource type="FontFile" uid="uid://dmxcp08tqg8hq" path="res://examples/showcase/Montserrat-Black.ttf" id="6_boxtn"]
+[ext_resource type="Shader" uid="uid://bh7aipfjhjwua" path="res://examples/showcase/grid/scene_3.gdshader" id="6_k2xql"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m5xtv"]
+shader = ExtResource("3_f7ki5")
+shader_parameter/inner_color = Color(0.50956357, 0.12835406, 0.16007765, 0)
+shader_parameter/outer_color = Color(0.45895782, 0.15594886, 0.1931151, 0.163)
+shader_parameter/border_color = Color(0.20906562, 0.050708726, 0.07016479, 1)
+shader_parameter/rect_size = Vector2(300, 300)
+shader_parameter/corner_radius = 0.0
+shader_parameter/border_width = 0.0
+shader_parameter/blur_size = 9.999999747e-05
+shader_parameter/radial_center = Vector2(0.5, 0.4)
+shader_parameter/radial_exponent = 1.2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bq8mu"]
+bg_color = Color(0.14117648, 0.14117648, 0.14117648, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s5a7s"]
+shader = ExtResource("6_k2xql")
+shader_parameter/bg_color = Color(0.07846785, 0.09320182, 0.11774104, 0)
+shader_parameter/border_color = Color(0.2, 0.25, 0.35, 0.5)
+shader_parameter/glow_color = Color(1, 0.75, 0.2, 1)
+shader_parameter/aspect_ratio = 10.0
+shader_parameter/corner_radius = 0.3950000187625
+shader_parameter/border_width = 0.010000000475
+shader_parameter/line_length = 0.94800004340006
+shader_parameter/speed = 1.800000323
+shader_parameter/glow_intensity = 4.150000149625
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k2xql"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m5xtv"]
+bg_color = Color(0.5429818, 0.5429818, 0.54298174, 1)
+
+[node name="Scene2" type="Panel" unique_id=558147064]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_boxtn")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1069593019]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Wrapper" type="HBoxContainer" parent="MarginContainer" unique_id=982817753]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VanillaPanel" type="VBoxContainer" parent="MarginContainer/Wrapper" unique_id=2069395416]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="Vanilla" type="Sprite2D" parent="MarginContainer/Wrapper/VanillaPanel" unique_id=1358236040]
+unique_name_in_owner = true
+scale = Vector2(0.768, 0.768)
+texture = ExtResource("2_boxtn")
+centered = false
+region_enabled = true
+region_rect = Rect2(-15, -300, 1872.3959, 2578.125)
+
+[node name="Panel" type="Panel" parent="MarginContainer/Wrapper/VanillaPanel/Vanilla" unique_id=558232752]
+material = SubResource("ShaderMaterial_m5xtv")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bq8mu")
+
+[node name="Label" parent="MarginContainer/Wrapper/VanillaPanel/Vanilla" unique_id=1150949138 instance=ExtResource("1_myjcb")]
+anchors_preset = 10
+anchor_left = 0.0
+anchor_right = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 104.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 84
+text = "Vanilla Godot"
+autowrap_mode = 0
+
+[node name="AnimaPanel" type="VBoxContainer" parent="MarginContainer/Wrapper" unique_id=1600120138]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="Anima" type="Node2D" parent="MarginContainer/Wrapper/AnimaPanel" unique_id=591028011]
+unique_name_in_owner = true
+
+[node name="Panel2" type="Panel" parent="MarginContainer/Wrapper/AnimaPanel/Anima" unique_id=2036574037]
+offset_right = 1438.0
+offset_bottom = 1980.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bq8mu")
+
+[node name="Label2" parent="MarginContainer/Wrapper/AnimaPanel/Anima/Panel2" unique_id=745663703 instance=ExtResource("1_myjcb")]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.0
+anchor_right = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 104.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 84
+text = "Anima"
+autowrap_mode = 0
+
+[node name="AnimaCode" type="Sprite2D" parent="MarginContainer/Wrapper/AnimaPanel/Anima" unique_id=730737142]
+unique_name_in_owner = true
+position = Vector2(50, 750)
+scale = Vector2(0.85321105, 0.853211)
+texture = ExtResource("5_boxtn")
+centered = false
+region_rect = Rect2(1450, 100, 1571.111, 2146.667)
+
+[node name="PanelShader" type="Panel" parent="MarginContainer/Wrapper/AnimaPanel/Anima" unique_id=1079317315]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_s5a7s")
+offset_left = 50.0
+offset_top = 750.0
+offset_right = 1370.0
+offset_bottom = 934.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_k2xql")
+
+[node name="Scrim" type="ColorRect" parent="MarginContainer" unique_id=405008706]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.193)
+
+[node name="Control" type="Control" parent="MarginContainer" unique_id=1676060135]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer/Control" unique_id=1066683892]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m5xtv")
+
+[node name="CenterContainer" type="VBoxContainer" parent="MarginContainer" unique_id=297479906]
+layout_mode = 2
+alignment = 2
+
+[node name="Banner2" type="Label" parent="MarginContainer/CenterContainer" unique_id=1941074060]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("6_boxtn")
+theme_override_font_sizes/font_size = 140
+text = "From 20 lines of code to 1."
+horizontal_alignment = 1
+vertical_alignment = 2

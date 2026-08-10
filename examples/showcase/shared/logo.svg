@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1105.2679"
+   height="286"
+   viewBox="0 0 1105.2679 286"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.54166667"
+     inkscape:cx="767.07692"
+     inkscape:cy="511.38461"
+     inkscape:window-width="3360"
+     inkscape:window-height="1831"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9" />
+  <!-- connector lines (drawn first, under the bars) -->
+  <!-- icon: three rounded timeline bars -->
+  <!-- wordmark -->
+  <g
+     id="g10"
+     transform="translate(-213,-372)">
+    <path
+       d="m 460,425 52,65"
+       id="path1"
+       style="fill:none;stroke:#82d3a4;stroke-width:16;stroke-linecap:round" />
+    <path
+       d="m 320,543 52,62"
+       id="path2"
+       style="fill:none;stroke:#82d3a4;stroke-width:16;stroke-linecap:round" />
+    <rect
+       x="290"
+       y="372"
+       width="248"
+       height="53"
+       rx="26.5"
+       fill="#3a5fd5"
+       id="rect2" />
+    <rect
+       x="306"
+       y="386"
+       width="26"
+       height="26"
+       rx="6"
+       fill="#f3f4f8"
+       id="rect3" />
+    <rect
+       x="245"
+       y="490"
+       width="150"
+       height="53"
+       rx="26.5"
+       fill="#3a5fd5"
+       id="rect4" />
+    <rect
+       x="261"
+       y="504"
+       width="26"
+       height="26"
+       rx="6"
+       fill="#82d3a4"
+       id="rect5" />
+    <rect
+       x="440"
+       y="490"
+       width="146"
+       height="53"
+       rx="26.5"
+       fill="#3a5fd5"
+       id="rect6" />
+    <rect
+       x="552"
+       y="504"
+       width="26"
+       height="26"
+       rx="6"
+       fill="#82d3a4"
+       id="rect7" />
+    <rect
+       x="213"
+       y="605"
+       width="397"
+       height="53"
+       rx="26.5"
+       fill="#3a5fd5"
+       id="rect8" />
+    <rect
+       x="578"
+       y="619"
+       width="26"
+       height="26"
+       rx="6"
+       fill="#f3f4f8"
+       id="rect9" />
+    <text
+       x="695"
+       y="612"
+       font-family="Quicksand, Poppins, 'Arial Rounded MT Bold', sans-serif"
+       font-weight="700"
+       font-size="220px"
+       fill="#172134"
+       letter-spacing="-4"
+       id="text9"><tspan
+         style="fill:#ffffff;fill-opacity:1"
+         id="tspan1">anima</tspan></text>
+  </g>
+</svg>
