@@ -125,12 +125,13 @@ static func item() -> AnimaItemMotionFactory:
 ## instead of hand-building an [AnimaTargetCollection] and [AnimaGridMotion]
 ## and calling [method play] separately (`tech-spec.md` §Grid convenience
 ## shorthand). Reports an error and returns `null` when [param container] is
-## `null`, the same as [method on].
-static func grid(container: Node) -> AnimaGridMotionFactory:
+## `null`, the same as [method on]. [param grid_size] accepts a [Vector2i],
+## [Vector2], [Node], or `null` — see [method AnimaGridMotionFactory._init].
+static func grid(container: Node, grid_size: Variant = null) -> AnimaGridMotionFactory:
 	if container == null:
 		push_error("Anima.grid() requires a non-null container.")
 		return null
-	return AnimaGridMotionFactory.new(container)
+	return AnimaGridMotionFactory.new(container, grid_size)
 
 ## Attaches [param behaviour] to [param node] via node metadata — [param node]'s
 ## class and script are unchanged. Retrieve it later with [method get_behaviour].

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cvxbhhytddn0x" path="res://examples/showcase/grid/layer_1.gd" id="1_1uv8f"]
 [ext_resource type="PackedScene" uid="uid://klfp21swkcqx" path="res://examples/showcase/shared/label.tscn" id="1_t3tup"]
+[ext_resource type="Texture2D" uid="uid://cwvid6dr06cwb" path="res://examples/showcase/grid/assets/background.jpg" id="2_f4xva"]
 [ext_resource type="Texture2D" uid="uid://dapqghdso2fyx" path="res://examples/showcase/grid/assets/inventory.png" id="2_pee11"]
 [ext_resource type="PackedScene" uid="uid://6cvv7i7dc81s" path="res://examples/showcase/grid/inventory_grid.tscn" id="4_grid"]
 
@@ -13,6 +14,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1uv8f")
+
+[node name="Background" type="TextureRect" parent="." unique_id=948478915]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_f4xva")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="Scrim" type="ColorRect" parent="." unique_id=1167961039]
 unique_name_in_owner = true
@@ -114,5 +127,5 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 120
-text = "No more nested math loops for ui grids"
+text = "No more nested math loops for UI grids"
 vertical_alignment = 1

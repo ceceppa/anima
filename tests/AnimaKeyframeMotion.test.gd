@@ -168,3 +168,44 @@ func test_pivot_reserved_key_parses_into_the_matching_stops():
 	var track: AnimaKeyframeTrack = motion.tracks[0]
 	assert_eq(track.stops[0].pivot, AnimaPropertyMotion.Pivot.CENTER)
 	assert_null(track.stops[1].pivot)
+
+func test_create_runtime_synthesizes_a_missing_initial_stop():
+	var motion := AnimaKeyframeMotion.new()
+	motion.parse_dictionary({"to": {"opacity": 1.0}})
+
+	motion.create_runtime()
+
+	var track: AnimaKeyframeTrack = motion.tracks[0]
+	assert_eq(track.stops.size(), 2, "a track with only a 'to' stop should gain a synthesized starting stop")
+	assert_almost_eq(track.stops[0].offset, 0.0, 0.0001)
+	assert_true(track.stops[0].value is AnimaValue, "the synthesized stop's value should be a dynamic value, not a literal")
+	assert_eq((track.stops[0].value as AnimaValue).kind, AnimaValue.Kind.TARGET)
+	assert_null(track.stops[0].ease, "nothing arrives at the synthesized first stop, so its own ease is never consulted")
+
+func test_create_runtime_does_not_overwrite_an_explicit_initial_stop():
+	var motion := AnimaKeyframeMotion.new()
+	motion.parse_dictionary({"from": {"opacity": 0.25}, "to": {"opacity": 1.0}})
+
+	motion.create_runtime()
+
+	var track: AnimaKeyframeTrack = motion.tracks[0]
+	assert_eq(track.stops.size(), 2, "an explicitly authored starting stop should never be duplicated or replaced")
+	assert_eq(track.stops[0].value, 0.25)
+
+func test_create_runtime_is_idempotent_across_replays():
+	var motion := AnimaKeyframeMotion.new()
+	motion.parse_dictionary({"to": {"opacity": 1.0}})
+
+	motion.create_runtime()
+	motion.create_runtime()
+
+	assert_eq(motion.tracks[0].stops.size(), 2, "replaying the same resource should not synthesize a second starting stop")
+
+func test_explicit_from_added_via_at_after_to_is_not_overwritten_by_synthesis():
+	var motion := Motion.keyframes({"to": {"opacity": 1.0}}).at("from", {"opacity": 0.4})
+
+	motion.create_runtime()
+
+	var track: AnimaKeyframeTrack = motion.tracks[0]
+	assert_eq(track.stops.size(), 2, "an explicit from stop added after to, before create_runtime(), should still win over synthesis")
+	assert_eq(track.stops[0].value, 0.4)

@@ -124,8 +124,8 @@ func test_multiple_properties_animate_together():
 	assert_almost_eq(node.modulate.a, 1.0, 0.01)
 	assert_almost_eq(node.scale.x, 1.0, 0.01)
 
-func test_single_stop_track_holds_its_value_for_the_whole_motion():
-	var motion := Motion.keyframes({50: {"position:x": 42.0}})
+func test_single_stop_track_at_offset_zero_holds_its_value_for_the_whole_motion():
+	var motion := Motion.keyframes({"from": {"position:x": 42.0}})
 	motion.duration = 1.0
 
 	var node := Node2D.new()
@@ -135,6 +135,22 @@ func test_single_stop_track_holds_its_value_for_the_whole_motion():
 	instance.advance(node, 0.1)
 	assert_almost_eq(node.position.x, 42.0, 0.01)
 	instance.advance(node, 0.9)
+	assert_almost_eq(node.position.x, 42.0, 0.01)
+
+func test_a_stop_declared_later_than_offset_zero_interpolates_from_the_live_value_not_a_held_constant():
+	var motion := Motion.keyframes({50: {"position:x": 42.0}})
+	motion.duration = 1.0
+
+	var node := Node2D.new()
+	autofree(node)
+	node.position.x = 0.0
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+
+	instance.advance(node, 0.1)
+	assert_almost_eq(node.position.x, 8.4, 0.01, "with no offset-0 stop declared, position should interpolate in from the node's own live value, not hold 42.0 from the very start")
+	instance.advance(node, 0.4)
+	assert_almost_eq(node.position.x, 42.0, 0.01, "once past the only declared stop's own offset, the value holds at 42.0")
+	instance.advance(node, 0.5)
 	assert_almost_eq(node.position.x, 42.0, 0.01)
 
 func test_per_segment_easing_is_respected():
@@ -322,3 +338,38 @@ func test_pivot_is_ignored_for_a_motion_with_no_scale_or_rotation_track():
 	instance.advance(control, 1.0 / 60.0)
 
 	assert_eq(control.pivot_offset, Vector2.ZERO, "pivot should be ignored when no track animates scale/rotation")
+
+func test_track_with_no_declared_starting_stop_animates_from_the_targets_live_value():
+	var node := Node2D.new()
+	autofree(node)
+	node.scale = Vector2(0.5, 0.5)
+	node.modulate.a = 0.2
+
+	var motion := Motion.keyframes({"to": {"scale": Vector2(2.0, 2.0), "opacity": 0.0}})
+	motion.duration = 1.0
+
+	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
+	instance.advance(node, 0.0)
+	assert_almost_eq(node.scale.x, 0.5, 0.01, "with no declared starting value, the motion should start from the node's own live scale")
+	assert_almost_eq(node.modulate.a, 0.2, 0.01, "with no declared starting value, the motion should start from the node's own live opacity")
+
+	instance.advance(node, 1.0)
+	assert_almost_eq(node.scale.x, 2.0, 0.01)
+	assert_almost_eq(node.modulate.a, 0.0, 0.01)
+
+func test_reversing_a_motion_with_a_synthesized_initial_stop_still_works():
+	var node := Node2D.new()
+	autofree(node)
+	node.position.x = 10.0
+
+	var motion := Motion.keyframes({"to": {"position:x": 100.0}})
+	motion.duration = 1.0
+
+	var playback := AnimaPlayback.new(motion, node)
+	playback._advance(1.0)
+	assert_almost_eq(node.position.x, 100.0, 0.01)
+
+	assert_true(playback.reverse(), "reversing a motion with a synthesized initial stop should not crash or fail")
+	for i in range(10):
+		playback._advance(0.1)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)

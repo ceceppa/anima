@@ -161,7 +161,30 @@ func estimate_duration() -> AnimaDuration:
 ## Builds the runtime instance that advances every track together. See
 ## [method AnimaMotion.create_runtime] for [param context].
 func create_runtime(context: AnimaValueContext = null) -> Variant:
+	_synthesize_missing_initial_stops()
 	return AnimaKeyframeMotionInstance.new(self, context)
+
+## Gives every track a stop at offset `0.0` when it doesn't already have one —
+## no declared starting value means the caller never authored one, not that
+## the property should hold its first declared stop's value for the whole
+## motion. The missing value resolves against the target's own live property
+## state instead, via [method AnimaValue.target] (`tech-spec.md` §Keyframe
+## motions, "Implicit initial value (v1 parity)"). Runs once, right before
+## the motion is actually played — deferred here rather than at [method at]/
+## [method parse_dictionary] time, since an author can still add an explicit
+## `"from"` stop after declaring later ones, and synthesising eagerly would
+## collide with it. Idempotent: a track that already starts at `0.0` (whether
+## authored or already synthesised on an earlier play of this same resource)
+## is left untouched.
+func _synthesize_missing_initial_stops() -> void:
+	for track in tracks:
+		if track.stops.is_empty() or is_equal_approx(track.stops[0].offset, 0.0):
+			continue
+		var stop := AnimaKeyframeStop.new()
+		stop.offset = 0.0
+		stop.value = AnimaValue.target(track.property_path)
+		track.stops.append(stop)
+		track.stops.sort_custom(func(a: AnimaKeyframeStop, b: AnimaKeyframeStop) -> bool: return a.offset < b.offset)
 
 ## Returns messages describing missing tracks, empty tracks, or duplicate
 ## stops at the same offset on the same track.

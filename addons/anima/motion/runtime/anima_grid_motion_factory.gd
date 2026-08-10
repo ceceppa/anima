@@ -8,18 +8,87 @@
 class_name AnimaGridMotionFactory
 extends RefCounted
 
+## Duration a distance-formula preset's own default item motion uses, when it
+## supplies one (`tech-spec.md` §Grid convenience shorthand).
+const DEFAULT_DURATION := 0.3
+## Ease a distance-formula preset's own default item motion uses. Scoped to
+## this default only — [member AnimaKeyframeMotion.default_ease]'s own
+## general `LINEAR` default is untouched.
+const DEFAULT_EASE := AnimaEase.Kind.EASE_IN_OUT
+## The item motion a distance-formula preset applies when none has been set
+## yet: fades each item in from invisible while its own scale dips 0.25 below
+## rest, pulses 0.15 above rest at the midpoint, then settles back to its own
+## resting scale (`tech-spec.md` §Grid convenience shorthand). A `static var`,
+## not a `const` — its [AnimaValue] entries are built via a static method
+## call, not a constant expression GDScript's `const` accepts; the shared
+## [AnimaValue] instances stay safe to reuse since arithmetic methods like
+## [method AnimaValue.subtract] never mutate their receiver.
+static var DEFAULT_ITEM_MOTION := {
+	"from": {"opacity": 0.0, "scale": AnimaValue.target(NodePath("scale")).subtract(Vector2(0.25, 0.25))},
+	50: {"scale": AnimaValue.target(NodePath("scale")).add(Vector2(0.15, 0.15))},
+	"to": {"opacity": 1.0, "scale": AnimaValue.target(NodePath("scale"))},
+}
+
 ## The node whose children this grid motion targets.
 var container: Node
 ## The grid motion this factory builds. Every field keeps [AnimaGridMotion]'s
-## own constructor default except [member AnimaGroupMotion.target_collection],
-## set to [constant AnimaTargetCollection.Kind.CHILDREN] against [member container].
+## own constructor default — except [member AnimaGroupMotion.target_collection],
+## set to [constant AnimaTargetCollection.Kind.CHILDREN] against [member
+## container], and [member AnimaGridMotion.distance_formula], set to
+## [constant AnimaGridMotion.DistanceFormula.EUCLIDEAN] — a factory-level
+## default distinct from [AnimaGridMotion]'s own general-purpose `ROW`
+## default, since this shorthand's own common case is radiating outward from
+## a point (`tech-spec.md` §Grid convenience shorthand).
 var motion: AnimaGridMotion
+## Whether [method with_start_point] has been called explicitly — set once
+## `true`, [method with_dimensions] never overwrites [member
+## AnimaGridMotion.start_point] again, regardless of which call came first.
+var _start_point_explicit: bool = false
 
-func _init(p_container: Node) -> void:
+## [param p_grid_size] accepts a [Vector2i] (used directly), a [Vector2]
+## (floored to whole cells), a [Node] (dimensions inferred from that node
+## instead of [param p_container]), or `null` (dimensions inferred from
+## [param p_container] itself) — resolved through [method _resolve_grid_size]
+## and applied via [method with_dimensions], so it carries the same
+## auto-derived centred [member AnimaGridMotion.start_point] behaviour
+## (`tech-spec.md` §Grid convenience shorthand).
+func _init(p_container: Node, p_grid_size: Variant = null) -> void:
 	container = p_container
 	motion = AnimaGridMotion.new()
 	motion.target_collection = AnimaTargetCollection.new()
 	motion.target_collection.kind = AnimaTargetCollection.Kind.CHILDREN
+	motion.distance_formula = AnimaGridMotion.DistanceFormula.EUCLIDEAN
+	with_dimensions(_resolve_grid_size(p_grid_size))
+
+## Resolves [param value] into a concrete [Vector2i] grid size. An
+## unrecognised type reports an error and falls back to the same inference
+## [method _infer_grid_size] performs for `null`.
+func _resolve_grid_size(value: Variant) -> Vector2i:
+	if value is Vector2i:
+		return value
+	if value is Vector2:
+		return Vector2i(floori(value.x), floori(value.y))
+	if value is Node:
+		return _infer_grid_size(value)
+	if value == null:
+		return _infer_grid_size(container)
+	push_error("AnimaGridMotionFactory: grid_size must be a Vector2i, Vector2, Node, or null — got %s. Falling back to inference." % type_string(typeof(value)))
+	return _infer_grid_size(container)
+
+## Infers a grid size from [param node]: [param node]'s own `rows`/`columns`
+## if both exist, [param node]'s `columns` alone (true for any [GridContainer]
+## or lookalike) with rows computed from [member container]'s own child
+## count, or — with neither — a single column tall enough to fit every one of
+## [member container]'s children. Child count always comes from [member
+## container], never from [param node], even when they differ
+## (`tech-spec.md` §Grid convenience shorthand).
+func _infer_grid_size(node: Node) -> Vector2i:
+	if "rows" in node and "columns" in node:
+		return Vector2i(node.columns, node.rows)
+	if "columns" in node and node.columns > 0:
+		var columns: int = node.columns
+		return Vector2i(columns, ceili(container.get_child_count() / float(columns)))
+	return Vector2i(1, container.get_child_count())
 
 ## Sets [member AnimaGroupMotion.item_motion]. Required before [method play] —
 ## a grid motion with no item motion has nothing to animate. Returns self so
@@ -28,10 +97,17 @@ func with_item_motion(value: AnimaMotion) -> AnimaGridMotionFactory:
 	motion.item_motion = value
 	return self
 
-## Sets [member AnimaGridMotion.grid_dimensions]. Returns self so calls can
+## Sets [member AnimaGridMotion.grid_dimensions]. Also auto-derives a centred
+## [member AnimaGridMotion.start_point] — `Vector2i(floori(value.x / 2.0),
+## floori(value.y / 2.0))` — unless [method with_start_point] has already been
+## called explicitly on this factory (`tech-spec.md` §Grid convenience
+## shorthand). Floored, not rounded, so an odd dimension centres on the
+## middle index rather than one rounded up past it. Returns self so calls can
 ## keep chaining.
 func with_dimensions(value: Vector2i) -> AnimaGridMotionFactory:
 	motion.grid_dimensions = value
+	if not _start_point_explicit:
+		motion.start_point = Vector2i(floori(value.x / 2.0), floori(value.y / 2.0))
 	return self
 
 ## Sets [member AnimaGridMotion.distance_formula]. Returns self so calls can
@@ -40,10 +116,90 @@ func with_distance_formula(value: AnimaGridMotion.DistanceFormula) -> AnimaGridM
 	motion.distance_formula = value
 	return self
 
-## Sets [member AnimaGridMotion.start_point]. Returns self so calls can keep
-## chaining.
+## Applies [member DEFAULT_ITEM_MOTION]/[member DEFAULT_DURATION]/
+## [member DEFAULT_EASE] if [member AnimaGridMotion.item_motion] is still
+## unset — called by every distance-formula preset, never by [method
+## with_distance_formula] itself, so only the named one-liner presets get a
+## free default motion (`tech-spec.md` §Grid convenience shorthand).
+func _ensure_default_item_motion() -> void:
+	if motion.item_motion == null:
+		keyframes(DEFAULT_ITEM_MOTION, DEFAULT_DURATION).with_ease(DEFAULT_EASE)
+
+## Named presets for every [enum AnimaGridMotion.DistanceFormula] value — pure
+## sugar for [method with_distance_formula], one name per formula with no
+## aliases (`tech-spec.md` §Grid convenience shorthand). Preset for
+## [constant AnimaGridMotion.DistanceFormula.EUCLIDEAN].
+func radial() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.EUCLIDEAN)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.MANHATTAN].
+func diamond() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.MANHATTAN)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.CHEBYSHEV].
+func box() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.CHEBYSHEV)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.ROW].
+func by_row() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.ROW)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.COLUMN].
+func by_column() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.COLUMN)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.DIAGONAL].
+func diagonal() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.DIAGONAL)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.ANTI_DIAGONAL].
+func anti_diagonal() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.ANTI_DIAGONAL)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.CLOCKWISE].
+func clockwise() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.CLOCKWISE)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.ANTICLOCKWISE].
+func counter_clockwise() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.ANTICLOCKWISE)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.SPIRAL_INWARD].
+func spiral_in() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.SPIRAL_INWARD)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD].
+func spiral_out() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.SPIRAL_OUTWARD)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.SERPENTINE_ROW].
+func serpentine_row() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.SERPENTINE_ROW)
+
+## Preset for [constant AnimaGridMotion.DistanceFormula.SERPENTINE_COLUMN].
+func serpentine_column() -> AnimaGridMotionFactory:
+	_ensure_default_item_motion()
+	return with_distance_formula(AnimaGridMotion.DistanceFormula.SERPENTINE_COLUMN)
+
+## Sets [member AnimaGridMotion.start_point] and marks it explicit, so no
+## later [method with_dimensions] call auto-derives over it — whether this is
+## called before or after [method with_dimensions] in the chain. Returns self
+## so calls can keep chaining.
 func with_start_point(value: Vector2i) -> AnimaGridMotionFactory:
 	motion.start_point = value
+	_start_point_explicit = true
 	return self
 
 ## Sets [member AnimaGroupDistribution.stagger_interval]. Returns self so

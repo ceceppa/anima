@@ -4,13 +4,11 @@
 ##
 ## [method play] is not auto-called from [method Node._ready] — the parent
 ## showcase orchestrator (`grid_showcase.gd`) calls it explicitly when Scene
-## 1's beat starts, the same way it drives every other scene. Synchronous, no
-## internal timer/await: the whole showcase is driven by manually-stepped
-## deltas (`AnimaPlayback.step`/`_advance_show`) so a test can advance the
-## entire ~15s sequence deterministically — an awaited real-time
-## `SceneTreeTimer` here would never fire under that manual stepping.
+## 1's beat starts, the same way it drives every other scene, and awaits the
+## returned [AnimaPlayback]'s [signal AnimaPlayback.finished] before moving on
+## (`_mano_output/phase-14/stories/story-7g-await-driven-scene-sequencing.md`).
 class_name InventoryHookLayer
 extends Control
 
-func play() -> void:
-	%InventoryGrid.play()
+func play() -> AnimaPlayback:
+	return %InventoryGrid.play()

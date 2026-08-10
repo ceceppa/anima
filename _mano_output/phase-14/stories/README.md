@@ -14,3 +14,10 @@
 | 7c | AnimaEase.from() Kind shorthand | story-7c-ease-kind-shorthand.md | done |
 | 7d | Keyframe pivot support | story-7d-keyframe-pivot.md | done |
 | 7e | Icons nested under their own tile | story-7e-icons-nested-in-tile.md | done |
+| 7f | Grid factory sensible defaults | story-7f-grid-factory-sensible-defaults.md | done |
+| 7g | Await-driven scene sequencing | story-7g-await-driven-scene-sequencing.md | done |
+| 7h | Grid size parameter | story-7h-grid-size-parameter.md | done |
+| 7i | Grid distance-formula presets | story-7i-grid-distance-formula-presets.md | done |
+| 7j | Grid preset default item motion | story-7j-grid-preset-default-item-motion.md | done |
+| 7k | Keyframe implicit initial value | story-7k-keyframe-implicit-initial-value.md | done |
+| 7l | Scene 3 all grid presets | story-7l-scene3-all-grid-presets.md | done |

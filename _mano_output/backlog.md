@@ -2988,3 +2988,10 @@
   Every earlier phase introducing a new leaf motion capability (Keyframes, Spring, Grid formulas, the convenience API) shipped a dedicated demo family in the existing convenience-motion playground, which already scales to many families via its Family enum/selector pattern.
   Phase 14's dynamic values and Anima.grid() shorthand should get the same treatment: a demo showing a dynamic value standalone, one inside a keyframe, two dynamic values combined arithmetically, and Anima.grid() as a one-liner — not just the narrower RPG-showcase icon-pulse fix.
 - **Status:** in-phase-14
+
+### Anima.begin() composition chaining (.with()/.then())
+- **Type:** feature
+- **Source:** User request outside phase-14 scope (phase-14 covers dynamic values + grid convenience only)
+- **Context:**
+  V1 had Anima.begin(node).with(motion).with(motion).play() for one-line parallel composition. Reintroduce with sequencing added: .with(...) runs in parallel with the current group, .then(...) starts a new sequential step after the previous group finishes (+/- delay if specified). Needs a builder resource wrapping AnimaParallel/AnimaSequence composition, mirroring Anima.on()/Anima.grid()'s existing factory ergonomics.
+- **Status:** backlog

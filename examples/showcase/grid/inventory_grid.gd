@@ -1,3 +1,5 @@
+@tool
+
 ## Fills its own bounds with as many whole clones of the authored [member
 ## _tile] template as actually fit, each centred, spaced at least
 ## [member min_gap] apart — and gives each tile a matching icon loaded from
@@ -11,6 +13,15 @@ class_name InventoryGrid
 extends Control
 
 const ICONS_DIR := "res://examples/showcase/grid/assets/icons"
+
+@export var tile_scale := 0.5:
+	set(value):
+		tile_scale = value
+		
+		if is_node_ready():
+			_tile.scale = Vector2(value, value)
+
+			_build_tile_grid()
 
 ## Minimum space kept between neighbouring tiles. Adjustable from the
 ## Inspector — rebuilds live so the change is visible immediately, the same
@@ -46,7 +57,11 @@ var _icon_nodes: Array[Sprite2D] = []
 var _columns: int = 0
 var _rows: int = 0
 
+const DEFAULT_TILE_SCALE = Vector2(0.5, 0.5)
+
 func _ready() -> void:
+	_tile.scale = Vector2(tile_scale, tile_scale)
+
 	_build_tile_grid()
 	
 	if get_parent() is Window:
@@ -85,7 +100,7 @@ func _build_tile_grid() -> void:
 				%Tiles.add_child(tile)
 			tile.visible = true
 			tile.position = origin + Vector2(col, row) * (tile_size + Vector2(min_gap, min_gap)) + tile_size / 2.0
-			tile.modulate.a = 0.0
+			tile.modulate.a = 1.0
 			_tiles.append(tile)
 
 	var icon_paths := _discover_icon_paths()
@@ -112,6 +127,8 @@ func _build_icon(tile: Sprite2D, tile_size: Vector2, icon_paths: Array, index: i
 	icon.position = Vector2.ZERO
 	icon.texture = _icon_texture(icon_paths, index)
 	icon.scale = _icon_scale(icon.texture, tile_size) / tile.scale
+	icon.modulate.a = 0.0
+
 	return icon
 
 ## The uniform scale that fits [param texture]'s native size inside
@@ -177,41 +194,9 @@ static func _grid_origin(container: Vector2, tile: Vector2, columns: int, rows: 
 	)
 	return (container - used) / 2.0
 
-## One CSS `@keyframes pulse`-equivalent reveal, shared by every tile: fades
-## in across the whole run while scale pulses up and back at the
-## midpoint — a single [AnimaKeyframeMotion] rather than two separate
-## motions, since `scale` and `opacity` are independent tracks evaluated
-## against the same clock (`tech-spec.md` §Keyframe motions). Each tile's own
-## icon child is carried along for free — Godot's own [member
-## CanvasItem.modulate]/transform inheritance means animating the tile
-## already fades and scales its icon with it, no second motion needed.
-const _ITEM_DURATION := 0.3
-
-## Plays a grid-driven reveal on the tiles — icon and frame together, since
-## every icon is now a child of its own tile. Built on [method Anima.grid]:
-## [method AnimaGridMotionFactory.keyframes] parses the same CSS `@keyframes
-## pulse`-equivalent shape [member _ITEM_DURATION] describes — fading in
-## across the whole run while scale pulses up and back at the midpoint —
-## and [method AnimaGridMotionFactory.with_duration]/[method
-## AnimaGridMotionFactory.with_ease] configure it in place
-## (`tech-spec.md` §Grid convenience shorthand). Each tile's own current
-## scale drives both the resting and peak keyframe values through
-## [AnimaValue] — resolved independently per tile by the grid's own per-item
-## context (`tech-spec.md` §Dynamic values). Every tile — the original
-## template and every duplicate [method _build_tile_grid] adds — ends up a
-## direct child of `%Tiles`, so [method Anima.grid]'s own [code]CHILDREN[/code]
-## default resolves exactly the tile set with no override needed, back to a
-## single fluent statement.
 func play() -> AnimaPlayback:
-	return Anima.grid(%Tiles) \
-		.with_dimensions(Vector2i(_columns, _rows)) \
-		.with_distance_formula(AnimaGridMotion.DistanceFormula.EUCLIDEAN) \
-		.with_start_point(Vector2i(_columns / 2, _rows / 2)) \
-		.with_stagger_interval(0.05) \
-		.keyframes({
-			"from": {"opacity": 0.0, "scale": AnimaValue.target(NodePath("scale"))},
-			50: {"scale": AnimaValue.target(NodePath("scale")).add(Vector2(0.25, 0.25))},
-			"to": {"opacity": 1.0, "scale": AnimaValue.target(NodePath("scale"))},
-		}, _ITEM_DURATION) \
-		.with_ease(AnimaEase.Kind.EASE_OUT_BACK) \
-		.play()
+	for index in _tiles.size():
+		_tiles[index].modulate.a = 0.0
+		_icon_nodes[index].modulate.a = 1.0
+
+	return Anima.grid(%Tiles, Vector2i(_columns, _rows)).radial().play()

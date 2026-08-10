@@ -106,7 +106,8 @@ one line — `Anima.grid(container).with_item_motion(pulse).play()` —
 instead of hand-building an [AnimaTargetCollection] and [AnimaGridMotion]
 and calling [method play] separately (`tech-spec.md` §Grid convenience
 shorthand). Reports an error and returns `null` when [param container] is
-`null`, the same as [method on].
+`null`, the same as [method on]. [param grid_size] accepts a [Vector2i],
+[Vector2], [Node], or `null` — see [method AnimaGridMotionFactory._init].
 
 ### attach_behaviour
 
