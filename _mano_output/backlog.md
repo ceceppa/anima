@@ -2994,63 +2994,63 @@
 - **Source:** phase-14 review
 - **Context:**
   Anima.on(...) builder chain has no .play() method, so a motion built via Anima.on cannot be started directly from the chain.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Chained motions via .with() do not play correctly
 - **Type:** bug
 - **Source:** phase-14 review
 - **Context:**
   Combining two motions with .with(Anima.on(...)...) produces a chain that does not play or stop the animation correctly.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Simplify pivot API naming
 - **Type:** refinement
 - **Source:** phase-14 review
 - **Context:**
   .with_pivot(AnimaPropertyMotion.Pivot.CENTER) should read AnimaPivot.Kind.CENTER for consistency with other typed enums.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Anima.on missing with_delay
 - **Type:** refinement
 - **Source:** phase-14 review
 - **Context:**
   Anima.on does not expose with_delay; current workaround is setting .delay directly on the array element.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Anima.grid missing on_started/on_completed callbacks
 - **Type:** refinement
 - **Source:** phase-14 review
 - **Context:**
   Anima.grid should expose on_started and on_completed lifecycle callbacks like other motion builders.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Anima.grid missing with_delay
 - **Type:** refinement
 - **Source:** phase-14 review
 - **Context:**
   Anima.grid has no with_delay (nor .delay) equivalent for staggering/delaying grid motions.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### with_ease should accept AnimaEase.Kind directly on Anima.on
 - **Type:** refinement
 - **Source:** phase-14 review
 - **Context:**
   with_ease(AnimaEase.Kind.EXPONENTIAL) should be accepted directly on Anima.on's chain.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Convenience fade_out on Anima.on
 - **Type:** feature
 - **Source:** phase-14 review
 - **Context:**
   Add Anima.on(self).fade_out(0.3).play() (or .with_duration) as a convenience shorthand.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Convenience fade_in on Anima.on
 - **Type:** feature
 - **Source:** phase-14 review
 - **Context:**
   Add Anima.on(self).fade_in(0.3).play() (or .with_duration) as a convenience shorthand.
-- **Status:** in-phase-15
+- **Status:** resolved
 
 ### Anima.group() convenience factory
 - **Type:** feature
@@ -3064,4 +3064,25 @@
 - **Source:** phase-15 (mano spec, story 8e)
 - **Context:**
   A callback set via .on_started()/.on_completed() on a motion before folding it into a .then()/.with() composite is never invoked — only the composite's own top-level callback fires, since AnimaPlayback only calls back on the root motion (AnimaPlayback._fire_started()/_advance()'s on_completed check both read motion.on_started_callback/on_completed_callback on the root only). Discovered via examples/showcase/grid/scene_3.gd combining two Anima.grid() chains, each with its own .on_started() set before .with(). No fix attempted yet — needs a design decision on whether AnimaSequenceInstance/AnimaParallelInstance should fire each child's own callbacks as it starts/finishes them.
+- **Status:** backlog
+
+### play_with_delay() to delay the whole chain
+- **Type:** refinement
+- **Source:** phase-15 review
+- **Context:**
+  Anima.on()/Anima.grid() chains have per-motion with_delay(), but no way to delay the start of the WHOLE combined chain (e.g. after .then()/.with() composition) without setting delay on every individual leaf.
+- **Status:** backlog
+
+### Hide internal builder classes behind a non-public naming convention
+- **Type:** refinement
+- **Source:** phase-15 review
+- **Context:**
+  AnimaParallel, AnimaSequence, and similar internal composition classes are currently as visible as the public entry points (Anima.on/Anima.grid/Anima.group). Requested: separate the internal builder/utility API from the intended dev-facing surface so users only naturally reach for Anima.on/Anima.group/Anima.grid.
+- **Status:** backlog
+
+### .wait(seconds) chain method for inline pauses
+- **Type:** feature
+- **Source:** phase-15 review
+- **Context:**
+  A .wait(seconds) chain method that delays the START of whatever follows in the chain (equivalent to with_delay() on the next step), so combining via .then()/.with() doesn't require repeating the same delay on every sibling. Must compose additively with an explicit with_delay() on an individual child (e.g. .wait(1) followed by a child with_delay(0.5) should total 1.5s for that child).
 - **Status:** backlog

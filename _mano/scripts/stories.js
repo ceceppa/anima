@@ -296,4 +296,19 @@ function main() {
   else fail(`unknown command "${args.command}". Use add-row or set-status (--help for usage).`);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = {
+  HEADER_ROW,
+  SEPARATOR_ROW,
+  STORY_NUM,
+  parseArgs,
+  indexPath,
+  rowCells,
+  rowStoryNum,
+  formatRow,
+  numKey,
+  keyLess,
+  freshIndex,
+  main,
+};

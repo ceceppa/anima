@@ -18,3 +18,4 @@
 | 8f | AnimaKeyframeMotion supports with_delay | story-8f-keyframe-with-delay.md | done |
 | 8g | Child on_started/on_completed fire inside .then()/.with() composites | story-8g-child-callbacks-in-composites.md | done |
 | 8h | AnimaParallel respects each child's own delay | story-8h-parallel-child-delay.md | done |
+| 8i | Grid showcase tests no longer leak playbacks across the suite | story-8i-grid-showcase-test-isolation.md | done |

@@ -325,9 +325,13 @@ Examples: do not write a checkout story unless the cart model is defined. Do not
 - ownership/lifetime and evaluation timing for relative/lazy/dynamic values when they change consumer use;
 - semantic-to-canonical mappings for convenience layers, adapters, aliases, serializers, or protocol translations.
 
-Apply this only to that consumer-visible or independently-owned boundary, not a private helper, internal service, or component API that one story and one implementer can safely design locally. “Supports position, movement, opacity, and generic properties” is not a callable contract: method names, argument shapes, and property mappings are still missing. “See tech-spec §API” is also insufficient when that section contains only the same family list.
+For a fluent, builder, pipeline, query, or composed API, also trace every in-scope chain transition from the canonical spec: the exact returned type, the target/owner/context it retains, and which terminal operations remain callable. A terminal AC such as `builder.move(...).play()` does not prove `builder.move(...).with(...).play()` or `builder.keyframes(...).play()` unless the spec closes those return-type paths too. Words such as “any”, “all”, “entirely fluent”, and “combined” require coverage of every named category, not one representative leaf.
+
+Apply this only to that consumer-visible or independently-owned boundary, not a private helper, internal service, or component API that one story and one implementer can safely design locally. “Supports position, movement, opacity, and generic properties” is not a callable contract: method names, argument shapes, and property mappings are still missing. “See tech-spec §API” is also insufficient when that section contains only the same family list. Verify every `Implementation Reference` citation against its target: the exact operation and promised path must actually be present there.
 
 If any behavior-driving interface field needed by the story is absent or has two materially different readings, **write no story files**. Report one `⚠️ Story readiness gap` naming every missing field and route to `mano spec`. The general gap-check options to continue with a temporary note or partial guidance do not waive this gate; an implementer cannot safely invent a shared/public contract story by story.
+
+Before accepting a `Not this story` boundary, compare it with the phase goal, Exit Criteria, and the rest of the story chain. It may defer an adjacent use case; it may not contradict a promised path or prohibit the shared contract surface another story needs to satisfy the phase. Resolve the story split, or route an unresolved contract choice to `mano spec`.
 <!-- /mano-rule: public-interface-contract-readiness -->
 
 **0d. Artifact gap check.** For each prospective story, check whether it depends on a visual, interaction, accessibility, technical, data, API, constant, shared measurement, or rule detail that is not defined by the artifacts read this run. This is a warning/decision point, not a default blocker.
@@ -388,6 +392,8 @@ If wiring lives in another story, that story must already exist and run earlier 
 4. If any element has no owning AC, the story set is **incomplete**. Add the missing AC to the most appropriate story, add a story, or — if it is a quality that cannot be expressed as an observable AC — flag it explicitly. If a quality word from the phase goal does not appear (or have a direct synonym) in any AC across the story set, treat it as silently dropped — do not assume it is "implicitly covered" by feature stories.
 
 Report the mapping in the execution log only if something was missing and had to be added or flagged. A fully covered goal needs no narration. Never write story files until every element of the phase goal maps to a concrete AC or an explicit flag.
+
+**0f.1 Exit-path coverage.** Map every phase Exit Criterion—including each nested action/result bullet—to one specific story AC that exercises the same observable route end-to-end. Preserve the caller or user path, sequence, and breadth: an alternative entry point that reaches the same internal result does not satisfy a criterion promising a particular direct call, command, screen path, or fluent terminal. For composed behavior, the owning AC must include the composition and its terminal action in the same path. If no AC owns an Exit Criterion exactly, revise the story set before writing files.
 
 <!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
 **0g. Project-rule coverage map.** After drafting the story set and before writing any files:

@@ -104,8 +104,12 @@ function main() {
   process.stdout.write(`[mano mode] ${configured.mode}${source}\n`);
 }
 
-try {
-  main();
-} catch (error) {
-  fail(error && error.message ? error.message : String(error));
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    fail(error && error.message ? error.message : String(error));
+  }
 }
+
+module.exports = { parseArgs, runGit, main };

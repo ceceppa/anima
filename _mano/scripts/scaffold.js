@@ -333,4 +333,20 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = {
+  PLACEHOLDER,
+  RESERVED_TOP_LEVEL,
+  parseArgs,
+  validateName,
+  lstatOrNull,
+  filesEqual,
+  collectTree,
+  preflight,
+  merge,
+  verify,
+  removeOwnedStage,
+  run,
+  main,
+};

@@ -1,5 +1,17 @@
 extends "res://addons/gut/test.gd"
 
+## Several tests here deliberately check an early checkpoint without awaiting
+## `_run_show()`'s full real-time completion (`test_zoom_transition_...`), or
+## await it but leave downstream real-timer chains (`_wait_for_next()`)
+## still pending. Either way, an `AnimaPlayback` can still be registered in
+## `AnimaRuntime.active_playbacks` when this test's own scene is torn down by
+## `autofree`, ticking against now-freed nodes on every later test's frames.
+## Cancelling everything still active after each test keeps that from
+## leaking across files.
+func after_each():
+	for playback in AnimaRuntime.get_singleton().active_playbacks.duplicate():
+		playback.cancel()
+
 func _make_scene() -> Control:
 	var scene: Control = preload("res://examples/showcase/grid/grid_showcase.tscn").instantiate()
 	add_child_autofree(scene)

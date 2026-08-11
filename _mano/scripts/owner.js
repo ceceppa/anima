@@ -83,8 +83,12 @@ function main() {
   }
 }
 
-try {
-  main();
-} catch (error) {
-  fail(error && error.message ? error.message : String(error));
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    fail(error && error.message ? error.message : String(error));
+  }
 }
+
+module.exports = { parseArgs, runGit, main };

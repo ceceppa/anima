@@ -31,3 +31,25 @@
 - [refinement] with_ease should accept AnimaEase.Kind directly on Anima.on — added
 - [feature] Convenience fade_out on Anima.on — added
 - [feature] Convenience fade_in on Anima.on — added
+
+---
+
+## Phase 15 Review — 2026-08-12
+
+### Evidence
+
+- **Status:** partial
+- **Method:** Not recorded
+- **Observed:** Not recorded — feedback described desired API shape rather than a described test/observation
+
+### Assumption results
+
+| Assumption | Outcome | Evidence / consequence |
+|-----------|---------|------------------------|
+| This phase fixes and completes the current `Anima.on`/`Anima.grid` builder signatures without adding the deferred `animation` name/tres keyword. | confirmed | |
+
+### Backlog changes
+
+- [refinement] play_with_delay() to delay the whole chain — added
+- [refinement] Hide internal builder classes behind a non-public naming convention — added
+- [feature] .wait(seconds) chain method for inline pauses — added

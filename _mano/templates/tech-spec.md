@@ -32,6 +32,12 @@
 | Surface | Exact operation / event | Inputs & defaults | Result / failure | Canonical mapping / ownership |
 |---------|-------------------------|-------------------|------------------|-------------------------------|
 | | | | | |
+
+<!-- For fluent/builder/pipeline APIs, also trace chain closure. Omit otherwise. -->
+
+| Expression before call | Operation / modifier | Exact returned type | Context retained | Terminals still callable |
+|------------------------|----------------------|---------------------|------------------|--------------------------|
+| | | | | |
 <!-- /mano-rule: public-interface-contract-readiness -->
 
 ## Storage Strategy

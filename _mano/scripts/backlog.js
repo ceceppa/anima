@@ -633,4 +633,20 @@ function main() {
   else fail(`unknown command "${args.command}". Use add, assign, resolve, resolve-gap, or reject (--help for usage).`);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = {
+  VALID_TYPES,
+  GAP_TYPES,
+  ITEMS_HEADING,
+  parseArgs,
+  backlogPath,
+  formatItem,
+  validateItem,
+  existingTitles,
+  parseItemRecords,
+  itemField,
+  buildWithItems,
+  collectAddItems,
+  main,
+};

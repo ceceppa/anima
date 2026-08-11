@@ -243,6 +243,8 @@ Do not silently mark a broad item with the projected `IN_PHASE_STATUS`.
 
 **Demo-sketch checkpoint.** Before drafting the brief, write out the Exit Criteria as a concrete user-action sequence — open the app, what loads, what the user does, what happens next, what proves it worked. If that sequence requires nouns you cannot ground in either Phase 1 or this brief (e.g. "the workspace," "the default view," "the starting state"), surface them as scope-gap questions here. Do not draft the brief with hand-wavy placeholders for system state the implementer will have to invent.
 
+When the approved scope uses breadth words such as “any”, “all”, “every”, “combined”, or “throughout”, include observable Exit Criteria for each named category or boundary case. Do not let one representative happy path silently narrow a broader promise. Keep this behavior-level: `mano start` makes the breadth testable; `mano spec` owns exact types and signatures.
+
 **Validation-plan checkpoint.** Derive a lightweight plan for how the human can learn from the completed phase:
 
 - **Decision this informs** — the product, scope, or direction decision the result can inform next.

@@ -9,7 +9,7 @@ description: Use at the end of a phase to record evidence, resolve assumption ou
 
 This skill collects feedback and triages it — nothing else. Prefix every message with `[mano review]:`. It does not scope, does not plan, does not write code.
 
-**This skill does not investigate.** It does not read source files, run tests, trace payloads, inspect build output, or look at any current implementation state. The only files it reads are Mano artifacts under `_mano_output/` (story index, phase brief, backlog, reviews). A bug description is *input to classify*, not a problem to diagnose. This holds even when the bug description names a specific symptom, a working/broken contrast, or hints at a likely cause — those are triage signals, not investigation prompts. Reading source code is **not** "not writing code"; it is investigation, and it is forbidden in this skill.
+**This skill does not investigate.** It does not read source files, run tests, trace payloads, inspect build output, or look at any current implementation state. The only files it reads are Mano artifacts under `_mano_output/` (story index and its indexed story files, phase brief, backlog, reviews, plus only the exact canonical spec sections cited during the Phase-contract safety net). A bug description is *input to classify*, not a problem to diagnose. This holds even when the bug description names a specific symptom, a working/broken contrast, or hints at a likely cause — those are triage signals, not investigation prompts. Reading source code is **not** "not writing code"; it is investigation, and it is forbidden in this skill.
 
 ## Activation
 
@@ -58,6 +58,25 @@ I can't review a phase that isn't complete, and managing story status isn't my j
 ```
 
 That is your complete response. Do not edit the README index, do not mark or cut stories, do not proceed to triage. Re-running `mano review` after the index shows every story `done` (or no longer lists the cut ones) clears this gate.
+
+<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
+**Phase-contract safety net.** Once every row is `done`, read the exact projected phase brief and each story file named by the exact projected index before beginning Standard review. This remains artifact inspection, not implementation investigation. Map every distinct Phase goal outcome and every Exit Criterion—including each nested action/result bullet—to a concrete `Done when` AC. Require the same observable user/caller route and breadth: an alternative API, command, screen route, or non-terminal fluent path that reaches a similar result does not count.
+
+For each mapped public/shared interface path, follow only the story's `Implementation Reference` to the exact cited canonical spec section. Confirm that section actually defines the operation and, for fluent/composed paths, closes the chain through each named returned type while retaining required context. Do not browse other spec sections or source code. A correctly worded AC backed by a missing or incompatible canonical contract still fails this gate and routes to `mano spec` first.
+
+If any criterion has no exact owning AC, stop before asking for feedback or closing the phase:
+
+```text
+[mano review]: This phase is built story-by-story, but its story set does not cover the full approved contract:
+
+- [missing Phase goal element or Exit Criterion]
+- Closest story coverage: [what it verifies instead, or "none"]
+
+Add the missing contract path with `mano stories "add coverage for [missing phase path]"`, then implement it with `mano dev`. If the path itself is technically undefined, run `mano spec` before adding the story.
+```
+
+Do not inspect source or tests to decide whether the uncovered behavior happens to work, and do not let `close it` waive this gate. A review cannot honestly close scope that no story accepted.
+<!-- /mano-rule: public-interface-contract-readiness -->
 
 ## Standard review
 

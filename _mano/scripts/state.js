@@ -1068,4 +1068,34 @@ function main() {
   process.exit(0);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = {
+  GAP_TYPES,
+  parseArgs,
+  readStories,
+  countBacklogStatuses,
+  extractBacklogItems,
+  assertBacklogItemsWellFormed,
+  extractCoreProductPrinciples,
+  extractLatestReview,
+  hasReviewEntry,
+  scanGaps,
+  scanSpec,
+  scanUi,
+  scan,
+  finalize,
+  renderDecision,
+  renderEvidence,
+  renderScope,
+  renderGaps,
+  renderGapsJson,
+  renderSpec,
+  renderSpecJson,
+  renderUi,
+  renderUiJson,
+  renderCurrent,
+  renderNext,
+  renderJson,
+  main,
+};

@@ -288,7 +288,18 @@ Build a compact interface matrix from the phase brief **and every projected curr
 - ownership/lifetime, evaluation timing for relative/lazy/dynamic values, or state transition when it changes how the interface is used;
 - semantic-to-canonical mapping when the interface is a convenience layer, adapter, alias, serializer, or protocol translation.
 
+For a fluent, builder, pipeline, query, or composed API, the callable contract is not complete at the first method. Add a compact **chain-closure matrix** that traces every in-scope transition:
+
+| Expression before the call | Operation / modifier | Exact returned type | Context retained | Terminals still callable |
+|---|---|---|---|---|
+
+`Context retained` names any bound target, owner, transaction, request, scheduler, or other state a later terminal needs. A terminal promised after a chain is covered only when it remains callable on the exact returned type of every in-scope leaf, modifier, and composer. Declaring `play()` on one leaf type does not cover `with()`, `then()`, `repeat()`, keyframes, or another operation that returns a wrapper or base type.
+
+Treat words such as “any”, “all”, “entirely fluent”, “combined”, and “after every modifier” as quantified contract claims. Expand the named categories into matrix rows; one happy-path example is not evidence for the rest. If the intended breadth is unclear, raise `❓ Decide:` instead of silently narrowing it.
+
 Names such as “position, relative movement, opacity, and generic property” are only capability families; they do not define callable methods. A heading named “API contract” is not evidence of completeness. If two reasonable method names, argument shapes, property mappings, or failure results would produce materially different consumer code, choose and record the most consistent one or raise `❓ Decide:` when the choice is reserved for the human. Never leave it for `mano stories` or `mano dev` to invent.
+
+A downstream citation counts only when the cited section or matrix row contains the exact promised operation and path. Do not let a nearby playback section, capability list, or related type stand in for a missing terminal contract.
 
 After completing the matrix, compare every row with the surrounding data model, decisions, and prose. The same operation must not acquire a second default, mapping, validation point, ownership rule, or evaluation time elsewhere in the spec. A correct statement in one section does not cancel a contradictory statement in another; resolve the contradiction before writing or confirming the artifact.
 
@@ -298,7 +309,7 @@ When the matrix changes or composes with an interface that the projected context
 
 1. Search only for the named public symbols/types with a narrow text search such as `rg`; do not inventory the codebase or mine source for new requirements.
 2. Read only the declaration/export surface and directly required public types. Do not trace implementation bodies, debug behavior, or broaden phase scope.
-3. Compare actual names, signatures/defaults, return shapes, and language/framework constraints with the proposed matrix.
+3. Compare actual names, signatures/defaults, return shapes, and language/framework constraints with the proposed matrix. For fluent contracts, inspect the declared return type at every named chain boundary and verify that it exposes the promised terminal while retaining the context that terminal needs.
 4. Record an explicit replacement, adapter/alias, or compatible extension. If the source and approved requirement conflict and the resolution changes consumer behavior, raise `❓ Decide:` before stories.
 
 If the named existing interface cannot be located, state that as `⚠ Verify:`; do not pretend compatibility was checked. This bounded exception verifies an already-selected contract—it does not let `mano spec` derive the work list from source.
