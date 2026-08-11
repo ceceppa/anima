@@ -8,8 +8,8 @@ func _make_leaf(property: String, to_value: float, duration: float) -> AnimaProp
 	return motion
 
 func test_compile_time_true_condition_plays_when_true_branch():
-	var conditional := AnimaConditional.new()
-	conditional.resolution_timing = AnimaConditional.ResolutionTiming.COMPILE_TIME
+	var conditional := _AnimaConditional.new()
+	conditional.resolution_timing = _AnimaConditional.ResolutionTiming.COMPILE_TIME
 	conditional.condition = func(): return true
 	conditional.when_true = _make_leaf("position:x", 10.0, 0.3)
 	conditional.when_false = _make_leaf("position:y", 20.0, 0.3)
@@ -25,8 +25,8 @@ func test_compile_time_true_condition_plays_when_true_branch():
 	assert_eq(node.position.y, 0.0)
 
 func test_compile_time_false_condition_plays_when_false_branch():
-	var conditional := AnimaConditional.new()
-	conditional.resolution_timing = AnimaConditional.ResolutionTiming.COMPILE_TIME
+	var conditional := _AnimaConditional.new()
+	conditional.resolution_timing = _AnimaConditional.ResolutionTiming.COMPILE_TIME
 	conditional.condition = func(): return false
 	conditional.when_true = _make_leaf("position:x", 10.0, 0.3)
 	conditional.when_false = _make_leaf("position:y", 20.0, 0.3)
@@ -42,7 +42,7 @@ func test_compile_time_false_condition_plays_when_false_branch():
 	assert_eq(node.position.x, 0.0)
 
 func test_runtime_resolution_reports_dynamic_before_playing():
-	var conditional := AnimaConditional.new()
+	var conditional := _AnimaConditional.new()
 	conditional.condition = func(): return true
 	conditional.when_true = _make_leaf("position:x", 10.0, 0.3)
 	conditional.when_false = _make_leaf("position:y", 20.0, 0.5)
@@ -51,7 +51,7 @@ func test_runtime_resolution_reports_dynamic_before_playing():
 	assert_eq(result.kind, AnimaDuration.Kind.DYNAMIC)
 
 func test_runtime_resolution_plays_the_selected_branch_and_completes_with_it():
-	var conditional := AnimaConditional.new()
+	var conditional := _AnimaConditional.new()
 	conditional.condition = func(): return false
 	conditional.when_true = _make_leaf("position:x", 10.0, 1.0)
 	conditional.when_false = _make_leaf("position:y", 20.0, 0.3)

@@ -520,7 +520,7 @@ func test_complete_and_revert_on_a_sequence():
 	second.to_value = 20.0
 	second.duration = 0.5
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [first, second]
 
 	var complete_playback := AnimaPlayback.new(sequence, node)
@@ -550,7 +550,7 @@ func test_complete_and_revert_on_a_parallel():
 	second.to_value = 20.0
 	second.duration = 0.5
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [first, second]
 
 	var playback := AnimaPlayback.new(parallel, node)
@@ -731,7 +731,7 @@ func test_group_nested_in_sequence_composes_speed_across_both_levels():
 	group.playback_mode = AnimaGroupMotion.PlaybackMode.PARALLEL
 	group.speed = 2.0
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [group]
 
 	var baseline_root: Node = add_child_autofree(Node.new())

@@ -1,4 +1,4 @@
-## Runtime instance for [AnimaConditional] — selects a branch once at
+## Runtime instance for [_AnimaConditional] — selects a branch once at
 ## construction and advances only that branch's own runtime instance.
 class_name AnimaConditionalInstance
 extends AnimaMotionInstance
@@ -10,7 +10,7 @@ var _branch_instance: Variant = null
 func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	super._init(p_motion, p_value_context)
 
-	var conditional := motion as AnimaConditional
+	var conditional := motion as _AnimaConditional
 	var branch: AnimaMotion = conditional._select_branch()
 	if branch != null:
 		_branch_instance = branch.create_runtime()

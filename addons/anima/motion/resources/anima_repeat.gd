@@ -1,6 +1,6 @@
 ## Repeats [member child] [member count] times, with an optional delay between
 ## repeats and an alternating (ping-pong) mode.
-class_name AnimaRepeat
+class_name _AnimaRepeat
 extends AnimaMotion
 
 ## The motion to repeat.

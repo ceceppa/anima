@@ -1,14 +1,14 @@
 ---
 title: "AnimaSequenceInstance"
-description: "Runtime instance for [AnimaSequence] — advances each child per its"
+description: "Runtime instance for [_AnimaSequence] — advances each child per its"
 ---
 
 # AnimaSequenceInstance
 
 ## Overview
 
-Runtime instance for [AnimaSequence] — advances each child per its
-scheduled start ([method AnimaSequence.compute_schedule]) and completes
+Runtime instance for [_AnimaSequence] — advances each child per its
+scheduled start ([method _AnimaSequence.compute_schedule]) and completes
 once every enabled child has finished.
 
 ## Availability
@@ -23,7 +23,7 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 ### advance
 
-Children are scheduled by delay/delay_basis (AnimaSequence.compute_schedule())
+Children are scheduled by delay/delay_basis (_AnimaSequence.compute_schedule())
 rather than strictly starting one after another finishes, so more than one
 child can be active at once when a negative delay overlaps them.
 
@@ -49,6 +49,6 @@ newly-started/newly-finished child's own callbacks, same as [method advance].
 
 ### build_reversed
 
-Builds a reversed [AnimaSequence]: each started child's own reversed
+Builds a reversed [_AnimaSequence]: each started child's own reversed
 motion, in reverse start order, keeping each child's own delay/delay_basis.
 `null` when no child has started yet.

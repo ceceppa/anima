@@ -1,5 +1,5 @@
-## Runtime instance for [AnimaSequence] — advances each child per its
-## scheduled start ([method AnimaSequence.compute_schedule]) and completes
+## Runtime instance for [_AnimaSequence] — advances each child per its
+## scheduled start ([method _AnimaSequence.compute_schedule]) and completes
 ## once every enabled child has finished.
 class_name AnimaSequenceInstance
 extends AnimaMotionInstance
@@ -17,7 +17,7 @@ var _states: Array[_ChildState] = []
 func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	super._init(p_motion, p_value_context)
 
-	var sequence := motion as AnimaSequence
+	var sequence := motion as _AnimaSequence
 	var enabled_children: Array[AnimaMotion] = []
 	for child in sequence.children:
 		if child.enabled:
@@ -30,7 +30,7 @@ func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> 
 		state.scheduled_start = starts[i]
 		_states.append(state)
 
-## Children are scheduled by delay/delay_basis (AnimaSequence.compute_schedule())
+## Children are scheduled by delay/delay_basis (_AnimaSequence.compute_schedule())
 ## rather than strictly starting one after another finishes, so more than one
 ## child can be active at once when a negative delay overlaps them.
 ##
@@ -91,7 +91,7 @@ func force_complete(target: Node) -> void:
 			_call_if_valid(state.child.on_completed_callback)
 		state.finished = true
 
-## Builds a reversed [AnimaSequence]: each started child's own reversed
+## Builds a reversed [_AnimaSequence]: each started child's own reversed
 ## motion, in reverse start order, keeping each child's own delay/delay_basis.
 ## `null` when no child has started yet.
 func build_reversed() -> AnimaMotion:
@@ -103,7 +103,7 @@ func build_reversed() -> AnimaMotion:
 		return null
 
 	started_states.reverse()
-	var reversed := AnimaSequence.new()
+	var reversed := _AnimaSequence.new()
 	for state in started_states:
 		var reversed_child: AnimaMotion = state.instance.build_reversed()
 		if reversed_child != null:

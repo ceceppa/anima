@@ -1,4 +1,4 @@
-## Runtime instance for [AnimaRace] — advances every enabled child each frame
+## Runtime instance for [_AnimaRace] — advances every enabled child each frame
 ## and completes as soon as the fastest one finishes.
 class_name AnimaRaceInstance
 extends AnimaMotionInstance
@@ -9,7 +9,7 @@ var _child_finished: Array[bool] = []
 func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	super._init(p_motion, p_value_context)
 
-	var race := motion as AnimaRace
+	var race := motion as _AnimaRace
 	for child in race.children:
 		if not child.enabled:
 			continue

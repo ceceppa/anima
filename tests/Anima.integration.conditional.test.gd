@@ -10,7 +10,7 @@ func _make_leaf(property: String, to_value: float, duration: float) -> AnimaProp
 func test_conditional_plays_through_anima_and_completes_with_selected_branch():
 	var node: Node2D = add_child_autofree(Node2D.new())
 
-	var conditional := AnimaConditional.new()
+	var conditional := _AnimaConditional.new()
 	conditional.condition = func(): return true
 	conditional.when_true = _make_leaf("position:x", 10.0, 0.3)
 	conditional.when_false = _make_leaf("position:y", 20.0, 1.0)
@@ -24,12 +24,12 @@ func test_conditional_plays_through_anima_and_completes_with_selected_branch():
 	assert_eq(node.position.y, 0.0)
 
 func test_sequence_containing_runtime_conditional_reports_dynamic_duration():
-	var conditional := AnimaConditional.new()
+	var conditional := _AnimaConditional.new()
 	conditional.condition = func(): return true
 	conditional.when_true = _make_leaf("position:x", 10.0, 0.3)
 	conditional.when_false = _make_leaf("position:y", 20.0, 0.5)
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_leaf("modulate:a", 0.0, 0.2),
 		conditional,

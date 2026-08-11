@@ -262,7 +262,7 @@ func test_composition_of_convenience_motions_matches_a_hand_built_sequence():
 	_run(convenience_chain, convenience_node, 15)
 	_run(canonical_chain, canonical_node, 15)
 
-	assert_eq(convenience_node.position, canonical_node.position, "[composition] a then() chain should match a hand-built AnimaSequence at the same point in playback")
+	assert_eq(convenience_node.position, canonical_node.position, "[composition] a then() chain should match a hand-built _AnimaSequence at the same point in playback")
 
 func test_reversing_a_convenience_motion_matches_reversing_its_canonical_equivalent():
 	var convenience_node: Node2D = add_child_autofree(Node2D.new())

@@ -216,6 +216,15 @@ func with_delay(value: float) -> AnimaGridMotionFactory:
 	motion.delay = value
 	return self
 
+## Delegates to [member motion]'s own [method AnimaMotion.wait] — delays the
+## start of whatever gets combined next via [method then]/[method with],
+## reachable mid-chain the same way [method with_delay] already is. Returns
+## this factory (not [member motion]) so [method play] stays reachable at
+## the end of the chain.
+func wait(seconds: float) -> AnimaGridMotionFactory:
+	motion.wait(seconds)
+	return self
+
 ## Sets [member AnimaMotion.on_started_callback], invoked once when the grid
 ## motion starts. Returns self so calls can keep chaining.
 func on_started(callback: Callable) -> AnimaGridMotionFactory:
@@ -247,7 +256,7 @@ func keyframes(initial: Dictionary = {}, duration: float = 0.0) -> AnimaGridMoti
 ## AnimaKeyframeMotion.duration], whichever applies. Reports an error and
 ## leaves the factory otherwise unchanged when no item motion is set yet, or
 ## when it's a kind with no duration of its own (a composite like
-## [AnimaSequence]). Returns self so calls can keep chaining — e.g. directly
+## [_AnimaSequence]). Returns self so calls can keep chaining — e.g. directly
 ## after [method keyframes] (`tech-spec.md` §Grid convenience shorthand).
 func with_duration(value: float) -> AnimaGridMotionFactory:
 	if motion.item_motion == null:
@@ -296,7 +305,7 @@ func with_pivot(value: AnimaPivot.Kind) -> AnimaGridMotionFactory:
 		push_error("AnimaGridMotionFactory.with_pivot() only applies to a property or keyframe item motion.")
 	return self
 
-## Builds an [AnimaSequence] playing [member motion], then [param other] — the
+## Builds an [_AnimaSequence] playing [member motion], then [param other] — the
 ## same resource [method AnimaMotion.then] would build, since [member motion]
 ## already carries [member AnimaMotion.convenience_target] (set in [method _init]).
 ## Returns the composite motion itself, not this factory: combining the grid
@@ -307,7 +316,7 @@ func with_pivot(value: AnimaPivot.Kind) -> AnimaGridMotionFactory:
 func then(other: Variant) -> AnimaMotion:
 	return motion.then(other)
 
-## Same as [method then], but folds [param other] into the same [AnimaParallel]
+## Same as [method then], but folds [param other] into the same [_AnimaParallel]
 ## group instead of a new sequential step — see [method AnimaMotion.with].
 func with(other: Variant) -> AnimaMotion:
 	return motion.with(other)

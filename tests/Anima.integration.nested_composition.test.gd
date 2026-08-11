@@ -1,6 +1,6 @@
 extends "res://addons/gut/test.gd"
 
-func _make_sequence(ease_kind: AnimaEase.Kind) -> AnimaSequence:
+func _make_sequence(ease_kind: AnimaEase.Kind) -> _AnimaSequence:
 	var a := AnimaPropertyMotion.new()
 	a.target_property = NodePath("position:x")
 	a.to_value = 10.0
@@ -15,7 +15,7 @@ func _make_sequence(ease_kind: AnimaEase.Kind) -> AnimaSequence:
 	b.ease = AnimaEase.new()
 	b.ease.kind = ease_kind
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [a, b]
 
 	var c := AnimaPropertyMotion.new()
@@ -25,7 +25,7 @@ func _make_sequence(ease_kind: AnimaEase.Kind) -> AnimaSequence:
 	c.ease = AnimaEase.new()
 	c.ease.kind = ease_kind
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [parallel, c]
 	return sequence
 

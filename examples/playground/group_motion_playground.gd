@@ -140,6 +140,7 @@ func _build_group() -> AnimaGroupMotion:
 	group.distribution.stagger_interval = 0.12
 	group.reverse_order_policy = AnimaGroupMotion.ReverseOrderPolicy.REVERSE_EXECUTION
 	_configure_order(group)
+
 	return group
 
 func _configure_order(group: AnimaGroupMotion) -> void:

@@ -94,7 +94,20 @@ class_name AnimaSequence
 extends AnimaMotion
 ```
 
-Exception: the fluent builder class is named `Motion` (`tech-spec.md` §Data model `Motion` row) — unprefixed, since `AnimaMotion` already names the base resource type and `Motion.sequence(...)` is the intended authoring surface. This is the only unprefixed type in the addon's public API; it is a one-off carve-out for this specific name clash, not a pattern to extend to future classes.
+Exception: the fluent builder class is named `Motion` (`tech-spec.md` §Data model `Motion` row) — unprefixed, since `AnimaMotion` already names the base resource type and `Motion.sequence(...)` is the intended authoring surface. This is the only *unprefixed* type in the addon's public API; it is a one-off carve-out for this specific name clash, not a pattern to extend to future classes.
+
+**What:** A composite motion *resource* class that exists purely as an implementation detail beneath a convenience entry point (`Anima.on()`/`Anima.group()`/`Anima.grid()`) or the `Motion` builder — never meant to be constructed directly by an author — is declared `class_name _AnimaXxx`: still `Anima`-prefixed and PascalCase, with one leading underscore marking it internal-by-convention. A type an author is meant to construct, save, or inspect directly (`AnimaPropertyMotion`, `AnimaKeyframeMotion`, `AnimaGroupMotion`, `AnimaGridMotion`, and similar) keeps the plain, unprefixed-by-underscore form.
+
+**Why:** GDScript has no true access-control keyword for class visibility — every `class_name` is globally addressable — so a leading underscore is the established GDScript community convention for "internal, not part of the intended surface," and it's what keeps `AnimaSequence`/`AnimaParallel`-style composition plumbing from competing with `Anima.on`/`Anima.group`/`Anima.grid` in autocomplete and the "New Resource" picker (`tech-spec.md` §Key technical decisions).
+
+The file name stays unprefixed (`anima_sequence.gd`, not `_anima_sequence.gd`) — this is the one deliberate exception to "the file name mirrors the class name" above, since the underscore marks the class as internal-by-convention, not the file itself.
+
+**Pattern:**
+```gdscript
+# addons/anima/motion/resources/anima_sequence.gd
+class_name _AnimaSequence
+extends AnimaMotion
+```
 
 **What:** An `AnimaEase` field that only applies to one specific `kind` is prefixed with a short form of that kind's name (`spring_response`, `spring_stiffness`, `elastic_amplitude`, `bezier_p1`, `decay_rate`, `back_overshoot`) — never a bare name that could belong to any kind (`response`, `amplitude`, `rate`).
 

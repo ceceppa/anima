@@ -4,7 +4,7 @@
 class_name AnimaMotion
 extends Resource
 
-## Which sibling instant [member delay] is measured from, inside an [AnimaSequence].
+## Which sibling instant [member delay] is measured from, inside an [_AnimaSequence].
 enum DelayBasis {
 	AFTER_PREVIOUS_ENDS,
 	AFTER_PREVIOUS_STARTS,
@@ -13,7 +13,7 @@ enum DelayBasis {
 ## The value left on the target once a playback reaches [constant
 ## AnimaPlayback.State.FINISHED] — whether by playing to the end naturally or
 ## via [method AnimaPlayback.complete]. Unrelated to [constant
-## AnimaGroupMotion.CompletionPolicy] / [constant AnimaParallel.CompletionPolicy],
+## AnimaGroupMotion.CompletionPolicy] / [constant _AnimaParallel.CompletionPolicy],
 ## which decide *when* a composite counts as done, never what value is left
 ## behind — see tech-spec.md's Key technical decisions.
 enum CompletionValuePolicy {
@@ -39,11 +39,11 @@ enum CancellationValuePolicy {
 	COMPLETE,
 }
 
-## Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
+## Optional label, e.g. for [constant _AnimaParallel.CompletionPolicy.NAMED_CHILD].
 @export var display_name: String = ""
 ## Disabled motions are skipped by every composite that contains them.
 @export var enabled: bool = true
-## Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
+## Seconds relative to [member delay_basis]. Only [_AnimaSequence] consumes
 ## this and [member delay_basis] this phase. May be negative (an overlap).
 @export var delay: float = 0.0
 ## Which sibling instant [member delay] is measured from.
@@ -87,6 +87,15 @@ enum CancellationValuePolicy {
 ## than reduce it.
 @export var reduced_motion_speed: float = -1.0
 
+## Transient, non-exported pending delay set by [method wait] and consumed by
+## the very next [method then]/[method with] call — added onto the resolved
+## next motion's own [member delay] rather than replacing it, so an already
+## `with_delay()`-tagged next step and a preceding [method wait] stack
+## instead of one overriding the other (`tech-spec.md` §Key technical
+## decisions, the `.wait()` bullet). Never read anywhere except [method then]/
+## [method with], which reset it to `0.0` immediately after consuming it.
+var _pending_chain_wait: float = 0.0
+
 ## Transient target captured by [AnimaOnMotionFactory] when this motion is
 ## built through [method Anima.on] — never exported, so it's never part of a
 ## saved resource. `null` for a hand-built motion, an [method Anima.item]-built
@@ -102,7 +111,7 @@ var convenience_target: Node = null
 ## Reports an error and returns `null` only when called on a leaf
 ## [AnimaPropertyMotion] with no captured target — build it through [method
 ## Anima.on] first, or call [method Anima.play] directly. A composite
-## ([AnimaSequence]/[AnimaParallel]) always proceeds, passing `null` when its
+## ([_AnimaSequence]/[_AnimaParallel]) always proceeds, passing `null` when its
 ## own [member convenience_target] wasn't propagated: each leaf then resolves
 ## its own captured target independently at `advance()` time
 ## (`tech-spec.md` §Target-bound authoring contract).
@@ -132,7 +141,7 @@ func create_runtime(context: AnimaValueContext = null) -> Variant:
 func validate() -> Array[String]:
 	return []
 
-## Builds an [AnimaSequence] that plays this motion, then [param other],
+## Builds an [_AnimaSequence] that plays this motion, then [param other],
 ## in order — the same resource [method Motion.sequence] would build.
 ## Chaining a second `.then()` appends another step to one flat sequence
 ## instead of nesting (`a.then(b).then(c)` is a 3-step sequence, not a
@@ -142,12 +151,12 @@ func validate() -> Array[String]:
 ## factory like [AnimaGridMotionFactory]) — resolved via [method
 ## _resolve_chainable] (`tech-spec.md` §Target-bound authoring contract,
 ## "Chaining a motion factory directly").
-func then(other: Variant) -> AnimaSequence:
+func then(other: Variant) -> _AnimaSequence:
 	var resolved_other := _resolve_chainable(other, "then")
 
-	var sequence := AnimaSequence.new()
-	if self is AnimaSequence:
-		sequence.children.append_array((self as AnimaSequence).children)
+	var sequence := _AnimaSequence.new()
+	if self is _AnimaSequence:
+		sequence.children.append_array((self as _AnimaSequence).children)
 	else:
 		sequence.children.append(self)
 
@@ -157,11 +166,15 @@ func then(other: Variant) -> AnimaSequence:
 		sequence.convenience_target = convenience_target
 		return sequence
 
+	if _pending_chain_wait != 0.0:
+		resolved_other.delay += _pending_chain_wait
+		_pending_chain_wait = 0.0
+
 	sequence.children.append(resolved_other)
 	sequence.convenience_target = _shared_convenience_target(convenience_target, resolved_other.convenience_target)
 	return sequence
 
-## Folds [param other] into the same [AnimaParallel] group as whatever was
+## Folds [param other] into the same [_AnimaParallel] group as whatever was
 ## most recently chained — the group open since the last [method then], or
 ## the whole chain when no [method then] preceded it. Multiple consecutive
 ## `.with()` calls join one growing group rather than nesting
@@ -172,14 +185,18 @@ func with(other: Variant) -> AnimaMotion:
 	if resolved_other == null:
 		return self
 
-	if not (self is AnimaSequence):
+	if _pending_chain_wait != 0.0:
+		resolved_other.delay += _pending_chain_wait
+		_pending_chain_wait = 0.0
+
+	if not (self is _AnimaSequence):
 		return _grouped_with(self, resolved_other)
 
-	var sequence := self as AnimaSequence
+	var sequence := self as _AnimaSequence
 	if sequence.children.is_empty():
 		return resolved_other
 
-	var result := AnimaSequence.new()
+	var result := _AnimaSequence.new()
 	result.children.append_array(sequence.children)
 	var last_index := result.children.size() - 1
 	result.children[last_index] = _grouped_with(result.children[last_index], resolved_other)
@@ -205,11 +222,11 @@ func _resolve_chainable(value: Variant, caller: String) -> AnimaMotion:
 	return null
 
 ## Shared helper for [method with]: groups [param existing] and [param other]
-## into one [AnimaParallel], flattening when [param existing] is already one.
-func _grouped_with(existing: AnimaMotion, other: AnimaMotion) -> AnimaParallel:
-	var parallel := AnimaParallel.new()
-	if existing is AnimaParallel:
-		parallel.children.append_array((existing as AnimaParallel).children)
+## into one [_AnimaParallel], flattening when [param existing] is already one.
+func _grouped_with(existing: AnimaMotion, other: AnimaMotion) -> _AnimaParallel:
+	var parallel := _AnimaParallel.new()
+	if existing is _AnimaParallel:
+		parallel.children.append_array((existing as _AnimaParallel).children)
 	else:
 		parallel.children.append(existing)
 	parallel.children.append(other)
@@ -238,15 +255,15 @@ func on_completed(callback: Callable) -> AnimaMotion:
 	on_completed_callback = callback
 	return self
 
-## Wraps this motion in a new [AnimaRepeat] that plays it [param count] times
+## Wraps this motion in a new [_AnimaRepeat] that plays it [param count] times
 ## — the same resource [method Motion.repeat] would build, now reachable as a
 ## chain call on any motion, including one built through [method Anima.on].
 ## [param count] defaults to `-1`, which repeats indefinitely instead of a
 ## fixed number of times. [param alternate] `true` ping-pongs every other
 ## iteration between forward and backward (v1's `loop_in_circle`) instead of
 ## repeating identically.
-func repeat(count: int = -1, alternate: bool = false) -> AnimaRepeat:
-	var result := AnimaRepeat.new()
+func repeat(count: int = -1, alternate: bool = false) -> _AnimaRepeat:
+	var result := _AnimaRepeat.new()
 	result.child = self
 	result.count = count
 	result.alternate = alternate
@@ -258,4 +275,34 @@ func repeat(count: int = -1, alternate: bool = false) -> AnimaRepeat:
 ## Returns self so calls can keep chaining.
 func with_speed(value: float) -> AnimaMotion:
 	speed = value
+	return self
+
+## Sets [member delay] directly on this motion — including a composite built
+## by [method then]/[method with], which previously had no way to delay its
+## own overall start except repeating a per-leaf [method
+## AnimaPropertyMotion.with_delay]/[method AnimaKeyframeMotion.with_delay] on
+## every child. [AnimaPlayback] already reads the root motion's [member
+## delay] before its first frame advances, so this base implementation is the
+## only piece that was missing (`tech-spec.md` §Key technical decisions, the
+## `AnimaMotion.with_delay()` bullet). [AnimaPropertyMotion]/
+## [AnimaKeyframeMotion] override this with a narrower return type so
+## duration/ease chaining still works after it; every other subtype
+## (including a `.then()`/`.with()` composite) uses this base implementation
+## directly. Returns self so calls can keep chaining.
+func with_delay(value: float) -> AnimaMotion:
+	delay = value
+	return self
+
+## Delays the start of whatever gets combined next via [method then]/[method
+## with], instead of this motion's own start — the inline-pause counterpart
+## to [method with_delay], which delays this motion itself. [param seconds]
+## is added onto the next combined motion's own [member delay] (not a
+## replacement), so a preceding [method wait] and an explicit [method
+## with_delay] already set on that next step stack additively
+## (`tech-spec.md` §Key technical decisions, the `.wait()` bullet). Consumed
+## exactly once, by the very next [method then]/[method with] call — ending a
+## chain, or calling [method play], with a [method wait] left unconsumed is a
+## harmless no-op. Returns self so calls can keep chaining.
+func wait(seconds: float) -> AnimaMotion:
+	_pending_chain_wait = seconds
 	return self

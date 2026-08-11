@@ -1,13 +1,13 @@
 ---
 title: "AnimaConditionalInstance"
-description: "Runtime instance for [AnimaConditional] — selects a branch once at"
+description: "Runtime instance for [_AnimaConditional] — selects a branch once at"
 ---
 
 # AnimaConditionalInstance
 
 ## Overview
 
-Runtime instance for [AnimaConditional] — selects a branch once at
+Runtime instance for [_AnimaConditional] — selects a branch once at
 construction and advances only that branch's own runtime instance.
 
 ## Availability

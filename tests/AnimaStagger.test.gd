@@ -16,52 +16,52 @@ func _make_template(duration: float) -> AnimaPropertyMotion:
 	return motion
 
 func test_forward_order_is_list_order():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(4)
-	stagger.order = AnimaStagger.Order.FORWARD
+	stagger.order = _AnimaStagger.Order.FORWARD
 
 	assert_eq(stagger.resolve_order(), [0, 1, 2, 3])
 
 func test_reverse_order_is_opposite_of_list_order():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(4)
-	stagger.order = AnimaStagger.Order.REVERSE
+	stagger.order = _AnimaStagger.Order.REVERSE
 
 	assert_eq(stagger.resolve_order(), [3, 2, 1, 0])
 
 func test_from_center_order_starts_at_the_middle():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(5)
-	stagger.order = AnimaStagger.Order.FROM_CENTER
+	stagger.order = _AnimaStagger.Order.FROM_CENTER
 
 	assert_eq(stagger.resolve_order(), [2, 1, 3, 0, 4])
 
 func test_from_edges_order_starts_at_both_ends():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(5)
-	stagger.order = AnimaStagger.Order.FROM_EDGES
+	stagger.order = _AnimaStagger.Order.FROM_EDGES
 
 	assert_eq(stagger.resolve_order(), [0, 4, 1, 3, 2])
 
 func test_custom_order_uses_the_explicit_index_list():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(4)
-	stagger.order = AnimaStagger.Order.CUSTOM
+	stagger.order = _AnimaStagger.Order.CUSTOM
 	stagger.custom_order = [2, 0, 3, 1]
 
 	assert_eq(stagger.resolve_order(), [2, 0, 3, 1])
 
 func test_random_order_includes_every_target_exactly_once():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(6)
-	stagger.order = AnimaStagger.Order.RANDOM
+	stagger.order = _AnimaStagger.Order.RANDOM
 
 	var order := stagger.resolve_order()
 	order.sort()
 	assert_eq(order, [0, 1, 2, 3, 4, 5])
 
 func test_estimate_duration_reports_fixed_kind_and_staggered_value():
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = _make_targets(4)
 	stagger.interval = 0.1
 	stagger.template = _make_template(0.5)
@@ -72,7 +72,7 @@ func test_estimate_duration_reports_fixed_kind_and_staggered_value():
 
 func test_playback_starts_targets_one_interval_apart_in_forward_order():
 	var targets := _make_targets(3)
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = targets
 	stagger.template = _make_template(0.3)
 	stagger.interval = 0.1
@@ -93,7 +93,7 @@ func test_playback_starts_targets_one_interval_apart_in_forward_order():
 
 func test_playback_runs_every_target_through_the_template_to_completion():
 	var targets := _make_targets(3)
-	var stagger := AnimaStagger.new()
+	var stagger := _AnimaStagger.new()
 	stagger.targets = targets
 	stagger.template = _make_template(0.2)
 	stagger.interval = 0.05

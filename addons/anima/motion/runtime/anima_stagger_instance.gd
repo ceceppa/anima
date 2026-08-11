@@ -1,4 +1,4 @@
-## Runtime instance for [AnimaStagger] — advances one [member AnimaStagger.template]
+## Runtime instance for [_AnimaStagger] — advances one [member _AnimaStagger.template]
 ## instance per target, started per the resolved stagger order.
 class_name AnimaStaggerInstance
 extends AnimaMotionInstance
@@ -16,7 +16,7 @@ var _entries: Array[_EntryState] = []
 func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	super._init(p_motion, p_value_context)
 
-	var stagger := motion as AnimaStagger
+	var stagger := motion as _AnimaStagger
 	if stagger.template == null or stagger.targets.is_empty():
 		return
 
@@ -28,12 +28,12 @@ func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> 
 		_entries.append(entry)
 
 ## Ignores the target this instance's own advance() receives — each entry
-## drives its own target from `targets`, per AnimaStagger's contract.
+## drives its own target from `targets`, per _AnimaStagger's contract.
 func advance(_target: Node, delta: float) -> bool:
 	if _entries.is_empty():
 		return true
 
-	var stagger := motion as AnimaStagger
+	var stagger := motion as _AnimaStagger
 	_elapsed += delta
 
 	for entry in _entries:
@@ -63,7 +63,7 @@ func restore_initial(_target: Node) -> void:
 ## Forces every entry to its own final state on its own target, starting any
 ## that have not begun yet.
 func force_complete(_target: Node) -> void:
-	var stagger := motion as AnimaStagger
+	var stagger := motion as _AnimaStagger
 	for entry in _entries:
 		if not entry.started:
 			entry.started = true

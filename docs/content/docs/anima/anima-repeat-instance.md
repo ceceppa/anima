@@ -1,14 +1,14 @@
 ---
 title: "AnimaRepeatInstance"
-description: "Runtime instance for [AnimaRepeat] — replays [member AnimaRepeat.child]"
+description: "Runtime instance for [_AnimaRepeat] — replays [member _AnimaRepeat.child]"
 ---
 
 # AnimaRepeatInstance
 
 ## Overview
 
-Runtime instance for [AnimaRepeat] — replays [member AnimaRepeat.child]
-[member AnimaRepeat.count] times, with an optional delay between repetitions.
+Runtime instance for [_AnimaRepeat] — replays [member _AnimaRepeat.child]
+[member _AnimaRepeat.count] times, with an optional delay between repetitions.
 
 ## Availability
 
@@ -24,7 +24,7 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 Advances the current repetition; once it finishes, either waits out
 delay_between and starts the next repetition, or completes if that was the
-last one. A negative [member AnimaRepeat.count] never completes on its own.
+last one. A negative [member _AnimaRepeat.count] never completes on its own.
 
 ### restore_initial
 
@@ -35,16 +35,16 @@ AnimaMotionInstance.restore_initial].
 
 Forces the current iteration to its final state — a repeat's own notion of
 "complete" is the current iteration reaching its end, not exhausting
-[member AnimaRepeat.count] (which may be indefinite) — see [method
+[member _AnimaRepeat.count] (which may be indefinite) — see [method
 AnimaMotionInstance.force_complete].
 
 ### build_reversed
 
-Builds a reversed [AnimaRepeat]: the currently-active iteration's own
+Builds a reversed [_AnimaRepeat]: the currently-active iteration's own
 reversed motion (see [method AnimaMotionInstance.build_reversed]), repeated
-the same [member AnimaRepeat.count] times with the same [member
-AnimaRepeat.delay_between] and [member AnimaRepeat.alternate] — the same
+the same [member _AnimaRepeat.count] times with the same [member
+_AnimaRepeat.delay_between] and [member _AnimaRepeat.alternate] — the same
 "freshly built reversed motion, restart from the top" rule already applied
-to a leaf/[AnimaSequence]/[AnimaParallel] reversal, extended to [AnimaRepeat]
+to a leaf/[_AnimaSequence]/[_AnimaParallel] reversal, extended to [_AnimaRepeat]
 instead of carved out as a special case. `null` before any iteration has
 captured a value yet.

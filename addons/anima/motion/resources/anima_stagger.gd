@@ -1,6 +1,6 @@
 ## Plays one instance of [member template] per entry in [member targets],
 ## started [member interval] seconds apart in the resolved [member order].
-class_name AnimaStagger
+class_name _AnimaStagger
 extends AnimaMotion
 
 ## The order [member targets] start in.

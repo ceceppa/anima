@@ -8,7 +8,7 @@ func test_repeat_plays_through_anima_and_completes():
 	child.to_value = 10.0
 	child.duration = 0.2
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	repeat.child = child
 	repeat.count = 2
 

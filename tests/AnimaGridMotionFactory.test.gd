@@ -42,7 +42,7 @@ func test_then_delegates_to_the_grid_motions_own_then_and_returns_the_composite(
 	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
 	var result := factory.then(other)
 
-	assert_true(result is AnimaSequence)
+	assert_true(result is _AnimaSequence)
 	assert_eq(result.children, [factory.motion, other])
 
 func test_with_delegates_to_the_grid_motions_own_with_and_returns_the_composite():
@@ -53,7 +53,7 @@ func test_with_delegates_to_the_grid_motions_own_with_and_returns_the_composite(
 	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
 	var result := factory.with(other)
 
-	assert_true(result is AnimaParallel)
+	assert_true(result is _AnimaParallel)
 	assert_eq(result.children, [factory.motion, other])
 
 func test_then_with_a_shared_target_propagates_convenience_target():
@@ -75,7 +75,7 @@ func test_with_accepts_another_grid_factory_directly():
 
 	var result := a.with(b)
 
-	assert_true(result is AnimaParallel)
+	assert_true(result is _AnimaParallel)
 	assert_eq(result.children, [a.motion, b.motion])
 	assert_same(result.convenience_target, container, "both factories share container, so the composite should too")
 

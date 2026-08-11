@@ -43,7 +43,7 @@ per the three-way rule documented on [member reduced_motion]. Shared by
 
 Plays [param motion] against [param target] and returns the resulting
 [AnimaPlayback]. [param target] is optional when [param motion] supplies
-its own targets (e.g. [AnimaStagger], which ignores [param target]
+its own targets (e.g. [_AnimaStagger], which ignores [param target]
 entirely). An [AnimaGroupMotion] is different: it still reads [param
 target] as the root node its [member AnimaGroupMotion.target_collection]
 resolves against — required for a [constant AnimaTargetCollection.Kind.CHILDREN]
@@ -108,6 +108,17 @@ and calling [method play] separately (`tech-spec.md` §Grid convenience
 shorthand). Reports an error and returns `null` when [param container] is
 `null`, the same as [method on]. [param grid_size] accepts a [Vector2i],
 [Vector2], [Node], or `null` — see [method AnimaGridMotionFactory._init].
+
+### group
+
+Returns a factory for playing a shared motion across a chosen set of nodes
+with one line — `Anima.group(container).with_item_motion(pulse).play()` —
+instead of hand-building an [AnimaTargetCollection] and [AnimaGroupMotion]
+and calling [method play] separately (`tech-spec.md` §Group convenience
+shorthand). [param targets] is a [Node] (its children become the group's
+targets, mirroring [method grid]) or an [Array] of [Node]s (used
+directly). Reports an error and returns `null` for any other type, the
+same fail-fast contract [method on] uses for a `null` target.
 
 ### attach_behaviour
 

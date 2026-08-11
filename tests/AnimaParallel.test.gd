@@ -12,7 +12,7 @@ func test_children_start_immediately_and_run_concurrently():
 	var node := Node2D.new()
 	autofree(node)
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [
 		_make_child("position:x", 10.0, 0.5),
 		_make_child("position:y", 20.0, 0.5),
@@ -32,7 +32,7 @@ func test_a_childs_own_delay_offsets_it_from_the_groups_own_start():
 	var delayed := _make_child("position:y", 10.0, 0.2)
 	delayed.delay = 0.2
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [immediate, delayed]
 
 	var playback := AnimaPlayback.new(parallel, node)
@@ -52,7 +52,7 @@ func test_two_children_with_different_delays_each_offset_from_the_groups_own_sta
 	var b := _make_child("position:y", 10.0, 0.1)
 	b.delay = 0.2
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [a, b]
 
 	var playback := AnimaPlayback.new(parallel, node)
@@ -71,7 +71,7 @@ func test_completing_a_parallel_starts_and_finishes_a_still_delayed_child():
 	var delayed := _make_child("position:y", 20.0, 0.2)
 	delayed.delay = 5.0
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [immediate, delayed]
 
 	var playback := AnimaPlayback.new(parallel, node)
@@ -100,7 +100,7 @@ func test_each_childs_own_on_started_fires_immediately_and_on_completed_fires_on
 	b.on_started_callback = func(): b_started[0] += 1
 	b.on_completed_callback = func(): b_completed[0] += 1
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [a, b]
 
 	var playback := AnimaPlayback.new(parallel, node)
@@ -121,7 +121,7 @@ func test_default_policy_finishes_only_once_every_child_finished():
 	var node := Node2D.new()
 	autofree(node)
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [
 		_make_child("position:x", 10.0, 0.3),
 		_make_child("position:y", 20.0, 0.6),
@@ -143,8 +143,8 @@ func test_first_child_policy_finishes_as_soon_as_first_child_finishes():
 	var node := Node2D.new()
 	autofree(node)
 
-	var parallel := AnimaParallel.new()
-	parallel.completion_policy = AnimaParallel.CompletionPolicy.FIRST_CHILD
+	var parallel := _AnimaParallel.new()
+	parallel.completion_policy = _AnimaParallel.CompletionPolicy.FIRST_CHILD
 	parallel.children = [
 		_make_child("position:x", 10.0, 0.3),
 		_make_child("position:y", 20.0, 1.0),
@@ -160,7 +160,7 @@ func test_first_child_policy_finishes_as_soon_as_first_child_finishes():
 	assert_lt(node.position.y, 20.0)
 
 func test_estimate_duration_reports_longest_fixed_child_by_default():
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [
 		_make_child("position:x", 10.0, 0.3),
 		_make_child("position:y", 20.0, 0.6),
@@ -174,8 +174,8 @@ func test_named_child_policy_finishes_as_soon_as_named_child_finishes():
 	var node := Node2D.new()
 	autofree(node)
 
-	var parallel := AnimaParallel.new()
-	parallel.completion_policy = AnimaParallel.CompletionPolicy.NAMED_CHILD
+	var parallel := _AnimaParallel.new()
+	parallel.completion_policy = _AnimaParallel.CompletionPolicy.NAMED_CHILD
 	parallel.completion_child_name = "decider"
 	parallel.children = [
 		_make_child("position:x", 10.0, 1.0, "slow"),
@@ -194,7 +194,7 @@ func test_reversing_a_finished_parallel_returns_every_child_to_its_start_value()
 	var node := Node2D.new()
 	autofree(node)
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [
 		_make_child("position:x", 10.0, 0.2),
 		_make_child("position:y", 20.0, 0.2),

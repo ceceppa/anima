@@ -73,7 +73,7 @@ func test_parallel_group_starts_every_target_together():
 func test_parallel_group_all_items_completion_waits_for_the_slowest_item():
 	var targets := _make_targets(2)
 	var call_count := [0]
-	var conditional := AnimaConditional.new()
+	var conditional := _AnimaConditional.new()
 	conditional.condition = func():
 		var is_fast: bool = call_count[0] == 0
 		call_count[0] += 1
@@ -94,7 +94,7 @@ func test_parallel_group_all_items_completion_waits_for_the_slowest_item():
 func test_parallel_group_first_item_completion_finishes_as_soon_as_the_fastest_item_finishes():
 	var targets := _make_targets(2)
 	var call_count := [0]
-	var conditional := AnimaConditional.new()
+	var conditional := _AnimaConditional.new()
 	conditional.condition = func():
 		var is_fast: bool = call_count[0] == 0
 		call_count[0] += 1

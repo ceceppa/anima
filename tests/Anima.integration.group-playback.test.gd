@@ -197,7 +197,7 @@ func test_reversing_a_group_with_nested_sequence_item_motion_returns_to_start():
 	step_two.to_value = 20.0
 	step_two.duration = 0.05
 
-	var item_sequence := AnimaSequence.new()
+	var item_sequence := _AnimaSequence.new()
 	item_sequence.children = [step_one, step_two]
 
 	var group := AnimaGroupMotion.new()

@@ -198,7 +198,7 @@ func retarget(new_to_value: Variant) -> void:
 ## (see [method AnimaGroupPlayback.build_reversed_item_motions]) instead of
 ## its original forward one, and restarts this same playback from the top,
 ## respecting [member AnimaGroupMotion.reverse_order_policy] for item order.
-## For a leaf [AnimaPropertyMotion] or an [AnimaSequence]/[AnimaParallel]
+## For a leaf [AnimaPropertyMotion] or an [_AnimaSequence]/[_AnimaParallel]
 ## composition of them (e.g. a target-bound motion authored through [method
 ## Anima.on]), replaces [member motion] with a freshly built reversed motion
 ## and restarts playback against it — see [method AnimaMotionInstance.build_reversed].
@@ -226,7 +226,7 @@ func reverse() -> bool:
 ## reversed motion (see [method AnimaGroupPlayback.build_reversed_item_motions])
 ## instead of its original forward one, and restarts from the top, respecting
 ## [member AnimaGroupMotion.reverse_order_policy] for item order. For a leaf
-## [AnimaPropertyMotion] or an [AnimaSequence]/[AnimaParallel]/[AnimaRepeat]
+## [AnimaPropertyMotion] or an [_AnimaSequence]/[_AnimaParallel]/[_AnimaRepeat]
 ## composition of them, replaces [member motion] with a freshly built
 ## reversed motion and restarts playback against it — see [method
 ## AnimaMotionInstance.build_reversed]. Returns `false` (leaving state

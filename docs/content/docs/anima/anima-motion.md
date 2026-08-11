@@ -23,14 +23,14 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 ### DelayBasis
 
-Which sibling instant [member delay] is measured from, inside an [AnimaSequence].
+Which sibling instant [member delay] is measured from, inside an [_AnimaSequence].
 
 ### CompletionValuePolicy
 
 The value left on the target once a playback reaches [constant
 AnimaPlayback.State.FINISHED] — whether by playing to the end naturally or
 via [method AnimaPlayback.complete]. Unrelated to [constant
-AnimaGroupMotion.CompletionPolicy] / [constant AnimaParallel.CompletionPolicy],
+AnimaGroupMotion.CompletionPolicy] / [constant _AnimaParallel.CompletionPolicy],
 which decide *when* a composite counts as done, never what value is left
 behind — see tech-spec.md's Key technical decisions.
 
@@ -42,7 +42,7 @@ The value left on the target when [method AnimaPlayback.cancel] is called.
 
 ### display_name
 
-Optional label, e.g. for [constant AnimaParallel.CompletionPolicy.NAMED_CHILD].
+Optional label, e.g. for [constant _AnimaParallel.CompletionPolicy.NAMED_CHILD].
 
 ### enabled
 
@@ -50,7 +50,7 @@ Disabled motions are skipped by every composite that contains them.
 
 ### delay
 
-Seconds relative to [member delay_basis]. Only [AnimaSequence] consumes
+Seconds relative to [member delay_basis]. Only [_AnimaSequence] consumes
 this and [member delay_basis] this phase. May be negative (an overlap).
 
 ### delay_basis
@@ -135,7 +135,7 @@ convenience_target] when set. Returns the resulting [AnimaPlayback].
 Reports an error and returns `null` only when called on a leaf
 [AnimaPropertyMotion] with no captured target — build it through [method
 Anima.on] first, or call [method Anima.play] directly. A composite
-([AnimaSequence]/[AnimaParallel]) always proceeds, passing `null` when its
+([_AnimaSequence]/[_AnimaParallel]) always proceeds, passing `null` when its
 own [member convenience_target] wasn't propagated: each leaf then resolves
 its own captured target independently at `advance()` time
 (`tech-spec.md` §Target-bound authoring contract).
@@ -160,7 +160,7 @@ when this motion (and its children, if any) are valid.
 
 ### then
 
-Builds an [AnimaSequence] that plays this motion, then [param other],
+Builds an [_AnimaSequence] that plays this motion, then [param other],
 in order — the same resource [method Motion.sequence] would build.
 Chaining a second `.then()` appends another step to one flat sequence
 instead of nesting (`a.then(b).then(c)` is a 3-step sequence, not a
@@ -173,7 +173,7 @@ _resolve_chainable] (`tech-spec.md` §Target-bound authoring contract,
 
 ### with
 
-Folds [param other] into the same [AnimaParallel] group as whatever was
+Folds [param other] into the same [_AnimaParallel] group as whatever was
 most recently chained — the group open since the last [method then], or
 the whole chain when no [method then] preceded it. Multiple consecutive
 `.with()` calls join one growing group rather than nesting
@@ -193,7 +193,7 @@ Returns self so calls can keep chaining.
 
 ### repeat
 
-Wraps this motion in a new [AnimaRepeat] that plays it [param count] times
+Wraps this motion in a new [_AnimaRepeat] that plays it [param count] times
 — the same resource [method Motion.repeat] would build, now reachable as a
 chain call on any motion, including one built through [method Anima.on].
 [param count] defaults to `-1`, which repeats indefinitely instead of a
@@ -207,3 +207,31 @@ Sets [member speed] directly. Named `with_speed` rather than `speed()` for
 the same reason as `with_duration`/`with_ease`/`with_delay` on leaf motion
 types — a bare method name would collide with the field of the same name.
 Returns self so calls can keep chaining.
+
+### with_delay
+
+Sets [member delay] directly on this motion — including a composite built
+by [method then]/[method with], which previously had no way to delay its
+own overall start except repeating a per-leaf [method
+AnimaPropertyMotion.with_delay]/[method AnimaKeyframeMotion.with_delay] on
+every child. [AnimaPlayback] already reads the root motion's [member
+delay] before its first frame advances, so this base implementation is the
+only piece that was missing (`tech-spec.md` §Key technical decisions, the
+`AnimaMotion.with_delay()` bullet). [AnimaPropertyMotion]/
+[AnimaKeyframeMotion] override this with a narrower return type so
+duration/ease chaining still works after it; every other subtype
+(including a `.then()`/`.with()` composite) uses this base implementation
+directly. Returns self so calls can keep chaining.
+
+### wait
+
+Delays the start of whatever gets combined next via [method then]/[method
+with], instead of this motion's own start — the inline-pause counterpart
+to [method with_delay], which delays this motion itself. [param seconds]
+is added onto the next combined motion's own [member delay] (not a
+replacement), so a preceding [method wait] and an explicit [method
+with_delay] already set on that next step stack additively
+(`tech-spec.md` §Key technical decisions, the `.wait()` bullet). Consumed
+exactly once, by the very next [method then]/[method with] call — ending a
+chain, or calling [method play], with a [method wait] left unconsumed is a
+harmless no-op. Returns self so calls can keep chaining.

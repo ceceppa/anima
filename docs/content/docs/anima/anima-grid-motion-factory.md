@@ -147,6 +147,14 @@ Sets [member AnimaMotion.delay] on the grid motion as a whole — delays the
 grid's overall start, independent of its own per-item stagger/distribution
 delay. Returns self so calls can keep chaining.
 
+### wait
+
+Delegates to [member motion]'s own [method AnimaMotion.wait] — delays the
+start of whatever gets combined next via [method then]/[method with],
+reachable mid-chain the same way [method with_delay] already is. Returns
+this factory (not [member motion]) so [method play] stays reachable at
+the end of the chain.
+
 ### on_started
 
 Sets [member AnimaMotion.on_started_callback], invoked once when the grid
@@ -175,7 +183,7 @@ duration — [member AnimaPropertyMotion.duration] or [member
 AnimaKeyframeMotion.duration], whichever applies. Reports an error and
 leaves the factory otherwise unchanged when no item motion is set yet, or
 when it's a kind with no duration of its own (a composite like
-[AnimaSequence]). Returns self so calls can keep chaining — e.g. directly
+[_AnimaSequence]). Returns self so calls can keep chaining — e.g. directly
 after [method keyframes] (`tech-spec.md` §Grid convenience shorthand).
 
 ### with_ease
@@ -196,7 +204,7 @@ incompatible-item-motion error behaviour as [method with_duration].
 
 ### then
 
-Builds an [AnimaSequence] playing [member motion], then [param other] — the
+Builds an [_AnimaSequence] playing [member motion], then [param other] — the
 same resource [method AnimaMotion.then] would build, since [member motion]
 already carries [member AnimaMotion.convenience_target] (set in [method _init]).
 Returns the composite motion itself, not this factory: combining the grid
@@ -207,7 +215,7 @@ an [AnimaMotion], or another convenience factory exposing `motion`.
 
 ### with
 
-Same as [method then], but folds [param other] into the same [AnimaParallel]
+Same as [method then], but folds [param other] into the same [_AnimaParallel]
 group instead of a new sequential step — see [method AnimaMotion.with].
 
 ### play

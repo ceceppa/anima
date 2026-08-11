@@ -1,6 +1,6 @@
 ## Runs each enabled child in [member children] one after another; completes
 ## when the last one finishes.
-class_name AnimaSequence
+class_name _AnimaSequence
 extends AnimaMotion
 
 ## The motions to run in order.

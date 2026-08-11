@@ -1,5 +1,5 @@
-## Runtime instance for [AnimaRepeat] — replays [member AnimaRepeat.child]
-## [member AnimaRepeat.count] times, with an optional delay between repetitions.
+## Runtime instance for [_AnimaRepeat] — replays [member _AnimaRepeat.child]
+## [member _AnimaRepeat.count] times, with an optional delay between repetitions.
 class_name AnimaRepeatInstance
 extends AnimaMotionInstance
 
@@ -10,7 +10,7 @@ var _delay_elapsed: float = 0.0
 
 func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	super._init(p_motion, p_value_context)
-	var repeat := motion as AnimaRepeat
+	var repeat := motion as _AnimaRepeat
 	if repeat.child != null and repeat.count != 0:
 		_current_instance = _build_iteration_instance(0)
 
@@ -18,7 +18,7 @@ func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> 
 ## child's from/to values, per tech-spec.md's alternate rule. Any other
 ## child type always replays forward — reversing a composite is undefined.
 func _build_iteration_instance(iteration: int) -> Variant:
-	var repeat := motion as AnimaRepeat
+	var repeat := motion as _AnimaRepeat
 	if repeat.alternate and iteration % 2 == 1 and repeat.child is AnimaPropertyMotion:
 		var original := repeat.child as AnimaPropertyMotion
 		var reversed := AnimaPropertyMotion.new()
@@ -35,9 +35,9 @@ func _build_iteration_instance(iteration: int) -> Variant:
 
 ## Advances the current repetition; once it finishes, either waits out
 ## delay_between and starts the next repetition, or completes if that was the
-## last one. A negative [member AnimaRepeat.count] never completes on its own.
+## last one. A negative [member _AnimaRepeat.count] never completes on its own.
 func advance(target: Node, delta: float) -> bool:
-	var repeat := motion as AnimaRepeat
+	var repeat := motion as _AnimaRepeat
 	if repeat.child == null or repeat.count == 0:
 		return true
 
@@ -67,18 +67,18 @@ func restore_initial(target: Node) -> void:
 
 ## Forces the current iteration to its final state — a repeat's own notion of
 ## "complete" is the current iteration reaching its end, not exhausting
-## [member AnimaRepeat.count] (which may be indefinite) — see [method
+## [member _AnimaRepeat.count] (which may be indefinite) — see [method
 ## AnimaMotionInstance.force_complete].
 func force_complete(target: Node) -> void:
 	if _current_instance != null:
 		_current_instance.force_complete(target)
 
-## Builds a reversed [AnimaRepeat]: the currently-active iteration's own
+## Builds a reversed [_AnimaRepeat]: the currently-active iteration's own
 ## reversed motion (see [method AnimaMotionInstance.build_reversed]), repeated
-## the same [member AnimaRepeat.count] times with the same [member
-## AnimaRepeat.delay_between] and [member AnimaRepeat.alternate] — the same
+## the same [member _AnimaRepeat.count] times with the same [member
+## _AnimaRepeat.delay_between] and [member _AnimaRepeat.alternate] — the same
 ## "freshly built reversed motion, restart from the top" rule already applied
-## to a leaf/[AnimaSequence]/[AnimaParallel] reversal, extended to [AnimaRepeat]
+## to a leaf/[_AnimaSequence]/[_AnimaParallel] reversal, extended to [_AnimaRepeat]
 ## instead of carved out as a special case. `null` before any iteration has
 ## captured a value yet.
 func build_reversed() -> AnimaMotion:
@@ -89,7 +89,7 @@ func build_reversed() -> AnimaMotion:
 	if reversed_child == null:
 		return null
 
-	var repeat := motion as AnimaRepeat
+	var repeat := motion as _AnimaRepeat
 	# When the repeated child is itself relative (move_by-style), each
 	# reversed repetition must keep continuing backward from wherever the
 	# target actually is — not replay the same captured absolute segment
@@ -107,7 +107,7 @@ func build_reversed() -> AnimaMotion:
 		reversed_property.from_value = null
 		reversed_property.is_relative = true
 
-	var reversed := AnimaRepeat.new()
+	var reversed := _AnimaRepeat.new()
 	reversed.child = reversed_child
 	reversed.count = repeat.count
 	reversed.delay_between = repeat.delay_between

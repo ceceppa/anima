@@ -33,10 +33,10 @@ func test_selecting_each_family_produces_a_visible_card_run_matching_the_shown_e
 			assert_true(playback.motion is AnimaKeyframeMotion, "the Keyframes family should build an AnimaKeyframeMotion")
 			assert_string_contains(example_line.text, "Motion.keyframes(", "the shown example line should match the Keyframes family")
 		elif button_text == "Dynamic Values":
-			assert_true(playback.motion is AnimaSequence, "the Dynamic Values family chains a standalone dynamic-value motion into a keyframe one")
+			assert_true(playback.motion is _AnimaSequence, "the Dynamic Values family chains a standalone dynamic-value motion into a keyframe one")
 			assert_string_contains(example_line.text, "AnimaValue.target(", "the shown example line should match the Dynamic Values family")
 		else:
-			assert_true(playback.motion is AnimaPropertyMotion or playback.motion is AnimaRepeat, "every other showcased family builds a single AnimaPropertyMotion, or an AnimaRepeat wrapping one")
+			assert_true(playback.motion is AnimaPropertyMotion or playback.motion is _AnimaRepeat, "every other showcased family builds a single AnimaPropertyMotion, or an _AnimaRepeat wrapping one")
 			assert_string_contains(example_line.text, "Anima.on(card)", "the shown example line should match the family actually playing")
 
 		# 90 frames (1.5s) comfortably covers every family's own duration —
@@ -159,7 +159,7 @@ func test_chained_family_demonstrates_callbacks_repeat_and_reverse_together():
 	selector.get_item(chained_index).pressed.emit()
 
 	var playback: AnimaPlayback = scene.get("_active_playback")
-	assert_true(playback.motion is AnimaRepeat, "the chained family should repeat its move_by motion")
+	assert_true(playback.motion is _AnimaRepeat, "the chained family should repeat its move_by motion")
 	assert_string_contains(example_line.text, "started", "on_started should already have fired and be reflected in the example line")
 
 	var base_x := card.position.x

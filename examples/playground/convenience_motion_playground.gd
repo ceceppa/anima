@@ -237,7 +237,7 @@ func _build_motion() -> AnimaMotion:
 
 ## Demonstrates the lifecycle-callback and repeat chain modifiers together —
 ## `.repeat()` comes before `.on_started()`/`.on_completed()` so the
-## callbacks land on the [AnimaRepeat] [AnimaPlayback] actually reads, not on
+## callbacks land on the [_AnimaRepeat] [AnimaPlayback] actually reads, not on
 ## the leaf motion it wraps. Fires once each per full repeat run, not once
 ## per iteration. Shown through the same read-only example line every other
 ## family uses, appended with each event as it actually fires.

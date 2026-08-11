@@ -4,7 +4,7 @@ const GroupComposer = preload("res://addons/anima/editor/anima_group_composer.gd
 
 func test_a_group_created_and_edited_in_the_composer_plays_through_anima():
 	var composer := GroupComposer.new()
-	var parent := AnimaSequence.new()
+	var parent := _AnimaSequence.new()
 	var group := composer.add_group(parent)
 	var root := Node.new()
 	add_child_autofree(root)
@@ -31,7 +31,7 @@ func test_a_group_created_and_edited_in_the_composer_plays_through_anima():
 func test_status_names_the_add_group_button_when_the_parent_can_hold_one():
 	var composer := GroupComposer.new()
 	add_child_autofree(composer)
-	var parent := AnimaSequence.new()
+	var parent := _AnimaSequence.new()
 
 	composer.show_motion(parent, null)
 
@@ -57,7 +57,7 @@ func test_not_a_group_messages_also_name_property_motion_as_an_option():
 	var composer := GroupComposer.new()
 	add_child_autofree(composer)
 
-	composer.show_motion(AnimaSequence.new(), null)
+	composer.show_motion(_AnimaSequence.new(), null)
 	assert_string_contains(composer.status_message(), "Property Motion")
 
 	composer.show_motion(AnimaPropertyMotion.new(), null)

@@ -6,7 +6,7 @@ func test_then_plays_two_convenience_motions_in_sequence():
 	var chain := Anima.on(node).position(Vector2(50.0, 0.0), 0.1) \
 		.then(Anima.on(node).opacity(0.0, 0.1))
 
-	assert_true(chain is AnimaSequence)
+	assert_true(chain is _AnimaSequence)
 	assert_eq(chain.children.size(), 2)
 
 	var playback := Anima.play(chain, node)
@@ -26,7 +26,7 @@ func test_with_plays_two_convenience_motions_together():
 	var chain := Anima.on(node).position(Vector2(50.0, 0.0), 0.1) \
 		.with(Anima.on(node).opacity(0.0, 0.1))
 
-	assert_true(chain is AnimaParallel)
+	assert_true(chain is _AnimaParallel)
 	assert_eq(chain.children.size(), 2)
 
 	var playback := Anima.play(chain, node)
@@ -105,9 +105,9 @@ func test_multiple_with_calls_after_one_then_join_a_single_parallel_group():
 		.with(Anima.on(node).scale(Vector2(2.0, 2.0), 0.1)) \
 		.with(Anima.on(node).rotation(1.0, 0.1))
 
-	assert_true(chain is AnimaSequence)
+	assert_true(chain is _AnimaSequence)
 	assert_eq(chain.children.size(), 2, "position step, then one parallel group of everything chained since then()")
-	assert_true(chain.children[1] is AnimaParallel)
+	assert_true(chain.children[1] is _AnimaParallel)
 	assert_eq(chain.children[1].children.size(), 3, "opacity, scale, and rotation should all be in the same group, not nested pairs")
 
 func test_three_motions_joined_by_with_all_play_and_finish_together():
@@ -241,3 +241,149 @@ func test_pause_resume_and_cancel_already_work_for_a_convenience_motion_like_any
 	playback.cancel()
 	assert_eq(playback.state, AnimaPlayback.State.CANCELLED)
 	assert_signal_emitted_with_parameters(playback, "finished", [false])
+
+func test_with_delay_on_a_composed_chain_delays_the_whole_chains_start():
+	var a: Node2D = add_child_autofree(Node2D.new())
+	var b: Node2D = add_child_autofree(Node2D.new())
+	b.modulate.a = 1.0
+
+	var playback: AnimaPlayback = Anima.on(a).position(Vector2(50.0, 0.0), 0.1) \
+		.then(Anima.on(b).opacity(0.0, 0.1)) \
+		.with_delay(1.0) \
+		.play()
+
+	playback._advance(0.5)
+	assert_almost_eq(a.position.x, 0.0, 0.01, "nothing should animate before the whole-chain delay elapses")
+	assert_almost_eq(b.modulate.a, 1.0, 0.01)
+
+	for i in range(78):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(a.position.x, 50.0, 0.01, "position step should have finished first, once the delay has elapsed")
+	assert_almost_eq(b.modulate.a, 0.0, 0.01, "opacity step should have played after it, in original order")
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+func test_per_leaf_with_delay_before_combining_is_unaffected_by_the_base_promotion():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	node.modulate.a = 1.0
+
+	var motion := Anima.on(node).opacity(0.0, 0.1).with_delay(0.2)
+	var playback := Anima.play(motion, node)
+
+	playback._advance(0.1)
+	assert_almost_eq(node.modulate.a, 1.0, 0.01, "the single leaf's own delay should still apply as before")
+
+	for i in range(20):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(node.modulate.a, 0.0, 0.01)
+
+func test_a_chain_with_no_whole_chain_delay_starts_immediately():
+	var a: Node2D = add_child_autofree(Node2D.new())
+
+	var playback: AnimaPlayback = Anima.on(a).position(Vector2(50.0, 0.0), 0.1) \
+		.then(Anima.on(a).opacity(0.0, 0.1)) \
+		.play()
+
+	playback._advance(1.0 / 60.0)
+	assert_gt(a.position.x, 0.0, "the chain should already be animating on the very next frame")
+
+func test_wait_delays_the_start_of_the_next_thenned_step():
+	var a: Node2D = add_child_autofree(Node2D.new())
+	var b: Node2D = add_child_autofree(Node2D.new())
+	b.modulate.a = 1.0
+
+	var playback: AnimaPlayback = Anima.on(a).position(Vector2(50.0, 0.0), 0.05) \
+		.wait(1.0) \
+		.then(Anima.on(b).opacity(0.0, 0.05)) \
+		.play()
+
+	for i in range(15):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(a.position.x, 50.0, 0.01, "the first step should already be finished")
+	assert_almost_eq(b.modulate.a, 1.0, 0.01, "the second step should still be waiting out the 1s pause")
+
+	for i in range(70):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(b.modulate.a, 0.0, 0.01, "the second step should have finished once the wait and its own duration elapsed")
+
+func test_wait_adds_to_an_explicit_with_delay_on_the_next_step_instead_of_replacing_it():
+	var a: Node2D = add_child_autofree(Node2D.new())
+	var b: Node2D = add_child_autofree(Node2D.new())
+	b.modulate.a = 1.0
+
+	var playback: AnimaPlayback = Anima.on(a).position(Vector2(50.0, 0.0), 0.05) \
+		.wait(1.0) \
+		.then(Anima.on(b).opacity(0.0, 0.05).with_delay(0.5)) \
+		.play()
+
+	# 1.0 (wait) + 0.5 (explicit with_delay) = 1.5s total before the opacity step starts.
+	for i in range(84):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(b.modulate.a, 1.0, 0.01, "opacity should not have started yet — the two delays should add, not one replace the other")
+
+	for i in range(20):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(b.modulate.a, 0.0, 0.01)
+
+func test_wait_between_two_grid_factory_calls_delays_the_second_grids_start():
+	var a := Node.new()
+	add_child_autofree(a)
+	for i in 4:
+		a.add_child(Node2D.new())
+	var b := Node.new()
+	add_child_autofree(b)
+	var b_children: Array[Node2D] = []
+	for i in 4:
+		var cell := Node2D.new()
+		cell.modulate.a = 1.0
+		b.add_child(cell)
+		b_children.append(cell)
+
+	var factory_a := Anima.grid(a, Vector2i(2, 2)).with_item_motion(Anima.item().opacity(0.0, 0.05))
+	factory_a.motion.playback_mode = AnimaGroupMotion.PlaybackMode.PARALLEL
+	var factory_b := Anima.grid(b, Vector2i(2, 2)).with_item_motion(Anima.item().opacity(0.0, 0.05))
+	factory_b.motion.playback_mode = AnimaGroupMotion.PlaybackMode.PARALLEL
+
+	var playback: AnimaPlayback = factory_a.wait(1.0).with(factory_b).play()
+
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+	for cell in b_children:
+		assert_almost_eq(cell.modulate.a, 1.0, 0.01, "the second grid should still be waiting out its 1s pause")
+
+	for i in range(50):
+		playback._advance(1.0 / 60.0)
+	for cell in b_children:
+		assert_almost_eq(cell.modulate.a, 0.0, 0.01)
+
+func test_wait_between_two_group_factory_calls_delays_the_second_groups_start():
+	var a := Node.new()
+	add_child_autofree(a)
+	var a_child := Node2D.new()
+	a.add_child(a_child)
+	var b := Node.new()
+	add_child_autofree(b)
+	var b_child := Node2D.new()
+	b_child.modulate.a = 1.0
+	b.add_child(b_child)
+
+	var factory_a := Anima.group(a).with_item_motion(Anima.item().opacity(0.0, 0.05))
+	var factory_b := Anima.group(b).with_item_motion(Anima.item().opacity(0.0, 0.05))
+
+	var playback: AnimaPlayback = factory_a.wait(1.0).with(factory_b).play()
+
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(b_child.modulate.a, 1.0, 0.01, "the second group should still be waiting out its 1s pause")
+
+	for i in range(50):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(b_child.modulate.a, 0.0, 0.01)
+
+func test_ending_a_chain_with_an_unconsumed_wait_does_not_error_or_affect_playback():
+	var a: Node2D = add_child_autofree(Node2D.new())
+
+	var playback: AnimaPlayback = Anima.on(a).position(Vector2(50.0, 0.0), 0.05).wait(1.0).play()
+
+	for i in range(10):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(a.position.x, 50.0, 0.01, "an unconsumed wait() must not delay or otherwise affect the motion it was called on")

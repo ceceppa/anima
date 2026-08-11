@@ -13,7 +13,7 @@ func test_race_plays_through_anima_and_completes_on_fastest_child():
 	slow.to_value = 20.0
 	slow.duration = 1.0
 
-	var race := AnimaRace.new()
+	var race := _AnimaRace.new()
 	race.children = [fast, slow]
 
 	var playback := Anima.play(race, node)

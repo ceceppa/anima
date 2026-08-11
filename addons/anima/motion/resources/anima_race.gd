@@ -1,6 +1,6 @@
 ## Runs every enabled child in [member children] concurrently and completes
 ## as soon as the fastest one finishes.
-class_name AnimaRace
+class_name _AnimaRace
 extends AnimaMotion
 
 ## The motions racing against each other.

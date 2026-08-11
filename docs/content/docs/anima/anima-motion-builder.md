@@ -23,28 +23,28 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 
 ### sequence
 
-Builds an [AnimaSequence] playing [param children] one after another.
+Builds an [_AnimaSequence] playing [param children] one after another.
 
 ### parallel
 
-Builds an [AnimaParallel] playing [param children] together.
+Builds an [_AnimaParallel] playing [param children] together.
 
 ### stagger
 
-Builds an [AnimaStagger] playing [param template] against each of [param targets],
+Builds an [_AnimaStagger] playing [param template] against each of [param targets],
 [param interval] seconds apart.
 
 ### repeat
 
-Builds an [AnimaRepeat] playing [param child] [param count] times.
+Builds an [_AnimaRepeat] playing [param child] [param count] times.
 
 ### race
 
-Builds an [AnimaRace] that completes as soon as the fastest of [param children] finishes.
+Builds an [_AnimaRace] that completes as soon as the fastest of [param children] finishes.
 
 ### conditional
 
-Builds an [AnimaConditional] that plays [param when_true] or [param when_false]
+Builds an [_AnimaConditional] that plays [param when_true] or [param when_false]
 depending on [param condition].
 
 ### to

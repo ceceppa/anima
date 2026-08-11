@@ -50,7 +50,7 @@ static func is_reduced_motion_active(target: Node) -> bool:
 
 ## Plays [param motion] against [param target] and returns the resulting
 ## [AnimaPlayback]. [param target] is optional when [param motion] supplies
-## its own targets (e.g. [AnimaStagger], which ignores [param target]
+## its own targets (e.g. [_AnimaStagger], which ignores [param target]
 ## entirely). An [AnimaGroupMotion] is different: it still reads [param
 ## target] as the root node its [member AnimaGroupMotion.target_collection]
 ## resolves against — required for a [constant AnimaTargetCollection.Kind.CHILDREN]
@@ -132,6 +132,20 @@ static func grid(container: Node, grid_size: Variant = null) -> AnimaGridMotionF
 		push_error("Anima.grid() requires a non-null container.")
 		return null
 	return AnimaGridMotionFactory.new(container, grid_size)
+
+## Returns a factory for playing a shared motion across a chosen set of nodes
+## with one line — `Anima.group(container).with_item_motion(pulse).play()` —
+## instead of hand-building an [AnimaTargetCollection] and [AnimaGroupMotion]
+## and calling [method play] separately (`tech-spec.md` §Group convenience
+## shorthand). [param targets] is a [Node] (its children become the group's
+## targets, mirroring [method grid]) or an [Array] of [Node]s (used
+## directly). Reports an error and returns `null` for any other type, the
+## same fail-fast contract [method on] uses for a `null` target.
+static func group(targets: Variant) -> AnimaGroupMotionFactory:
+	if not (targets is Node or targets is Array):
+		push_error("Anima.group() requires a Node or an Array of Node — got %s." % type_string(typeof(targets)))
+		return null
+	return AnimaGroupMotionFactory.new(targets)
 
 ## Attaches [param behaviour] to [param node] via node metadata — [param node]'s
 ## class and script are unchanged. Retrieve it later with [method get_behaviour].

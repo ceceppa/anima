@@ -39,7 +39,7 @@ func test_transition_to_builds_a_parallel_of_one_motion_per_property():
 		NodePath("position:x"): 100.0,
 		NodePath("modulate:a"): 0.5,
 	})
-	var parallel := playback.motion as AnimaParallel
+	var parallel := playback.motion as _AnimaParallel
 
 	assert_not_null(parallel)
 	assert_eq(parallel.children.size(), 2)

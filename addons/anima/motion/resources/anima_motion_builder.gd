@@ -4,44 +4,44 @@
 class_name Motion
 extends RefCounted
 
-## Builds an [AnimaSequence] playing [param children] one after another.
-static func sequence(children: Array[AnimaMotion]) -> AnimaSequence:
-	var motion := AnimaSequence.new()
+## Builds an [_AnimaSequence] playing [param children] one after another.
+static func sequence(children: Array[AnimaMotion]) -> _AnimaSequence:
+	var motion := _AnimaSequence.new()
 	motion.children = children
 	return motion
 
-## Builds an [AnimaParallel] playing [param children] together.
-static func parallel(children: Array[AnimaMotion]) -> AnimaParallel:
-	var motion := AnimaParallel.new()
+## Builds an [_AnimaParallel] playing [param children] together.
+static func parallel(children: Array[AnimaMotion]) -> _AnimaParallel:
+	var motion := _AnimaParallel.new()
 	motion.children = children
 	return motion
 
-## Builds an [AnimaStagger] playing [param template] against each of [param targets],
+## Builds an [_AnimaStagger] playing [param template] against each of [param targets],
 ## [param interval] seconds apart.
-static func stagger(targets: Array[Node], template: AnimaMotion, interval: float) -> AnimaStagger:
-	var motion := AnimaStagger.new()
+static func stagger(targets: Array[Node], template: AnimaMotion, interval: float) -> _AnimaStagger:
+	var motion := _AnimaStagger.new()
 	motion.targets = targets
 	motion.template = template
 	motion.interval = interval
 	return motion
 
-## Builds an [AnimaRepeat] playing [param child] [param count] times.
-static func repeat(child: AnimaMotion, count: int) -> AnimaRepeat:
-	var motion := AnimaRepeat.new()
+## Builds an [_AnimaRepeat] playing [param child] [param count] times.
+static func repeat(child: AnimaMotion, count: int) -> _AnimaRepeat:
+	var motion := _AnimaRepeat.new()
 	motion.child = child
 	motion.count = count
 	return motion
 
-## Builds an [AnimaRace] that completes as soon as the fastest of [param children] finishes.
-static func race(children: Array[AnimaMotion]) -> AnimaRace:
-	var motion := AnimaRace.new()
+## Builds an [_AnimaRace] that completes as soon as the fastest of [param children] finishes.
+static func race(children: Array[AnimaMotion]) -> _AnimaRace:
+	var motion := _AnimaRace.new()
 	motion.children = children
 	return motion
 
-## Builds an [AnimaConditional] that plays [param when_true] or [param when_false]
+## Builds an [_AnimaConditional] that plays [param when_true] or [param when_false]
 ## depending on [param condition].
-static func conditional(condition: Callable, when_true: AnimaMotion, when_false: AnimaMotion) -> AnimaConditional:
-	var motion := AnimaConditional.new()
+static func conditional(condition: Callable, when_true: AnimaMotion, when_false: AnimaMotion) -> _AnimaConditional:
+	var motion := _AnimaConditional.new()
 	motion.condition = condition
 	motion.when_true = when_true
 	motion.when_false = when_false

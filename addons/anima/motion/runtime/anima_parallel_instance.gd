@@ -1,5 +1,5 @@
-## Runtime instance for [AnimaParallel] — advances every enabled child each
-## frame and completes per its [member AnimaParallel.completion_policy].
+## Runtime instance for [_AnimaParallel] — advances every enabled child each
+## frame and completes per its [member _AnimaParallel.completion_policy].
 class_name AnimaParallelInstance
 extends AnimaMotionInstance
 
@@ -20,12 +20,12 @@ var _completion_index: int = -1
 ## since only the root [AnimaPlayback] invoked the *composite's own*
 ## callbacks (`tech-spec.md` §Target-bound authoring contract). A child with
 ## a positive delay is deferred to [method advance] instead (phase-15) —
-## [member AnimaMotion.delay] previously did nothing on a [AnimaParallel]
+## [member AnimaMotion.delay] previously did nothing on a [_AnimaParallel]
 ## child at all; see "Per-child delay inside .with()" in the same section.
 func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> void:
 	super._init(p_motion, p_value_context)
 
-	var parallel := motion as AnimaParallel
+	var parallel := motion as _AnimaParallel
 	var completion_child := parallel.get_completion_child()
 
 	for child in parallel.children:
@@ -94,7 +94,7 @@ func restore_initial(target: Node) -> void:
 
 ## Forces every child to its own final state together — see [method
 ## AnimaMotionInstance.force_complete]. Applies to every child regardless of
-## [member AnimaParallel.completion_policy], since completing the group
+## [member _AnimaParallel.completion_policy], since completing the group
 ## visually means every animating property reaches its authored end state,
 ## not only the one tracked child that would otherwise decide completion.
 ## Starts any not-yet-started (still delayed) child first, then fires each
@@ -110,11 +110,11 @@ func force_complete(target: Node) -> void:
 			state.finished = true
 			_call_if_valid(state.child.on_completed_callback)
 
-## Builds a reversed [AnimaParallel]: every child that captured a start value
+## Builds a reversed [_AnimaParallel]: every child that captured a start value
 ## gets its own reversed motion, still played together. `null` when no child
 ## has captured one yet.
 func build_reversed() -> AnimaMotion:
-	var reversed := AnimaParallel.new()
+	var reversed := _AnimaParallel.new()
 	for state in _states:
 		if not state.started:
 			continue

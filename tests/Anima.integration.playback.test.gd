@@ -186,7 +186,7 @@ func test_playing_a_sequence_runs_children_in_order_and_completes():
 	second.to_value = 20.0
 	second.duration = 0.5
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [first, second]
 
 	var playback := Anima.play(sequence, node)
@@ -213,7 +213,7 @@ func test_playing_a_parallel_runs_children_concurrently_and_completes():
 	second.to_value = 20.0
 	second.duration = 0.5
 
-	var parallel := AnimaParallel.new()
+	var parallel := _AnimaParallel.new()
 	parallel.children = [first, second]
 
 	var playback := Anima.play(parallel, node)

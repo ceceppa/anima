@@ -1,14 +1,14 @@
 ---
 title: "AnimaParallelInstance"
-description: "Runtime instance for [AnimaParallel] — advances every enabled child each"
+description: "Runtime instance for [_AnimaParallel] — advances every enabled child each"
 ---
 
 # AnimaParallelInstance
 
 ## Overview
 
-Runtime instance for [AnimaParallel] — advances every enabled child each
-frame and completes per its [member AnimaParallel.completion_policy].
+Runtime instance for [_AnimaParallel] — advances every enabled child each
+frame and completes per its [member _AnimaParallel.completion_policy].
 
 ## Availability
 
@@ -42,7 +42,7 @@ to restore.
 
 Forces every child to its own final state together — see [method
 AnimaMotionInstance.force_complete]. Applies to every child regardless of
-[member AnimaParallel.completion_policy], since completing the group
+[member _AnimaParallel.completion_policy], since completing the group
 visually means every animating property reaches its authored end state,
 not only the one tracked child that would otherwise decide completion.
 Starts any not-yet-started (still delayed) child first, then fires each
@@ -50,6 +50,6 @@ newly-started/newly-finished child's own callbacks, same as [method advance].
 
 ### build_reversed
 
-Builds a reversed [AnimaParallel]: every child that captured a start value
+Builds a reversed [_AnimaParallel]: every child that captured a start value
 gets its own reversed motion, still played together. `null` when no child
 has captured one yet.

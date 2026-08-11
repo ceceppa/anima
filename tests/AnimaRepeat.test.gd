@@ -1,7 +1,7 @@
 extends "res://addons/gut/test.gd"
 
 func test_estimate_duration_reports_fixed_kind_and_formula_value():
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.to_value = 10.0
@@ -18,7 +18,7 @@ func test_repeats_the_child_the_configured_number_of_times():
 	var node := Node2D.new()
 	autofree(node)
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.to_value = 10.0
@@ -39,7 +39,7 @@ func test_delay_between_waits_before_starting_the_next_repetition():
 	var node := Node2D.new()
 	autofree(node)
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.from_value = 0.0
@@ -68,7 +68,7 @@ func test_alternate_reverses_direction_on_the_second_repetition():
 	var node := Node2D.new()
 	autofree(node)
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.from_value = 0.0
@@ -98,7 +98,7 @@ func test_alternate_reverses_direction_on_the_second_repetition():
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 
 func test_negative_count_reports_infinite_duration():
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.to_value = 10.0
@@ -113,7 +113,7 @@ func test_negative_count_never_finishes_on_its_own():
 	var node := Node2D.new()
 	autofree(node)
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.to_value = 10.0
@@ -133,7 +133,7 @@ func test_reversing_a_finished_repeat_returns_to_start_and_repeats_the_same_numb
 	autofree(node)
 	node.position.x = 0.0
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.from_value = 0.0 # explicit, so every repetition behaves the same regardless of accumulated position
@@ -170,7 +170,7 @@ func test_reversing_a_relative_repeat_continues_backward_through_each_repetition
 	autofree(node)
 	node.position.x = 0.0
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.to_value = 10.0
@@ -205,7 +205,7 @@ func test_reversing_an_indefinite_repeat_does_not_error():
 	var node := Node2D.new()
 	autofree(node)
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.to_value = 10.0
@@ -226,7 +226,7 @@ func test_reversing_an_alternating_repeat_reverses_the_currently_active_directio
 	autofree(node)
 	node.position.x = 0.0
 
-	var repeat := AnimaRepeat.new()
+	var repeat := _AnimaRepeat.new()
 	var child := AnimaPropertyMotion.new()
 	child.target_property = NodePath("position:x")
 	child.from_value = 0.0

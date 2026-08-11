@@ -1,6 +1,6 @@
 ## Selects between [member when_true] and [member when_false] based on
 ## [member condition], evaluated once per [method create_runtime] call.
-class_name AnimaConditional
+class_name _AnimaConditional
 extends AnimaMotion
 
 ## When [member condition] is evaluated.

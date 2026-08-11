@@ -12,7 +12,7 @@ func test_children_run_strictly_one_after_another():
 	autofree(node)
 	node.modulate = Color(1, 1, 1, 1)
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.5),
 		_make_child("position:y", 20.0, 0.5),
@@ -42,7 +42,7 @@ func test_completes_only_once_last_child_finishes():
 	autofree(node)
 	node.modulate = Color(1, 1, 1, 1)
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.3),
 		_make_child("position:y", 20.0, 0.3),
@@ -74,7 +74,7 @@ func test_each_childs_own_on_started_and_on_completed_fire_as_it_runs():
 	var second_started := [0]
 	second.on_started_callback = func(): second_started[0] += 1
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [first, second]
 
 	var playback := AnimaPlayback.new(sequence, node)
@@ -96,7 +96,7 @@ func test_negative_delay_overlaps_with_previous_child():
 	var overlap_child := _make_child("position:y", 20.0, 0.5)
 	overlap_child.delay = -0.2
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.5),
 		overlap_child,
@@ -119,7 +119,7 @@ func test_positive_delay_waits_after_previous_child_ends():
 	var delayed_child := _make_child("position:y", 20.0, 0.3)
 	delayed_child.delay = 0.2
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.3),
 		delayed_child,
@@ -143,7 +143,7 @@ func test_after_previous_starts_offsets_from_predecessor_start_not_end():
 	offset_child.delay = 0.2
 	offset_child.delay_basis = AnimaMotion.DelayBasis.AFTER_PREVIOUS_STARTS
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 1.0),
 		offset_child,
@@ -165,7 +165,7 @@ func test_first_child_uses_only_its_own_delay_from_sequence_start():
 	var first_child := _make_child("position:x", 10.0, 0.5)
 	first_child.delay = 0.2
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [first_child]
 
 	var playback := AnimaPlayback.new(sequence, node)
@@ -177,7 +177,7 @@ func test_first_child_uses_only_its_own_delay_from_sequence_start():
 	assert_gt(node.position.x, 0.0, "first child should have started once its own delay elapsed, with no predecessor involved")
 
 func test_estimate_duration_sums_fixed_children():
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.3),
 		_make_child("position:y", 20.0, 0.5),
@@ -191,7 +191,7 @@ func test_pause_freezes_active_child_and_resume_continues_it():
 	var node := Node2D.new()
 	autofree(node)
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.5),
 		_make_child("position:y", 20.0, 0.5),
@@ -221,7 +221,7 @@ func test_reversing_a_finished_sequence_returns_every_child_to_its_start_value()
 	var node := Node2D.new()
 	autofree(node)
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [
 		_make_child("position:x", 10.0, 0.2),
 		_make_child("position:y", 20.0, 0.2),
@@ -253,7 +253,7 @@ func test_completing_a_sequence_fires_each_not_yet_started_childs_on_started_and
 	second.on_started_callback = func(): second_started[0] += 1
 	second.on_completed_callback = func(): second_completed[0] += 1
 
-	var sequence := AnimaSequence.new()
+	var sequence := _AnimaSequence.new()
 	sequence.children = [first, second]
 
 	var playback := AnimaPlayback.new(sequence, node)

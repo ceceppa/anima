@@ -1,6 +1,6 @@
 ## Starts every enabled child in [member children] together; [member completion_policy]
 ## decides which child (or children) must finish for the group to complete.
-class_name AnimaParallel
+class_name _AnimaParallel
 extends AnimaMotion
 
 ## Which child (or children) must finish for the group to complete.

@@ -1,13 +1,13 @@
 ---
 title: "AnimaRaceInstance"
-description: "Runtime instance for [AnimaRace] — advances every enabled child each frame"
+description: "Runtime instance for [_AnimaRace] — advances every enabled child each frame"
 ---
 
 # AnimaRaceInstance
 
 ## Overview
 
-Runtime instance for [AnimaRace] — advances every enabled child each frame
+Runtime instance for [_AnimaRace] — advances every enabled child each frame
 and completes as soon as the fastest one finishes.
 
 ## Availability

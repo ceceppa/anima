@@ -11,7 +11,7 @@ func test_completes_as_soon_as_fastest_child_finishes():
 	var node := Node2D.new()
 	autofree(node)
 
-	var race := AnimaRace.new()
+	var race := _AnimaRace.new()
 	race.children = [
 		_make_child("position:x", 10.0, 0.2),
 		_make_child("position:y", 20.0, 1.0),
@@ -32,7 +32,7 @@ func test_losing_child_stops_changing_after_race_completes():
 	var node := Node2D.new()
 	autofree(node)
 
-	var race := AnimaRace.new()
+	var race := _AnimaRace.new()
 	race.children = [
 		_make_child("position:x", 10.0, 0.2),
 		_make_child("position:y", 20.0, 1.0),
@@ -49,7 +49,7 @@ func test_losing_child_stops_changing_after_race_completes():
 	assert_eq(node.position.y, y_at_completion, "losing child should not keep animating after the race completes")
 
 func test_estimate_duration_reports_fixed_kind_and_fastest_value():
-	var race := AnimaRace.new()
+	var race := _AnimaRace.new()
 	race.children = [
 		_make_child("position:x", 10.0, 1.0),
 		_make_child("position:y", 20.0, 0.4),
