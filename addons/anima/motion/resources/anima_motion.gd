@@ -87,6 +87,31 @@ enum CancellationValuePolicy {
 ## than reduce it.
 @export var reduced_motion_speed: float = -1.0
 
+## Transient target captured by [AnimaOnMotionFactory] when this motion is
+## built through [method Anima.on] — never exported, so it's never part of a
+## saved resource. `null` for a hand-built motion, an [method Anima.item]-built
+## motion (which has no single fixed target), or a [method then]/[method with]
+## composite whose combined motions were captured against different targets.
+## Read only by [method play] and propagated by [method then]/[method with] —
+## see `tech-spec.md` §Target-bound authoring contract, "`.play()` and
+## per-leaf convenience targets".
+var convenience_target: Node = null
+
+## Starts this motion immediately via [method Anima.play], using [member
+## convenience_target] when set. Returns the resulting [AnimaPlayback].
+## Reports an error and returns `null` only when called on a leaf
+## [AnimaPropertyMotion] with no captured target — build it through [method
+## Anima.on] first, or call [method Anima.play] directly. A composite
+## ([AnimaSequence]/[AnimaParallel]) always proceeds, passing `null` when its
+## own [member convenience_target] wasn't propagated: each leaf then resolves
+## its own captured target independently at `advance()` time
+## (`tech-spec.md` §Target-bound authoring contract).
+func play() -> AnimaPlayback:
+	if self is AnimaPropertyMotion and convenience_target == null:
+		push_error("play() needs a target captured via Anima.on() — use Anima.play(motion, target) instead.")
+		return null
+	return Anima.play(self, convenience_target)
+
 ## Reports this motion's duration kind and (when known) its length in seconds.
 ## Every subtype must override this explicitly.
 func estimate_duration() -> AnimaDuration:
@@ -112,14 +137,28 @@ func validate() -> Array[String]:
 ## Chaining a second `.then()` appends another step to one flat sequence
 ## instead of nesting (`a.then(b).then(c)` is a 3-step sequence, not a
 ## sequence of sequences). See [method with] for combining steps that
-## should start together instead.
-func then(other: AnimaMotion) -> AnimaSequence:
+## should start together instead. [param other] accepts an [AnimaMotion]
+## or any object exposing a `motion: AnimaMotion` property (a convenience
+## factory like [AnimaGridMotionFactory]) — resolved via [method
+## _resolve_chainable] (`tech-spec.md` §Target-bound authoring contract,
+## "Chaining a motion factory directly").
+func then(other: Variant) -> AnimaSequence:
+	var resolved_other := _resolve_chainable(other, "then")
+
 	var sequence := AnimaSequence.new()
 	if self is AnimaSequence:
 		sequence.children.append_array((self as AnimaSequence).children)
 	else:
 		sequence.children.append(self)
-	sequence.children.append(other)
+
+	if resolved_other == null:
+		# _resolve_chainable already reported the error — return self's own
+		# steps unchanged rather than building a broken composite.
+		sequence.convenience_target = convenience_target
+		return sequence
+
+	sequence.children.append(resolved_other)
+	sequence.convenience_target = _shared_convenience_target(convenience_target, resolved_other.convenience_target)
 	return sequence
 
 ## Folds [param other] into the same [AnimaParallel] group as whatever was
@@ -127,20 +166,43 @@ func then(other: AnimaMotion) -> AnimaSequence:
 ## the whole chain when no [method then] preceded it. Multiple consecutive
 ## `.with()` calls join one growing group rather than nesting
 ## (`a.then(b).with(c).with(d)` is `b`, `c`, and `d` all starting together,
-## after `a`).
-func with(other: AnimaMotion) -> AnimaMotion:
+## after `a`). Accepts the same [param other] types as [method then].
+func with(other: Variant) -> AnimaMotion:
+	var resolved_other := _resolve_chainable(other, "with")
+	if resolved_other == null:
+		return self
+
 	if not (self is AnimaSequence):
-		return _grouped_with(self, other)
+		return _grouped_with(self, resolved_other)
 
 	var sequence := self as AnimaSequence
 	if sequence.children.is_empty():
-		return other
+		return resolved_other
 
 	var result := AnimaSequence.new()
 	result.children.append_array(sequence.children)
 	var last_index := result.children.size() - 1
-	result.children[last_index] = _grouped_with(result.children[last_index], other)
+	result.children[last_index] = _grouped_with(result.children[last_index], resolved_other)
+	result.convenience_target = _shared_convenience_target(sequence.convenience_target, resolved_other.convenience_target)
 	return result
+
+## Resolves [param value] — passed to [method then]/[method with] as `other`
+## — into an [AnimaMotion]: [param value] itself when it already is one, or
+## the [AnimaMotion] held by its `motion` property when [param value] is a
+## convenience factory ([AnimaGridMotionFactory] and any future factory built
+## the same way). Reports an error naming [param caller] and [param value]'s
+## type, and returns `null`, for anything else — the caller falls back to a
+## no-op rather than building a broken composite (`tech-spec.md`
+## §Target-bound authoring contract, "Chaining a motion factory directly").
+func _resolve_chainable(value: Variant, caller: String) -> AnimaMotion:
+	if value is AnimaMotion:
+		return value
+	# `"motion" in value` means substring search for a String, not property
+	# lookup — restrict the property check to actual Objects first.
+	if value is Object and "motion" in value and value.motion is AnimaMotion:
+		return value.motion
+	push_error("AnimaMotion.%s() needs an AnimaMotion or a factory exposing .motion — got %s." % [caller, type_string(typeof(value))])
+	return null
 
 ## Shared helper for [method with]: groups [param existing] and [param other]
 ## into one [AnimaParallel], flattening when [param existing] is already one.
@@ -151,7 +213,17 @@ func _grouped_with(existing: AnimaMotion, other: AnimaMotion) -> AnimaParallel:
 	else:
 		parallel.children.append(existing)
 	parallel.children.append(other)
+	parallel.convenience_target = _shared_convenience_target(existing.convenience_target, other.convenience_target)
 	return parallel
+
+## Returns [param a] when it equals [param b] and both are non-null, else
+## `null` — the propagation rule [method then]/[method with] use for
+## [member convenience_target] (`tech-spec.md` §Target-bound authoring
+## contract, "`.play()` and per-leaf convenience targets").
+func _shared_convenience_target(a: Node, b: Node) -> Node:
+	if a != null and a == b:
+		return a
+	return null
 
 ## Sets [member on_started_callback], invoked exactly once by [AnimaPlayback]
 ## when this motion begins playing. Returns self so calls can keep chaining.
@@ -181,9 +253,9 @@ func repeat(count: int = -1, alternate: bool = false) -> AnimaRepeat:
 	return result
 
 ## Sets [member speed] directly. Named `with_speed` rather than `speed()` for
-## the same reason as `with_duration`/`with_ease`/`with_delay` on
-## [AnimaPropertyMotion] — a bare method name would collide with the field of
-## the same name. Returns self so calls can keep chaining.
+## the same reason as `with_duration`/`with_ease`/`with_delay` on leaf motion
+## types — a bare method name would collide with the field of the same name.
+## Returns self so calls can keep chaining.
 func with_speed(value: float) -> AnimaMotion:
 	speed = value
 	return self

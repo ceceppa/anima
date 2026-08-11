@@ -26,6 +26,113 @@ func test_chain_methods_set_the_matching_grid_motion_fields():
 	assert_eq(factory.motion.start_point, Vector2i(1, 2))
 	assert_almost_eq(factory.motion.distribution.stagger_interval, 0.25, 0.0001)
 
+func test_init_captures_container_as_the_grid_motions_convenience_target():
+	var container := Node.new()
+	add_child_autofree(container)
+
+	var factory := AnimaGridMotionFactory.new(container)
+
+	assert_same(factory.motion.convenience_target, container)
+
+func test_then_delegates_to_the_grid_motions_own_then_and_returns_the_composite():
+	var container := Node.new()
+	add_child_autofree(container)
+	var other := AnimaMotion.new()
+
+	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
+	var result := factory.then(other)
+
+	assert_true(result is AnimaSequence)
+	assert_eq(result.children, [factory.motion, other])
+
+func test_with_delegates_to_the_grid_motions_own_with_and_returns_the_composite():
+	var container := Node.new()
+	add_child_autofree(container)
+	var other := AnimaMotion.new()
+
+	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
+	var result := factory.with(other)
+
+	assert_true(result is AnimaParallel)
+	assert_eq(result.children, [factory.motion, other])
+
+func test_then_with_a_shared_target_propagates_convenience_target():
+	var container := Node.new()
+	add_child_autofree(container)
+	var other := AnimaMotion.new()
+	other.convenience_target = container
+
+	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
+	var result := factory.then(other)
+
+	assert_same(result.convenience_target, container)
+
+func test_with_accepts_another_grid_factory_directly():
+	var container := Node.new()
+	add_child_autofree(container)
+	var a := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
+	var b := AnimaGridMotionFactory.new(container).diagonal()
+
+	var result := a.with(b)
+
+	assert_true(result is AnimaParallel)
+	assert_eq(result.children, [a.motion, b.motion])
+	assert_same(result.convenience_target, container, "both factories share container, so the composite should too")
+
+func test_with_delay_sets_delay_on_the_grid_motion():
+	var container := Node.new()
+	add_child_autofree(container)
+
+	var factory := AnimaGridMotionFactory.new(container).with_delay(0.4)
+
+	assert_eq(factory.motion.delay, 0.4)
+
+func test_on_started_fires_once_when_the_grid_motion_starts():
+	var container := Node.new()
+	add_child_autofree(container)
+	var cell := Node2D.new()
+	container.add_child(cell)
+	var started_count := [0]
+
+	var playback := AnimaGridMotionFactory.new(container) \
+		.with_item_motion(Anima.item().opacity(0.0, 0.05)) \
+		.on_started(func(): started_count[0] += 1) \
+		.play()
+
+	assert_eq(started_count[0], 1)
+	playback._advance(0.1)
+	assert_eq(started_count[0], 1)
+
+func test_on_completed_fires_once_on_successful_finish_but_not_on_cancel():
+	var container := Node.new()
+	add_child_autofree(container)
+	var cell := Node2D.new()
+	container.add_child(cell)
+	var completed_count := [0]
+
+	var playback := AnimaGridMotionFactory.new(container) \
+		.with_item_motion(Anima.item().opacity(0.0, 0.05)) \
+		.on_completed(func(): completed_count[0] += 1) \
+		.play()
+
+	playback._advance(1.0)
+	assert_eq(completed_count[0], 1)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+	var cancelled_container := Node.new()
+	add_child_autofree(cancelled_container)
+	var cancelled_cell := Node2D.new()
+	cancelled_container.add_child(cancelled_cell)
+	var cancelled_completed_count := [0]
+
+	var cancelled_playback := AnimaGridMotionFactory.new(cancelled_container) \
+		.with_item_motion(Anima.item().opacity(0.0, 0.05)) \
+		.on_completed(func(): cancelled_completed_count[0] += 1) \
+		.play()
+	cancelled_playback.cancel()
+
+	assert_eq(cancelled_completed_count[0], 0)
+
 func test_play_with_no_item_motion_reports_an_error_and_returns_null():
 	var container := Node.new()
 	add_child_autofree(container)
@@ -149,10 +256,10 @@ func test_with_pivot_sets_pivot_on_a_property_item_motion():
 
 	var factory := AnimaGridMotionFactory.new(container) \
 		.with_item_motion(Anima.item().opacity(0.0, 0.0)) \
-		.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+		.with_pivot(AnimaPivot.Kind.CENTER)
 
 	var item_motion := factory.motion.item_motion as AnimaPropertyMotion
-	assert_eq(item_motion.pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_eq(item_motion.pivot, AnimaPivot.Kind.CENTER)
 
 func test_with_pivot_sets_default_pivot_on_a_keyframe_item_motion():
 	var container := Node.new()
@@ -160,17 +267,17 @@ func test_with_pivot_sets_default_pivot_on_a_keyframe_item_motion():
 
 	var factory := AnimaGridMotionFactory.new(container) \
 		.keyframes({"from": {"scale": Vector2.ONE}, "to": {"scale": Vector2(1.1, 1.1)}}) \
-		.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+		.with_pivot(AnimaPivot.Kind.CENTER)
 
 	var item_motion := factory.motion.item_motion as AnimaKeyframeMotion
-	assert_eq(item_motion.default_pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_eq(item_motion.default_pivot, AnimaPivot.Kind.CENTER)
 
 func test_with_pivot_with_no_item_motion_reports_an_error_and_stays_chainable():
 	var container := Node.new()
 	add_child_autofree(container)
 
 	var factory := AnimaGridMotionFactory.new(container)
-	var returned := factory.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+	var returned := factory.with_pivot(AnimaPivot.Kind.CENTER)
 
 	assert_eq(returned, factory, "with_pivot() should still return the factory even when it can't apply")
 	assert_push_error("requires an item motion")

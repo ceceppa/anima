@@ -15,10 +15,27 @@ var _resolved_values: Array = []
 var _values_resolved: bool = false
 var _pivot_applied: bool = false
 
+## Resolves the target this instance actually animates — [member
+## AnimaMotion.convenience_target] when this motion was built through
+## [method Anima.on], otherwise whatever [param target] the enclosing
+## [AnimaPlayback] supplies. Mirrors [method
+## AnimaPropertyMotionInstance._effective_target] (`tech-spec.md`
+## §Target-bound authoring contract, "`.play()` and per-leaf convenience targets").
+func _effective_target(target: Node) -> Node:
+	var convenience_target: Node = (motion as AnimaKeyframeMotion).convenience_target
+	return convenience_target if convenience_target != null else target
+
 ## Advances this motion by [param delta] seconds and writes every track's
-## current value to [param target]. Returns `true` once finished.
+## current value to [param target] — or [member AnimaMotion.convenience_target]
+## when set (see [method _effective_target]). Returns `true` once finished.
 func advance(target: Node, delta: float) -> bool:
 	var keyframe_motion := motion as AnimaKeyframeMotion
+	target = _effective_target(target)
+	# A keyframe motion always needs a real, live target to write to — unlike
+	# a group's EXPLICIT collection, `null` was never valid input here, so
+	# is_instance_valid's own null-is-invalid behavior is exactly right.
+	if not is_instance_valid(target):
+		return true
 
 	if not _duration_resolved:
 		_resolved_duration = _resolve_duration(target, keyframe_motion)
@@ -55,7 +72,7 @@ func _resolve_values(keyframe_motion: AnimaKeyframeMotion, target: Node) -> void
 ## AnimaKeyframeStop.pivot]; falls back to [member
 ## AnimaKeyframeMotion.default_pivot] when none is declared anywhere. Applies
 ## it via the shared [method AnimaMotionInstance._apply_pivot_to] only when
-## the resolved pivot isn't [constant AnimaPropertyMotion.Pivot.NONE] and at
+## the resolved pivot isn't [constant AnimaPivot.Kind.NONE] and at
 ## least one track's canonical property is `scale`/`rotation` — the same
 ## gate [method AnimaPropertyMotionInstance._apply_pivot] uses.
 func _resolve_and_apply_pivot(keyframe_motion: AnimaKeyframeMotion, target: Node) -> void:
@@ -68,8 +85,8 @@ func _resolve_and_apply_pivot(keyframe_motion: AnimaKeyframeMotion, target: Node
 		if declared_pivot != null:
 			break
 
-	var resolved_pivot: AnimaPropertyMotion.Pivot = declared_pivot if declared_pivot != null else keyframe_motion.default_pivot
-	if resolved_pivot == AnimaPropertyMotion.Pivot.NONE:
+	var resolved_pivot: AnimaPivot.Kind = declared_pivot if declared_pivot != null else keyframe_motion.default_pivot
+	if resolved_pivot == AnimaPivot.Kind.NONE:
 		return
 
 	var applies_to_a_track := false
@@ -89,6 +106,7 @@ func _resolve_and_apply_pivot(keyframe_motion: AnimaKeyframeMotion, target: Node
 ## force_complete] does, so a dynamic-valued stop is never applied unresolved.
 func restore_initial(target: Node) -> void:
 	var keyframe_motion := motion as AnimaKeyframeMotion
+	target = _effective_target(target)
 	if not _values_resolved:
 		_resolve_values(keyframe_motion, target)
 	for track_index in keyframe_motion.tracks.size():
@@ -99,6 +117,7 @@ func restore_initial(target: Node) -> void:
 ## outcome; resolves first if nothing has advanced yet (see [method restore_initial]).
 func force_complete(target: Node) -> void:
 	var keyframe_motion := motion as AnimaKeyframeMotion
+	target = _effective_target(target)
 	if not _values_resolved:
 		_resolve_values(keyframe_motion, target)
 	for track_index in keyframe_motion.tracks.size():
@@ -166,6 +185,7 @@ func build_reversed() -> AnimaMotion:
 	reversed.reverse_speed = keyframe_motion.reverse_speed
 	reversed.on_started_callback = keyframe_motion.on_started_callback
 	reversed.on_completed_callback = keyframe_motion.on_completed_callback
+	reversed.convenience_target = keyframe_motion.convenience_target
 
 	for track in keyframe_motion.tracks:
 		var reversed_track := AnimaKeyframeTrack.new()

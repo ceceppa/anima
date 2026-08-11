@@ -1962,7 +1962,7 @@
   A dynamic value (AnimaValue) resolves against the current playback context: func resolve(context: AnimaValueContext) -> Variant. A motion property may accept a fixed value, an AnimaValue, or a supported callable wrapper instead.
   Preserves Anima V1's dynamic-expression capability (e.g. "-.:size:x" meaning "negative width of the current target") in typed form.
   PRD5.md §6.1-§6.2.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Typed dynamic value API (Value.*)
 - **Type:** feature
@@ -1970,7 +1970,7 @@
 - **Context:**
   The primary Anima 2 API expresses dynamic values through typed expressions, e.g. .from(Value.target(^"size:x").negative()). Works standalone and inside a Group, where each item resolves its own value independently.
   PRD5.md §6.3.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic value sources
 - **Type:** feature
@@ -1978,7 +1978,7 @@
 - **Context:**
   Value.constant(), Value.target(property), Value.node(path, property), Value.root(property), Value.context(key), Value.group_index(), Value.group_count(), Value.group_normalised_index(), Value.grid_row(), Value.grid_column().
   PRD5.md §6.4.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic value arithmetic composition
 - **Type:** feature
@@ -1986,7 +1986,7 @@
 - **Context:**
   Structural arithmetic chainable on a Value: add/subtract/multiply/divide/negative/absolute/minimum/maximum/clamp/map, plus vector helpers x()/y()/z()/component().
   PRD5.md §6.5.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic value callable fallback
 - **Type:** feature
@@ -1994,7 +1994,7 @@
 - **Context:**
   Value.call(func(context): ...) covers calculations that can't be expressed structurally; must be marked runtime-only, potentially non-serialisable, potentially non-compilable, and potentially unavailable in editor preview.
   PRD5.md §6.6.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic value resolution timing policy
 - **Type:** feature
@@ -2010,7 +2010,7 @@
 - **Context:**
   Any keyframe property value may be a dynamic Value instead of a fixed literal.
   PRD5.md §6.8.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic value execution record
 - **Type:** feature
@@ -2964,14 +2964,14 @@
   No Anima.grid()/Anima.item()-style convenience factory exists for grid motions today — playing one means hand-building an AnimaTargetCollection + AnimaGridMotion (target_collection, grid_dimensions, distance_formula, item_motion, distribution) and calling Anima.play(motion, target), unlike Anima.on()'s one-line ergonomics for property motions.
   A quick Anima.grid(container) entry point (sensible defaults for grid_dimensions/distance_formula, chainable modifiers mirroring Anima.on()) would remove that boilerplate for the common case.
   Found while building the Phase 13 showcase (examples/showcase/grid/inventory_grid.gd), which currently hand-builds the AnimaGridMotion directly.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Complete the RPG-grid showcase once dynamic values and Anima.grid() land
 - **Type:** feature
 - **Source:** phase-13 review
 - **Context:**
   Phase 13's showcase scene (examples/showcase/grid/) could not be fully completed as originally envisioned — the icon-pulse animation in Scene 1's inventory grid needs each icon to animate relative to its own current/fitted scale, which keyframes can't express today (literal values only). The shipped scene works around this with a shared literal scale across all icons, documented as a known limitation. Once both prerequisite backlog items land — "Dynamic values inside keyframes" and "Anima.grid(container) convenience shorthand" — revisit the showcase to replace the workaround with real per-icon dynamic values and, if useful, the simpler Anima.grid() call.
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic value composition across multiple property references
 - **Type:** feature
@@ -2979,7 +2979,7 @@
 - **Context:**
   v1's dynamic-value formulas (addons/anima/utils/tween_utils.gd calculate_dynamic_value, anima.ceceppa.me/docs/guides/dynamic-value) could combine several independent property references, potentially from different nodes, inside one arithmetic expression (e.g. one node's width plus another's height), not just a single reference against a literal.
   AnimaValue's arithmetic composition should let one AnimaValue take another AnimaValue as an operand (not only a literal), so this v1 capability carries forward. Extends "Dynamic value arithmetic composition".
-- **Status:** in-phase-14
+- **Status:** resolved
 
 ### Dynamic Values / Anima.grid() playground demo
 - **Type:** feature
@@ -2987,11 +2987,81 @@
 - **Context:**
   Every earlier phase introducing a new leaf motion capability (Keyframes, Spring, Grid formulas, the convenience API) shipped a dedicated demo family in the existing convenience-motion playground, which already scales to many families via its Family enum/selector pattern.
   Phase 14's dynamic values and Anima.grid() shorthand should get the same treatment: a demo showing a dynamic value standalone, one inside a keyframe, two dynamic values combined arithmetically, and Anima.grid() as a one-liner — not just the narrower RPG-showcase icon-pulse fix.
-- **Status:** in-phase-14
+- **Status:** resolved
 
-### Anima.begin() composition chaining (.with()/.then())
-- **Type:** feature
-- **Source:** User request outside phase-14 scope (phase-14 covers dynamic values + grid convenience only)
+### Anima.on() chain does not expose .play()
+- **Type:** bug
+- **Source:** phase-14 review
 - **Context:**
-  V1 had Anima.begin(node).with(motion).with(motion).play() for one-line parallel composition. Reintroduce with sequencing added: .with(...) runs in parallel with the current group, .then(...) starts a new sequential step after the previous group finishes (+/- delay if specified). Needs a builder resource wrapping AnimaParallel/AnimaSequence composition, mirroring Anima.on()/Anima.grid()'s existing factory ergonomics.
+  Anima.on(...) builder chain has no .play() method, so a motion built via Anima.on cannot be started directly from the chain.
+- **Status:** in-phase-15
+
+### Chained motions via .with() do not play correctly
+- **Type:** bug
+- **Source:** phase-14 review
+- **Context:**
+  Combining two motions with .with(Anima.on(...)...) produces a chain that does not play or stop the animation correctly.
+- **Status:** in-phase-15
+
+### Simplify pivot API naming
+- **Type:** refinement
+- **Source:** phase-14 review
+- **Context:**
+  .with_pivot(AnimaPropertyMotion.Pivot.CENTER) should read AnimaPivot.Kind.CENTER for consistency with other typed enums.
+- **Status:** in-phase-15
+
+### Anima.on missing with_delay
+- **Type:** refinement
+- **Source:** phase-14 review
+- **Context:**
+  Anima.on does not expose with_delay; current workaround is setting .delay directly on the array element.
+- **Status:** in-phase-15
+
+### Anima.grid missing on_started/on_completed callbacks
+- **Type:** refinement
+- **Source:** phase-14 review
+- **Context:**
+  Anima.grid should expose on_started and on_completed lifecycle callbacks like other motion builders.
+- **Status:** in-phase-15
+
+### Anima.grid missing with_delay
+- **Type:** refinement
+- **Source:** phase-14 review
+- **Context:**
+  Anima.grid has no with_delay (nor .delay) equivalent for staggering/delaying grid motions.
+- **Status:** in-phase-15
+
+### with_ease should accept AnimaEase.Kind directly on Anima.on
+- **Type:** refinement
+- **Source:** phase-14 review
+- **Context:**
+  with_ease(AnimaEase.Kind.EXPONENTIAL) should be accepted directly on Anima.on's chain.
+- **Status:** in-phase-15
+
+### Convenience fade_out on Anima.on
+- **Type:** feature
+- **Source:** phase-14 review
+- **Context:**
+  Add Anima.on(self).fade_out(0.3).play() (or .with_duration) as a convenience shorthand.
+- **Status:** in-phase-15
+
+### Convenience fade_in on Anima.on
+- **Type:** feature
+- **Source:** phase-14 review
+- **Context:**
+  Add Anima.on(self).fade_in(0.3).play() (or .with_duration) as a convenience shorthand.
+- **Status:** in-phase-15
+
+### Anima.group() convenience factory
+- **Type:** feature
+- **Source:** phase-15 (mano spec)
+- **Context:**
+  Anima.on()/Anima.grid() have dedicated convenience factories, but there is no Anima.group() shorthand — only the canonical Motion.group(target_collection, item_motion) builder. Needs its own calling signature designed (what identifies the target collection: an explicit AnimaTargetCollection, a container node, an array of nodes?).
+- **Status:** backlog
+
+### on_started/on_completed set on a child before .then()/.with() combining never fires
+- **Type:** bug
+- **Source:** phase-15 (mano spec, story 8e)
+- **Context:**
+  A callback set via .on_started()/.on_completed() on a motion before folding it into a .then()/.with() composite is never invoked — only the composite's own top-level callback fires, since AnimaPlayback only calls back on the root motion (AnimaPlayback._fire_started()/_advance()'s on_completed check both read motion.on_started_callback/on_completed_callback on the root only). Discovered via examples/showcase/grid/scene_3.gd combining two Anima.grid() chains, each with its own .on_started() set before .with(). No fix attempted yet — needs a design decision on whether AnimaSequenceInstance/AnimaParallelInstance should fire each child's own callbacks as it starts/finishes them.
 - **Status:** backlog

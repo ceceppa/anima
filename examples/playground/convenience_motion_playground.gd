@@ -5,6 +5,7 @@ enum Family {
 	SCALE, SCALE_BY, ROTATION, ROTATE_BY,
 	OPACITY, COLOR, SIZE, PROPERTY, CHAINED,
 	KEYFRAMES, SPRING, DYNAMIC_VALUES,
+	FADE_OUT, FADE_IN, WITH_DELAY, NAMED_EASE,
 }
 
 const FAMILY_ORDER := [
@@ -12,6 +13,7 @@ const FAMILY_ORDER := [
 	Family.SCALE, Family.SCALE_BY, Family.ROTATION, Family.ROTATE_BY,
 	Family.OPACITY, Family.COLOR, Family.SIZE, Family.PROPERTY, Family.CHAINED,
 	Family.KEYFRAMES, Family.SPRING, Family.DYNAMIC_VALUES,
+	Family.FADE_OUT, Family.FADE_IN, Family.WITH_DELAY, Family.NAMED_EASE,
 ]
 const FAMILY_LABELS := {
 	Family.POSITION: "Position",
@@ -30,6 +32,10 @@ const FAMILY_LABELS := {
 	Family.KEYFRAMES: "Keyframes",
 	Family.SPRING: "Spring",
 	Family.DYNAMIC_VALUES: "Dynamic Values",
+	Family.FADE_OUT: "Fade Out",
+	Family.FADE_IN: "Fade In",
+	Family.WITH_DELAY: "With Delay",
+	Family.NAMED_EASE: "Named Ease",
 }
 const FAMILY_EXAMPLES := {
 	Family.POSITION: "Anima.on(card).position(card.position + Vector2(60, -40), 0.4)",
@@ -48,6 +54,10 @@ const FAMILY_EXAMPLES := {
 	Family.KEYFRAMES: "Motion.keyframes({\"from\": {...}, 30: {...}, 70: {...}, \"to\": {...}}).with_duration(0.9)",
 	Family.SPRING: "Anima.on(card).position_x(card.position.x + 80, 0.0).with_ease(spring)",
 	Family.DYNAMIC_VALUES: "Motion.to(\"position:x\", AnimaValue.target(\"position:x\").add(AnimaValue.target(\"size:x\")))",
+	Family.FADE_OUT: "Anima.on(card).fade_out(0.4).play()",
+	Family.FADE_IN: "Anima.on(card).fade_in(0.4)",
+	Family.WITH_DELAY: "Anima.on(card).move_by(Vector2(60, 0), 0.3).with_delay(0.4)",
+	Family.NAMED_EASE: "Anima.on(card).position_x(card.position.x + 80, 0.4).with_ease(AnimaEase.Kind.BOUNCE)",
 }
 const SELECTOR_BUTTON := preload("res://examples/playground/shared/components/selector_button.tscn")
 
@@ -124,17 +134,32 @@ func select_family(family: Family) -> void:
 	restart()
 
 ## Restarts the selected family's motion from the card's resting appearance.
+## FADE_OUT is the one family started via the motion's own `.play()` chain
+## method instead of the shared `Anima.play(motion, _card)` call below — both
+## produce an identical AnimaPlayback (`.play()` just wraps the same call
+## using its own captured target), so this is purely which entry point the
+## example demonstrates.
 func restart() -> void:
 	if _active_playback != null and _active_playback.state == AnimaPlayback.State.PLAYING:
 		_active_playback.cancel()
 	_reset_card()
+	if _selected_family == Family.FADE_IN:
+		# fade_in() animates opacity toward 1.0 — starting the reset (opaque)
+		# card there would be a no-op, so this family alone starts invisible.
+		_card.modulate.a = 0.0
 	_example_line.text = FAMILY_EXAMPLES[_selected_family]
-	var motion := _build_motion()
-	# 0.0 means complete immediately when reduced motion is active — the
-	# web's "remove the motion" sense of reduced motion, not just a slower
-	# play-through (tech-spec.md §Speed, direction, and reduced motion).
-	motion.reduced_motion_speed = 0.0
-	_active_playback = Anima.play(motion, _card)
+
+	if _selected_family == Family.FADE_OUT:
+		var motion := Anima.on(_card).fade_out(0.4)
+		motion.reduced_motion_speed = 0.0
+		_active_playback = motion.play()
+	else:
+		var motion := _build_motion()
+		# 0.0 means complete immediately when reduced motion is active — the
+		# web's "remove the motion" sense of reduced motion, not just a slower
+		# play-through (tech-spec.md §Speed, direction, and reduced motion).
+		motion.reduced_motion_speed = 0.0
+		_active_playback = Anima.play(motion, _card)
 	_active_playback.speed_scale = _selected_speed
 
 ## Reverses the currently selected motion through its actually-recorded run —
@@ -199,8 +224,16 @@ func _build_motion() -> AnimaMotion:
 			return _build_keyframe_motion()
 		Family.SPRING:
 			return _build_spring_motion()
+		Family.DYNAMIC_VALUES:
+			return _build_dynamic_value_motion()
+		Family.FADE_OUT:
+			return Anima.on(_card).fade_out(0.4) # unreachable via restart() — see its own FADE_OUT branch
+		Family.FADE_IN:
+			return Anima.on(_card).fade_in(0.4)
+		Family.WITH_DELAY:
+			return Anima.on(_card).move_by(Vector2(60.0, 0.0), 0.3).with_delay(0.4)
 		_:
-			return _build_dynamic_value_motion() # Family.DYNAMIC_VALUES
+			return Anima.on(_card).position_x(_card.position.x + 80.0, 0.4).with_ease(AnimaEase.Kind.BOUNCE) # Family.NAMED_EASE
 
 ## Demonstrates the lifecycle-callback and repeat chain modifiers together —
 ## `.repeat()` comes before `.on_started()`/`.on_completed()` so the

@@ -81,6 +81,16 @@ Fades [member target]'s opacity ([code]modulate:a[/code]) to [param to].
 [CanvasItem] ([Control]/[Node2D]) targets only. A value outside `0.0..1.0`
 is allowed and produces an editor warning, never a clamp or a rejection.
 
+### fade_out
+
+Fades [member target] out to fully transparent — sugar for [method opacity]
+with [code]to = 0.0[/code]. Same target restriction as [method opacity].
+
+### fade_in
+
+Fades [member target] in to fully opaque — sugar for [method opacity] with
+[code]to = 1.0[/code]. Same target restriction as [method opacity].
+
 ### color
 
 Animates [member target]'s colour ([code]modulate[/code]) to [param to].

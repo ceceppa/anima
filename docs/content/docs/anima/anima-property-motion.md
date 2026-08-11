@@ -18,15 +18,6 @@ Godot 4.x and Anima 2.x.
 
 See the class and member help in the Godot editor for a minimal, runnable example.
 
-## Enumerations
-
-### Pivot
-
-Restored Anima v1 anchor positions a scale or rotation motion can
-transform around, instead of the target's default origin. Only takes
-effect when [member target_property] is `scale`/`scale:x`/`scale:y` or
-`rotation` — see [member pivot] (`tech-spec.md` §Motion pivot control).
-
 ## Properties and constants
 
 ### target_property
@@ -67,7 +58,7 @@ property (see [method with_duration]).
 Anchor position a scale or rotation motion transforms around, restored
 from Anima v1. Ignored on any other property, or a target that supports
 neither `Control`'s native pivot nor an `offset`+`texture` pair
-(`tech-spec.md` §Motion pivot control).
+(`tech-spec.md` §Motion pivot control). See [AnimaPivot].
 
 ## Methods
 
@@ -93,7 +84,11 @@ and GDScript cannot declare a method with the same name as a property.
 
 ### with_ease
 
-See [method with_duration].
+See [method with_duration]. Accepts either a fully-built [AnimaEase]
+resource, unchanged, or a bare [enum AnimaEase.Kind] value — converted via
+[method AnimaEase.from], the same shorthand [method AnimaKeyframeMotion.with_ease]
+and [method AnimaGridMotionFactory.with_ease] already offer
+(`tech-spec.md` §Easing curve library).
 
 ### with_delay
 

@@ -115,7 +115,30 @@ instead — the same outcome [method AnimaPlayback.complete] produces —
 since a literal `0.0` multiplier would freeze the motion forever rather
 than reduce it.
 
+### convenience_target
+
+Transient target captured by [AnimaOnMotionFactory] when this motion is
+built through [method Anima.on] — never exported, so it's never part of a
+saved resource. `null` for a hand-built motion, an [method Anima.item]-built
+motion (which has no single fixed target), or a [method then]/[method with]
+composite whose combined motions were captured against different targets.
+Read only by [method play] and propagated by [method then]/[method with] —
+see `tech-spec.md` §Target-bound authoring contract, "`.play()` and
+per-leaf convenience targets".
+
 ## Methods
+
+### play
+
+Starts this motion immediately via [method Anima.play], using [member
+convenience_target] when set. Returns the resulting [AnimaPlayback].
+Reports an error and returns `null` only when called on a leaf
+[AnimaPropertyMotion] with no captured target — build it through [method
+Anima.on] first, or call [method Anima.play] directly. A composite
+([AnimaSequence]/[AnimaParallel]) always proceeds, passing `null` when its
+own [member convenience_target] wasn't propagated: each leaf then resolves
+its own captured target independently at `advance()` time
+(`tech-spec.md` §Target-bound authoring contract).
 
 ### estimate_duration
 
@@ -142,7 +165,11 @@ in order — the same resource [method Motion.sequence] would build.
 Chaining a second `.then()` appends another step to one flat sequence
 instead of nesting (`a.then(b).then(c)` is a 3-step sequence, not a
 sequence of sequences). See [method with] for combining steps that
-should start together instead.
+should start together instead. [param other] accepts an [AnimaMotion]
+or any object exposing a `motion: AnimaMotion` property (a convenience
+factory like [AnimaGridMotionFactory]) — resolved via [method
+_resolve_chainable] (`tech-spec.md` §Target-bound authoring contract,
+"Chaining a motion factory directly").
 
 ### with
 
@@ -151,7 +178,7 @@ most recently chained — the group open since the last [method then], or
 the whole chain when no [method then] preceded it. Multiple consecutive
 `.with()` calls join one growing group rather than nesting
 (`a.then(b).with(c).with(d)` is `b`, `c`, and `d` all starting together,
-after `a`).
+after `a`). Accepts the same [param other] types as [method then].
 
 ### on_started
 
@@ -177,6 +204,6 @@ repeating identically.
 ### with_speed
 
 Sets [member speed] directly. Named `with_speed` rather than `speed()` for
-the same reason as `with_duration`/`with_ease`/`with_delay` on
-[AnimaPropertyMotion] — a bare method name would collide with the field of
-the same name. Returns self so calls can keep chaining.
+the same reason as `with_duration`/`with_ease`/`with_delay` on leaf motion
+types — a bare method name would collide with the field of the same name.
+Returns self so calls can keep chaining.

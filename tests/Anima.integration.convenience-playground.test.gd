@@ -12,7 +12,7 @@ func test_the_playground_shows_the_shared_header_card_example_line_selector_and_
 	assert_not_null(scene.find_child("Header", true, false))
 
 	var selector: SelectorDock = scene.get_node("%Selector")
-	assert_eq(selector.get_item_count(), 16, "one item per showcased family, including Keyframes, Spring, and Dynamic Values")
+	assert_eq(selector.get_item_count(), 20, "one item per showcased family, including Keyframes, Spring, Dynamic Values, Fade Out, Fade In, With Delay, and Named Ease")
 
 func test_selecting_each_family_produces_a_visible_card_run_matching_the_shown_example():
 	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
@@ -251,6 +251,79 @@ func test_spring_family_visibly_overshoots_its_target_before_settling():
 	assert_gt(max_x, target_x, "the spring should visibly pass its target before settling, not glide straight to it")
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED, "the spring should have settled well within 5 seconds")
 	assert_almost_eq(card.position.x, target_x, 0.5, "the spring should still come to rest at its target")
+
+func _select_family_by_label(selector: SelectorDock, label: String) -> void:
+	for i in selector.get_item_count():
+		if selector.get_item(i).text == label:
+			selector.get_item(i).pressed.emit()
+			return
+	fail_test("sanity: a \"%s\" family item should exist" % label)
+
+func test_fade_out_family_plays_via_the_motions_own_play_and_fades_to_zero():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var card: Card = scene.get_node("%Card")
+
+	_select_family_by_label(selector, "Fade Out")
+	assert_almost_eq(card.modulate.a, 1.0, 0.01, "Fade Out should start from the reset card's full opacity")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+
+	assert_almost_eq(card.modulate.a, 0.0, 0.01)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+func test_fade_in_family_starts_invisible_and_fades_to_full_opacity():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var card: Card = scene.get_node("%Card")
+
+	_select_family_by_label(selector, "Fade In")
+	assert_almost_eq(card.modulate.a, 0.0, 0.01, "Fade In should reset the card to invisible before playing")
+
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+
+	assert_almost_eq(card.modulate.a, 1.0, 0.01)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+func test_with_delay_family_visibly_pauses_before_the_card_moves():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var selector: SelectorDock = scene.get_node("%Selector")
+	var card: Card = scene.get_node("%Card")
+
+	_select_family_by_label(selector, "With Delay")
+	var playback: AnimaPlayback = scene.get("_active_playback")
+	var start_x := card.position.x
+
+	# The family's own delay is 0.4s — 12 frames at 1/60 stays comfortably
+	# inside it, so the card should not have moved yet.
+	for i in range(12):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(card.position.x, start_x, 0.01, "the card should not move until the with_delay() pause elapses")
+
+	for i in range(30):
+		playback._advance(1.0 / 60.0)
+	assert_gt(card.position.x, start_x, "the card should have moved once the delay elapsed")
+
+func test_named_ease_family_eases_with_the_bare_kind_value():
+	var scene: Control = preload("res://examples/playground/convenience_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+	var selector: SelectorDock = scene.get_node("%Selector")
+
+	_select_family_by_label(selector, "Named Ease")
+	var playback: AnimaPlayback = scene.get("_active_playback")
+
+	assert_eq((playback.motion as AnimaPropertyMotion).ease.kind, AnimaEase.Kind.BOUNCE)
 
 ## Regression: AnimaKeyframeMotionInstance never overrode force_complete()/
 ## restore_initial() (the AnimaMotionInstance base no-ops), so Complete and

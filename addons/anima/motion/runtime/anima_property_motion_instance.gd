@@ -20,10 +20,34 @@ var _spring_velocity: float = 0.0
 var _spring_target: float = 0.0
 var _spring_initialized: bool = false
 
+## Resolves the target this instance actually animates: [member
+## AnimaMotion.convenience_target] when this motion was built through [method
+## Anima.on] (alone or combined into a `.then()`/`.with()` composite),
+## otherwise whatever [param target] the enclosing [AnimaPlayback] supplies —
+## lets a multi-target composite chain call [method AnimaMotion.play] with
+## each leaf still animating its own node (`tech-spec.md` §Target-bound
+## authoring contract, "`.play()` and per-leaf convenience targets").
+func _effective_target(target: Node) -> Node:
+	var convenience_target: Node = (motion as AnimaPropertyMotion).convenience_target
+	return convenience_target if convenience_target != null else target
+
 ## Advances this motion by [param delta] seconds and writes the new value to
-## [param target]. Returns `true` once finished.
+## [param target] — or, when this motion carries its own [member
+## AnimaMotion.convenience_target], to that captured target instead (see
+## [method _effective_target]). Returns `true` once finished. A composite
+## combining leaves captured against different targets has no single root
+## target for [method AnimaPlayback]'s own freed-target check (§Lifecycle-safe
+## playback policies) to guard — each leaf's [member is_instance_valid] check
+## here is that same protection applied per leaf instead, since only the leaf
+## knows its own captured target.
 func advance(target: Node, delta: float) -> bool:
 	var property_motion := motion as AnimaPropertyMotion
+	target = _effective_target(target)
+	# A property motion always needs a real, live target to write to — unlike
+	# a group's EXPLICIT collection, `null` was never valid input here, so
+	# is_instance_valid's own null-is-invalid behavior is exactly right.
+	if not is_instance_valid(target):
+		return true
 
 	if not _from_value_captured:
 		_from_value = _resolve_dynamic(property_motion.from_value, target)
@@ -69,7 +93,7 @@ func _resolve_duration(target: Node, property_motion: AnimaPropertyMotion) -> fl
 ## Control/Sprite2D-like branching are the shared [method
 ## AnimaMotionInstance._apply_pivot_to] every caller uses.
 func _apply_pivot(target: Node, property_motion: AnimaPropertyMotion) -> void:
-	if property_motion.pivot == AnimaPropertyMotion.Pivot.NONE:
+	if property_motion.pivot == AnimaPivot.Kind.NONE:
 		return
 	var base_property := String(property_motion.target_property).split(":")[0]
 	if base_property != "scale" and base_property != "rotation":
@@ -101,33 +125,37 @@ func build_reversed() -> AnimaMotion:
 	reversed.delay_basis = property_motion.delay_basis
 	reversed.on_started_callback = property_motion.on_started_callback
 	reversed.on_completed_callback = property_motion.on_completed_callback
+	reversed.convenience_target = property_motion.convenience_target
 	return reversed
 
-## Restores [param target]'s property to the value captured when this
-## instance began advancing. A no-op if nothing has been captured yet.
+## Restores [param target]'s property (or [member AnimaMotion.convenience_target]
+## when captured — see [method _effective_target]) to the value captured when
+## this instance began advancing. A no-op if nothing has been captured yet.
 func restore_initial(target: Node) -> void:
 	if not _from_value_captured:
 		return
 	var property_motion := motion as AnimaPropertyMotion
-	target.set_indexed(property_motion.target_property, _from_value)
+	_effective_target(target).set_indexed(property_motion.target_property, _from_value)
 
-## Applies this motion's authored end value to [param target] immediately —
-## capturing a start value first (a zero-length advance) if nothing has been
-## captured yet. A SPRING-eased motion is force-settled to its spring target
-## instead, since it has no fixed to-value curve.
+## Applies this motion's authored end value to [param target] (or [member
+## AnimaMotion.convenience_target] when captured) immediately — capturing a
+## start value first (a zero-length advance) if nothing has been captured
+## yet. A SPRING-eased motion is force-settled to its spring target instead,
+## since it has no fixed to-value curve.
 func force_complete(target: Node) -> void:
 	if not _from_value_captured:
 		advance(target, 0.0)
 
 	var property_motion := motion as AnimaPropertyMotion
+	var effective_target := _effective_target(target)
 	if property_motion.ease.kind == AnimaEase.Kind.SPRING:
 		_spring_value = _spring_target
 		_spring_velocity = 0.0
-		target.set_indexed(property_motion.target_property, _spring_value)
+		effective_target.set_indexed(property_motion.target_property, _spring_value)
 		return
 
 	_elapsed = _resolved_duration
-	target.set_indexed(property_motion.target_property, _to_value)
+	effective_target.set_indexed(property_motion.target_property, _to_value)
 
 ## Advances a SPRING-eased motion one physics step (semi-implicit Euler on a
 ## damped harmonic oscillator) instead of evaluating a normalized-time curve.

@@ -60,6 +60,35 @@ func test_completes_only_once_last_child_finishes():
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 	assert_almost_eq(node.modulate.a, 0.0, 0.01)
 
+func test_each_childs_own_on_started_and_on_completed_fire_as_it_runs():
+	var node := Node2D.new()
+	autofree(node)
+
+	var first := _make_child("position:x", 10.0, 0.2)
+	var first_started := [0]
+	var first_completed := [0]
+	first.on_started_callback = func(): first_started[0] += 1
+	first.on_completed_callback = func(): first_completed[0] += 1
+
+	var second := _make_child("position:y", 10.0, 0.2)
+	var second_started := [0]
+	second.on_started_callback = func(): second_started[0] += 1
+
+	var sequence := AnimaSequence.new()
+	sequence.children = [first, second]
+
+	var playback := AnimaPlayback.new(sequence, node)
+	playback._advance(0.0) # first advance is what actually starts the first child
+	assert_eq(first_started[0], 1, "the first child should have started on the first advance")
+	assert_eq(second_started[0], 0, "the second child should not have started yet")
+	assert_eq(first_completed[0], 0)
+
+	for i in range(3):
+		playback._advance(0.1)
+
+	assert_eq(first_completed[0], 1, "the first child should have completed exactly once")
+	assert_eq(second_started[0], 1, "the second child should have started once the first finished")
+
 func test_negative_delay_overlaps_with_previous_child():
 	var node := Node2D.new()
 	autofree(node)
@@ -212,3 +241,26 @@ func test_reversing_a_finished_sequence_returns_every_child_to_its_start_value()
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 	assert_almost_eq(node.position.x, 0.0, 0.01, "reversing a sequence should return every child to its starting value")
 	assert_almost_eq(node.position.y, 0.0, 0.01, "reversing a sequence should return every child to its starting value")
+
+func test_completing_a_sequence_fires_each_not_yet_started_childs_on_started_and_on_completed():
+	var node := Node2D.new()
+	autofree(node)
+
+	var first := _make_child("position:x", 10.0, 0.5)
+	var second := _make_child("position:y", 20.0, 0.5)
+	var second_started := [0]
+	var second_completed := [0]
+	second.on_started_callback = func(): second_started[0] += 1
+	second.on_completed_callback = func(): second_completed[0] += 1
+
+	var sequence := AnimaSequence.new()
+	sequence.children = [first, second]
+
+	var playback := AnimaPlayback.new(sequence, node)
+	assert_eq(second_started[0], 0, "the second child should not have started yet")
+
+	playback.complete()
+
+	assert_eq(second_started[0], 1, "complete() should still start the not-yet-started child before ending it")
+	assert_eq(second_completed[0], 1)
+	assert_almost_eq(node.position.y, 20.0, 0.01)

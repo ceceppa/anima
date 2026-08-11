@@ -34,7 +34,7 @@ func _zoom_in(top_node: Control, bottom_node: Control) -> AnimaPlayback:
 			"scale": Vector2(2.0, 2.0),
 			"opacity": 0.0
 		}
-	}).with_duration(duration).with_pivot(AnimaPropertyMotion.Pivot.CENTER).with_ease(AnimaEase.Kind.EXPONENTIAL)
+	}).with_duration(duration).with_pivot(AnimaPivot.Kind.CENTER).with_ease(AnimaEase.Kind.EXPONENTIAL)
 
 	var zoom2 := Anima.on(bottom_node).keyframes({
 		"from": {
@@ -45,7 +45,7 @@ func _zoom_in(top_node: Control, bottom_node: Control) -> AnimaPlayback:
 			"scale": Vector2.ONE,
 			"opacity": 1.0
 		}
-	}).with_duration(duration).with_pivot(AnimaPropertyMotion.Pivot.CENTER).with_ease(AnimaEase.Kind.EXPONENTIAL)
+	}).with_duration(duration).with_pivot(AnimaPivot.Kind.CENTER).with_ease(AnimaEase.Kind.EXPONENTIAL)
 	zoom2.delay = 0.05
 
 	Anima.play(zoom1, top_node)

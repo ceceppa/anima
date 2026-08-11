@@ -116,6 +116,37 @@ func test_restart_and_reverse_replay_the_same_selected_grid_configuration():
 	var restarted_instance := restarted._instance as AnimaGroupPlayback
 	assert_eq(restarted_instance.execution_record.entries[0].target, forward_first, "restart should replay the same tapped start point forward again")
 
+func test_grid_motion_is_delayed_before_any_item_starts_moving():
+	var scene := await _open_scene()
+	var grid: GridContainer = scene.get_node("%Grid")
+	var playback: AnimaPlayback = scene.get("_active_playback")
+
+	var first_card := grid.get_child(0) as Card
+	var progress_before: float = first_card.get("progress")
+
+	# The scene's own delay is 0.3s — 6 frames at 1/60 stays comfortably
+	# inside it, so no item should have started moving yet.
+	for i in range(6):
+		playback._advance(1.0 / 60.0)
+	assert_eq(first_card.get("progress"), progress_before, "no item should move until the grid's with_delay() pause elapses")
+
+func test_on_started_and_on_completed_update_the_formula_description():
+	var scene := await _open_scene()
+	var formula_description: Label = scene.get_node("%FormulaDescription")
+	var base_text := formula_description.text
+	var playback: AnimaPlayback = scene.get("_active_playback")
+
+	assert_string_contains(formula_description.text, "started", "on_started should already have fired synchronously when the grid motion started playing")
+
+	for i in range(120):
+		playback._advance(1.0 / 60.0)
+		if playback.state == AnimaPlayback.State.FINISHED:
+			break
+
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_string_contains(formula_description.text, "completed")
+	assert_string_contains(formula_description.text, base_text.split("  →")[0], "the callback text should still be based on the selected formula's own description")
+
 ## Regression: pressing reverse before the auto-started grid had captured
 ## even one frame used to silently no-op (AnimaPlayback.reverse() had
 ## nothing to reverse to), leaving the original forward run untouched.

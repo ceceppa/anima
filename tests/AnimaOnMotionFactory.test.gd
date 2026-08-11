@@ -87,3 +87,61 @@ func test_property_delegates_to_the_named_path_with_no_class_restriction():
 
 	assert_eq(motion.target_property, NodePath("visible"))
 	assert_eq(motion.to_value, false)
+
+func test_with_delay_chains_off_a_semantic_method():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).move_by(Vector2(1.0, 2.0), 0.1).with_delay(0.05)
+
+	assert_eq(motion.delay, 0.05)
+
+func test_fade_out_animates_opacity_to_zero():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).fade_out(0.2)
+
+	assert_eq(motion.target_property, NodePath("modulate:a"))
+	assert_eq(motion.to_value, 0.0)
+	assert_eq(motion.duration, 0.2)
+
+func test_fade_in_animates_opacity_to_one():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).fade_in(0.2)
+
+	assert_eq(motion.target_property, NodePath("modulate:a"))
+	assert_eq(motion.to_value, 1.0)
+	assert_eq(motion.duration, 0.2)
+
+func test_fade_out_on_a_non_canvas_item_target_fails_validation():
+	var node3d: Node3D = add_child_autofree(Node3D.new())
+
+	var motion := AnimaOnMotionFactory.new(node3d).fade_out(0.2)
+
+	assert_null(motion)
+	assert_push_error("CanvasItem")
+
+func test_keyframes_captures_the_target_for_play():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).keyframes({"from": {"opacity": 0.0}, "to": {"opacity": 1.0}})
+
+	assert_same(motion.convenience_target, node)
+
+func test_keyframes_built_motion_plays_via_the_chains_own_play():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	node.modulate.a = 0.0
+
+	var playback: AnimaPlayback = Anima.on(node).keyframes({"from": {"opacity": 0.0}, "to": {"opacity": 1.0}}, 0.1).play()
+	for i in range(6):
+		playback._advance(1.0 / 60.0)
+
+	assert_almost_eq(node.modulate.a, 1.0, 0.01)
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+
+func test_semantic_methods_capture_the_target_for_play():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := AnimaOnMotionFactory.new(node).move_by(Vector2(1.0, 2.0))
+
+	assert_same(motion.convenience_target, node)

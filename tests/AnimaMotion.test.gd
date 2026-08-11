@@ -83,6 +83,112 @@ func test_then_after_with_starts_a_new_step_leaving_the_earlier_group_intact():
 	assert_true(result.children[1] is AnimaParallel)
 	assert_eq(result.children[1].children, [c, d])
 
+func test_then_accepts_a_factory_exposing_a_motion_property():
+	var container := Node.new()
+	add_child_autofree(container)
+	var a := _leaf("a")
+	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
+
+	var result := a.then(factory)
+
+	assert_eq(result.children, [a, factory.motion])
+
+func test_with_accepts_a_factory_exposing_a_motion_property():
+	var container := Node.new()
+	add_child_autofree(container)
+	var a := _leaf("a")
+	var factory := AnimaGridMotionFactory.new(container).with_item_motion(Anima.item().opacity(0.0, 0.1))
+
+	var result := a.with(factory)
+
+	assert_true(result is AnimaParallel)
+	assert_eq(result.children, [a, factory.motion])
+
+func test_then_with_an_unsupported_type_reports_an_error_and_returns_self_unchanged():
+	var a := _leaf("a")
+
+	var result := a.then("not a motion")
+
+	assert_eq(result.children, [a])
+	assert_push_error("AnimaMotion.then()")
+
+func test_with_with_an_unsupported_type_reports_an_error_and_returns_self_unchanged():
+	var a := _leaf("a")
+
+	var result := a.with("not a motion")
+
+	assert_same(result, a)
+	assert_push_error("AnimaMotion.with()")
+
+func test_then_propagates_convenience_target_when_both_sides_agree():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var a := _leaf("a")
+	a.convenience_target = node
+	var b := _leaf("b")
+	b.convenience_target = node
+
+	var result := a.then(b)
+
+	assert_same(result.convenience_target, node)
+
+func test_then_leaves_convenience_target_unset_when_sides_disagree():
+	var node_a: Node2D = add_child_autofree(Node2D.new())
+	var node_b: Node2D = add_child_autofree(Node2D.new())
+	var a := _leaf("a")
+	a.convenience_target = node_a
+	var b := _leaf("b")
+	b.convenience_target = node_b
+
+	var result := a.then(b)
+
+	assert_null(result.convenience_target)
+
+func test_with_propagates_convenience_target_when_both_sides_agree():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var a := _leaf("a")
+	a.convenience_target = node
+	var b := _leaf("b")
+	b.convenience_target = node
+
+	var result := a.with(b)
+
+	assert_same(result.convenience_target, node)
+
+func test_with_leaves_convenience_target_unset_when_sides_disagree():
+	var node_a: Node2D = add_child_autofree(Node2D.new())
+	var node_b: Node2D = add_child_autofree(Node2D.new())
+	var a := _leaf("a")
+	a.convenience_target = node_a
+	var b := _leaf("b")
+	b.convenience_target = node_b
+
+	var result := a.with(b)
+
+	assert_null(result.convenience_target)
+
+func test_play_wraps_anima_play_with_the_convenience_target():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position")
+	motion.to_value = Vector2(10.0, 0.0)
+	motion.convenience_target = node
+
+	var playback: AnimaPlayback = motion.play()
+
+	assert_not_null(playback)
+	assert_same(playback.target, node)
+	playback.cancel() # avoid leaking a still-PLAYING playback into later tests
+
+func test_play_on_a_leaf_property_motion_with_no_captured_target_fails():
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position")
+	motion.to_value = Vector2.ZERO
+
+	var playback := motion.play()
+
+	assert_null(playback)
+	assert_push_error("target")
+
 func test_on_started_sets_callback_and_returns_self():
 	var motion := AnimaMotion.new()
 	var callback := func(): pass

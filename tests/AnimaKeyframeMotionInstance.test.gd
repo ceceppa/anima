@@ -272,7 +272,7 @@ func test_default_pivot_resolves_a_scale_tracks_anchor_on_a_control():
 
 	var motion := Motion.keyframes({"from": {"scale": Vector2.ONE}, "to": {"scale": Vector2(1.2, 1.2)}})
 	motion.duration = 0.1
-	motion.default_pivot = AnimaPropertyMotion.Pivot.CENTER
+	motion.default_pivot = AnimaPivot.Kind.CENTER
 
 	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
 	instance.advance(control, 1.0 / 60.0)
@@ -285,7 +285,7 @@ func test_a_stops_own_pivot_declaration_is_used_when_default_pivot_is_none():
 	control.size = Vector2(100.0, 80.0)
 
 	var motion := Motion.keyframes({
-		"from": {"scale": Vector2.ONE, "_pivot": AnimaPropertyMotion.Pivot.BOTTOM_RIGHT},
+		"from": {"scale": Vector2.ONE, "_pivot": AnimaPivot.Kind.BOTTOM_RIGHT},
 		"to": {"scale": Vector2(1.2, 1.2)},
 	})
 	motion.duration = 0.1
@@ -301,8 +301,8 @@ func test_the_first_declared_stop_pivot_wins_when_more_than_one_stop_declares_on
 	control.size = Vector2(100.0, 80.0)
 
 	var motion := Motion.keyframes({
-		"from": {"scale": Vector2.ONE, "_pivot": AnimaPropertyMotion.Pivot.TOP_LEFT},
-		50: {"scale": Vector2(1.1, 1.1), "_pivot": AnimaPropertyMotion.Pivot.BOTTOM_RIGHT},
+		"from": {"scale": Vector2.ONE, "_pivot": AnimaPivot.Kind.TOP_LEFT},
+		50: {"scale": Vector2(1.1, 1.1), "_pivot": AnimaPivot.Kind.BOTTOM_RIGHT},
 		"to": {"scale": Vector2(1.2, 1.2)},
 	})
 	motion.duration = 0.1
@@ -332,7 +332,7 @@ func test_pivot_is_ignored_for_a_motion_with_no_scale_or_rotation_track():
 
 	var motion := Motion.keyframes({"from": {"opacity": 0.0}, "to": {"opacity": 1.0}})
 	motion.duration = 0.1
-	motion.default_pivot = AnimaPropertyMotion.Pivot.CENTER
+	motion.default_pivot = AnimaPivot.Kind.CENTER
 
 	var instance: AnimaKeyframeMotionInstance = motion.create_runtime()
 	instance.advance(control, 1.0 / 60.0)

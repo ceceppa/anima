@@ -14,6 +14,22 @@ func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> 
 	motion = p_motion
 	value_context = p_value_context
 
+## Invokes [param callback] only when it is both [member Callable.is_valid]
+## and — for a callable bound to an instance, including a lambda closure
+## capturing `self` — that instance is still alive. [method Callable.is_valid]
+## alone doesn't catch a freed closure target the same way it catches a freed
+## bound-method target, which is what lets a leaked, never-cancelled
+## [AnimaPlayback] crash calling a per-child callback (phase-15) against a
+## node its own scene already freed. Shared by [AnimaSequenceInstance] and
+## [AnimaParallelInstance] for each child's own `on_started`/`on_completed`.
+func _call_if_valid(callback: Callable) -> void:
+	if not callback.is_valid():
+		return
+	var bound_object: Object = callback.get_object()
+	if bound_object != null and not is_instance_valid(bound_object):
+		return
+	callback.call()
+
 ## Resolves [param value] through [member value_context] when it is an
 ## [AnimaValue] — a fresh target-only context when none was supplied, the
 ## same "root defaults to the animated node" behaviour Anima v1 used for a
@@ -26,33 +42,33 @@ func _resolve_dynamic(value: Variant, target: Node) -> Variant:
 		context = AnimaValueContext.new(target)
 	return (value as AnimaValue).resolve(context)
 
-## Normalized (x, y) position of each [enum AnimaPropertyMotion.Pivot] anchor
+## Normalized (x, y) position of each [enum AnimaPivot.Kind] anchor
 ## within a target's own bounds — `(0, 0)` is the top-left corner, `(1, 1)`
 ## the bottom-right, matching Control.size / Sprite2D.texture-space. Shared
 ## by [method AnimaPropertyMotionInstance._apply_pivot] and [method
 ## AnimaKeyframeMotionInstance._resolve_and_apply_pivot] (`tech-spec.md`
 ## §Motion pivot control, "Shared with keyframe motions").
 const _PIVOT_ANCHORS := {
-	AnimaPropertyMotion.Pivot.TOP_LEFT: Vector2(0.0, 0.0),
-	AnimaPropertyMotion.Pivot.TOP_CENTER: Vector2(0.5, 0.0),
-	AnimaPropertyMotion.Pivot.TOP_RIGHT: Vector2(1.0, 0.0),
-	AnimaPropertyMotion.Pivot.CENTER_LEFT: Vector2(0.0, 0.5),
-	AnimaPropertyMotion.Pivot.CENTER: Vector2(0.5, 0.5),
-	AnimaPropertyMotion.Pivot.CENTER_RIGHT: Vector2(1.0, 0.5),
-	AnimaPropertyMotion.Pivot.BOTTOM_LEFT: Vector2(0.0, 1.0),
-	AnimaPropertyMotion.Pivot.BOTTOM_CENTER: Vector2(0.5, 1.0),
-	AnimaPropertyMotion.Pivot.BOTTOM_RIGHT: Vector2(1.0, 1.0),
+	AnimaPivot.Kind.TOP_LEFT: Vector2(0.0, 0.0),
+	AnimaPivot.Kind.TOP_CENTER: Vector2(0.5, 0.0),
+	AnimaPivot.Kind.TOP_RIGHT: Vector2(1.0, 0.0),
+	AnimaPivot.Kind.CENTER_LEFT: Vector2(0.0, 0.5),
+	AnimaPivot.Kind.CENTER: Vector2(0.5, 0.5),
+	AnimaPivot.Kind.CENTER_RIGHT: Vector2(1.0, 0.5),
+	AnimaPivot.Kind.BOTTOM_LEFT: Vector2(0.0, 1.0),
+	AnimaPivot.Kind.BOTTOM_CENTER: Vector2(0.5, 1.0),
+	AnimaPivot.Kind.BOTTOM_RIGHT: Vector2(1.0, 1.0),
 }
 
 ## Resolves and applies [param pivot] to [param target] once — the shared
 ## mechanism [AnimaPropertyMotionInstance] and [AnimaKeyframeMotionInstance]
 ## both call after their own gating (whether [param pivot] is [constant
-## AnimaPropertyMotion.Pivot.NONE] and whether the animated propert(y/ies)
+## AnimaPivot.Kind.NONE] and whether the animated propert(y/ies)
 ## is/are `scale`/`rotation`) — see each caller and `tech-spec.md` §Motion
 ## pivot control. Only a [Control] (native `pivot_offset`) or a 2D node
 ## exposing both `offset` and `texture` (Sprite2D-like) are affected;
 ## anything else is left untouched.
-func _apply_pivot_to(target: Node, pivot: AnimaPropertyMotion.Pivot) -> void:
+func _apply_pivot_to(target: Node, pivot: AnimaPivot.Kind) -> void:
 	var anchor: Vector2 = _PIVOT_ANCHORS.get(pivot, Vector2(0.5, 0.5))
 
 	if target is Control:

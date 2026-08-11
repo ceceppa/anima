@@ -76,6 +76,16 @@ func opacity(to: float, duration: float = 0.0) -> AnimaPropertyMotion:
 	_stamp_origin(motion, "opacity")
 	return motion
 
+## Fades [member target] out to fully transparent — sugar for [method opacity]
+## with [code]to = 0.0[/code]. Same target restriction as [method opacity].
+func fade_out(duration: float = 0.0) -> AnimaPropertyMotion:
+	return opacity(0.0, duration)
+
+## Fades [member target] in to fully opaque — sugar for [method opacity] with
+## [code]to = 1.0[/code]. Same target restriction as [method opacity].
+func fade_in(duration: float = 0.0) -> AnimaPropertyMotion:
+	return opacity(1.0, duration)
+
 ## Animates [member target]'s colour ([code]modulate[/code]) to [param to].
 ## [CanvasItem] ([Control]/[Node2D]) targets only. Spelled `.color()` to
 ## match Godot's own [Color] naming.
@@ -124,6 +134,7 @@ func keyframes(initial: Dictionary = {}, duration: float = 0.0) -> AnimaKeyframe
 
 	var motion := Motion.keyframes(initial)
 	motion.duration = duration
+	_stamp_origin(motion, "keyframes")
 	return motion
 
 ## Generic escape hatch for any other property. Delegates directly to
@@ -212,10 +223,16 @@ func _rotation_leaf(method_name: String, value: float, duration: float, relative
 ## Records which convenience method built [param motion] as editor-only,
 ## non-runtime-affecting metadata — read by the Motion Composer to show a
 ## semantic name instead of only the raw property path. Never consumed by
-## playback, validation, or compilation.
-func _stamp_origin(motion: AnimaPropertyMotion, method_name: String) -> void:
+## playback, validation, or compilation. Also captures [member target] as
+## [param motion]'s [member AnimaMotion.convenience_target] so [method
+## AnimaMotion.play] can start playback without a second explicit
+## [method Anima.play] call (`tech-spec.md` §Target-bound authoring contract).
+## [param motion] is typed [AnimaMotion], not just [AnimaPropertyMotion], so
+## [method keyframes] below can share this same stamping.
+func _stamp_origin(motion: AnimaMotion, method_name: String) -> void:
 	motion.metadata["convenience_factory"] = "Anima.on()"
 	motion.metadata["convenience_method"] = method_name
+	motion.convenience_target = target
 
 func _maybe_warn_layout_owned(control: Control, method_name: String) -> void:
 	var container_owned := control.get_parent() is Container

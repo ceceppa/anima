@@ -30,10 +30,10 @@ shader_parameter/border_color = Color(0.2, 0.25, 0.35, 0.5)
 shader_parameter/glow_color = Color(1, 0.75, 0.2, 1)
 shader_parameter/aspect_ratio = 10.0
 shader_parameter/corner_radius = 0.3950000187625
-shader_parameter/border_width = 0.010000000475
+shader_parameter/border_width = 0.0190000009025
 shader_parameter/line_length = 0.94800004340006
 shader_parameter/speed = 1.800000323
-shader_parameter/glow_intensity = 4.150000149625
+shader_parameter/glow_intensity = 5.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k2xql"]
 
@@ -47,6 +47,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_boxtn")
+_fix = false
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1069593019]
 layout_mode = 1

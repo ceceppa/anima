@@ -37,8 +37,14 @@ happened (the first [method advance] call) — `null` before that.
 ### advance
 
 Advances every active item by [param delta]. [param target] is the root
-node that target-collection kinds like Children resolve against;
-resolution itself only happens once, on the first call.
+node that target-collection kinds like Children resolve against (or [member
+AnimaMotion.convenience_target] when set — see [method _effective_target]);
+resolution itself only happens once, on the first call. A composite
+combining leaves captured against different targets has no single root for
+[AnimaPlayback]'s own freed-target check to guard (§Lifecycle-safe playback
+policies) — this per-instance [method is_instance_valid] check is that same
+protection applied here too, mirroring [method
+AnimaPropertyMotionInstance.advance]'s own equivalent guard.
 
 ### restart_from_record
 

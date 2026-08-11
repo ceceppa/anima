@@ -20,6 +20,30 @@ func test_default_ease_is_linear():
 
 	assert_eq(motion.ease.kind, AnimaEase.Kind.LINEAR)
 
+func test_with_ease_accepts_a_bare_kind_value():
+	var motion := AnimaPropertyMotion.new()
+
+	var result := motion.with_ease(AnimaEase.Kind.EXPONENTIAL)
+
+	assert_eq(motion.ease.kind, AnimaEase.Kind.EXPONENTIAL)
+	assert_same(result, motion)
+
+func test_with_ease_accepts_an_already_built_ease_resource_unchanged():
+	var motion := AnimaPropertyMotion.new()
+	var ease := AnimaEase.new()
+	ease.kind = AnimaEase.Kind.BOUNCE
+
+	motion.with_ease(ease)
+
+	assert_same(motion.ease, ease)
+
+func test_with_ease_with_an_unsupported_type_reports_an_error():
+	var motion := AnimaPropertyMotion.new()
+
+	motion.with_ease("not an ease")
+
+	assert_push_error("AnimaEase.from")
+
 func test_with_delay_sets_the_inherited_delay_field_and_returns_self():
 	var motion := AnimaPropertyMotion.new()
 
@@ -27,6 +51,14 @@ func test_with_delay_sets_the_inherited_delay_field_and_returns_self():
 
 	assert_eq(motion.delay, 0.25)
 	assert_same(result, motion)
+
+func test_with_delay_accepts_zero_as_a_valid_no_delay_value():
+	var motion := AnimaPropertyMotion.new()
+	motion.with_delay(0.4)
+
+	motion.with_delay(0.0)
+
+	assert_eq(motion.delay, 0.0)
 
 func test_from_sets_explicit_start_value_and_returns_self():
 	var motion := AnimaPropertyMotion.new()
@@ -195,25 +227,46 @@ func test_fixed_preview_duration_finishes_at_configured_time_regardless_of_physi
 	var elapsed: float = (finished_frame + 1) / 60.0
 	assert_almost_eq(elapsed, 0.2, 1.0 / 60.0)
 
+func test_play_starts_playback_against_the_captured_convenience_target():
+	var node: Node2D = add_child_autofree(Node2D.new())
+
+	var motion := Anima.on(node).move_by(Vector2(30.0, 0.0), 0.1)
+	var playback: AnimaPlayback = motion.play()
+
+	assert_not_null(playback)
+	for i in range(6):
+		playback._advance(1.0 / 60.0)
+	assert_almost_eq(node.position.x, 30.0, 0.01)
+
+func test_play_without_a_captured_target_fails():
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position")
+	motion.to_value = Vector2(30.0, 0.0)
+
+	var playback := motion.play()
+
+	assert_null(playback)
+	assert_push_error("target")
+
 func test_with_pivot_sets_the_pivot_field_and_returns_self():
 	var motion := AnimaPropertyMotion.new()
 
-	var result := motion.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+	var result := motion.with_pivot(AnimaPivot.Kind.CENTER)
 
-	assert_eq(motion.pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_eq(motion.pivot, AnimaPivot.Kind.CENTER)
 	assert_same(result, motion)
 
 func test_pivot_resolves_each_anchor_position_on_a_control():
 	var expected := {
-		AnimaPropertyMotion.Pivot.TOP_LEFT: Vector2(0.0, 0.0),
-		AnimaPropertyMotion.Pivot.TOP_CENTER: Vector2(50.0, 0.0),
-		AnimaPropertyMotion.Pivot.TOP_RIGHT: Vector2(100.0, 0.0),
-		AnimaPropertyMotion.Pivot.CENTER_LEFT: Vector2(0.0, 40.0),
-		AnimaPropertyMotion.Pivot.CENTER: Vector2(50.0, 40.0),
-		AnimaPropertyMotion.Pivot.CENTER_RIGHT: Vector2(100.0, 40.0),
-		AnimaPropertyMotion.Pivot.BOTTOM_LEFT: Vector2(0.0, 80.0),
-		AnimaPropertyMotion.Pivot.BOTTOM_CENTER: Vector2(50.0, 80.0),
-		AnimaPropertyMotion.Pivot.BOTTOM_RIGHT: Vector2(100.0, 80.0),
+		AnimaPivot.Kind.TOP_LEFT: Vector2(0.0, 0.0),
+		AnimaPivot.Kind.TOP_CENTER: Vector2(50.0, 0.0),
+		AnimaPivot.Kind.TOP_RIGHT: Vector2(100.0, 0.0),
+		AnimaPivot.Kind.CENTER_LEFT: Vector2(0.0, 40.0),
+		AnimaPivot.Kind.CENTER: Vector2(50.0, 40.0),
+		AnimaPivot.Kind.CENTER_RIGHT: Vector2(100.0, 40.0),
+		AnimaPivot.Kind.BOTTOM_LEFT: Vector2(0.0, 80.0),
+		AnimaPivot.Kind.BOTTOM_CENTER: Vector2(50.0, 80.0),
+		AnimaPivot.Kind.BOTTOM_RIGHT: Vector2(100.0, 80.0),
 	}
 
 	for pivot in expected:
@@ -241,7 +294,7 @@ func test_pivot_leaves_a_non_scale_rotation_motion_unaffected():
 	motion.target_property = NodePath("modulate:a")
 	motion.to_value = 0.5
 	motion.duration = 0.3
-	motion.pivot = AnimaPropertyMotion.Pivot.BOTTOM_RIGHT
+	motion.pivot = AnimaPivot.Kind.BOTTOM_RIGHT
 
 	var instance = motion.create_runtime()
 	instance.advance(control, 1.0 / 60.0)
@@ -256,7 +309,7 @@ func test_pivot_on_an_unsupported_target_does_not_error():
 	motion.target_property = NodePath("rotation")
 	motion.to_value = 0.5
 	motion.duration = 0.1
-	motion.pivot = AnimaPropertyMotion.Pivot.CENTER
+	motion.pivot = AnimaPivot.Kind.CENTER
 
 	var instance = motion.create_runtime()
 	var finished := false
@@ -280,7 +333,7 @@ func test_pivot_on_a_sprite2d_like_node_does_not_visibly_shift_the_artwork():
 	motion.target_property = NodePath("scale")
 	motion.to_value = Vector2(1.5, 1.5)
 	motion.duration = 0.3
-	motion.pivot = AnimaPropertyMotion.Pivot.BOTTOM_RIGHT
+	motion.pivot = AnimaPivot.Kind.BOTTOM_RIGHT
 
 	var instance = motion.create_runtime()
 	instance.advance(sprite, 1.0 / 60.0)

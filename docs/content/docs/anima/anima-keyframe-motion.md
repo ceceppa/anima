@@ -53,7 +53,7 @@ Easing used for a stop that doesn't set its own [member AnimaKeyframeStop.ease].
 ### default_pivot
 
 Pivot used when no stop declares its own [member AnimaKeyframeStop.pivot]
-(`tech-spec.md` §Keyframe motions, "Pivot").
+(`tech-spec.md` §Keyframe motions, "Pivot"). See [AnimaPivot].
 
 ## Methods
 
@@ -96,6 +96,13 @@ Sets [member default_pivot] directly. Named `with_pivot` for the same
 [method with_ease] since pivot and easing are unrelated settings that
 happen to share the same resolve-once timing (`tech-spec.md` §Keyframe
 motions, "Pivot"). Returns self so calls can keep chaining.
+
+### with_delay
+
+Sets [member AnimaMotion.delay] directly (phase-15) — mirrors
+[method AnimaPropertyMotion.with_delay] for the other leaf motion type;
+named `with_delay` for the same `with_`-prefix reason as [method with_duration].
+Returns self so calls can keep chaining.
 
 ### parse_dictionary
 

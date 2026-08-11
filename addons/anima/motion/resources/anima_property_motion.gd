@@ -3,24 +3,6 @@
 class_name AnimaPropertyMotion
 extends AnimaMotion
 
-## Restored Anima v1 anchor positions a scale or rotation motion can
-## transform around, instead of the target's default origin. Only takes
-## effect when [member target_property] is `scale`/`scale:x`/`scale:y` or
-## `rotation` — see [member pivot] (`tech-spec.md` §Motion pivot control).
-enum Pivot {
-	## No pivot override — the target's default transform origin is used.
-	NONE,
-	TOP_LEFT,
-	TOP_CENTER,
-	TOP_RIGHT,
-	CENTER_LEFT,
-	CENTER,
-	CENTER_RIGHT,
-	BOTTOM_LEFT,
-	BOTTOM_CENTER,
-	BOTTOM_RIGHT,
-}
-
 ## The property to animate, e.g. `NodePath("position:x")`.
 @export var target_property: NodePath = NodePath()
 ## Starting value. `null` reads the target's current value when playback starts.
@@ -45,8 +27,8 @@ enum Pivot {
 ## Anchor position a scale or rotation motion transforms around, restored
 ## from Anima v1. Ignored on any other property, or a target that supports
 ## neither `Control`'s native pivot nor an `offset`+`texture` pair
-## (`tech-spec.md` §Motion pivot control).
-@export var pivot: Pivot = Pivot.NONE
+## (`tech-spec.md` §Motion pivot control). See [AnimaPivot].
+@export var pivot: AnimaPivot.Kind = AnimaPivot.Kind.NONE
 
 ## `FIXED` for every ease except [constant AnimaEase.Kind.SPRING], which
 ## reports `ESTIMATED` (a settle-time estimate derived from its parameters).
@@ -74,9 +56,13 @@ func with_duration(value: float) -> AnimaPropertyMotion:
 	duration = value
 	return self
 
-## See [method with_duration].
-func with_ease(value: AnimaEase) -> AnimaPropertyMotion:
-	ease = value
+## See [method with_duration]. Accepts either a fully-built [AnimaEase]
+## resource, unchanged, or a bare [enum AnimaEase.Kind] value — converted via
+## [method AnimaEase.from], the same shorthand [method AnimaKeyframeMotion.with_ease]
+## and [method AnimaGridMotionFactory.with_ease] already offer
+## (`tech-spec.md` §Easing curve library).
+func with_ease(value: Variant) -> AnimaPropertyMotion:
+	ease = AnimaEase.from(value)
 	return self
 
 ## See [method with_duration]. Named with_delay rather than delay — that name
@@ -106,6 +92,6 @@ func relative() -> AnimaPropertyMotion:
 
 ## See [method with_duration]. Sets [member pivot] directly — that name is
 ## the field above, and GDScript cannot declare a method with the same name.
-func with_pivot(value: Pivot) -> AnimaPropertyMotion:
+func with_pivot(value: AnimaPivot.Kind) -> AnimaPropertyMotion:
 	pivot = value
 	return self

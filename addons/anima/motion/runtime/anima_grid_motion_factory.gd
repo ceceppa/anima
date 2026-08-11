@@ -58,6 +58,7 @@ func _init(p_container: Node, p_grid_size: Variant = null) -> void:
 	motion.target_collection = AnimaTargetCollection.new()
 	motion.target_collection.kind = AnimaTargetCollection.Kind.CHILDREN
 	motion.distance_formula = AnimaGridMotion.DistanceFormula.EUCLIDEAN
+	motion.convenience_target = container
 	with_dimensions(_resolve_grid_size(p_grid_size))
 
 ## Resolves [param value] into a concrete [Vector2i] grid size. An
@@ -208,6 +209,26 @@ func with_stagger_interval(value: float) -> AnimaGridMotionFactory:
 	motion.distribution.stagger_interval = value
 	return self
 
+## Sets [member AnimaMotion.delay] on the grid motion as a whole — delays the
+## grid's overall start, independent of its own per-item stagger/distribution
+## delay. Returns self so calls can keep chaining.
+func with_delay(value: float) -> AnimaGridMotionFactory:
+	motion.delay = value
+	return self
+
+## Sets [member AnimaMotion.on_started_callback], invoked once when the grid
+## motion starts. Returns self so calls can keep chaining.
+func on_started(callback: Callable) -> AnimaGridMotionFactory:
+	motion.on_started_callback = callback
+	return self
+
+## Sets [member AnimaMotion.on_completed_callback], invoked once immediately
+## before a successful finish — never on cancellation. Returns self so calls
+## can keep chaining.
+func on_completed(callback: Callable) -> AnimaGridMotionFactory:
+	motion.on_completed_callback = callback
+	return self
+
 ## Builds an [AnimaKeyframeMotion] from [param initial] (the same shape
 ## [method Motion.keyframes] parses) and [param duration], then sets it as
 ## [member AnimaGroupMotion.item_motion] — the same name [method
@@ -263,7 +284,7 @@ func with_ease(value: Variant) -> AnimaGridMotionFactory:
 ## pivot — [member AnimaPropertyMotion.pivot] or [member
 ## AnimaKeyframeMotion.default_pivot], whichever applies. Same missing- or
 ## incompatible-item-motion error behaviour as [method with_duration].
-func with_pivot(value: AnimaPropertyMotion.Pivot) -> AnimaGridMotionFactory:
+func with_pivot(value: AnimaPivot.Kind) -> AnimaGridMotionFactory:
 	if motion.item_motion == null:
 		push_error("AnimaGridMotionFactory.with_pivot() requires an item motion — call with_item_motion() or keyframes() first.")
 		return self
@@ -274,6 +295,22 @@ func with_pivot(value: AnimaPropertyMotion.Pivot) -> AnimaGridMotionFactory:
 	else:
 		push_error("AnimaGridMotionFactory.with_pivot() only applies to a property or keyframe item motion.")
 	return self
+
+## Builds an [AnimaSequence] playing [member motion], then [param other] — the
+## same resource [method AnimaMotion.then] would build, since [member motion]
+## already carries [member AnimaMotion.convenience_target] (set in [method _init]).
+## Returns the composite motion itself, not this factory: combining the grid
+## with something else means nothing further configures this grid specifically
+## (`tech-spec.md` §Grid convenience shorthand, "`.then()`/`.with()` (phase-15)").
+## [param other] accepts the same types [method AnimaMotion.then] does —
+## an [AnimaMotion], or another convenience factory exposing `motion`.
+func then(other: Variant) -> AnimaMotion:
+	return motion.then(other)
+
+## Same as [method then], but folds [param other] into the same [AnimaParallel]
+## group instead of a new sequential step — see [method AnimaMotion.with].
+func with(other: Variant) -> AnimaMotion:
+	return motion.with(other)
 
 ## Plays [member motion] against [member container] — [code]Anima.play(motion, container)[/code].
 ## Reports an error and returns `null` when [method with_item_motion] was

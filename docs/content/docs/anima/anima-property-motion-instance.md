@@ -24,7 +24,14 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 ### advance
 
 Advances this motion by [param delta] seconds and writes the new value to
-[param target]. Returns `true` once finished.
+[param target] — or, when this motion carries its own [member
+AnimaMotion.convenience_target], to that captured target instead (see
+[method _effective_target]). Returns `true` once finished. A composite
+combining leaves captured against different targets has no single root
+target for [method AnimaPlayback]'s own freed-target check (§Lifecycle-safe
+playback policies) to guard — each leaf's [member is_instance_valid] check
+here is that same protection applied per leaf instead, since only the leaf
+knows its own captured target.
 
 ### build_reversed
 
@@ -38,15 +45,17 @@ keyframe reversal already applies.
 
 ### restore_initial
 
-Restores [param target]'s property to the value captured when this
-instance began advancing. A no-op if nothing has been captured yet.
+Restores [param target]'s property (or [member AnimaMotion.convenience_target]
+when captured — see [method _effective_target]) to the value captured when
+this instance began advancing. A no-op if nothing has been captured yet.
 
 ### force_complete
 
-Applies this motion's authored end value to [param target] immediately —
-capturing a start value first (a zero-length advance) if nothing has been
-captured yet. A SPRING-eased motion is force-settled to its spring target
-instead, since it has no fixed to-value curve.
+Applies this motion's authored end value to [param target] (or [member
+AnimaMotion.convenience_target] when captured) immediately — capturing a
+start value first (a zero-length advance) if nothing has been captured
+yet. A SPRING-eased motion is force-settled to its spring target instead,
+since it has no fixed to-value curve.
 
 ### retarget_spring
 

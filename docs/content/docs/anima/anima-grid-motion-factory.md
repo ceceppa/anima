@@ -141,6 +141,23 @@ so calls can keep chaining.
 Sets [member AnimaGroupDistribution.stagger_interval]. Returns self so
 calls can keep chaining.
 
+### with_delay
+
+Sets [member AnimaMotion.delay] on the grid motion as a whole — delays the
+grid's overall start, independent of its own per-item stagger/distribution
+delay. Returns self so calls can keep chaining.
+
+### on_started
+
+Sets [member AnimaMotion.on_started_callback], invoked once when the grid
+motion starts. Returns self so calls can keep chaining.
+
+### on_completed
+
+Sets [member AnimaMotion.on_completed_callback], invoked once immediately
+before a successful finish — never on cancellation. Returns self so calls
+can keep chaining.
+
 ### keyframes
 
 Builds an [AnimaKeyframeMotion] from [param initial] (the same shape
@@ -176,6 +193,22 @@ Sets the currently-configured [member AnimaGroupMotion.item_motion]'s
 pivot — [member AnimaPropertyMotion.pivot] or [member
 AnimaKeyframeMotion.default_pivot], whichever applies. Same missing- or
 incompatible-item-motion error behaviour as [method with_duration].
+
+### then
+
+Builds an [AnimaSequence] playing [member motion], then [param other] — the
+same resource [method AnimaMotion.then] would build, since [member motion]
+already carries [member AnimaMotion.convenience_target] (set in [method _init]).
+Returns the composite motion itself, not this factory: combining the grid
+with something else means nothing further configures this grid specifically
+(`tech-spec.md` §Grid convenience shorthand, "`.then()`/`.with()` (phase-15)").
+[param other] accepts the same types [method AnimaMotion.then] does —
+an [AnimaMotion], or another convenience factory exposing `motion`.
+
+### with
+
+Same as [method then], but folds [param other] into the same [AnimaParallel]
+group instead of a new sequential step — see [method AnimaMotion.with].
 
 ### play
 

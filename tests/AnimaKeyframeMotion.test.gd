@@ -148,25 +148,33 @@ func test_with_ease_accepts_a_bare_kind():
 func test_with_pivot_sets_default_pivot_and_returns_self():
 	var motion := AnimaKeyframeMotion.new()
 
-	var returned := motion.with_pivot(AnimaPropertyMotion.Pivot.CENTER)
+	var returned := motion.with_pivot(AnimaPivot.Kind.CENTER)
 
 	assert_eq(returned, motion)
-	assert_eq(motion.default_pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_eq(motion.default_pivot, AnimaPivot.Kind.CENTER)
+
+func test_with_delay_sets_delay_and_returns_self():
+	var motion := AnimaKeyframeMotion.new()
+
+	var returned := motion.with_delay(0.4)
+
+	assert_eq(returned, motion)
+	assert_eq(motion.delay, 0.4)
 
 func test_default_pivot_starts_at_none():
 	var motion := AnimaKeyframeMotion.new()
 
-	assert_eq(motion.default_pivot, AnimaPropertyMotion.Pivot.NONE)
+	assert_eq(motion.default_pivot, AnimaPivot.Kind.NONE)
 
 func test_pivot_reserved_key_parses_into_the_matching_stops():
 	var motion := AnimaKeyframeMotion.new()
 	motion.parse_dictionary({
-		"from": {"scale": Vector2.ONE, "_pivot": AnimaPropertyMotion.Pivot.CENTER},
+		"from": {"scale": Vector2.ONE, "_pivot": AnimaPivot.Kind.CENTER},
 		"to": {"scale": Vector2(1.1, 1.1)},
 	})
 
 	var track: AnimaKeyframeTrack = motion.tracks[0]
-	assert_eq(track.stops[0].pivot, AnimaPropertyMotion.Pivot.CENTER)
+	assert_eq(track.stops[0].pivot, AnimaPivot.Kind.CENTER)
 	assert_null(track.stops[1].pivot)
 
 func test_create_runtime_synthesizes_a_missing_initial_stop():

@@ -40,8 +40,8 @@ const _SEMANTIC_PROPERTY_PATHS := {
 ## Easing used for a stop that doesn't set its own [member AnimaKeyframeStop.ease].
 @export var default_ease: AnimaEase = AnimaEase.new()
 ## Pivot used when no stop declares its own [member AnimaKeyframeStop.pivot]
-## (`tech-spec.md` §Keyframe motions, "Pivot").
-@export var default_pivot: AnimaPropertyMotion.Pivot = AnimaPropertyMotion.Pivot.NONE
+## (`tech-spec.md` §Keyframe motions, "Pivot"). See [AnimaPivot].
+@export var default_pivot: AnimaPivot.Kind = AnimaPivot.Kind.NONE
 
 ## Merges one authored keyframe declaration into [member tracks] and returns
 ## self, so calls can keep chaining. [param offsets] is `"from"`, `"to"`, a
@@ -101,8 +101,16 @@ func with_ease(value: Variant) -> AnimaKeyframeMotion:
 ## [method with_ease] since pivot and easing are unrelated settings that
 ## happen to share the same resolve-once timing (`tech-spec.md` §Keyframe
 ## motions, "Pivot"). Returns self so calls can keep chaining.
-func with_pivot(value: AnimaPropertyMotion.Pivot) -> AnimaKeyframeMotion:
+func with_pivot(value: AnimaPivot.Kind) -> AnimaKeyframeMotion:
 	default_pivot = value
+	return self
+
+## Sets [member AnimaMotion.delay] directly (phase-15) — mirrors
+## [method AnimaPropertyMotion.with_delay] for the other leaf motion type;
+## named `with_delay` for the same `with_`-prefix reason as [method with_duration].
+## Returns self so calls can keep chaining.
+func with_delay(value: float) -> AnimaKeyframeMotion:
+	delay = value
 	return self
 
 ## Parses [param source] (the dictionary authoring form) into [member tracks]

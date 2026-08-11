@@ -194,13 +194,23 @@ func _cards() -> Array[Card]:
 ## exposed [member AnimaGridMotionFactory.motion] afterward — the same
 ## escape hatch `tech-spec.md` §Grid convenience shorthand documents for
 ## anyone who needs more than the convenience surface itself.
+##
+## `.with_delay(...)`/`.on_started(...)`/`.on_completed(...)` demonstrate the
+## grid factory's own lifecycle chain methods: the delay makes the whole
+## grid's start visibly lag behind pressing Restart/a selector, and the two
+## callbacks append their own event onto the formula description — the same
+## pattern `convenience_motion_playground.gd`'s Chained family already uses
+## for `Anima.on()`'s own `.on_started()`/`.on_completed()`.
 func _build_grid_motion() -> AnimaGridMotion:
 	var factory := Anima.grid(self) \
 		.with_dimensions(GRID_SIZE) \
 		.with_start_point(_start_point) \
 		.with_distance_formula(_selected_formula) \
 		.with_item_motion(Anima.item().property(NodePath("progress"), 1.0, 0.28).from(0.0)) \
-		.with_stagger_interval(0.1)
+		.with_stagger_interval(0.1) \
+		.with_delay(0.3) \
+		.on_started(func(): _formula_description.text = FORMULA_DESCRIPTIONS[_selected_formula] + "  →  started") \
+		.on_completed(func(): _formula_description.text = FORMULA_DESCRIPTIONS[_selected_formula] + "  →  started  →  completed")
 
 	factory.motion.target_collection.kind = AnimaTargetCollection.Kind.EXPLICIT
 	factory.motion.target_collection.reference_data = _cards()

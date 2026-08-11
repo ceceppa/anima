@@ -40,10 +40,35 @@ var _reversed_item_motions: Dictionary = {}
 ## happened (the first [method advance] call) — `null` before that.
 var execution_record: AnimaExecutionRecord = null
 
+## Resolves the root this group actually resolves its target collection
+## against: [member AnimaMotion.convenience_target] when this motion was
+## built through [method Anima.grid] (alone or combined into a `.then()`/
+## `.with()` composite with a different-target sibling), otherwise whatever
+## root [param target] the enclosing [AnimaPlayback] supplies — the same
+## per-leaf resolution [method AnimaPropertyMotionInstance._effective_target]
+## applies for a leaf motion (`tech-spec.md` §Target-bound authoring contract,
+## "`.play()` and per-leaf convenience targets").
+func _effective_target(target: Node) -> Node:
+	var convenience_target: Node = (motion as AnimaGroupMotion).convenience_target
+	return convenience_target if convenience_target != null else target
+
 ## Advances every active item by [param delta]. [param target] is the root
-## node that target-collection kinds like Children resolve against;
-## resolution itself only happens once, on the first call.
+## node that target-collection kinds like Children resolve against (or [member
+## AnimaMotion.convenience_target] when set — see [method _effective_target]);
+## resolution itself only happens once, on the first call. A composite
+## combining leaves captured against different targets has no single root for
+## [AnimaPlayback]'s own freed-target check to guard (§Lifecycle-safe playback
+## policies) — this per-instance [method is_instance_valid] check is that same
+## protection applied here too, mirroring [method
+## AnimaPropertyMotionInstance.advance]'s own equivalent guard.
 func advance(target: Node, delta: float) -> bool:
+	target = _effective_target(target)
+	# `null` is a legitimate target here (an EXPLICIT target collection needs
+	# no root at all) — only a *freed* non-null reference is the failure case
+	# this guard exists for; is_instance_valid(null) is false too, so it must
+	# be excluded explicitly.
+	if target != null and not is_instance_valid(target):
+		return true
 	if not _resolved:
 		_resolve(target)
 	if _cancelled or _items.is_empty():

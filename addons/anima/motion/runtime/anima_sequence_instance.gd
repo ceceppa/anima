@@ -33,6 +33,13 @@ func _init(p_motion: AnimaMotion, p_value_context: AnimaValueContext = null) -> 
 ## Children are scheduled by delay/delay_basis (AnimaSequence.compute_schedule())
 ## rather than strictly starting one after another finishes, so more than one
 ## child can be active at once when a negative delay overlaps them.
+##
+## Fires each started child's own [member AnimaMotion.on_started_callback]/
+## [member AnimaMotion.on_completed_callback] as it starts/finishes (phase-15)
+## — a callback set on a child *before* it was folded into this composite
+## (e.g. via [method AnimaMotion.then]) previously never fired, since only
+## the root [AnimaPlayback] invoked the *composite's own* callbacks
+## (`tech-spec.md` §Target-bound authoring contract).
 func advance(target: Node, delta: float) -> bool:
 	if _states.is_empty():
 		return true
@@ -49,8 +56,12 @@ func advance(target: Node, delta: float) -> bool:
 				continue
 			state.started = true
 			state.instance = state.child.create_runtime()
+			_call_if_valid(state.child.on_started_callback)
 
-		state.finished = state.instance.advance(target, scaled_delta)
+		var just_finished: bool = state.instance.advance(target, scaled_delta)
+		if just_finished and not state.finished:
+			state.finished = true
+			_call_if_valid(state.child.on_completed_callback)
 
 	for state in _states:
 		if not state.finished:
@@ -67,13 +78,17 @@ func restore_initial(target: Node) -> void:
 
 ## Forces every child to its own final state, starting any that have not
 ## begun yet (so a sequence completes end-to-end, not just its started
-## prefix) — see [method AnimaMotionInstance.force_complete].
+## prefix) — see [method AnimaMotionInstance.force_complete]. Fires each
+## newly-started/newly-finished child's own callbacks, same as [method advance].
 func force_complete(target: Node) -> void:
 	for state in _states:
 		if not state.started:
 			state.started = true
 			state.instance = state.child.create_runtime()
+			_call_if_valid(state.child.on_started_callback)
 		state.instance.force_complete(target)
+		if not state.finished:
+			_call_if_valid(state.child.on_completed_callback)
 		state.finished = true
 
 ## Builds a reversed [AnimaSequence]: each started child's own reversed
@@ -99,4 +114,5 @@ func build_reversed() -> AnimaMotion:
 	reversed.reverse_speed = motion.reverse_speed
 	reversed.on_started_callback = motion.on_started_callback
 	reversed.on_completed_callback = motion.on_completed_callback
+	reversed.convenience_target = motion.convenience_target
 	return reversed

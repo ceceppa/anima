@@ -23,7 +23,8 @@ See the class and member help in the Godot editor for a minimal, runnable exampl
 ### advance
 
 Advances this motion by [param delta] seconds and writes every track's
-current value to [param target]. Returns `true` once finished.
+current value to [param target] — or [member AnimaMotion.convenience_target]
+when set (see [method _effective_target]). Returns `true` once finished.
 
 ### restore_initial
 
