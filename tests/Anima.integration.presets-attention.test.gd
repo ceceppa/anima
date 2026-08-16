@@ -8,7 +8,7 @@ func test_unregistered_name_reports_null():
 
 func test_by_name_and_by_asset_return_the_identical_resource():
 	var by_name := Anima.animation("tada")
-	var by_asset := load("res://addons/anima/presets/attention/tada.tres")
+	var by_asset := load("res://addons/anima/presets/attention_seeker/tada.tres")
 	assert_same(by_name, by_asset)
 
 func test_repeated_calls_return_the_cached_instance():

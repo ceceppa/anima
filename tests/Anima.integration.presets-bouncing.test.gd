@@ -82,4 +82,4 @@ func test_all_ten_bouncing_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_by_name_and_by_asset_return_the_identical_resource():
-	assert_same(Anima.animation("bouncing_in_left"), load("res://addons/anima/presets/entrance/bouncing_in_left.tres"))
+	assert_same(Anima.animation("bouncing_in_left"), load("res://addons/anima/presets/bouncing_entrances/bouncing_in_left.tres"))

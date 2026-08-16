@@ -42,6 +42,29 @@ func test_select_with_out_of_range_index_is_ignored():
 	await dock.select(5)
 	assert_eq(dock.selected_index, 0, "an out-of-range index should be ignored, leaving the previous selection")
 
+func test_clear_items_removes_every_item_and_resets_selection():
+	var dock := _make_dock(3)
+	await dock.select(1)
+
+	dock.clear_items()
+
+	assert_eq(dock.get_item_count(), 0)
+	assert_eq(dock.selected_index, -1)
+
+func test_select_after_clear_items_positions_the_indicator_on_the_new_item_set():
+	var dock := _make_dock(3)
+	await dock.select(2)
+
+	dock.clear_items()
+	var button: SelectorButton = preload("res://examples/playground/shared/components/selector_button.tscn").instantiate()
+	button.text = "New Item"
+	dock.add_item(button)
+	await dock.select(0)
+
+	var rect := dock._rect_for_index(0)
+	assert_eq(dock.indicator_target_position, rect.position, "indicator must land on the new, single item's actual rect, not a stale 3-item-row position")
+	assert_eq(dock.indicator_target_size, rect.size)
+
 func test_selector_button_set_selected_does_not_render_its_own_fill():
 	var dock := _make_dock(1)
 	await dock.select(0)

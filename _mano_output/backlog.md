@@ -571,7 +571,7 @@
 - **Context:**
   Presets are normal AnimaMotion resources, organised into categories: attention, entrance, exit, emphasis, transform, UI interaction, layout, feedback, camera, text, reduced motion.
   PRD.md §21.2.
-- **Status:** in-phase-17
+- **Status:** resolved
 
 ### Preset browser
 - **Type:** feature
@@ -3064,7 +3064,7 @@
 - **Source:** phase-15 (mano spec, story 8e)
 - **Context:**
   A callback set via .on_started()/.on_completed() on a motion before folding it into a .then()/.with() composite is never invoked — only the composite's own top-level callback fires, since AnimaPlayback only calls back on the root motion (AnimaPlayback._fire_started()/_advance()'s on_completed check both read motion.on_started_callback/on_completed_callback on the root only). Discovered via examples/showcase/grid/scene_3.gd combining two Anima.grid() chains, each with its own .on_started() set before .with(). No fix attempted yet — needs a design decision on whether AnimaSequenceInstance/AnimaParallelInstance should fire each child's own callbacks as it starts/finishes them.
-- **Status:** backlog
+- **Status:** in-phase-18
 
 ### play_with_delay() to delay the whole chain
 - **Type:** refinement
@@ -3092,4 +3092,12 @@
 - **Source:** User request — Anima v1 animations directory
 - **Context:**
   Bring the 99 built-in v1 animation definitions forward as Anima 2 motion presets, using the supplied v1 source directory as the behavioural reference. The catalog spans attention, entrance, exit, back, bounce, fade, slide, zoom, rotate, lightspeed, special, and text effects.
-- **Status:** in-phase-17
+- **Status:** resolved
+
+### Animation Catalog Playground
+- **Type:** feature
+- **Source:** phase-17 review
+- **Context:**
+  A scene to preview every ported v1 preset by category, so the phase-17 catalog can be visually/experientially verified, not just automated-tested.
+  Design already sketched via mano ui: design-brief.md (Category sidebar/Animation grid), phase-17/design-preview.html.
+- **Status:** in-phase-18

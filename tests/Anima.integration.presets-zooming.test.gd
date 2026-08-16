@@ -127,4 +127,4 @@ func test_all_fifteen_zooming_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_by_name_and_by_asset_return_the_identical_resource():
-	assert_same(Anima.animation("zoom_in_up_big"), load("res://addons/anima/presets/entrance/zoom_in_up_big.tres"))
+	assert_same(Anima.animation("zoom_in_up_big"), load("res://addons/anima/presets/zooming_entrances/zoom_in_up_big.tres"))

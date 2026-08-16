@@ -75,4 +75,4 @@ func test_all_eight_sliding_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_by_name_and_by_asset_return_the_identical_resource():
-	assert_same(Anima.animation("slide_out_down"), load("res://addons/anima/presets/exit/slide_out_down.tres"))
+	assert_same(Anima.animation("slide_out_down"), load("res://addons/anima/presets/slide_exits/slide_out_down.tres"))

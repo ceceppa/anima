@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Anima — Animation Catalog Playground (phase-17 preview)</title>
+<style>
+  :root {
+    --bg: #060A16;
+    --surface: #11182A;
+    --stage-bg: #0A1224;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A8B4CC;
+    --accent: #7C3AED;
+    --accent-soft: #A78BFA;
+    --positive: #2DD4BF;
+    --border: #26324B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .header .icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--text-primary);
+    flex-shrink: 0;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; margin: 0; }
+  .header p { font-size: 14px; color: var(--text-secondary); margin: 2px 0 0; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    padding: 24px 32px;
+  }
+
+  /* Category sidebar — vertical extension of the existing SelectorDock pattern:
+     one shared moving accent indicator, sliding vertically instead of horizontally. */
+  .sidebar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sidebar-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px 6px;
+  }
+  .cat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+  }
+  .cat-row .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-soft);
+    margin-left: auto;
+    opacity: 0;
+  }
+  .cat-row.selected {
+    color: var(--text-primary);
+    font-weight: 600;
+    background: var(--accent);
+  }
+  .cat-row.selected .dot { opacity: 1; }
+  .cat-row .count {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-left: auto;
+  }
+  .cat-row.selected .count { color: var(--text-primary); }
+
+  /* Content stage + animation grid */
+  .main { display: flex; flex-direction: column; gap: 16px; }
+  .stage {
+    background: var(--stage-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    min-height: 260px;
+    justify-content: center;
+    position: relative;
+  }
+  .stage-glow {
+    position: absolute;
+    width: 360px; height: 220px;
+    background: radial-gradient(ellipse at center, rgba(124,58,237,0.20), transparent 70%);
+    pointer-events: none;
+  }
+  .stage-title {
+    font-size: 20px; font-weight: 700;
+    z-index: 1;
+  }
+  .stage-caption {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: Consolas, Menlo, monospace;
+    z-index: 1;
+  }
+  .card {
+    width: 220px; height: 130px;
+    border-radius: 12px;
+    background: linear-gradient(160deg, #1c1436, #241a44);
+    border: 1px solid var(--border);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.25), 0 12px 32px rgba(124,58,237,0.25);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary);
+    font-weight: 700;
+    z-index: 1;
+  }
+
+  .grid-dock {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .anim-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: transparent;
+  }
+  .anim-btn.selected {
+    background: var(--accent);
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Playback controls — existing shared bar, reused unchanged */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 32px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    margin-top: 8px;
+  }
+  .transport { display: flex; gap: 12px; }
+  .transport button {
+    width: 44px; height: 44px; border-radius: 22px;
+    background: var(--accent);
+    border: 2px solid var(--accent-soft);
+    color: var(--text-primary);
+    font-size: 16px;
+  }
+  .speed-dock, .toggle-row { display: flex; align-items: center; gap: 8px; }
+  .speed-dock { background: var(--stage-bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-left: 12px; }
+  .speed-dock span { padding: 6px 12px; font-size: 12px; color: var(--text-secondary); border-radius: 8px; }
+  .speed-dock span.selected { background: var(--accent); color: var(--text-primary); font-weight: 600; }
+  .toggle-row { margin-left: auto; color: var(--text-secondary); font-size: 13px; }
+  .toggle { width: 40px; height: 22px; border-radius: 11px; background: var(--stage-bg); border: 1px solid var(--border); position: relative; }
+  .toggle .thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--text-secondary); position: absolute; top: 1px; left: 2px; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="icon">A</div>
+    <div>
+      <h1>Animation Catalog</h1>
+      <p>Preview every ported preset by name.</p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-title">Categories</div>
+      <div class="cat-row selected">Attention <span class="count">12</span></div>
+      <div class="cat-row">Entrance <span class="count">51</span></div>
+      <div class="cat-row">Exit <span class="count">32</span></div>
+      <div class="cat-row">Special <span class="count">4</span></div>
+      <div class="cat-row">Text <span class="count">1</span></div>
+    </div>
+
+    <div class="main">
+      <div class="stage">
+        <div class="stage-glow"></div>
+        <div class="stage-title">bounce</div>
+        <div class="card">Card</div>
+        <div class="stage-caption">Anima.animation("bounce")</div>
+      </div>
+
+      <div class="grid-dock">
+        <div class="anim-btn selected">bounce</div>
+        <div class="anim-btn">flash</div>
+        <div class="anim-btn">headshake</div>
+        <div class="anim-btn">heartbeat</div>
+        <div class="anim-btn">jello</div>
+        <div class="anim-btn">pulse</div>
+        <div class="anim-btn">rubber_band</div>
+        <div class="anim-btn">shake_x</div>
+        <div class="anim-btn">shake_y</div>
+        <div class="anim-btn">swing</div>
+        <div class="anim-btn">tada</div>
+        <div class="anim-btn">wobble</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="transport">
+      <button title="Restart">⟳</button>
+      <button title="Reverse">◂</button>
+      <button title="Complete">✓</button>
+      <button title="Revert">↺</button>
+    </div>
+    <div class="speed-dock">
+      <span>0.5×</span>
+      <span class="selected">1×</span>
+      <span>2×</span>
+    </div>
+    <div class="toggle-row">
+      Reduced motion
+      <div class="toggle"><div class="thumb"></div></div>
+    </div>
+  </div>
+
+</body>
+</html>

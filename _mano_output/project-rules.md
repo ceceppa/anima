@@ -122,22 +122,23 @@ extends AnimaMotion
 
 ## Animation Catalog
 
-**What:** A catalog preset's `.tres` lives under `addons/anima/presets/<category>/<name>.tres`, one lowercase folder per category — `attention/`, `entrance/`, `exit/`, `special/`, `text/` (`tech-spec.md` §Animation catalog owns the five-category list). The file stem is the exact registry name `Anima.animation(name)` looks up — no transformation between filename and lookup string.
+**What:** A catalog preset's `.tres` lives under `addons/anima/presets/<category>/<name>.tres`, one lowercase folder per category, mirroring Anima v1's own 16 source folders exactly — `attention_seeker/`, `back_entrances/`, `back_exits/`, `bouncing_entrances/`, `bouncing_exits/`, `fading_entrances/`, `fading_exits/`, `lightspeed/`, `rotating_entrances/`, `rotating_exits/`, `slide_exits/`, `sliding_entrances/`, `specials/`, `text/`, `zooming_entrances/`, `zooming_exits/` (`tech-spec.md` §Animation catalog owns the full list). The file stem is the exact registry name `Anima.animation(name)` looks up — no transformation between filename and lookup string.
 
-**Why:** `Anima.animation(name)` (`tech-spec.md` §Animation catalog) resolves a name to a resource; keeping the filename and the lookup name identical, one folder per category, means a contributor can find any of the 99 ported presets from either direction — by name in code, or by browsing the matching category folder — with no separate mapping table to keep in sync.
+**Why:** `Anima.animation(name)` (`tech-spec.md` §Animation catalog) resolves a name to a resource; keeping the filename and the lookup name identical, one folder per category, means a contributor can find any of the 99 ported presets from either direction — by name in code, or by browsing the matching category folder — with no separate mapping table to keep in sync. Mirroring v1's own folder split (phase-18) instead of collapsing by `_in`/`_out` suffix keeps each folder to a browsable, single-style size (4-14 presets) rather than one 44-item catch-all.
 
 **Pattern:**
 ```
 addons/anima/presets/
-  attention/
+  attention_seeker/
     tada.tres
     heartbeat.tres
-  entrance/
+  fading_entrances/
     fade_in.tres
-    bouncing_in_left.tres
-  exit/
+  fading_exits/
     fade_out_left_big.tres
-  special/
+  bouncing_entrances/
+    bouncing_in_left.tres
+  specials/
     hinge.tres
   text/
     typewrite.tres
@@ -163,6 +164,20 @@ AnimaValue.target(^"size:x").negative().subtract(AnimaValue.node(^"..", ^"size:x
 func test_translate_x_at_offset_1_accounts_for_own_and_parent_size():
     var resolved := _stop_value_at(preset, "translate:x", 1.0, context)
     assert_eq(resolved, -own_size.x - parent_size.x)
+```
+
+## Selector Orientation
+
+**What:** `SelectorDock`'s indicator geometry (`_move_indicator_to`, `_rect_for_index`) already reads each selected item's actual laid-out `position`/`size` — it has no horizontal-only assumption. A vertical selector (e.g. a category sidebar) is a second scene reusing the exact same `selector_dock.gd` script, with its `%Items` container swapped from `HFlowContainer` to `VBoxContainer` — never a second script or a copy of the indicator-drawing code.
+
+**Why:** Re-implementing indicator math for "vertical mode" would fork the one place selection-indicator behaviour lives, the same duplication risk `Card`/`SelectorButton`/`ExampleHeader` were already extracted to prevent. The geometry code was already orientation-agnostic by construction; only the container's layout direction needs to change.
+
+**Pattern:**
+```
+examples/playground/shared/components/
+  selector_dock.gd              # unchanged — same script, both orientations
+  selector_dock.tscn             # %Items: HFlowContainer (horizontal)
+  selector_dock_vertical.tscn    # %Items: VBoxContainer (vertical) — same script attached
 ```
 
 ## Architecture

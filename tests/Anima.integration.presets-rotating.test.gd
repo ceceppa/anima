@@ -74,4 +74,4 @@ func test_all_ten_rotating_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_by_name_and_by_asset_return_the_identical_resource():
-	assert_same(Anima.animation("rotate_in_up_right"), load("res://addons/anima/presets/entrance/rotate_in_up_right.tres"))
+	assert_same(Anima.animation("rotate_in_up_right"), load("res://addons/anima/presets/rotating_entrances/rotate_in_up_right.tres"))

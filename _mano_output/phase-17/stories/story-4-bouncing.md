@@ -20,7 +20,7 @@ Depends on story-1.
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)`, using per-stop `_ease` for the overshoot segments — `tech-spec.md` §Keyframe motions.
-- **Files:** `addons/anima/presets/entrance/` (the `_in` presets), `addons/anima/presets/exit/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/bouncing_entrances/` (the `_in` presets), `addons/anima/presets/bouncing_exits/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/bouncing_entrances/*.gd` and `addons/anima/animations/bouncing_exits/*.gd` in the v1 project.
 - **Dynamic values:** any size-dependent directional offset translates through `AnimaValue.*` using the canonical mapping convention established in story-3 — `project-rules.md` §Animation Catalog.
 - **Rules:** one resolved-value unit test per preset — `project-rules.md` §Animation Catalog.

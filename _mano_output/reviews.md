@@ -87,3 +87,34 @@
 ### Backlog changes
 
 - None
+
+---
+
+## Phase 17 Review — 2026-08-17
+
+### Validation
+
+- **Result:** Automated tests cover all 99 ported presets (registry lookup by name and by asset, resolved keyframe/dynamic values, full-catalog coverage) and pass. Mechanical verification only — no playground exists yet to preview the motions, so the Validation Plan's own Try items (side-by-side comparison against v1, calling the by-name lookup from a scratch scene) were not performed by the human.
+
+### Phase checks
+
+| Phase promise | Result | What happened |
+|---|---|---|
+| Catalog reachable by name | not tested | Automated coverage only; not visually confirmed by the human |
+| Catalog reachable by asset | not tested | Automated coverage only; not visually confirmed by the human |
+| Dynamic values preserved | not tested | Automated coverage only; not visually confirmed by the human |
+| Full coverage (99/99) | not tested | Automated coverage only; not visually confirmed by the human |
+
+### Decision
+
+- **Choice:** Not enough evidence
+
+### Assumptions
+
+| Assumption | Result | What showed this |
+|-----------|---------|------------------------|
+| The category taxonomy chosen for these 99 presets is sufficient for now, even though the deferred preset browser may later impose its own taxonomy. | inconclusive | |
+
+### Backlog changes
+
+- feature "Animation Catalog Playground" — added because the phase shipped with no way to visually verify the catalog; design already sketched via `mano ui`

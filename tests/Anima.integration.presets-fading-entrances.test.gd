@@ -122,4 +122,4 @@ func test_all_fourteen_fading_entrance_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_by_name_and_by_asset_return_the_identical_resource():
-	assert_same(Anima.animation("fade_in_down_big"), load("res://addons/anima/presets/entrance/fade_in_down_big.tres"))
+	assert_same(Anima.animation("fade_in_down_big"), load("res://addons/anima/presets/fading_entrances/fade_in_down_big.tres"))

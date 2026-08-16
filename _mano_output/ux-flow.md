@@ -201,6 +201,29 @@
 - Validation refreshes the displayed issues from the current resource and scene-node context.
 - Compiling an eligible group produces its native Animation. A blocked group remains inspectable with its reason, so the author can return to setup and correct it.
 
+## Animation Catalog Playground
+
+**How it's accessed:** Open the Animation Catalog playground scene in the Godot editor and run it, like any other `examples/playground/` scene.
+
+**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+
+**What the user sees:**
+- The shared example header, and a category sidebar listing all 16 categories, mirroring Anima v1's own source folders (Attention Seeker, Back Entrances, Back Exits, Bouncing Entrances, Bouncing Exits, Fading Entrances, Fading Exits, Lightspeed, Rotating Entrances, Rotating Exits, Slide Exits, Sliding Entrances, Specials, Text, Zooming Entrances, Zooming Exits) — one is always selected, Attention Seeker by default on first open.
+- A live preview stage showing the currently selected preset playing on loop, named on screen so what's playing is never ambiguous.
+- A grid of buttons below the stage, one per preset in the selected category — one is always selected, the first in the category by default when the category changes.
+- The shared playback controls (restart, reverse, complete, revert, speed, reduced-motion) — unchanged from every other playground, acting on whatever preset is currently playing.
+
+**What the user can do:**
+- Choose a different category from the sidebar.
+- Choose a different preset from the grid.
+- Use the shared playback controls on the currently playing preset.
+
+**What happens on action:**
+- Choosing a category updates the grid to that category's presets and immediately plays the first one in the stage — the previous category's selection is not remembered when switching back to it later.
+- Choosing a preset from the grid immediately replays that exact preset in the stage from its start; no confirmation step, since nothing here is destructive.
+- Every category and every preset within it is always available — nothing in this playground is ever locked or requires unlocking; the only exclusion is that a preset from one category is never shown while a different category is selected.
+- The playback controls behave exactly as they already do on every other playground scene; this phase adds no new control.
+
 ## Editor Tooling Showcase Scene
 
 **How it's accessed:** Open `examples/editor/motion_composer_showcase.tscn` in the Godot editor. This scene is opened and explored in the editor, not run.

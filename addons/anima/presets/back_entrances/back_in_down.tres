@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3 uid="uid://c804r5jstirk8"]
 
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_5xbn3"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_o3wn7"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_u7n73"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_s8eta"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_value.gd" id="5_8411r"]
+[ext_resource type="Script" uid="uid://dokcmi1oky2fb" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_5xbn3"]
+[ext_resource type="Script" uid="uid://dwdgg5wfulfo1" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_o3wn7"]
+[ext_resource type="Script" uid="uid://cbwq6fmbqwjt7" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_u7n73"]
+[ext_resource type="Script" uid="uid://cjs4hbuja67bg" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_s8eta"]
+[ext_resource type="Script" uid="uid://ch8dlq63qhont" path="res://addons/anima/motion/resources/anima_value.gd" id="5_8411r"]
 
 [sub_resource type="Resource" id="Resource_q4h7a"]
 script = ExtResource("1_5xbn3")

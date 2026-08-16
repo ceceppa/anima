@@ -127,7 +127,11 @@ func test_full_catalog_all_99_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_every_category_has_at_least_one_preset():
-	var categories := ["attention", "entrance", "exit", "special", "text"]
+	var categories := [
+		"attention_seeker", "back_entrances", "back_exits", "bouncing_entrances", "bouncing_exits",
+		"fading_entrances", "fading_exits", "lightspeed", "rotating_entrances", "rotating_exits",
+		"slide_exits", "sliding_entrances", "specials", "text", "zooming_entrances", "zooming_exits",
+	]
 	for category in categories:
 		var dir := DirAccess.open("res://addons/anima/presets/%s" % category)
 		assert_not_null(dir, "missing category folder: %s" % category)
@@ -145,14 +149,14 @@ func test_every_category_has_at_least_one_preset():
 
 func test_by_name_and_by_asset_are_consistent_across_every_story():
 	var cases := {
-		"tada": "res://addons/anima/presets/attention/tada.tres",
-		"fade_in_left": "res://addons/anima/presets/entrance/fade_in_left.tres",
-		"bounce_out": "res://addons/anima/presets/exit/bounce_out.tres",
-		"back_in_down": "res://addons/anima/presets/entrance/back_in_down.tres",
-		"rotate_out": "res://addons/anima/presets/exit/rotate_out.tres",
-		"slide_in_left": "res://addons/anima/presets/entrance/slide_in_left.tres",
-		"zoom_out": "res://addons/anima/presets/exit/zoom_out.tres",
-		"hinge": "res://addons/anima/presets/special/hinge.tres",
+		"tada": "res://addons/anima/presets/attention_seeker/tada.tres",
+		"fade_in_left": "res://addons/anima/presets/fading_entrances/fade_in_left.tres",
+		"bounce_out": "res://addons/anima/presets/bouncing_exits/bounce_out.tres",
+		"back_in_down": "res://addons/anima/presets/back_entrances/back_in_down.tres",
+		"rotate_out": "res://addons/anima/presets/rotating_exits/rotate_out.tres",
+		"slide_in_left": "res://addons/anima/presets/sliding_entrances/slide_in_left.tres",
+		"zoom_out": "res://addons/anima/presets/zooming_exits/zoom_out.tres",
+		"hinge": "res://addons/anima/presets/specials/hinge.tres",
 		"typewrite": "res://addons/anima/presets/text/typewrite.tres",
 	}
 	for preset_name in cases:

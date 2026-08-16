@@ -20,7 +20,7 @@ Depends on story-1.
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)` — `tech-spec.md` §Keyframe motions.
-- **Files:** `addons/anima/presets/entrance/` (the `zoom_in*` presets), `addons/anima/presets/exit/` (the `zoom_out*` presets) — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/zooming_entrances/` (the `zoom_in*` presets), `addons/anima/presets/zooming_exits/` (the `zoom_out*` presets) — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/zooming_entrances/*.gd` and `addons/anima/animations/zooming_exits/*.gd` in the v1 project.
 - **Dynamic values:** directional offsets translate through `AnimaValue.*` using the canonical mapping convention established in story-3 — `project-rules.md` §Animation Catalog.
 - **Rules:** one resolved-value unit test per preset — `project-rules.md` §Animation Catalog.

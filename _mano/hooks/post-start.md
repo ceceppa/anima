@@ -15,11 +15,9 @@ Optional post-start review after `mano start` creates or updates the backlog, ph
 
 ## How to run
 
-Run the relevant external or specialist review manually after reviewing and accepting the generated artifact.
+No external review command is configured for this hook. **An unconfigured command is not a reason to skip this hook.** When the hook fires (per Mode/Instruction below), Mano performs the review itself directly against the checklist in "Suggested prompt" — reading the same inputs an external tool would, and reporting findings the same way. Only replace the missing command below with a real external tool/skill if the project later wants that specialist opinion instead of Mano's own; until then, self-review is the default execution path, not a fallback for when nothing else is set up.
 
-Use this hook as a reminder, not as automatic execution.
-
-Replace `[external-review-command]` in your active project hook with the command or skill you want to run.
+External command/skill (optional — leave blank to keep self-review as the path): `[external-review-command]`
 
 ## Inputs
 
@@ -58,12 +56,11 @@ Do not modify files unless explicitly asked.
 
 ## Instruction for Mano
 
-When this hook is active, do not run it automatically.
+This is a `suggest` hook — see `_mano/workflow.md` → **Optional Post-Skill Hooks** for the full contract. Two distinct run paths, both real, neither optional to consider:
 
-After the related Mano skill completes, mention that the hook is available and ask whether to run it.
+- **Manual or unarmed run:** do not run it automatically. Mention it's available and ask whether to run it. Do not print the suggested prompt unless asked.
+- **Armed auto chain** (the human approved the phase scope and the chain is running): run it automatically, immediately after the phase brief is written — no confirmation needed, no "nothing configured" exception. Findings still go through Post-Hook Findings Triage.
 
-Do not print the hook's suggested prompt unless the user asks to run or view the hook.
+Never skip this hook because the "External command/skill" field above is blank — blank means self-review (see "How to run"), not "inactive." A hook file existing at all is the authorization to run it per the rule above; the missing external command changes *who* performs the review, never *whether* it runs.
 
 Do not mention specific external skill names in generic Mano output.
-
-Do not execute the hook without explicit user confirmation.

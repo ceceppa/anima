@@ -5,7 +5,12 @@ const INDICATOR_BG := Color(0.309804, 0.27451, 0.898039, 1.0) # accent
 const INDICATOR_RADIUS := 12
 const MOVE_DURATION := 0.26
 
-@onready var _items_box: HFlowContainer = %Items
+## [HFlowContainer] (horizontal, wrapping) in the default `selector_dock.tscn`,
+## or [VBoxContainer] in `selector_dock_vertical.tscn` — the indicator
+## geometry below only ever reads a child's actual laid-out rect, so either
+## orientation works with no script changes (project-rules.md §Selector
+## Orientation).
+@onready var _items_box: Container = %Items
 
 ## The indicator's logical target, updated synchronously on every select() —
 ## independent of how far the animated (tweened) visual has actually moved,
@@ -71,6 +76,22 @@ func get_item_count() -> int:
 
 func get_item(index: int) -> SelectorButton:
 	return _items_box.get_child(index)
+
+## Removes every current item and resets the "first selection" state, so a
+## caller that repopulates this dock with a new item set (the Animation
+## Catalog Playground's grid does this per category) gets the same one-frame
+## layout-settle wait [method select] already gives its actual first call —
+## without this, a `select()` right after repopulating reads the new item's
+## rect before the container's layout pass has placed it, and the indicator
+## drifts to a stale position.
+func clear_items() -> void:
+	for i in range(_items_box.get_child_count() - 1, -1, -1):
+		var item := _items_box.get_child(i)
+		_items_box.remove_child(item)
+		item.free()
+	_is_first_time = true
+	selected_index = -1
+	_indicator_size = Vector2.ZERO
 
 ## Moves the shared indicator behind the SelectorButton at `index` and marks
 ## it (and only it) selected.

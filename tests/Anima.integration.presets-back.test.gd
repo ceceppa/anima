@@ -65,4 +65,4 @@ func test_all_eight_back_presets_are_registered():
 		assert_not_null(Anima.animation(preset_name), "missing preset: %s" % preset_name)
 
 func test_by_name_and_by_asset_return_the_identical_resource():
-	assert_same(Anima.animation("back_out_up"), load("res://addons/anima/presets/exit/back_out_up.tres"))
+	assert_same(Anima.animation("back_out_up"), load("res://addons/anima/presets/back_exits/back_out_up.tres"))
