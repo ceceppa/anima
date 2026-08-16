@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_lju8w"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_dgmks"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_yqjlr"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_vrcb0"]
+
+[sub_resource type="Resource" id="Resource_m8qjm"]
+script = ExtResource("1_lju8w")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_ybhd2"]
+script = ExtResource("4_vrcb0")
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_fq5ht"]
+script = ExtResource("4_vrcb0")
+offset = 1.0
+value = 1.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_m1tot"]
+script = ExtResource("3_yqjlr")
+property_path = NodePath("modulate:a")
+stops = Array[ExtResource("4_vrcb0")]([SubResource("Resource_ybhd2"), SubResource("Resource_fq5ht")])
+
+[sub_resource type="Resource" id="Resource_0ukv8"]
+script = ExtResource("4_vrcb0")
+value = 0.7853981633974483
+pivot = null
+
+[sub_resource type="Resource" id="Resource_hcnwu"]
+script = ExtResource("4_vrcb0")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_outf1"]
+script = ExtResource("3_yqjlr")
+property_path = NodePath("rotation")
+stops = Array[ExtResource("4_vrcb0")]([SubResource("Resource_0ukv8"), SubResource("Resource_hcnwu")])
+
+[resource]
+script = ExtResource("2_dgmks")
+tracks = Array[ExtResource("3_yqjlr")]([SubResource("Resource_m1tot"), SubResource("Resource_outf1")])
+duration = 0.6
+default_ease = SubResource("Resource_m8qjm")
+default_pivot = 9

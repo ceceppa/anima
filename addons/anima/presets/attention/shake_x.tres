@@ -1,0 +1,123 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_fmtkq"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_ofoyr"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_lerii"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_38cyc"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_value.gd" id="5_nbeb5"]
+
+[sub_resource type="Resource" id="Resource_vrkgf"]
+script = ExtResource("1_fmtkq")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_vi7cq"]
+script = ExtResource("5_nbeb5")
+kind = 1
+constant_value = null
+property_path = NodePath("position:x")
+
+[sub_resource type="Resource" id="Resource_j4m7t"]
+script = ExtResource("5_nbeb5")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_vi7cq"), 0.0]
+
+[sub_resource type="Resource" id="Resource_ry47b"]
+script = ExtResource("4_38cyc")
+value = SubResource("Resource_j4m7t")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_nkbsc"]
+script = ExtResource("5_nbeb5")
+kind = 1
+constant_value = null
+property_path = NodePath("position:x")
+
+[sub_resource type="Resource" id="Resource_o1o48"]
+script = ExtResource("5_nbeb5")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_nkbsc"), -10.0]
+
+[sub_resource type="Resource" id="Resource_0qa0g"]
+script = ExtResource("4_38cyc")
+offset = 0.1
+value = SubResource("Resource_o1o48")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_30mxq"]
+script = ExtResource("5_nbeb5")
+kind = 1
+constant_value = null
+property_path = NodePath("position:x")
+
+[sub_resource type="Resource" id="Resource_hfmow"]
+script = ExtResource("5_nbeb5")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_30mxq"), 10.0]
+
+[sub_resource type="Resource" id="Resource_5k22d"]
+script = ExtResource("4_38cyc")
+offset = 0.2
+value = SubResource("Resource_hfmow")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_aanbv"]
+script = ExtResource("4_38cyc")
+offset = 0.3
+value = SubResource("Resource_o1o48")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_dnwux"]
+script = ExtResource("4_38cyc")
+offset = 0.4
+value = SubResource("Resource_hfmow")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_cf0jj"]
+script = ExtResource("4_38cyc")
+offset = 0.5
+value = SubResource("Resource_o1o48")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_nbghh"]
+script = ExtResource("4_38cyc")
+offset = 0.6
+value = SubResource("Resource_hfmow")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_j5hfd"]
+script = ExtResource("4_38cyc")
+offset = 0.7
+value = SubResource("Resource_o1o48")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_7e3lp"]
+script = ExtResource("4_38cyc")
+offset = 0.8
+value = SubResource("Resource_hfmow")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_t7g0s"]
+script = ExtResource("4_38cyc")
+offset = 0.9
+value = SubResource("Resource_o1o48")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_gvv0a"]
+script = ExtResource("4_38cyc")
+offset = 1.0
+value = SubResource("Resource_j4m7t")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_o1ahl"]
+script = ExtResource("3_lerii")
+property_path = NodePath("position:x")
+stops = Array[ExtResource("4_38cyc")]([SubResource("Resource_ry47b"), SubResource("Resource_0qa0g"), SubResource("Resource_5k22d"), SubResource("Resource_aanbv"), SubResource("Resource_dnwux"), SubResource("Resource_cf0jj"), SubResource("Resource_nbghh"), SubResource("Resource_j5hfd"), SubResource("Resource_7e3lp"), SubResource("Resource_t7g0s"), SubResource("Resource_gvv0a")])
+
+[resource]
+script = ExtResource("2_ofoyr")
+tracks = Array[ExtResource("3_lerii")]([SubResource("Resource_o1ahl")])
+duration = 0.8
+default_ease = SubResource("Resource_vrkgf")

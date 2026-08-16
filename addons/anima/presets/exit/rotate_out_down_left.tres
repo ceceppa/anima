@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_bwf2b"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_42tgl"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_owixl"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_r54hf"]
+
+[sub_resource type="Resource" id="Resource_ei43a"]
+script = ExtResource("1_bwf2b")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_utcyu"]
+script = ExtResource("4_r54hf")
+value = 1.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_mq2l2"]
+script = ExtResource("4_r54hf")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_kudto"]
+script = ExtResource("3_owixl")
+property_path = NodePath("modulate:a")
+stops = Array[ExtResource("4_r54hf")]([SubResource("Resource_utcyu"), SubResource("Resource_mq2l2")])
+
+[sub_resource type="Resource" id="Resource_evblf"]
+script = ExtResource("4_r54hf")
+offset = 1.0
+value = 0.7853981633974483
+pivot = null
+
+[sub_resource type="Resource" id="Resource_lj8hg"]
+script = ExtResource("3_owixl")
+property_path = NodePath("rotation")
+stops = Array[ExtResource("4_r54hf")]([SubResource("Resource_evblf")])
+
+[resource]
+script = ExtResource("2_42tgl")
+tracks = Array[ExtResource("3_owixl")]([SubResource("Resource_kudto"), SubResource("Resource_lj8hg")])
+duration = 0.6
+default_ease = SubResource("Resource_ei43a")
+default_pivot = 7

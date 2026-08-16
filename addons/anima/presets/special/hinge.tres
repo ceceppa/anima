@@ -1,0 +1,123 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_1k6t8"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_iuexa"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_6g360"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_xmar3"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_value.gd" id="5_5ama4"]
+
+[sub_resource type="Resource" id="Resource_a0665"]
+script = ExtResource("1_1k6t8")
+kind = 17
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_v6d42"]
+script = ExtResource("4_xmar3")
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_8oy3c"]
+script = ExtResource("4_xmar3")
+offset = 0.2
+value = 1.3962634015954636
+ease = SubResource("Resource_a0665")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_hbn6q"]
+script = ExtResource("4_xmar3")
+offset = 0.4
+value = 1.0471975511965976
+ease = SubResource("Resource_a0665")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_m17h3"]
+script = ExtResource("4_xmar3")
+offset = 0.6
+value = 1.3962634015954636
+ease = SubResource("Resource_a0665")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_8n3vo"]
+script = ExtResource("4_xmar3")
+offset = 0.8
+value = 1.0471975511965976
+ease = SubResource("Resource_a0665")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_26neo"]
+script = ExtResource("3_6g360")
+property_path = NodePath("rotation")
+stops = Array[ExtResource("4_xmar3")]([SubResource("Resource_v6d42"), SubResource("Resource_8oy3c"), SubResource("Resource_hbn6q"), SubResource("Resource_m17h3"), SubResource("Resource_8n3vo")])
+
+[sub_resource type="Resource" id="Resource_nj2nn"]
+script = ExtResource("4_xmar3")
+offset = 0.4
+value = 1.0
+ease = SubResource("Resource_a0665")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_h6h2d"]
+script = ExtResource("4_xmar3")
+offset = 0.8
+value = 1.0
+ease = SubResource("Resource_a0665")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_uqt6x"]
+script = ExtResource("4_xmar3")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_87d7w"]
+script = ExtResource("3_6g360")
+property_path = NodePath("modulate:a")
+stops = Array[ExtResource("4_xmar3")]([SubResource("Resource_nj2nn"), SubResource("Resource_h6h2d"), SubResource("Resource_uqt6x")])
+
+[sub_resource type="Resource" id="Resource_se1ua"]
+script = ExtResource("5_5ama4")
+kind = 1
+constant_value = null
+property_path = NodePath("position:y")
+
+[sub_resource type="Resource" id="Resource_nmhbi"]
+script = ExtResource("5_5ama4")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_se1ua"), 0.0]
+
+[sub_resource type="Resource" id="Resource_fsrv5"]
+script = ExtResource("4_xmar3")
+offset = 0.81
+value = SubResource("Resource_nmhbi")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_qa8dj"]
+script = ExtResource("5_5ama4")
+kind = 1
+constant_value = null
+property_path = NodePath("position:y")
+
+[sub_resource type="Resource" id="Resource_eilxu"]
+script = ExtResource("5_5ama4")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_qa8dj"), 700.0]
+
+[sub_resource type="Resource" id="Resource_ac1r5"]
+script = ExtResource("4_xmar3")
+offset = 1.0
+value = SubResource("Resource_eilxu")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_v7btn"]
+script = ExtResource("3_6g360")
+property_path = NodePath("position:y")
+stops = Array[ExtResource("4_xmar3")]([SubResource("Resource_fsrv5"), SubResource("Resource_ac1r5")])
+
+[resource]
+script = ExtResource("2_iuexa")
+tracks = Array[ExtResource("3_6g360")]([SubResource("Resource_26neo"), SubResource("Resource_87d7w"), SubResource("Resource_v7btn")])
+duration = 1.0
+default_ease = SubResource("Resource_a0665")
+default_pivot = 1

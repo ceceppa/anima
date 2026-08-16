@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_lg70n"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_7ufxp"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_3ewwe"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_0lf8e"]
+
+[sub_resource type="Resource" id="Resource_srdwd"]
+script = ExtResource("1_lg70n")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_ue7jm"]
+script = ExtResource("4_0lf8e")
+value = 1.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_sa7ql"]
+script = ExtResource("4_0lf8e")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_x6duf"]
+script = ExtResource("3_3ewwe")
+property_path = NodePath("modulate:a")
+stops = Array[ExtResource("4_0lf8e")]([SubResource("Resource_ue7jm"), SubResource("Resource_sa7ql")])
+
+[resource]
+script = ExtResource("2_7ufxp")
+tracks = Array[ExtResource("3_3ewwe")]([SubResource("Resource_x6duf")])
+duration = 0.6
+default_ease = SubResource("Resource_srdwd")

@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_t63ak"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_2u7fq"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_t1trh"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_gnbpa"]
+
+[sub_resource type="Resource" id="Resource_5ms5m"]
+script = ExtResource("1_t63ak")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_wb6la"]
+script = ExtResource("4_gnbpa")
+value = 1.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_a0ndh"]
+script = ExtResource("4_gnbpa")
+offset = 0.5
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_lqlto"]
+script = ExtResource("4_gnbpa")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_uk4it"]
+script = ExtResource("3_t1trh")
+property_path = NodePath("modulate:a")
+stops = Array[ExtResource("4_gnbpa")]([SubResource("Resource_wb6la"), SubResource("Resource_a0ndh"), SubResource("Resource_lqlto")])
+
+[sub_resource type="Resource" id="Resource_ijwiy"]
+script = ExtResource("4_gnbpa")
+offset = 0.5
+value = Vector2(0.3, 0.3)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_y2nff"]
+script = ExtResource("3_t1trh")
+property_path = NodePath("scale")
+stops = Array[ExtResource("4_gnbpa")]([SubResource("Resource_ijwiy")])
+
+[resource]
+script = ExtResource("2_2u7fq")
+tracks = Array[ExtResource("3_t1trh")]([SubResource("Resource_uk4it"), SubResource("Resource_y2nff")])
+duration = 0.6
+default_ease = SubResource("Resource_5ms5m")

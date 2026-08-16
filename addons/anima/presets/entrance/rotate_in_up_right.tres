@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_h7n4i"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_rvku3"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_8e4lg"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_m0w0r"]
+
+[sub_resource type="Resource" id="Resource_iky0x"]
+script = ExtResource("1_h7n4i")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_ployq"]
+script = ExtResource("4_m0w0r")
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_wskbe"]
+script = ExtResource("4_m0w0r")
+offset = 1.0
+value = 1.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_1x5tp"]
+script = ExtResource("3_8e4lg")
+property_path = NodePath("modulate:a")
+stops = Array[ExtResource("4_m0w0r")]([SubResource("Resource_ployq"), SubResource("Resource_wskbe")])
+
+[sub_resource type="Resource" id="Resource_s4130"]
+script = ExtResource("4_m0w0r")
+value = -1.5707963267948966
+pivot = null
+
+[sub_resource type="Resource" id="Resource_gikiq"]
+script = ExtResource("4_m0w0r")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_q4jub"]
+script = ExtResource("3_8e4lg")
+property_path = NodePath("rotation")
+stops = Array[ExtResource("4_m0w0r")]([SubResource("Resource_s4130"), SubResource("Resource_gikiq")])
+
+[resource]
+script = ExtResource("2_rvku3")
+tracks = Array[ExtResource("3_8e4lg")]([SubResource("Resource_1x5tp"), SubResource("Resource_q4jub")])
+duration = 0.6
+default_ease = SubResource("Resource_iky0x")
+default_pivot = 9

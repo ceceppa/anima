@@ -1,0 +1,157 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_f4wwe"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_5kv6y"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_v2rjv"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_hshht"]
+
+[sub_resource type="Resource" id="Resource_flcay"]
+script = ExtResource("1_f4wwe")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_wkjlb"]
+script = ExtResource("4_hshht")
+value = Vector2(1, 1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_afy4v"]
+script = ExtResource("4_hshht")
+offset = 0.1
+value = Vector2(0.9, 0.9)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_ore1o"]
+script = ExtResource("4_hshht")
+offset = 0.2
+value = Vector2(0.9, 0.9)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_p2ux2"]
+script = ExtResource("4_hshht")
+offset = 0.3
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_egrlp"]
+script = ExtResource("4_hshht")
+offset = 0.4
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_1awqm"]
+script = ExtResource("4_hshht")
+offset = 0.5
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_pterb"]
+script = ExtResource("4_hshht")
+offset = 0.6
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_l2bsm"]
+script = ExtResource("4_hshht")
+offset = 0.7
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_5wqnd"]
+script = ExtResource("4_hshht")
+offset = 0.8
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_b8rc0"]
+script = ExtResource("4_hshht")
+offset = 0.9
+value = Vector2(1.1, 1.1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_ag67l"]
+script = ExtResource("4_hshht")
+offset = 1.0
+value = Vector2(1, 1)
+pivot = null
+
+[sub_resource type="Resource" id="Resource_sm4vu"]
+script = ExtResource("3_v2rjv")
+property_path = NodePath("scale")
+stops = Array[ExtResource("4_hshht")]([SubResource("Resource_wkjlb"), SubResource("Resource_afy4v"), SubResource("Resource_ore1o"), SubResource("Resource_p2ux2"), SubResource("Resource_egrlp"), SubResource("Resource_1awqm"), SubResource("Resource_pterb"), SubResource("Resource_l2bsm"), SubResource("Resource_5wqnd"), SubResource("Resource_b8rc0"), SubResource("Resource_ag67l")])
+
+[sub_resource type="Resource" id="Resource_xtauj"]
+script = ExtResource("4_hshht")
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_8go4i"]
+script = ExtResource("4_hshht")
+offset = 0.1
+value = -0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_d46jq"]
+script = ExtResource("4_hshht")
+offset = 0.2
+value = -0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_epofn"]
+script = ExtResource("4_hshht")
+offset = 0.3
+value = 0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_s87g1"]
+script = ExtResource("4_hshht")
+offset = 0.4
+value = -0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_hripi"]
+script = ExtResource("4_hshht")
+offset = 0.5
+value = 0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_tks26"]
+script = ExtResource("4_hshht")
+offset = 0.6
+value = -0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_0hqq3"]
+script = ExtResource("4_hshht")
+offset = 0.7
+value = 0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_6wrl1"]
+script = ExtResource("4_hshht")
+offset = 0.8
+value = -0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_8di1y"]
+script = ExtResource("4_hshht")
+offset = 0.9
+value = 0.0523599
+pivot = null
+
+[sub_resource type="Resource" id="Resource_3ieg8"]
+script = ExtResource("4_hshht")
+offset = 1.0
+value = 0.0
+pivot = null
+
+[sub_resource type="Resource" id="Resource_pmmsd"]
+script = ExtResource("3_v2rjv")
+property_path = NodePath("rotation")
+stops = Array[ExtResource("4_hshht")]([SubResource("Resource_xtauj"), SubResource("Resource_8go4i"), SubResource("Resource_d46jq"), SubResource("Resource_epofn"), SubResource("Resource_s87g1"), SubResource("Resource_hripi"), SubResource("Resource_tks26"), SubResource("Resource_0hqq3"), SubResource("Resource_6wrl1"), SubResource("Resource_8di1y"), SubResource("Resource_3ieg8")])
+
+[resource]
+script = ExtResource("2_5kv6y")
+tracks = Array[ExtResource("3_v2rjv")]([SubResource("Resource_sm4vu"), SubResource("Resource_pmmsd")])
+duration = 1.0
+default_ease = SubResource("Resource_flcay")
+default_pivot = 5

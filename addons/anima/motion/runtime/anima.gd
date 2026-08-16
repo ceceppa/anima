@@ -147,6 +147,18 @@ static func group(targets: Variant) -> AnimaGroupMotionFactory:
 		return null
 	return AnimaGroupMotionFactory.new(targets)
 
+## Returns the cached, shared [AnimaMotion] for the ported v1 catalog preset
+## named [param name] (e.g. `"fade_in"`, `"bouncing_in_left"`, `"tada"`) —
+## `Anima.play(Anima.animation("fade_in"), target)`. The same resource is
+## returned whether reached by name here or by referencing its `.tres`
+## directly (`tech-spec.md` §Animation catalog). An unregistered [param name]
+## reports an error and returns `null`. This never captures a target — the
+## returned resource is shared across every caller, so chain-mutating it
+## (e.g. `.with_delay()`) affects every later caller of the same name; a
+## caller needing an independent copy should `duplicate()` it first.
+static func animation(name: String) -> AnimaMotion:
+	return AnimaAnimationRegistry.get_animation(name)
+
 ## Attaches [param behaviour] to [param node] via node metadata — [param node]'s
 ## class and script are unchanged. Retrieve it later with [method get_behaviour].
 static func attach_behaviour(node: Node, behaviour: AnimaBehaviour) -> void:

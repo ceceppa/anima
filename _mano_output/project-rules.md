@@ -120,6 +120,51 @@ extends AnimaMotion
 @export var elastic_period: float = 0.3    # ELASTIC only
 ```
 
+## Animation Catalog
+
+**What:** A catalog preset's `.tres` lives under `addons/anima/presets/<category>/<name>.tres`, one lowercase folder per category — `attention/`, `entrance/`, `exit/`, `special/`, `text/` (`tech-spec.md` §Animation catalog owns the five-category list). The file stem is the exact registry name `Anima.animation(name)` looks up — no transformation between filename and lookup string.
+
+**Why:** `Anima.animation(name)` (`tech-spec.md` §Animation catalog) resolves a name to a resource; keeping the filename and the lookup name identical, one folder per category, means a contributor can find any of the 99 ported presets from either direction — by name in code, or by browsing the matching category folder — with no separate mapping table to keep in sync.
+
+**Pattern:**
+```
+addons/anima/presets/
+  attention/
+    tada.tres
+    heartbeat.tres
+  entrance/
+    fade_in.tres
+    bouncing_in_left.tres
+  exit/
+    fade_out_left_big.tres
+  special/
+    hinge.tres
+  text/
+    typewrite.tres
+```
+
+**What:** When porting a v1 dynamic-value formula string, use the same canonical `AnimaValue` mapping for every occurrence of a given v1 idiom — `.` (self) always becomes `AnimaValue.target(property)`, `..` (parent) always becomes `AnimaValue.node(^"..", property)`, and a shared arithmetic shape (e.g. "negate mine, subtract the parent's") is built the same chain of `.negative()`/`.subtract()`/etc. every time it recurs. Do not invent a second, differently-shaped `AnimaValue` chain for a formula pattern already ported elsewhere in the catalog.
+
+**Why:** 99 presets, several sharing the same v1 formula idiom (e.g. every `*_big` fade/slide exit measures against its own size and its parent's), are likely ported across more than one story; a consistent mapping keeps two presets that use the same v1 pattern readable the same way, instead of each implementer re-deriving their own equivalent expression.
+
+**Pattern:**
+```gdscript
+# v1: "translate:x": "-:size:x - ..:size:x"
+AnimaValue.target(^"size:x").negative().subtract(AnimaValue.node(^"..", ^"size:x"))
+```
+
+**What:** Each ported preset gets a unit test asserting its resolved keyframe values at representative offsets (`0.0`, an interior stop, `1.0`) — for a preset with a dynamic-value formula, resolved against a known target/parent size — not only a smoke test that the `.tres` loads without error.
+
+**Why:** A silently wrong translation (a flipped sign, a swapped `.target()`/`.node()`) still loads and plays without erroring; only asserting the actual resolved values catches a mistranslation, which is the highest-acknowledged risk in `phase-brief.md` for this catalog.
+
+**Pattern:**
+```gdscript
+# tests/presets/FadeOutLeftBig.test.gd
+func test_translate_x_at_offset_1_accounts_for_own_and_parent_size():
+    var resolved := _stop_value_at(preset, "translate:x", 1.0, context)
+    assert_eq(resolved, -own_size.x - parent_size.x)
+```
+
 ## Architecture
 
 **What:** The public entry point (`Anima.play(...)`) is exposed through a `class_name`-declared script, never through a `project.godot` autoload. Do not add anything under `[autoload]`.

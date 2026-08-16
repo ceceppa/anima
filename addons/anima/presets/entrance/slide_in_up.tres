@@ -1,0 +1,63 @@
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_cq58q"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_uu8kx"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_y6x66"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_qo4ol"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_value.gd" id="5_h5t5r"]
+
+[sub_resource type="Resource" id="Resource_4vkqh"]
+script = ExtResource("1_cq58q")
+custom_samples = PackedFloat32Array()
+
+[sub_resource type="Resource" id="Resource_paox2"]
+script = ExtResource("5_h5t5r")
+kind = 1
+constant_value = null
+property_path = NodePath("position:y")
+
+[sub_resource type="Resource" id="Resource_mwy3o"]
+script = ExtResource("5_h5t5r")
+kind = 1
+constant_value = null
+property_path = NodePath("size:y")
+
+[sub_resource type="Resource" id="Resource_e0q80"]
+script = ExtResource("5_h5t5r")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_paox2"), SubResource("Resource_mwy3o")]
+
+[sub_resource type="Resource" id="Resource_lidpw"]
+script = ExtResource("4_qo4ol")
+value = SubResource("Resource_e0q80")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_mryyr"]
+script = ExtResource("5_h5t5r")
+kind = 1
+constant_value = null
+property_path = NodePath("position:y")
+
+[sub_resource type="Resource" id="Resource_d8b4h"]
+script = ExtResource("5_h5t5r")
+kind = 10
+constant_value = null
+operands = [SubResource("Resource_mryyr"), 0.0]
+
+[sub_resource type="Resource" id="Resource_3w7lh"]
+script = ExtResource("4_qo4ol")
+offset = 1.0
+value = SubResource("Resource_d8b4h")
+pivot = null
+
+[sub_resource type="Resource" id="Resource_xujo5"]
+script = ExtResource("3_y6x66")
+property_path = NodePath("position:y")
+stops = Array[ExtResource("4_qo4ol")]([SubResource("Resource_lidpw"), SubResource("Resource_3w7lh")])
+
+[resource]
+script = ExtResource("2_uu8kx")
+tracks = Array[ExtResource("3_y6x66")]([SubResource("Resource_xujo5")])
+duration = 0.6
+default_ease = SubResource("Resource_4vkqh")

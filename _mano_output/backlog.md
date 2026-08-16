@@ -571,7 +571,7 @@
 - **Context:**
   Presets are normal AnimaMotion resources, organised into categories: attention, entrance, exit, emphasis, transform, UI interaction, layout, feedback, camera, text, reduced motion.
   PRD.md §21.2.
-- **Status:** backlog
+- **Status:** in-phase-17
 
 ### Preset browser
 - **Type:** feature
@@ -3086,3 +3086,10 @@
 - **Context:**
   A .wait(seconds) chain method that delays the START of whatever follows in the chain (equivalent to with_delay() on the next step), so combining via .then()/.with() doesn't require repeating the same delay on every sibling. Must compose additively with an explicit with_delay() on an individual child (e.g. .wait(1) followed by a child with_delay(0.5) should total 1.5s for that child).
 - **Status:** resolved
+
+### Reimplement the Anima v1 built-in animation catalog
+- **Type:** feature
+- **Source:** User request — Anima v1 animations directory
+- **Context:**
+  Bring the 99 built-in v1 animation definitions forward as Anima 2 motion presets, using the supplied v1 source directory as the behavioural reference. The catalog spans attention, entrance, exit, back, bounce, fade, slide, zoom, rotate, lightspeed, special, and text effects.
+- **Status:** in-phase-17
