@@ -27,6 +27,11 @@ var selected_playback: PlaybackMode = PlaybackMode.STAGGERED
 var selected_order: Ordering = Ordering.FIRST
 var active_playback: AnimaPlayback = null
 var _group: AnimaGroupMotion = null
+## The speed multiplier last picked via the speed selector — applied to
+## whatever playback is currently running, and reapplied to each new one
+## `restart()` creates, so switching playback mode/ordering doesn't silently
+## drop back to 1x (`_mano_output/phase-16/stories/story-5b-group-playground-speed-persists-across-restart.md`).
+var _selected_speed: float = 1.0
 
 func _ready() -> void:
 	super._ready()
@@ -52,6 +57,7 @@ func _ready() -> void:
 			active_playback.revert()
 	)
 	_controls.speed_selected.connect(func(speed: float) -> void:
+		_selected_speed = speed
 		if active_playback != null:
 			active_playback.speed_scale = speed
 	)
@@ -93,6 +99,7 @@ func restart(play := true) -> void:
 	_group.reduced_motion_speed = 0.0
 
 	active_playback = Anima.play(_group, self)
+	active_playback.speed_scale = _selected_speed
 
 ## Replays this run's resolved card collection in reverse order and returns the
 ## decorative cards to their resting appearance. If nothing has been captured
@@ -123,13 +130,9 @@ func _cards() -> Array[Card]:
 	return cards
 
 func _build_group() -> AnimaGroupMotion:
-	var collection := AnimaTargetCollection.new()
-	collection.kind = AnimaTargetCollection.Kind.EXPLICIT
-	collection.reference_data = _cards()
-
 	var item := Motion.to(NodePath("progress"), 1.0).with_duration(0.42)
 	item.from_value = 0.0
-	var group := Motion.group(collection, item)
+	var group := Anima.group(_card_row).with_item_motion(item).motion
 	match selected_playback:
 		PlaybackMode.SEQUENTIAL:
 			group.playback_mode = AnimaGroupMotion.PlaybackMode.SEQUENTIAL

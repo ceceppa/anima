@@ -32,7 +32,7 @@ Use these for optional external review, validation, or specialist checks. Mano w
 - in manual mode or an unarmed run, mention it after the related skill finishes, ask whether to run it, and wait for you
 - during an armed auto chain, run it after the related skill; continue when it has no findings, or pause for per-item triage when it does
 
-Mano will not print the hook's prompt unless you ask, name specific external skills in generic output, or modify files from a hook's findings without your approval.
+Mano will not print the hook's prompt unless you ask, name specific external skills in generic output, or modify files from a hook's findings without your approval. Selected findings return to the related Mano skill and stay inside that skill's artifact boundary. `post-stories` uses its stricter immutable-story flow.
 
 To point one at a third-party or specialist skill, copy an example file and replace `[external-review-command]` with your command.
 

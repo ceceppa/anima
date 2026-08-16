@@ -91,7 +91,7 @@ Only include fields relevant to this story. Omit empty categories. Do not invent
 An artifact pointer is not proof that its named section is complete. Before pointing at a public/package contract—or a cross-component contract consumed by independently-owned components or multiple stories—verify that the section actually contains the exact operations/events, inputs/defaults, result/failure behavior, and any semantic-to-canonical mapping the story needs. A broad paragraph that only names capability families cannot be promoted into an implementation-ready contract by citing it.
 <!-- /mano-rule: public-interface-contract-readiness -->
 
-When project rules or the tech spec own exact tokens — prop names, attribute names, file paths, state keys, install commands, constants — point to the exact owning section instead of copying the value. When a project rule implies a required file, module, constant, or prohibition, make the obligation explicit while leaving any shared literal at its canonical home.
+When an input artifact owns exact tokens, point to that exact section instead of copying the value. A particular component's consumer-visible props, events, variants, defaults, and state transitions belong to the tech spec. Project rules may own reusable naming patterns, required file locations, and prohibitions. Make each obligation explicit while leaving every shared literal at its canonical home.
 
 **No hedged paths or ambiguous ownership.** Name one location. Do not write `src/foo.cpp or src/bar.cpp`, `either A or B`, `wherever the X helper lives`, or `if needed`. If ownership genuinely splits (computation in one file, enforcement in another), say so with each file's role: `compute in src/foo.cpp; enforce in src/bar.cpp`. If the correct location is genuinely unknown and not determinable from existing artifacts, flag it during the artifact gap check — do not ship the ambiguity.
 
@@ -184,7 +184,13 @@ For stateful frontend stories: name what persists across restart, what stays tra
   Bad — adjectival: *After releasing the card, correct snap behaviour.*
   Bad — noun-phrase placeholder: *Smooth drag interaction.*
 
-  The adjectival and noun-phrase forms have an extra failure mode: they often *replace* the AC's verb instead of qualifying it. "After releasing the card, correct snap behaviour" has no verb describing what the user observes — it labels a moment and gestures at it. Rewrite to name the observable: *"After releasing the card, it snaps into the target column within one frame and both columns' item counts update to match."*
+  The adjectival and noun-phrase forms have an extra failure mode: they often *replace* the AC's verb instead of qualifying it. "After releasing the card, correct snap behaviour" has no verb describing what the user observes. Rewrite it with one trigger and separate results:
+
+  ```markdown
+  - [ ] After releasing the card:
+    - It snaps into the target column within one frame.
+    - Both columns show the new item counts.
+  ```
 
 - **Move implementation mechanics to Implementation Reference.** If a detail is necessary but not directly observable — for example "compute once at drag start", "use a shared seam-width constant", or "fold committed offset into visual offset" — put it in `Implementation Reference`, not `Done when`. Pair it with an observable AC that describes the visible effect.
 
@@ -201,6 +207,8 @@ For stateful frontend stories: name what persists across restart, what stays tra
   - [ ] Each row displays: checkbox, todo text, delete button
   - [ ] Test: checkbox toggles completed state
   ```
+
+- **Unpack compound acceptance criteria.** Put the trigger on the checkbox line. Put each condition, observable result, and exception in a nested bullet. Do not join several results with commas or `and`. Treat every nested result as required acceptance evidence. Keep a simple single-result AC on one line.
 
 - **Stories must be small.** One focused session. Aim for five acceptance criteria or fewer; six is acceptable when the story is genuinely small and cohesive (the extra AC observes a distinct behaviour, not a rephrased one). Seven or more is a sizing signal — split the story, or merge AC that describe the same observable behaviour. Treat five as the soft target, not a hard ceiling: don't pad to reach it, don't artificially split a cohesive story to stay under it.
 
@@ -219,7 +227,7 @@ For stateful frontend stories: name what persists across restart, what stays tra
 
 Before drafting the story set, run these against the inputs. Each is a real check that produces concrete AC adjustments.
 
-- **Phase goal (mandatory).** The phase brief's `Phase goal` is the single most important outcome of the phase. At least one story must carry an AC that, taken with the chain's end-to-end AC, verifies that exact goal. Decomposing the goal into separate feature stories is not sufficient on its own: qualities embedded in the goal's wording — "in real time", "instantly", "correctly", "smoothly", latency/feel words — must each surface as an explicit testable AC, not be left implicit. If a quality cannot be written as an observable AC, say so and flag it; do not silently drop it.
+- **Phase goal (mandatory).** The phase brief's `Phase goal` is the single most important outcome of the phase. At least one story must carry an AC that, taken with the chain's end-to-end AC, verifies that exact goal. Decomposing the goal into separate feature stories is not sufficient on its own. Objective qualities such as latency, persistence, and visible state changes need observable AC. Subjective product feelings such as “calm,” “fun,” or “rewarding” belong in the Validation Plan unless the brief already defines observable behavior for them. Never invent a proxy AC for a feeling. Preserve the learning question and flag any missing validation path instead.
 
 - **Tech spec.** If a tech spec exists, ensure its decisions are reflected in AC. If the spec says offline-first, at least one story must include "data persists after closing and reopening the app." If the spec says biometric auth, a story must test it. Tech decisions that never appear in AC are invisible to QA and will be skipped.
 
@@ -316,8 +324,16 @@ If a story depends on missing domain structure, do not hide the gap in vague AC.
 
 Examples: do not write a checkout story unless the cart model is defined. Do not write a notification story unless a delivery channel is represented. Do not write a dashboard story unless a default or empty data state exists.
 
+**0c.0 Spec-owned defaults and initial state — hard gate.** When an Exit Criterion or prospective story depends on a starting state, first-use state, capacity, radius/range, count, duration, threshold, spawn amount, or other behaviour-driving default, verify the canonical tech spec names its owning field/config/constant and gives its exact value or required relationship. A brief may say “small healed area” or “enough room”; if code must turn that into a number, it is a technical decision, not story setup.
+
+If that owner or value is missing, **write no story files**. Report `⚠️ Story readiness gap: spec-owned default missing`, name the affected exit path and field that needs defining, and route to `mano spec`. Do not offer a story-owned default, an implementation `Notes` placeholder, or options to continue with a temporary value. Stories may decompose an already-decided default into tests; they never choose it.
+
+**0c.1 Player choice interaction — hard gate.** When a player can choose among two or more simultaneously available tools, buildables, abilities, modes, rewards, or other alternatives, verify `_mano_output/ux-flow.md` defines the choice as a player path. It must cover what makes each option available, how the player enters or invokes the choice, how they select or change the active option, how the active choice is communicated, and what happens when an option is locked, unavailable, or the player cancels. The choice may be in-world or minimal; it is still UX.
+
+If that flow is absent or leaves any of those decisions to implementation, **write no story files**. Report `⚠️ Story readiness gap: player choice interaction missing`, name the affected phase path and missing UX behaviour, and route to `mano ux`. Do not propose a hotkey, picker, cycling scheme, default active item, HUD treatment, or other story-owned interaction. The general artifact-gap options do not waive this gate; only a completed UX flow or an explicit human decision to skip `mano ux` can do so.
+
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
-**0c.1 Public-interface readiness — hard gate.** For every prospective story that creates, changes, wraps, or depends on a public/package API, command, event protocol, plugin hook, external integration, persisted/wire format, or cross-component contract consumed by independently-owned components or multiple stories, verify its canonical owning artifact defines:
+**0c.2 Public-interface readiness — hard gate.** For every prospective story that creates, changes, wraps, or depends on a public/package API, command, event protocol, plugin hook, external integration, persisted/wire format, or cross-component contract consumed by independently-owned components or multiple stories, verify its canonical owning artifact defines:
 
 - the exact consumer-visible operation, method, command, or event names;
 - input order/shape, required vs optional values, and behavior-driving defaults;
@@ -334,7 +350,15 @@ If any behavior-driving interface field needed by the story is absent or has two
 Before accepting a `Not this story` boundary, compare it with the phase goal, Exit Criteria, and the rest of the story chain. It may defer an adjacent use case; it may not contradict a promised path or prohibit the shared contract surface another story needs to satisfy the phase. Resolve the story split, or route an unresolved contract choice to `mano spec`.
 <!-- /mano-rule: public-interface-contract-readiness -->
 
-**0d. Artifact gap check.** For each prospective story, check whether it depends on a visual, interaction, accessibility, technical, data, API, constant, shared measurement, or rule detail that is not defined by the artifacts read this run. This is a warning/decision point, not a default blocker.
+<!-- mano-rule: id=phase-acceptance-integrity; incident=exit-criterion-tested-in-reverse; model=codex; date=2026-08-13; eval=pending -->
+**0c.3 Phase-promise polarity — hard gate.** Map every `Phase Goal` outcome and every `Exit Criteria` action/result—including each nested bullet—to its prospective `Done when` owner and the supporting artifact decisions it needs. Read those decisions for meaning, not keyword presence. If any artifact states the opposite outcome or preserves a stale deferral (`recoverable` vs `stays locked`, `available` vs `unavailable`, `implemented` vs `not wired`, success vs required failure), **write no new story files**. Report one `⚠️ Story readiness gap: supporting artifact contradicts phase promise`, quote both statements, and route to the artifact's owning skill—normally `mano spec` for technical/data/gate contradictions.
+
+Do not disguise the conflict with wording such as “existing behaviour, now reachable” unless the cited artifact actually defines every prerequisite that makes the route reachable. An AC appearing in a story is coverage, not readiness; its implementation reference must point to a compatible contract rather than an opposing one.
+<!-- /mano-rule: phase-acceptance-integrity -->
+
+**0d. Artifact gap check.** For each prospective story, check whether it depends on a visual, interaction, accessibility, technical, data, API, constant, shared measurement, or rule detail that is not defined by the artifacts read this run. This is a warning/decision point, not a default blocker; the hard gates in 0c.0–0c.3 remain non-continuable.
+
+**Player-flow check.** A game mechanic is not exempt from UX because it happens in the world rather than a screen. When the phase includes player activation, direct manipulation, placement/selection, progression/unlock actions, available-versus-locked states, or feedback for an unmet condition, check `_mano_output/ux-flow.md` for the concrete path: what the player notices, does, sees after success, and sees when the action is unavailable. Multiple simultaneously available choices are the hard gate in 0c.1, not a continuable artifact gap. “Minimal” presentation does not let stories invent discoverability or feedback behaviour.
 
 Look for partial-but-usable guidance before flagging a gap. A detail is not missing merely because it is brief. If an artifact contains a relevant section, subsection, token, note, rule, constant, or implementation reference, reuse it and cite the artifact location in the story's `Implementation Reference`.
 
@@ -442,7 +466,7 @@ When all stories are written, output the execution log:
 - 1. [title] — [exact PHASE_DIR]/stories/story-1-[slug].md
 - 2. ...
 ⚠ Verify: [embedded assumption worth checking — advisory, omit if none]
-❓ Decide: [decision to confirm or change before the affected story is implemented, phrased as a question with the inferred value — omit if none]
+❓ Decide: [decision explicitly permitted by this skill — never an inferred upstream value; omit if none]
 
 [Optional hook block if active]
 
@@ -452,10 +476,10 @@ Next:
 
 Give each story its **full project-root-relative path** (as above), not a bare `story-N-[slug].md` — that is what makes each line tap-to-open in the editor. The path replaces the old parenthesised filename.
 
-Two rules for the flag lines (see the canonical execution-log format in `_mano/workflow.md`): **(1)** When an input artifact should have stated a behaviour-driving value and didn't (a default, a threshold, a severity), infer the most consistent value, build the story with it, and raise the inference as a `❓ Decide:` — never leave the implementer to invent it, and never edit the upstream artifact yourself (flag the gap for its owning skill). **(2)** A pending `❓ Decide:` makes the affected next action conditional: name which story is blocked and write `mano dev` as available only after that decision. Do not add a separate `Status:` line.
+Two rules for the flag lines (see the canonical execution-log format in `_mano/workflow.md`): **(1)** When an input artifact omits a behaviour-driving value, apply the readiness hard gates. Write no story files. Route the missing decision to its owning skill. Do not infer a value, embed a provisional default, or turn the gap into a story-level `❓ Decide:`. **(2)** If another decision explicitly permitted by this skill remains open, a pending `❓ Decide:` makes the affected next action conditional. Name which story is blocked. Show `mano dev` only after that decision. Do not add a separate `Status:` line.
 
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
-The inference path above does not apply to the Public-interface readiness hard gate: route that missing contract to `mano spec` and write no stories.
+The no-inference rule applies to public interfaces, spec-owned defaults, and every other behaviour-driving value.
 <!-- /mano-rule: public-interface-contract-readiness -->
 
 Do not ask for per-story approval. The user reviews the files at their own pace in their editor.

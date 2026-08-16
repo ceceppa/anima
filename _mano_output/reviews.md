@@ -53,3 +53,37 @@
 - [refinement] play_with_delay() to delay the whole chain — added
 - [refinement] Hide internal builder classes behind a non-public naming convention — added
 - [feature] .wait(seconds) chain method for inline pauses — added
+
+---
+
+## Phase 16 Review — 2026-08-17
+
+### Evidence
+
+- **Level:** gathered
+- **Tried:** Used `Anima.on`/`Anima.grid` with the new `.wait()` chaining in the Showcase; tested `Anima.group()` in the group motion playground
+- **Result:** Everything worked as expected
+
+### Phase checks
+
+| Phase promise | Result | What happened |
+|---|---|---|
+| `Anima.group(%Container)...play()` animates every child of `%Container`; `Anima.group([$A, $B, $C])...play()` animates exactly those three nodes | passed | Tested in the group motion playground |
+| Whole-chain `.with_delay()` on a composed `.then()`/`.with()` chain delays the start; both steps still play in original order | passed | Exercised in the Showcase |
+| `.wait(1.0)` starts the next step 1s later; combined with the next step's own `with_delay(0.5)`, starts it 1.5s later | passed | Exercised in the Showcase |
+| Autocomplete/class list for `Anima.*` no longer surfaces `AnimaParallel`/`AnimaSequence`/similar as equally-weighted public options | passed | confirmed |
+
+### Decision
+
+- **Choice:** The convenience API is solid enough to be used for real — stop treating it as a moving target and start building real scenes on top of it.
+- **Why:** Exercised in the Showcase (`Anima.on`/`Anima.grid` with `.wait()`) and in the group motion playground (`Anima.group()`) — all worked as expected.
+
+### Assumptions
+
+| Assumption | Result | What showed this |
+|-----------|---------|------------------------|
+| A single `Anima.group()` factory covering both a container-Node target and an explicit-array target is sufficient — no separate factory or mode flag is needed for the two forms. | confirmed | |
+
+### Backlog changes
+
+- None

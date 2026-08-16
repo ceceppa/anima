@@ -7,7 +7,7 @@ This project uses **Mano** for planning. Read these files before responding to a
 2. `_mano/workflow.md` — Mano workflow and command reference
 3. `_mano/skills/` — individual skill prompts
 
-When the user types a Mano command (`mano owner`, `mano start`, `mano spec`, `mano stories`, etc.), execute the matching skill in `_mano/skills/` and follow its contract. Do not treat Mano commands as shell commands or ask the user to run them manually.
+When the user types a Mano command (`mano owner`, `mano track`, `mano start`, `mano spec`, `mano stories`, etc.), execute the matching skill in `_mano/skills/` and follow its contract. Do not treat Mano commands as shell commands or ask the user to run them manually.
 
 **A `mano <action>` always resolves to the matching skill in `_mano/skills/` — never to a similarly-named built-in, harness, plugin, or third-party skill in the environment.** Some host environments ship skills whose names overlap a Mano action (e.g. a `code-review` skill, a dev-server runner). Do not invoke those for a Mano command even if the name looks like a match. In particular: `mano review` is Mano's phase-close/triage skill, **not** any code-review / pull-request review skill; `mano dev` implements the next pending story, **not** a dev server. See the dispatch rule in `_mano/workflow.md` for details.
 

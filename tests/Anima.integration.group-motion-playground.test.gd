@@ -28,6 +28,47 @@ func test_group_motion_playground_opens_and_selector_starts_a_public_group_playb
 	assert_eq(reverse_record.entries[0].target, forward_last)
 	assert_eq(reverse_record.entries[-1].target, forward_first)
 
+## Confirms the playground actually goes through Anima.group()'s container
+## form now (`_mano_output/phase-16/stories/story-5a-group-playground-uses-anima-group.md`)
+## rather than hand-building an AnimaTargetCollection — resolving %CardRow's
+## own children, the exact set _cards() already reads from.
+func test_group_targets_every_card_in_card_row_via_anima_group():
+	var scene: Control = preload("res://examples/playground/group_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var group: AnimaGroupMotion = scene.get("_group")
+	assert_eq(group.target_collection.kind, AnimaTargetCollection.Kind.CHILDREN, "Anima.group(_card_row)'s container form resolves CHILDREN, not a captured EXPLICIT array")
+
+	var card_row: HBoxContainer = scene.get_node("%CardRow")
+	var resolution := AnimaTargetResolver.resolve(group.target_collection, card_row)
+	assert_eq(resolution.targets.size(), card_row.get_child_count())
+	for index in resolution.targets.size():
+		assert_eq(resolution.targets[index], card_row.get_child(index))
+
+## Regression: picking a speed then switching playback mode/ordering (or
+## pressing restart) used to silently drop back to 1x, since restart() built
+## a brand-new AnimaPlayback with no speed applied
+## (`_mano_output/phase-16/stories/story-5b-group-playground-speed-persists-across-restart.md`).
+func test_selected_speed_survives_restart():
+	var scene: Control = preload("res://examples/playground/group_motion_playground.tscn").instantiate()
+	add_child_autofree(scene)
+	await get_tree().process_frame
+
+	var controls: PlaybackControls = scene.get_node("%PlaybackControls")
+	controls.speed_selected.emit(2.0)
+	var playback: AnimaPlayback = scene.get("active_playback")
+	assert_almost_eq(playback.speed_scale, 2.0, 0.0001)
+
+	scene.select_playback(scene.PlaybackMode.PARALLEL) # triggers restart() internally
+	var restarted_playback: AnimaPlayback = scene.get("active_playback")
+	assert_ne(restarted_playback, playback, "sanity: a new playback should have been created")
+	assert_almost_eq(restarted_playback.speed_scale, 2.0, 0.0001, "the previously selected speed should still apply after restart")
+
+	controls.restart_pressed.emit()
+	var directly_restarted_playback: AnimaPlayback = scene.get("active_playback")
+	assert_almost_eq(directly_restarted_playback.speed_scale, 2.0, 0.0001, "pressing restart directly should also keep the selected speed")
+
 ## Regression: pressing reverse before the auto-started group had captured
 ## even one frame used to silently no-op (AnimaPlayback.reverse() had
 ## nothing to reverse to), leaving the original forward run untouched.

@@ -19,7 +19,8 @@ This skill activates when the user types `mano import` (optionally with a path: 
 - **Without a path** (`mano import`): ask which document to read, or accept the document text if the user pasted it inline with the command. Do not proceed until you have a document.
 
 On activation:
-1. Create `_mano_output/` if it doesn't exist.
+1. Run `node _mano/scripts/state.js` and record `TRACK:`. This is the only active-track source; do not read Git config yourself. A missing track is `TRACK: none`.
+2. Create `_mano_output/` if it doesn't exist.
 2. Read `_mano_output/backlog.md` if it already exists. If it does and already has items, this is not a fresh import — tell the user the backlog already exists and ask whether to merge new items from this document or stop. Do not silently overwrite or duplicate.
 
 ## Boundaries
@@ -60,13 +61,14 @@ A single document point can yield an import question *and* a note for later — 
 Present findings:
 
 ```
-[mano import]: I've read the document. Before I break it down, a few things to clarify:
+[mano import]: Before I split this document into backlog items, I need these product decisions:
 
-1. [Ambiguity or gap] — [what's unclear and why it matters for scoping]
-2. [Ambiguity or gap] — [what's unclear]
-3. [Contradiction or assumption] — [what I noticed]
+1. [direct question]
+   Why it matters: [effect on the backlog; omit when obvious]
+2. [direct question]
+3. [direct question]
 
-Answer what's relevant, skip what isn't.
+Reply naturally. Say "unsure" when you do not know an answer.
 ```
 
 **Pre-send filter — run mechanically on the drafted question list, do not rely on judgment alone.** Before sending, take each numbered question and apply these checks literally. Any question that hits a check is deleted from the list (and, if it flagged a real foundation conflict, recorded as a note in the relevant backlog item's context instead — not asked):
@@ -88,9 +90,9 @@ If the document clearly states durable product values (product feel, interaction
 
 ### Step 3 — Populate the backlog
 
-Decompose the entire document into backlog items. Every feature, requirement, non-functional criterion, and success criterion. Preserve specific detail from the source — including any stated technical preference, transcribed verbatim into the relevant item's context per B1 (pass-through, not silence).
+Decompose the entire document into backlog items. Every feature, requirement, non-functional criterion, and success criterion. Preserve specific detail from the source — including any stated technical preference, transcribed verbatim into the relevant item's context per B1 (pass-through, not silence). When `TRACK:` is not `none`, include that exact value as `track` on every imported item; Source remains the document name.
 
-Write all items to `_mano_output/backlog.md` with `Status: backlog` through the deterministic writer. Produce a JSON array of `{ "title", "type", "context", "source" }` objects, write it to a temporary file such as `_mano_output/.import.json`, then run:
+Write all items to `_mano_output/backlog.md` with `Status: backlog` through the deterministic writer. Produce a JSON array of `{ "title", "type", "context", "source", "track"? }` objects, write it to a temporary file such as `_mano_output/.import.json`, then run:
 
 ```text
 node _mano/scripts/backlog.js add --file _mano_output/.import.json
@@ -102,6 +104,7 @@ Delete the temporary file after the writer succeeds. The writer owns the item sh
 ### [Short title]
 - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap
 - **Source:** [document name]
+- **Track:** [active track, if any]
 - **Context:**
   [Line 1 — what it is]
   [Line 2 — why it matters or key detail]

@@ -81,7 +81,7 @@ Belongs in `project-rules.md`:
 - Naming conventions (classes, functions, variables, files)
 - Reusable implementation patterns (error handling, state management, data fetching)
 - Shared helper usage
-- Component contracts and extraction thresholds
+- Project-wide component reuse, accessibility, placement, naming, and extraction conventions
 - Validation boundaries
 - Testing conventions (when applicable)
 - Accessibility patterns contributors must apply (touch target size, contrast targets, focus handling)
@@ -172,20 +172,21 @@ Testing rules describe what contributors must cover, not a full test plan. Avoid
 
 Treat `_mano_output/design-brief.md` as the source of truth for visual inventory and named shared UI from `mano ui`.
 
-Promote something from the design brief into `project-rules.md` only when it needs an implementation contract `mano ui`'s brief does not already provide:
-- required props
-- behavioural states
+Promote something from the design brief into `project-rules.md` only when it needs a project-wide implementation convention `mano ui`'s brief does not already provide:
 - accessibility semantics
 - ownership boundaries
 - extraction thresholds
 - mandatory reuse rules
 - token/theme restrictions
+- component prop/event naming patterns that apply across the project
+
+A particular component's exact consumer-visible props, events, variants, defaults, and state transitions belong in `tech-spec.md` when the phase depends on them. Project rules may require reuse of that component and reference its spec contract. They must not restate or redefine the exact interface.
 
 Do not restate a component in `project-rules.md` just because it appears in the design brief. If the design brief already names a shared component and `mano rules` has nothing more to add than its existence or rough purpose, leave it in the design brief only.
 
 For the **Components** category specifically:
 - Add a component rule only when developers need a reusable contract, not just a list entry.
-- Good reasons: required accessibility behaviour, exact API props/states, mandatory reuse across screens, token/theme restrictions, file ownership and extraction boundaries.
+- Good reasons: required accessibility behaviour, mandatory reuse across screens, token/theme restrictions, project-wide API conventions, file ownership, and extraction boundaries.
 - Weak reasons: repeating that `StepIndicator` exists, repeating its visual role, restating screen-specific composition already in the design brief.
 
 ## Rules maintenance
@@ -299,7 +300,7 @@ Next:
 Populate the canonical `Next:` block from the actions that are still missing or worth refining:
 - `mano spec` — if technical decisions, API contracts, data models, dependencies, persistence, or platform constraints need defining or updating
 - `mano stories` — if the phase is technically clear enough to break into implementable work
-- `mano ux` — only if user-facing flows, frontend behaviour, interaction design, or product experience decisions are part of this phase
+- `mano ux` — if user-facing flows, frontend behaviour, interaction design, or product experience decisions are part of this phase. For player-facing games, this includes world interaction, placement/selection, progression or unlock actions, available-versus-locked states, and feedback for unmet conditions; a minimal or in-world presentation is still a flow.
 - `mano ui` — only if visual design, components, layout, or UI system decisions are part of this phase
 - `mano continue` — only if it adds value and there may be a single obvious next step
 
@@ -310,7 +311,7 @@ Populate the canonical `Next:` block from the actions that are still missing or 
 - Do not write stories. That's `mano stories`'s job.
 - Do not scope phases. That's `mano start`'s job.
 - Do not write or fix code. `mano rules` is an advisor.
-- Do not write domain logic, game mechanics, or business rules (what makes an entity valid, win conditions, state machine definitions). Those belong in `tech-spec.md` or stories.
+- Do not write domain logic, game mechanics, or business rules (what makes an entity valid, win conditions, state machine definitions). Product scope belongs in the phase brief. Exact domain contracts and mechanics belong in `tech-spec.md`. Stories reference and verify those decisions; they do not become the canonical owner.
 - Do not write exact tuning values, interaction math, or design tokens (specific velocity thresholds, animation durations, easing curves, hex colours). Those belong in `tech-spec.md` or `design-brief.md`. Rules may name the *constants* (e.g. "use named `Color` constants, not inline hex") but not their *values* — reference the owning artifact, per "Shared Values: One Canonical Home" in workflow.md. If a value you need already exists in another artifact with a different number or unit, surface the conflict instead of restating it — see "Conflicting Values: Surface, Do Not Reconcile".
 - Do not restate full API contracts, data models, error-code tables, storage strategy, rate limiting policy, platform constraints, pagination/filtering contracts, or versioning policy.
 - Do not add rules "just in case." Every rule must earn its place with a current, concrete reason.

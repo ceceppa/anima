@@ -18,6 +18,8 @@ owner-phase-N after opt-in) and are non-canonical phase snapshots. -->
 
 ## Framework / Component Library
 
+<!-- Mirror or reference only a choice already recorded in tech-spec.md. `mano ui` does not select technical dependencies. Omit this section when the spec has no relevant choice. -->
+
 ## Colour Palette
 
 | Role | Colour | Hex |
@@ -64,7 +66,7 @@ heading per composition; do not replace prior phase compositions. -->
 - **Layout / hierarchy notes:**
 
 <!-- This screen-level list is the inventory of shared UI used by the design.
-If a component later needs a hard implementation contract such as required props, accessibility semantics, mandatory reuse, or ownership rules, `mano rules` may codify that separately in project-rules.md. -->
+If a component needs exact consumer-visible props, events, variants, defaults, or state transitions, `mano spec` owns that contract. `mano rules` may separately codify project-wide accessibility, reuse, placement, naming, ownership, or extraction conventions. -->
 
 ---
 

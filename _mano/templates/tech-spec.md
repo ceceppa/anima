@@ -24,6 +24,8 @@
 |--------|--------|-------|
 | | | |
 
+<!-- When an Exit Criterion depends on a starting or first-use state, name the owning initial/default field here (for example initial_radius, starting_capacity, or initial_delay). Never leave that value to a story. -->
+
 <!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
 ## Public / Integration Interface Contracts
 

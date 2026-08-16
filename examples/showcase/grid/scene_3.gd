@@ -36,23 +36,24 @@ func play() -> void:
 			.diamond()
 			.with_start_point(Vector2.ZERO)
 			.on_started(func(): _update_text('.diamond().with_start_point(Vector2.ZERO)'))
+		.wait(1)
 		.then(
 			_anima_grid()
 			.diagonal()
 			.on_started(func(): _update_text('.diagonal()'))
-			.with_delay(1)
 		)
+		.wait(1)
 		.then(
 			_anima_grid()
 			.spiral_in()
 			.on_started(func(): _update_text('.spiral_in()'))
-			.with_delay(1)
 			.with(
 				Anima.on(%OverlayBg)
 				.property(NodePath("color:a"), 0.85, 1.0)
 				.with_delay(1.0)
 			)
 		)
+		.wait(1)
 		.then(
 			Anima.on(%Control2).keyframes({
 				"from": {
@@ -66,8 +67,8 @@ func play() -> void:
 			})
 			.with_pivot(AnimaPivot.Kind.CENTER)
 			.with_ease(AnimaEase.Kind.EASE_OUT_BACK)
-			.with_delay(1.0)
 		)
+		.wait(1)
 		.then(
 			Anima.on(%Control2).keyframes({
 				"from": {
@@ -81,7 +82,6 @@ func play() -> void:
 			})
 			.with_pivot(AnimaPivot.Kind.CENTER)
 			.with_ease(AnimaEase.Kind.EASE_OUT_BACK)
-			.with_delay(1.0)
 		)
 		.then(
 			Anima.on(%Control).keyframes({

@@ -18,6 +18,7 @@ const path = require("node:path");
 const childProcess = require("node:child_process");
 
 const OWNER_RE = /^[a-z0-9](?:[a-z0-9-]{0,46}[a-z0-9])?$/;
+const TRACK_MAX_LENGTH = 120;
 
 function validateOwner(value) {
   const owner = value == null ? "" : String(value).trim();
@@ -49,6 +50,37 @@ function resolveConfiguredOwner(projectRoot) {
   }
   const owner = gitConfigOwner(projectRoot);
   return owner ? { owner, source: "git config --local mano.owner" } : { owner: null, source: null };
+}
+
+function validateTrack(value) {
+  const track = value == null ? "" : String(value).trim();
+  if (!track || track.length > TRACK_MAX_LENGTH || /[\u0000-\u001F\u007F]/.test(track)) {
+    throw new Error(
+      `invalid Mano track ${JSON.stringify(value)}; use 1-${TRACK_MAX_LENGTH} printable characters on one line`,
+    );
+  }
+  return track;
+}
+
+function gitConfigTrack(projectRoot) {
+  const result = childProcess.spawnSync(
+    "git",
+    ["config", "--local", "--get", "mano.track"],
+    { cwd: projectRoot, encoding: "utf8" },
+  );
+  if (result.status !== 0) return null;
+  const value = String(result.stdout || "").trim();
+  return value ? validateTrack(value) : null;
+}
+
+function resolveConfiguredTrack(projectRoot) {
+  if (Object.prototype.hasOwnProperty.call(process.env, "MANO_TRACK")) {
+    const value = String(process.env.MANO_TRACK || "").trim();
+    if (!value) throw new Error("MANO_TRACK is set but empty");
+    return { track: validateTrack(value), source: "MANO_TRACK" };
+  }
+  const track = gitConfigTrack(projectRoot);
+  return track ? { track, source: "git config --local mano.track" } : { track: null, source: null };
 }
 
 const MODES = ["manual", "auto"];
@@ -142,6 +174,7 @@ function phaseRouting(projectRoot, outputDir = path.join(projectRoot, "_mano_out
     : all.filter((ref) => ref.owner === null);
   refs.sort((a, b) => a.number - b.number);
   const run = resolveConfiguredMode(projectRoot);
+  const track = resolveConfiguredTrack(projectRoot);
   return {
     owner: configured.owner,
     ownerSource: configured.source,
@@ -150,6 +183,8 @@ function phaseRouting(projectRoot, outputDir = path.join(projectRoot, "_mano_out
     mode: configured.owner ? "owned" : "legacy",
     runMode: run.mode,
     runModeSource: run.source,
+    track: track.track,
+    trackSource: track.source,
     refs,
     latest: refs.length ? refs[refs.length - 1] : null,
     otherOwners: [...new Set(owned.map((ref) => ref.owner).filter((owner) => owner !== configured.owner))].sort(),
@@ -167,11 +202,14 @@ function reviewHeadingPattern(ref) {
 
 module.exports = {
   OWNER_RE,
+  TRACK_MAX_LENGTH,
   MODES,
   DEFAULT_MODE,
   validateOwner,
+  validateTrack,
   validateMode,
   resolveConfiguredOwner,
+  resolveConfiguredTrack,
   resolveConfiguredMode,
   parsePhaseDirName,
   phaseRef,

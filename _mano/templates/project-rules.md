@@ -1,6 +1,6 @@
 # Project Rules
 
-The team agrees to follow these architectural decisions, styling standards, and workflow patterns. This list can be extended or modified as required down the line. The coding agent must follow these rules without exception on every single story.
+The team agrees to follow these architectural decisions, styling standards, and workflow patterns. This list can change as the project evolves. The coding agent must follow every rule that applies to the current story.
 
 ---
 
@@ -12,14 +12,16 @@ Possible uses:
 - Repeated interactive elements that should stay visually and behaviorally consistent
 - Reusable form controls with project-specific accessibility or validation requirements
 - Cross-screen UI building blocks that would otherwise drift
-- Contracts from the design brief that now need explicit implementation rules
+- Project-wide reuse, accessibility, placement, or extraction conventions prompted by the design brief
 
 Do not duplicate the design brief's shared-component inventory here. If `design-brief.md` already names a component and this section has no extra implementation rule to add, leave it in the design brief only.
 
-For each shared component, describe:
+For each shared component rule, describe:
 - what it is
 - when it must be used
-- any required variants, props, accessibility semantics, or constraints that the coding agent must follow
+- the accessibility, placement, reuse, naming, ownership, or extraction constraint the coding agent must follow
+
+Do not define a particular component's exact props, events, variants, defaults, or state transitions here. `tech-spec.md` owns that consumer-visible contract when a phase depends on it. Reference the spec instead of copying it.
 -->
 
 ---

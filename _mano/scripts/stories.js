@@ -38,8 +38,8 @@
  * A `--story` value is an integer (`3`) or a sub-numbered insertion (`3a`). A
  * trailing positional arg is the project root (default: current dir).
  *
- * Exit code 0 on success (including "no matching row", which is reported).
- * Non-zero only on bad input (missing flags, no index for set-status).
+ * Exit code 0 only when every requested row exists. A missing row fails before
+ * any status is written, so callers can trust a successful status transition.
  */
 
 const fs = require("node:fs");
@@ -271,6 +271,13 @@ function cmdSetStatus(args) {
   }
 
   const results = [...want.values()];
+  const missing = results.filter((r) => r.outcome === "not-found");
+  if (missing.length) {
+    fail(
+      `set-status: no matching row for ${missing.map((r) => r.story).join(", ")}; ` +
+      "no statuses changed",
+    );
+  }
   const changed = results.filter((r) => r.outcome === "set");
   if (changed.length) fs.writeFileSync(file, lines.join("\n"));
 
@@ -279,7 +286,6 @@ function cmdSetStatus(args) {
   for (const r of results) {
     if (r.outcome === "set") process.stdout.write(`  + ${r.story} (${r.was} → ${status})\n`);
     else if (r.outcome === "same") process.stdout.write(`  ~ ${r.story} (already '${status}', left as-is)\n`);
-    else process.stdout.write(`  ? ${r.story} (no matching row — check the number)\n`);
   }
 }
 

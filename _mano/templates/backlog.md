@@ -25,11 +25,12 @@ Do not create phase sections such as `Phase 1`, `Complete in Phase`, or `Deferre
 Do not use checkbox task lists.
 Do not stamp the current phase status until the human has approved that exact phase scope. Default mode uses `in-phase-N`; owner opt-in uses `in-owner-phase-N`.
 Current-phase implementation work belongs in `phase-brief.md` or the phase's story files, not as checklist tasks in the backlog.
-`Source` is optional provenance; omit it when there is no meaningful source.
+`Source` is optional provenance; omit it when there is no meaningful source. `Track` is an optional experiment/direction label (for example, `Option B`); it is not a replacement for Source.
 
 ### [Short title]
 - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap
 - **Source:** [PHASE_ID] / User idea / Review triage / Product brief
+- **Track:** [Optional experiment or direction]
 - **Context:**
   What it is.
   Why it matters or key detail.

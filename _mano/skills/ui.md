@@ -35,7 +35,7 @@ On activation:
 
 ## Inputs
 
-- Phase brief (required — warn if missing)
+- Phase brief (required — stop and route to `mano start` if missing)
 - UX flow (recommended — `mano ui` should know what screens exist before designing)
 - Tech spec (optional — constrains component library choices)
 - `_mano_output/project-rules.md` (optional — a11y rules, component patterns)
@@ -81,7 +81,7 @@ Use this format:
 If you don't care, say "default it" and I'll choose.
 ```
 
-If the user gives no preference, says to default it, or says they have no strong opinion, assume these practical defaults:
+If the project rules or existing design brief already records an accessibility target, preserve it. Never downgrade an existing target because the user says to default unrelated preferences. Otherwise, if the user gives no preference, says to default it, or says they have no strong opinion, assume these practical defaults:
 1. **Accessibility level:** Default to `WCAG 2.1 AA`. Record this conservatively.
 2. **Visual style:** Default to `Clean, minimal, high utility`.
 3. **Mode:** Default to `System preference (light/dark supported)`.
@@ -94,7 +94,7 @@ Use the chosen accessibility target in `design-brief.md`. Do not edit `project-r
 
 Write `_mano_output/design-brief.md`:
 - Accessibility target
-- Framework / component library
+- Framework / component library already selected in `tech-spec.md`, when present. Reference or mirror that choice; do not choose a technical dependency here.
 - Colour palette (6-8 colours, hex values)
 - Typography (font, heading sizes, body, caption)
 - Navigation pattern
@@ -127,7 +127,7 @@ Common components to include **only if they appear in the current scope:**
 - Navigation (only the pattern from the UX flow)
 - Feedback (success, error, loading, empty — only states relevant to this phase)
 
-Every value concrete: hex codes, pixel values, component names.
+Make every owned value concrete: hex codes, named components, and dimensions with platform-native units. Use CSS pixels for web, density-independent pixels for Android, and points for iOS. For other platforms, name the unit explicitly.
 
 If the HTML preview includes a sample screen or composed mockup, the design brief must also include a short "Screen Composition" section for that screen. Describe:
 - the screen name
@@ -213,7 +213,7 @@ Re-run the state projection every time; phase identity is disk state, not conver
 - Keep the current visual system and component guide compact enough to review in under five minutes. Aim for roughly 500-900 words plus concise, phase-labelled Screen Composition entries; do not erase valid prior entries merely to meet the target.
 - Each phase HTML preview is one self-contained file with no external dependencies.
 <!-- /mano-rule: ui-phase-preview-ownership -->
-- Make decisions, not suggestions. Every colour has a hex. Every size has a pixel value.
+- Make decisions, not suggestions. Every colour has a hex. Every size names its platform-appropriate unit.
 - Use real content from the phase brief in the sample mockup, not lorem ipsum.
 - Preference capture must stay short. Do not turn `mano ui` into open-ended design discovery.
 

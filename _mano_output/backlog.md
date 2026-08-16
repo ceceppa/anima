@@ -3057,7 +3057,7 @@
 - **Source:** phase-15 (mano spec)
 - **Context:**
   Anima.on()/Anima.grid() have dedicated convenience factories, but there is no Anima.group() shorthand — only the canonical Motion.group(target_collection, item_motion) builder. Needs its own calling signature designed (what identifies the target collection: an explicit AnimaTargetCollection, a container node, an array of nodes?).
-- **Status:** in-phase-16
+- **Status:** resolved
 
 ### on_started/on_completed set on a child before .then()/.with() combining never fires
 - **Type:** bug
@@ -3071,18 +3071,18 @@
 - **Source:** phase-15 review
 - **Context:**
   Anima.on()/Anima.grid() chains have per-motion with_delay(), but no way to delay the start of the WHOLE combined chain (e.g. after .then()/.with() composition) without setting delay on every individual leaf.
-- **Status:** in-phase-16
+- **Status:** resolved
 
 ### Hide internal builder classes behind a non-public naming convention
 - **Type:** refinement
 - **Source:** phase-15 review
 - **Context:**
   AnimaParallel, AnimaSequence, and similar internal composition classes are currently as visible as the public entry points (Anima.on/Anima.grid/Anima.group). Requested: separate the internal builder/utility API from the intended dev-facing surface so users only naturally reach for Anima.on/Anima.group/Anima.grid.
-- **Status:** in-phase-16
+- **Status:** resolved
 
 ### .wait(seconds) chain method for inline pauses
 - **Type:** feature
 - **Source:** phase-15 review
 - **Context:**
   A .wait(seconds) chain method that delays the START of whatever follows in the chain (equivalent to with_delay() on the next step), so combining via .then()/.with() doesn't require repeating the same delay on every sibling. Must compose additively with an explicit with_delay() on an individual child (e.g. .wait(1) followed by a child with_delay(0.5) should total 1.5s for that child).
-- **Status:** in-phase-16
+- **Status:** resolved

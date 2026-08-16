@@ -25,6 +25,10 @@ Screens:
 2.
 3.
 
+## Player / In-World Interaction
+
+<!-- Use when the phase has player-facing gameplay. For simultaneous choices (tools, buildables, abilities, modes, rewards), state: availability, how the player opens the choice, selection/change, active-choice feedback, execution, locked/unavailable feedback, and cancel/back behaviour. -->
+
 ## Screen Specs
 
 ### [Screen Name]

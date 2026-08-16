@@ -59,7 +59,7 @@ Output format: one bullet per finding. Each finding states the issue, the affect
 
 Do not inspect source code, build output, test output, or any current implementation state. The stories are the source of truth for this review — not the codebase. Do not request the user paste code or run commands to verify against. If a story appears inconsistent with implementation, that is `mano review`'s concern, not this hook's.
 
-Do not modify any files. Report findings only. If the user wants changes made, they will run `mano stories` after reviewing your findings.
+Do not modify any files. Report findings only. Mano keeps `mano stories` active, lists each finding, and applies only the story changes the user selects. Done stories still require lettered corrective work.
 ```
 
 ## Instruction for Mano
