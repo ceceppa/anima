@@ -42,9 +42,13 @@ parser — see [method at] to add to it directly.
 
 ### duration
 
-Total duration in seconds. `0.0` resolves through the same duration chain
-[AnimaPropertyMotion] uses (attached [AnimaBehaviour.default_duration],
-else [member Anima.default_duration]) at playback time.
+Total duration in seconds, as a literal, or an [AnimaValue] resolved once
+at motion start against the live target (`tech-spec.md` §Animation
+catalog, "`typewrite`'s content-length-scaled duration") — e.g.
+`AnimaValue.target(^"text").length().multiply(...)`. `0.0` (the literal
+default) resolves through the same duration chain [AnimaPropertyMotion]
+uses (attached [AnimaBehaviour.default_duration], else [member
+Anima.default_duration]) at playback time.
 
 ### default_ease
 
@@ -116,7 +120,10 @@ regardless, since [method at] always sorts after merging.
 Reports this motion's duration — the same [code]fixed(duration)[/code]
 pattern [method AnimaPropertyMotion.estimate_duration] uses, including
 reporting `fixed(0.0)` verbatim when [member duration] is still
-chain-resolved rather than explicit.
+chain-resolved rather than explicit. When [member duration] is an
+[AnimaValue], reports [constant AnimaDuration.Kind.DYNAMIC] instead — no
+target/context exists at this call site to resolve it against
+(`tech-spec.md` §Animation catalog).
 
 ### create_runtime
 

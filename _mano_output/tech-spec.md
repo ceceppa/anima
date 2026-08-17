@@ -555,6 +555,49 @@ For each public class, generation produces the existing online-reference shape: 
 
 `npm run docs:api` regenerates the API pages. `npm run dev` and `npm run build` run that command before their existing Hugo command, so local previews and production output use the same generated pages. No separate documentation database, metadata file, or third-party parser is introduced.
 
+## Documentation site structure (phase-19)
+
+Phase-19's Features/Guides/Tutorials content (`_mano_output/phase-19/phase-brief.md`) is hand-written prose, the same category as the existing Motion Composer guide (`docs/content/docs/guides/motion-composer/index.md`) — never generated, and never a second explanation of a public member the API-doc pipeline above already covers page-by-page. A guide or tutorial explains *how and why*; the generated `docs/content/docs/anima/*.md` reference explains *what* (every public member) — a guide cross-links to the matching generated page (`[AnimaKeyframeMotion](../../anima/anima-keyframe-motion)`, the exact relative-link pattern `motion-composer/index.md` already uses) rather than restating its member list.
+
+**Five top-level sections** (revised mid-phase — Installation added, Tutorials moved last, per direct user direction after the first four shipped), Lotus Docs' existing `_index.md` front-matter shape (`weight`, `title`, `description`, `icon`, `draft: false` — the exact fields `docs/content/docs/anima/_index.md` and `docs/content/docs/guides/_index.md` already use):
+
+```
+docs/content/docs/
+  installation/  weight: 100   title: "Installation"   (new — see below)
+  features/      weight: 200   title: "Features"
+  anima/         weight: 300   title: "Anima Addon"    (existing, unchanged)
+  guides/        weight: 400   title: "Guides"          (existing, description widened below)
+  tutorials/     weight: 500   title: "Tutorials"       (moved from 100 — see below)
+```
+
+Ordering is no longer the tutorial-first progression originally planned: Installation leads (it's the landing site's "Get Started" button target — see below), Features/Anima Addon/Guides are the lookup layer, and Tutorials sits last by explicit user direction rather than first-for-newbies.
+
+**`Installation` is a new section**, added when the site's landing-page "Get Started" button was found pointing at a page that was never created (`/docs/overview/`, a 404). `docs/content/docs/installation/_index.md` is a branch bundle carrying both the section's nav entry *and* its walkthrough content directly in the same file's body (the same shape `docs/content/docs/anima/_index.md` already uses for its own "Getting started" prose) — no separate child page, since it's one linear walkthrough. Screenshot steps use the existing placeholder convention (`project-rules.md` §Documentation): `![alt](placeholder.png)` plus an HTML comment naming exactly what to capture. `docs/data/landing.toml`'s `[hero.ctaButton].url` now points at `/docs/installation/` instead of the never-created `/docs/overview/`.
+
+**`Guides` section scope widens.** `docs/content/docs/guides/_index.md`'s current `description` ("Step-by-step walkthroughs for the Anima editor tools") and body ("Hand-written walkthroughs for driving Anima's Godot editor tooling") both scope it to editor tooling only — narrower than phase-19's runtime-concept guides, none of which are about editor tooling. Reusing this section rather than adding a fourth top-level "Concepts" section avoids two nav entries a reader would both call "a guide." `motion-composer/` and its images are untouched. New guide pages are plain `.md` files (not leaf bundles — no images, per phase-19's `Not This Phase`), sibling to the `motion-composer/` folder, one file per concept, filename matching the concept in kebab-case.
+
+The Guides set shipped as **seven** pages, not the six originally planned — `reusable-vs-single-shot.md`, `multiple-animations.md`, `animating-relative-values.md`, `dynamic-values.md`, `on-group-grid.md` (added mid-phase: `Anima.on()`/`Anima.group()`/`Anima.grid()` side by side, none of the other guides put all three in one place), and `keyframes.md` (renamed mid-phase from `keyframe-motion.md`/"AnimaKeyframeMotion" to the more general "Keyframes", once the standalone `keyframe-track.md`/"AnimaKeyframeTrack" guide was dropped — its per-stop field detail duplicated territory the generated `AnimaKeyframeTrack`/`AnimaKeyframeStop` reference pages already own; `keyframes.md` links to both instead). `keyframe-motion.md` and `keyframe-track.md` are stale filenames — do not recreate them.
+
+**`Features` is a new section:** two plain `.md` pages, `built-in-animations.md` and `built-in-easings.md` — each a scannable catalogue (every ported preset by category for the first, every named `AnimaEase.Kind` curve for the second) plus one runnable `gdscript` code block showing how to play/apply an entry from that catalogue. No leaf-bundle images.
+
+**`Tutorials` is a new section:** two leaf bundles (Lotus Docs' bundle form, matching `guides/motion-composer/`, so each can hold its own images later even though phase-19 ships none), ordered within the section by per-page `weight` front matter (`1`, `2` — the same numeric-ordering mechanism the top-level sections already use, applied one level down since Tutorials are sequential and Guides/Features are topic-parallel):
+
+```
+docs/content/docs/tutorials/
+  01-basic-animation/index.md    weight: 1   title: "01: Basic Animation"
+  02-popup-animation/index.md    weight: 2   title: "02: Popup Animation"
+```
+
+Tutorial 02's own prose states the dependency on 01 explicitly (its opening line says it continues 01's result) — this is content, not a Hugo mechanism; no `Depends on` front-matter field is introduced.
+
+**Runnable-example convention.** Per the phase's design principle, every Feature, Guide, and Tutorial page contains at least one fenced ` ```gdscript ` block a reader can copy into their own project — the same convention `docs/content/docs/anima/_index.md`'s "Getting started" section and every generated Quick Example already use, extended to hand-written pages. A page with only prose and no runnable block does not satisfy the phase's design principle. Within that block, a motion built via `Anima.on(...)` plays with `.play()` chained directly on it, not `Anima.play(motion, target)` — the convenience form, matching how `docs/content/docs/anima/_index.md` itself already favours `Anima.on()` over hand-built `Motion.to()`. The explicit `Anima.play(motion, target)` form is still correct, and stays, wherever the motion has no captured target — a bare `Anima.animation(name)` catalog preset, or a duplicate of one — since `.play()` errors without one.
+
+**No duplicated page titles.** `docs/themes/lotusdocs/layouts/docs/baseof.html` already renders the page's front-matter `title` as its `<h1>` — a hand-written `# Title` heading repeating that same text at the top of the body is a duplicate, not a second heading level. No page in `features/`, `guides/`, `tutorials/`, or `installation/` opens with one; a page's body starts at its first `##` subsection (or plain prose, for a page with no subsections yet).
+
+**Site-level CSS override mechanism** (added mid-phase, for two readability fixes — the code-block colour scheme and list-item spacing): `docs/hugo.toml`'s `[params.docs].prismTheme` is `"lotusdocs"` (the theme's own default), not a third-party Prism theme. A small site-owned stylesheet, `docs/assets/docs/scss/site-overrides.scss`, holds rules meant to win over the theme's own — compiled and linked *after* the theme's own bundle by `docs/layouts/partials/docs/head.html`, a site-level copy of the theme's `layouts/partials/docs/head.html` with one added compile-and-link block (the same site-level-override-by-matching-path mechanism this project already uses for its landing-page `layouts/partials/head.html` and its `layouts/shortcodes/`). This is the standing mechanism for any future docs-site style tweak: add rules to `site-overrides.scss`, never fork or fully copy a theme SCSS partial (specifically avoided for `assets/docs/scss/custom/structure/_content.scss`, the file that owns the list-spacing rule being overridden, to avoid losing future theme improvements to that 276-line file).
+
+**No new tooling.** `npm run dev`/`npm run build` already build the whole `docs/content/` tree, generated and hand-written pages alike, through the existing Hugo commands (§API documentation pipeline) — phase-19 adds content under that tree, not a new build step, generator, or manifest dependency.
+
 ## Out of Scope
 
 - Legacy dictionary or group-migration compatibility layers.

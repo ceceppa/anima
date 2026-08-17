@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, "..");
 const sourceDirs = [
   path.join(root, "addons/anima/motion/resources"),
   path.join(root, "addons/anima/motion/runtime"),
-  path.join(root, "addons/anima/editor"),
+  // path.join(root, "addons/anima/editor"),
 ];
 const outputDir = path.join(root, "docs/content/docs/anima");
 

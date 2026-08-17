@@ -120,6 +120,18 @@ targets, mirroring [method grid]) or an [Array] of [Node]s (used
 directly). Reports an error and returns `null` for any other type, the
 same fail-fast contract [method on] uses for a `null` target.
 
+### animation
+
+Returns the cached, shared [AnimaMotion] for the ported v1 catalog preset
+named [param name] (e.g. `"fade_in"`, `"bouncing_in_left"`, `"tada"`) —
+`Anima.play(Anima.animation("fade_in"), target)`. The same resource is
+returned whether reached by name here or by referencing its `.tres`
+directly (`tech-spec.md` §Animation catalog). An unregistered [param name]
+reports an error and returns `null`. This never captures a target — the
+returned resource is shared across every caller, so chain-mutating it
+(e.g. `.with_delay()`) affects every later caller of the same name; a
+caller needing an independent copy should `duplicate()` it first.
+
 ### attach_behaviour
 
 Attaches [param behaviour] to [param node] via node metadata — [param node]'s

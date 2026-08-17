@@ -29,7 +29,7 @@ info = "**Open Source** MIT Licensed."
   [hero.ctaButton]
   icon = "rocket_launch"
   btnText = "Get Started"
-  url = "/docs/overview/"
+  url = "/docs/installation/"
 
   [hero.cta2Button]
   icon = "animation"

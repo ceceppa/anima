@@ -380,6 +380,55 @@ title: "Motion Composer"
 <!-- PLACEHOLDER: screenshot needed — Motion Composer dock, docked open, a single AnimaPropertyMotion selected, default/empty state -->
 ```
 
+**What:** A hand-written page about a *runtime* concept (not an `addons/anima/editor/` tool) lives in one of three sections by kind, each with its own `_index.md` (`weight`, `title`, `description`, `icon`, `draft: false`, matching `anima/_index.md`'s existing shape — exact weight values and current section list are `tech-spec.md` §Documentation site structure's, not repeated here): a scannable "what ships" catalogue at `docs/content/docs/features/<slug>.md`; a conceptual "how/why does X work" walkthrough at `docs/content/docs/guides/<slug>.md`, sibling to the existing `motion-composer/` editor-tool guide; a numbered, sequential "build this" walkthrough as a leaf bundle at `docs/content/docs/tutorials/<NN>-<slug>/index.md`, ordered by its own page-level `weight`.
+
+**Why:** A Feature, a Guide, and a Tutorial answer different reader questions — what exists, how does one mechanism work, walk me through building something — and each already has (or, this phase, gains) its own top-level nav section for that reason. Filing a runtime-concept guide inside the generated `anima/` reference, or a build-something walkthrough inside the topic-parallel `Guides` section, would put a reader-question in the wrong drawer.
+
+**Pattern:**
+```
+docs/content/docs/
+  features/
+    built-in-animations.md
+    built-in-easings.md
+  guides/
+    motion-composer/index.md   # editor-tool guide, existing
+    dynamic-values.md          # runtime-concept guide, plain .md — no images
+  tutorials/
+    01-basic-animation/index.md
+    02-popup-animation/index.md
+```
+
+**What:** Every Feature, Guide, and Tutorial page contains at least one fenced ` ```gdscript ` code block a reader can copy directly into their own project and run — never a prose-only explanation. A Tutorial additionally states in its own prose which earlier tutorial it continues from, since Tutorials are ordered and cumulative while Guides and Features are topic-parallel and stand alone.
+
+**Why:** A newcomer deciding whether to trust a claim about Anima needs to see it work, not just read that it does — the same posture `anima/_index.md`'s "Getting started" section already takes, extended uniformly to every hand-written page rather than left to each contributor's judgment.
+
+**Pattern:**
+```md
+Reading a property mid-flight isn't exposed today — but `AnimaValue` can read
+any node's *current* property to build a new animation from it:
+
+```gdscript
+var pulse := Anima.on($Card).scale(Vector2(1.2, 1.2)) \
+    .from(AnimaValue.target(^"scale"))
+```
+```
+
+**What:** In a Feature, Guide, or Tutorial code example, a motion built via `Anima.on(target)` plays with `.play()` chained directly on it, not `Anima.play(motion, target)`. The explicit two-argument form is reserved for a motion with no captured target — a bare `Anima.animation(name)` catalog preset, or a `.duplicate()` of one — where `.play()` would report an error and return `null`.
+
+**Why:** `.play()` is the convenience form `Anima.on()` exists to make reachable — repeating the target a second argument later, when the motion already captured it, contradicts the "hides the complexity" pitch these pages are making. `docs/content/docs/anima/_index.md`'s own "Getting started" section already favours `Anima.on()` over hand-built `Motion.to()` for the identical reason; this rule keeps every hand-written page consistent with it.
+
+**Pattern:**
+```gdscript
+# Built via Anima.on() — captured a target, so .play() works:
+var fade_in := Anima.on($Label).opacity(1.0).from(0.0).with_duration(0.5)
+fade_in.play()
+
+# No captured target (a catalog preset, or a duplicate of one) — .play() would
+# error; use the explicit form instead:
+var my_tada := Anima.animation("tada").duplicate(true) as AnimaMotion
+Anima.play(my_tada, $Card)
+```
+
 ## Example Scenes
 
 **What:** `examples/` splits by what a scene demonstrates. A scene an author *runs* to see the runtime motion API in action — driven by `Anima.play()`, restart/reverse controls, the shared theme and components below — lives under `examples/playground/`. A scene that showcases an `addons/anima/editor/` tool itself — something an author *opens in the Godot editor* to see a panel like the Motion Composer at work, not something that runs as a game — lives under `examples/editor/`. A scripted, self-contained scene built to be captured (screen-recorded or exported via Godot's Movie Writer) for marketing/social content, rather than to demo an API to a developer, lives under `examples/showcase/`.

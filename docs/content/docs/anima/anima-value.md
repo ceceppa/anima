@@ -164,6 +164,13 @@ Negates this value. See [method add] for the "returns a new AnimaValue" contract
 
 Resolves to the absolute value of this value.
 
+### length
+
+Resolves to the character count of this value's resolved [String] — e.g.
+a target's own `text` length, for a content-length-scaled duration
+(`tech-spec.md` §Animation catalog, "`typewrite`'s content-length-scaled
+duration").
+
 ### clamp
 
 Clamps this value between [param min_value] and [param max_value] (each a

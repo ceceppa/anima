@@ -3,15 +3,13 @@ title: "Motion Composer"
 description: "How to open, edit, and inspect Anima motions from the Godot editor."
 ---
 
-# Motion Composer
-
 ## What it does
 
-The Motion Composer is a bottom-panel dock, labelled **Anima**, that lets you
-open any [`AnimaMotion`](../../anima/anima-motion) resource and edit it — the same
-resource your code plays with [`Anima.play()`](../../anima/anima). Editing a value
-here changes the authored resource directly; there is no separate visual-only
-copy, so what you see in the panel is exactly what plays.
+The Motion Composer lets you open any [`AnimaMotion`](../../anima/anima-motion)
+resource and edit it — the same resource your code plays with
+[`Anima.play()`](../../anima/anima). Editing a value here changes the
+authored resource directly; there is no separate visual-only copy, so what
+you see in the panel is exactly what plays.
 
 It has three views, and you move between them as you work:
 

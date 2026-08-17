@@ -3107,18 +3107,25 @@
 - **Source:** user idea
 - **Context:**
   We need to document how to use AnimaKeyframeTrack as I have no idea how it works.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Guide: AnimaKeyframeMotion
 - **Type:** feature
 - **Source:** user idea
 - **Context:**
   We need to document how to use AnimaKeyframeMotion as I have no idea how it works.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Anima usage guide/tutorial (on/group/grid, built-ins, keyframes, dynamic values, easings)
 - **Type:** feature
 - **Source:** phase-18 review
 - **Context:**
   A guide/tutorial with runnable examples covering Anima.on, Anima.group, and Anima.grid, each demonstrating built-in (catalog) animations, keyframes, dynamic values, and easings. Requested during phase-18 review.
+- **Status:** resolved
+
+### Guide: querying a motion's current live value
+- **Type:** feature
+- **Source:** phase-19 scoping
+- **Context:**
+  v1 documented how to read a target's current animated value mid-flight. v2 has no public query API for this yet (only a future Composer editor panel touches it), so this guide was dropped from phase-19. Revisit once such an API exists.
 - **Status:** backlog

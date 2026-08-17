@@ -148,3 +148,33 @@
 ### Backlog changes
 
 - feature "Anima usage guide/tutorial (on/group/grid, built-ins, keyframes, dynamic values, easings)" — added: runnable examples covering `Anima.on`/`Anima.group`/`Anima.grid`, each demonstrating built-in animations, keyframes, dynamic values, and easings
+
+## Phase 19 Review — 2026-08-19
+
+### Validation
+
+- **Result:** Everything was tested. The documentation covers basic plus some advanced material, suitable for a newbie.
+
+### Phase checks
+
+| Phase promise | Result | What happened |
+|---|---|---|
+| Features | passed | |
+| Guides | passed | |
+| Tutorials | passed | |
+| Site builds | passed | |
+
+### Decision
+
+- **Choice:** Keep the documentation as shipped
+- **Why:** Yes, the docs cover basic plus some advanced stuff, suitable for a newbie
+
+### Assumptions
+
+| Assumption | Result | What showed this |
+|-----------|---------|------------------------|
+| This phase's Features/Guides/Tutorials set is a deliberately narrowed, hand-picked slice of the deferred "Full documentation structure" backlog item — not the final information architecture. | confirmed | |
+
+### Backlog changes
+
+- None
