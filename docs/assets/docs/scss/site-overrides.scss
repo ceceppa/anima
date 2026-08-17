@@ -1,0 +1,11 @@
+// Site-owned overrides layered on top of the LotusDocs theme's own docs.scss.
+// Kept separate from the theme's own SCSS so a theme update never silently
+// drops these — see docs/layouts/partials/docs/head.html for how this file
+// is compiled and linked after the theme's own stylesheet.
+
+// The theme's own list styling (assets/docs/scss/custom/structure/_content.scss)
+// sets no space between list items — cramped for a multi-item list.
+.docs-content .main-content ul > li,
+.docs-content .main-content ol > li {
+    margin-bottom: 0.5rem;
+}
