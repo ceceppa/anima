@@ -60,6 +60,8 @@ enum Kind {
 	COMPONENT,
 	## Result of an author-supplied custom calculation — see [method custom].
 	CUSTOM,
+	## Character count of one operand's resolved [String] — see [method length].
+	LENGTH,
 }
 
 ## Which source [method resolve] reads from.
@@ -213,6 +215,16 @@ func absolute() -> AnimaValue:
 	result.operands = [self]
 	return result
 
+## Resolves to the character count of this value's resolved [String] — e.g.
+## a target's own `text` length, for a content-length-scaled duration
+## (`tech-spec.md` §Animation catalog, "`typewrite`'s content-length-scaled
+## duration").
+func length() -> AnimaValue:
+	var result := AnimaValue.new()
+	result.kind = Kind.LENGTH
+	result.operands = [self]
+	return result
+
 ## Clamps this value between [param min_value] and [param max_value] (each a
 ## literal or another [AnimaValue]) — the resolved result never falls outside
 ## those bounds, even when this value's own resolution would otherwise exceed
@@ -342,6 +354,11 @@ func resolve(context: AnimaValueContext) -> Variant:
 				_:
 					push_error("AnimaValue.component(): index %d is not a valid vector component" % component_index)
 					return null
+		Kind.LENGTH:
+			var length_operand: Variant = _resolve_operand(operands[0], context)
+			if length_operand == null:
+				return 0
+			return String(length_operand).length()
 		Kind.CUSTOM:
 			return custom_callable.call(context)
 		_:

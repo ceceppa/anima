@@ -3,7 +3,8 @@ extends PanelContainer
 
 const INDICATOR_BG := Color(0.309804, 0.27451, 0.898039, 1.0) # accent
 const INDICATOR_RADIUS := 12
-const MOVE_DURATION := 0.26
+var MOVE_DURATION := 0.3
+const MARGIN = 6
 
 ## [HFlowContainer] (horizontal, wrapping) in the default `selector_dock.tscn`,
 ## or [VBoxContainer] in `selector_dock_vertical.tscn` — the indicator
@@ -11,6 +12,8 @@ const MOVE_DURATION := 0.26
 ## orientation works with no script changes (project-rules.md §Selector
 ## Orientation).
 @onready var _items_box: Container = %Items
+
+@export var auto_size := false
 
 ## The indicator's logical target, updated synchronously on every select() —
 ## independent of how far the animated (tweened) visual has actually moved,
@@ -28,7 +31,7 @@ var _indicator_size := Vector2.ZERO:
 		_indicator_size = value
 		queue_redraw()
 
-var _indicator_tween: Tween
+var _indicator_playback: AnimaPlayback
 var selected_index := -1
 
 func _ready() -> void:
@@ -45,12 +48,33 @@ func _ready() -> void:
 	dock_style.corner_radius_bottom_left = 16
 	dock_style.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
 	dock_style.shadow_size = 8
-	dock_style.content_margin_left = 6
-	dock_style.content_margin_right = 6
-	dock_style.content_margin_top = 6
-	dock_style.content_margin_bottom = 6
+	dock_style.content_margin_left = MARGIN
+	dock_style.content_margin_right = MARGIN
+	dock_style.content_margin_top = MARGIN
+	dock_style.content_margin_bottom = MARGIN
 
 	add_theme_stylebox_override("panel", dock_style)
+	
+	if auto_size:
+		_auto_size_me()
+
+func _auto_size_me():
+	await get_tree().process_frame
+
+	var w := 0.0
+	
+	for child in %Items.get_children():
+		w += child.size.x
+		
+	custom_minimum_size.x = ceil(w + MARGIN * 2 + 8)
+	
+	await get_tree().process_frame
+	
+	MOVE_DURATION = 0.01
+
+	select(selected_index)
+	
+	MOVE_DURATION = 0.3
 
 ## Drawn directly (rather than as a real child Control) so the sliding
 ## indicator can be freely positioned without fighting the HBoxContainer's
@@ -127,8 +151,8 @@ func _move_indicator_to(target_position: Vector2, target_size: Vector2) -> void:
 	indicator_target_position = target_position
 	indicator_target_size = target_size
 
-	if _indicator_tween != null and _indicator_tween.is_valid():
-		_indicator_tween.kill()
+	if _indicator_playback != null and _indicator_playback.state == AnimaPlayback.State.PLAYING:
+		_indicator_playback.cancel()
 
 	if _indicator_size == Vector2.ZERO:
 		# First selection — snap instead of animating in from a zero-size rect.
@@ -136,8 +160,8 @@ func _move_indicator_to(target_position: Vector2, target_size: Vector2) -> void:
 		_indicator_size = target_size
 		return
 
-	_indicator_tween = create_tween()
-	_indicator_tween.set_parallel(true)
-	_indicator_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_indicator_tween.tween_property(self, "_indicator_position", target_position, MOVE_DURATION)
-	_indicator_tween.tween_property(self, "_indicator_size", target_size, MOVE_DURATION)
+	var move := Anima.on(self).property(^"_indicator_position", target_position, MOVE_DURATION) \
+		.with_ease(AnimaEase.Kind.EASE_OUT_BACK)
+	var resize := Anima.on(self).property(^"_indicator_size", target_size, MOVE_DURATION) \
+		.with_ease(AnimaEase.Kind.EASE_OUT_BACK)
+	_indicator_playback = move.with(resize).play()

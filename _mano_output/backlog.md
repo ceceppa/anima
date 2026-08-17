@@ -3064,7 +3064,7 @@
 - **Source:** phase-15 (mano spec, story 8e)
 - **Context:**
   A callback set via .on_started()/.on_completed() on a motion before folding it into a .then()/.with() composite is never invoked — only the composite's own top-level callback fires, since AnimaPlayback only calls back on the root motion (AnimaPlayback._fire_started()/_advance()'s on_completed check both read motion.on_started_callback/on_completed_callback on the root only). Discovered via examples/showcase/grid/scene_3.gd combining two Anima.grid() chains, each with its own .on_started() set before .with(). No fix attempted yet — needs a design decision on whether AnimaSequenceInstance/AnimaParallelInstance should fire each child's own callbacks as it starts/finishes them.
-- **Status:** in-phase-18
+- **Status:** resolved
 
 ### play_with_delay() to delay the whole chain
 - **Type:** refinement
@@ -3100,4 +3100,25 @@
 - **Context:**
   A scene to preview every ported v1 preset by category, so the phase-17 catalog can be visually/experientially verified, not just automated-tested.
   Design already sketched via mano ui: design-brief.md (Category sidebar/Animation grid), phase-17/design-preview.html.
-- **Status:** in-phase-18
+- **Status:** resolved
+
+### Guide: AnimaKeyframeTrack
+- **Type:** feature
+- **Source:** user idea
+- **Context:**
+  We need to document how to use AnimaKeyframeTrack as I have no idea how it works.
+- **Status:** backlog
+
+### Guide: AnimaKeyframeMotion
+- **Type:** feature
+- **Source:** user idea
+- **Context:**
+  We need to document how to use AnimaKeyframeMotion as I have no idea how it works.
+- **Status:** backlog
+
+### Anima usage guide/tutorial (on/group/grid, built-ins, keyframes, dynamic values, easings)
+- **Type:** feature
+- **Source:** phase-18 review
+- **Context:**
+  A guide/tutorial with runnable examples covering Anima.on, Anima.group, and Anima.grid, each demonstrating built-in (catalog) animations, keyframes, dynamic values, and easings. Requested during phase-18 review.
+- **Status:** backlog

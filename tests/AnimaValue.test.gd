@@ -116,6 +116,35 @@ func test_group_and_grid_position_sources_resolve_to_their_sentinel_outside_a_gr
 	assert_eq(AnimaValue.grid_row().resolve(context), -1)
 	assert_eq(AnimaValue.grid_column().resolve(context), -1)
 
+func test_length_resolves_to_the_character_count_of_a_string_property():
+	var label := Label.new()
+	add_child_autofree(label)
+	label.text = "hello"
+
+	var value := AnimaValue.target(NodePath("text")).length()
+	var context := AnimaValueContext.new(label)
+
+	assert_eq(value.resolve(context), 5)
+
+func test_length_composes_with_arithmetic_like_any_other_value():
+	var label := Label.new()
+	add_child_autofree(label)
+	label.text = "hello"
+
+	var value := AnimaValue.target(NodePath("text")).length().multiply(0.7)
+	var context := AnimaValueContext.new(label)
+
+	assert_almost_eq(value.resolve(context), 3.5, 0.001)
+
+func test_length_of_an_undefined_property_resolves_to_zero_not_an_error():
+	var sprite := Sprite2D.new()
+	add_child_autofree(sprite)
+
+	var value := AnimaValue.target(NodePath("text")).length()
+	var context := AnimaValueContext.new(sprite)
+
+	assert_eq(value.resolve(context), 0)
+
 func test_the_same_base_value_combined_two_ways_stays_independent():
 	var base := AnimaValue.constant(10.0)
 	var doubled := base.multiply(2.0)

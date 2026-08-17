@@ -24,7 +24,7 @@ Depends on story-1's registry mechanism and folder scaffold; this story only add
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)` — `tech-spec.md` §Keyframe motions.
-- **Files:** `addons/anima/presets/fading_entrances/` — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/entrance/` — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/fading_entrances/*.gd` in the v1 project.
 - **Dynamic values:** every directional preset's starting offset (and the `_big` variants' parent-width/height-dependent offset) translates through `AnimaValue.*` per `tech-spec.md` §Animation catalog and the canonical mapping convention in `project-rules.md` §Animation Catalog — reuse the same `.target()`/`.node(^"..", ...)`/arithmetic shape for every preset sharing the same v1 formula idiom.
 - **Rules:** one resolved-value unit test per preset — `project-rules.md` §Animation Catalog.

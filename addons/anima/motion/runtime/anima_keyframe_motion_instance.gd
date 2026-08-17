@@ -126,10 +126,15 @@ func force_complete(target: Node) -> void:
 
 ## Resolves the duration this run actually uses — the same chain
 ## [method AnimaPropertyMotionInstance._resolve_duration] applies: an
-## explicitly positive [member AnimaKeyframeMotion.duration] wins outright;
-## otherwise [param target]'s attached [AnimaBehaviour.default_duration],
-## else the project-level [member Anima.default_duration].
+## [member AnimaKeyframeMotion.duration] that is an [AnimaValue] resolves
+## through the same [method _resolve_dynamic] seam every other dynamic value
+## uses (`tech-spec.md` §Animation catalog); otherwise an explicitly positive
+## literal [member AnimaKeyframeMotion.duration] wins outright; otherwise
+## [param target]'s attached [AnimaBehaviour.default_duration], else the
+## project-level [member Anima.default_duration].
 func _resolve_duration(target: Node, keyframe_motion: AnimaKeyframeMotion) -> float:
+	if keyframe_motion.duration is AnimaValue:
+		return _resolve_dynamic(keyframe_motion.duration, target)
 	if keyframe_motion.duration > 0.0:
 		return keyframe_motion.duration
 

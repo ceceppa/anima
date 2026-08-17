@@ -209,18 +209,21 @@
 
 **What the user sees:**
 - The shared example header, and a category sidebar listing all 16 categories, mirroring Anima v1's own source folders (Attention Seeker, Back Entrances, Back Exits, Bouncing Entrances, Bouncing Exits, Fading Entrances, Fading Exits, Lightspeed, Rotating Entrances, Rotating Exits, Slide Exits, Sliding Entrances, Specials, Text, Zooming Entrances, Zooming Exits) — one is always selected, Attention Seeker by default on first open.
-- A live preview stage showing the currently selected preset playing on loop, named on screen so what's playing is never ambiguous.
+- A target-mode control (`Both` / `Control` / `Sprite2D`) at the top of the stage — `Both` selected by default.
+- A live preview stage below it: with `Both` selected, a split view — a plain "anima" label on the left (the target every preset except `lightspeed` plays on), the sprite placeholder on the right (the target `lightspeed` presets play on). No separate title text — the grid's own selected button already names the current preset.
 - A grid of buttons below the stage, one per preset in the selected category — one is always selected, the first in the category by default when the category changes.
 - The shared playback controls (restart, reverse, complete, revert, speed, reduced-motion) — unchanged from every other playground, acting on whatever preset is currently playing.
 
 **What the user can do:**
 - Choose a different category from the sidebar.
 - Choose a different preset from the grid.
+- Choose a different target-mode (`Both` / `Control` / `Sprite2D`).
 - Use the shared playback controls on the currently playing preset.
 
 **What happens on action:**
-- Choosing a category updates the grid to that category's presets and immediately plays the first one in the stage — the previous category's selection is not remembered when switching back to it later.
-- Choosing a preset from the grid immediately replays that exact preset in the stage from its start; no confirmation step, since nothing here is destructive.
+- Choosing a category updates the grid to that category's presets and immediately plays the first one on its target — the previous category's selection is not remembered when switching back to it later.
+- Choosing a preset from the grid immediately replays that exact preset, on whichever target it's compatible with, from its start; no confirmation step, since nothing here is destructive.
+- Choosing `Control` shows only the label, full width; choosing `Sprite2D` shows only the sprite, full width; choosing `Both` shows the split view again. This only changes which target(s) are visible — it never changes which target the current preset actually animates on, so picking a mode that hides the animating target just shows nothing moving until `Both` (or the matching mode) is chosen again.
 - Every category and every preset within it is always available — nothing in this playground is ever locked or requires unlocking; the only exclusion is that a preset from one category is never shown while a different category is selected.
 - The playback controls behave exactly as they already do on every other playground scene; this phase adds no new control.
 

@@ -70,3 +70,46 @@ func test_selector_button_set_selected_does_not_render_its_own_fill():
 	await dock.select(0)
 	var button: SelectorButton = dock.get_item(0)
 	assert_true(button.get_theme_stylebox("normal") is StyleBoxEmpty, "SelectorDock owns the shared indicator fill, not each SelectorButton")
+
+func test_first_selection_snaps_the_indicator_with_no_animation():
+	var dock := _make_dock(3)
+	await dock.select(1)
+
+	var rect1 := dock._rect_for_index(1)
+	assert_eq(dock._indicator_position, rect1.position, "the very first selection should snap immediately, not animate in")
+	assert_eq(dock._indicator_size, rect1.size)
+
+func test_select_animates_the_indicator_from_its_previous_rect_to_the_new_one():
+	var dock := _make_dock(3)
+	await dock.select(0)
+	var start_position := dock._indicator_position
+
+	dock.select(2)
+	await wait_process_frames(2)
+
+	var rect2 := dock._rect_for_index(2)
+	assert_ne(dock._indicator_position, start_position, "the indicator should have started moving away from its previous position")
+	assert_ne(dock._indicator_position, rect2.position, "the indicator should not have arrived yet after only a couple of frames")
+
+	await wait_process_frames(60)
+	assert_almost_eq(dock._indicator_position.x, rect2.position.x, 1.0)
+	assert_almost_eq(dock._indicator_position.y, rect2.position.y, 1.0)
+	assert_almost_eq(dock._indicator_size.x, rect2.size.x, 1.0)
+	assert_almost_eq(dock._indicator_size.y, rect2.size.y, 1.0)
+
+func test_reselecting_mid_animation_retargets_without_jumping_to_the_first_item():
+	var dock := _make_dock(3)
+	await dock.select(0)
+	var rect0 := dock._rect_for_index(0)
+
+	dock.select(2)
+	await wait_process_frames(2)
+	dock.select(1)
+	await wait_process_frames(1)
+
+	assert_ne(dock._indicator_position, rect0.position, "retargeting mid-flight should not jump back to the very first item's position")
+
+	await wait_process_frames(60)
+	var rect1 := dock._rect_for_index(1)
+	assert_almost_eq(dock._indicator_position.x, rect1.position.x, 1.0)
+	assert_almost_eq(dock._indicator_position.y, rect1.position.y, 1.0)

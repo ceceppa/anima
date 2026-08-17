@@ -95,6 +95,8 @@ layout_mode = 2
 [node name="SpeedDock" parent="." unique_id=999445498 instance=ExtResource("4_speed")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 1
+auto_size = true
 
 [node name="ReducedMotionRow" type="HBoxContainer" parent="." unique_id=1267422110]
 layout_mode = 2

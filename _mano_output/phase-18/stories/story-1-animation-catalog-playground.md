@@ -4,7 +4,7 @@
 A developer wanting to see whether a ported preset actually looks right currently has to write a scratch scene and call `Anima.animation(name)` by hand. This story adds a playground scene — a category sidebar, a live preview stage, and a grid of preset buttons — so any of the 99 ported presets can be browsed and watched in seconds.
 
 #### Done when
-- [ ] Opening the playground scene shows: the category sidebar with all 16 categories listed (mirroring Anima v1's own source folders), one selected by default (`attention_seeker`, the alphabetically-first category), and the stage already playing a preset from that category.
+- [ ] Opening the playground scene shows: the category sidebar with all 5 categories listed, one selected by default (`attention`, the alphabetically-first category), and the stage already playing a preset from that category.
 - [ ] Selecting a different category in the sidebar:
   - The grid below the stage updates to that category's preset names.
   - The first preset in the new category (alphabetically) starts playing in the stage immediately, with no extra click needed.
@@ -32,10 +32,6 @@ A developer wanting to see whether a ported preset actually looks right currentl
 - **Files:** shared components under `examples/playground/shared/components/`; the playground scene itself under `examples/playground/` — `project-rules.md` §Example Scenes, §Folder Structure.
 - **Rules:** a unit test for the scene-local enumeration helper (category list, per-category name list, unknown-category behaviour) — `project-rules.md` §Testing.
 - **Do not:** no new playback control — the existing shared bar is reused exactly as every other playground uses it; no new `AnimaMotion`/registry mechanism; no addition to `anima.gd`'s public surface.
-
-## Changes
-
-- Category taxonomy: reworked from the original 5-bucket scheme (Attention/Entrance/Exit/Special/Text, collapsed by `_in`/`_out` suffix) to mirror Anima v1's own 16 source folders exactly, because the collapsed scheme put 44 unrelated presets under one "entrance" folder. All 99 `.tres` presets were physically moved to the new folders; the registry (`anima_animation_registry.gd`) and `tech-spec.md`/`project-rules.md` were updated to match.
 
 ---
 <!-- ⚠️ When this story is implemented, mark it done via `stories.js set-status` (AGENTS.md step 11) — don't hand-edit the index. -->

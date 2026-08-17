@@ -21,7 +21,7 @@ Depends on story-1.
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)`; the corner-pivoted variants set `default_pivot` (`TOP_LEFT`/`TOP_RIGHT`/`BOTTOM_LEFT`/`BOTTOM_RIGHT`) — `tech-spec.md` §Keyframe motions ("Pivot"), §Motion pivot control.
-- **Files:** `addons/anima/presets/rotating_entrances/` (the `_in` presets), `addons/anima/presets/rotating_exits/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/entrance/` (the `_in` presets), `addons/anima/presets/exit/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/rotating_entrances/*.gd` and `addons/anima/animations/rotating_exits/*.gd` in the v1 project.
 - **Rules:** one resolved-value unit test per preset, including a check that a corner-pivoted preset's pivot resolves to the named corner — `project-rules.md` §Animation Catalog.
 - **Do not:** no new `AnimaMotion` subtype or field.

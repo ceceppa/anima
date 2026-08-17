@@ -18,7 +18,7 @@ Depends on story-1.
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)`, `"from"`/`"to"` offsets — `tech-spec.md` §Keyframe motions ("Offset resolution").
-- **Files:** `addons/anima/presets/sliding_entrances/` (the `_in` presets), `addons/anima/presets/slide_exits/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/entrance/` (the `_in` presets), `addons/anima/presets/exit/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/sliding_entrances/*.gd` and `addons/anima/animations/slide_exits/*.gd` in the v1 project.
 - **Dynamic values:** each offset is `AnimaValue.target(...)`-based (own size only, no parent term) — canonical mapping convention, `project-rules.md` §Animation Catalog.
 - **Rules:** one resolved-value unit test per preset, plus the target-size-change check above — `project-rules.md` §Animation Catalog.

@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://cmw2s8xshnoq" path="res://examples/playground/animation_catalog_playground.gd" id="1"]
 [ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="2"]
 [ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://bm5a0hngixu2r" path="res://examples/playground/shared/components/card.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://examples/playground/shared/components/selector_dock_vertical.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://dpj05faeq0rg7" path="res://examples/playground/shared/components/selector_dock_vertical.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="7"]
+[ext_resource type="Script" uid="uid://dqjavtev5uycq" path="res://examples/playground/animation_catalog_sprite.gd" id="8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qwik5"]
 content_margin_left = 32.0
@@ -103,16 +103,19 @@ layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="StageTitle" type="Label" parent="Margin/Content/Body/Main/Stage/StageContent" unique_id=1415525026]
+[node name="TargetModeRow" type="HBoxContainer" parent="Margin/Content/Body/Main/Stage/StageContent" unique_id=1889696275]
+layout_mode = 2
+alignment = 1
+
+[node name="TargetModeDock" parent="Margin/Content/Body/Main/Stage/StageContent/TargetModeRow" unique_id=1951509739 instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
-theme_override_font_sizes/font_size = 20
-text = "bounce"
-horizontal_alignment = 1
+size_flags_horizontal = 1
+auto_size = true
 
 [node name="CardStage" type="Control" parent="Margin/Content/Body/Main/Stage/StageContent" unique_id=665743343]
-custom_minimum_size = Vector2(0, 260)
+custom_minimum_size = Vector2(0, 380)
+clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -126,7 +129,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CardCenter" type="Control" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage" unique_id=1589195871]
+[node name="SplitRow" type="HBoxContainer" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage" unique_id=1043722903]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -134,14 +137,30 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 24
 
-[node name="Card" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage/CardCenter" unique_id=1187513008 instance=ExtResource("4")]
+[node name="ControlSlot" type="Control" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage/SplitRow" unique_id=176252287]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ControlLabel" type="Label" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage/SplitRow/ControlSlot" unique_id=1749210756]
 unique_name_in_owner = true
 layout_mode = 0
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 32
+text = "anima"
 
-[node name="Sprite" type="Sprite2D" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage/CardCenter" unique_id=570956303]
+[node name="SpriteSlot" type="Control" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage/SplitRow" unique_id=877824630]
 unique_name_in_owner = true
-visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Sprite" type="Sprite2D" parent="Margin/Content/Body/Main/Stage/StageContent/CardStage/SplitRow/SpriteSlot" unique_id=1692445987]
+unique_name_in_owner = true
+script = ExtResource("8")
 
 [node name="GridMargin" type="MarginContainer" parent="Margin/Content/Body/Main" unique_id=79949467]
 layout_mode = 2

@@ -33,10 +33,14 @@ const _SEMANTIC_PROPERTY_PATHS := {
 ## This motion's tracks, one per animated property. Built and owned by the
 ## parser — see [method at] to add to it directly.
 @export var tracks: Array[AnimaKeyframeTrack] = []
-## Total duration in seconds. `0.0` resolves through the same duration chain
-## [AnimaPropertyMotion] uses (attached [AnimaBehaviour.default_duration],
-## else [member Anima.default_duration]) at playback time.
-@export var duration: float = 0.0
+## Total duration in seconds, as a literal, or an [AnimaValue] resolved once
+## at motion start against the live target (`tech-spec.md` §Animation
+## catalog, "`typewrite`'s content-length-scaled duration") — e.g.
+## `AnimaValue.target(^"text").length().multiply(...)`. `0.0` (the literal
+## default) resolves through the same duration chain [AnimaPropertyMotion]
+## uses (attached [AnimaBehaviour.default_duration], else [member
+## Anima.default_duration]) at playback time.
+@export var duration: Variant = 0.0
 ## Easing used for a stop that doesn't set its own [member AnimaKeyframeStop.ease].
 @export var default_ease: AnimaEase = AnimaEase.new()
 ## Pivot used when no stop declares its own [member AnimaKeyframeStop.pivot]
@@ -82,7 +86,7 @@ func at(offsets: Variant, values: Dictionary) -> AnimaKeyframeMotion:
 ## `with_duration`/`with_ease`/`with_delay` — a bare method name would
 ## collide with the field of the same name. Returns self so calls can keep
 ## chaining.
-func with_duration(value: float) -> AnimaKeyframeMotion:
+func with_duration(value: Variant) -> AnimaKeyframeMotion:
 	duration = value
 	return self
 
@@ -162,8 +166,13 @@ func _track_for(property_path: NodePath) -> AnimaKeyframeTrack:
 ## Reports this motion's duration — the same [code]fixed(duration)[/code]
 ## pattern [method AnimaPropertyMotion.estimate_duration] uses, including
 ## reporting `fixed(0.0)` verbatim when [member duration] is still
-## chain-resolved rather than explicit.
+## chain-resolved rather than explicit. When [member duration] is an
+## [AnimaValue], reports [constant AnimaDuration.Kind.DYNAMIC] instead — no
+## target/context exists at this call site to resolve it against
+## (`tech-spec.md` §Animation catalog).
 func estimate_duration() -> AnimaDuration:
+	if duration is AnimaValue:
+		return AnimaDuration.dynamic()
 	return AnimaDuration.fixed(duration)
 
 ## Builds the runtime instance that advances every track together. See

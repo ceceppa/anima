@@ -17,7 +17,7 @@ Depends on story-1.
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)` — `tech-spec.md` §Keyframe motions.
-- **Files:** `addons/anima/presets/back_entrances/` (the `_in` presets), `addons/anima/presets/back_exits/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/entrance/` (the `_in` presets), `addons/anima/presets/exit/` (the `_out` presets) — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/back_entrances/*.gd` and `addons/anima/animations/back_exits/*.gd` in the v1 project.
 - **Rules:** one resolved-value unit test per preset — `project-rules.md` §Animation Catalog.
 - **Do not:** no new `AnimaMotion` subtype or field.

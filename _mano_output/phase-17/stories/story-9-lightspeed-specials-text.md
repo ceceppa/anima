@@ -13,7 +13,7 @@ The remaining 9 v1 presets that don't fit the fade/slide/zoom/rotate/bounce/back
   - `roll_out`: starts fully opaque, at rest, and unrotated; ends transparent, offset to the right by its own size, and rotated.
   - `typewrite`: starts with none of its text visible and ends with all of it visible, revealing progressively over its playback — its duration is an explicit, fixed value like every other preset in this catalog, not automatically scaled by the text's length.
 - [ ] All 9 presets above are loadable and playable by name and by asset — none are missing.
-- [ ] **Full-catalog check:** across the whole phase, every one of the 99 v1 source animations (`addons/anima/animations/**/*.gd` in the v1 project) has a corresponding ported preset in this catalog, and each of the sixteen categories (mirroring Anima v1's own source folders) contains at least one preset.
+- [ ] **Full-catalog check:** across the whole phase, every one of the 99 v1 source animations (`addons/anima/animations/**/*.gd` in the v1 project) has a corresponding ported preset in this catalog, and each of the five categories (attention, entrance, exit, special, text) contains at least one preset.
 - [ ] **Access-path check:** for at least one preset from each of story-1 through story-9, `Anima.animation(name)` and playing that preset's `.tres` directly produce the identical animation — confirming the by-name and by-asset paths stay consistent across the whole catalog, not just the first preset added in story-1.
 
 #### Not this story
@@ -28,16 +28,12 @@ This is the phase's closing story — its full-catalog and access-path checks ar
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)` — `tech-spec.md` §Keyframe motions.
-- **Files:** `addons/anima/presets/lightspeed/` (`light_speed_in_*`, `light_speed_out_*`), `addons/anima/presets/specials/` (`hinge`, `jack_in_the_box`, `roll_in`, `roll_out`), `addons/anima/presets/text/` (`typewrite`) — `project-rules.md` §Animation Catalog. (Folder names updated in phase-18 — see Changes below.)
+- **Files:** `addons/anima/presets/entrance/` (`light_speed_in_*`, `roll_in`), `addons/anima/presets/exit/` (`light_speed_out_*`, `roll_out`), `addons/anima/presets/special/` (`hinge`, `jack_in_the_box`), `addons/anima/presets/text/` (`typewrite`) — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/lightspeed/*.gd`, `addons/anima/animations/specials/*.gd`, `addons/anima/animations/text/typewrite.gd` in the v1 project.
 - **Dynamic values:** `light_speed_*`'s skew writes to `transform:x:y` as a generic property path (no `skew` property exists natively) — `tech-spec.md` §Animation catalog. `roll_in`/`roll_out`'s size-dependent offset uses the canonical `AnimaValue` mapping convention — `project-rules.md` §Animation Catalog. `hinge`/`jack_in_the_box` set `default_pivot` (`TOP_LEFT` / `BOTTOM_CENTER`) — `tech-spec.md` §Keyframe motions ("Pivot").
 - **Duration:** `typewrite`'s `duration` is supplied explicitly, per `tech-spec.md` §Animation catalog ("Duration is never a dynamic value") — do not attempt to scale it by the target's text length.
 - **Rules:** one resolved-value unit test per preset — `project-rules.md` §Animation Catalog.
 - **Do not:** no new `AnimaMotion` subtype or field; no `skew` field added to any resource — `transform:x:y` is a plain generic property path, not a new named concept.
-
-## Changes
-
-- Category taxonomy: reworked in phase-18 from the original 5-bucket scheme (attention/entrance/exit/special/text) to mirror Anima v1's own 16 source folders exactly. `light_speed_in_*`/`light_speed_out_*` moved to `lightspeed/`; `hinge`/`jack_in_the_box`/`roll_in`/`roll_out` all moved to `specials/` (previously split across `special/`/`entrance/`/`exit/`). `typewrite` stayed in `text/`.
 
 ---
 <!-- ⚠️ When this story is implemented, mark it done via `stories.js set-status` (AGENTS.md step 11) — don't hand-edit the index. -->

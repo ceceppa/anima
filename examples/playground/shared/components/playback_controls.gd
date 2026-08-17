@@ -38,6 +38,7 @@ func _ready() -> void:
 		button.text = SPEED_LABELS[i]
 		button.pressed.connect(_on_speed_button_pressed.bind(i))
 		_speed_dock.add_item(button)
+
 	_speed_dock.select(DEFAULT_SPEED_INDEX)
 
 	_reduced_motion_toggle.toggled.connect(func(enabled: bool) -> void: reduced_motion_toggled.emit(enabled))

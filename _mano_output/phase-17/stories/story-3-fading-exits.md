@@ -23,7 +23,7 @@ Depends on story-1. `fade_out_left_big` is this phase's reference case for the d
 
 #### Implementation Reference
 - **Build:** each preset an `AnimaKeyframeMotion` via `Motion.keyframes(initial)` — `tech-spec.md` §Keyframe motions.
-- **Files:** `addons/anima/presets/fading_exits/` — `project-rules.md` §Animation Catalog.
+- **Files:** `addons/anima/presets/exit/` — `project-rules.md` §Animation Catalog.
 - **Data:** behavioural reference `addons/anima/animations/fading_exits/*.gd` in the v1 project.
 - **Dynamic values:** `fade_out_left_big`'s exact translation is worked in `tech-spec.md` §Animation catalog (`AnimaValue.target(^"size:x").negative().subtract(AnimaValue.node(^"..", ^"size:x"))`); apply the equivalent shape (mirrored per axis/direction) to every other `_big`/directional preset in this batch.
 - **Rules:** one resolved-value unit test per preset, and for `fade_out_left_big` specifically a test that varies the parent's size and asserts the resolved offset changes accordingly — `project-rules.md` §Animation Catalog.

@@ -118,3 +118,33 @@
 ### Backlog changes
 
 - feature "Animation Catalog Playground" — added because the phase shipped with no way to visually verify the catalog; design already sketched via `mano ui`
+
+## Phase 18 Review — 2026-08-18
+
+### Validation
+
+- **Result:** Tested everything in the playground; everything worked as expected.
+
+### Phase checks
+
+| Phase promise | Result | What happened |
+|---|---|---|
+| Open the playground | passed | |
+| Browse by category | passed | |
+| Pick a preset | passed | |
+| Playback controls | passed | |
+
+### Decision
+
+- **Choice:** Keep the category-grid browsing approach as-is
+- **Why:** Browsing by category does make it easy to spot a preset that looks wrong
+
+### Assumptions
+
+| Assumption | Result | What showed this |
+|-----------|---------|------------------------|
+| This playground is deliberately a narrowed version of the deferred "Preset Browser" backlog item (browse-and-preview only, no search/tags/favourites/duplicate) — not the final shape the catalog's discovery UI will take. | confirmed | |
+
+### Backlog changes
+
+- feature "Anima usage guide/tutorial (on/group/grid, built-ins, keyframes, dynamic values, easings)" — added: runnable examples covering `Anima.on`/`Anima.group`/`Anima.grid`, each demonstrating built-in animations, keyframes, dynamic values, and easings

@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3]
+[gd_resource type="Resource" script_class="AnimaKeyframeMotion" format=3 uid="uid://hkpy8wr7xvt4"]
 
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_mhe7c"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_nm788"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_13uv4"]
-[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_1iseh"]
+[ext_resource type="Script" uid="uid://dokcmi1oky2fb" path="res://addons/anima/motion/resources/anima_ease.gd" id="1_mhe7c"]
+[ext_resource type="Script" uid="uid://dwdgg5wfulfo1" path="res://addons/anima/motion/resources/anima_keyframe_motion.gd" id="2_nm788"]
+[ext_resource type="Script" uid="uid://cbwq6fmbqwjt7" path="res://addons/anima/motion/resources/anima_keyframe_track.gd" id="3_13uv4"]
+[ext_resource type="Script" uid="uid://cjs4hbuja67bg" path="res://addons/anima/motion/resources/anima_keyframe_stop.gd" id="4_1iseh"]
+[ext_resource type="Script" path="res://addons/anima/motion/resources/anima_value.gd" id="5_txtln"]
 
 [sub_resource type="Resource" id="Resource_s5pqb"]
 script = ExtResource("1_mhe7c")
@@ -25,8 +26,26 @@ script = ExtResource("3_13uv4")
 property_path = NodePath("visible_ratio")
 stops = Array[ExtResource("4_1iseh")]([SubResource("Resource_sni5a"), SubResource("Resource_ny6yo")])
 
+[sub_resource type="Resource" id="Resource_txttg"]
+script = ExtResource("5_txtln")
+kind = 1
+constant_value = null
+property_path = NodePath("text")
+
+[sub_resource type="Resource" id="Resource_txtln"]
+script = ExtResource("5_txtln")
+kind = 22
+constant_value = null
+operands = [SubResource("Resource_txttg")]
+
+[sub_resource type="Resource" id="Resource_txtsp"]
+script = ExtResource("5_txtln")
+kind = 12
+constant_value = null
+operands = [SubResource("Resource_txtln"), 0.1]
+
 [resource]
 script = ExtResource("2_nm788")
 tracks = Array[ExtResource("3_13uv4")]([SubResource("Resource_rrjgk")])
-duration = 1.0
+duration = SubResource("Resource_txtsp")
 default_ease = SubResource("Resource_s5pqb")

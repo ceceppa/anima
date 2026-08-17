@@ -87,16 +87,35 @@ func test_roll_out_ends_offset_rotated_and_transparent():
 	assert_almost_eq(node.position.x, 50.0 + 80.0, 0.01)
 	assert_false(is_zero_approx(node.rotation))
 
-func test_typewrite_reveals_progressively_with_an_explicit_fixed_duration():
-	var label := RichTextLabel.new()
-	add_child_autofree(label)
+func test_typewrite_reveals_progressively_over_a_duration_scaled_by_text_length():
+	var short_label := RichTextLabel.new()
+	short_label.text = "abcde" # 5 characters
+	add_child_autofree(short_label)
+	var long_label := RichTextLabel.new()
+	long_label.text = "abcdefghij" # 10 characters — exactly double the short label's
+	add_child_autofree(long_label)
+
 	var motion := Anima.animation("typewrite")
-	assert_true(motion.duration > 0.0)
-	var instance = motion.create_runtime()
-	instance.advance(label, 0.0)
-	assert_almost_eq(label.visible_ratio, 0.0, 0.01)
-	instance.advance(label, motion.duration)
-	assert_almost_eq(label.visible_ratio, 1.0, 0.01)
+	var short_instance = motion.create_runtime()
+	var long_instance = motion.create_runtime()
+
+	short_instance.advance(short_label, 0.0)
+	long_instance.advance(long_label, 0.0)
+	assert_almost_eq(short_label.visible_ratio, 0.0, 0.01)
+	assert_almost_eq(long_label.visible_ratio, 0.0, 0.01)
+
+	const SPEED_PER_CHARACTER := 0.1 # seconds/character — addons/anima/presets/text/typewrite.tres
+	var short_duration: float = short_label.text.length() * SPEED_PER_CHARACTER
+	var long_duration: float = long_label.text.length() * SPEED_PER_CHARACTER
+
+	short_instance.advance(short_label, short_duration)
+	assert_almost_eq(short_label.visible_ratio, 1.0, 0.01)
+
+	long_instance.advance(long_label, short_duration)
+	assert_true(long_label.visible_ratio < 1.0, "the longer target should not have finished revealing yet")
+
+	long_instance.advance(long_label, long_duration - short_duration)
+	assert_almost_eq(long_label.visible_ratio, 1.0, 0.01)
 
 ## --- Full-catalog check: every v1 source animation has a ported preset ---
 
