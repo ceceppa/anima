@@ -1,73 +1,25 @@
+# post-review hook
+
 ## Mode
 suggest
 
-<!-- Two kinds of hook. `suggest` (this one) produces findings: Mano asks
-     before running it in manual/unarmed runs, runs it during an armed auto
-     chain, and you approve
-     each finding. Change this to `command`
-     and add a `## Command` section naming one command to instead run that
-     command automatically, every time, after this skill. See hooks/README.md. -->
-
-## Purpose
-Optional post-review audit after `mano review` triages a phase and writes findings to the backlog.
-
-## When useful
-- A phase just closed and the user wants a deeper specialist look at code quality, architecture drift, or accumulated technical debt
-- Review identified spec gaps or rule gaps and the user wants a specialist confirmation before scoping the next phase
-- The user wants a structured comparison between what shipped and what the planning artifacts described
+## Run
+[the exact external command or skill to suggest — e.g. your drift-audit specialist]
 
 ## Inputs
+- `_mano_output/reviews.md`, `_mano_output/backlog.md`, `_mano_output/tech-spec.md`
+- `_mano_output/project-rules.md`, `_mano_output/design-brief.md`, `_mano_output/ux-flow.md`, if they exist
+- the exact `BRIEF` path from the state projection
+- source code **bounded to the modules the reviewed phase touched** — this is the one hook where comparing artifacts to implementation is the job
 
-Allow the audit skill to read:
-- `_mano_output/reviews.md` — phase review findings and triaged items
-- `_mano_output/backlog.md` — items the review wrote, including spec-gaps and rule-gaps
-- `_mano_output/tech-spec.md` — technical decisions for comparison
-- `_mano_output/project-rules.md` if it exists
-- `_mano_output/design-brief.md` if it exists
-- `_mano_output/ux-flow.md` if it exists — user-flow assumptions that may need updates after review
-- The exact `BRIEF` path from `state.js --current` — owner-aware phase that was just reviewed
+## Focus
 
-Source code access for this hook: **allowed** but bounded. This is the only Mano hook where comparing artifacts to implementation is part of the job, since `mano review` is the drift-detection step. Inspection should be scoped to the modules and files that changed in the reviewed phase. Do not perform a project-wide audit unless the user explicitly asks.
+<!-- What the review should look for, one `- ` line each.
+     Uncomment what you want and edit freely — these are examples, not defaults.
 
-Optional files may be missing. Do not fail because an optional file is absent. Use only the context relevant to the review target. Do not invent missing context.
+- Drift between tech spec / project rules / design brief and what actually shipped.
+- Backlog quality: are the review's spec-gaps, rule-gaps, and bugs well-scoped and actionable?
+- Issues visible in the changed code that review didn't surface.
+-->
 
-## How to run
-
-Run the relevant external or specialist review manually after reviewing and accepting the review findings.
-
-Use this hook as a reminder, not as automatic execution.
-
-Replace `[external-review-command]` in your active project hook with the command or skill you want to run.
-
-## Suggested prompt
-
-```text
-[external-review-command] audit the closed phase using the inputs listed in this hook.
-
-Focus areas:
-- Drift between tech spec and implementation: are decisions in the spec actually reflected in the code that shipped?
-- Drift between project rules and implementation: are rules being followed consistently?
-- Drift between design brief and implementation: do shipped screens match the documented visual direction?
-- Backlog quality: are the spec-gaps, rule-gaps, and bugs that review identified well-scoped and actionable?
-- Missed concerns: are there issues visible in the changed code that review didn't surface?
-
-Limit findings to these focus areas. Do not propose new features, suggest architectural rewrites, or comment on code unrelated to the reviewed phase.
-
-Source code inspection: allowed and expected for this hook, but bounded to modules touched in the reviewed phase. Do not perform a project-wide code audit. Do not propose changes to unrelated code.
-
-Output format: one bullet per finding. Each finding states the issue, the affected artifact or code location, and either the suggested fix or which Mano flow owns the resolution (`mano spec`, `mano rules`, `mano start` for backlog adjustment). No prose preamble, no executive summary, no closing commentary.
-
-Do not modify any files. Report findings only. Mano will triage them and apply only selected changes through the artifact owner.
-```
-
-## Instruction for Mano
-
-`mano review` always runs outside the auto chain, so this `suggest` hook is always unarmed. Ask before running it in both configured modes. If you change `## Mode` to `command`, the command runs automatically in both modes — see hooks/README.md.
-
-In a manual or unarmed run, after the related Mano skill completes, mention that the hook is available and ask whether to run it.
-
-Do not print the hook's suggested prompt unless the user asks to run or view the hook.
-
-Do not mention specific external skill names in generic Mano output.
-
-Do not execute this suggest hook without explicit user confirmation.
+One bullet per finding: issue, affected artifact or code location, and which Mano flow owns the resolution. No file modifications — findings only.

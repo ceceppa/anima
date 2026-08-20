@@ -1,6 +1,8 @@
 ---
 name: mano-rules
 description: Use to define or update project rules, coding standards, components, and architectural patterns.
+requires: [core, artifact]
+requires-in-auto: [auto]
 ---
 
 # `mano rules` — Project Rules Advisor
@@ -15,7 +17,9 @@ This skill defines project rules that are useful now — not rules for a project
 
 ## Activation
 
-This skill activates when the user types `mano rules`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
+This skill activates when the user types `mano rules`. When inputs are missing, follow the missing-input protocol in `_mano/rules/core.md`.
+
+Read this file plus `_mano/rules/core.md` and `_mano/rules/artifact.md` first — before the state projection, then artifacts — and read only those rule files; never open `_mano/workflow.md` mid-skill. Keeping that order stable keeps the contract prefix cacheable.
 
 On activation:
 1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails or lacks `STATUS`, `MODE`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, stop and report the exact failure. `STATUS: NO_PHASE` is allowed for a gap-only rules update; in that case there is no phase brief to read. Never construct `phase-N` from the number.
@@ -23,7 +27,7 @@ On activation:
 3. Read `_mano_output/tech-spec.md` if it exists. If it doesn't, warn the user that the rules will be higher-level and offer to proceed from the phase brief or run `mano spec` first.
 4. Read `_mano_output/ux-flow.md` and `_mano_output/design-brief.md` if they exist.
 5. Read `_mano_output/project-rules.md` if it exists.
-6. Read the exact projected `BRIEF` path if `state.js --current` reports it present.
+6. **Read the exact projected `BRIEF` path** whenever `state.js --current` reports a phase. The brief is what the rules are being written *for*: it carries the phase's scope, its product principles, and the work about to be implemented, and a session that starts at `mano rules` has no other way to know any of it. Only a gap-only run (`STATUS: NO_PHASE`) proceeds without it.
 
 Do not read the project `README.md` or source files to discover additional context. The listed planning artifacts, projected gaps, and literal context supplied by the user are the activation boundary.
 
@@ -49,7 +53,7 @@ All other decisions are made one-shot in Step 2. Do not stop to ask the user abo
 
 ### Step 2 — Generate rules one-shot
 
-Based on the tech spec, phase brief scope, projected `rule-gap` items, UX flow, and project shape, generate the required project rules and write them directly to `_mano_output/project-rules.md`. Immediately before writing—especially after an accessibility or testing question pauses the flow—rerun `node _mano/scripts/state.js --current`; when a phase exists, continue only if `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF` match activation. If routing changed, write nothing and ask the user to rerun `mano rules`.
+Based on the tech spec, phase brief scope, projected `rule-gap` items, UX flow, and project shape, generate the required project rules and write them to `_mano_output/project-rules.md` — a full-file write only when the file does not exist yet; when it exists, targeted replacements only, per `_mano/rules/core.md` → **Writing artifacts: create once, edit thereafter**. Immediately before writing—especially after an accessibility or testing question pauses the flow—rerun `node _mano/scripts/state.js --current`; when a phase exists, continue only if `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF` match activation. If routing changed, write nothing and ask the user to rerun `mano rules`.
 
 Only write rules relevant to what is being built now or in the current phase. Do not front-load rules for features that do not exist yet.
 
@@ -59,6 +63,8 @@ If `project-rules.md` already exists:
 - Preserve any existing `Accessibility level:` line.
 
 Make specific implementation-convention decisions instead of asking the user. Do not pick libraries or frameworks — those belong to `mano spec`.
+
+**A projected `rule-gap` item may carry a stated directive, not an open question** — a folder structure, a file-naming scheme, or a test layout the user themselves specified, routed here because no feature item owned it. That is authoritative user intent: adopt it as written. Overriding it is allowed when the phase's constraints make it wrong, but never silently — quote the directive and give the reason in the completion log, the same override-flag duty `mano spec` carries for the brief's `## Stated Technical Preferences`. "Decide instead of asking" above governs conventions the source left open; it does not license replacing one the source already fixed. Resolve the item only once `project-rules.md` adopts or explicitly overrides it.
 
 ## Rules vs Tech Spec boundary
 
@@ -241,7 +247,7 @@ Do not add sections that explain:
 - how stories are found or completed
 - what implementers should do after finishing a story
 
-Those instructions belong in `AGENTS.md`, `_mano/workflow.md`, story files, or the final chat response.
+Those instructions belong in `AGENTS.md`, the Mano framework files, story files, or the final chat response.
 
 If implementation reveals a repeated pattern that should become a rule, do not instruct the implementer to edit `project-rules.md` directly. Capture it during `mano review` or run `mano rules` intentionally.
 
@@ -261,29 +267,23 @@ Run one command per addressed item. Do not resolve a gap that was deferred, only
 
 Prefer narrow edits. Do not rewrite large parts of `project-rules.md` unless the existing rules are stale, duplicative, or misleading.
 
-<!-- mano-rule: id=post-hook-findings-triage; incident=hook-output-triage-gap; model=not-recorded; date=2026-05-29; eval=hook-triage-no-approval,hook-triage-selected-only,hook-triage-start-no-approval,hook-triage-rules-no-approval -->
 ## Addressing post-rules hook findings
 
-When a just-run post-rules hook prints findings, follow `_mano/workflow.md` →
+When a just-run post-rules hook prints findings, follow `_mano/rules/hooks.md` →
 **Post-Hook Findings Triage** before editing anything. `mano rules` may apply
 selected findings only to `_mano_output/project-rules.md`. A conflict with a
 value owned by the spec, brief, UX, or design brief is `decide` or `route`, never
 an invitation to reconcile the artifacts silently. Do not edit the owning
 artifact on another skill's behalf. A direct `project-rules.md` correction is
 `apply` — never route it back to the already-active `mano rules`.
-<!-- /mano-rule: post-hook-findings-triage -->
 
-## Post-rules hook suggestion
+## Post-rules hook
 
-After `mano rules` completes, check whether `_mano/hooks/post-rules.md` exists. Ignore `_mano/hooks/post-rules.example.md`.
-
-If `_mano/hooks/post-rules.md` exists, check its `## Mode`. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
-
-This check is required even when no rules update was needed. In manual or unarmed runs, mention an active suggest hook before the next-action block; during an armed auto chain, run it instead.
+If the state projection's `HOOK:` line names `post-rules`, follow `_mano/rules/hooks.md` for it. Otherwise skip hooks entirely — do not probe `_mano/hooks/` yourself. This check applies even when no rules update was needed.
 
 ## After completion
 
-Use the canonical execution-log format defined in `_mano/workflow.md`:
+Use the canonical execution-log format defined in `_mano/rules/core.md`:
 
 ```text
 [mano rules]: mano rules — _mano_output/project-rules.md
@@ -299,10 +299,13 @@ Next:
 
 Populate the canonical `Next:` block from the actions that are still missing or worth refining:
 - `mano spec` — if technical decisions, API contracts, data models, dependencies, persistence, or platform constraints need defining or updating
-- `mano stories` — if the phase is technically clear enough to break into implementable work
+- `mano stories` — if the phase is technically clear enough to break into implementable work, and you want story files a small-context implementer works one at a time
+- `mano build` — if the phase is technically clear enough to break into implementable work, and you want it built straight from the brief with no story files
 - `mano ux` — if user-facing flows, frontend behaviour, interaction design, or product experience decisions are part of this phase. For player-facing games, this includes world interaction, placement/selection, progression or unlock actions, available-versus-locked states, and feedback for unmet conditions; a minimal or in-world presentation is still a flow.
 - `mano ui` — only if visual design, components, layout, or UI system decisions are part of this phase
 - `mano continue` — only if it adds value and there may be a single obvious next step
+
+**Show both implementation paths in `manual`, and only `mano build` in `auto`.** `_mano/rules/artifact.md` → **Next-step suggestion rule** owns this: at the no-ledger planning stage the mode decides, so read `MODE:` from the projection rather than defaulting to whichever path the examples use most.
 
 ## Forbidden
 
@@ -312,7 +315,7 @@ Populate the canonical `Next:` block from the actions that are still missing or 
 - Do not scope phases. That's `mano start`'s job.
 - Do not write or fix code. `mano rules` is an advisor.
 - Do not write domain logic, game mechanics, or business rules (what makes an entity valid, win conditions, state machine definitions). Product scope belongs in the phase brief. Exact domain contracts and mechanics belong in `tech-spec.md`. Stories reference and verify those decisions; they do not become the canonical owner.
-- Do not write exact tuning values, interaction math, or design tokens (specific velocity thresholds, animation durations, easing curves, hex colours). Those belong in `tech-spec.md` or `design-brief.md`. Rules may name the *constants* (e.g. "use named `Color` constants, not inline hex") but not their *values* — reference the owning artifact, per "Shared Values: One Canonical Home" in workflow.md. If a value you need already exists in another artifact with a different number or unit, surface the conflict instead of restating it — see "Conflicting Values: Surface, Do Not Reconcile".
+- Do not write exact tuning values, interaction math, or design tokens (specific velocity thresholds, animation durations, easing curves, hex colours). Those belong in `tech-spec.md` or `design-brief.md`. Rules may name the *constants* (e.g. "use named `Color` constants, not inline hex") but not their *values* — reference the owning artifact, per "Shared Values: One Canonical Home" in `_mano/rules/artifact.md`. If a value you need already exists in another artifact with a different number or unit, surface the conflict instead of restating it — see "Conflicting Values: Surface, Do Not Reconcile".
 - Do not restate full API contracts, data models, error-code tables, storage strategy, rate limiting policy, platform constraints, pagination/filtering contracts, or versioning policy.
 - Do not add rules "just in case." Every rule must earn its place with a current, concrete reason.
 - Do not produce a bloated rulebook. Keep each update concise enough to scan in a few minutes.

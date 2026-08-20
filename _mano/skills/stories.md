@@ -1,6 +1,8 @@
 ---
 name: mano-stories
 description: Use to break down a phase brief and any available supporting context into implementable, developer-ready user stories with acceptance criteria.
+requires: [core, artifact, backlog]
+requires-in-auto: [auto]
 ---
 
 # `mano stories` — Stories Skill
@@ -15,11 +17,15 @@ This skill writes stories a developer can pick up without a meeting and a non-te
 
 ## Activation
 
-This skill activates when the user types `mano stories`. When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
+This skill activates when the user types `mano stories`. When inputs are missing, follow the missing-input protocol in `_mano/rules/core.md`.
+
+Read this file plus `_mano/rules/core.md`, `_mano/rules/artifact.md`, and `_mano/rules/backlog.md` first — before the state projection, then artifacts — and read only those rule files; never open `_mano/workflow.md` mid-skill. Keeping that order stable keeps the contract prefix cacheable.
 
 Read every input fresh from disk — even if it already appears in the conversation context. Artifacts may have been edited earlier this same session (e.g. a spec extended then a decision backported); the filesystem is the source of truth, a context snapshot is not.
 
 First run `node _mano/scripts/state.js --current`. It is the only phase-directory discovery for this skill. If it fails, lacks `STATUS`, `MODE`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `STORIES`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Record the exact values and never construct `phase-N` from `PHASE`. Owner-scoped routing is opt-in; legacy projects still project `phase-N`.
+
+**`PROGRESS_STATUS: present` → stop.** That phase is being built with `mano build`, whose ledger is `PHASE_DIR/progress.md`. A phase has one ledger: writing a stories index beside that one creates a state every projection afterwards refuses, so decomposing into stories is not available here. Say so in one line and route the request: work already in the brief is `mano build`; a correction mid-build is typed to `mano build` itself; work the brief does not contain goes to the backlog or the next phase. **Do not route to `mano start` from here** — a phase with a ledger cannot have its brief amended, `mano start` will refuse, and sending the user there closes a loop straight back to this line. Write nothing.
 
 **Discard prior chat intent.** If the conversation before this command was about implementing, debugging, or modifying code, that context does not carry over. `mano stories` is a planning turn only. Treat the chat as if it were empty for the purpose of deciding what to do — your job this turn is to produce story files and nothing else. Do not "also" implement, "also" fix the bug under discussion, or "also" touch source code.
 
@@ -76,7 +82,7 @@ Default format:
 [See guidance below.]
 
 ---
-<!-- ⚠️ When this story is implemented, mark it done via `stories.js set-status` (AGENTS.md step 11) — don't hand-edit the index. -->
+<!-- ⚠️ When this story is implemented, mark it done via `stories.js set-status` (_mano/skills/dev.md step 11) — don't hand-edit the index. -->
 ```
 
 ### Implementation Reference
@@ -87,9 +93,7 @@ Every story must include an Implementation Reference. Write it as a compact poin
 
 Only include fields relevant to this story. Omit empty categories. Do not invent variants, props, states, or constraints not backed by an existing artifact.
 
-<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
 An artifact pointer is not proof that its named section is complete. Before pointing at a public/package contract—or a cross-component contract consumed by independently-owned components or multiple stories—verify that the section actually contains the exact operations/events, inputs/defaults, result/failure behavior, and any semantic-to-canonical mapping the story needs. A broad paragraph that only names capability families cannot be promoted into an implementation-ready contract by citing it.
-<!-- /mano-rule: public-interface-contract-readiness -->
 
 When an input artifact owns exact tokens, point to that exact section instead of copying the value. A particular component's consumer-visible props, events, variants, defaults, and state transitions belong to the tech spec. Project rules may own reusable naming patterns, required file locations, and prohibitions. Make each obligation explicit while leaving every shared literal at its canonical home.
 
@@ -102,7 +106,6 @@ When an input artifact owns exact tokens, point to that exact section instead of
   - ✅ Do, genuinely split: `Files: compute in src/foo.cpp; commit in src/bar.cpp` (each file's role explicit, no `or`)
   - ✅ Do, genuinely unknown: do not write the entry — flag it in the artifact gap check (Step 0a) so the upstream skill resolves it before the story ships.
 
-<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
 **Carry every applicable project rule into the story set.** Determine applicability from what each story creates, changes, or exposes; do not rely on the implementer to rediscover the rules file, and do not copy irrelevant rules into every story.
 
 - **Implementation constraint or internal mechanism** — naming, accessibility pattern, shared constant, file boundary, prohibition, or prescribed implementation technique: state the obligation explicitly in `Implementation Reference` and point to the exact `project-rules.md` section. Keep any shared literal in its canonical artifact.
@@ -114,9 +117,8 @@ When a rule owns a file-placement template, keep the template canonical in the r
 Examples: a colour-constant rule becomes an explicit no-inline-values constraint under `Implementation Reference`. A documentation rule with two inspectable channels creates two `Done when` criteria — for example, "The API reference page for `WidgetClient` exists with an overview, one minimal example, and its public methods" and "The source documentation for the exported `WidgetClient` states its one-line purpose." Put concrete story-owned paths, required comment placement, and the narrow rule pointer in `Implementation Reference`. A public API identifier is acceptable here because that API is the deliverable being inspected. Do not invent editor-hover behaviour unless the rule requires it. Do not treat inspectable documentation as implementation mechanics and demote it to `Implementation Reference` only; every required channel needs an acceptance criterion. The documentation requirement is not satisfied by mentioning `project-rules.md`, and it cannot be moved to `Not this story` without resolving the scope conflict below.
 
 If an applicable project rule conflicts with something the phase brief excludes, defers, or contradicts, stop before writing the affected stories. Quote the rule and the conflicting phase scope, then ask whether the user wants `mano start` to change the phase or `mano rules` to change the rule. If the user already resolved which artifact governs in this request, apply that correction to the stories and flag the stale owning artifact instead of asking again. Do not silently defer, weaken, or override either artifact.
-<!-- /mano-rule: project-rule-story-coverage -->
 
-If a required constant, token, rule, or shared measurement is needed and no artifact defines its value, do not write "if not yet defined." Make the requirement explicit and point to the owning artifact. If choosing the value would be guesswork, flag it during artifact gap check. If the value already exists in another artifact but with a different number or unit, do not silently pick one — surface the conflict, per "Conflicting Values: Surface, Do Not Reconcile" in workflow.md.
+If a required constant, token, rule, or shared measurement is needed and no artifact defines its value, do not write "if not yet defined." Make the requirement explicit and point to the owning artifact. If choosing the value would be guesswork, flag it during artifact gap check. If the value already exists in another artifact but with a different number or unit, do not silently pick one — surface the conflict, per "Conflicting Values: Surface, Do Not Reconcile" in `_mano/rules/artifact.md`.
 
 **An ambiguous behaviour-driving quantity is a gap to surface, not an ambiguity to resolve silently.** The "surface, don't pick" rule above covers *missing* values and *conflicting* values — but a *single stated value whose phrasing supports two materially different behaviours* slips through both, because it is neither missing nor conflicting. It is the most dangerous case, because nothing looks wrong: the brief states a quantity, you pick a reading, and the wrong behaviour ships looking fully specified. Watch especially for **rate/scope quantifiers** like "one per tick at each position", "remove a tile each interval", "N per step", "expands by one" — where it is unclear whether the unit applies *once globally* or *once per location/side/item*. Worked example: *"one tile removed per decay tick at each boundary position"* can mean **(a)** one tile total per tick, or **(b)** one tile at every boundary position per tick (a full ring) — a slow ragged nibble versus an even closing front, completely different feel. Do **not** collapse it to one reading and harden it into an AC or a `Do not` (e.g. "remove no more than one tile per tick"); that locks the guess in. Flag it at the artifact gap check (0d) and route it to the upstream Mano skill that owns the ambiguous artifact before the story ships.
 
@@ -138,7 +140,7 @@ Example:
 - **Do not:** no inline colour values (see `project-rules.md §Colour constants`); no new auth logic in this story
 ```
 
-For `story-0` and setup/dependency stories: point to the exact package-manager, dependency, scaffold, and install-command sections in the tech spec. AGENTS.md step 7 requires the implementer to read them; do not create a second copy in the story.
+For `story-0` and setup/dependency stories: point to the exact package-manager, dependency, scaffold, and install-command sections in the tech spec. `_mano/skills/dev.md` step 7 requires the implementer to read them; do not create a second copy in the story.
 
 **Greenfield scaffold gate.** If the application does not have a real manifest yet and bootstrap requires a generator that expects an empty directory, the tech spec must provide a `## Project Scaffold` command through `node _mano/scripts/scaffold.js run`, with a literal `{target}` destination. Put that requirement in `story-0`'s Implementation Reference. A raw generator aimed at `.`, the project root, or a temporary child followed by manual moving/copying is not developer-ready: stop and route the missing guarded command to `mano spec`. Never instruct development to move, rename, delete, or temporarily hide `_mano`, `_mano_output`, `.git`, `AGENTS.md`, or any existing file.
 
@@ -159,9 +161,7 @@ For stateful frontend stories: name what persists across restart, what stays tra
 
 - **Acceptance criteria are observable behaviour.** No implementation tasks. This applies to technical and bug-fix stories too. Function signatures, variable names, type names, formulas, timing of internal computation, and internal logic are not AC.
 
-  <!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
   Only rule-required outcomes and companion deliverables with a direct verification surface belong in `Done when`: state the inspectable result without inventing a new surface. A public API identifier or artifact name is allowed when that named API or artifact is itself the deliverable being inspected. Keep internal mechanisms, file paths, and construction details in `Implementation Reference`. Do not use the observable-behaviour rule or the "move implementation mechanics" rule to remove an inspectable rule deliverable from the acceptance criteria; do not use this exception to promote an internal-only constraint into acceptance criteria.
-  <!-- /mano-rule: project-rule-story-coverage -->
 
   Good: *Drag a card to another column — the column item counts update as the card moves.*
   Bad: *`move_card` passes `target_column_id` to `recalc_counts` on every drag event.*
@@ -235,9 +235,7 @@ Before drafting the story set, run these against the inputs. Each is a real chec
 
 - **Design brief.** If a story introduces or depends on a visual element, component, state, animation, layout, or styling distinction, check the design brief for matching guidance. If guidance exists, reference it in `Implementation Reference` instead of restating it as prose in AC. If no guidance exists and the choice affects the observable outcome, flag it during the artifact gap check.
 
-<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
 - **Project rules (mandatory).** Apply the rule-placement contract above, then complete the project-rule coverage map in Step 0g. An applicable rule with no owning story is an incomplete story set.
-<!-- /mano-rule: project-rule-story-coverage -->
 
 - **Acknowledged risks.** If the phase brief lists `Acknowledged risks`, each risk that describes an interaction, conflict, or possible failure mode the phase could ship with must be addressed by at least one story — covered by an AC that exercises the risk scenario, or explicitly flagged as a deferred concern in that story's `Notes`. Risks named in the brief but not surfaced anywhere in the story set are silently dropped. Pure outside-world risks ("library X may release a breaking change") that cannot be exercised by an AC may be acknowledged in the story set's execution-log `⚠ Verify` line instead.
 
@@ -332,7 +330,6 @@ If that owner or value is missing, **write no story files**. Report `⚠️ Stor
 
 If that flow is absent or leaves any of those decisions to implementation, **write no story files**. Report `⚠️ Story readiness gap: player choice interaction missing`, name the affected phase path and missing UX behaviour, and route to `mano ux`. Do not propose a hotkey, picker, cycling scheme, default active item, HUD treatment, or other story-owned interaction. The general artifact-gap options do not waive this gate; only a completed UX flow or an explicit human decision to skip `mano ux` can do so.
 
-<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
 **0c.2 Public-interface readiness — hard gate.** For every prospective story that creates, changes, wraps, or depends on a public/package API, command, event protocol, plugin hook, external integration, persisted/wire format, or cross-component contract consumed by independently-owned components or multiple stories, verify its canonical owning artifact defines:
 
 - the exact consumer-visible operation, method, command, or event names;
@@ -348,13 +345,10 @@ Apply this only to that consumer-visible or independently-owned boundary, not a 
 If any behavior-driving interface field needed by the story is absent or has two materially different readings, **write no story files**. Report one `⚠️ Story readiness gap` naming every missing field and route to `mano spec`. The general gap-check options to continue with a temporary note or partial guidance do not waive this gate; an implementer cannot safely invent a shared/public contract story by story.
 
 Before accepting a `Not this story` boundary, compare it with the phase goal, Exit Criteria, and the rest of the story chain. It may defer an adjacent use case; it may not contradict a promised path or prohibit the shared contract surface another story needs to satisfy the phase. Resolve the story split, or route an unresolved contract choice to `mano spec`.
-<!-- /mano-rule: public-interface-contract-readiness -->
 
-<!-- mano-rule: id=phase-acceptance-integrity; incident=exit-criterion-tested-in-reverse; model=codex; date=2026-08-13; eval=pending -->
 **0c.3 Phase-promise polarity — hard gate.** Map every `Phase Goal` outcome and every `Exit Criteria` action/result—including each nested bullet—to its prospective `Done when` owner and the supporting artifact decisions it needs. Read those decisions for meaning, not keyword presence. If any artifact states the opposite outcome or preserves a stale deferral (`recoverable` vs `stays locked`, `available` vs `unavailable`, `implemented` vs `not wired`, success vs required failure), **write no new story files**. Report one `⚠️ Story readiness gap: supporting artifact contradicts phase promise`, quote both statements, and route to the artifact's owning skill—normally `mano spec` for technical/data/gate contradictions.
 
 Do not disguise the conflict with wording such as “existing behaviour, now reachable” unless the cited artifact actually defines every prerequisite that makes the route reachable. An AC appearing in a story is coverage, not readiness; its implementation reference must point to a compatible contract rather than an opposing one.
-<!-- /mano-rule: phase-acceptance-integrity -->
 
 **0d. Artifact gap check.** For each prospective story, check whether it depends on a visual, interaction, accessibility, technical, data, API, constant, shared measurement, or rule detail that is not defined by the artifacts read this run. This is a warning/decision point, not a default blocker; the hard gates in 0c.0–0c.3 remain non-continuable.
 
@@ -397,9 +391,7 @@ If sufficient guidance exists, do not warn. Include a compact pointer in `Implem
 - **Rules:** Colour Constants — add named constants for empty-state colours; no inline hex values in rendering code
 ```
 
-<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
 A conflict between an applicable project rule and the phase scope is not a continuable artifact gap. Stop and follow the project-rule conflict rule above; options 2 and 3 do not waive an existing rule.
-<!-- /mano-rule: project-rule-story-coverage -->
 
 **0e. Story reachability.** For each story involving interactive behaviour, screens, endpoints, or any user-triggered action, name:
 - What surface does this behaviour live on? (screen, route, command, endpoint)
@@ -419,7 +411,6 @@ Report the mapping in the execution log only if something was missing and had to
 
 **0f.1 Exit-path coverage.** Map every phase Exit Criterion—including each nested action/result bullet—to one specific story AC that exercises the same observable route end-to-end. Preserve the caller or user path, sequence, and breadth: an alternative entry point that reaches the same internal result does not satisfy a criterion promising a particular direct call, command, screen path, or fluent terminal. For composed behavior, the owning AC must include the composition and its terminal action in the same path. If no AC owns an Exit Criterion exactly, revise the story set before writing files.
 
-<!-- mano-rule: id=project-rule-story-coverage; incident=applicable-documentation-rule-omitted; model=not-recorded; date=2026-07-31; eval=stories-project-rule-coverage -->
 **0g. Project-rule coverage map.** After drafting the story set and before writing any files:
 
 1. For every rule-level section in `project-rules.md` (normally each `##` rule, not its `What` / `Why` / `Pattern` parts), mark it internally as `not applicable` with a concrete reason, or `applicable` to one or more prospective stories. Decompose every normative obligation in `What` plus any explicit `must`, `required`, or `never` elsewhere: each bullet, required channel, `both`, and joined obligation needs its own mapping. Treat rationale and examples as interpretive context, not separate obligations. A single general pointer does not cover a compound rule.
@@ -428,7 +419,6 @@ Report the mapping in the execution log only if something was missing and had to
 4. If any applicable obligation is unmapped, revise the story set. If mapping exposes a phase-scope conflict, stop under the hard-stop rule above.
 
 Do not write story files until the map has no unmapped applicable obligations. Report the mapping in the execution log only when it exposed a conflict or caused a story or criterion to be added; a clean map needs no narration.
-<!-- /mano-rule: project-rule-story-coverage -->
 
 **0h. Vague-AC self-audit.** Before writing any story file, scan every drafted AC across the entire story set for the forbidden vocabulary from the "Define vague correctness words" rule above. Check for *every grammatical form* — adverbial, adjectival, and noun-phrase — of: `correct`/`correctly`, `proper`/`properly`, `smooth`/`smoothly`, `works`, `handles`, `real time`/`real-time`, `instantly`, `seamless`/`seamlessly`. Also flag any AC that consists of a noun phrase with no verb describing what the user observes (e.g. *"correct snap behaviour"*, *"smooth drag interaction"*) — these are placeholder labels, not acceptance criteria.
 
@@ -456,7 +446,7 @@ For each story:
    ```
    node _mano/scripts/stories.js add-row --phase [N] --story [num] --title "[title]" --file "story-[num]-[slug].md" --project "[project]"
    ```
-   It creates `README.md` (Index format below) on the first call and inserts each row in number order; `--project` (from the brief title) is used only when the file is created. Rows start `pending`. **Script failing?** Stop and report the error — never hand-write the index (see "Scripts are mandatory" in `_mano/workflow.md`).
+   It creates `README.md` (Index format below) on the first call and inserts each row in number order; `--project` (from the brief title) is used only when the file is created. Rows start `pending`. **Script failing?** Stop and report the error — never hand-write the index (see "Scripts are mandatory" in `_mano/rules/core.md`).
 
 When all stories are written, output the execution log:
 
@@ -476,11 +466,9 @@ Next:
 
 Give each story its **full project-root-relative path** (as above), not a bare `story-N-[slug].md` — that is what makes each line tap-to-open in the editor. The path replaces the old parenthesised filename.
 
-Two rules for the flag lines (see the canonical execution-log format in `_mano/workflow.md`): **(1)** When an input artifact omits a behaviour-driving value, apply the readiness hard gates. Write no story files. Route the missing decision to its owning skill. Do not infer a value, embed a provisional default, or turn the gap into a story-level `❓ Decide:`. **(2)** If another decision explicitly permitted by this skill remains open, a pending `❓ Decide:` makes the affected next action conditional. Name which story is blocked. Show `mano dev` only after that decision. Do not add a separate `Status:` line.
+Two rules for the flag lines (see the canonical execution-log format in `_mano/rules/core.md`): **(1)** When an input artifact omits a behaviour-driving value, apply the readiness hard gates. Write no story files. Route the missing decision to its owning skill. Do not infer a value, embed a provisional default, or turn the gap into a story-level `❓ Decide:`. **(2)** If another decision explicitly permitted by this skill remains open, a pending `❓ Decide:` makes the affected next action conditional. Name which story is blocked. Show `mano dev` only after that decision. Do not add a separate `Status:` line.
 
-<!-- mano-rule: id=public-interface-contract-readiness; incident=public-api-contract-reached-dev-undefined; model=codex; date=2026-08-03; eval=spec-public-interface-completeness,stories-public-interface-gap -->
 The no-inference rule applies to public interfaces, spec-owned defaults, and every other behaviour-driving value.
-<!-- /mano-rule: public-interface-contract-readiness -->
 
 Do not ask for per-story approval. The user reviews the files at their own pace in their editor.
 
@@ -532,10 +520,9 @@ Next:
 - `mano dev` — implement the next pending story
 ```
 
-<!-- mano-rule: id=mid-phase-addition-owner; incident=stories-assigned-backlog-item-out-of-lane; model=not-recorded; date=2026-08-05; eval=stories-midphase-assign -->
 ### Pulling a backlog item into the open phase
 
-When the user names an **exact existing backlog item** to bring into the phase already being built ("bring in *Mirror easing on reversal*"), `mano stories` may assign it and write its story. The full rule is `_mano/workflow.md` → **Mid-phase additions**; this is the procedure.
+When the user names an **exact existing backlog item** to bring into the phase already being built ("bring in *Mirror easing on reversal*"), `mano stories` may assign it and write its story. The full rule is `_mano/rules/backlog.md` → **Mid-phase additions**; this is the procedure.
 
 **Check the goal first.** Read the phase brief's goal. If the named item would change that goal rather than fit inside it, this is the next phase, not an addition — say so and stop:
 
@@ -567,9 +554,7 @@ Next:
 ```
 
 Never select items yourself, never assign more than the user named, and never assign to a phase that does not already exist with approved scope. Adding to an open phase is the human's call, made in the message that names the item.
-<!-- /mano-rule: mid-phase-addition-owner -->
 
-<!-- mano-rule: id=post-stories-hook-findings-triage; incident=post-stories-hook-findings; model=not-recorded; date=2026-05-29; eval=pending -->
 ## Addressing post-stories hook findings
 
 When the post-stories hook runs and the reviewer prints findings in chat, `mano stories` does **not** silently update stories. The reviewer is diagnostic; the user owns every change.
@@ -599,7 +584,6 @@ Mark findings that require a product decision (contradictions between artifacts,
 - **No source code.** The Identity rule still holds. Even if a finding hints at an implementation fix, `mano stories` only edits story files.
 
 After applying each approved finding, output a one-line confirmation. After the user says `done`, output the standard execution log for the modified story set.
-<!-- /mano-rule: post-stories-hook-findings-triage -->
 
 ## Cascading UI/UX changes
 
@@ -611,13 +595,9 @@ If the user edits UI/UX in a story during review:
 
 Never silently edit approved work.
 
-## Post-stories hook suggestion
+## Post-stories hook
 
-After `mano stories` completes, check whether `_mano/hooks/post-stories.md` exists. Ignore `_mano/hooks/post-stories.example.md`.
-
-If `_mano/hooks/post-stories.md` exists, check its `## Mode`. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook. Do not write hook suggestions into generated artifacts.
-
-This check is required even when no stories update was needed. In manual or unarmed runs, mention an active suggest hook before the next-action block; during an armed auto chain, run it instead.
+If the state projection's `HOOK:` line names `post-stories`, follow `_mano/rules/hooks.md` for it — with this skill's stricter findings protocol above replacing the generic triage. Otherwise skip hooks entirely — do not probe `_mano/hooks/` yourself. This check applies even when no stories update was needed.
 
 ## Forbidden
 

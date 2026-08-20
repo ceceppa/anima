@@ -1,6 +1,8 @@
 ---
 name: mano-import
 description: Use to turn an existing PRD, spec, or product document into a Mano backlog. Decomposes the document into backlog items, then stops.
+requires: [core, artifact, intake, backlog]
+requires-in-auto: [auto]
 ---
 
 # `mano import` — Document Intake Skill
@@ -18,14 +20,16 @@ This skill activates when the user types `mano import` (optionally with a path: 
 - **With a path** (`mano import prd.md`): read that file as the source document.
 - **Without a path** (`mano import`): ask which document to read, or accept the document text if the user pasted it inline with the command. Do not proceed until you have a document.
 
+Read this file plus `_mano/rules/core.md`, `_mano/rules/artifact.md`, `_mano/rules/intake.md`, and `_mano/rules/backlog.md` first — before the state projection, then the document — and read only those rule files; never open `_mano/workflow.md` mid-skill.
+
 On activation:
 1. Run `node _mano/scripts/state.js` and record `TRACK:`. This is the only active-track source; do not read Git config yourself. A missing track is `TRACK: none`.
 2. Create `_mano_output/` if it doesn't exist.
-2. Read `_mano_output/backlog.md` if it already exists. If it does and already has items, this is not a fresh import — tell the user the backlog already exists and ask whether to merge new items from this document or stop. Do not silently overwrite or duplicate.
+3. Read `_mano_output/backlog.md` if it already exists. If it does and already has items, this is not a fresh import — tell the user the backlog already exists and ask whether to merge new items from this document or stop. Do not silently overwrite or duplicate.
 
 ## Boundaries
 
-Every question `mano import` asks is governed by **Intake Boundaries (B1–B5)** in `_mano/workflow.md` — the single source of truth shared with `mano start`. In short: B1 tech-boundary (ask *what*, never *how*; transcribe stated tech preferences verbatim into the backlog item context, never decide them), B2 closed-scope, B3 scope-sizing-deferral (never ask what goes in Phase 1 — phases do not exist yet at import time), B4 no solutioning, B5 source-read (decompose the document, not the codebase — do not read source to enumerate or verify work). Read the full text before relying on the summary.
+Every question `mano import` asks is governed by **Intake Boundaries (B1–B5)** in `_mano/rules/intake.md` — the single source of truth shared with `mano start`. In short: B1 tech-boundary (ask *what*, never *how*; transcribe stated tech preferences verbatim into the backlog item context, never decide them), B2 closed-scope, B3 scope-sizing-deferral (never ask what goes in Phase 1 — phases do not exist yet at import time), B4 no solutioning, B5 source-read (decompose the document, not the codebase — do not read source to enumerate or verify work). Read the full text before relying on the summary.
 
 `mano import` never marks items `in-phase-[N]`, never drafts a brief, and never suggests phase scope. Phases do not exist at import time.
 
@@ -92,13 +96,15 @@ If the document clearly states durable product values (product feel, interaction
 
 Decompose the entire document into backlog items. Every feature, requirement, non-functional criterion, and success criterion. Preserve specific detail from the source — including any stated technical preference, transcribed verbatim into the relevant item's context per B1 (pass-through, not silence). When `TRACK:` is not `none`, include that exact value as `track` on every imported item; Source remains the document name.
 
+**Home the directives no feature item owns.** A document's project-wide technical directives — a runtime or version constraint, a module system, a folder structure, a file-naming scheme, where tests live — belong to every item and therefore to none, which is exactly how they vanish between the document and the first line of code. Sweep the document for them *before* you write, and give each its own item rather than dropping it for lack of a host: `spec-gap` when `tech-spec.md` will own the decision, `rule-gap` when `project-rules.md` will. Title it after the directive (`Stated: project directory structure`), carry the directive verbatim in the context, and leave `Status: backlog` — `mano spec` and `mano rules` see it through their own projections, and `state.js` routes the human to them. The type is a routing address; `mano import` still decides nothing. Full rule and the block/budget case: **B1 → Every stated directive gets a home** in `_mano/rules/intake.md`.
+
 Write all items to `_mano_output/backlog.md` with `Status: backlog` through the deterministic writer. Produce a JSON array of `{ "title", "type", "context", "source", "track"? }` objects, write it to a temporary file such as `_mano_output/.import.json`, then run:
 
 ```text
 node _mano/scripts/backlog.js add --file _mano_output/.import.json
 ```
 
-Delete the temporary file after the writer succeeds. The writer owns the item shape, duplicate-title check, and default `Status: backlog`; never hand-write blocks. **Script failing?** Stop and report the error (see "Scripts are mandatory" in `_mano/workflow.md`). For reference, the exact shape the writer produces — no `ID`, no `Title`, no `Description`, no checkboxes, no numbering:
+Delete the temporary file after the writer succeeds. The writer owns the item shape, duplicate-title check, and default `Status: backlog`; never hand-write blocks. **Script failing?** Stop and report the error (see "Scripts are mandatory" in `_mano/rules/core.md`). For reference, the exact shape the writer produces — no `ID`, no `Title`, no `Description`, no checkboxes, no numbering:
 
 ```markdown
 ### [Short title]
@@ -112,7 +118,7 @@ Delete the temporary file after the writer succeeds. The writer owns the item sh
 - **Status:** backlog
 ```
 
-`Type` values: `bug` (broken), `refinement` (works but could be better), `feature` (new capability), `tech-debt` (refactoring/infra), `test` (missing coverage), `spec-gap` (unclear tech spec), `rule-gap` (unclear project rule). For a document import, most items are `feature`. `Type`, `Context`, and `Status` are required. `Source` is optional provenance — since every item here comes from the document, set it to the document's name (e.g. `product-brief.md`). Max 5 lines of context per item.
+`Type` values: `bug` (broken), `refinement` (works but could be better), `feature` (new capability), `tech-debt` (refactoring/infra), `test` (missing coverage), `spec-gap` (the tech spec must still resolve or adopt this), `rule-gap` (project rules must still resolve or adopt this). For a document import, most items are `feature`. `Type`, `Context`, and `Status` are required. `Source` is optional provenance — since every item here comes from the document, set it to the document's name (e.g. `product-brief.md`). Max 5 lines of context per item.
 
 Preserve the required file structure in this order: `# Backlog`, then optional `## Core Product Principles`, then `## Items`, then the item blocks. The writer creates or extends that structure and skips duplicate titles. `mano start` reads these items later; going through the writer is what guarantees the field names it parses.
 
@@ -124,6 +130,7 @@ The backlog is the deliverable. Do not scope a phase, draft a brief, or suggest 
 [mano import]: mano import — _mano_output/backlog.md
 - [N] items decomposed from [document name]
 - Core Product Principles captured: [yes / none found]
+- Stated directives homed: [N spec-gap → mano spec, N rule-gap → mano rules / none stated]
 ⚠ Verify: [any assumption or unresolved ambiguity worth checking — omit if none]
 
 [Optional hook block if active]
@@ -132,11 +139,9 @@ Next:
 - `mano start` — scope the first phase from this backlog
 ```
 
-## Post-import hook suggestion
+## Post-import hook
 
-After `mano import` completes, check whether `_mano/hooks/post-import.md` exists. Ignore `_mano/hooks/post-import.example.md`.
-
-If an active `post-import.md` hook exists, check its `## Mode`. A `command` hook runs automatically in both modes. Import is before phase approval, so a `suggest` hook asks with the generic `Run it now?` block even when `MODE: auto`; only an armed auto chain runs suggest hooks automatically. See `_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**. Do not mention specific third-party skill names or the hook's suggested prompt unless the user explicitly asks to run or inspect it. Do not write hook suggestions into generated artifacts.
+If the state projection's `HOOK:` line names `post-import`, follow `_mano/rules/hooks.md` for it. Otherwise skip hooks entirely — do not probe `_mano/hooks/` yourself. Import always runs before phase approval, so it is an unarmed run even when `MODE: auto`.
 
 ## Forbidden
 
@@ -144,9 +149,10 @@ This list is the negative restatement of rules defined in full elsewhere. Where 
 
 - Do not scope a phase, suggest what ships first, or float a candidate decomposition — that is `mano start`'s job, and it is also forbidden by **B3** and **B4**.
 - Do not draft a phase brief, create a phase folder, or mark items `in-phase-[N]`. `mano import` only produces a backlog with all items `Status: backlog`.
-- Do not ask about tech, persistence, or implementation, or re-open closed scope — see **Intake Boundaries B1 and B2** in `_mano/workflow.md`.
+- Do not ask about tech, persistence, or implementation, or re-open closed scope — see **Intake Boundaries B1 and B2** in `_mano/rules/intake.md`.
 - Do not ask scope-sizing or phase-selection questions, including ones disguised as contradictions or yes/no confirmations — see **B3**.
 - Do not decide, evaluate, or act on a stated technical preference — transcribe it verbatim into the item context and leave the decision to `mano spec` (see **B1**, pass-through).
+- Do not drop a stated directive because no feature item hosts it. Home it as its own `spec-gap` / `rule-gap` item (see **B1**, every stated directive gets a home).
 - Do not create optional project-rule, technical, UX, or UI design artifacts.
 - Do not remove or replace existing backlog items. Only append, or merge with explicit user confirmation when a backlog already exists.
 - Do not write or fix code. `mano import` is a planner.

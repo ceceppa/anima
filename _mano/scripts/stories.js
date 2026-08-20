@@ -45,6 +45,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { phaseRef, phaseRouting } = require("./phase.js");
+const { writeAtomic } = require("./atomic.js");
 
 const HEADER_ROW = "| # | Story | File | Status |";
 const SEPARATOR_ROW = "|---|-------|------|--------|";
@@ -194,7 +195,7 @@ function cmdAddRow(args) {
 
   if (existing == null) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, freshIndex(args.project, ref, row));
+    writeAtomic(file, freshIndex(args.project, ref, row));
     process.stdout.write(`[mano stories] add-row → created index, 1 row\n  + ${num} ${String(args.title).trim()}\n`);
     return;
   }
@@ -222,7 +223,7 @@ function cmdAddRow(args) {
     if (sepIdx !== -1) insertAt = sepIdx + 1;
     else {
       const trimmed = existing.replace(/\s+$/, "");
-      fs.writeFileSync(file, `${trimmed}\n\n${HEADER_ROW}\n${SEPARATOR_ROW}\n${row}\n`);
+      writeAtomic(file, `${trimmed}\n\n${HEADER_ROW}\n${SEPARATOR_ROW}\n${row}\n`);
       process.stdout.write(`[mano stories] add-row → added table + 1 row\n  + ${num} ${String(args.title).trim()}\n`);
       return;
     }
@@ -234,7 +235,7 @@ function cmdAddRow(args) {
   }
 
   lines.splice(insertAt, 0, row);
-  fs.writeFileSync(file, lines.join("\n"));
+  writeAtomic(file, lines.join("\n"));
   process.stdout.write(`[mano stories] add-row → 1 written\n  + ${num} ${String(args.title).trim()}\n`);
 }
 
@@ -279,7 +280,7 @@ function cmdSetStatus(args) {
     );
   }
   const changed = results.filter((r) => r.outcome === "set");
-  if (changed.length) fs.writeFileSync(file, lines.join("\n"));
+  if (changed.length) writeAtomic(file, lines.join("\n"));
 
   process.stdout.write(`[mano stories] set-status → ${changed.length} set to '${status}'` +
     (results.length - changed.length ? `, ${results.length - changed.length} unchanged` : "") + "\n");

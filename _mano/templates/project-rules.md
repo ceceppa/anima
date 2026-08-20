@@ -58,7 +58,7 @@ Possible uses:
 Accessibility level: WCAG 2.1 AA
 
 ### Interaction basics
-- All interactive elements meet the minimum touch-target size defined in `tech-spec.md` (mirrored by the named code constant). Reference the owner; do not restate the number here in a second unit — see "Shared Values: One Canonical Home" in workflow.md.
+- All interactive elements meet the minimum touch-target size defined in `tech-spec.md` (mirrored by the named code constant). Reference the owner; do not restate the number here in a second unit — see "Shared Values: One Canonical Home" in `_mano/rules/artifact.md`.
 - Visible focus indicators are required for all interactive elements.
 - Text and UI labels must meet the selected contrast target.
 -->

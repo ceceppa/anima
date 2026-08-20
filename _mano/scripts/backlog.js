@@ -44,6 +44,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { phaseRef, phaseRouting, validateTrack } = require("./phase.js");
+const { writeAtomic } = require("./atomic.js");
 
 const VALID_TYPES = ["bug", "refinement", "feature", "tech-debt", "test", "spec-gap", "rule-gap"];
 const GAP_TYPES = ["spec-gap", "rule-gap"];
@@ -322,7 +323,7 @@ function cmdAdd(args) {
   const blocks = kept.map(formatItem);
   const next = buildWithItems(existing, blocks);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, next);
+  writeAtomic(file, next);
 
   process.stdout.write(`[mano backlog] add → ${kept.length} written` + (skipped.length ? `, ${skipped.length} skipped (duplicate title)` : "") + "\n");
   kept.forEach((it) => printAddItem("+", it));
@@ -400,7 +401,7 @@ function cmdAssign(args) {
 
   const results = [...want.values()];
   const assigned = results.filter((r) => r.outcome === "assigned");
-  if (assigned.length) fs.writeFileSync(file, lines.join("\n"));
+  if (assigned.length) writeAtomic(file, lines.join("\n"));
 
   process.stdout.write(`[mano backlog] assign → ${ref.id}: ${assigned.length} assigned` +
     (results.length - assigned.length ? `, ${results.length - assigned.length} unchanged` : "") + "\n");
@@ -454,7 +455,7 @@ function cmdResolve(args) {
     }
   }
 
-  if (flipped.length) fs.writeFileSync(file, lines.join("\n"));
+  if (flipped.length) writeAtomic(file, lines.join("\n"));
   process.stdout.write(`[mano backlog] resolve → ${ref.id}: ${flipped.length} item(s) marked resolved\n`);
   if (flipped.length === 0) process.stdout.write(`  (no items with Status: ${want})\n`);
   for (const t of flipped) process.stdout.write(`  + ${t}\n`);
@@ -570,7 +571,7 @@ function cmdResolveGap(args) {
   }
 
   parsed.lines[status.line] = `${status.prefix}resolved${status.trailing}`;
-  fs.writeFileSync(file, parsed.lines.join("\n"));
+  writeAtomic(file, parsed.lines.join("\n"));
   process.stdout.write(`[mano backlog] resolve-gap → ${expectedType}: 1 item marked resolved\n`);
   process.stdout.write(`  + ${record.title}\n`);
 }
@@ -627,7 +628,7 @@ function cmdReject(args) {
   }
 
   const rejected = results.filter((r) => r.outcome === "rejected");
-  if (rejected.length) fs.writeFileSync(file, parsed.lines.join("\n"));
+  if (rejected.length) writeAtomic(file, parsed.lines.join("\n"));
 
   process.stdout.write(`[mano backlog] reject → ${rejected.length} item(s) marked rejected` +
     (results.length - rejected.length ? `, ${results.length - rejected.length} unchanged` : "") + "\n");

@@ -30,11 +30,17 @@
 
 ## Phase Scope
 
-<!-- What ships. One line per item. Keep the whole brief concise: target roughly 250-500 words total. -->
+<!-- What ships, in the order it should be built. Exactly two levels: a numbered category, then lettered `a.` / `b.` / `c.` leaves. Each leaf leads with a short bolded title, then an em dash, then one behaviour-level line. -->
 
--
--
--
+<!-- A category is **a coherent outcome area likely to be implemented together — not a promised module, class, or file.** "Task management" names an area of behaviour; it does not order a `TaskManager`. `mano start` cannot know the final architecture and must not pretend to, so never name a category after a type, layer, folder, or file you expect to exist. -->
+
+<!-- The address is stable for the whole phase: `mano build` addresses category 1 leaf b as `S1b`, and the ledger label joins the two bolded leads (`Task management — Persistence`). Neither is decoration. A flat numbered list is still valid and builds row by row (item 2 is `S2`); leave an existing flat brief alone rather than converting it. Keep the whole brief concise: target roughly 250-500 words total. -->
+
+1. **[Category]**
+   a. **[Short title]** — [what ships, stated as behaviour]
+   b. **[Short title]** — [what ships, stated as behaviour]
+2. **[Category]**
+   a. **[Short title]** — [what ships, stated as behaviour]
 
 ## Not This Phase
 
@@ -45,15 +51,23 @@
 
 ## Exit Criteria
 
-<!-- What a real person can do when this phase is done. -->
+<!-- What a real person can do when this phase is done. Exactly two levels: a numbered category, then lettered `a.` / `b.` / `c.` leaves, each one action and its result separated by a colon. Never use arrows. Every leaf is separately addressable (`mano build` addresses them as `E1a`, `E2b`) and separately provable, so a criterion that would need a third level folds that detail into its own leaf text instead. -->
+
+1. **[Category]**
+   a. [action]: [result]
+2. **[Category]**
+   a. [action]: [result]
+   b. [action]: [result]
 
 ## Validation Plan
 
 <!-- This plan captures learning. Exit Criteria still captures every promised result. -->
 
+<!-- Every question and every assumption carries a stable address — `Q1`, `Q2`, `A1` — in document order. `mano review` refers to them by that address instead of inventing display numbering that changes between sessions. A brief written before addresses existed keeps its wording: the same IDs are derived by document order, never written back. -->
+
 ### Questions
 
-- [One concrete question per bullet. Every question needs a matching test below.]
+- **Q1.** [One concrete question per bullet. Every question needs a matching test below.]
 
 ### Try
 
@@ -62,9 +76,9 @@
 
 ## Assumption Log
 
-| Assumption | Risk if wrong |
-|---|---|
-| | |
+| ID | Assumption | Risk if wrong |
+|---|---|---|
+| A1 | | |
 
 ## Acknowledged Risks
 

@@ -1,6 +1,8 @@
 ---
 name: mano-ux
 description: Use to define UX flows, navigation, and user interactions for visual screens and player-facing in-world interactions.
+requires: [core, artifact]
+requires-in-auto: [auto]
 ---
 
 # `mano ux` — UX Flow Skill
@@ -17,7 +19,9 @@ This skill maps how people actually use the software — what they see, what the
 ## Activation
 
 This skill activates when the user types `mano ux`.
-When inputs are missing, follow the missing-input protocol in `_mano/workflow.md`.
+When inputs are missing, follow the missing-input protocol in `_mano/rules/core.md`.
+
+Read this file plus `_mano/rules/core.md` and `_mano/rules/artifact.md` first — before the state projection, then artifacts — and read only those rule files; never open `_mano/workflow.md` mid-skill. Keeping that order stable keeps the contract prefix cacheable.
 
 On activation:
 1. Run `node _mano/scripts/state.js --current`. This is the only phase-directory discovery. If it fails, lacks `STATUS`, `MODE`, `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF`, or reports `STATUS: NO_PHASE`, stop and route to `mano start`. Never construct `phase-N` from the number.
@@ -42,7 +46,7 @@ Define how users move through the application or game. Generate the UX flow for 
 
 ## Flow — One-Shot Generation
 
-Generate the UX flow for the exact projected `PHASE_ID` entirely in one go and write it directly to `_mano_output/ux-flow.md`. Immediately before writing, rerun `node _mano/scripts/state.js --current`; continue only if `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF` are unchanged. Do not pause for confirmation. Do not present screens one at a time in the chat. Make structural decisions based on the brief and enforce them.
+Generate the UX flow for the exact projected `PHASE_ID` entirely in one go and write it to `_mano_output/ux-flow.md` — a full-file write only when the file does not exist yet; when it exists, targeted replacements only, per `_mano/rules/core.md` → **Writing artifacts: create once, edit thereafter**. Immediately before writing, rerun `node _mano/scripts/state.js --current`; continue only if `OWNER`, `PHASE_ID`, `PHASE_DIR`, and `BRIEF` are unchanged. Do not pause for confirmation. Do not present screens one at a time in the chat. Make structural decisions based on the brief and enforce them.
 
 ### Step 1 — Define all screens & Navigation
 
@@ -69,40 +73,13 @@ Use plain language. "Tapping a todo on the list opens Todo Detail as a full scre
 
 For a player-facing game, an in-world/HUD interaction is a flow even when it opens no conventional screen. When two or more tools, buildables, abilities, modes, or rewards can be available at once, document: what makes each available; how the player invokes the choice; how they select or change it; how the active choice is communicated; what executing it does; and locked, unavailable, and cancel/back behaviour. Do not leave a hardcoded active item standing in for the player decision.
 
-## Post-UX Hook Suggestion
+## Post-UX hook
 
-After `mano ux` completes, always check whether this file exists:
-
-`_mano/hooks/post-ux.md`
-
-Ignore this file:
-
-`_mano/hooks/post-ux.example.md`
-
-If an active `post-ux.md` suggest hook exists in a manual or unarmed run, prepare the generic hook block for the final chat response. During an armed auto chain, run it instead.
-
-Check the hook's `## Mode` first. A `command` hook runs automatically in both modes. A `suggest` hook asks with the generic `Run it now?` block in manual or unarmed runs; during an armed auto chain it runs automatically and pauses only when findings require triage (`_mano/workflow.md` → **Optional Post-Skill Hooks** and **Run Mode**).
-
-Do not mention specific third-party skill names, slash commands, external tool names, or the hook's full suggested prompt unless the user explicitly asks to run or inspect the hook.
-
-This step is required even when no UX update was needed.
-
-In manual or unarmed runs, mention it in the final chat response before the next-action block. During an armed auto chain, do not print the suggestion block.
-
-This applies whether the skill:
-- created an artifact
-- updated an artifact
-- checked existing artifacts and decided no update was needed
-
-Do not print the hook's suggested prompt unless the user asks to run or view the hook.
-Do not execute a `suggest` hook without explicit user confirmation in manual or unarmed runs. An armed auto chain is the workflow-defined exception.
-Do not write hook suggestions into generated artifacts.
+If the state projection's `HOOK:` line names `post-ux`, follow `_mano/rules/hooks.md` for it. Otherwise skip hooks entirely — do not probe `_mano/hooks/` yourself. This check applies even when no UX update was needed.
 
 ## After completion
 
-Output a cold, structured execution log to the user indicating completion, pointing them to edit the file directly if needed. Use this exact format:
-
-Use the canonical execution-log format defined in `_mano/workflow.md` ("Canonical execution-log format"):
+Output a cold, structured execution log to the user indicating completion, pointing them to edit the file directly if needed. Use the canonical execution-log format defined in `_mano/rules/core.md` ("Canonical execution-log format"):
 
 ```
 [mano ux]: mano ux — _mano_output/ux-flow.md
@@ -114,19 +91,14 @@ Use the canonical execution-log format defined in `_mano/workflow.md` ("Canonica
 Next:
 - `mano ui` — if visual direction or component language still need defining
 - `mano rules` — if project conventions or framework constraints still need codifying
-- `mano stories` — if the phase is already clear enough to break into implementable work
+- `mano stories` — if the phase is already clear enough to break into implementable work, and you want story files a small-context implementer works one at a time
+- `mano build` — if the phase is already clear enough to break into implementable work, and you want it built straight from the brief with no story files
 - `mano continue` — if you want Mano to pick only when there is a single obvious next step
 ```
 
-Rules for the next-action block:
-- Use the same block shape as `mano start` so the framework feels consistent across skills.
-- Include only the Mano actions that are actually useful from the current artifact state after `mano ux`.
-- Omit actions whose artifacts already exist and do not obviously need refinement.
-- If only one next action is genuinely obvious, list just that one action plus `mano continue` only if it still adds value.
-- If several next actions are valid, list them all instead of prescribing a fake sequence.
-- Keep the one-line reason style used by `mano start`.
+The next-action block follows `_mano/rules/artifact.md` → **Next-step suggestion rule**. Do not add conversational fluff.
 
-Do not add conversational fluff.
+**Show both implementation paths in `manual`, and only `mano build` in `auto`.** `_mano/rules/artifact.md` → **Next-step suggestion rule** owns this: at the no-ledger planning stage the mode decides, so read `MODE:` from the projection rather than defaulting to whichever path the examples use most.
 
 ## Hard constraints
 

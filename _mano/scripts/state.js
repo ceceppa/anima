@@ -23,9 +23,13 @@
  *   node state.js --scope         on a PROCEED to scope-backlog or resume-draft,
  *                                 also print the relevant backlog items,
  *                                 principles, and latest review
- *   node state.js --next          for mano dev: the active phase + next pending
- *                                 story (#, file) + ordered story list, so the
- *                                 implementer needn't ls or reopen the index
+ *   node state.js --scope --amend-current
+ *                                 may the current phase's brief still be amended?
+ *                                 AMEND_CURRENT only while no ledger exists
+ *   node state.js --next          for mano dev / mano build: the active phase +
+ *                                 the next unit of work — the next pending story
+ *                                 (#, file) on the stories path, or the next
+ *                                 non-done ledger row on the build path
  *   node state.js --ui            for mano ui: the active phase's exact brief
  *                                 and phase-local preview paths
  *   node state.js --current       exact owner-scoped phase identity and paths
@@ -49,20 +53,29 @@ const {
   resolveConfiguredMode,
   reviewHeadingPattern,
 } = require("./phase.js");
+const Ledger = require("./ledger.js");
 
 const GAP_TYPES = ["spec-gap", "rule-gap"];
+
+// Post-skill hook slots and the optional project-level artifacts, projected so
+// skills never probe the filesystem for hooks or open artifacts merely to see
+// whether they exist.
+const HOOK_SKILLS = ["import", "start", "spec", "rules", "ux", "ui", "stories", "review"];
+const OPTIONAL_ARTIFACTS = ["tech-spec", "ux-flow", "design-brief", "project-rules"];
 
 function parseArgs(argv) {
   const args = {
     root: process.cwd(), json: false, verbose: false,
     scope: false, next: false, ui: false, current: false,
     spec: false, gaps: null, source: null, track: null, help: false,
+    amendCurrent: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--json") args.json = true;
     else if (a === "--verbose" || a === "-v") args.verbose = true;
     else if (a === "--scope") args.scope = true;
+    else if (a === "--amend-current") args.amendCurrent = true;
     else if (a === "--next") args.next = true;
     else if (a === "--ui") args.ui = true;
     else if (a === "--current") args.current = true;
@@ -94,21 +107,28 @@ Usage:
   node state.js [projectRoot] [--scope [--source <text>] [--track <name>] | --next | --ui | --current | --spec | --gaps <type>] [--verbose] [--json]
 
   projectRoot   directory containing _mano_output/ (default: current dir)
+  --amend-current  with --scope only: ask whether the *current* phase's brief may
+                still be amended in place. AMEND_CURRENT only when this exact
+                owner and phase have a brief and neither ledger exists.
   --scope       on a PROCEED to scope-backlog or resume-draft, also print the
                 relevant backlog items, core principles, and latest review
   --source      with --scope only: case-insensitive substring filter for an
                 item's optional top-level Source provenance field
   --track       with --scope only: case-insensitive exact filter for an item's
                 optional top-level Track; otherwise uses the active local track
-  --next        for mano dev: the active phase, the next pending story (its #
-                and file path) and the ordered story list, computed fresh from
-                disk so the implementer needn't ls or reopen the index
+  --next        for mano dev and mano build: the active phase and the next unit
+                of work, computed fresh from disk — the next pending story (its
+                # and file path) plus the ordered story list, or, when the phase
+                has a progress.md ledger, its next non-done Scope row plus both
+                ledger tables. On the build path it also reports the optional
+                artifact inventory (ARTIFACTS) and any pending review findings
+                (REWORK), before the ledger exists as well as after
   --ui          for mano ui: report the current phase brief and phase-local
                 design preview paths without exposing backlog content or
                 scanning phase folders in the prompt
   --current     report the configured owner and exact current phase identity,
-                directory, brief, stories index, backlog status, and review
-                heading without exposing artifact contents
+                directory, brief, stories index or build ledger, backlog status,
+                and review heading without exposing artifact contents
   --spec        for mano spec: report the current phase brief path, exact
                 in-phase-N backlog items, and open spec-gap items without
                 exposing the rest of backlog.md
@@ -179,6 +199,96 @@ function readStories(storiesReadme) {
     else openTitles.push(`${r.num} ${r.title} (${r.status || "—"})`);
   }
   return { total, done, openTitles, rows };
+}
+
+/**
+ * Read the build ledger through the shared parser in `ledger.js`.
+ *
+ * Returns one of three states, and they are never collapsed:
+ *
+ *   missing   the file does not exist on disk. Nothing else means missing.
+ *   invalid   the file exists and does not validate. A hard stop with one
+ *             repair instruction; there is no v1 migration path because no v1
+ *             ledger was ever released.
+ *   present   the file exists and validates.
+ *
+ * B4 was the collapse: a malformed or empty ledger read as *no ledger*, which
+ * routed build to create one and skipped the dual-ledger refusal entirely,
+ * because that check only fired when progress parsed.
+ */
+function readProgress(progressFile, briefText = null) {
+  const text = readText(progressFile);
+  if (text === null) return { status: "missing", errors: [] };
+
+  const parsed = Ledger.parseLedger(text);
+  if (!parsed.ok) return { status: "invalid", errors: parsed.errors };
+
+  const ledger = parsed.ledger;
+  if (briefText !== null) {
+    // D12: every row address points into the addressed brief, so an edit there
+    // invalidates the ledger rather than silently repointing rows.
+    const digest = Ledger.contractDigest(briefText);
+    if (digest !== ledger.contract) {
+      return {
+        status: "invalid",
+        errors: [
+          `the phase brief changed after this ledger was created (contract ${ledger.contract} -> ${digest})`,
+        ],
+      };
+    }
+  }
+
+  const rollUps = Ledger.rollUpIds(ledger.scope);
+  const scopeLeaves = ledger.scope.filter((r) => !rollUps.has(r.id));
+  const exitRollUps = Ledger.rollUpIds(ledger.exit);
+  const exitLeaves = ledger.exit.filter((r) => !exitRollUps.has(r.id));
+  const scope = {
+    rows: ledger.scope,
+    total: scopeLeaves.length,
+    closed: scopeLeaves.filter((r) => r.status === "done").length,
+  };
+  const exit = {
+    rows: ledger.exit,
+    total: exitLeaves.length,
+    closed: exitLeaves.filter((r) => r.status === "met").length,
+  };
+  const needsHuman = exitLeaves.filter((r) => r.status === "needs-human");
+  return {
+    status: "present",
+    errors: [],
+    ledger,
+    scope,
+    exit,
+    rework: ledger.rework,
+    openRework: ledger.rework.filter((r) => r.status === "pending"),
+    needsHuman,
+    // B2: the deepest open leaf, in comparator order — never the roll-up parent
+    // that a file-order scan returns.
+    next: Ledger.nextActionableRow(ledger.scope),
+    allDone: scope.total > 0 && scope.closed === scope.total,
+    allMet: exit.total > 0 && exit.closed === exit.total,
+  };
+}
+
+/**
+ * The exact contract text for one row, whatever kind it is.
+ *
+ * A normal row's contract is its brief item or leaf, re-derived through the
+ * same parser `init` used — which is what makes B1 fixable, because a nested
+ * leaf's full behaviour line is recoverable instead of reduced to its bolded
+ * lead. A correction or split carries its own text in `## Row Contracts`.
+ */
+function rowContractText(progress, briefText, row) {
+  if (!row) return null;
+  if (row.parsed.kind !== "normal") {
+    const body = progress.ledger.contracts.get(row.id);
+    return body && body.text ? body.text : null;
+  }
+  if (briefText === null) return null;
+  const source = row.parsed.table === "S" ? Ledger.parseScope(briefText) : Ledger.parseExitCriteria(briefText);
+  if (source.error) return null;
+  const match = source.rows.find((r) => r.id === row.id);
+  return match ? match.text : null;
 }
 
 // Backlog Status counts. Matches `- **Status:** <value>` exactly (the format
@@ -336,6 +446,127 @@ function resumeDraftTrack(assignedItems, selectedTrack, phaseId) {
   return named.size === 1 ? [...named.values()][0] : selectedTrack;
 }
 
+// Active post-skill hooks with their declared mode, as `mode:post-skill`
+// entries. Hooks are repo-level — never owner-namespaced. The `## Mode`
+// section's first non-empty line decides; a missing or unrecognised mode is
+// `suggest` (back-compat with hooks written before the other modes existed).
+function scanHooks(projectRoot) {
+  const out = [];
+  for (const skill of HOOK_SKILLS) {
+    const hookPath = path.join(projectRoot, "_mano", "hooks", `post-${skill}.md`);
+    if (!exists(hookPath)) continue;
+    const text = readText(hookPath) || "";
+    let mode = "suggest";
+    const match = /^##\s+Mode\s*\r?\n+[ \t]*(\S+)/im.exec(text);
+    if (match) {
+      const declared = match[1].trim().toLowerCase();
+      if (declared === "command" || declared === "check" || declared === "suggest") mode = declared;
+    }
+    out.push(`${mode}:post-${skill}`);
+  }
+  return out;
+}
+
+// Existence of the four optional project-level artifacts, as `name=present|absent`.
+function scanArtifacts(projectRoot) {
+  const outputDir = path.join(projectRoot, "_mano_output");
+  return OPTIONAL_ARTIFACTS.map(
+    (name) => `${name}=${exists(path.join(outputDir, `${name}.md`)) ? "present" : "absent"}`,
+  );
+}
+
+/**
+ * Planning artifacts whose mtime is newer than the ledger's — advisory only.
+ *
+ * D9: mtime is weaker than a digest, and a `touch` or a git checkout trips it.
+ * That is acceptable precisely because the signal routes nothing: it prints one
+ * line, review surfaces it, and the human decides. A false positive costs a
+ * line and no behaviour.
+ */
+function staleInputs(outputDir, progressFile) {
+  const ledgerTime = mtimeOf(progressFile);
+  if (ledgerTime === null) return [];
+  const stale = [];
+  for (const name of OPTIONAL_ARTIFACTS) {
+    const when = mtimeOf(path.join(outputDir, `${name}.md`));
+    if (when !== null && when > ledgerTime) stale.push(`${name}.md`);
+  }
+  return stale;
+}
+
+function mtimeOf(file) {
+  try { return fs.statSync(file).mtimeMs; } catch { return null; }
+}
+
+/**
+ * May the current phase's brief still be amended in place?
+ *
+ * Only while **no ledger exists**. A ledger's row addresses point into the
+ * brief's `## Phase Scope` and `## Exit Criteria`, and `init` fingerprints them
+ * — so once one exists, editing the brief is not an amendment, it is a
+ * migration nobody asked for. Before that point there is nothing addressing the
+ * brief, and re-approving a revised scope costs one exchange.
+ *
+ * This closes the loop the documented route used to have: build sent the user
+ * to `mano start`, which sent them to `mano stories`, which saw `progress.md`
+ * and sent them back to `mano start`.
+ */
+function renderAmendCurrent(s) {
+  const L = ["--- AMEND CURRENT (from the state script — do NOT scan phase folders) ---"];
+  L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
+  L.push(`MODE: ${s.runMode}`);
+  L.push(`TRACK: ${s.track || "none"}`);
+
+  const reason = amendBlocker(s);
+  L.push(`DECISION: ${reason ? "REFUSE" : "AMEND_CURRENT"}`);
+  if (s.phaseId) {
+    L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
+    L.push(`PHASE_DIR: ${s.phaseDir}`);
+    L.push(`BRIEF: ${s.phaseDir}/phase-brief.md`);
+  }
+  L.push(`STORIES_STATUS: ${s.storiesExists ? "present" : "missing"}`);
+  L.push(`PROGRESS_STATUS: ${s.progressStatus}`);
+  if (reason) {
+    L.push(`REASON: ${reason}`);
+  } else {
+    L.push("The brief may be revised in place. Show the complete proposed scope and write");
+    L.push("nothing until the human approves it; that approval is the approval of the revised");
+    L.push("contract. Re-check this projection immediately before writing.");
+  }
+  L.push("--- END AMEND CURRENT ---");
+  return L.join("\n");
+}
+
+function amendBlocker(s) {
+  if (!s.outputExists || s.phase === null) {
+    return "no phase exists for this owner — mano start scopes one; there is nothing to amend";
+  }
+  if (!s.briefExists) {
+    return `${s.phaseId} has no phase-brief.md — finish the draft rather than amending it`;
+  }
+  if (s.storiesExists && s.progressExists) {
+    return `${s.phaseId} holds both ledgers — resolve that first`;
+  }
+  if (s.storiesExists) {
+    return `${s.phaseId} already has a stories index; its stories address this brief. `
+      + "An in-goal change is a lettered story via mano stories; a distinct outcome goes to the backlog or the next phase";
+  }
+  if (s.progressExists) {
+    return `${s.phaseId} already has a build ledger; its rows address this brief and init fingerprinted it. `
+      + "An in-goal change is a correction row via mano build; a distinct outcome goes to the backlog or the next phase";
+  }
+  return null;
+}
+
+function hookLine(hooks) {
+  return `HOOK: ${hooks.length ? hooks.join(" ") : "none"}`;
+}
+
+function artifactsLine(artifacts) {
+  return `ARTIFACTS: ${artifacts.join(" ")}`;
+}
+
 // A narrow gap-only projection. It intentionally bypasses scan(): only
 // backlog.md is read, and only matching open gap blocks are returned.
 function scanGaps(projectRoot, type) {
@@ -347,6 +578,8 @@ function scanGaps(projectRoot, type) {
     projectRoot,
     runMode: run.mode,
     runModeSource: run.source,
+    hooks: scanHooks(projectRoot),
+    artifacts: scanArtifacts(projectRoot),
     type,
     status: "backlog",
     count: items.length,
@@ -398,6 +631,8 @@ function scanSpec(projectRoot) {
     ownerSource: routing.ownerSource,
     runMode: routing.runMode,
     runModeSource: routing.runModeSource,
+    hooks: scanHooks(projectRoot),
+    artifacts: scanArtifacts(projectRoot),
     track: routing.track,
     trackSource: routing.trackSource,
     phase,
@@ -429,6 +664,8 @@ function scanUi(projectRoot) {
     owner: projectState.owner,
     runMode: projectState.runMode,
     runModeSource: projectState.runModeSource,
+    hooks: projectState.hooks,
+    artifacts: projectState.artifacts,
     track: projectState.track,
     trackSource: projectState.trackSource,
     phase,
@@ -536,6 +773,8 @@ function scan(projectRoot, options = {}) {
     ownerMode: "legacy",
     runMode: "manual",
     runModeSource: null,
+    hooks: scanHooks(projectRoot),
+    artifacts: scanArtifacts(projectRoot),
     track: null,
     trackSource: null,
     otherOwners: [],
@@ -547,6 +786,12 @@ function scan(projectRoot, options = {}) {
     reviewHeading: null,
     briefExists: false,
     stories: null,          // { total, done, openTitles } or null
+    storiesExists: false,   // physical existence, independent of parsing
+    progressExists: false,  // physical existence, independent of parsing
+    progress: { status: "missing", errors: [] }, // shared-parser ledger read
+    progressStatus: "missing", // missing | present | invalid — never collapsed
+    brief: null,            // the active phase brief's text, when it exists
+    staleInputs: [],        // advisory: planning artifacts newer than the ledger
     reviewEntry: false,
     backlog: null,          // status counts, or null
     backlogItems: 0,        // all Status: backlog lines (backward-compatible field)
@@ -599,8 +844,27 @@ function scan(projectRoot, options = {}) {
 
   if (ref) {
     const phaseDir = path.join(projectRoot, ref.relativeDir);
-    s.briefExists = exists(path.join(phaseDir, "phase-brief.md"));
-    s.stories = readStories(path.join(phaseDir, "stories", "README.md"));
+    const briefFile = path.join(phaseDir, "phase-brief.md");
+    const storiesFile = path.join(phaseDir, "stories", "README.md");
+    const progressFile = path.join(phaseDir, "progress.md");
+    s.briefExists = exists(briefFile);
+    s.brief = s.briefExists ? readText(briefFile) : null;
+    // One ledger per phase, decided on **physical existence**. Deciding it on
+    // whether a file parsed is B4: a malformed progress.md read as no ledger,
+    // so a phase holding both skipped this refusal entirely.
+    s.storiesExists = exists(storiesFile);
+    s.progressExists = exists(progressFile);
+    if (s.storiesExists && s.progressExists) {
+      throw new Error(
+        `${ref.id} holds both stories/README.md and progress.md. ` +
+        "A phase has one ledger: mano stories + mano dev, or mano build. " +
+        "Keep the one that matches how this phase was planned and remove the other.",
+      );
+    }
+    s.stories = readStories(storiesFile);
+    s.progress = readProgress(progressFile, s.brief);
+    s.progressStatus = s.progress.status;
+    s.staleInputs = s.progressExists ? staleInputs(outputDir, progressFile) : [];
     s.reviewEntry = hasReviewEntry(s._reviewsText, ref);
     s.inPhaseRemaining = s.backlog[ref.inPhaseStatus] || 0;
   }
@@ -612,6 +876,16 @@ function scan(projectRoot, options = {}) {
 function finalize(s, options = {}) {
   const storiesAllDone = !!(s.stories && s.stories.total > 0 && s.stories.done === s.stories.total);
   const storiesMissing = !s.stories || s.stories.total === 0;
+  // The build path's ledger answers the same two questions the stories index
+  // does, with one addition: built means every Scope row done AND every Exit
+  // Criterion met. A phase has one ledger or the other (scan refuses both).
+  const building = s.progressStatus === "present";
+  // D4: a confirmed review finding is durable state, not conversation. While one
+  // is pending the phase routes back to build even though every row reads done —
+  // that is the whole reason the finding is in the ledger and not in the chat.
+  const openRework = building ? s.progress.openRework.length : 0;
+  const buildAllDone = !!(building && s.progress.allDone && s.progress.allMet && openRework === 0);
+  const ledgerMissing = storiesMissing && !s.progressExists;
   // Gate condition 3: reviewed/closed — review is mandatory, and its close sweep
   // must have moved every item for this exact phase identity off its in-phase status.
   const closed = s.reviewEntry && s.inPhaseRemaining === 0;
@@ -640,10 +914,30 @@ function finalize(s, options = {}) {
     // Edge case: phase folder without a brief — a prior start didn't finalise.
     verdict = "RESUME_DRAFT";
     action = `${s.phaseId}/ exists without phase-brief.md — a previous mano start didn't finalise. Resume drafting ${s.phaseId}; do NOT start a new phase.`;
-  } else if (storiesMissing) {
+  } else if (s.progressStatus === "invalid") {
+    // A hard stop with one repair instruction. No migration path exists, and
+    // none is needed: no v1 ledger was ever released (D2).
+    verdict = "LEDGER_INVALID";
+    action =
+      `${s.phaseId}/progress.md exists but is not a valid v2 ledger ` +
+      `(${s.progress.errors.join("; ")}). Delete ${s.phaseDir}/progress.md and re-run mano build. ` +
+      "Do NOT hand-repair it, and do NOT treat this phase as unstarted.";
+  } else if (ledgerMissing) {
     verdict = "PHASE_IN_PROGRESS";
-    action = `${s.phaseId} has a brief but no stories yet. Not complete — run mano stories. mano start must NOT scope a next phase.`;
-  } else if (!storiesAllDone) {
+    // The one state where the run mode decides the implementation entry: with
+    // no ledger both paths are still open, so an armed auto chain must not be
+    // offered a branch it is forbidden to choose (its terminal action is
+    // mano build), and a manual user must not be handed one path as if the
+    // other did not exist. Every other state is decided by the ledger itself.
+    action = s.runMode === "auto"
+      ? `${s.phaseId} has a brief but no stories or build ledger yet. Not complete — the armed chain's terminal action is mano build, which creates the ledger from this brief. mano start must NOT scope a next phase.`
+      : `${s.phaseId} has a brief but no stories or build ledger yet. Not complete — run mano stories (then mano dev) for story files, or mano build to build straight from the brief. Both are valid; the human picks. mano start must NOT scope a next phase.`;
+  } else if (building && !buildAllDone) {
+    verdict = "PHASE_IN_PROGRESS";
+    action = openRework
+      ? `${s.phaseId} has ${openRework} pending review finding(s) in its ledger. Not complete — run mano build to work the first pending R… event. mano start must NOT scope a next phase.`
+      : `${s.phaseId} is being built (${s.progress.scope.closed}/${s.progress.scope.total} scope rows done, ${s.progress.exit.closed}/${s.progress.exit.total} exit criteria met). Not complete — run mano build. mano start must NOT scope a next phase.`;
+  } else if (!building && !storiesAllDone) {
     verdict = "PHASE_IN_PROGRESS";
     action = `${s.phaseId} has open stories (${s.stories.done}/${s.stories.total} done). Not complete — run mano dev. mano start must NOT scope a next phase.`;
   } else if (!closed) {
@@ -654,7 +948,8 @@ function finalize(s, options = {}) {
     const repair = s.reviewEntry
       ? "The review entry exists but its backlog close sweep is incomplete — re-run mano review to repair it."
       : "Run mano review.";
-    action = `${s.phaseId} is built (stories all done) but not closed — ${blockers.join("; ")}. ${repair} mano start must NOT scope a next phase.`;
+    const proof = building ? "every scope row done, every exit criterion met" : "stories all done";
+    action = `${s.phaseId} is built (${proof}) but not closed — ${blockers.join("; ")}. ${repair} mano start must NOT scope a next phase.`;
   } else {
     // Phase complete.
     if (s.scopeableBacklogItems > 0) {
@@ -683,6 +978,7 @@ function finalize(s, options = {}) {
   const proceeds = Object.prototype.hasOwnProperty.call(NEXT_BY_VERDICT, verdict);
 
   s.storiesAllDone = storiesAllDone;
+  s.buildAllDone = buildAllDone;
   s.closed = closed;
   s.verdict = verdict;
   s.action = action;
@@ -763,6 +1059,8 @@ function renderDecision(s) {
   // before the scope payload, so show the effective value here too.
   const effectiveTrack = s.scope ? s.scope.track : s.track;
   L.push(`TRACK: ${effectiveTrack || "none"}`);
+  L.push(hookLine(s.hooks));
+  L.push(artifactsLine(s.artifacts));
   if (s.targetPhase != null) {
     L.push(`PHASE: ${s.targetPhase}`);
     L.push(`PHASE_ID: ${s.targetPhaseId}`);
@@ -770,6 +1068,14 @@ function renderDecision(s) {
     L.push(`IN_PHASE_STATUS: ${s.targetInPhaseStatus}`);
     L.push(`REVIEW_HEADING_PREFIX: ${s.targetReviewHeading}`);
   }
+  // Gap items never enter scope selection, so a phase-scopeable backlog hides
+  // them from the human entirely — including a stated directive intake homed
+  // here precisely so it would not be lost. Surfacing the routes costs one
+  // line and never changes the decision.
+  const openGapRoutes = [];
+  if (s.gaps && s.gaps["spec-gap"] > 0) openGapRoutes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
+  if (s.gaps && s.gaps["rule-gap"] > 0) openGapRoutes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
+  if (openGapRoutes.length) L.push(`OPEN_GAPS: ${openGapRoutes.join("; ")}`);
   L.push(s.action);
   return L.join("\n");
 }
@@ -792,8 +1098,22 @@ function renderEvidence(s) {
       if (s.stories.openTitles.length) {
         for (const t of s.stories.openTitles) L.push(`                           open: ${t}`);
       }
+    } else if (s.progressStatus === "invalid") {
+      L.push(`  build ledger:          INVALID — delete ${s.phaseDir}/progress.md and re-run mano build`);
+      for (const problem of s.progress.errors) L.push(`                           ${problem}`);
+    } else if (s.progressStatus === "present") {
+      L.push(`  build ledger:          ${s.progress.scope.closed}/${s.progress.scope.total} scope rows done, ${s.progress.exit.closed}/${s.progress.exit.total} exit criteria met`);
+      for (const r of s.progress.scope.rows) {
+        if (r.status !== "done") L.push(`                           open: ${r.id} ${r.label} (${r.status || "—"})`);
+      }
+      for (const r of s.progress.openRework) {
+        L.push(`                           rework: ${r.id} ${r.label}`);
+      }
+      for (const artifact of s.staleInputs) {
+        L.push(`                           ⚠ ${artifact} changed after the ledger was last written`);
+      }
     } else {
-      L.push(`  stories:               none (no stories/README.md)`);
+      L.push(`  stories:               none (no stories/README.md, no progress.md)`);
     }
     L.push(`  reviewed (reviews.md): ${s.reviewEntry ? "yes" : "no"}`);
     L.push(`  ${s.inPhaseStatus} items:      ${s.inPhaseRemaining} remaining`);
@@ -858,6 +1178,8 @@ function renderScope(s) {
 function renderGaps(g) {
   const L = ["--- GAP INPUT (from the state script — do NOT open _mano_output/backlog.md) ---"];
   L.push(`MODE: ${g.runMode}`);
+  L.push(hookLine(g.hooks));
+  L.push(artifactsLine(g.artifacts));
   L.push(`TYPE: ${g.type}`);
   L.push(`STATUS: ${g.status}`);
   L.push(`COUNT: ${g.count}`);
@@ -885,6 +1207,8 @@ function renderSpec(spec) {
   L.push(`STATUS: ${spec.status}`);
   L.push(`OWNER: ${spec.owner || "none (legacy phase-N mode)"}`);
   L.push(`MODE: ${spec.runMode}`);
+  L.push(hookLine(spec.hooks));
+  L.push(artifactsLine(spec.artifacts));
   L.push(`TRACK: ${spec.track || "none"}`);
   L.push(`PHASE: ${spec.phase === null ? "none" : spec.phase}`);
   L.push(`PHASE_ID: ${spec.phaseId || "none"}`);
@@ -936,6 +1260,8 @@ function renderUi(ui) {
   L.push(`STATUS: ${ui.status}`);
   L.push(`OWNER: ${ui.owner || "none (legacy phase-N mode)"}`);
   L.push(`MODE: ${ui.runMode}`);
+  L.push(hookLine(ui.hooks));
+  L.push(artifactsLine(ui.artifacts));
   L.push(`TRACK: ${ui.track || "none"}`);
   L.push(`PHASE: ${ui.phase === null ? "none" : ui.phase}`);
   L.push(`PHASE_ID: ${ui.phaseId || "none"}`);
@@ -961,6 +1287,8 @@ function renderCurrent(s) {
   L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
   L.push(`OWNER_MODE: ${s.ownerMode}`);
   L.push(`MODE: ${s.runMode}`);
+  L.push(hookLine(s.hooks));
+  L.push(artifactsLine(s.artifacts));
   L.push(`TRACK: ${s.track || "none"}`);
   L.push(`PHASE: ${s.phase === null ? "none" : s.phase}`);
   L.push(`PHASE_ID: ${s.phaseId || "none"}`);
@@ -969,6 +1297,23 @@ function renderCurrent(s) {
   L.push(`BRIEF_STATUS: ${s.briefExists ? "present" : "missing"}`);
   L.push(`STORIES: ${s.phaseDir ? `${s.phaseDir}/stories/README.md` : "missing"}`);
   L.push(`STORIES_STATUS: ${s.stories ? "present" : "missing"}`);
+  L.push(`PROGRESS: ${s.phaseDir ? `${s.phaseDir}/progress.md` : "missing"}`);
+  // missing | present | invalid, never collapsed: `missing` means the file is
+  // not on disk and nothing else does (B4).
+  L.push(`PROGRESS_STATUS: ${s.progressStatus}`);
+  if (s.progressStatus === "invalid") {
+    for (const problem of s.progress.errors) L.push(`  - ${problem}`);
+    L.push(`Delete ${s.phaseDir}/progress.md and re-run mano build. Do NOT hand-repair it.`);
+  }
+  if (s.progressStatus === "present") {
+    L.push(`SCOPE: ${s.progress.scope.closed}/${s.progress.scope.total} done`);
+    L.push(`EXIT_CRITERIA: ${s.progress.exit.closed}/${s.progress.exit.total} met`);
+    if (s.progress.needsHuman.length) L.push(`NEEDS_HUMAN: ${s.progress.needsHuman.map((r) => r.id).join(" ")}`);
+    if (s.progress.openRework.length) L.push(`REWORK: ${s.progress.openRework.length} pending`);
+    for (const artifact of s.staleInputs) {
+      L.push(`⚠ ${artifact} changed after the ledger was last written`);
+    }
+  }
   L.push(`IN_PHASE_STATUS: ${s.inPhaseStatus || "unavailable"}`);
   L.push(`REVIEW_HEADING_PREFIX: ${s.reviewHeading || "unavailable"}`);
   return L.join("\n");
@@ -979,12 +1324,15 @@ function renderCurrent(s) {
 // its file path, and the ordered story list — so the implementer needn't ls for
 // the phase or reopen the index, and can't be fooled by a stale phase carried in
 // the chat. It only *reports* the next pending row; it never decides to skip an
-// earlier pending one (that bypass stays the user's call — AGENTS.md step 5).
+// earlier pending one (that bypass stays the user's call — dev.md step 5).
 function renderNext(s) {
   const L = [];
   L.push(`OWNER: ${s.owner || "none (legacy phase-N mode)"}`);
   L.push(`MODE: ${s.runMode}`);
   L.push(`TRACK: ${s.track || "none"}`);
+
+  // No HOOK/ARTIFACTS lines here: mano dev has no hook slot and reads
+  // artifacts only where its contract's steps direct it to.
 
   // Nothing to implement: no project / no phase folder.
   if (!s.outputExists || s.phase === null) {
@@ -999,10 +1347,105 @@ function renderNext(s) {
     L.push(`PHASE_ID: ${s.phaseId}`);
     return L.join("\n");
   }
-  if (!s.stories || s.stories.total === 0) {
-    L.push(`DEV: ${s.phaseId} has a brief but no stories yet — run mano stories. Nothing for mano dev yet.`);
+
+  // A ledger that exists and does not validate is a hard stop, never a phase
+  // to start building. Collapsing this into "no ledger" is B4.
+  if (s.progressStatus === "invalid") {
     L.push(`PHASE: ${s.phase}`);
     L.push(`PHASE_ID: ${s.phaseId}`);
+    L.push(`PHASE_DIR: ${s.phaseDir}`);
+    L.push(`PROGRESS: ${s.phaseDir}/progress.md`);
+    L.push("PROGRESS_STATUS: invalid");
+    for (const problem of s.progress.errors) L.push(`  - ${problem}`);
+    L.push(`Delete ${s.phaseDir}/progress.md and re-run mano build. Do NOT hand-repair it, do NOT`);
+    L.push("treat this phase as unstarted, and do NOT write any row or status until it is gone.");
+    return L.join("\n");
+  }
+
+  // Build path: this phase's ledger is progress.md, not a stories index. Same
+  // projection contract — what to work on right now, computed fresh from disk.
+  if (s.progressStatus === "present") {
+    const next = s.progress.next;
+    L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
+    L.push(`PHASE_DIR: ${s.phaseDir}`);
+    L.push(`BRIEF: ${s.phaseDir}/phase-brief.md`);
+    L.push(`PROGRESS: ${s.phaseDir}/progress.md`);
+    L.push("PROGRESS_STATUS: present");
+    // B7: build had no whole-brief artifact discovery, so it could not tell a
+    // missing input from an input it simply had not opened.
+    L.push(artifactsLine(s.artifacts));
+    L.push(`SCOPE: ${s.progress.scope.closed}/${s.progress.scope.total} done`);
+    L.push(`EXIT_CRITERIA: ${s.progress.exit.closed}/${s.progress.exit.total} met`);
+    if (s.progress.openRework.length) L.push(`REWORK: ${s.progress.openRework.length} pending`);
+    // D9: advisory only. No routing hangs off it; the human decides.
+    for (const artifact of s.staleInputs) {
+      L.push(`⚠ ${artifact} changed after the ledger was last written`);
+    }
+    if (next) {
+      L.push(`ROW: ${next.id}`);
+      // The row's exact contract, inline. A normal row's is re-derived from the
+      // brief through the same parser init used; a correction or a split carries
+      // its own. Either way the implementer no longer opens the brief to read
+      // one line — the resident-context term that dominates cost.
+      const contract = rowContractText(s.progress, s.brief, next);
+      if (contract === null) {
+        L.push("ROW_CONTRACT: unavailable — the row's text could not be recovered. Stop and report this.");
+      } else {
+        L.push("ROW_CONTRACT:");
+        for (const line of contract.split("\n")) L.push(`  ${line}`);
+        L.push("END_ROW_CONTRACT");
+      }
+    } else if (s.progress.openRework.length) {
+      L.push("ROW: none");
+      L.push(`Every scope row is done, but ${s.progress.openRework.length} review finding(s) are still pending. Work the first pending R… event in order; each one keeps its own exact text in \`## Row Contracts\`. The phase does not go back to review until none is pending.`);
+    } else if (!s.progress.allMet) {
+      L.push("ROW: none");
+      L.push("Every scope row is done but not every Exit Criterion is met. Prove the remaining ones or reopen the row that owes the evidence; the phase is not built until both tables are closed.");
+    } else {
+      L.push("ROW: none");
+      L.push("Every scope row is done and every Exit Criterion is met. The phase is built but NOT closed — run mano review. Do NOT scope or start a new phase before review closes this one.");
+    }
+    const rollUps = Ledger.rollUpIds(s.progress.scope.rows);
+    L.push("");
+    L.push("Scope (Status is the only signal; → = next row, = marks a roll-up whose status is derived):");
+    for (const r of s.progress.scope.rows) {
+      const mark = next && r.id === next.id ? "→" : (rollUps.has(r.id) ? "=" : " ");
+      L.push(`${mark} ${r.id.padEnd(8)} ${r.status.padEnd(11)} ${r.label}`);
+    }
+    L.push("");
+    L.push("Exit Criteria (every leaf must be met before review):");
+    for (const r of s.progress.exit.rows) {
+      L.push(`  ${r.id.padEnd(8)} ${r.status.padEnd(11)} ${r.label}`);
+    }
+    if (s.progress.rework.length) {
+      L.push("");
+      L.push("Rework (review findings; build routes here while any is pending):");
+      for (const r of s.progress.rework) {
+        L.push(`  ${r.id.padEnd(8)} ${r.status.padEnd(11)} ${r.label}`);
+      }
+    }
+    return L.join("\n");
+  }
+
+  if (!s.stories || s.stories.total === 0) {
+    L.push(
+      s.runMode === "auto"
+        ? `DEV: ${s.phaseId} has a brief but no stories yet — in auto the implementation entry is mano build, which builds straight from the brief. Nothing for mano dev yet.`
+        : `DEV: ${s.phaseId} has a brief but no stories yet — run mano stories for story files, or mano build to build straight from the brief. Nothing for mano dev yet.`,
+    );
+    L.push(`PHASE: ${s.phase}`);
+    L.push(`PHASE_ID: ${s.phaseId}`);
+    L.push(`PHASE_DIR: ${s.phaseDir}`);
+    L.push(`BRIEF: ${s.phaseDir}/phase-brief.md`);
+    L.push(`PROGRESS: ${s.phaseDir}/progress.md`);
+    L.push("PROGRESS_STATUS: missing");
+    // B7 again, on the branch that matters most: this is the projection
+    // `mano build` reads on its FIRST run, when pre-flight 0b has to open every
+    // present artifact and nothing has been written yet. Reporting the
+    // inventory only once a ledger exists gives build the list one run too
+    // late.
+    L.push(artifactsLine(s.artifacts));
     return L.join("\n");
   }
 
@@ -1018,10 +1461,10 @@ function renderNext(s) {
     L.push(`PHASE_ID: ${s.phaseId}`);
     L.push(`STORY: ${next.num}`);
     L.push(`FILE: ${s.phaseDir}/stories/${next.file}`);
-    L.push("Read that story file first, then follow AGENTS.md steps 6-10 for any required tech-spec or project-rules context; implement only its acceptance criteria; then mark it done via stories.js set-status (step 11).");
+    L.push("Read that story file first, then follow _mano/skills/dev.md steps 6-10 for any required tech-spec or project-rules context; implement only its acceptance criteria; then mark it done via stories.js set-status (step 11).");
   }
 
-  // The ordered list, so honouring story order (AGENTS.md steps 4-5) for a
+  // The ordered list, so honouring story order (dev.md steps 4-5) for a
   // user-named story needs no index reopen. `→` marks the next pending row.
   L.push("");
   L.push("Stories (Status is the only signal; → = next pending):");
@@ -1041,6 +1484,8 @@ function renderJson(s) {
     ownerMode: s.ownerMode,
     runMode: s.runMode,
     runModeSource: s.runModeSource,
+    hooks: s.hooks,
+    artifacts: s.artifacts,
     track: s.track,
     trackSource: s.trackSource,
     otherOwners: s.otherOwners,
@@ -1052,6 +1497,12 @@ function renderJson(s) {
     briefExists: s.briefExists,
     stories: s.stories,
     storiesAllDone: s.storiesAllDone,
+    progress: s.progress,
+    progressStatus: s.progressStatus,
+    progressExists: s.progressExists,
+    storiesExists: s.storiesExists,
+    staleInputs: s.staleInputs,
+    buildAllDone: s.buildAllDone,
     reviewEntry: s.reviewEntry,
     inPhaseRemaining: s.inPhaseRemaining,
     backlog: s.backlog,
@@ -1080,6 +1531,10 @@ function main() {
   if (args.help) {
     process.stdout.write(HELP + "\n");
     process.exit(0);
+  }
+  if (args.amendCurrent && !args.scope) {
+    process.stderr.write("[mano state] --amend-current can only be used with --scope.\n");
+    process.exit(1);
   }
   if ((args.source !== null && (!args.scope || !String(args.source).trim())) ||
       (args.track !== null && (!args.scope || !String(args.track).trim()))) {
@@ -1163,6 +1618,8 @@ function main() {
   } else if (args.next) {
     out = renderNext(s);
     if (args.verbose) out += "\n\n" + renderEvidence(s);
+  } else if (args.scope && args.amendCurrent) {
+    out = renderAmendCurrent(s);
   } else {
     out = renderDecision(s);
     if (args.scope && s.scope) out += "\n\n" + renderScope(s);
@@ -1178,6 +1635,7 @@ module.exports = {
   GAP_TYPES,
   parseArgs,
   readStories,
+  readProgress,
   countBacklogStatuses,
   extractBacklogItems,
   assertBacklogItemsWellFormed,
@@ -1186,10 +1644,14 @@ module.exports = {
   extractCoreProductPrinciples,
   extractLatestReview,
   hasReviewEntry,
+  scanHooks,
+  scanArtifacts,
   scanGaps,
   scanSpec,
   scanUi,
   scan,
+  renderAmendCurrent,
+  amendBlocker,
   finalize,
   renderDecision,
   renderEvidence,

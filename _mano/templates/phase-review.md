@@ -18,9 +18,19 @@ Owner opt-in: `## Phase [N] Review — Owner: [owner-slug] — [Date]` -->
 
 ### Phase checks
 
-| Phase promise | Result | What happened |
+<!-- One row per Exit Criterion leaf, at the brief's own address. `signed off` is a criterion the human closed without reporting on — the ledger records the same attestation against it. -->
+
+| # | Phase promise | Result | What happened |
+|---|---|---|---|
+| [E1a] | [Exit Criterion leaf] | passed / failed / not tested / signed off | [concrete result, or `Not tested`] |
+
+### Questions
+
+<!-- One row per Validation Plan question, at the brief's own address. Omit this section only when the brief has no Validation Plan. -->
+
+| # | Question | Answer |
 |---|---|---|
-| [Exit Criterion] | passed / failed / not tested | [concrete result, or `Not tested`] |
+| [Q1] | [the question as the brief states it] | [what the human answered, or `unanswered at close`] |
 
 ### Decision
 
@@ -30,9 +40,11 @@ Owner opt-in: `## Phase [N] Review — Owner: [owner-slug] — [Date]` -->
 
 ### Assumptions
 
-| Assumption | Result | What showed this |
-|-----------|---------|------------------------|
-| | confirmed / invalidated / inconclusive | |
+<!-- `accepted` is an assumption the human did not rule on and closed the phase on anyway. `inconclusive` is one they say they still cannot call. -->
+
+| # | Assumption | Result | What showed this |
+|---|-----------|---------|------------------------|
+| [A1] | | confirmed / invalidated / inconclusive / accepted | |
 
 ### Backlog changes
 
