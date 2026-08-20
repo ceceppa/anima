@@ -6,6 +6,8 @@
 
 **Phase 11 supersedes the earlier "no speed or reduced-motion controls" stance for the shared `PlaybackControls` bar.** That bar now needs to demonstrate `complete()`, `revert()`, a speed change, and the global reduced-motion flag end-to-end (see `phase-11/phase-brief.md` Exit Criteria). `v2_stuff/ex2.jpg`'s bottom transport bar is the concrete reference for this addition — its speed control and "Reduced motion" toggle are what's borrowed here (translated into this project's own component vocabulary below); its scrub slider and elapsed/total time readout are not, since progress-based seeking is explicitly a separate, not-yet-selected backlog item.
 
+**Phase 20's Demo Selector** takes `v2_stuff/main-menu.jpeg` as a loose layout reference only: its title bar, card grid, and footer info bar are the borrowed structure. Its per-card neon colour-coding is not borrowed — this app keeps one `accent`/`accent-soft` colour language across every screen (see Colour palette), so every demo card shares that same treatment rather than a colour per category. The reference shows a flat card grid; the approved phase scope is two category tabs (2D/3D) above the card grid, so the tabs replace the reference's single flat list.
+
 ## Accessibility target
 
 WCAG 2.1 AA. Every text pairing below meets the normal-text target unless explicitly marked as large-display-only.
@@ -54,6 +56,9 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 - **Category sidebar** (new, phase-18) — `v2_stuff/animations.jpg` is a loose layout reference only (vertical category list, live preview stage, per-category button grid, bottom transport bar); its cyan/pink neon glow and iconography are not borrowed — this sidebar stays inside the established dark/violet system below. A fixed-width `surface` panel, left of the stage, listing the catalog's 16 categories (mirroring Anima v1's own source folders — Attention Seeker, Back Entrances/Exits, Bouncing Entrances/Exits, Fading Entrances/Exits, Lightspeed, Rotating Entrances/Exits, Slide Exits, Sliding Entrances, Specials, Text, Zooming Entrances/Exits) as a **vertical** extension of the existing `SelectorDock`/`SelectorButton` pattern: one shared moving `accent` indicator, now sliding vertically behind whichever category row is selected, rather than horizontally behind a button. Each row is a `SelectorButton`-style label (icon + name); selection still reads through the same indicator + white text + stronger weight convention every other selector in this app already uses — no new selection language, only a new axis.
 - **Animation grid** — an ordinary (horizontal, wrapping) `SelectorDock` beneath the content stage, one `SelectorButton` per preset name in the selected category (e.g. `bounce`, `flash`, `headshake`, …). Selecting a button immediately replays that preset on whichever target it's compatible with (the label, or the sprite), exactly as `SelectorDock` selection already retriggers a stage animation elsewhere in this app.
 - **Target-mode dock** (new, phase-18) — a compact 3-item horizontal `SelectorDock` (`Both` / `Control` / `Sprite2D`) at the top of the content stage. Purely a visibility switch for the two target halves below it — it never changes which target a preset actually animates on, only which half(s) are shown.
+- **Demo Selector tabs** (new, phase-20) — a compact 2-item `SelectorDock` (`2D` / `3D`) at the top of the Demo Selector screen — the same moving-`accent`-indicator pattern already used for Order From, Formula, Target-mode dock, and Speed control; no new selection language.
+- **Demo card** (new, phase-20) — a `surface` panel, 1px `border` outline, 16px corner radius, holding a 20px line icon, a 16px/700 title, and a 13px/400 `text-secondary` one-line description. Selected/focused state brightens the border to `accent-soft` with the existing soft shadow — the same treatment `Card`/`SelectorButton` already use. Contrast: `text-secondary` on `surface` 7.4:1 ✅ AA (already-verified pairing).
+- **Info bar** (new, phase-20) — a full-width `surface` bar with a `border` top divider, 16px padding, a small info icon, and one `text-secondary` line naming the next action ("Choose a demo to open it."). Structure borrowed from `v2_stuff/main-menu.jpeg`'s footer bar, recoloured to this app's own palette.
 
 ## Screen composition — phase-18 — Animation Catalog Playground
 
@@ -137,3 +142,10 @@ Contrast: `showcase-text` (#FFFFFF) is guaranteed ≥ 4.5:1 (AA) against any sup
 1. **ExampleHeader** — reuses whichever playground scene the developer opens; not changed by this phase.
 2. **Content stage / Card row** — unchanged; this phase's controls sit in the existing playback-controls row beneath any stage.
 3. **Playback controls row** — four circular buttons (restart, reverse, complete, revert) in established order, left-aligned; a 3-item Speed `SelectorDock` (`0.5×`/`1×`/`2×`) to their right; the `ToggleSwitch` + "Reduced motion" label at the far right. One row, no wrap, matching `v2_stuff/ex2.jpg`'s left-to-right control hierarchy (transport → speed → accessibility switch).
+
+## Screen composition — phase-20 — Demo Selector
+
+1. **ExampleHeader** — fixed icon, "Demo Selector", subtitle "Browse the example playground."
+2. **Demo Selector tabs** — the 2-item `SelectorDock` (`2D` / `3D`); `2D` selected by default.
+3. **Demo grid** — a wrapping grid of Demo cards for the selected category: Composition, Group Motion, Convenience Motion, Grid Motion, and Animation Catalog under `2D`; 3D Motion under `3D`. Choosing a card opens that demo's own scene.
+4. **Info bar** — fixed footer naming the next action ("Choose a demo to open it.").

@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://qpsiplpj35rc"]
+
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="1_ahwwd"]
+[ext_resource type="Script" uid="uid://dnnibge2lcp0g" path="res://examples/demo_selector.gd" id="2_varj5"]
+[ext_resource type="PackedScene" uid="uid://4n22aqs2w1qf" path="res://examples/playground/shared/components/example_header.tscn" id="3_6dpm8"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4_kwv24"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4nvdj"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info_bar"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+content_margin_bottom = 16.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_top = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+
+[node name="DemoSelector" type="Control" unique_id=770376655]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ahwwd")
+script = ExtResource("2_varj5")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1063997844]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.039216, 0.054902, 0.101961, 1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1497678604]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=445944145]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" parent="Margin/Content" unique_id=1992664225 instance=ExtResource("3_6dpm8")]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4nvdj")
+title = "Demo Selector"
+subtitle = "Browse the example playground."
+icon = "▣"
+
+[node name="Stage" type="PanelContainer" parent="Margin/Content" unique_id=301821152]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StageContent" type="VBoxContainer" parent="Margin/Content/Stage" unique_id=1307460909]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="DockMargin" type="MarginContainer" parent="Margin/Content/Stage/StageContent" unique_id=667361903]
+layout_mode = 2
+
+[node name="DockRow" type="HBoxContainer" parent="Margin/Content/Stage/StageContent/DockMargin" unique_id=890072085]
+layout_mode = 2
+alignment = 1
+
+[node name="CategorySelector" parent="Margin/Content/Stage/StageContent/DockMargin/DockRow" unique_id=1122960322 instance=ExtResource("4_kwv24")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 1
+auto_size = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Margin/Content/Stage/StageContent" unique_id=1489160374]
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="DemoGrid" type="HFlowContainer" parent="Margin/Content/Stage/StageContent/MarginContainer" unique_id=857649104]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+
+[node name="InfoBar" type="PanelContainer" parent="Margin/Content" unique_id=2059280899]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_info_bar")
+
+[node name="InfoLabel" type="Label" parent="Margin/Content/InfoBar" unique_id=332833772]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 13

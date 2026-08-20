@@ -598,6 +598,14 @@ Tutorial 02's own prose states the dependency on 01 explicitly (its opening line
 
 **No new tooling.** `npm run dev`/`npm run build` already build the whole `docs/content/` tree, generated and hand-written pages alike, through the existing Hugo commands (§API documentation pipeline) — phase-19 adds content under that tree, not a new build step, generator, or manifest dependency.
 
+## Example playground: navigation and scaling (phase-20)
+
+The example playground gains a top-level demo selector scene grouping the existing playgrounds into two categories — 2D (`composition_playground`, `convenience_motion_playground`, `animation_catalog_playground`, `grid_motion_playground`, `group_motion_playground`) and 3D (`3d_motion_playground`) — matching the `v2_stuff/main-menu.jpeg` reference. Selecting a category shows only that category's demos; selecting a demo opens its existing scene unchanged. No new demo content ships with this — only navigation to what already exists.
+
+HiDPI scaling moves out of `ExamplePlayground`'s own `_apply_hidpi_scale()` method into a standalone, reusable add-on, per the phase brief's Stated Technical Preferences (modeled on an existing add-on from a separate project). `ExamplePlayground` calls into the add-on rather than implementing scaling itself, so every playground scene — including the new demo selector — inherits identical scaling behaviour through the one shared base every scene already extends. The add-on owns display-scale detection and node scaling only; it carries no Anima-specific behaviour and no dependency on any Anima runtime type, so it stays reusable outside this project too.
+
+⚠️ Note: the add-on's folder placement is `project-rules.md`/story-level detail, not a spec decision.
+
 ## Out of Scope
 
 - Legacy dictionary or group-migration compatibility layers.

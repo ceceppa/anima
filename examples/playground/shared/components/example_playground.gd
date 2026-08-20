@@ -4,16 +4,18 @@ extends Control
 ## Shared root for runnable Anima playground scenes.
 ##
 ## It makes a running example use the same readable content scale as the
-## operating system display. Playground-specific scripts should call
-## [method _ready] on this base class instead of copying display setup.
+## operating system display, via the standalone [HiDPIScale] add-on, and
+## wires any [ExampleHeader] descendant's back button to the Demo Selector.
+## Playground-specific scripts should call [method _ready] on this base
+## class instead of copying display setup.
+
+const DEMO_SELECTOR_SCENE := "res://examples/demo_selector.tscn"
 
 func _ready() -> void:
-	_apply_hidpi_scale()
+	HiDPIScale.apply_to(self)
 
-## Applies the operating system's scale factor to the running window when the
-## current display is HiDPI. Normal-density displays keep Godot's default scale.
-func _apply_hidpi_scale() -> void:
-	var screen := DisplayServer.window_get_current_screen()
-	var display_scale := DisplayServer.screen_get_scale(screen)
-	if display_scale > 1.0:
-		get_window().content_scale_factor = display_scale
+	for header in find_children("*", "ExampleHeader", true, false):
+		header.back_pressed.connect(_on_header_back_pressed)
+
+func _on_header_back_pressed() -> void:
+	get_tree().change_scene_to_file(DEMO_SELECTOR_SCENE)

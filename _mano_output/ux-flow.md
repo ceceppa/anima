@@ -1,10 +1,30 @@
 # UX Flow — Anima
 
+## Demo Selector
+
+**How it's accessed:** Open the playground's entry scene in the Godot editor and run it — this is now the starting point for browsing the example playground.
+
+**How the user gets back:** Stop the running scene or close it in the editor. There is no screen above this one.
+
+**What the user sees:**
+- The shared `ExampleHeader`.
+- Two category tabs: 2D and 3D.
+- Under the selected tab, a list of that category's demos: Composition, Group Motion, Convenience Motion, Grid Motion, and Animation Catalog under 2D; 3D Motion under 3D.
+- A layout following the `v2_stuff/main-menu.jpeg` reference.
+
+**What the user can do:**
+- Choose the 2D or 3D tab.
+- Choose a demo from the visible list to open it.
+
+**What happens on action:**
+- Choosing a tab shows only that category's demo list; the other category's demos are hidden, never removed.
+- Choosing a demo opens that demo's existing scene, unchanged from how it behaves today.
+
 ## Composition Example Scene
 
-**How it's accessed:** Open `examples/composition_playground.tscn` in the Godot editor and run the scene.
+**How it's accessed:** Choose Composition from the Demo Selector's 2D tab.
 
-**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
 
 **What the user sees:**
 - The shared `ExampleHeader` with the Composition title and subtitle.
@@ -21,9 +41,9 @@
 
 ## Group Motion Example Scene
 
-**How it's accessed:** Open `examples/group_motion_playground.tscn` in the Godot editor and run the scene.
+**How it's accessed:** Choose Group Motion from the Demo Selector's 2D tab.
 
-**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
 
 **What the user sees:**
 - The shared `ExampleHeader` with the Group Motion title and subtitle.
@@ -44,9 +64,9 @@
 
 ## Convenience Motion Example Scene
 
-**How it's accessed:** Open the convenience-motion playground scene in the Godot editor and run it.
+**How it's accessed:** Choose Convenience Motion from the Demo Selector's 2D tab.
 
-**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
 
 **What the user sees:**
 - The shared example header and one Card stage.
@@ -63,9 +83,9 @@
 
 ## Grid Motion Example Scene
 
-**How it's accessed:** Open the Grid-motion playground scene in the Godot editor and run it.
+**How it's accessed:** Choose Grid Motion from the Demo Selector's 2D tab.
 
-**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
 
 **What the user sees:**
 - The shared example header and a 5×5 `GridContainer` of Cards.
@@ -101,9 +121,9 @@
 
 ## 3D Motion Example Scene
 
-**How it's accessed:** Open the 3D-motion playground scene in the Godot editor and run it.
+**How it's accessed:** Choose 3D Motion from the Demo Selector's 3D tab.
 
-**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
 
 **What the user sees:**
 - The same shared example header and playback controls as the 2D Convenience Motion Example Scene.
@@ -203,9 +223,9 @@
 
 ## Animation Catalog Playground
 
-**How it's accessed:** Open the Animation Catalog playground scene in the Godot editor and run it, like any other `examples/playground/` scene.
+**How it's accessed:** Choose Animation Catalog from the Demo Selector's 2D tab.
 
-**How the user gets back:** Stop the running scene or close it in the editor. The scene has no in-app navigation.
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
 
 **What the user sees:**
 - The shared example header, and a category sidebar listing all 16 categories, mirroring Anima v1's own source folders (Attention Seeker, Back Entrances, Back Exits, Bouncing Entrances, Bouncing Exits, Fading Entrances, Fading Exits, Lightspeed, Rotating Entrances, Rotating Exits, Slide Exits, Sliding Entrances, Specials, Text, Zooming Entrances, Zooming Exits) — one is always selected, Attention Seeker by default on first open.

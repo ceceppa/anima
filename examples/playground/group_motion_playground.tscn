@@ -73,6 +73,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=1934436438 instance=ExtResource("3")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_w5r0q")
+show_back_button = true
 title = "Group Motion"
 subtitle = "Coordinate one motion across a collection of artwork cards."
 icon = "✦"

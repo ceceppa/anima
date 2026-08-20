@@ -73,6 +73,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=1198804036 instance=ExtResource("3")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_qwik5")
+show_back_button = true
 title = "Animation Catalog"
 subtitle = "Preview every ported preset by name."
 icon = "✦"

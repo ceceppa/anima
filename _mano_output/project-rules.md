@@ -431,13 +431,15 @@ Anima.play(my_tada, $Card)
 
 ## Example Scenes
 
-**What:** `examples/` splits by what a scene demonstrates. A scene an author *runs* to see the runtime motion API in action — driven by `Anima.play()`, restart/reverse controls, the shared theme and components below — lives under `examples/playground/`. A scene that showcases an `addons/anima/editor/` tool itself — something an author *opens in the Godot editor* to see a panel like the Motion Composer at work, not something that runs as a game — lives under `examples/editor/`. A scripted, self-contained scene built to be captured (screen-recorded or exported via Godot's Movie Writer) for marketing/social content, rather than to demo an API to a developer, lives under `examples/showcase/`.
+**What:** `examples/` splits by what a scene demonstrates. A scene an author *runs* to see the runtime motion API in action — driven by `Anima.play()`, restart/reverse controls, the shared theme and components below — lives under `examples/playground/`. A scene that showcases an `addons/anima/editor/` tool itself — something an author *opens in the Godot editor* to see a panel like the Motion Composer at work, not something that runs as a game — lives under `examples/editor/`. A scripted, self-contained scene built to be captured (screen-recorded or exported via Godot's Movie Writer) for marketing/social content, rather than to demo an API to a developer, lives under `examples/showcase/`. The Demo Selector — the entry-point scene that lists and opens the playground demos — lives directly under `examples/`, not inside `examples/playground/`: it is the shared entry point above the three-way split, not one specific `examples/playground/` demo itself.
 
-**Why:** These are three different audiences and three different ways of consuming the example: playing a scene, opening it and driving the editor around it, or watching a fixed sequence play through once for capture. Keeping them in separate top-level folders keeps `examples/playground/`'s shared runtime chrome (theme, `Card`, `PlaybackControls`, `SelectorDock`, …) from being assumed by scenes that don't need it — an editor-tooling showcase, or a showcase scene with no restart/reverse controls at all.
+**Why:** These are three different audiences and three different ways of consuming the example: playing a scene, opening it and driving the editor around it, or watching a fixed sequence play through once for capture. Keeping them in separate top-level folders keeps `examples/playground/`'s shared runtime chrome (theme, `Card`, `PlaybackControls`, `SelectorDock`, …) from being assumed by scenes that don't need it — an editor-tooling showcase, or a showcase scene with no restart/reverse controls at all. The Demo Selector sits above that split by construction — nesting the whole-project entry point inside just one of the categories it points into would misrepresent what it is.
 
 **Pattern:**
 ```
 examples/
+  demo_selector.tscn   # entry point — lists and opens the playground demos
+  demo_selector.gd
   playground/     # runtime motion scenes — Anima.play(), restart/reverse controls
   editor/         # showcase scenes for addons/anima/editor/ tools — opened in the Godot editor, not run
   showcase/       # scripted scenes built for external capture — no dev playback controls
@@ -499,21 +501,33 @@ examples/
 ```
 
 **What:** Every runnable playground scene extends the shared `ExamplePlayground`
-root script. It applies the operating system's HiDPI content scale in `_ready()`;
-individual playgrounds do not duplicate a local `_apply_hidpi_scale()` helper.
+root script. HiDPI content scaling lives in its own standalone add-on under
+`addons/hidpi_scale/`, not inline on `ExamplePlayground` — `ExamplePlayground`
+calls into the add-on from `_ready()`; individual playgrounds do not duplicate
+a local scaling helper of their own, and the add-on itself carries no
+Anima-specific behaviour or dependency, so it stays reusable outside this
+project too.
 
 **Why:** Examples must remain legible at the display scale the author actually
-uses, and a shared root keeps that platform behaviour consistent as more demos
-are added.
+uses. Extracting the scaling logic into its own add-on (`tech-spec.md`
+§Example playground: navigation and scaling) keeps that behaviour reusable on
+its own, separate from the Anima product addon; a shared `ExamplePlayground`
+root still keeps every playground's behaviour consistent as more demos are
+added.
 
 **Pattern:**
 ```gdscript
+# addons/hidpi_scale/hidpi_scale.gd
+class_name HiDPIScale
+extends RefCounted
+# owns display-scale detection and node scaling only — no Anima dependency
+
 # examples/playground/shared/components/example_playground.gd
 class_name ExamplePlayground
 extends Control
 
 func _ready() -> void:
-    apply_hidpi_scale()
+    HiDPIScale.apply_to(self)
 
 # examples/playground/a_playground.gd
 extends ExamplePlayground

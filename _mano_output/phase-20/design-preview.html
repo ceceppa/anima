@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Anima — Demo Selector (Phase 20 preview)</title>
+<style>
+  :root {
+    --bg: #060A16;
+    --surface: #11182A;
+    --stage-bg: #0A1224;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A8B4CC;
+    --accent: #7C3AED;
+    --accent-soft: #A78BFA;
+    --positive: #2DD4BF;
+    --border: #26324B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .app {
+    width: 100%;
+    max-width: 960px;
+  }
+  header.example-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px 24px 0 0;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header.example-header .icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+    flex-shrink: 0;
+  }
+  header.example-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+  }
+  header.example-header p {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 4px 0 0;
+  }
+  .stage {
+    background: var(--stage-bg);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 32px;
+  }
+  .tabs {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .tabs button {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .tabs button.selected {
+    background: var(--accent);
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .demo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 0.15s ease;
+  }
+  .demo-card:hover,
+  .demo-card.selected {
+    border-color: var(--accent-soft);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.18);
+  }
+  .demo-card .glyph {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--accent-soft);
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .demo-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .demo-card p {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  .info-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 24px 24px;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .info-bar .dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-secondary);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="example-header">
+      <div class="icon"></div>
+      <div>
+        <h1>Demo Selector</h1>
+        <p>Browse the example playground.</p>
+      </div>
+    </header>
+    <div class="stage">
+      <div class="tabs">
+        <button class="selected">2D</button>
+        <button>3D</button>
+      </div>
+      <div class="demo-grid">
+        <div class="demo-card">
+          <div class="glyph"></div>
+          <h3>Composition</h3>
+          <p>Sequence, Parallel, Stagger, Repeat, Race, Conditional.</p>
+        </div>
+        <div class="demo-card">
+          <div class="glyph"></div>
+          <h3>Group Motion</h3>
+          <p>Playback mode and ordering across a card collection.</p>
+        </div>
+        <div class="demo-card">
+          <div class="glyph"></div>
+          <h3>Convenience Motion</h3>
+          <p>Anima.on() families with a live code example.</p>
+        </div>
+        <div class="demo-card">
+          <div class="glyph"></div>
+          <h3>Grid Motion</h3>
+          <p>Propagation formulas across a 5×5 card grid.</p>
+        </div>
+        <div class="demo-card">
+          <div class="glyph"></div>
+          <h3>Animation Catalog</h3>
+          <p>Every ported preset, browsable by category.</p>
+        </div>
+      </div>
+    </div>
+    <div class="info-bar">
+      <div class="dot"></div>
+      Choose a demo to open it.
+    </div>
+  </div>
+</body>
+</html>

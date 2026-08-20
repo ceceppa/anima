@@ -1,38 +1,85 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://4n22aqs2w1qf"]
 
 [ext_resource type="Script" uid="uid://bbubcuat4omx7" path="res://examples/playground/shared/components/example_header.gd" id="1"]
 
-[node name="ExampleHeader" type="PanelContainer"]
-layout_mode = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_433pc"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2312a"]
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pa6jw"]
+bg_color = Color(0.309804, 0.27451, 0.898039, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="ExampleHeader" type="PanelContainer" unique_id=1694377551]
+theme_override_styles/panel = SubResource("StyleBoxFlat_433pc")
 script = ExtResource("1")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=213648207]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="IconBox" type="PanelContainer" parent="HBox"]
+[node name="BackButton" type="Button" parent="HBox" unique_id=1877141094]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_2312a")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2312a")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2312a")
+theme_override_styles/focus = SubResource("StyleBoxFlat_2312a")
+text = "←"
+
+[node name="IconBox" type="PanelContainer" parent="HBox" unique_id=1880360615]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_pa6jw")
 
-[node name="IconLabel" type="Label" parent="HBox/IconBox"]
+[node name="IconLabel" type="Label" parent="HBox/IconBox" unique_id=1905546923]
 unique_name_in_owner = true
 layout_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="TextBox" type="VBoxContainer" parent="HBox"]
+[node name="TextBox" type="VBoxContainer" parent="HBox" unique_id=123798788]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 2
 
-[node name="Title" type="Label" parent="HBox/TextBox"]
+[node name="Title" type="Label" parent="HBox/TextBox" unique_id=1892355720]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.980392, 0.988235, 1)
+theme_override_font_sizes/font_size = 28
 
-[node name="Subtitle" type="Label" parent="HBox/TextBox"]
+[node name="Subtitle" type="Label" parent="HBox/TextBox" unique_id=388032308]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.580392, 0.639216, 0.721569, 1)
+theme_override_font_sizes/font_size = 14

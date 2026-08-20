@@ -2783,7 +2783,7 @@
 - **Source:** Phase 6 review
 - **Context:**
   Update every existing runnable playground example to extend the shared ExamplePlayground base so its HiDPI scaling is applied consistently.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Grid motion scheduling and distance formulas
 - **Type:** feature
@@ -2916,7 +2916,7 @@
 - **Source:** User idea
 - **Context:**
   To have a demo selector for the playground example added. It needs to have two "tabs": 2D and 3D
-- **Status:** backlog
+- **Status:** resolved
 
 ### Spring-motion playground demo
 - **Type:** feature
@@ -3128,4 +3128,15 @@
 - **Source:** phase-19 scoping
 - **Context:**
   v1 documented how to read a target's current animated value mid-flight. v2 has no public query API for this yet (only a future Composer editor panel touches it), so this guide was dropped from phase-19. Revisit once such an API exists.
+- **Status:** backlog
+
+### Add "Showcase" category to demo selector
+- **Type:** feature
+- **Source:** phase-20
+- **Track:** none
+- **Context:**
+  Demo selector currently switches between 2D and 3D demo groups only.
+  Extend it with a third "Showcase" category (switch + listing of
+  available showcases); showcase content itself is added separately,
+  wherever it fits.
 - **Status:** backlog

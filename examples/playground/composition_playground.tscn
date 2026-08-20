@@ -56,6 +56,7 @@ theme_override_constants/separation = 24
 [node name="Header" parent="Margin/Content" unique_id=941379105 instance=ExtResource("3")]
 unique_name_in_owner = true
 theme_override_styles/panel = SubResource("StyleBoxFlat_0cbyn")
+show_back_button = true
 title = "Composition"
 subtitle = "See how simple animations come together in expressive flows."
 icon = "✦"

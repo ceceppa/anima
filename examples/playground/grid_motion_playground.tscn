@@ -71,6 +71,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=274345128 instance=ExtResource("3")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_2o1f1")
+show_back_button = true
 title = "Grid Motion"
 subtitle = "Propagate a wave across a 5×5 grid from any tile you choose."
 icon = "✦"

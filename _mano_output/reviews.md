@@ -178,3 +178,51 @@
 ### Backlog changes
 
 - None
+
+## Phase 20 Review — 2026-08-21
+
+### Validation
+
+- **Result:** Not tested
+
+### Phase checks
+
+| # | Phase promise | Result | What happened |
+|---|---|---|---|
+| E1a | Open the playground: a 2D/3D selector is visible | signed off | |
+| E1a+1 | Open any existing playground demo: a "go back" button in the header returns to the demo selector. | signed off | |
+| E1b | Select 2D: only 2D demos are shown | signed off | |
+| E1c | Select 3D: only 3D demos are shown | signed off | |
+| E2a | Open any existing playground demo on a high-DPI display: it renders at the same relative size and clarity as the others | signed off | |
+| E2b | Compare two different playground demos side by side at a non-default display scale: their scaling behaves identically | signed off | |
+
+### Questions
+
+| # | Question | Answer |
+|---|---|---|
+| Q1 | Does the 2D/3D selector make it easy to find a demo? | unanswered at close |
+| Q2 | Does every existing playground demo now scale consistently at high DPI? | unanswered at close |
+
+### Decision
+
+- **Choice:** Not assessed
+
+### Assumptions
+
+| # | Assumption | Result | What showed this |
+|---|-----------|---------|------------------------|
+| A1 | The playground's inconsistent scaling can be fully resolved by adopting one shared scaling add-on, rather than needing per-demo fixes. | accepted | |
+
+### Backlog changes
+
+- None
+
+### Addendum — 2026-08-21
+
+#### Validation
+
+- **Result:** Everything worked as expected; validated manually.
+
+#### Outcome changes
+
+- None

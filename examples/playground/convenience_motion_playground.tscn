@@ -72,6 +72,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=368921809 instance=ExtResource("3")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_mwbe8")
+show_back_button = true
 title = "Convenience Motion"
 subtitle = "Author.on() a common change by name, then compose, reverse, and replay it like any other motion."
 icon = "✦"

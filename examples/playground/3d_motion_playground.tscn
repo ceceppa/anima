@@ -89,6 +89,7 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=468921809 instance=ExtResource("3")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_ggsen")
+show_back_button = true
 title = "3D Motion"
 subtitle = "The same Anima.on() convenience layer, driving a 3D Icosahedron Card instead of a flat one."
 icon = "✦"
