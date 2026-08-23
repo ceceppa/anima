@@ -1,15 +1,16 @@
 extends ExamplePlayground
 
 ## Entry point for the example playground (ux-flow.md §Demo Selector):
-## groups the existing playground demos into 2D and 3D categories and opens
+## groups the existing playground demos into 2D, 3D, and Showcase categories and opens
 ## whichever one the user picks. Ships no new demo content — only navigation
 ## to what already exists.
 
-enum Category { TWO_D, THREE_D }
+enum Category { TWO_D, THREE_D, SHOWCASE }
 
 const CATEGORY_LABELS := {
 	Category.TWO_D: "2D",
 	Category.THREE_D: "3D",
+	Category.SHOWCASE: "Showcase",
 }
 
 ## title / description / icon / scene path per demo, grouped by category —
@@ -53,6 +54,14 @@ const DEMOS := {
 			"description": "Anima.on() families for a 3D target.",
 			"icon": "◈",
 			"scene": "res://examples/playground/3d_motion_playground.tscn",
+		},
+	],
+	Category.SHOWCASE: [
+		{
+			"title": "Grid Showcase",
+			"description": "A scripted animated grid showcase.",
+			"icon": "✦",
+			"scene": "res://examples/showcase/grid/grid_showcase.tscn",
 		},
 	],
 }

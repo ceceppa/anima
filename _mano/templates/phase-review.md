@@ -26,15 +26,16 @@ Owner opt-in: `## Phase [N] Review — Owner: [owner-slug] — [Date]` -->
 
 ### Questions
 
-<!-- One row per Validation Plan question, at the brief's own address. Omit this section only when the brief has no Validation Plan. -->
+<!-- One row per Validation Plan question, at the brief's own address. Omit this section only when the brief has no Validation Plan.
+Every row carries the human's own answer. `not checked` is the only substitute, and only when the human said so. A question is never left for Mano to answer. -->
 
 | # | Question | Answer |
 |---|---|---|
-| [Q1] | [the question as the brief states it] | [what the human answered, or `unanswered at close`] |
+| [Q1] | [the question as the brief states it] | [what the human answered, or `not checked`] |
 
 ### Decision
 
-- **Choice:** [human choice, `Not enough evidence`, or `Not assessed`]
+- **Choice:** [human choice, `Not enough evidence`, or `Nothing to decide`]
 - **Why:** [stated reason, or a stated result that directly supports the choice]
 <!-- Omit `Why` when the human supplied no reason. -->
 

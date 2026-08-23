@@ -5,6 +5,7 @@ extends RefCounted
 ## Which lifecycle stage this playback is in.
 enum State {
 	PLAYING,
+	QUEUED,
 	PAUSED,
 	CANCELLED,
 	FINISHED,
@@ -113,6 +114,16 @@ func pause() -> void:
 ## Continues playback from wherever [method pause] froze it.
 func resume() -> void:
 	if state == State.PAUSED:
+		state = State.PLAYING
+
+## Holds this playback until [method start_queued] is called by the runtime.
+func queue() -> void:
+	if state == State.PLAYING:
+		state = State.QUEUED
+
+## Starts a playback previously held by [method queue].
+func start_queued() -> void:
+	if state == State.QUEUED:
 		state = State.PLAYING
 
 ## Stops playback and resolves [signal finished] as not-successful. The value

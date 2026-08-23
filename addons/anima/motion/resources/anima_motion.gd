@@ -39,6 +39,17 @@ enum CancellationValuePolicy {
 	COMPLETE,
 }
 
+## How an incoming property motion resolves an existing owner of the same target property.
+enum InterruptionPolicy {
+	REPLACE,
+	RETARGET,
+	REVERSE,
+	QUEUE,
+	CANCEL,
+	COMPLETE_CURRENT,
+	IGNORE_NEW,
+}
+
 ## Optional label, e.g. for [constant _AnimaParallel.CompletionPolicy.NAMED_CHILD].
 @export var display_name: String = ""
 ## Disabled motions are skipped by every composite that contains them.
@@ -78,6 +89,8 @@ enum CancellationValuePolicy {
 ## The value left behind when this motion's playback is cancelled. See
 ## [enum CancellationValuePolicy].
 @export var cancellation_value_policy: CancellationValuePolicy = CancellationValuePolicy.KEEP_CURRENT
+## The policy used when this motion arrives while the same target property is already animated.
+@export var interruption_policy: InterruptionPolicy = InterruptionPolicy.REPLACE
 ## Overrides how this motion plays when reduced motion is active for the
 ## playing target (see [method Anima.is_reduced_motion_active]). `< 0.0`
 ## (the default) means no override. `> 0.0` replaces the normal `speed_scale

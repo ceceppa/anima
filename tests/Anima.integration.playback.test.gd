@@ -173,6 +173,93 @@ func test_second_motion_on_same_node_plays_independently():
 	assert_almost_eq(node.position.y, 50.0, 0.01)
 	assert_eq(playback_b.state, AnimaPlayback.State.FINISHED)
 
+func test_same_property_replaces_the_active_owner_by_default():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var first := AnimaPropertyMotion.new()
+	first.target_property = NodePath("position:x")
+	first.to_value = 100.0
+	first.duration = 1.0
+	var second := AnimaPropertyMotion.new()
+	second.target_property = NodePath("position:x")
+	second.to_value = 20.0
+	second.duration = 0.25
+	var first_playback := Anima.play(first, node)
+	simulate(AnimaRuntime.get_singleton(), 10, 1.0 / 60.0)
+	var second_playback := Anima.play(second, node)
+	assert_eq(first_playback.state, AnimaPlayback.State.CANCELLED)
+	assert_ne(second_playback, null)
+	simulate(AnimaRuntime.get_singleton(), 20, 1.0 / 60.0)
+	assert_eq(second_playback.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(node.position.x, 20.0, 0.01)
+
+func test_same_property_queue_waits_for_the_active_owner():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var first := AnimaPropertyMotion.new()
+	first.target_property = NodePath("position:x")
+	first.to_value = 10.0
+	first.duration = 0.25
+	var second := AnimaPropertyMotion.new()
+	second.target_property = NodePath("position:x")
+	second.to_value = 20.0
+	second.duration = 0.25
+	second.interruption_policy = AnimaMotion.InterruptionPolicy.QUEUE
+	var first_playback := Anima.play(first, node)
+	var queued := Anima.play(second, node)
+	assert_eq(queued.state, AnimaPlayback.State.QUEUED)
+	simulate(AnimaRuntime.get_singleton(), 16, 1.0 / 60.0)
+	assert_eq(first_playback.state, AnimaPlayback.State.FINISHED)
+	assert_eq(queued.state, AnimaPlayback.State.PLAYING)
+	simulate(AnimaRuntime.get_singleton(), 16, 1.0 / 60.0)
+	assert_eq(queued.state, AnimaPlayback.State.FINISHED)
+	assert_almost_eq(node.position.x, 20.0, 0.01)
+
+func test_same_property_cancel_and_ignore_new_leave_no_second_owner():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var first := AnimaPropertyMotion.new()
+	first.target_property = NodePath("position:x")
+	first.to_value = 10.0
+	first.duration = 1.0
+	var cancel_request := AnimaPropertyMotion.new()
+	cancel_request.target_property = NodePath("position:x")
+	cancel_request.to_value = 20.0
+	cancel_request.interruption_policy = AnimaMotion.InterruptionPolicy.CANCEL
+	var active := Anima.play(first, node)
+	assert_eq(Anima.play(cancel_request, node), null)
+	assert_eq(active.state, AnimaPlayback.State.CANCELLED)
+	var restarted := Anima.play(first, node)
+	var ignored := AnimaPropertyMotion.new()
+	ignored.target_property = NodePath("position:x")
+	ignored.to_value = 20.0
+	ignored.interruption_policy = AnimaMotion.InterruptionPolicy.IGNORE_NEW
+	assert_eq(Anima.play(ignored, node), null)
+	assert_eq(restarted.state, AnimaPlayback.State.PLAYING)
+	restarted.cancel()
+
+func test_complete_current_and_reverse_resolve_to_one_playback():
+	var node: Node2D = add_child_autofree(Node2D.new())
+	var first := AnimaPropertyMotion.new()
+	first.target_property = NodePath("position:x")
+	first.to_value = 10.0
+	first.duration = 1.0
+	var complete_request := AnimaPropertyMotion.new()
+	complete_request.target_property = NodePath("position:x")
+	complete_request.to_value = 20.0
+	complete_request.duration = 0.25
+	complete_request.interruption_policy = AnimaMotion.InterruptionPolicy.COMPLETE_CURRENT
+	var active := Anima.play(first, node)
+	var replacement := Anima.play(complete_request, node)
+	assert_eq(active.state, AnimaPlayback.State.FINISHED)
+	assert_ne(replacement, null)
+	simulate(AnimaRuntime.get_singleton(), 5, 1.0 / 60.0)
+	assert_gt(node.position.x, 10.0)
+	var reverse_request := AnimaPropertyMotion.new()
+	reverse_request.target_property = NodePath("position:x")
+	reverse_request.interruption_policy = AnimaMotion.InterruptionPolicy.REVERSE
+	var reversed := Anima.play(reverse_request, node)
+	assert_eq(reversed, replacement)
+	simulate(AnimaRuntime.get_singleton(), 16, 1.0 / 60.0)
+	assert_almost_eq(node.position.x, 10.0, 0.01)
+
 func test_playing_a_sequence_runs_children_in_order_and_completes():
 	var node: Node2D = add_child_autofree(Node2D.new())
 

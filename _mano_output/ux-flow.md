@@ -8,17 +8,18 @@
 
 **What the user sees:**
 - The shared `ExampleHeader`.
-- Two category tabs: 2D and 3D.
-- Under the selected tab, a list of that category's demos: Composition, Group Motion, Convenience Motion, Grid Motion, and Animation Catalog under 2D; 3D Motion under 3D.
+- Three category tabs: 2D, 3D, and Showcase. One category is selected at a time.
+- Under the selected tab, a list of that category's demos: Composition, Group Motion, Convenience Motion, Grid Motion, and Animation Catalog under 2D; 3D Motion under 3D; Grid Showcase under Showcase.
 - A layout following the `v2_stuff/main-menu.jpeg` reference.
 
 **What the user can do:**
-- Choose the 2D or 3D tab.
+- Choose the 2D, 3D, or Showcase tab.
 - Choose a demo from the visible list to open it.
 
 **What happens on action:**
 - Choosing a tab shows only that category's demo list; the other category's demos are hidden, never removed.
-- Choosing a demo opens that demo's existing scene, unchanged from how it behaves today.
+- Choosing Grid Showcase from the Showcase tab opens its existing scene.
+- Choosing any other demo opens that demo's existing scene, unchanged from how it behaves today.
 
 ## Composition Example Scene
 

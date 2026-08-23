@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cywi7ohm2iphf" path="res://examples/playground/composition_playground.gd" id="1"]
 [ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="1_lyx8s"]
-[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://4n22aqs2w1qf" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="5_0cbyn"]
 
@@ -55,11 +55,12 @@ theme_override_constants/separation = 24
 
 [node name="Header" parent="Margin/Content" unique_id=941379105 instance=ExtResource("3")]
 unique_name_in_owner = true
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0cbyn")
-show_back_button = true
 title = "Composition"
 subtitle = "See how simple animations come together in expressive flows."
 icon = "✦"
+show_back_button = true
 
 [node name="Stage" type="PanelContainer" parent="Margin/Content" unique_id=2005584351]
 unique_name_in_owner = true

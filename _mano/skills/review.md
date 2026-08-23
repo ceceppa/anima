@@ -143,18 +143,22 @@ Promised:
    Try: [the brief's matching Try guidance]
 
 Open bet A1: [the assumption, one compact line].
-Open question Q1: [the Validation Plan question, one line per question].
 
-What broke, what you'd change, or "close it".
+Answer before close:
+Q1 — [the Validation Plan question, one line per question].
+
+Answer each open question and say what broke or what you'd change — then "close it". "Didn't check" answers a question.
 ```
 
 - **Every Exit Criterion leaf gets its own line.** A category that hides an unverified leaf inside it is the exact defect addressable Exit Criteria were built to remove. Never omit an Exit Criterion because the Validation Plan does not mention it — the two sections answer different questions.
-- **Every unresolved Validation Question gets its own `Open question` line.** Shorter must not mean weaker: a question the human was asked does not disappear because the prompt got tighter.
+- **Every unresolved Validation Question gets its own line under `Answer before close:`.** Shorter must not mean weaker: a question the human was asked does not disappear because the prompt got tighter. The heading is doing work — a question filed under `Open question` reads as context to skim, and the human then closes without realising they were being asked anything.
+- **The ask names what must come back.** Every open question is an answer the review cannot write without — see the **Answer gate** in STEP 2. When the brief has no Validation Plan there is nothing to answer, so the `Answer before close:` block is omitted and the last line reads `What broke, what you'd change, or "close it".` instead.
+- **The brief states no decision, so never ask for one here.** `## Validation Plan` holds `### Questions` and `### Try` — that is all. A `Decision — …` line has nothing to name and prints as an empty bracket, which is a question about nothing. Only a legacy plan carrying an explicit `Decision this informs` heading supplies one; add the line then, quoting that heading's own words, and never otherwise.
 - **Use the brief's own addresses — `E1a`, `Q1`, `A1` — never display numbering you invented.** A brief written before those addresses existed is *not* rewritten to add them: derive the same IDs by document order (the first `### Questions` bullet is `Q1`, the first Assumption Log row is `A1`) and use them here and in the review record, so a follow-up can refer to the same thing.
 - **An assumption is one compact bet line, not a checklist.** Restate it in plain English without changing its meaning. No Assumption Log, no bet lines.
 - **A leaf the ledger marks `needs-human` is flagged as such and always shows its `Try` line.** Build recorded why a person has to judge it; you source the `Try` from the brief. These are the checks most likely to be worth the human's minute.
 - **The `Try` lines repeat what the implementation handoff already printed under `Validate now:`.** Print them anyway: chat delivery is not durable state, and this opening is frequently a fresh session in which that message no longer exists.
-- No Validation Plan means no `Open question` lines and no `Try` lines. Never invent a missing plan during review. A legacy plan that uses `Decision this informs` / `Evidence to gather` already supplies both — read it under its own headings rather than restructuring it.
+- No Validation Plan means no `Answer before close:` block and no `Try` lines. Never invent a missing plan during review. A legacy plan that uses `Decision this informs` / `Evidence to gather` already supplies both — read it under its own headings rather than restructuring it.
 
 **One response, one ask, and the ask is that last line as written.** No tags. No status vocabulary. No explanation of how any of it gets recorded. No second closer, no alternatives menu, no preamble, no commentary. End of message — and **silence is not approval and closes nothing**: send this and do nothing at all until the human replies.
 
@@ -188,7 +192,7 @@ When the verdict refers to the whole review:
 
 A qualifier narrows the verdict. For example, `all tests passed` covers the tested Phase checks. It does not confirm product assumptions. If the human states a choice and a result that directly supports it, reuse that result as the Decision's `Why`. Do not make the human restate it.
 
-**A clear positive verdict closes in one exchange — with or without the literal `close it`.** When the verdict is unqualified and nothing in the message needs triage judgment (no defect, refinement, new idea, gap, or rejection to classify), apply the whole-review mapping silently — verdict recorded verbatim as `Result`, every Phase check `passed`, every assumption `confirmed`, resolve sweep run — go straight to STEP 3, and reply with the terse execution-log changelog. Do not present the triage echo or ask whether anything is in the wrong bucket. The echo-back confirmation round survives **only** for mixed or negative feedback, where Mano made triage judgments the human must check.
+**A clear positive verdict closes in one exchange — with or without the literal `close it` — once the answer gate is satisfied.** When the verdict is unqualified, nothing in the message needs triage judgment (no defect, refinement, new idea, gap, or rejection to classify), and the message already answers every open question, apply the whole-review mapping silently — verdict recorded verbatim as `Result`, every Phase check `passed`, every assumption `confirmed`, resolve sweep run — go straight to STEP 3, and reply with the terse execution-log changelog. Do not present the triage echo or ask whether anything is in the wrong bucket. A brief with no Validation Plan has nothing to answer and nothing to decide, so a positive verdict closes it outright. When a question is still open, send the **Answer gate** line below — that is the one thing a positive verdict does not skip. The echo-back confirmation round survives **only** for mixed or negative feedback, where Mano made triage judgments the human must check.
 
 **Phase-check rule:** Record one result for every Exit Criterion — `passed`, `failed`, `not tested`, or `signed off`. A user-reported failure becomes a 🐛 Defect unless they reject the promised outcome. Do not treat an omitted check as passed. A check the human did not report on records `signed off` when they closed the phase (see **Closing semantics** below), and `not tested` only where the review does not close it.
 
@@ -224,11 +228,41 @@ Rejection candidates follow the same confirmation model as every other bucket: t
 
 That is your complete response. DO NOT write files yet.
 
-**Fast close — explicit close without a result.** Use this path only when the reply says `close it` and supplies no validation result, decision, assumption verdict, or feedback. Examples include `close it` and `I did not test it; close it`. A positive summary verdict never uses this path.
+**Answer gate — the two things review may never write for the human.** Before writing any file, the review must hold, in the human's own words:
 
-Skip the triage presentation and go straight to STEP 3. Write no backlog items. Run the resolve sweep and write the review entry. Record `Validation` as `Result: Not tested` and omit `Checked with` — they reported no result, and the record says so. Record the decision as `Not assessed` and omit its Why. Record `Backlog changes` as `None`. Omit `What we learned`. Everything else follows **Closing semantics** below. Do not ask for feedback or another confirmation.
+1. the **Validation `Result`** — what happened, or an explicit "didn't test it";
+2. an **answer to every Validation Question** at its `Q…` address — `didn't check` is a complete answer.
 
-**The close instruction is terminal — never re-confirm it.** A message may carry a whole-review verdict, individual verdicts, or feedback with its close instruction. Examples include `all went as planned, close it` and `1 confirmed, 2 invalidated; close it`. Apply the supplied outcomes, then go straight to writing files. Do **not** emit another triage-confirmation prompt. The user already confirmed the review.
+*Mano never fills either in.* A question Mano asked and then answered on the human's behalf is a question there was no point asking, and a record full of them is why this gate exists. `close it` is sign-off on the phase; it is not an answer to a question. There is no path — no verdict, no close token, no combination of the two — that writes the record with either still open.
+
+**The Decision is not a gate slot.** The brief does not state one: `## Validation Plan` holds `### Questions` and `### Try`, and nothing else. Asking "what did you decide?" against a brief that framed no decision is a question about nothing, and it prints as an empty bracket. Record `Choice` from what the human already said, or `Nothing to decide` — and never ask. The single exception is a legacy plan with an explicit `Decision this informs` heading: that brief *does* name the choice, so it joins the gate quoting that heading's own words.
+
+When a close instruction arrives with either slot open, send exactly this and nothing else:
+
+```text
+[mano review]: [PHASE_ID] — still need:
+
+Q1 — [the question, as the brief states it]
+Q2 — [the question]
+Result — what happened when you tried it
+
+"Didn't check" / "didn't test it" are complete answers.
+```
+
+- **Never send a line you could not fill from the brief.** If the text inside a bracket is not in the brief, the whole line is omitted — an unfilled placeholder is a question the human cannot answer and Mano cannot use. This is what makes a `Decision — [the choice this phase informs]` line unsendable on a modern brief.
+- **List only what is actually missing**, and list all of it at once. A message that answered Q1 and left Q2 open asks for Q2 alone.
+- **Send the gate at most once per review.** Whatever is still open after the reply is recorded from what the human did say — `not checked`, `Not tested`, `Nothing to decide` — and the review closes. A second `still need:` message is the ceremony this framework exists to avoid, and it is never correct: the human already answered once.
+- **The gate is the human's protection, not the framework's.** They did not write the brief's questions and have no reason to remember them at close time. Showing the open ones at the moment they close is the whole point: it is how they find out what they were about to skip.
+- **Do not re-present what is already confirmed.** The triage, the phase checks, the assumptions, and the rejection candidates the human already ruled on are written the moment the gate clears — they do not go in this message and are never asked about again.
+- **The reply to the gate is triage input, and STEP 2 runs over it in full.** This is the opposite of the bullet above: *Mano* adds nothing, the *human* may add anything. An answer routinely carries a finding — the **Splitting rule** applies to it exactly as it does to any other feedback. Triage what they added, echo it if it needed judgment, and record it. Discarding it because "the gate only asked for Q1" loses feedback the human volunteered, which is worse than the hole the gate was built to close.
+
+  Worked example — the gate asks Q1 and the human replies: *"Q2: yes. Q1: I couldn't test this manually, we need to implement it in the existing examples (or a new one)."*
+  - ✅ `Q2` records `yes`. `Q1` records `not checked — couldn't test it manually`.
+  - ✅ "we need to implement it in the existing examples" is a ✨ New idea: a backlog item for the playground coverage that would make Q1 answerable next time. It is the reason Q1 could not be answered, and it is the actionable half of that sentence.
+  - ❌ Do not record `Q1: not checked` and drop the rest. ❌ Do not send a second `still need:` line.
+- **A refusal is an answer.** `skip it`, `just close it`, or `don't care` in reply to the gate closes the phase: record that question as `not checked`, the result as `Not tested`, and write.
+
+**Past the gate, the close instruction is terminal — never re-confirm it.** A message may carry a whole-review verdict, individual verdicts, or feedback with its close instruction. Examples include `all went as planned, close it` and `1 confirmed, 2 invalidated; close it`. Apply the supplied outcomes, satisfy the answer gate if anything is still open, then go straight to writing files. Do **not** emit a triage-confirmation prompt. The user already confirmed the review.
 
 **Dismissing a build-path finding is the human's word, never an inference.** When the human rejects a finding outright during triage — "that's intended", "not doing that, close it" — and it had already been written as a rework event, record that exact decision:
 
@@ -244,12 +278,13 @@ The one thing that survives a close instruction is a ❌ rejection candidate the
 
 **Closing semantics — `close it` is full human sign-off.**
 
-The human typed it. That is an attestation, and recording it as *untested* would be the framework second-guessing the person it exists to serve. On `close it`, or on an explicit clear all-good verdict:
+The human typed it. That is an attestation about the phase — and it is not evidence, and not an answer to anything Mano asked. On `close it`, or on an explicit clear all-good verdict, once the **Answer gate** above is satisfied:
 
 - **Exit Criteria.** On the build path, `progress.js sign-off` flips every `pending` and `needs-human` leaf to `met` and records `human sign-off at review, [date]` against each one, so the ledger says *who* proved it. In the review record, a criterion the human reported on keeps their result (`passed` / `failed`); one they did not is `signed off`, matching the ledger. On the stories path there is no ledger and the review record is the whole account.
 - **Assumptions.** An assumption the human ruled on keeps their verdict (`confirmed` / `invalidated`). One they did not rule on records `accepted`: the phase shipped on it and they closed it. `inconclusive` is for an assumption the human says they still cannot call, not for one they never mentioned.
-- **Validation Questions.** An unanswered question records `unanswered at close` — never as answered, passed, or accepted. *"Ship it" does not answer a question the human was asked*, and a question that quietly resolves itself at close is a question there was no point asking. It carries its `Q…` address so a later phase can pick it up.
-- **Validation.** `Result` is what the human reported. They reported nothing, it is `Not tested` — sign-off is an attestation, not evidence, and the record keeps the two apart.
+- **Validation Questions.** Every question carries the human's own answer at its `Q…` address. The one substitute is `not checked`, written only when they said so at the answer gate — followed by their words when they added any. **There is no `unanswered at close`.** The gate makes it unreachable, and that is the point: *"ship it" does not answer a question the human was asked*, and a question the record cannot answer is one a later phase cannot pick up.
+- **Decision.** `Choice` is the human's own when they stated one, and `Nothing to decide` when they did not — the brief framed no decision to ask about, so this slot is recorded, never gated. Still never *inferred*: not from completion, not from a close instruction, not from test success. `Not enough evidence` only when the human said so.
+- **Validation.** `Result` is what the human reported. `Not tested` records their own "didn't test it", never the framework's reading of silence — sign-off is an attestation, not evidence, and the record keeps the two apart.
 
 There is no second closing keyword. A human who wants to record a failure says what broke; that is already the triage path, and a second keyword would cost the one exchange this whole flow is built to fit in.
 
@@ -320,7 +355,7 @@ When the user confirms (e.g., "close it", "yes"):
    It flips each named open item to `Status: rejected`, which is not `resolved`: rejected means no longer wanted, resolved means shipped or fixed. Never conflate them — a rejected item recorded as resolved falsely claims the work was done. Skip this step entirely when the triage had no confirmed ❌ items. **Script failing?** Stop and report the error — do not flip statuses by hand.
 4. If `_mano_output/reviews.md` does not exist, create it with the top-level title.
 5. **Always append** the new review entry at the **bottom** of `_mano_output/reviews.md`. Never insert between existing entries.
-6. Fill the review template concretely. Always write a Validation result. Preserve what the human reported. Use `Not tested` only when they reported no result. Add `Checked with` only when the human named the context. Never write an evidence level, `Tried`, or `Not recorded`. A whole-review verdict counts as a stated result and assumption verdict under the Validation rule. **The record is the complete one, even though the echo was short:** add every Exit Criterion leaf to `Phase checks` at its `E…` address, every Validation Question at its `Q…` address, and every assumption at its `A…` address — the same addresses the opening used. Their values follow **Closing semantics** above. Record the human's choice. Use `Not assessed` when they made none. Never infer a choice from completion or test success. When the human states both a choice and a result that directly supports it, reuse the result as `Why`. Otherwise omit Why. List only confirmed backlog changes, or `None`. Omit `What we learned` unless a reusable lesson changes future work.
+6. Fill the review template concretely. Always write a Validation result. Preserve what the human reported. Use `Not tested` only when the human said they did not test it. Add `Checked with` only when the human named the context. Never write an evidence level, `Tried`, or `Not recorded`. A whole-review verdict counts as a stated result and assumption verdict under the Validation rule. **The record is the complete one, even though the echo was short:** add every Exit Criterion leaf to `Phase checks` at its `E…` address, every Validation Question at its `Q…` address, and every assumption at its `A…` address — the same addresses the opening used. Their values follow **Closing semantics** above. Record the human's choice, or `Nothing to decide` when they stated none — never ask for it. Never infer a choice from completion or test success, and never leave a question blank: the gate guarantees you were given every answer. When the human states both a choice and a result that directly supports it, reuse the result as `Why`. Otherwise omit Why. List only confirmed backlog changes, or `None`. Omit `What we learned` unless a reusable lesson changes future work.
 
    **No release recap.** The review entry is a compact validation-and-decision record, not a phase summary or mini-postmortem. Do not record story counts, test counts, shipped-feature inventories, implementation summaries, empty "worked/didn't work" sections, or generic lessons unless a fact directly supports the decision. A lesson belongs in `What we learned` only when it can change a future decision or working rule; name the destination when the user provides one.
 
@@ -364,7 +399,7 @@ Left open:
 1. [the finding the recorded review logged, one line]
 2. [next finding]
 
-What's fixed, what's still broken, or "close it".
+What's fixed, what's still broken, and what happened when you checked — then "close it". "Didn't test it" is a complete answer.
 ```
 
 Same rule as the standard opening: one response, one ask, every open item separately visible, no enumeration checklist and no closer menu. `Left open:` lists what the recorded review entry logged as a defect, refinement, or open outcome — one line each, from the review entry and the backlog items it named, never invented. When the recorded review left nothing open, omit the list and let the ask stand alone.
@@ -406,7 +441,17 @@ That is your complete response. DO NOT write to files yet.
 
 Use the standard review's Validation, **Closing semantics**, and no-release-recap rules here too. Record a `Decision update` only when the user states one.
 
-**Fast close — explicit close with no result.** If the follow-up reply says `close it` and contains no result or feedback, skip the triage presentation. Go straight to STEP 3 (Follow-up) with an empty triage. Write no new backlog items. Append the addendum with `Validation` set to `Result: Not tested`. Omit `Checked with` and Decision update. Record `Outcome changes: None`. A positive summary result follows the standard Validation rule and never becomes `Not tested`.
+**The answer gate applies here too, narrowed to one slot.** The addendum has no Validation Questions of its own and its `Decision update` is optional, so the only thing review cannot write for the human is the Validation `Result`. A follow-up close that reports no result gets one line back:
+
+```text
+[mano review]: [PHASE_ID] follow-up — still need:
+
+Result — what happened when you checked it
+
+"Didn't test it" is a complete answer.
+```
+
+Close on the reply. `Not tested` records their own words, never their silence. Once the gate is satisfied, a bare close skips the triage presentation, writes no new backlog items, omits `Checked with` and the Decision update, and records `Outcome changes: None`.
 
 ---
 
@@ -451,6 +496,8 @@ If the state projection's `HOOK:` line names `post-review`, follow `_mano/rules/
 ## Forbidden
 
 - Do not skip the review questions. Prior conversations do not count as a review.
+- Do not answer a Validation Question or write a Validation `Result` on the human's behalf, and never write `unanswered at close` or `Not assessed`. The answer gate holds the close until they supply both; `close it` is sign-off on the phase, not an answer to anything Mano asked.
+- Do not ask the human what they decided. No brief states a decision to ask about, so the question has no referent — record `Nothing to decide` and close. Do not send a chat line containing an unfilled `[bracket]`, and never send a second `still need:` message in one review.
 - Do not auto-decide during review. Each step is one message. Do not combine steps.
 - Do not write any files until the user confirms the triage in STEP 3.
 - Do not debug, inspect code, trace payloads, propose patches, run tests, or attempt repairs. `mano review` only classifies feedback and updates backlog/review files after confirmation.

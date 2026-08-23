@@ -179,7 +179,7 @@
 - **Context:**
   Explicit per-motion interruption behaviour when a new target arrives mid-playback: replace, retarget, reverse, queue, cancel, complete-current, or ignore-new.
   PRD.md §13.5.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Per-property ownership tracking
 - **Type:** feature
@@ -187,7 +187,7 @@
 - **Context:**
   Runtime tracks ownership keyed by (target instance ID + property path) so two unrelated motions can't silently fight over the same property.
   PRD.md §13.6.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Easing Studio (editor tool)
 - **Type:** feature
@@ -3139,4 +3139,11 @@
   Extend it with a third "Showcase" category (switch + listing of
   available showcases); showcase content itself is added separately,
   wherever it fits.
-- **Status:** backlog
+- **Status:** resolved
+
+### Showcase category in demo selector
+- **Type:** feature
+- **Source:** User idea
+- **Context:**
+  Add a Showcase category to the demo selector.
+- **Status:** resolved

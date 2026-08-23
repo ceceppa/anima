@@ -220,3 +220,5 @@ Planning artifacts remain optional to the human; auto mode must not silently ski
   └─ go straight to implementation unless tech is genuinely fuzzy (suggest `mano spec`)
   ```
   The first branch exists because the others are asymmetric: `mano ui` is gated on a **phase-scoped** artifact (`PHASE_DIR/design-preview.html`), which is missing at the start of every phase, while `mano rules` was gated only on `project-rules still default?` — a **project-lifetime** condition that can never fire again once the file is customised. Existence of `project-rules.md` proves earlier categories were homed; it says nothing about a category this phase introduces. Judge rules by what the phase adds, not by whether the file has been written before.
+
+  That asymmetry holds for this decision tree, which can see the phase preview. It does **not** hold on the auto-chain path: `mano start` builds its chain from an existence-only `ARTIFACTS:` line, where `design-brief.md` and `ux-flow.md` are both project-lifetime and read `present` for every phase after the one that wrote them — the same trap, with `ux` and `ui` in it. See `_mano/skills/start.md` → **Step 6 — Suggest phase scope**.

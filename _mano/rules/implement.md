@@ -85,7 +85,7 @@ A full-file rewrite is invisible in the rendered result and catastrophic in a di
 When this run leaves the **phase** ready for review — the last Scope row is `done` and every Exit leaf is `met` or `needs-human`, the last pending story is `done`, or a `yolo` batch emptied the index — the terminal line is followed by the phase brief's compact `Try` guidance:
 
 ```text
-[mano build]: phase 2 built — S1a–S2b done, E1a–E2a met, E2b needs a human check.
+[mano build]: phase 2 built — S1a–S2b done, E1a–E2a met, E2b needs a human check. Next: mano review to close the phase.
 
 Validate now:
 - load 200 items and scroll — the list should not stutter

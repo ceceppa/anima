@@ -12,7 +12,7 @@ extends Control
 const DEMO_SELECTOR_SCENE := "res://examples/demo_selector.tscn"
 
 func _ready() -> void:
-	HiDPIScale.apply_to(self)
+	#HiDPIScale.apply_to(self)
 
 	for header in find_children("*", "ExampleHeader", true, false):
 		header.back_pressed.connect(_on_header_back_pressed)

@@ -26,7 +26,7 @@ Godot 4.3 through stable Godot 4.x, implemented in GDScript. The JavaScript tool
 
 | Entity | Fields | Notes |
 |---|---|---|
-| `AnimaMotion` | display name, enabled, delay, speed, `forward_speed`, `reverse_speed`, `reduced_motion_speed`, `completion_value_policy`, `cancellation_value_policy`, tags, metadata, `on_started_callback`, `on_completed_callback` | Base Resource for all leaf and composite motions. The two callback fields are optional `Callable`s invoked by `AnimaPlayback`, not signals — see §Target-bound authoring contract. The five new fields are consulted only at the playback root — see §Speed, direction, and reduced motion and §Playback lifecycle: cancel, complete, revert, reverse. |
+| `AnimaMotion` | display name, enabled, delay, speed, `forward_speed`, `reverse_speed`, `reduced_motion_speed`, `completion_value_policy`, `cancellation_value_policy`, `interruption_policy`, tags, metadata, `on_started_callback`, `on_completed_callback` | Base Resource for all leaf and composite motions. The callback fields are optional `Callable`s invoked by `AnimaPlayback`, not signals. `interruption_policy` controls an incoming property motion that conflicts with an active owner; the root playback consults it when the request arrives. |
 | `_AnimaRepeat` | `child`, `count`, `delay_between`, `alternate` | Wraps one child motion; `count = -1` repeats indefinitely. Reversal rebuilds `child` via its own `build_reversed()` and wraps the result in a matching `_AnimaRepeat` — see §Key technical decisions. |
 | `AnimaGroupMotion` | `target_collection`, `item_motion`, `playback_mode`, `distribution`, `order`, `sequential_gap`, `completion_policy`, `reverse_order_policy`, `invalid_target_policy`, `empty_group_policy` | One Resource model for every group mode; configuration is serialized and shared by code and the Motion Composer. |
 | `AnimaTargetCollection` | collection kind, reference data, filters, resolution timing | Children, explicit, scene-group, descendant, or runtime-callable targets. |
@@ -182,7 +182,25 @@ The benchmark measures construction only, not rendering or playback. Convenience
 
 ⚠ Verify: `AnimaGroupMotion`'s per-item `completion_value_policy`/`cancellation_value_policy` — this phase reads the policy off the *top-level* motion only (see §Speed, direction, and reduced motion for why fields are root-consulted this phase); an individual group item cannot currently override its own value policy. Flag if per-item override turns out to matter before groups commonly need it.
 
-Cancellation cleanup beyond state + value policy is scoped to what the runtime actually owns today: state transition, the value policy above, and removal from `AnimaRuntime.active_playbacks` (already automatic — see §Lifecycle-safe playback policies). "Disconnect signals," "release property ownership," and "release layout overlays" from the item's fuller PRD wording have no corresponding mechanism yet — per-property ownership tracking, signal-wait leaves, and layout overlays are each their own un-shipped backlog item. Cleanup grows to cover them when those items ship, not speculatively now.
+Cancellation cleanup covers state transition, the value policy above, removal from `AnimaRuntime.active_playbacks`, and release of every property ownership key held by that playback. Signal waits and layout overlays have no corresponding mechanism yet; their cleanup grows with those later features rather than being invented here.
+
+## Property ownership and interruption
+
+`AnimaRuntime` owns an active-property registry keyed by the target instance and canonical property path. A property motion registers its key immediately before its first write and releases it when its playback finishes, is cancelled, or its target becomes invalid. Separate properties on one target remain independent; a composite or group motion resolves ownership one property motion at a time.
+
+`AnimaMotion.InterruptionPolicy { REPLACE, RETARGET, REVERSE, QUEUE, CANCEL, COMPLETE_CURRENT, IGNORE_NEW }` is a serialized field on every motion, defaulting to `REPLACE`. When a new property motion conflicts with an existing owner, the incoming motion's policy decides the result:
+
+| Policy | Result |
+|---|---|
+| `REPLACE` | Cancel the active owner using its cancellation-value policy, then start the incoming motion. |
+| `RETARGET` | Reuse the active playback only when it supports retargeting; otherwise warn and use `REPLACE`. |
+| `REVERSE` | Reverse the active playback when it can reverse; otherwise warn and use `REPLACE`. The incoming request does not create a second owner. |
+| `QUEUE` | Hold the incoming request until the active owner reaches a terminal state, then start it. Queued requests run in arrival order. |
+| `CANCEL` | Cancel the active owner and discard the incoming request. |
+| `COMPLETE_CURRENT` | Force the active owner to its completed state, then start the incoming motion. |
+| `IGNORE_NEW` | Keep the active owner unchanged and discard the incoming request. |
+
+`Anima.play()` returns the playback that will own the requested property: the newly created playback for `REPLACE`, `QUEUE`, and `COMPLETE_CURRENT`; the active playback for successful `RETARGET` or `REVERSE`; and `null` for `CANCEL` or `IGNORE_NEW`. A queued playback has `State.QUEUED` until it starts; it emits `finished` only after it starts and reaches a terminal result. An unsupported retarget or reverse must warn rather than silently producing two writers.
 
 ## Speed, direction, and reduced motion
 
@@ -235,6 +253,7 @@ Of PRD5's six recommended defaults, five already hold today with no code change,
 | `AnimaMotion` (any motion) | `forward_speed` / `reverse_speed` | `float`, default `1.0` each | Multiplies effective speed at the playback root, selected by current direction | consulted in `AnimaPlayback._advance()` |
 | | `reduced_motion_speed` | `float`, default `-1.0` (no override) | When reduced motion is active for this playback (see §Speed, direction, and reduced motion's three-way resolution): `> 0.0` replaces `speed_scale × direction_speed`; `== 0.0` calls `complete()` instead; `< 0.0` is no override | see §Speed, direction, and reduced motion |
 | | `completion_value_policy` / `cancellation_value_policy` | enums, default `KEEP_FINAL` / `KEEP_CURRENT` | Value left on target when playback finishes or is cancelled | see §Playback lifecycle |
+| | `interruption_policy` | enum, default `REPLACE` | Resolves an incoming property motion that targets a property with an active owner | see §Property ownership and interruption |
 | `Anima` (static facade) | `reduced_motion` | `bool`, default `false` | Global reduced-motion switch; resolves against a target's `AnimaBehaviour.reduced_motion` when one is attached | the system-preference adapter `AnimaBehaviour.ReducedMotion.SYSTEM`'s own doc comment already anticipated |
 
 ## Grid motion contract
@@ -598,9 +617,9 @@ Tutorial 02's own prose states the dependency on 01 explicitly (its opening line
 
 **No new tooling.** `npm run dev`/`npm run build` already build the whole `docs/content/` tree, generated and hand-written pages alike, through the existing Hugo commands (§API documentation pipeline) — phase-19 adds content under that tree, not a new build step, generator, or manifest dependency.
 
-## Example playground: navigation and scaling (phase-20)
+## Example playground: navigation and scaling
 
-The example playground gains a top-level demo selector scene grouping the existing playgrounds into two categories — 2D (`composition_playground`, `convenience_motion_playground`, `animation_catalog_playground`, `grid_motion_playground`, `group_motion_playground`) and 3D (`3d_motion_playground`) — matching the `v2_stuff/main-menu.jpeg` reference. Selecting a category shows only that category's demos; selecting a demo opens its existing scene unchanged. No new demo content ships with this — only navigation to what already exists.
+The top-level demo selector groups demos into 2D, 3D, and Showcase categories. The Showcase category initially lists Grid Showcase; selecting a category shows only its demos, and selecting a demo opens its existing scene unchanged. New showcase content stays separately scoped from selector navigation.
 
 HiDPI scaling moves out of `ExamplePlayground`'s own `_apply_hidpi_scale()` method into a standalone, reusable add-on, per the phase brief's Stated Technical Preferences (modeled on an existing add-on from a separate project). `ExamplePlayground` calls into the add-on rather than implementing scaling itself, so every playground scene — including the new demo selector — inherits identical scaling behaviour through the one shared base every scene already extends. The add-on owns display-scale detection and node scaling only; it carries no Anima-specific behaviour and no dependency on any Anima runtime type, so it stays reusable outside this project too.
 

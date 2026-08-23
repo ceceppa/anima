@@ -44,12 +44,12 @@ Then read the emitted tables back and confirm they are the brief you just ran pr
 
 **2. Implement in row order, one pass at a time.** Take the `ROW` and `ROW_CONTRACT` from the projection. `ROW_CONTRACT` is the row's exact text — the brief's own item or leaf for a normal row, the human's or your own recorded text for a correction or a split — so there is no second read of the brief to make.
 
-A **pass** is what one turn implements. By default it is that one row. When the next rows are contiguous leaves of the same brief category and share one real implementation surface, a pass may cover several of them — the derivation and its six conditions are **Grouping rows into one pass** below. Grouping changes only how many rows a turn covers; every step here stays **per row**:
+A **pass** is one implement-then-verify cycle. By default it is that one row. When the next rows are contiguous leaves of the same brief category and share one real implementation surface, a pass may cover several of them — the derivation and its six conditions are **Grouping rows into one pass** below. Grouping changes only how many rows one pass covers; every step here stays **per row**:
 
   a. **Run the gates first, before touching any status or any code.** Apply gates **6.2**, **6.3**, **6.4** and the **read budget** from `_mano/rules/implement.md` against **each row's** contract in the pass. A gate that fires stops the run *here*, with the ledger untouched — a row flipped to `doing` for work that then gets refused is a false record of what happened. In a group, the gate fires against one row and ends the pass **before** that row; the earlier rows are still an honest pass.
   b. Only once the gates pass, flip the pass to `doing` in one call: `node _mano/scripts/progress.js set-status --phase [N] --expect-phase-id [PHASE_ID] --row [id] --status doing` — repeating `--row [id] --status doing` for each row in the pass.
-  c. Derive what the pass needs from the artifacts *in this turn*; never write an implementation reference to disk. It is expensive, single-use, and wrong to persist. Implement, then verify through `node _mano/scripts/verify.js -- <command>`, then apply gate **10.1** — **separately to every row in the pass and every `E` leaf you are about to mark**. Verification may be shared; evidence may not.
-  d. Flip the rows you proved to `done` and mark `met` every Exit Criterion this turn produced evidence for, in one call:
+  c. Derive what the pass needs from the artifacts *in this pass*; never write an implementation reference to disk. It is expensive, single-use, and wrong to persist. Implement, then verify through `node _mano/scripts/verify.js -- <command>`, then apply gate **10.1** — **separately to every row in the pass and every `E` leaf you are about to mark**. Verification may be shared; evidence may not.
+  d. Flip the rows you proved to `done` and mark `met` every Exit Criterion this pass produced evidence for, in one call:
      `node _mano/scripts/progress.js set-status --phase [N] --expect-phase-id [PHASE_ID] --row [id] --status done --row [Eid] --status met`
      No stored row → criterion mapping exists and none is needed: mark leaves as the evidence appears, and step 4's terminal sweep re-checks all of them regardless of which row got there. A row or leaf you cannot yet prove stays open — that is the gate doing its job, and the next run resumes at the first unresolved leaf.
   e. Re-run `state.js --next` **once for the pass** and confirm `OWNER` and `PHASE_ID` are unchanged and the rows you wrote now read `done`. Stop without claiming progress if any postcondition fails.
@@ -58,7 +58,7 @@ A row whose split parts exist is a **roll-up**: its status is derived from its p
 
 **2r. Open review findings come first.** When the projection reports `REWORK: [n] pending`, the ledger routes here even if every row was already complete. Process the **first pending event**, in order, before any other row — see **Review findings (rework)**.
 
-**3. Stop when this turn's output budget is spent.** Report from the ledger (see **Chat output**) and stop. **Resume in a fresh session**, not by continuing this one: a fresh session restarts residency and reads back the exact position for a few hundred tokens, while continuing carries every message you already paid for. A resumed run starts at flow step 0 and picks up the row the projection names; it does not re-derive completed rows.
+**3. Never stop mid-row, and never stop between rows while work remains.** A pass only ever ends *between* rows, with every status written and every claim proven — a run that trails off inside a row leaves work the ledger cannot describe, which is the one state a resume cannot recover from. But finishing a pass is not a reason to end the run: close it (2e), then return to step 2 for the next unresolved row **in the same invocation**. Keep taking passes until step 4 applies, or until one of this contract's own stops fires — a pre-flight or gap gate, `REWORK` routing to step 2r, a deviation, or Repair Mode's attempt limit. The size of the remaining ledger, the number of rows already closed, or how long the run is taking are never reasons to pause and hand back on their own.
 
 **4. Terminal — every Scope leaf `done` and every Exit leaf `met` or `needs-human`.** Do not report the phase built on the strength of the statuses alone: run the **Terminal evidence sweep** first, then output one aggregate line and stop. The phase is **built, not closed**: `mano review` is mandatory and unchanged. Do not scope, plan, or start another phase.
 
@@ -222,18 +222,18 @@ Every stop **names which condition fired** and shows the deviating text next to 
 
 ## Grouping rows into one pass
 
-A **pass** is what one turn implements, and by default it is one row. When several adjacent rows are really one piece of work, a pass may cover them all. That is the entire scope of grouping: it changes **how many rows one turn covers**, never **what was promised**. It composes no scope text, invents no row, and needs no human confirmation — there is nothing for the human to approve that they did not already approve in the brief.
+A **pass** is one implement-then-verify cycle, and by default it is one row. When several adjacent rows are really one piece of work, a pass may cover them all. That is the entire scope of grouping: it changes **how many rows one pass covers**, never **what was promised**. It composes no scope text, invents no row, and needs no human confirmation — there is nothing for the human to approve that they did not already approve in the brief.
 
 **A group forms only when all six of these hold.** The first one that fails ends the candidate *before* the failing leaf; it never shrinks some other part of the pass or reorders around the failure.
 
 1. **Start at the first actionable non-`done` normal brief leaf** — the row the projection named, never a later one.
 2. **Take only contiguous normal brief leaves with the same numeric category.** `S1a`, `S1b`, `S1c` may form a pass; `S1c` followed by `S2a` may not. A leaf already `done` breaks contiguity.
-3. **Never include a `+N` correction or a dotted split row.** Each of those is built alone. A correction carries the human's own words and fires a deviation stop; a split exists because one row already overflowed a turn.
+3. **Never include a `+N` correction or a dotted split row.** Each of those is built alone. A correction carries the human's own words and fires a deviation stop; a split exists because one row already overflowed a pass.
 4. **Stop before a leaf whose real implementation surface differs from the pass being formed.** Judge the surface you are actually about to edit — the same file, module, command, or screen — not the fact that two labels sound related.
-5. **Stop before any per-row gate failure, and before any risk to this turn's output budget.**
-6. **The whole candidate can be implemented *and verified* within this turn.** If you are not confident you can prove every leaf in it before the budget runs out, the pass is smaller.
+5. **Stop before any per-row gate failure.**
+6. **The whole candidate can be implemented and verified as one unit.** If you are not confident you can prove every leaf in it, the pass is smaller.
 
-**There is no numeric cap and no cross-category group. The category is a ceiling, never a mandate.** A category of eight leaves does not become one pass because it is one category — condition 6 decides, and when the honest answer is "I am not certain I can verify all eight in this turn", the pass takes fewer. Taking fewer rows is always available and never needs a justification. Taking more than one category is never available, at any size.
+**There is no numeric cap and no cross-category group. The category is a ceiling, never a mandate.** A category of eight leaves does not become one pass because it is one category — condition 6 decides, and when the honest answer is "I am not certain I can verify all eight", the pass takes fewer. Taking fewer rows is always available and never needs a justification. Taking more than one category is never available, at any size.
 
 A **flat** brief has no categories, so every row is its own pass. Do not group flat rows by inferring which ones belong together: the ceiling has to have come from the human, and in a flat brief they did not draw one.
 
@@ -252,7 +252,7 @@ The close line may name the row range — `S1a–S1c done`. A split, a reopen, o
 
 ## Sub-rows: the one text build composes
 
-When the row being built overflows this turn's output budget, and only then, record the split:
+When the row being built overflows what one pass can honestly prove, and only then, record the split:
 
 ```
 node _mano/scripts/progress.js split --phase [N] --expect-phase-id [PHASE_ID] \
@@ -392,15 +392,15 @@ node _mano/scripts/progress.js set-status --phase [N] --expect-phase-id [PHASE_I
 
 ## Chat output
 
-`_mano/rules/implement.md` → **Implementation Output Discipline** applies in full. Build's own shape:
+`_mano/rules/implement.md` → **Implementation Output Discipline** applies in full. Build's own shape: one closing line per invocation — the **Terminal** line below, a **Deviation stop**, or a **Repair-limit stop** — never an interim report between passes. `Next:` names a command; never instruct the human to start a fresh session or manage their context.
 
-**Mid-run stop (budget spent):** one line naming what is left, from the ledger — `[mano build]: [PHASE_ID] — S1, S2 done. 4/7 exit criteria met. Next: S3. Start a fresh session to continue.` No recap, no file list, no "AC met" checklist, no narrative.
-
-**Terminal:** one aggregate line, and only after the **Terminal evidence sweep** passes: `[mano build]: [PHASE_ID] built — all scope rows done, all exit criteria met in [PHASE_DIR]/progress.md. Run mano review to close the phase.` When the sweep left any leaf `needs-human`, say so in the same line — `… all scope rows done, 6 exit criteria met, 1 needs human check in [PHASE_DIR]/progress.md.` — without listing them; review shows them.
+**Terminal:** one aggregate line, and only after the **Terminal evidence sweep** passes: `[mano build]: [PHASE_ID] built — all scope rows done, all exit criteria met in [PHASE_DIR]/progress.md. Next: mano review to close the phase.` When the sweep left any leaf `needs-human`, say so in the same line — `… all scope rows done, 6 exit criteria met, 1 needs human check in [PHASE_DIR]/progress.md.` — without listing them; review shows them.
 
 The terminal line is followed by the **`Validate now:`** block — the brief's own `Try` guidance, copied compactly, once for the phase — exactly as `_mano/rules/implement.md` → **`Validate now:` — the one expansion of the terminal line** defines it. Omit the block when the brief has no `Try` bullets; never invent one, and never derive one from an Exit Criterion.
 
 **Deviation stop:** the named condition, the deviating text, and the question — nothing else. Then stop; do not continue into code while the question is open.
+
+**Repair-limit stop:** Repair Mode's attempt limit (`_mano/rules/implement.md`) is the one stop that is neither terminal nor a deviation — the rows already closed stay closed and the failing row stays open. Its ≤3-line report is the whole output, under one ledger line: `[mano build]: [PHASE_ID] — S1a–S1c done, S2a open. Next: mano build once the failure below is cleared.` No recap, no file list, no widened repair budget.
 
 Two suffixes are permitted, and only when one genuinely applies: a short note about a non-acceptance deviation that did not weaken verification, and a project-relevant decision worth preserving, offered for capture in the artifact that owns it. An unmet Exit Criterion is never a permitted suffix — gate 10.1 leaves the row open instead.
 

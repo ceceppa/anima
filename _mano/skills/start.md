@@ -172,13 +172,19 @@ Then proceed to Step 6.
 
 Work from the state script's `SCOPE INPUT` block (the phase-scopeable `Status: backlog` items, `## Core Product Principles`, and latest review) — it's already in context from activation, so don't reopen `backlog.md`, `reviews.md`, or the completed phase's folder. The projection has already removed `spec-gap` and `rule-gap` items. Estimate complexity of each remaining item based on its context.
 
-If the latest review records `Validation` as `Result: Not tested`, or uses the legacy `Evidence: none` form, and the candidate phase depends on an assumption that review left `accepted` or `inconclusive`, or on a question it recorded as `unanswered at close`, surface one non-blocking line with the suggestion: `⚠ Previous [PHASE_ID] closed without validation; [A2 / Q1 …] relevant to this scope was never answered.` Carry the review's own `A…` / `Q…` addresses so the human can find the entry. Do not block the new phase, manufacture a validation task, or repeat the warning when the candidate scope is unrelated. The human decides whether to validate later or continue knowingly.
+If the latest review records `Validation` as `Result: Not tested`, or uses the legacy `Evidence: none` form, and the candidate phase depends on an assumption that review left `accepted` or `inconclusive`, or on a question it recorded as `not checked`, surface one non-blocking line with the suggestion: `⚠ Previous [PHASE_ID] closed without validation; [A2 / Q1 …] relevant to this scope was never answered.` Carry the review's own `A…` / `Q…` addresses so the human can find the entry. Do not block the new phase, manufacture a validation task, or repeat the warning when the candidate scope is unrelated. The human decides whether to validate later or continue knowingly.
 
-**Hard constraint: one independently verifiable outcome per phase.** A phase should deliver one cohesive capability or retire one meaningful risk that can be validated without work planned for a later phase. It may cross backend, frontend, storage, or other layers when that is the smallest complete slice; keep each layer to the minimum required for the outcome. Do not bundle unrelated outcomes simply because they share infrastructure. Treat internal prerequisites as part of the outcome rather than separate phase-scope items, while recording them explicitly in the phase brief and stories.
+**Default scope shape: one independently verifiable outcome per phase.** A phase should deliver one cohesive capability or retire one meaningful risk that can be validated without work planned for a later phase. It may cross backend, frontend, storage, or other layers when that is the smallest complete slice; keep each layer to the minimum required for the outcome. Do not *propose* a bundle of unrelated outcomes simply because they share infrastructure. Treat internal prerequisites as part of the outcome rather than separate phase-scope items, while recording them explicitly in the phase brief and stories.
 
 Ask: "At the end of this phase, can someone demonstrate the capability or verify that the risk has been retired using clear acceptance criteria?" If not, reshape the scope.
 
-Suggest a shortlist that fits this constraint — 1-2 items if complex, several if small. When in doubt, err on fewer items. A phase that's too small ships fast; a phase that's too big never ships.
+**Size against effort, not item count.** One or two items when they are complex, several when they are small. A cluster of small items is not over-scoped by virtue of being a cluster, and a single large item is not right-sized by virtue of being alone. When in doubt, err on fewer items. A phase that's too small ships fast; a phase that's too big never ships.
+
+**The scope shape governs what you propose, never what the human may approve.** When the human asks for a combination you would not have suggested — two unrelated items, a small rider on top of the main outcome — take it and continue in the same turn. Say the cost once, as an advisory line, and move on:
+
+`⚠ [Item A] and [Item B] are unrelated outcomes; the phase review will return one verdict covering both.`
+
+Then draft the brief for the approved scope. Never answer a scope request with a refusal, a "pick one" menu, or the same question again. "I won't combine them" is not a move `mano start` has — the human owns the phase boundary, and you owe them the trade-off once, not a gate. This is a `⚠ Verify`, never a `❓ Decide` (`_mano/rules/core.md` → **Canonical execution-log format**).
 
 Prioritise:
 1. 🐛 Defects first — bugs always take priority
@@ -225,6 +231,12 @@ After presenting, stop. Do not continue to Step 7 until the user explicitly appr
 In auto mode, replace option 1's description with `Approve this scope and run the auto chain shown below.` An edit without `1` or `go` changes the proposal but does not approve or arm it. Never make one approval token scope-only and the other auto-arming; `1` and `go` are exact synonyms.
 
 Before proposing that line, decide whether this candidate scope requires `spec`, `ux`, `rules`, or `ui` from the projection's `ARTIFACTS:` line — it reports whether `tech-spec.md`, `ux-flow.md`, `project-rules.md`, and `design-brief.md` exist, so do not open any of them for this check. Never open the backlog, reviews, source, a prior phase folder, or another phase's preview either. An artifact that exists is only skipped when the candidate scope plainly adds nothing in its area; when its coverage of this phase is genuinely uncertain, include the action and let the human strike it in the approval reply.
+
+**`ARTIFACTS:` reports existence, never coverage — and you may not open the files to find out.** `ux-flow=present` means a flow document exists, not that it describes this phase's interaction; `design-brief=present` means a brief exists, not that it covers this phase's screen. Both are project-lifetime artifacts: once written they read `present` for every phase that follows, so presence can never distinguish a covered phase from an uncovered one. Presence is therefore not a reason to omit an action.
+
+You are blind here by design, so resolve the uncertainty toward including the action: when the candidate scope touches an interactive surface or a rendered screen at all, put `ux` and `ui` in the chain and let the human strike them (`go, skip ux`). Apply `_mano/rules/artifact.md` → **Planning coverage for user-facing phases** on the scope's own terms, never on whether the artifact exists.
+
+**"The phase only adds one more of something that artifact already describes" is the reasoning this rule exists to block.** A third category in an existing selector, a second mode beside the first, one more state on a known control — each is new navigation and new visual hierarchy that the existing flow, written before it existed, cannot have covered. Omitting `ux`/`ui` there is exactly the gap `mano build`'s pre-flight will stop on, one armed chain later.
 
 Propose only the actions the phase genuinely needs, applying `_mano/rules/artifact.md` → **Planning coverage for user-facing phases** before showing the chain. In auto mode, a missing exact UX flow or design/preview for material new interaction or visual work means include `ux` / `ui`; do not reinterpret “optional” as “omit unless forced.” The human may explicitly remove either in the approval reply. That reply arms the exact ordered chain; preserve its remaining actions across pauses rather than recomputing optional branches after each action. See `_mano/workflow.md` → **Run Mode: manual and auto** and `_mano/rules/auto.md` for the rest of the chain contract.
 
@@ -288,6 +300,24 @@ When the approved scope uses breadth words such as “any”, “all”, “ever
 Use one question per bullet. Never join independent questions with “and whether”. The human may use the phase directly, show it to someone, observe a workflow, or measure a result. Do not require external users when self-use or an objective check fits.
 
 Every Question needs at least one Try bullet that can answer it. Every Try bullet must support a Question. Move a capability check into Exit Criteria instead. Remove any unrelated activity. If a useful test is unclear, ask one focused question.
+
+**Performability check — a `Try` the human cannot perform is not a test.** Every Try bullet is an action on a surface. Before writing one, name that surface and confirm two things: a `## Phase Scope` leaf ships it, or the project already has it — **and it exercises this phase's behaviour**. An existing demo that shows something else is not a surface for this phase's Try. Then check `## Not This Phase`, which may have removed the fallback. A Try that survives neither check is an instruction the human cannot follow, and `mano review` will later demand an answer that was never obtainable.
+
+This fails on engine, API, and behaviour-only phases: the phase defines what happens internally, no leaf ships anything that runs it in front of a person, and the Try still says "observe the resulting state". Reading source, attaching a debugger, or writing a throwaway scene is **not** a Try — that is implementing, and the human is here to validate.
+
+**The tell is a scope leaf that promises observability while no leaf delivers it.** A leaf named `Observable outcome`, a design principle reading *make the result easy to inspect*, an Exit Criterion whose verb is *observe* or *inspect* — each names a person doing the looking. Find the leaf that gives them somewhere to look. When there isn't one, the brief contradicts itself and the Try inherits the contradiction.
+
+- ❌ Scope ships `a. Ownership`, `b. Interruption choices`, `c. Observable outcome` (all engine) plus `d. Showcase category` (lists an existing grid demo), and the Try reads `Start conflicting motions under each supported interruption choice and observe the resulting property state and playback outcome`. Nothing in that scope runs a conflicting motion where a person can see it, and `## Not This Phase` excludes the debugger panel that would have.
+- ✅ Either a leaf ships the surface — `e. Interruption demo — a scene that runs each interruption choice back to back on one property` — and the Try names it, or the question is not answerable this phase and does not belong in this brief.
+
+**Never resolve this silently, in either direction.** Adding a surface widens scope and dropping a question discards learning the human asked for — both are theirs to decide. Raise it in the 7b clarification block below, before drafting:
+
+```
+2. Q1 asks whether the interruption choices are predictable enough to use, but every Scope leaf is engine behaviour and the Showcase leaf only lists an existing grid demo — there is nothing to run a conflicting motion on.
+   Affects: add a demo scene to Phase Scope, or drop Q1 to a later phase
+```
+
+An automated check answers a Question only where the Question is about a result a test can assert. A question about whether something *feels* right, reads right, or matches expectation needs a human at a surface — pick the surface or drop the question.
 
 The plan is not a success prediction and Mano does not make the decision. It makes the intended evidence path visible before implementation. Infer it from the approved goal and Exit Criteria when clear. If either line would be invented, ask one focused 7b question. Do not add market research, business metrics, or a heavyweight experiment to a small phase unless the user requested them.
 
@@ -371,6 +401,8 @@ Each phase brief carries everything needed to understand the phase. No external 
 ### Hard constraint
 
 The brief must describe one independently verifiable outcome. That outcome may cross technical layers when the smallest complete slice needs them. Target roughly 250-500 words. If the brief needs long prose or a large scope list to make sense, the phase is too broad.
+
+When the human approved a scope spanning more than one outcome (see **Step 6**), carry them as separate `## Phase Scope` categories, each with its own exit criteria, and let `## Phase Goal` name the outcome that survives a scope cut. Do not merge them into one invented umbrella outcome to satisfy this section, and do not quietly drop the item you would not have proposed.
 
 ## Backlog format
 
