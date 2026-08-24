@@ -111,6 +111,16 @@ static func on(target: Node) -> AnimaOnMotionFactory:
 		return null
 	return AnimaOnMotionFactory.new(target)
 
+## Captures a supported [Container]'s current Control layout so a subsequent
+## Godot-driven change can be played with [method AnimaLayoutTransition.play].
+## The caller changes its container state, waits for Godot's layout pass, then
+## plays the returned record; no authored layout values are retained.
+static func layout_transition(container: Node, duration: float = 0.3) -> AnimaLayoutTransition:
+	if container == null:
+		push_error("Anima.layout_transition() requires a Container target.")
+		return null
+	return AnimaLayoutTransition.new(container, duration)
+
 ## Returns a factory for authoring a common per-item change against an
 ## [AnimaGroupMotion]'s [member AnimaGroupMotion.item_motion] by name —
 ## `group.item_motion = Anima.item().opacity(1.0)` — the same methods

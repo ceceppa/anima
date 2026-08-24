@@ -204,7 +204,7 @@
   Capture the old rect, let Godot lay out normally, capture the new rect, apply an inverse visual offset, animate back to identity.
   Godot's own layout stays authoritative — Anima only controls the temporary visual transform.
   PRD.md §14.2.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Layout transition APIs (explicit / capture / automatic)
 - **Type:** feature
@@ -237,7 +237,7 @@
   Initial support limited to Control nodes, standard Godot containers, position/size, and nodes within the same viewport.
   3D layout and arbitrary custom drawing are explicitly out of scope.
   PRD.md §14.7.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Shared-element identity & Inspector controls
 - **Type:** feature
@@ -2084,7 +2084,7 @@
 - **Context:**
   PRD5.md defines the policy options (RESPECT / OVERLAY / TEMPORARILY_DISABLE) for whether animated content is clipped by its container during a layout transition, but states no recommended default — unlike every neighbouring policy in the same section.
   PRD5.md §7.11.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Layout transition mid-flight interruption
 - **Type:** feature
@@ -3146,4 +3146,37 @@
 - **Source:** User idea
 - **Context:**
   Add a Showcase category to the demo selector.
+- **Status:** resolved
+
+### Motion interruption example coverage
+- **Type:** feature
+- **Source:** phase-21 review
+- **Context:**
+  Add an existing or new example that lets people manually exercise motion interruption choices, so overlapping motion behavior can be validated.
+- **Status:** resolved
+
+### Motion interruption example scenarios
+- **Type:** test
+- **Context:**
+  Examples demonstrate an in-flight motion interrupted by a new motion request.
+  They show the observable result of the selected interruption behaviour.
+- **Status:** resolved
+
+### Layout transition visual demonstration scenario
+- **Type:** test
+- **Context:**
+  Provide a visual scenario that lets a person verify automatic layout transitions.
+  The scenario shows supported layout changes before, during, and after motion.
+- **Status:** resolved
+
+### Layout transition GUIDE/Documentation
+- **Type:** test
+- **Context:**
+  We need to add a guide for Anima.layout_transition
+- **Status:** resolved
+
+### Layout transition Tutorial
+- **Type:** test
+- **Context:**
+  We need to add a tutorial for Anima.layout_transition — we can use the playground example code to see how 1 liner is enough to handle animations
 - **Status:** resolved

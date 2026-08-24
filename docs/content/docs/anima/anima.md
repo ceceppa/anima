@@ -90,6 +90,13 @@ result plays, composes, and reverses exactly like any other property
 motion (`tech-spec.md` §Target-bound authoring contract). Reports an error
 and returns `null` when [param target] is `null`.
 
+### layout_transition
+
+Captures a supported [Container]'s current Control layout so a subsequent
+Godot-driven change can be played with [method AnimaLayoutTransition.play].
+The caller changes its container state, waits for Godot's layout pass, then
+plays the returned record; no authored layout values are retained.
+
 ### item
 
 Returns a factory for authoring a common per-item change against an

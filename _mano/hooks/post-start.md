@@ -34,7 +34,7 @@ Use only the context relevant to the review target. Do not invent missing contex
 ## Suggested prompt
 
 ```text
-[external-review-command] review the planning artifacts using the inputs listed in this hook.
+review the planning artifacts using the inputs listed in this hook.
 
 Focus on:
 - backlog structure and status accuracy
@@ -42,10 +42,12 @@ Focus on:
 - missing or over-broad backlog items
 - Core Product Principles preservation
 - contradictions with the source brief
+- whether every added or modified piece of code has an explicit documentation plan appropriate to that code (for example, public API comments/reference documentation or developer-facing implementation notes)
 - whether the phase scope includes the right demo coverage for the work it introduces
 - for runtime-facing work, whether the phase should include a playground demo under `examples/playground/`
 - for editor-facing work, whether the phase should include an editor demo under `examples/editor/`
 - whether any phase that introduces a new or changed runtime or editor capability is missing a matching example/demo plan
+- whether every example or demo that includes code is paired with a tutorial that explains how to build or use it, rather than leaving the example unexplained
 
 Report issues, risks, contradictions, and suggested improvements.
 

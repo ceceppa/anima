@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://buv5mndc6k7uw"]
+
+[ext_resource type="Theme" uid="uid://dhlt0rl7fitif" path="res://examples/playground/shared/theme/anima_examples.tres" id="1"]
+[ext_resource type="Script" uid="uid://b1as0onxhldro" path="res://examples/playground/motion_interruption_playground.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://4n22aqs2w1qf" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://ci7wgfqrot35x" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://cwidyx88uf7r7" path="res://examples/playground/shared/components/playback_controls.tscn" id="5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vh3qc"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StageStyle"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0392157, 0.0705882, 0.141176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.14902, 0.196078, 0.294118, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[node name="MotionInterruptionPlayground" type="Control" unique_id=2010128865]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1")
+script = ExtResource("2")
+
+[node name="Background" type="ColorRect" parent="." unique_id=2139025333]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0235294, 0.0392157, 0.0862745, 1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=354220195]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=811395468]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" parent="Margin/Content" unique_id=1175460508 instance=ExtResource("3")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vh3qc")
+title = "Motion Interruption"
+subtitle = "Compare what a new request does to an active motion."
+icon = "↺"
+show_back_button = true
+
+[node name="Status" type="Label" parent="Margin/Content" unique_id=602614983]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage" type="PanelContainer" parent="Margin/Content" unique_id=1332019170]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StageStyle")
+
+[node name="StageCanvas" type="Control" parent="Margin/Content/Stage" unique_id=846603767]
+layout_mode = 2
+
+[node name="Target" type="ColorRect" parent="Margin/Content/Stage/StageCanvas" unique_id=2133407205]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 120.0
+offset_top = 90.0
+offset_right = 200.0
+offset_bottom = 170.0
+color = Color(0.48, 0.35, 0.9, 1)
+
+[node name="ActionDock" parent="Margin/Content" unique_id=234215330 instance=ExtResource("4")]
+unique_name_in_owner = true
+layout_mode = 2
+auto_size = true
+
+[node name="PlaybackControls" parent="Margin/Content" unique_id=1412897593 instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="restart_pressed" from="Margin/Content/PlaybackControls" to="." method="_on_playback_controls_restart_pressed"]

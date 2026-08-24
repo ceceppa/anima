@@ -59,6 +59,7 @@ Line icons use a 20px box, 1.5px stroke, and no fill. Accent glow is decorative 
 - **Demo Selector tabs** — a compact 3-item `SelectorDock` (`2D` / `3D` / `Showcase`) at the top of the Demo Selector screen — the same moving-`accent`-indicator pattern already used for Order From, Formula, Target-mode dock, and Speed control; no new selection language.
 - **Demo card** (new, phase-20) — a `surface` panel, 1px `border` outline, 16px corner radius, holding a 20px line icon, a 16px/700 title, and a 13px/400 `text-secondary` one-line description. Selected/focused state brightens the border to `accent-soft` with the existing soft shadow — the same treatment `Card`/`SelectorButton` already use. Contrast: `text-secondary` on `surface` 7.4:1 ✅ AA (already-verified pairing).
 - **Info bar** (new, phase-20) — a full-width `surface` bar with a `border` top divider, 16px padding, a small info icon, and one `text-secondary` line naming the next action ("Choose a demo to open it."). Structure borrowed from `v2_stuff/main-menu.jpeg`'s footer bar, recoloured to this app's own palette.
+- **Scenario state label** (phase-22) — a compact `surface` label above a playground stage that names the active interruption outcome and its current state. It uses `text-primary` on `surface` with a `border` outline; it reports state in words rather than relying on motion alone.
 
 ## Screen composition — phase-18 — Animation Catalog Playground
 
@@ -149,3 +150,11 @@ Contrast: `showcase-text` (#FFFFFF) is guaranteed ≥ 4.5:1 (AA) against any sup
 2. **Demo Selector tabs** — the 3-item `SelectorDock` (`2D` / `3D` / `Showcase`); `2D` selected by default.
 3. **Demo grid** — a wrapping grid of Demo cards for the selected category: Composition, Group Motion, Convenience Motion, Grid Motion, and Animation Catalog under `2D`; 3D Motion under `3D`; Grid Showcase under `Showcase`. Choosing a card opens that demo's own scene.
 4. **Info bar** — fixed footer naming the next action ("Choose a demo to open it.").
+
+## Screen composition — phase-22 — Layout and Motion Interruption Playgrounds
+
+1. **ExampleHeader** — the shared header identifies either Layout Transitions or Motion Interruption and explains the scenario in one line.
+2. **Scenario stage** — a stable `stage-bg` container: the layout demo shows the same standard-container arrangement before, during, and after a change; the interruption demo shows one target in motion.
+3. **Action dock** — existing `SelectorDock` styling presents the layout trigger or the four interruption outcomes. The selected outcome is readable through the existing indicator, white text, and stronger weight.
+4. **Scenario state label** — the interruption stage reports the selected policy and current outcome in text, so the result remains understandable when motion is brief.
+5. **Playback controls** — the shared restart control resets each scenario to its defined starting state.

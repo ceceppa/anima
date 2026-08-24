@@ -12,17 +12,19 @@ This file plus `_mano/rules/implement.md` are the **complete contract** for `man
 
 `mano build` is one of two paths and replaces neither. `mano stories` + `mano dev` stay first-class: they split planning (big model) from implementation (small model) and suit a large phase. `mano build` runs one phase in one contract on one model, checkpointed by a ledger. One phase uses one path — a phase holding both `stories/README.md` and `progress.md` is refused by the state projection.
 
+**One invocation builds the whole phase.** `mano build` is `mano dev yolo` with no opt-in word: there is no one-row variant to fall back to, so *every* invocation runs from wherever the ledger stands to the terminal sweep. That holds in `manual` as much as in `auto` — the mode decides whether planning actions chain into this one, never how much of the phase this one finishes. The ledger is what makes it safe: it is written as each row closes, so an interrupted run resumes from disk in a fresh session with nothing carried in the conversation. Resumability is why the run may be long, not permission to leave it half-run — **`_mano/rules/implement.md` → Never end a turn on an announcement** governs every stop.
+
 **Read order — keep the prefix stable.** Read this contract and `_mano/rules/implement.md` first (they are identical on every run, so they cache as a stable prompt prefix), then the state projection, then the phase brief, then the artifact sections a row needs, then source.
 
 **An argument is a correction, never new scope.** `mano build "[what changed]"` is accepted **only when a valid ledger exists** — the ledger is the thing the text corrects, and this design still rests on the ledger itself being derivable from the brief alone. The invocation is only a channel; the classification, the write rules, and the stops are the same ones a correction typed mid-run goes through (**Mid-phase corrections**). The exact wording is the human's contract: pass it through verbatim, never paraphrase it into scope-ese, and never treat it as licence to widen a row.
 
-- **A pending `R…` rework event wins over the argument.** Durable state outranks a new sentence. When the projection reports `REWORK: [n] pending`, a plain `mano build` resumes the first event as normal, and `mano build "[new text]"` **refuses without mutation** — no row, no code, no queue, no ledger change of any kind. Name the pending event, show its exact text, and ask the human to resolve or dismiss it first. An approval or a rejection of a pending event is a response *inside that event's deviation flow*; it is never reinterpreted as a new correction argument, and never stored as scope for later.
-- **With no pending rework, the argument enters the A/B/C classifier** below, before any normal row resumes. **(A)** a defect in work an existing row or `E` leaf already promised → guarded reopen **before any code**, deviation stop, then fix; **no row is appended**. **(B)** a distinct outcome the phase does not contain → refuse; no row, no code, and offer the explicit backlog-defer choice. Auto mode does not soften this. **(C)** an in-goal nuance no row covers → allocate a `+N` row from the *exact* text, link an existing `E` leaf or obtain approval for a new one, persist scope, criterion, and link in one write, re-run the gap gates against the new row, fire the deviation stop, and wait — code only after the human approves.
+- **A pending `R…` rework event wins over the argument.** Durable state outranks a new sentence. This is read from the projection at invocation, so it governs events that were already there — never one this run recorded itself under case (A). When the projection reports `REWORK: [n] pending`, a plain `mano build` resumes the first event as normal, and `mano build "[new text]"` **refuses without mutation** — no row, no code, no queue, no ledger change of any kind. Name the pending event, show its exact text, and ask the human to resolve or dismiss it first. An approval or a rejection of a pending event is a response *inside that event's deviation flow*; it is never reinterpreted as a new correction argument, and never stored as scope for later.
+- **With no pending rework, the argument enters the A/B/C classifier** below, before any normal row resumes. **(A)** a defect in work an existing row or `E` leaf already promised → guarded reopen **before any code**, then fix, in the same run; **no row is appended**, and no stop fires unless the reopen reaches past what the report named. **(B)** a distinct outcome the phase does not contain → refuse; no row, no code, and offer the explicit backlog-defer choice. Auto mode does not soften this. **(C)** an in-goal nuance no row covers → allocate a `+N` row from the *exact* text, link an existing `E` leaf or obtain approval for a new one, persist scope, criterion, and link in one write, re-run the gap gates against the new row, fire the deviation stop, and wait — code only after the human approves.
 - **With no ledger, the argument is rejected without running pre-flight and without `init`.** Nothing exists to correct, so nothing is created to hold it. Say that a plain `mano build` builds the approved brief as written, and that changing that brief goes through `mano start "[the change]"` and a fresh scope approval — not an implicit correction row. Write no ledger, no source, and no backlog item. An approval that armed an auto chain covered the brief as approved; it is not consumed, spent, or reused by this refusal, and the chain resumes only when the human answers.
 
 ## Flow
 
-**0. Find what to build by running the state script — do not `ls` for the phase or infer it from the conversation.** Run `node _mano/scripts/state.js --next`. It reports `MODE`, the selected `OWNER`, exact `PHASE_ID`, numeric `PHASE`, `PHASE_DIR`, `BRIEF`, `PROGRESS`, `PROGRESS_STATUS`, `ARTIFACTS`, both ledger tables, the `ROW` to work now with its exact `ROW_CONTRACT`, and `REWORK` when review findings are open. If `MODE` or any routing field is absent, stop and report the malformed projection. Obey its `OWNER`/`PHASE_ID`/paths; never construct `phase-N` from the number. **If the script cannot run, stop and report the exact failure** — do not scan for the phase by hand. If it reports no phase or no brief, follow the line it prints and stop.
+**0. Find what to build by running the state script — do not `ls` for the phase or infer it from the conversation.** Run `node _mano/scripts/state.js --next`. It reports `MODE`, the selected `OWNER`, exact `PHASE_ID`, numeric `PHASE`, `PHASE_DIR`, `BRIEF`, `PROGRESS`, `PROGRESS_STATUS`, `ARTIFACTS`, both ledger tables, the `ROW` to work now with its exact `ROW_CONTRACT`, `REWORK` when review findings are open, and the line addressed to this skill — `BUILD:` before a ledger exists, `RUN:` once one does — which states what this whole invocation must do, not just its next step. **The `DEV:` line in the same projection addresses `mano dev`, not you.** Never act on it and never relay it to the human; it names `mano build` because it is telling a different reader where the work lives, and reading it as an instruction ends the run before pre-flight. If `MODE` or any routing field is absent, stop and report the malformed projection. Obey its `OWNER`/`PHASE_ID`/paths; never construct `phase-N` from the number. **If the script cannot run, stop and report the exact failure** — do not scan for the phase by hand. If it reports no phase or no brief, follow the line it prints and stop.
 
 Branch on `PROGRESS_STATUS`, and on nothing else:
 
@@ -42,13 +44,15 @@ node _mano/scripts/progress.js init --phase [N] --expect-phase-id [PHASE_ID]
 
 Then read the emitted tables back and confirm they are the brief you just ran pre-flight against: one Scope row per scope leaf, one Exit row per exit leaf, the brief's own numbering and lettering, and the label of each joining its category to its leaf. A mismatch means the brief changed underneath you — stop and report it rather than building against a ledger you did not verify.
 
+**Then go straight to step 2 in this same invocation.** Creating the ledger is not a unit of work and is not a stopping point: it is the first thing that happens inside a run that then builds the phase. Do not report the ledger, do not describe its rows, and do not hand back for the human to type `mano build` again — a run that ends here has written a file and built nothing, which is the one outcome worse than not starting. The only things that may stop the run between `init` and the first row are the stops this contract already names.
+
 **2. Implement in row order, one pass at a time.** Take the `ROW` and `ROW_CONTRACT` from the projection. `ROW_CONTRACT` is the row's exact text — the brief's own item or leaf for a normal row, the human's or your own recorded text for a correction or a split — so there is no second read of the brief to make.
 
 A **pass** is one implement-then-verify cycle. By default it is that one row. When the next rows are contiguous leaves of the same brief category and share one real implementation surface, a pass may cover several of them — the derivation and its six conditions are **Grouping rows into one pass** below. Grouping changes only how many rows one pass covers; every step here stays **per row**:
 
   a. **Run the gates first, before touching any status or any code.** Apply gates **6.2**, **6.3**, **6.4** and the **read budget** from `_mano/rules/implement.md` against **each row's** contract in the pass. A gate that fires stops the run *here*, with the ledger untouched — a row flipped to `doing` for work that then gets refused is a false record of what happened. In a group, the gate fires against one row and ends the pass **before** that row; the earlier rows are still an honest pass.
   b. Only once the gates pass, flip the pass to `doing` in one call: `node _mano/scripts/progress.js set-status --phase [N] --expect-phase-id [PHASE_ID] --row [id] --status doing` — repeating `--row [id] --status doing` for each row in the pass.
-  c. Derive what the pass needs from the artifacts *in this pass*; never write an implementation reference to disk. It is expensive, single-use, and wrong to persist. Implement, then verify through `node _mano/scripts/verify.js -- <command>`, then apply gate **10.1** — **separately to every row in the pass and every `E` leaf you are about to mark**. Verification may be shared; evidence may not.
+  c. Derive what the pass needs from the artifacts *in this pass*; never write an implementation reference to disk. It is expensive, single-use, and wrong to persist. Implement, then verify through `node _mano/scripts/verify.js -- <command>`, then apply gates **10.1 and 10.2** — **separately to every row in the pass and every `E` leaf you are about to mark**. Verification may be shared; evidence may not.
   d. Flip the rows you proved to `done` and mark `met` every Exit Criterion this pass produced evidence for, in one call:
      `node _mano/scripts/progress.js set-status --phase [N] --expect-phase-id [PHASE_ID] --row [id] --status done --row [Eid] --status met`
      No stored row → criterion mapping exists and none is needed: mark leaves as the evidence appears, and step 4's terminal sweep re-checks all of them regardless of which row got there. A row or leaf you cannot yet prove stays open — that is the gate doing its job, and the next run resumes at the first unresolved leaf.
@@ -56,7 +60,7 @@ A **pass** is one implement-then-verify cycle. By default it is that one row. Wh
 
 A row whose split parts exist is a **roll-up**: its status is derived from its parts and the script refuses to write it directly. Work the parts; the parent closes with the last one.
 
-**2r. Open review findings come first.** When the projection reports `REWORK: [n] pending`, the ledger routes here even if every row was already complete. Process the **first pending event**, in order, before any other row — see **Review findings (rework)**.
+**2r. Open rework events come first.** When the projection reports `REWORK: [n] pending`, the ledger routes here even if every row was already complete. Process the **first pending event**, in order, before any other row — see **Rework events**.
 
 **3. Never stop mid-row, and never stop between rows while work remains.** A pass only ever ends *between* rows, with every status written and every claim proven — a run that trails off inside a row leaves work the ledger cannot describe, which is the one state a resume cannot recover from. But finishing a pass is not a reason to end the run: close it (2e), then return to step 2 for the next unresolved row **in the same invocation**. Keep taking passes until step 4 applies, or until one of this contract's own stops fires — a pre-flight or gap gate, `REWORK` routing to step 2r, a deviation, or Repair Mode's attempt limit. The size of the remaining ledger, the number of rows already closed, or how long the run is taking are never reasons to pause and hand back on their own.
 
@@ -73,7 +77,7 @@ A row whose split parts exist is a **roll-up**: its status is derived from its p
 - **Text arguments travel as files, never inline.** `--text-file`, `--part-file`, `--reason-file`, `--exit-text-file`. Quotes, backticks, `$()`, and newlines do not survive a shell round-trip, and a row's exact text is its contract. Write the text to a scratch file and pass the path.
 - **Three status vocabularies, deliberately distinct.** Scope rows: `pending | doing | done`. Exit Criteria: `pending | met | needs-human`. Rework events: `pending | resolved | dismissed`. **Built is not proven** — the script rejects `met` on an `S` row and `done` on an `E` row.
 - **The addressed brief is frozen once the ledger exists.** `init` fingerprints `## Phase Goal`, `## Phase Scope`, `## Not This Phase`, and `## Exit Criteria`. Every later command re-checks that fingerprint and refuses when it moved, because every row address points into those sections. That refusal is not a problem to work around — see **Mid-phase corrections**, case (E).
-- **Row text is immutable; row status is correctable.** No row's text is ever rewritten. A status may move backwards when a defect surfaces, and that always requires an explicit `--reopen` and always fires the **deviation stop**.
+- **Row text is immutable; row status is correctable.** No row's text is ever rewritten. A status may move backwards when a defect surfaces, and that always requires an explicit `--reopen`. The reopen itself is not a deviation stop — see **Reopening without a stop**.
 - **Build never edits the phase brief**, or any other artifact it does not own — not to fix a typo, not to record what it built, not when the user says the brief is wrong. Reading an input artifact is how build works; writing to one is out of lane. `progress.md` is the one file build owns, plus the source it is implementing.
 
 ## Step 0 — pre-flight
@@ -187,6 +191,16 @@ A conflict between an applicable project rule and the phase scope is not a conti
 
 Do not write the ledger, and do not write code, until the map has no unmapped applicable obligations. Report the mapping only when it exposed a conflict or caused a row to be added; a clean map needs no narration.
 
+**0g.1 Design-contract coverage.** The same mapping, run against `_mano_output/design-brief.md`. `mano ui` writes one `### [PHASE_ID] — [Screen Name]` entry per screen under `## Screen Composition`; that entry, together with any project-wide statement of what screens may be built from, is an **obligation list**, not reference material.
+
+1. Read every composition entry whose `PHASE_ID` matches the exact projected phase. No matching entry satisfies this gate — an absent design contract is 0d's business, not this one.
+2. Map every **named component** in those entries — a proper-noun element the brief expects reused rather than described — onto the exact Scope row that must instantiate it. Map any brief-level restriction on the available vocabulary the same way.
+3. A named component with no Scope row that can carry it is a gap: stop with no ledger written and report it, exactly as step 4 above does.
+
+**Naming a component is not describing one.** The brief names it because the reusable thing already exists, so the row honours it by instantiating that thing — never by building something that renders the same. Reusing a shared theme, palette, or stylesheet is not reusing the component that theme was extracted alongside.
+
+This gate exists because nothing downstream covers it: `Exit Criteria` test what a surface *does*, and a hand-built lookalike does exactly what the shared one does. A phase can therefore reach every criterion, pass gate 10.1, and still have shipped the design contract unbuilt. Gate 10.2 in `_mano/rules/implement.md` is this map's reciprocal, and the two are one mechanism — a map made before code that nothing re-reads is a map the implementation forgets.
+
 **0f. Prove the chain: `Phase Goal` outcome → Scope leaves → Exit leaves.** The last pre-flight step, and the one that decides whether the brief can be built at all. For **every distinct outcome the `Phase Goal` promises**, name the one or more `## Phase Scope` items that will ship it and the one or more `## Exit Criteria` leaves that will prove it. Then close the loop both ways:
 
 1. Every Exit Criterion has at least one Scope item that could plausibly satisfy it.
@@ -214,7 +228,7 @@ Build runs straight through while the ledger is a copy of the human's own list �
 - pre-flight found a hard gate, an unresolved artifact gap, an unmapped project-rule obligation, or a `Phase Goal` outcome the brief does not close (routes out, no ledger);
 - gate 6.4 fired — the work conflicts with `Phase goal` / `Phase scope` / `Not this phase`;
 - a sub-row split was needed;
-- a row was reopened, or a correction row appended;
+- a correction row was appended, or a reopen reached past what the human's own report named — see **Reopening without a stop**;
 - a distinct outcome needs a backlog item — the preview and its approval;
 - the terminal sweep reopened a leaf, or left one `needs-human`.
 
@@ -243,12 +257,12 @@ A **flat** brief has no categories, so every row is its own pass. Do not group f
 2. Run gates **6.2**, **6.3**, **6.4** and the read budget **per row**, before any code. A gate that fires on the third row ends the pass at the second, with nothing written.
 3. One status batch to `doing`, covering exactly the rows in the pass.
 4. Implement once across the shared surface.
-5. Verify once where that is honest — but apply gate **10.1 separately to every row and every `E` leaf**. One green suite is not evidence for three rows unless something in it exercises each one.
+5. Verify once where that is honest — but apply gates **10.1 and 10.2 separately to every row and every `E` leaf**. One green suite is not evidence for three rows unless something in it exercises each one.
 6. Write the rows you proved, and the `E` leaves you proved, in one call.
 7. Leave any failing or unproven row open, and resume at the first unresolved leaf. A partial pass closes what it proved and nothing else — never close a row on the strength of its neighbour.
 8. One state and identity post-check for the pass, not one per row.
 
-The close line may name the row range — `S1a–S1c done`. A split, a reopen, or a correction remains a **deviation stop**, and none of the three ever appears inside a group.
+The close line may name the row range — `S1a–S1c done`. A split or a correction remains a **deviation stop**, and none of the three — split, reopen, correction — ever appears inside a group.
 
 ## Sub-rows: the one text build composes
 
@@ -275,14 +289,40 @@ The user reports something the build should account for. It arrives through one 
 
 Two things decide whether the classifier runs at all, and both are read from the projection before any classification: a **pending `R…` rework event** takes precedence over an invocation argument (refuse without mutation, and resolve or dismiss the event first), and **no ledger** means there is nothing to correct (refuse, and route to `mano start "[the change]"`). Neither is a case below; both are stated in full at the top of this file.
 
-**(A) A defect in work already marked done — no new scope, no new row.** The code does not do what an existing `S` row or `E` leaf already requires. This is most mid-build reports, and it carries zero invention risk because nothing is authored at all. Reopen the affected rows **before writing any code**, in one call:
+**(A) A defect in work already marked done — no new scope, no new row.** The code does not do what an existing `S` row or `E` leaf already requires. This is most mid-build reports, and it carries zero invention risk because nothing is authored at all.
+
+**Record it before you reopen anything.** Write the user's exact words to a file and append the event first:
+
+```
+node _mano/scripts/progress.js request-rework --phase [N] --expect-phase-id [PHASE_ID] \
+  --text-file /tmp/correction.txt --source build
+```
+
+`--source build` is what distinguishes a defect you were told about from one `mano review` found; the two are the same class of fact and take the same route, and the record may not credit yours to a review that never saw it. The text is the user's, verbatim — never paraphrased into scope-ese — for the same reason a `+N` row's is.
+
+**Why this comes first, and why the reopen alone is not enough.** `set-status --reopen` writes a status cell. Once you fix the row it reads `done` again, and `progress.md` is byte-identical to a phase in which the defect never happened — the reopen, the reason, and your correction all lived in a conversation that a compaction, a restart, or an interleaved command destroys. The event is the half that survives all three: it holds your words, `sign-off` refuses while it is pending, and if this run dies before the fix lands, the next `mano build` finds it under `REWORK:` and resumes exactly here. Then reopen the affected rows, **before writing any code**, in one call:
 
 ```
 node _mano/scripts/progress.js set-status --phase [N] --expect-phase-id [PHASE_ID] \
   --row S2 --status doing --reopen --row E2c --status pending --reopen
 ```
 
-The ledger was wrong: the row was never done, and gate 10.1 letting it through is the bug behind the bug. `--reopen` is mandatory and fires the deviation stop. Reopen the **existing normal rows** by their own addresses — never append a correction row for work an existing row already required, and never attach correction-only `affects:` metadata to a normal row. Reopening after the fix, rather than before it, records a sequence that did not happen.
+Resolve the event in the same write that closes the work, exactly as a review-sourced event is resolved:
+
+```
+node _mano/scripts/progress.js resolve-rework --phase [N] --expect-phase-id [PHASE_ID] \
+  --id R1 --status resolved
+```
+
+**An event you recorded in this run is not a pending event blocking this run.** The precedence rule at the top of this file is evaluated once, from the projection, before classification; your own event is written after that and is the thing you are already handling. Re-reading it as a blocker would deadlock build against a correction it recorded itself.
+
+The ledger was wrong: the row was never done, and gate 10.1 letting it through is the bug behind the bug. `--reopen` is mandatory. Reopen the **existing normal rows** by their own addresses — never append a correction row for work an existing row already required, and never attach correction-only `affects:` metadata to a normal row. Reopening after the fix, rather than before it, records a sequence that did not happen.
+
+**Reopen only what the defect actually touches.** An `E` leaf is reopened when the defect contradicts what that leaf asserts — not because it is the nearest leaf to the affected row. A criterion the defect leaves true stays `met`; reopening it as a proxy records a promise as unproven when it was proven, and hides that no leaf covered the defect at all.
+
+**Reopening without a stop.** A reopen authors nothing — the scope is the human's own sentence and the rows are addresses that already existed — so it is not a deviation to approve. Asking *"should I proceed?"* about a defect the human reported one second ago costs an exchange and returns no decision, and by then the event is already written, so the question asks permission for state that is already durable. **Record, reopen, fix, resolve, in one run.** The same holds for a `source: review` event: a finding the human confirmed at `mano review` is at least as approved as one they just typed.
+
+There is one exception, and it is the only part of (A) that is build's own judgment rather than the human's words: **when the reopen reaches past what their report named** — an Exit leaf that read `met` becomes unproven, or rows they never mentioned are pulled in — the deviation stop fires *before the fix*, names every row and leaf being reopened beyond the report, and waits. A reopen that lands exactly where the report points never stops.
 
 **(B) A distinct outcome the phase does not contain — no row, no code.** Gate 6.4 applies verbatim: stop **before** code. Do not append a row, do not implement, and do not route to `mano start` to amend a brief that a ledger has already frozen. Offer exactly one explicit choice — defer it to the backlog — and see **Deferring a distinct outcome** below. Auto mode does not soften this.
 
@@ -345,13 +385,13 @@ Approve these fields and I'll write it. Nothing is written yet.
 
 Everything else in 0⊘ still holds: this exception is one backlog item, previewed and approved. It is not permission to touch the brief, the spec, the rules, or another owner's phase.
 
-## Review findings (rework)
+## Rework events
 
-`mano review` persists each confirmed substantive finding as an ordered `R…` event in the ledger, with its own exact text. They are durable state, not conversation: a compaction, a restart, or an interleaved command loses a conversation, and these have to survive all three.
+An `R…` event is a confirmed defect held in the ledger with its own exact text, in order. Two things write one: `mano review`, for each confirmed substantive finding, and **case (A)** above, for a defect the human reports mid-build. The `source:` attribute records which. They are durable state, not conversation: a compaction, a restart, or an interleaved command loses a conversation, and these have to survive all three — which is the whole reason a correction you were handed in chat becomes one before you act on it.
 
 When the projection reports `REWORK: [n] pending`, that routes here **even when every row was already `done` and every criterion `met`**. Take the **first pending event**, read its exact text from the ledger's `## Row Contracts`, and classify it into A, B, or C above — per event, never in aggregate:
 
-- **A** → guarded reopen of the named rows, then fix. Mark the event resolved in the same write that closes the work:
+- **A** → guarded reopen of the rows the event's own text names, then fix — no stop unless the reopen exceeds that text (**Reopening without a stop**). Mark the event resolved in the same write that closes the work:
   `node _mano/scripts/progress.js resolve-rework --phase [N] --expect-phase-id [PHASE_ID] --id R1 --status resolved`
 - **B** → the **Deferring a distinct outcome** flow. Mark the event `resolved` only after the backlog item is actually written.
 - **C** → the `+N` correction flow, including its Exit link. Mark the event `resolved` after the correction is built and proven.
@@ -402,7 +442,7 @@ The terminal line is followed by the **`Validate now:`** block — the brief's o
 
 **Repair-limit stop:** Repair Mode's attempt limit (`_mano/rules/implement.md`) is the one stop that is neither terminal nor a deviation — the rows already closed stay closed and the failing row stays open. Its ≤3-line report is the whole output, under one ledger line: `[mano build]: [PHASE_ID] — S1a–S1c done, S2a open. Next: mano build once the failure below is cleared.` No recap, no file list, no widened repair budget.
 
-Two suffixes are permitted, and only when one genuinely applies: a short note about a non-acceptance deviation that did not weaken verification, and a project-relevant decision worth preserving, offered for capture in the artifact that owns it. An unmet Exit Criterion is never a permitted suffix — gate 10.1 leaves the row open instead.
+Three suffixes are permitted, and only when one genuinely applies: a run that reopened rows names them and the event it closed — `Reworked: S2, E2c reopened and rebuilt (R1 resolved).` — ; a short note about a non-acceptance deviation that did not weaken verification; and a project-relevant decision worth preserving, offered for capture in the artifact that owns it. An unmet Exit Criterion is never a permitted suffix — gate 10.1 leaves the row open instead.
 
 When `mano build` is the terminal action of an armed `mano mode auto` chain, the aggregate or deviation line is the build action's log, followed by the required `[mano auto]` closing block from `_mano/rules/implement.md` → **Closing an armed auto chain**. That block is the only permitted content after the line.
 
@@ -416,6 +456,8 @@ When `mano build` is the terminal action of an armed `mano mode auto` chain, the
 - Do not group a correction row, a split row, or leaves from two brief categories into one pass.
 - Do not write any backlog item except through the previewed, explicitly approved defer flow — exactly one item, never assigned to a phase.
 - Do not infer a rework dismissal. Relay the human's decision or leave the event pending.
+- Do not end the invocation after `init`, after pre-flight, or between passes; do not report the ledger's rows to the human as if creating it were the run.
+- Do not act on the projection's `DEV:` line or relay it — it addresses `mano dev`.
 - Do not report the phase built on the strength of the statuses alone; the terminal sweep runs first.
 - Do not run `mano review`, close the phase, or scope another phase. Built is not closed.
 - Do not edit the phase brief or any other input artifact — flag and route instead.

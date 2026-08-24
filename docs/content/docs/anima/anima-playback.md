@@ -71,6 +71,14 @@ Freezes the animated value in place until [method resume].
 
 Continues playback from wherever [method pause] froze it.
 
+### queue
+
+Holds this playback until [method start_queued] is called by the runtime.
+
+### start_queued
+
+Starts a playback previously held by [method queue].
+
 ### cancel
 
 Stops playback and resolves [signal finished] as not-successful. The value

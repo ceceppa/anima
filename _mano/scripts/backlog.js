@@ -18,6 +18,7 @@
  *
  * Commands:
  *   add      append item(s) under `## Items`
+ *   update   rewrite one exact item's title and/or context (never its status)
  *   assign   move approved items from `Status: backlog` to `in-phase-<N>`
  *   resolve  mano review's close sweep: `in-phase-<N>` -> `resolved` (whole phase)
  *   resolve-gap  mark one exact spec-gap / rule-gap item resolved
@@ -38,7 +39,8 @@
  * trailing positional arg is the project root (default: current dir).
  *
  * Exit code 0 on success. Non-zero on bad input or when resolve-gap cannot
- * identify one safe exact target; failed targeted resolves never write.
+ * identify one safe exact target; failed targeted resolves never write. add's
+ * near-duplicate report never affects the exit code — it is advisory output.
  */
 
 const fs = require("node:fs");
@@ -54,6 +56,7 @@ const HELP = `mano backlog — deterministic writer for _mano_output/backlog.md
 
 Commands:
   add      append item(s) under '## Items'
+  update   rewrite one exact item's title and/or context (never its status)
   assign   move approved items from 'Status: backlog' to the configured phase
   resolve  mano review's close sweep for the configured phase identity
   resolve-gap  flip one exact open spec-gap / rule-gap item to 'resolved'
@@ -66,11 +69,33 @@ add — one item from flags (the shell-safe path):
   --source "..."    optional provenance
   --track "..."     optional work track / experiment
   --status <s>      optional (default: backlog)
+  --no-similar-warning  skip the resemblance report for this call
 add — many items at once:
-  --file items.json   a JSON array of { title, type, context, source?, track?, status? }
+  --file items.json   a JSON array of
+                      { title, type, context, source?, track?, status?,
+                        noSimilarWarning? }
                       (or pipe that JSON array on stdin)
   Items whose title already exists are skipped (exact, case-insensitive).
+  Items that merely *resemble* an existing one are still written, and reported
+  under 'SIMILAR' with the title they resemble. This catches the same work
+  re-entering the backlog under a new name, which an exact-title check never
+  sees, including resemblance to items already scoped or resolved. It is
+  advisory only: the check over-fires by design (no title metric separates a
+  duplicate from a sibling), so it never blocks and never changes the exit
+  code. Pass --no-similar-warning where sibling titles are expected — bulk
+  decomposition of one authored document (mano import).
   Output prints each item's Track. Missing or empty tracks print as 'undefined'.
+
+update:
+  --title "..."      required: the exact current title of the item to change
+  --new-title "..."  optional: rename it
+  --context "..."    optional: replace its context (\\n = line break, max 5 lines)
+  At least one of --new-title / --context. Type, Source, Track and Status are
+  never touched — status changes belong to assign / resolve / reject. Fails
+  without writing on a missing, ambiguous or malformed target, or when the new
+  title would collide with a different item. Use it to fold a duplicate into
+  the item that already covers the work, and to narrow an item to the slice
+  entering a phase when splitting it.
 
 assign:
   --phase N         the configured owner's phase number (required)
@@ -115,6 +140,7 @@ function parseArgs(argv) {
     command: null, root: process.cwd(), help: false,
     phase: null, titles: [],
     title: null, type: null, context: null, source: null, track: null, status: null, file: null,
+    noSimilarWarning: false, newTitle: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -127,6 +153,8 @@ function parseArgs(argv) {
     else if (a === "--track") args.track = argv[++i];
     else if (a === "--status") args.status = argv[++i];
     else if (a === "--file") args.file = argv[++i];
+    else if (a === "--no-similar-warning") args.noSimilarWarning = true;
+    else if (a === "--new-title") args.newTitle = argv[++i];
     else if (a === "--root") args.root = path.resolve(argv[++i]);
     else if (!a.startsWith("-")) {
       if (!args.command) args.command = a;
@@ -225,6 +253,67 @@ function existingTitles(text) {
   return set;
 }
 
+// ---- near-duplicate detection ---------------------------------------------
+//
+// Exact-title matching (above) only ever caught a re-run. The failure it misses
+// is the one that actually happens: a skill re-expresses work the backlog
+// already tracks under a slightly different name ("Motion interruption example
+// scenarios" beside "Motion interruption example coverage"), and both end up
+// scoped into the same phase.
+//
+// No similarity metric separates a real duplicate from a real sibling — on a
+// live 381-item backlog the threshold fires on 23 pairs of which 21 are
+// legitimate, and IDF weighting made it worse, scoring a confirmed duplicate
+// BELOW three real siblings ("fade_in" vs "fade_out", "2D" vs "3D showcase
+// scenes"). A check that wrong cannot be allowed to block: it would tax many
+// correct additions to catch a rare wrong one. So it reports and gets out of
+// the way — every item is written, the resemblance is named, and the skill
+// carries it to the human as an advisory line. Detection is the part a skill
+// cannot do from memory; the decision was never the script's to make.
+
+const TITLE_STOPWORDS = new Set([
+  "a", "an", "the", "and", "or", "of", "to", "for", "in", "on", "with", "by",
+  "at", "from", "add", "adds", "new", "its", "it", "as", "into", "per", "via",
+]);
+
+function titleTokens(title) {
+  const seen = new Set();
+  for (const raw of String(title).toLowerCase().replace(/[^a-z0-9]+/g, " ").split(" ")) {
+    if (!raw || TITLE_STOPWORDS.has(raw)) continue;
+    // Light singularisation so "scenarios" and "scenario" collide.
+    const word = raw.length > 3 && raw.endsWith("s") && !raw.endsWith("ss") ? raw.slice(0, -1) : raw;
+    seen.add(word);
+  }
+  return seen;
+}
+
+// Thresholds calibrated against a real 381-item backlog: they fire on both
+// confirmed duplicates in it, and on ~12% of items overall (the rest being
+// siblings the caller waves through). Recall is what matters here — a missed
+// duplicate is silent, a false positive costs one --allow-similar re-run.
+function titlesAreSimilar(a, b) {
+  const A = titleTokens(a);
+  const B = titleTokens(b);
+  if (A.size === 0 || B.size === 0) return false;
+  let shared = 0;
+  for (const word of A) if (B.has(word)) shared++;
+  const union = new Set([...A, ...B]).size;
+  const smaller = Math.min(A.size, B.size);
+  const jaccard = shared / union;
+  const overlap = shared / smaller;
+  return jaccard >= 0.6 || (overlap >= 0.8 && smaller >= 3);
+}
+
+// Every existing item as { title, status }, for collision reporting.
+function existingItems(text) {
+  if (text == null) return [];
+  const { lines, records } = parseItemRecords(text);
+  return records.map((record) => {
+    const status = itemField(lines, record, "Status");
+    return { title: record.title, status: status && status.value ? status.value : "unknown" };
+  });
+}
+
 // ---- add ------------------------------------------------------------------
 
 function readStdin() {
@@ -303,6 +392,7 @@ function cmdAdd(args) {
   const file = backlogPath(args.root);
   const existing = readText(file);
   const present = existingTitles(existing);
+  const priorItems = existingItems(existing);
 
   const kept = [];
   const skipped = [];
@@ -314,20 +404,47 @@ function cmdAdd(args) {
     kept.push(it);
   }
 
-  if (kept.length === 0) {
-    process.stdout.write(`[mano backlog] add → 0 written, ${skipped.length} skipped (duplicate title)\n`);
-    skipped.forEach((it) => printAddItem("~", it, " (duplicate, skipped)"));
-    return;
+  // Resemblance is advisory: every item is written. The check over-fires by
+  // nature, so making it block would tax many correct additions to catch a rare
+  // wrong one. It reports, and the skill carries the report to the human.
+  const flagged = [];
+  if (!args.noSimilarWarning) {
+    const written = [];
+    for (const it of kept) {
+      if (it.noSimilarWarning === true) { written.push(it); continue; }
+      const pool = priorItems.concat(written.map((w) => ({ title: w.title, status: "this batch" })));
+      const near = pool.filter((prior) => titlesAreSimilar(it.title, prior.title));
+      if (near.length) flagged.push({ item: it, near });
+      written.push(it);
+    }
   }
 
-  const blocks = kept.map(formatItem);
-  const next = buildWithItems(existing, blocks);
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  writeAtomic(file, next);
+  if (kept.length) {
+    const blocks = kept.map(formatItem);
+    const next = buildWithItems(existing, blocks);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    writeAtomic(file, next);
+  }
 
-  process.stdout.write(`[mano backlog] add → ${kept.length} written` + (skipped.length ? `, ${skipped.length} skipped (duplicate title)` : "") + "\n");
+  const parts = [`${kept.length} written`];
+  if (skipped.length) parts.push(`${skipped.length} skipped (duplicate title)`);
+  process.stdout.write(`[mano backlog] add → ${parts.join(", ")}\n`);
   kept.forEach((it) => printAddItem("+", it));
   skipped.forEach((it) => printAddItem("~", it, " (duplicate, skipped)"));
+
+  if (flagged.length) {
+    process.stdout.write("\nSIMILAR — written, but the backlog may already track this:\n");
+    for (const entry of flagged) {
+      process.stdout.write(`  ? ${String(entry.item.title).trim()}\n`);
+      for (const prior of entry.near) {
+        process.stdout.write(`      resembles: ${prior.title}  (Status: ${prior.status})\n`);
+      }
+    }
+    process.stdout.write(
+      "\nNothing is blocked. Pass this to the human as one ⚠ Verify line so they can\n" +
+      "merge or drop a real duplicate; a genuine sibling needs no action.\n"
+    );
+  }
 }
 
 // ---- assign ---------------------------------------------------------------
@@ -522,6 +639,102 @@ function itemField(lines, record, label) {
   return found[0];
 }
 
+// ---- update ---------------------------------------------------------------
+//
+// The backlog owners were told to "update its context instead of creating a
+// duplicate", and to rewrite an item's title and context when splitting it —
+// but no command did either, so both instructions resolved to a hand-edit that
+// two other rules in the same file forbid. This is that missing command.
+//
+// It is deliberately narrow: it rewrites an item's title and context and
+// nothing else. Status stays with assign/resolve/reject, because status is
+// where phase identity lives and a careless rewrite there loses work.
+function cmdUpdate(args) {
+  if (args.titles.length !== 1) {
+    fail("update needs exactly one --title naming the item to change.");
+  }
+  if (typeof args.titles[0] !== "string" || !args.titles[0].trim()) {
+    fail("update needs a non-empty value after --title.");
+  }
+  const requestedTitle = args.titles[0].trim();
+  const newTitle = args.newTitle != null ? String(args.newTitle).trim() : null;
+  const newContext = args.context != null ? String(args.context).replace(/\\n/g, "\n") : null;
+  if (newTitle === null && newContext === null) {
+    fail("update needs --new-title, --context, or both. Status changes go through assign / resolve / reject.");
+  }
+  if (newTitle !== null && newTitle === "") {
+    fail("update: --new-title cannot be empty.");
+  }
+  if (newContext !== null && !newContext.trim()) {
+    fail("update: --context cannot be empty.");
+  }
+  if (newContext !== null) {
+    const check = validateItem({ title: "x", type: "feature", context: newContext }, 0);
+    if (check) fail(`update: invalid input — ${check.replace(/^item 1: /, "")}`);
+  }
+
+  const file = backlogPath(args.root);
+  const text = readText(file);
+  if (text == null) fail(`update: no backlog at ${file}.`);
+
+  const parsed = parseItemRecords(text);
+  const key = requestedTitle.toLowerCase();
+  const matches = parsed.records.filter((record) => record.title.toLowerCase() === key);
+  if (matches.length === 0) {
+    fail(`update: no item has the exact title "${requestedTitle}".`);
+  }
+  if (matches.length > 1) {
+    fail(`update: title "${requestedTitle}" is ambiguous (${matches.length} exact matches).`);
+  }
+  const record = matches[0];
+
+  // A rename must not collide with a different item.
+  if (newTitle !== null && newTitle.toLowerCase() !== key) {
+    const clash = parsed.records.find(
+      (other) => other !== record && other.title.toLowerCase() === newTitle.toLowerCase(),
+    );
+    if (clash) fail(`update: another item is already titled "${clash.title}".`);
+  }
+
+  // The envelope must be intact before we rewrite any of it.
+  const type = itemField(parsed.lines, record, "Type");
+  const status = itemField(parsed.lines, record, "Status");
+  if (type.error) fail(`update: malformed item — ${type.error}.`);
+  if (status.error) fail(`update: malformed item — ${status.error}.`);
+
+  const lines = parsed.lines.slice();
+  if (newTitle !== null) lines[record.start] = `### ${newTitle}`;
+
+  if (newContext !== null) {
+    // Context runs from its own marker to the next top-level `- **Field:**`.
+    let ctxStart = -1;
+    for (let i = record.start + 1; i < record.end; i++) {
+      if (/^-\s*\*\*Context:\*\*\s*$/i.test(lines[i])) { ctxStart = i; break; }
+    }
+    if (ctxStart === -1) fail(`update: "${record.title}" has no '- **Context:**' line to replace.`);
+    let ctxEnd = ctxStart + 1;
+    while (ctxEnd < record.end && !/^-\s*\*\*[A-Za-z]/.test(lines[ctxEnd])) ctxEnd++;
+
+    const body = newContext.replace(/\r/g, "").split("\n").map((l) => l.replace(/\s+$/, ""));
+    while (body.length && body[0] === "") body.shift();
+    while (body.length && body[body.length - 1] === "") body.pop();
+    lines.splice(ctxStart + 1, ctxEnd - (ctxStart + 1), ...body.map((l) => `  ${l}`));
+  }
+
+  writeAtomic(file, lines.join("\n"));
+  const finalTitle = newTitle !== null ? newTitle : record.title;
+  const changed = [newTitle !== null ? "title" : null, newContext !== null ? "context" : null]
+    .filter(Boolean).join(" + ");
+  process.stdout.write(`[mano backlog] update → 1 item updated (${changed})\n`);
+  if (newTitle !== null && newTitle !== record.title) {
+    process.stdout.write(`  ~ ${record.title}\n`);
+    process.stdout.write(`  + ${finalTitle}\n`);
+  } else {
+    process.stdout.write(`  + ${finalTitle}\n`);
+  }
+  process.stdout.write(`    Status: ${status.value} (unchanged)\n`);
+}
+
 // A deliberately stricter writer than the phase-wide resolve. Gap owners name
 // one projected item and its expected type; every condition is validated before
 // the sole status line is changed.
@@ -651,11 +864,12 @@ function main() {
     process.exit(args.help ? 0 : 1);
   }
   if (args.command === "add") cmdAdd(args);
+  else if (args.command === "update") cmdUpdate(args);
   else if (args.command === "assign") cmdAssign(args);
   else if (args.command === "resolve") cmdResolve(args);
   else if (args.command === "resolve-gap") cmdResolveGap(args);
   else if (args.command === "reject") cmdReject(args);
-  else fail(`unknown command "${args.command}". Use add, assign, resolve, resolve-gap, or reject (--help for usage).`);
+  else fail(`unknown command "${args.command}". Use add, update, assign, resolve, resolve-gap, or reject (--help for usage).`);
 }
 
 if (require.main === module) main();
@@ -670,9 +884,13 @@ module.exports = {
   validateItem,
   displayTrack,
   existingTitles,
+  existingItems,
+  titleTokens,
+  titlesAreSimilar,
   parseItemRecords,
   itemField,
   buildWithItems,
   collectAddItems,
+  cmdUpdate,
   main,
 };

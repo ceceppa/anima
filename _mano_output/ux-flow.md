@@ -263,3 +263,40 @@
 
 **What happens on action:**
 - Selecting a node opens the real Motion Composer workspace, not a showcase-only mock — what the developer sees here is exactly what they'll get once they wire up their own motions.
+
+## Layout Transition Playground
+
+**How it's accessed:** Choose Layout Transitions from the Demo Selector's 2D tab.
+
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
+
+**What the user sees:**
+- The shared example header and one standard-container arrangement in its starting state.
+- A clear trigger for the supported layout change and the shared restart control.
+
+**What the user can do:**
+- Trigger the supported layout change.
+- Restart the scenario.
+
+**What happens on action:**
+- Triggering the change lets Godot choose the final arrangement while the previous arrangement visibly settles into it.
+- Restart restores the defined starting arrangement.
+
+## Motion Interruption Playground
+
+**How it's accessed:** Choose Motion Interruption from the Demo Selector's 2D tab.
+
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
+
+**What the user sees:**
+- The shared example header, one moving target, and one choice for each interruption outcome: Replace, Retarget, Queue, and Reverse.
+- A readable state label that identifies the selected outcome and the current result.
+
+**What the user can do:**
+- Start the initial motion.
+- Choose an interruption outcome while that motion is active.
+- Restart the scenario.
+
+**What happens on action:**
+- Choosing an outcome sends a new motion request and visibly shows that outcome without starting conflicting motion on the target.
+- Restart returns the target and state label to their defined starting state.

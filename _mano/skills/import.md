@@ -101,10 +101,12 @@ Decompose the entire document into backlog items. Every feature, requirement, no
 Write all items to `_mano_output/backlog.md` with `Status: backlog` through the deterministic writer. Produce a JSON array of `{ "title", "type", "context", "source", "track"? }` objects, write it to a temporary file such as `_mano_output/.import.json`, then run:
 
 ```text
-node _mano/scripts/backlog.js add --file _mano_output/.import.json
+node _mano/scripts/backlog.js add --file _mano_output/.import.json --no-similar-warning
 ```
 
-Delete the temporary file after the writer succeeds. The writer owns the item shape, duplicate-title check, and default `Status: backlog`; never hand-write blocks. **Script failing?** Stop and report the error (see "Scripts are mandatory" in `_mano/rules/core.md`). For reference, the exact shape the writer produces — no `ID`, no `Title`, no `Description`, no checkboxes, no numbering:
+Delete the temporary file after the writer succeeds. The writer owns the item shape, duplicate-title check, and default `Status: backlog`; never hand-write blocks.
+
+`--no-similar-warning` is correct for import and nowhere else in this skill: you are decomposing **one authored document**, whose sibling sections legitimately produce closely-related titles ("Convenience `fade_in`" beside "Convenience `fade_out`"), so the resemblance report would be near-continuous noise about the document's own shape. It silences that report only — an exactly repeated title is still skipped. Importing a second document into a backlog that already has items is the case to be careful with: run `node _mano/scripts/state.js --titles` first and drop what the project already tracks, because nothing downstream will catch it for you. **Script failing?** Stop and report the error (see "Scripts are mandatory" in `_mano/rules/core.md`). For reference, the exact shape the writer produces — no `ID`, no `Title`, no `Description`, no checkboxes, no numbering:
 
 ```markdown
 ### [Short title]

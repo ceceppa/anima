@@ -100,6 +100,8 @@ The next-action block follows `_mano/rules/artifact.md` → **Next-step suggesti
 
 **Show both implementation paths in `manual`, and only `mano build` in `auto`.** `_mano/rules/artifact.md` → **Next-step suggestion rule** owns this: at the no-ledger planning stage the mode decides, so read `MODE:` from the projection rather than defaulting to whichever path the examples use most.
 
+**A mid-chain hand-off prints no `Next:` block at all.** That rule is `_mano/rules/core.md` → **Canonical execution-log format** and `_mano/rules/auto.md` → **Continuing is an action, not an announcement**, and it outranks the sentence above: mid-chain nobody is choosing a command, so rendering `mano build` as an option and then running it yourself is a log that offers a choice and walks past it in the same breath — the exact shape that ends chains. The mode rule decides what a `Next:` block *contains* when there is one: on every `manual` run, and on the action that ends a chain.
+
 ## Hard constraints
 
 - During follow-up adjustments, discuss changed screens individually instead of regenerating unrelated screens.

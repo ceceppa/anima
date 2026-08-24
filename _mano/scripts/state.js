@@ -54,6 +54,7 @@ const {
   reviewHeadingPattern,
 } = require("./phase.js");
 const Ledger = require("./ledger.js");
+const Chain = require("./chain.js");
 
 const GAP_TYPES = ["spec-gap", "rule-gap"];
 
@@ -68,7 +69,7 @@ function parseArgs(argv) {
     root: process.cwd(), json: false, verbose: false,
     scope: false, next: false, ui: false, current: false,
     spec: false, gaps: null, source: null, track: null, help: false,
-    amendCurrent: false,
+    amendCurrent: false, titles: false, match: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -90,6 +91,8 @@ function parseArgs(argv) {
       if (candidate == null || candidate.startsWith("-")) args.track = "";
       else { args.track = candidate; i++; }
     }
+    else if (a === "--titles") args.titles = true;
+    else if (a === "--match") args.match = argv[++i];
     else if (a === "--gaps") {
       const candidate = argv[i + 1];
       if (candidate == null || candidate.startsWith("-")) args.gaps = "";
@@ -104,7 +107,7 @@ function parseArgs(argv) {
 const HELP = `mano state — read-only projections of _mano_output/
 
 Usage:
-  node state.js [projectRoot] [--scope [--source <text>] [--track <name>] | --next | --ui | --current | --spec | --gaps <type>] [--verbose] [--json]
+  node state.js [projectRoot] [--scope [--source <text>] [--track <name>] | --next | --ui | --current | --spec | --gaps <type> | --titles [--match <text>]] [--verbose] [--json]
 
   projectRoot   directory containing _mano_output/ (default: current dir)
   --amend-current  with --scope only: ask whether the *current* phase's brief may
@@ -121,7 +124,7 @@ Usage:
                 # and file path) plus the ordered story list, or, when the phase
                 has a progress.md ledger, its next non-done Scope row plus both
                 ledger tables. On the build path it also reports the optional
-                artifact inventory (ARTIFACTS) and any pending review findings
+                artifact inventory (ARTIFACTS) and any pending rework events
                 (REWORK), before the ledger exists as well as after
   --ui          for mano ui: report the current phase brief and phase-local
                 design preview paths without exposing backlog content or
@@ -132,6 +135,14 @@ Usage:
   --spec        for mano spec: report the current phase brief path, exact
                 in-phase-N backlog items, and open spec-gap items without
                 exposing the rest of backlog.md
+  --titles      the backlog roster: every item's title, type and status,
+                grouped by status, with no context — what the project already
+                tracks, including items already scoped or shipped that --scope
+                never shows. Use it to answer "do we track this already?"
+                before adding an item, and to show the human the full backlog.
+                Never a scope-selection input: that stays SCOPE INPUT only
+  --match <text>  with --titles only: case-insensitive substring filter on the
+                title, for checking one piece of work rather than listing all
   --gaps <type> read only backlog.md and print unresolved items of exact type
                 spec-gap or rule-gap (mano rules uses the rule-gap projection)
   --verbose     also print the evidence (phase, stories, reviewed, backlog)
@@ -569,6 +580,77 @@ function artifactsLine(artifacts) {
 
 // A narrow gap-only projection. It intentionally bypasses scan(): only
 // backlog.md is read, and only matching open gap blocks are returned.
+// The backlog roster: every item's title, type and status, and nothing else.
+//
+// mano start is barred from opening backlog.md, and its SCOPE INPUT carries
+// only `Status: backlog` items with full context. That leaves it blind to
+// everything already scoped or shipped — which is how the same work gets added
+// twice under two names. This projection restores the missing visibility at the
+// one granularity that is both sufficient and cheap: on a real 381-item
+// backlog it is 16 KB against the file's 165 KB, because it carries no context.
+// It answers "what does this project already track?", never "what should this
+// phase contain?" — scope selection still comes from SCOPE INPUT alone.
+function scanTitles(projectRoot, match) {
+  const backlog = readGapText(path.join(projectRoot, "_mano_output", "backlog.md"));
+  assertBacklogItemsWellFormed(backlog);
+  const wanted = match ? String(match).trim().toLowerCase() : null;
+  const items = [];
+  for (const block of extractBacklogItems(backlog)) {
+    const title = (/^###\s+(.+?)\s*$/m.exec(block) || [])[1];
+    if (!title) continue;
+    if (wanted && !title.toLowerCase().includes(wanted)) continue;
+    const type = (/^-\s*\*\*Type:\*\*\s*(.+?)\s*$/im.exec(block) || [])[1] || "?";
+    const status = (/^-\s*\*\*Status:\*\*\s*(.+?)\s*$/im.exec(block) || [])[1] || "?";
+    items.push({ title: title.trim(), type: type.trim().toLowerCase(), status: status.trim().toLowerCase() });
+  }
+  const run = resolveConfiguredMode(projectRoot);
+  return {
+    projectRoot,
+    runMode: run.mode,
+    runModeSource: run.source,
+    match: wanted,
+    total: items.length,
+    items,
+  };
+}
+
+function renderTitles(t) {
+  const L = ["--- BACKLOG ROSTER (from the state script — do NOT open _mano_output/backlog.md) ---"];
+  L.push(`MODE: ${t.runMode}`);
+  if (t.match) L.push(`MATCH: ${t.match}`);
+  L.push(`COUNT: ${t.total}`);
+  const order = ["backlog", "in-phase", "resolved", "rejected"];
+  const bucket = (status) => {
+    if (status.startsWith("in-")) return "in-phase";
+    return order.includes(status) ? status : "other";
+  };
+  const groups = new Map();
+  for (const item of t.items) {
+    const key = bucket(item.status);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  if (t.items.length === 0) {
+    L.push("");
+    L.push(t.match ? "(no item title matches)" : "(no items)");
+    return L.join("\n");
+  }
+  for (const key of order.concat("other")) {
+    const list = groups.get(key);
+    if (!list || list.length === 0) continue;
+    L.push("");
+    L.push(`## ${key} (${list.length})`);
+    for (const item of list) {
+      L.push(`  ${item.title}  [${item.type}` + (key === "in-phase" ? `, ${item.status}` : "") + "]");
+    }
+  }
+  return L.join("\n");
+}
+
+function renderTitlesJson(t) {
+  return JSON.stringify({ match: t.match, total: t.total, items: t.items }, null, 2);
+}
+
 function scanGaps(projectRoot, type) {
   const backlog = readGapText(path.join(projectRoot, "_mano_output", "backlog.md"));
   assertBacklogItemsWellFormed(backlog);
@@ -874,13 +956,18 @@ function scan(projectRoot, options = {}) {
 
 // Derive the verdict from raw signals, faithful to mano start's gate.
 function finalize(s, options = {}) {
+  // The one part of an armed chain that is not derivable from disk: the actions
+  // the human removed at scope approval. Absent for every default chain, which
+  // is the common case and costs nothing to read.
+  s.chainSkipped = s.phaseId ? Chain.readSkipped(s.projectRoot, s.phaseId) : [];
   const storiesAllDone = !!(s.stories && s.stories.total > 0 && s.stories.done === s.stories.total);
   const storiesMissing = !s.stories || s.stories.total === 0;
   // The build path's ledger answers the same two questions the stories index
   // does, with one addition: built means every Scope row done AND every Exit
   // Criterion met. A phase has one ledger or the other (scan refuses both).
   const building = s.progressStatus === "present";
-  // D4: a confirmed review finding is durable state, not conversation. While one
+  // D4: a confirmed defect is durable state, not conversation — whether review
+// found it or the human reported it mid-build. While one
   // is pending the phase routes back to build even though every row reads done —
   // that is the whole reason the finding is in the ledger and not in the chat.
   const openRework = building ? s.progress.openRework.length : 0;
@@ -935,7 +1022,7 @@ function finalize(s, options = {}) {
   } else if (building && !buildAllDone) {
     verdict = "PHASE_IN_PROGRESS";
     action = openRework
-      ? `${s.phaseId} has ${openRework} pending review finding(s) in its ledger. Not complete — run mano build to work the first pending R… event. mano start must NOT scope a next phase.`
+      ? `${s.phaseId} has ${openRework} pending rework event(s) in its ledger. Not complete — run mano build to work the first pending R… event. mano start must NOT scope a next phase.`
       : `${s.phaseId} is being built (${s.progress.scope.closed}/${s.progress.scope.total} scope rows done, ${s.progress.exit.closed}/${s.progress.exit.total} exit criteria met). Not complete — run mano build. mano start must NOT scope a next phase.`;
   } else if (!building && !storiesAllDone) {
     verdict = "PHASE_IN_PROGRESS";
@@ -966,6 +1053,17 @@ function finalize(s, options = {}) {
     }
   }
 
+  // Which implementation action `mano continue` dispatches into, read off the
+  // ledger rather than guessed from whichever path is more familiar. `none`
+  // means there is nothing to continue *into* — either no implementable state,
+  // or the one genuine fork Mano leaves to the human (no ledger, manual mode:
+  // `mano stories` and `mano build` are both valid and the choice is theirs).
+  let implementationEntry = "none";
+  if (s.progressStatus === "invalid") implementationEntry = "none";
+  else if (building && !buildAllDone) implementationEntry = "build";
+  else if (!building && s.storiesExists && !storiesAllDone) implementationEntry = "dev";
+  else if (ledgerMissing && s.runMode === "auto") implementationEntry = "build";
+
   // Collapse the verdict to the only thing mano start branches on: go/no-go,
   // plus which path to take when going. The verdict + evidence remain for the
   // human (and --json), but the skill consumes just decision + next.
@@ -982,6 +1080,7 @@ function finalize(s, options = {}) {
   s.closed = closed;
   s.verdict = verdict;
   s.action = action;
+  s.implementationEntry = implementationEntry;
   s.decision = proceeds ? "PROCEED" : "STOP";
   s.next = proceeds ? NEXT_BY_VERDICT[verdict] : null;
 
@@ -1076,6 +1175,13 @@ function renderDecision(s) {
   if (s.gaps && s.gaps["spec-gap"] > 0) openGapRoutes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
   if (s.gaps && s.gaps["rule-gap"] > 0) openGapRoutes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
   if (openGapRoutes.length) L.push(`OPEN_GAPS: ${openGapRoutes.join("; ")}`);
+  // Which implementation action `mano continue` runs, decided by the ledger.
+  // `none` is not "nothing to do" — it is "nothing to continue *into*", which
+  // includes the one fork the human owns (no ledger, manual mode).
+  L.push(`IMPLEMENTATION_ENTRY: ${s.implementationEntry}`);
+  if (s.chainSkipped && s.chainSkipped.length) {
+    L.push(`CHAIN_SKIPPED: ${s.chainSkipped.join(", ")} — the human removed these at scope approval; do not re-propose them for this phase`);
+  }
   L.push(s.action);
   return L.join("\n");
 }
@@ -1396,9 +1502,22 @@ function renderNext(s) {
         for (const line of contract.split("\n")) L.push(`  ${line}`);
         L.push("END_ROW_CONTRACT");
       }
+      // The resume directive, stated on every read in both modes. `mano build`
+      // is a run-to-completion batch with no one-row variant — it is `mano dev
+      // yolo` with no opt-in word — so the projection names the whole run, not
+      // just the next row. A build that hands back between rows leaves a phase
+      // nobody is finishing, and the ledger cannot tell that apart from a
+      // contract stop.
+      const openScope = s.progress.scope.total - s.progress.scope.closed;
+      const openExit = s.progress.exit.total - s.progress.exit.closed;
+      L.push(
+        "RUN: implement ROW now, then continue to the next unresolved row in this SAME invocation. " +
+          `${openScope} of ${s.progress.scope.total} scope rows and ${openExit} of ${s.progress.exit.total} exit criteria still open. ` +
+          "Do not stop between rows and do not report progress between passes; the run ends at the terminal evidence sweep or a stop this contract names.",
+      );
     } else if (s.progress.openRework.length) {
       L.push("ROW: none");
-      L.push(`Every scope row is done, but ${s.progress.openRework.length} review finding(s) are still pending. Work the first pending R… event in order; each one keeps its own exact text in \`## Row Contracts\`. The phase does not go back to review until none is pending.`);
+      L.push(`Every scope row is done, but ${s.progress.openRework.length} rework event(s) are still pending. Work the first pending R… event in order, then continue to the next one in this SAME invocation; each keeps its own exact text in \`## Row Contracts\`. The phase does not go back to review until none is pending.`);
     } else if (!s.progress.allMet) {
       L.push("ROW: none");
       L.push("Every scope row is done but not every Exit Criterion is met. Prove the remaining ones or reopen the row that owes the evidence; the phase is not built until both tables are closed.");
@@ -1420,7 +1539,7 @@ function renderNext(s) {
     }
     if (s.progress.rework.length) {
       L.push("");
-      L.push("Rework (review findings; build routes here while any is pending):");
+      L.push("Rework (review findings and mid-build corrections; build routes here while any is pending):");
       for (const r of s.progress.rework) {
         L.push(`  ${r.id.padEnd(8)} ${r.status.padEnd(11)} ${r.label}`);
       }
@@ -1429,10 +1548,22 @@ function renderNext(s) {
   }
 
   if (!s.stories || s.stories.total === 0) {
+    // Two readers, two lines, each addressed by name. This projection is shared
+    // by `mano dev` and `mano build`, and on this branch build is the one that
+    // has work: it creates the ledger it is about to run. A single `DEV:` line
+    // naming `mano build` as the entry is read by build itself as "tell the
+    // human to run mano build" — the misroute that ends the run before
+    // pre-flight. Build reads BUILD:, dev reads DEV:, and neither is handed the
+    // other's instruction.
+    L.push(
+      `BUILD: ${s.phaseId} has a brief and no ledger — this is mano build's FIRST run, and it is a run, not a setup step. ` +
+        "Pre-flight (build.md step 0), then progress.js init, then implement every scope row to completion in this SAME invocation. " +
+        "Creating the ledger is not a stopping point; do not hand back after init, and do not report the ledger to the human.",
+    );
     L.push(
       s.runMode === "auto"
-        ? `DEV: ${s.phaseId} has a brief but no stories yet — in auto the implementation entry is mano build, which builds straight from the brief. Nothing for mano dev yet.`
-        : `DEV: ${s.phaseId} has a brief but no stories yet — run mano stories for story files, or mano build to build straight from the brief. Nothing for mano dev yet.`,
+        ? `DEV: ${s.phaseId} has no stories index — nothing for mano dev. In auto the implementation entry is mano build (see BUILD: above); do not route the human anywhere.`
+        : `DEV: ${s.phaseId} has no stories index — nothing for mano dev. mano stories creates one, or mano build builds straight from the brief.`,
     );
     L.push(`PHASE: ${s.phase}`);
     L.push(`PHASE_ID: ${s.phaseId}`);
@@ -1520,6 +1651,8 @@ function renderJson(s) {
     targetReviewHeading: s.targetReviewHeading,
     verdict: s.verdict,
     action: s.action,
+    implementationEntry: s.implementationEntry,
+    chainSkipped: s.chainSkipped,
     scope: s.scope,
   }, null, 2);
 }
@@ -1584,6 +1717,21 @@ function main() {
       process.exit(1);
     }
     process.stdout.write((args.json ? renderJson(current) : renderCurrent(current)) + "\n");
+    process.exit(0);
+  }
+  if (args.titles) {
+    if (args.scope || args.next || args.ui || args.current || args.spec || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --titles cannot be combined with --scope, --next, --ui, --current, --spec, --gaps, or --verbose.\n");
+      process.exit(1);
+    }
+    let roster;
+    try {
+      roster = scanTitles(args.root, args.match);
+    } catch (error) {
+      process.stderr.write(`[mano state] cannot read _mano_output/backlog.md — ${error.message}\n`);
+      process.exit(1);
+    }
+    process.stdout.write((args.json ? renderTitlesJson(roster) : renderTitles(roster)) + "\n");
     process.exit(0);
   }
   if (args.gaps !== null) {

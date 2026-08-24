@@ -71,7 +71,8 @@ Commands:
   set-status      flip one or more rows to a new status
   split           append dot-numbered sub-rows under the row being built
   add-row         append a human correction row under an existing item
-  request-rework  append an ordered review finding
+  request-rework  append an ordered rework event — a review finding, or a
+                  defect the human reported mid-build (--source build)
   resolve-rework  close one rework event
   sign-off        record the human's sign-off across the Exit Criteria
 
@@ -107,6 +108,9 @@ add-row:
 
 request-rework:
   --text-file <path>      one finding's exact text, repeatable (required)
+  --source <who>          review (default) | build — who raised it. 'build' is
+                          a correction the human typed mid-build; the record
+                          says so instead of crediting it to a review.
 
 resolve-rework:
   --id R<n>               the event to close (required)
@@ -129,7 +133,7 @@ function parseArgs(argv) {
     command: null, root: process.cwd(), help: false,
     phase: null, expectPhaseId: null, entries: [], partFiles: [], textFiles: [],
     parent: null, exit: null, exitTextFile: null, reasonFile: null, id: null,
-    status: null, legacyText: null, legacyParts: [],
+    status: null, legacyText: null, legacyParts: [], source: null,
   };
   let current = null;
   for (let i = 0; i < argv.length; i++) {
@@ -155,6 +159,7 @@ function parseArgs(argv) {
     else if (a === "--text-file") args.textFiles.push(argv[++i]);
     else if (a === "--exit-text-file") args.exitTextFile = argv[++i];
     else if (a === "--reason-file") args.reasonFile = argv[++i];
+    else if (a === "--source") args.source = argv[++i];
     else if (a === "--parent") args.parent = argv[++i];
     else if (a === "--exit") args.exit = argv[++i];
     else if (a === "--id") args.id = argv[++i];
@@ -663,10 +668,19 @@ function cmdAddRow(args) {
 
 // ---- rework ---------------------------------------------------------------
 
+// Who raised an event. A review finding and a correction the human typed into
+// a running build are the same class of durable fact and take the same route —
+// but the record may not credit both to a review that never saw one of them.
+const REWORK_SOURCES = new Set(["review", "build"]);
+
 function cmdRequestRework(args) {
   refuseInlineText(args);
   const ref = resolveRef(args);
   if (args.textFiles.length === 0) fail("request-rework needs at least one --text-file <path>.");
+  const source = args.source === null ? "review" : args.source;
+  if (!REWORK_SOURCES.has(source)) {
+    fail(`request-rework: --source must be one of ${[...REWORK_SOURCES].join("|")}; got '${args.source}'.`);
+  }
   const { file, ledger } = loadLedger(args, ref);
 
   const texts = args.textFiles.map((f, i) => readContractText(f, `request-rework --text-file[${i + 1}]`));
@@ -676,14 +690,17 @@ function cmdRequestRework(args) {
     const event = { id: `R${next}`, number: next, label: L.deriveLabel(text), status: "pending" };
     next++;
     ledger.rework.push(event);
-    setContract(ledger, event.id, { text });
+    setContract(ledger, event.id, { attributes: { source }, text });
     added.push(event);
   }
   save(file, ledger);
 
-  out(`[mano build] request-rework → ${added.length} event(s) recorded\n`);
+  out(`[mano build] request-rework → ${added.length} event(s) recorded (source: ${source})\n`);
   for (const a of added) out(`  + ${a.id.padEnd(4)} pending  ${a.label}\n`);
-  out("  Confirmed findings are durable state: they survive session loss and route to mano build.\n");
+  out("  A confirmed defect is durable state: it survives session loss and routes to mano build.\n");
+  if (source === "build") {
+    out("  Resolve it in the same run that fixes it — sign-off refuses while any event is pending.\n");
+  }
 }
 
 function cmdResolveRework(args) {

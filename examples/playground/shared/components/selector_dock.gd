@@ -95,6 +95,11 @@ func _draw() -> void:
 func add_item(button: SelectorButton) -> void:
 	_items_box.add_child(button)
 
+func trigger_item(index: int) -> void:
+	var button: SelectorButton = %Items.get_child(index)
+	
+	button.pressed.emit()
+
 func get_item_count() -> int:
 	return _items_box.get_child_count()
 

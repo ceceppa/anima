@@ -1,6 +1,6 @@
 ---
 name: implement
-description: The implementation contract shared by mano dev and mano build — the gates that run before code, the acceptance-evidence gate, Repair Mode, the read budget, and output discipline.
+description: The implementation contract shared by mano dev and mano build — the gates that run before code, the acceptance-evidence and design-contract gates, Repair Mode, the read budget, and output discipline.
 ---
 
 # Implementation contract (shared)
@@ -21,7 +21,7 @@ Step numbers are stable across both paths and are cited by name elsewhere in Man
 **One pass may cover several units. The gates never do.** `mano dev` implements one story per invocation (`yolo` runs the pending set sequentially, each story keeping its own boundaries). `mano build` may cover several contiguous Scope rows in one pass when they share a single implementation surface; `_mano/skills/build.md` owns exactly when that is allowed. Either way:
 
 - gates **6.2**, **6.3**, and **6.4** run **per unit**, before any code and before any status write;
-- the acceptance-evidence gate **10.1** is applied **per unit and per acceptance criterion**, after implementation.
+- the acceptance-evidence gate **10.1** is applied **per unit and per acceptance criterion**, and the design-contract gate **10.2** **per unit and per named component**, after implementation.
 
 Verification may be shared across a pass — one suite run can serve several units. **Evidence may not.** A green suite is evidence for a unit only where something in it exercises that unit's stated outcome through its stated route. A pass that covers three units and proves two closes two, and the third stays open.
 
@@ -50,6 +50,12 @@ This gate applies in default, YOLO, and auto mode.
 
 When an AC cannot be satisfied because current code or a cited artifact deliberately preserves the opposite behaviour, stop before the status write, leave the row pending, and report the contradiction. Route a planning-contract contradiction to `mano spec`/`mano stories` as appropriate; do not rewrite the AC's meaning, invert the test, call the opposing behaviour intentional, or mark the unit done with a deviation. For an AC that is inherently visual or experiential, perform the narrow available manual/runtime check; if that cannot be run, report the unverified AC and leave the row pending.
 
+10.2 **Design-contract conformance — before status may become `done`.** If the unit produced or changed a user-visible surface and the design brief names components for that surface, confirm from **this turn's actual edits** that the surface instantiates each named one. Look for the component's own name, or the file that defines it, in what you wrote. A shared theme, a matching colour, a copied style, or a hand-built control that renders the same are none of them the component.
+
+A named component that is absent leaves the row **pending** and is reported, exactly as an unproven acceptance criterion is under 10.1. It is not a follow-up note and not a refinement: the row's own contract is what went unmet, so the row is not done.
+
+This gate is the reciprocal of the map made before code — pre-flight gate 0g.1 in `_mano/skills/build.md` on the build path, the story's `Implementation Reference` on the dev path. The map is the half that is easy to make and easy to forget by the time the surface exists, and the acceptance criteria cannot catch the forgetting: they test what the surface does, and a lookalike does the same thing. Whichever path you are on, the component named in an artifact is a promise the unit carries, not context it may weigh.
+
 ## Repair Mode
 
 A failing build, lint, type-check, or test during verification enters Repair Mode. Fixed budget; never widen it.
@@ -64,7 +70,7 @@ Repair-mode commands still run through `node _mano/scripts/verify.js -- <command
 trimmed failure excerpt.
 Attempt limit: 3 on the same error → stop, leave the row pending, report ≤3 lines (error, file:line, tried).
 Exception — never optimised away: the `state.js` re-check before the status write, and the
-acceptance-evidence gate (10.1), run in full regardless.
+acceptance-evidence and design-contract gates (10.1, 10.2), run in full regardless.
 
 ## Read budget
 
@@ -100,6 +106,18 @@ This block is the **sole** sanctioned expansion of **Implementation Output Disci
 
 `mano review` shows the same `Try` guidance again beside the promise it tests. That is deliberate, not redundancy to optimise away: chat delivery is not durable state, and the review that reads it is frequently a fresh session in which this message no longer exists.
 
+## Never end a turn on an announcement
+
+**A run ends by finishing, by a stop this contract names, or not at all.** Describing what you are about to do next and then ending the turn is the run stopping while claiming the opposite: the human is left holding a promise instead of a result, and no stop condition fired to explain it. Default `mano dev` ends after step 12 — that is its whole unit. Every other shape here (`mano dev yolo`, `mano build`, either skill inside an armed chain) runs until its terminal line.
+
+- ❌ "Ledger created — it has four scope rows; the first is `S1a`." → *turn ends*
+- ❌ "Pre-flight is in progress." / "Continuing into implementation now." → *turn ends*
+- ✅ ledger created → `S1a` implemented → … → the terminal aggregate line
+
+If you have written words describing what you are about to run, you have not run it. Either invoke it now, or print the stop. **Interim progress reports are the usual disguise**: they read as work and contain none, which is exactly why **Implementation Output Discipline** allows one closing line per invocation and no report between passes. Setup is not a unit of work — creating a ledger, passing pre-flight, and reading an artifact are things that happen *inside* the run, never things a run is finished having done.
+
+**Every stop is named, and only these are stops.** A run that hands back without naming its condition is a bug, not a stop — the two look identical to the human, and only the named one tells them whether to answer something or re-run the command. The complete list: a gap gate (6.2–6.4), the acceptance-evidence gate (10.1) leaving a unit unproven, the design-contract gate (10.2) leaving a named component unbuilt, Repair Mode's attempt limit, a script failure, a deviation stop, `REWORK` routing, or the terminal line. The size of what remains, how many units are already closed, and how long the run is taking are **never** stops.
+
 ## Closing an armed auto chain
 
 Both implementation skills are the terminal action of an armed `mano mode auto` chain. When one finishes such a chain, its ordinary aggregate or deviation line is that action's log — followed by the **`Validate now:`** block when the run left the phase ready for review — and exactly one closing block follows:
@@ -120,7 +138,7 @@ Next:
 
 That block, and the `Validate now:` block that may precede it, are the **only** permitted content after the aggregate line, and neither is an implementation summary: do not add a recap, a file list, or restated acceptance criteria between them. In `manual` mode there is no chain and no closing block — the aggregate line is the whole response. Re-read `MODE` from the freshest projection before deciding which applies.
 
-This contract is stated here, in full, on purpose. Both implementation skills declare themselves self-contained and forbid opening `_mano/workflow.md` or `_mano/rules/core.md` mid-skill, so a pointer into either would be an instruction they cannot follow. The planning skills' copy lives in `_mano/rules/auto.md`; the two must stay in step.
+This contract is stated here, in full, on purpose. Both implementation skills declare themselves self-contained and forbid opening `_mano/workflow.md` or `_mano/rules/core.md` mid-skill, so a pointer into either would be an instruction they cannot follow. Neither declares `requires-in-auto: [auto]`, so neither can ever open `_mano/rules/auto.md` — which is why **Never end a turn on an announcement** above is stated here too, not left there. The planning skills' copies of both live in `_mano/rules/auto.md`; each pair must stay in step, and a rule that exists only in `auto.md` does not exist on this path at all.
 
 ## Implementation Output Discipline
 

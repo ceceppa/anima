@@ -38,6 +38,10 @@ behind — see tech-spec.md's Key technical decisions.
 
 The value left on the target when [method AnimaPlayback.cancel] is called.
 
+### InterruptionPolicy
+
+How an incoming property motion resolves an existing owner of the same target property.
+
 ## Properties and constants
 
 ### display_name
@@ -104,6 +108,10 @@ or [method AnimaPlayback.complete]. See [enum CompletionValuePolicy].
 
 The value left behind when this motion's playback is cancelled. See
 [enum CancellationValuePolicy].
+
+### interruption_policy
+
+The policy used when this motion arrives while the same target property is already animated.
 
 ### reduced_motion_speed
 

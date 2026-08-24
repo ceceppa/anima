@@ -226,3 +226,78 @@
 #### Outcome changes
 
 - None
+
+---
+
+## Phase 21 Review — 2026-08-24
+
+### Validation
+
+- **Result:** Q2: yes. Q1: could not test manually because no existing example covers the interruption choices.
+
+### Phase checks
+
+| # | Phase promise | Result | What happened |
+|---|---|---|---|
+| E1a | Start a motion, then request another motion on the same property: the system identifies the active owner and applies the selected interruption behaviour | signed off | Not manually tested. |
+| E2a | Start a motion using each supported interruption choice: the affected property reaches the result defined by that choice without simultaneous conflicting writes | signed off | Not manually tested. |
+| E2b | Queue a second motion behind an active motion: the queued motion starts only after the active motion's policy-defined outcome | signed off | Not manually tested. |
+| E3a | Open the demo selector and choose Showcase: Grid Showcase is listed and can be opened | passed | Q2: yes. |
+
+### Questions
+
+| # | Question | Answer |
+|---|---|---|
+| Q1 | Do the supported interruption choices make overlapping motion requests predictable enough to use without workarounds? | Not checked — could not test manually; needs example coverage. |
+| Q2 | Does the Showcase category make Grid Showcase easy to find? | Yes. |
+
+### Decision
+
+- **Choice:** Nothing to decide
+
+### Assumptions
+
+| # | Assumption | Result | What showed this |
+|---|---|---|---|
+| A1 | The general interruption choices in this phase can be extended by deferred visual-state and layout-transition work without introducing a separate conflicting model. | accepted | |
+
+### Backlog changes
+
+- [feature] Motion interruption example coverage — added so people can manually exercise the interruption choices.
+
+---
+
+## Phase 22 Review — 2026-08-25
+
+### Validation
+
+- **Result:** Yes, all is working as expected. Layout transitions are now clear with no visual snap.
+
+### Phase checks
+
+| # | Phase promise | Result | What happened |
+|---|---|---|---|
+| E1a | Run the layout demonstration and trigger a supported layout change: every supported Control reaches Godot's final position and size without a visible snap. | passed | All working as expected; no visual snap. |
+| E1b | Inspect the completed layout demonstration: the final arrangement remains the one selected by Godot. | passed | All working as expected. |
+| E2a | Run each interruption scenario: replace, retarget, queue, and reverse each show a distinct resulting motion outcome. | passed | All working as expected. |
+| E2b | Restart each interruption scenario: it returns to its defined starting state before the next run. | passed | All working as expected. |
+
+### Questions
+
+| # | Question | Answer |
+|---|---|---|
+| Q1 | Are the automatic layout transition and each supported interruption outcome clear enough to verify by watching their visual scenarios? | Yes, all is working as expected. Layout transitions are now clear with no visual snap. |
+
+### Decision
+
+- **Choice:** Nothing to decide
+
+### Assumptions
+
+| # | Assumption | Result | What showed this |
+|---|-----------|---------|------------------------|
+| A1 | The supported Control and standard-container cases are enough to establish the first automatic layout-transition behaviour. | confirmed | All working as expected. |
+
+### Backlog changes
+
+- None

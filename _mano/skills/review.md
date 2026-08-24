@@ -308,7 +308,9 @@ When the user confirms (e.g., "close it", "yes"):
    ```
    node _mano/scripts/backlog.js add --file [tmp].json
    ```
-   The script owns the `### / **Type:** / **Context:** / **Status:**` shape, starts every item at `Status: backlog`, and skips any title already present — so you can't misname, invent, or duplicate a field. **Script failing?** Stop and report the error — do not hand-write item blocks (see "Scripts are mandatory" in `_mano/rules/core.md`). For reference, the exact shape the writer produces:
+   The script owns the `### / **Type:** / **Context:** / **Status:**` shape, starts every item at `Status: backlog`, and skips any title already present — so you can't misname, invent, or duplicate a field. **Script failing?** Stop and report the error — do not hand-write item blocks (see "Scripts are mandatory" in `_mano/rules/core.md`).
+
+   A review triages findings against a backlog that already holds everything shipped so far, so a finding is often something the project already tracks. The script **reports** any item resembling an existing one — including resolved items you never saw — and writes it anyway. Nothing blocks. Carry what it reports into your output as one `⚠ Verify:` line so the human can merge or drop a genuine duplicate (`_mano/rules/backlog.md` → **The backlog roster, and not adding the same work twice**). To check before writing, `node _mano/scripts/state.js --titles --match "[word]"` shows what exists. For reference, the exact shape the writer produces:
 
    ```markdown
    ### [Short title]
@@ -321,7 +323,7 @@ When the user confirms (e.g., "close it", "yes"):
    ```
 1b. **On the build path only — persist confirmed findings as durable rework, and record the human's sign-off.**
 
-   These two calls are review's entire write surface on `progress.md`. Skip both on the stories path.
+   These two calls are review's entire write surface on `progress.md`. Skip both on the stories path. `request-rework` is not review's alone — `mano build` writes one for a defect the human reports mid-build (`--source build`), so that a correction handed over in chat is as durable as a finding raised here. Review's own events take the default `review` source; do not pass `--source`.
 
    **Findings first.** For every confirmed **substantive** finding — 🐛 Defects, 📋 Spec gaps, 📏 Rule gaps, and any 🔧 Refinement the human wants fixed in this phase — write one event per finding, in the order they were triaged:
 

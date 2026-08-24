@@ -30,6 +30,7 @@ Godot 4.3 through stable Godot 4.x, implemented in GDScript. The JavaScript tool
 | `_AnimaRepeat` | `child`, `count`, `delay_between`, `alternate` | Wraps one child motion; `count = -1` repeats indefinitely. Reversal rebuilds `child` via its own `build_reversed()` and wraps the result in a matching `_AnimaRepeat` — see §Key technical decisions. |
 | `AnimaGroupMotion` | `target_collection`, `item_motion`, `playback_mode`, `distribution`, `order`, `sequential_gap`, `completion_policy`, `reverse_order_policy`, `invalid_target_policy`, `empty_group_policy` | One Resource model for every group mode; configuration is serialized and shared by code and the Motion Composer. |
 | `AnimaTargetCollection` | collection kind, reference data, filters, resolution timing | Children, explicit, scene-group, descendant, or runtime-callable targets. |
+| `AnimaLayoutTransition` | `before_rect`, `after_rect`, `properties`, `clipping_policy`, playback state | Runtime-only record for one supported Control layout change. `properties` is fixed to position and size for the initial release; it never becomes serialized scene layout data. |
 | `AnimaGroupDistribution` | `mode`, `stagger_interval`, `total_stagger_duration`, `ease` | Fixed interval or total spread across ranks. |
 | `AnimaGroupOrder` | `kind`, `origin`, `origin_index`, `origin_point`, coordinate space, seed, grid columns, custom ordering | Origin-specific fields are required only by their matching kind. |
 | `AnimaGridMotion` | shared group configuration (including the inherited `order`, still driving the same Top/Bottom/Center/Together/Odd/Even/Random/Index modes any group already has), `grid_dimensions`, `start_point`, `distance_formula`, `spiral_direction` | A specialised `AnimaGroupMotion`; it reuses target resolution, filters, item motion, distributions, execution records, playback, validation, and compilation. Its `distance_formula`-driven ranking is a separate, additional scheduling path — it does not replace or consult `order`. |
@@ -624,6 +625,16 @@ The top-level demo selector groups demos into 2D, 3D, and Showcase categories. T
 HiDPI scaling moves out of `ExamplePlayground`'s own `_apply_hidpi_scale()` method into a standalone, reusable add-on, per the phase brief's Stated Technical Preferences (modeled on an existing add-on from a separate project). `ExamplePlayground` calls into the add-on rather than implementing scaling itself, so every playground scene — including the new demo selector — inherits identical scaling behaviour through the one shared base every scene already extends. The add-on owns display-scale detection and node scaling only; it carries no Anima-specific behaviour and no dependency on any Anima runtime type, so it stays reusable outside this project too.
 
 ⚠️ Note: the add-on's folder placement is `project-rules.md`/story-level detail, not a spec decision.
+
+## Layout transition contract
+
+Automatic layout transitions apply only to `Control` nodes managed by standard Godot containers in one viewport. A transition captures each supported control's rectangle before and after Godot performs its normal layout update. Godot's final rectangle remains authoritative throughout; Anima animates only the temporary visual difference until it reaches identity.
+
+`AnimaLayoutTransition.properties` is fixed to `POSITION_AND_SIZE` for this release. A target that leaves the supported node, container, or viewport boundary does not receive a transition and retains Godot's normal final layout without an error.
+
+`AnimaLayoutTransition.clipping_policy` defaults to `RESPECT`. The motion stays within the container's existing clipping behaviour rather than temporarily changing it or moving content into an overlay. This is the safe default: the initial release preserves the scene's established visual containment, while `OVERLAY` and `TEMPORARILY_DISABLE` remain available for later expansion.
+
+The layout transition has no separate logical property owner: it cannot override the final layout selected by Godot. Its playback completes only after every temporary visual difference settles, then releases its runtime record. The layout demonstration must expose before, in-progress, and final states; each interruption demonstration must reset its target state before another policy is run.
 
 ## Out of Scope
 

@@ -47,6 +47,18 @@ const DEMOS := {
 			"icon": "☰",
 			"scene": "res://examples/playground/animation_catalog_playground.tscn",
 		},
+		{
+			"title": "Layout Transitions",
+			"description": "Godot-controlled container layout changes in motion.",
+			"icon": "↔",
+			"scene": "res://examples/playground/layout_transition_playground.tscn",
+		},
+		{
+			"title": "Motion Interruption",
+			"description": "Compare replace, retarget, queue, and reverse.",
+			"icon": "↺",
+			"scene": "res://examples/playground/motion_interruption_playground.tscn",
+		},
 	],
 	Category.THREE_D: [
 		{
