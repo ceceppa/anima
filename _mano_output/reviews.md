@@ -86,7 +86,7 @@
 
 ### Backlog changes
 
-- None
+- No new items. Existing follow-ups: [test] Layout transition GUIDE/Documentation and [test] Layout transition Tutorial.
 
 ---
 

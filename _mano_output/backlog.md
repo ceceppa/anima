@@ -3173,10 +3173,10 @@
 - **Type:** test
 - **Context:**
   We need to add a guide for Anima.layout_transition
-- **Status:** resolved
+- **Status:** backlog
 
 ### Layout transition Tutorial
 - **Type:** test
 - **Context:**
   We need to add a tutorial for Anima.layout_transition — we can use the playground example code to see how 1 liner is enough to handle animations
-- **Status:** resolved
+- **Status:** backlog
