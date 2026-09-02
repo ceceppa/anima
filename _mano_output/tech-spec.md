@@ -7,7 +7,7 @@
 | Runtime / framework | Godot 4.3, addon runtime |
 | Language | GDScript |
 | Data / storage | Godot `Resource` and scene serialization; no separate persistence layer |
-| Main interfaces | Anima runtime facade, `Anima.on()` / `Anima.item()` / `Anima.grid()` / `Anima.group()` / `Anima.animation()` factories, `Motion` builder, `AnimaValue` dynamic-value resource, `AnimaMotion` resource graph, Motion Composer editor panel, generated API reference |
+| Main interfaces | Anima runtime facade, `Anima.on()` / `Anima.item()` / `Anima.grid()` / `Anima.group()` / `Anima.animation()` factories, `Anima.layout_transition()`, `Motion` builder, `AnimaValue` dynamic-value resource, `AnimaMotion` resource graph, Motion Composer editor panel, generated API reference |
 | Testing | GUT |
 | Key constraints | Ordinary Godot nodes; one motion resource model for code and editor; code comments are the API-documentation source of truth; no legacy compatibility API |
 
@@ -30,7 +30,7 @@ Godot 4.3 through stable Godot 4.x, implemented in GDScript. The JavaScript tool
 | `_AnimaRepeat` | `child`, `count`, `delay_between`, `alternate` | Wraps one child motion; `count = -1` repeats indefinitely. Reversal rebuilds `child` via its own `build_reversed()` and wraps the result in a matching `_AnimaRepeat` — see §Key technical decisions. |
 | `AnimaGroupMotion` | `target_collection`, `item_motion`, `playback_mode`, `distribution`, `order`, `sequential_gap`, `completion_policy`, `reverse_order_policy`, `invalid_target_policy`, `empty_group_policy` | One Resource model for every group mode; configuration is serialized and shared by code and the Motion Composer. |
 | `AnimaTargetCollection` | collection kind, reference data, filters, resolution timing | Children, explicit, scene-group, descendant, or runtime-callable targets. |
-| `AnimaLayoutTransition` | `before_rect`, `after_rect`, `properties`, `clipping_policy`, playback state | Runtime-only record for one supported Control layout change. `properties` is fixed to position and size for the initial release; it never becomes serialized scene layout data. |
+| `AnimaLayoutTransition` | observed container and controls, before and final rectangles, `duration`, `properties`, `clipping_policy`, signal connections, active playbacks | Runtime-only `Node` observer for one supported Control layout change. It must not be a `RefCounted`: the node-backed lifetime keeps layout observation active through Godot's `resized` and `item_rect_changed` notifications. `duration` owns the transition time and defaults to `DEFAULT_DURATION` (`0.3` seconds). `properties` is fixed to position and size; the record is never serialized scene layout data. |
 | `AnimaGroupDistribution` | `mode`, `stagger_interval`, `total_stagger_duration`, `ease` | Fixed interval or total spread across ranks. |
 | `AnimaGroupOrder` | `kind`, `origin`, `origin_index`, `origin_point`, coordinate space, seed, grid columns, custom ordering | Origin-specific fields are required only by their matching kind. |
 | `AnimaGridMotion` | shared group configuration (including the inherited `order`, still driving the same Top/Bottom/Center/Together/Odd/Even/Random/Index modes any group already has), `grid_dimensions`, `start_point`, `distance_formula`, `spiral_direction` | A specialised `AnimaGroupMotion`; it reuses target resolution, filters, item motion, distributions, execution records, playback, validation, and compilation. Its `distance_formula`-driven ranking is a separate, additional scheduling path — it does not replace or consult `order`. |
@@ -237,7 +237,7 @@ Of PRD5's six recommended defaults, five already hold today with no code change,
 - **Scene tree paused → follow selected clock.** `AnimaRuntime` is a plain `Node` with the default `process_mode` (`PROCESS_MODE_INHERIT`); Godot already stops calling `_process()` while the tree is paused, and resumes it automatically on unpause. This already matches PRD5's own recommended default clock (`PROCESS`) with zero Anima-specific code — pinned here, not reimplemented.
 - **Target reparented → continue if references remain valid.** `target` is a plain `Node` reference; reparenting doesn't invalidate it, so `set_indexed()` calls keep landing on the same node regardless of its place in the tree.
 - **Playback root freed → cancel whole playback.** `AnimaPlayback` is `RefCounted`; once nothing holds a reference to it (including `AnimaRuntime.active_playbacks`, which drops it on `finished`), it frees itself — there is no separate "root" object to leak.
-- **Layout target removed → follow layout-exit policy.** Deferred — layout transitions don't exist yet (see the phase brief's Not This Phase).
+- **Layout target leaves the supported layout boundary → skip its transition.** The target keeps Godot's final rectangle; child insertion, removal, reparenting, and repeated layout retargeting remain outside the current layout-transition contract.
 
 **Target freed → cancel affected motion safely** is the one case with no existing mechanism, and the one this phase actually implements: it is the same failure class the Phase 10 review flagged as a leak (a discarded-but-uncancelled playback still sitting in `active_playbacks`, being advanced against a target that's gone). Replacing on-target-freed detection with `target.tree_exiting` (the originally specced mechanism) was rejected during implementation — it also fires on an ordinary reparent, which must *not* cancel. `AnimaPlayback._advance()` instead checks `is_instance_valid(target)` each frame (gated behind `_has_target`, captured once at construction — see §Node liveness below) and calls `cancel()` the moment it's false, mirroring the same per-item check `AnimaGroupPlayback` already used.
 
@@ -629,6 +629,13 @@ HiDPI scaling moves out of `ExamplePlayground`'s own `_apply_hidpi_scale()` meth
 ## Layout transition contract
 
 Automatic layout transitions apply only to `Control` nodes managed by standard Godot containers in one viewport. A transition captures each supported control's rectangle before and after Godot performs its normal layout update. Godot's final rectangle remains authoritative throughout; Anima animates only the temporary visual difference until it reaches identity.
+
+`AnimaLayoutTransition` extends `Node`, not `RefCounted`. It is a live event observer, not a serializable motion resource: it must remain valid from the initial rectangle capture through Godot's layout notifications and every resulting playback. The observer listens to the supported controls' layout-change notifications, including `resized` and `item_rect_changed`; any additional Godot notification added for a supported boundary must feed the same before/final-rectangle contract rather than create a second layout path. It disconnects its observers and releases itself only after the transition reaches a terminal state or its container becomes invalid.
+
+| Surface | Exact operation | Inputs & defaults | Result / failure | Canonical mapping |
+|---|---|---|---|---|
+| `Anima` | `layout_transition(container, duration = 0.3)` | `container: Node` that must be a standard `Container`; `duration: float = AnimaLayoutTransition.DEFAULT_DURATION`, clamped to `0.0` minimum | Returns an `AnimaLayoutTransition`; a null or non-`Container` target reports an error and returns `null` | Captures the supported descendant `Control` rectangles and creates the Node-backed layout observer |
+| `AnimaLayoutTransition` | `play()` | none | Returns the `Array[AnimaPlayback]` started for changed supported controls; unchanged or unsupported controls add no playback | Exposes the playbacks produced when Godot's layout notifications reveal final rectangles |
 
 `AnimaLayoutTransition.properties` is fixed to `POSITION_AND_SIZE` for this release. A target that leaves the supported node, container, or viewport boundary does not receive a transition and retains Godot's normal final layout without an error.
 
