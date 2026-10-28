@@ -4,7 +4,7 @@
 /** Configure the optional local work track for one Mano checkout. */
 
 const path = require("node:path");
-const childProcess = require("node:child_process");
+const Settings = require("./settings.js");
 const { validateTrack, resolveConfiguredTrack } = require("./phase.js");
 
 const HELP = `mano track — configure an optional work track for this repository clone
@@ -14,10 +14,10 @@ Usage:
   node track.js set "Option B" [projectRoot]
   node track.js clear [projectRoot]
 
-The active track is stored in local Git config as mano.track and is not
-committed. It tags new imports and conversational Start items, and narrows
-mano start candidates. Review items copy the Track recorded in their phase
-brief. MANO_TRACK overrides Git config for a shell/session.`;
+The active track is stored in _mano_output/[owner].json (or .default.json
+without an owner) and can be committed. It tags new imports and Start items
+and narrows Start candidates. Review items copy their phase brief Track.
+MANO_TRACK overrides the stored value for a shell/session.`;
 
 function fail(message) {
   process.stderr.write(`[mano track] ${message}\n`);
@@ -35,14 +35,6 @@ function parseArgs(argv) {
   };
 }
 
-function runGit(root, args, allowMissing = false) {
-  const result = childProcess.spawnSync("git", args, { cwd: root, encoding: "utf8" });
-  if (result.status === 0) return result;
-  if (allowMissing && result.status === 5) return result;
-  const detail = String(result.stderr || result.stdout || "git command failed").trim();
-  fail(`${detail}. Mano track configuration requires a Git checkout; alternatively set MANO_TRACK.`);
-}
-
 function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -53,8 +45,7 @@ function main() {
     if (args.value == null) fail("set needs a track name");
     let track;
     try { track = validateTrack(args.value); } catch (error) { fail(error.message); }
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "mano.track", track]);
+    Settings.writeSetting(args.root, "track", track);
     process.stdout.write(`[mano track] track set to ${JSON.stringify(track)} for this repository clone\n`);
     if (Object.prototype.hasOwnProperty.call(process.env, "MANO_TRACK")) {
       process.stdout.write(`  MANO_TRACK=${JSON.stringify(process.env.MANO_TRACK)} currently overrides that value\n`);
@@ -62,8 +53,7 @@ function main() {
     return;
   }
   if (args.command === "clear") {
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "--unset-all", "mano.track"], true);
+    Settings.writeSetting(args.root, "track", null);
     process.stdout.write("[mano track] local track cleared; untracked planning is active unless MANO_TRACK is set\n");
     return;
   }
@@ -78,4 +68,4 @@ if (require.main === module) {
   try { main(); } catch (error) { fail(error && error.message ? error.message : String(error)); }
 }
 
-module.exports = { parseArgs, runGit, main };
+module.exports = { parseArgs, main };

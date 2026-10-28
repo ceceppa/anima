@@ -6,6 +6,14 @@ requires: [core, artifact, backlog]
 
 # `mano review` — Review Skill
 
+## Language check — before any response
+
+After loading this contract and its required rules, run `node _mano/scripts/settings.js language` from the project root **before the first user-facing message or any project write**. Use the returned `language.chat` for all conversation, including progress, questions, errors, and the final response; use `language.artefacts` for new planning artifacts and `language.build` for new implementation content (code, tests, product documentation, and product/UI text, including preview copy). The command resolves missing or `null` `artefacts` through `build`, then `chat`, then `null`. Never read settings JSON directly or infer languages from the prompt, source files, or this skill's English examples. A `null` value preserves existing behaviour for that channel only. If the command fails or any of the three fields is absent, report the failure and stop; do not guess.
+
+This check applies on direct invocation, auto-chain handoff, and resumption after interruption or compaction. Re-run after an owner or language change. English response examples, including “exact” or one-line templates, constrain structure and meaning, not prose language: translate their prose into `language.chat`. Preserve command names, paths, required labels, status tokens, and verbatim quotations or diagnostics. Before sending **each** message, check its prose against `language.chat`; before each project write, check planning prose against `language.artefacts` and implementation content against `language.build`. Do not emit an extra language-confirmation message.
+
+**Tuning and artifact drift.** Apply `_mano/rules/artifact.md` → **Parameter authority: contracts, tuning, and seeds**. Compare tuning against its meaning, ownership, actual constraints, and promised outcomes, not against a historical seed. Do not request spec sync or flag a regression merely because an authorised tuning value changed. Flag tests or acceptance criteria that accidentally freeze a non-normative seed; do not waive genuine configured-outcome failures or silently reinterpret an existing contract as tuning.
+
 ## Identity
 
 This skill collects feedback and triages it — nothing else. Prefix every message with `[mano review]:`. It does not scope, does not plan, does not write code.
@@ -70,7 +78,11 @@ That is your complete response. Do not flip a row or a criterion, do not proceed
 
 The story-specific safety nets below **do not apply on this path**. Review never asks for an `Implementation Reference`, never opens a story file, and never routes to `mano stories` or `mano dev` — on a build-path phase, both of those would create the second ledger the projection refuses.
 
-**Review's only sanctioned `progress.js` surfaces are `request-rework`, `resolve-rework`, and `sign-off`.** It may not flip a Scope row, add or split a row, cut work, or hand-edit the ledger.
+**`sign-off` is review's only sanctioned `progress.js` surface, and it closes.** Review may not flip a Scope row, add or split a row, cut work, open or resolve a rework event, or hand-edit the ledger. **Review closes a phase; it never reopens one.** A rework event reopens the phase — it belongs to `mano build`, which is the only writer of one (`progress.js request-rework` refuses any other source).
+
+That is not a technicality about who holds the pen. A review that could close *and* reopen in the same turn wrote both: the backlog said `resolved`, the ledger said in progress, the review record was already appended, and `mano start` then refused to scope on work the human had just been told was done. There is no state a later command can read back out of that.
+
+So **every finding this review confirms is a backlog item** — that is the whole routing decision, and it holds for a 🐛 Defect and a failed Exit Criterion exactly as it does for a ✨ New idea. That is not the finding being downgraded. A human who wants it fixed inside this phase has a better route than review ever did, and it is open to them right up until they close: leave the review unclosed, run `mano build "[the change]"`, and review again after. Build classifies the text A/B/C and re-runs the gap gates against it, catching the spec or artifact impact a blind rework event would have skipped. Name that option in the triage message when the finding plainly belongs in this phase; never take it for them, and never delay the close waiting for an answer they did not offer.
 
 **On the stories path**, if any stories are not marked `done`, **refuse and stop**. Review does not manage story state — that is not its job. Report what's pending and point to the right path:
 
@@ -172,7 +184,11 @@ When the user replies with their feedback, or when substantive feedback was alre
 - ✨ New ideas — emerged from usage, not originally scoped
 - 📋 Spec gaps — missing or unclear tech spec (if applicable)
 - 📏 Rule gaps — missing or unclear rules (if applicable)
+- 🧭 UX gaps — missing or unclear UX flow (if applicable)
+- 🎨 UI gaps — missing or unclear design brief (if applicable)
 - ❌ Rejected scope — open backlog items whose premise this feedback invalidates (if applicable)
+
+**Classify by completion, not subject matter.** Apply `_mano/rules/backlog.md` → **Artifact gaps versus implementation work** before choosing a bucket. UI/UX change requests needing code are defects, refinements, or new ideas. A human who specifies viewport anchoring has supplied the desired behavior; do not replace their implementation request with an “Open decision” `ui-gap`. A separate gap requires an independent current-artifact defect.
 
 **Validation rule:** Track validation separately from feedback triage. Validation records what happened. Optional context records where or how the human checked it. Neither becomes a backlog item by itself.
 
@@ -224,7 +240,7 @@ Anything in the wrong bucket? Otherwise "close it".
 
 Rejection candidates follow the same confirmation model as every other bucket: they are visible in this list, the user removes any that survive, and `close it` confirms the list as presented. Never reject an item that was not listed as a candidate here.
 
-**`close it` arriving with a negative finding closes the phase; it does not erase the finding.** "The export is broken, close it" is two instructions, and silently dropping the first is the one outcome the human cannot recover. Echo the finding and ask which it is — routed to rework, or dismissed in their own words — then close in that same exchange. Never infer the dismissal (see **Relay a dismissal, never conclude one** below).
+**`close it` arriving with a negative finding closes the phase; it does not erase the finding.** "The export is broken, close it" is two instructions, and silently dropping the first is the one outcome the human cannot recover. The finding goes in the list above as a 🐛 Defect and becomes a backlog item; the phase still closes. That is not the framework overruling them — they said to close, and a tracked defect is what closing with a known problem looks like. Never infer a dismissal from a close instruction (see **Relay a dismissal, never conclude one** below).
 
 That is your complete response. DO NOT write files yet.
 
@@ -264,13 +280,9 @@ Result — what happened when you tried it
 
 **Past the gate, the close instruction is terminal — never re-confirm it.** A message may carry a whole-review verdict, individual verdicts, or feedback with its close instruction. Examples include `all went as planned, close it` and `1 confirmed, 2 invalidated; close it`. Apply the supplied outcomes, satisfy the answer gate if anything is still open, then go straight to writing files. Do **not** emit a triage-confirmation prompt. The user already confirmed the review.
 
-**Dismissing a build-path finding is the human's word, never an inference.** When the human rejects a finding outright during triage — "that's intended", "not doing that, close it" — and it had already been written as a rework event, record that exact decision:
+**Relay a dismissal, never conclude one.** When the human rejects a finding outright during triage — "that's intended", "not doing that, close it" — that finding is dropped from the triage list and no backlog item is written for it. Their word is the only thing that does this: not that a finding looks minor, not that it seems already handled, and not that dropping it clears the way to a close. A finding you dismissed on your own judgment is one the human never learns they had.
 
-```
-node _mano/scripts/progress.js resolve-rework --phase [N] --expect-phase-id [PHASE_ID] --id R2 --status dismissed --reason-file [tmp].txt
-```
-
-The reason file holds the human's own words; the script refuses a dismissal without one. **Relay a dismissal, never conclude one** — not because a finding looks minor, not because it seems already handled, and not to clear the way to a close.
+There is no `resolve-rework` here. A rework event is `mano build`'s, and the pre-review gate has already refused if one is pending — so review never meets one to dismiss.
 
 The one thing that survives a close instruction is a ❌ rejection candidate the user has not seen. "Drop the dock work, close it" closes the phase, but the open backlog items that rejection orphans are information the user has not been shown, not a re-confirmation of something they already approved. Present the ❌ list alone — no other buckets, no re-litigating the rest of the triage — and write the rest of the close in the same turn.
 
@@ -290,12 +302,53 @@ There is no second closing keyword. A human who wants to record a failure says w
 
 ---
 
+**STEP 2b — Harvest what the reworks taught. Build path only.**
+
+A rework event is a correction the human already proved necessary *during the build*. Some of them are pure implementation defects. Some of them taught something an artifact should have said and now still doesn't — and that knowledge currently dies in the ledger, because the fix landed in code and no skill owns carrying it back. That is how a tech spec, rule set, UX flow, or design brief stays wrong for phases at a time.
+
+Read the **Rework** table and its **Row Contracts** in the exact projected `PROGRESS` path — you already read that file at activation. For **every** event, `resolved` and `dismissed` alike, ask one question:
+
+> Does this correction teach something an artifact should have stated?
+
+First exclude authorised tuning changes that only differ from a non-normative seed: they teach no missing artifact decision. Then distinguish an implemented correction from a deferred or dismissed request. An event marked `resolved` may have been deferred to the backlog by build case (B); its status alone does not prove implementation. Keep that requested change in its scopeable work item. Do not harvest a gap merely because the future change is absent from today's artifacts. A dismissed direction does not become an artifact requirement. For an implemented correction or an independently established current-artifact defect, apply the test below.
+
+**Do not** ask whether it was "architectural", whether the artifact already covers it, or whether it is worth a phase — those are the owning skill's judgements, made later with better information, and guessing at them here is how the harvest goes quiet.
+
+- **Yes, or unsure → emit a gap item.** Erring loud is deliberate. A false positive costs the owning skill one `resolve-gap` call on its next run. A false negative costs a wrong artifact for as long as nobody notices — which this phase's own history shows is measured in phases, not hours.
+- **No → emit nothing.** A correction that a rule or spec *already* covered, and the code simply got wrong, taught nothing new. Reserve this for events you can name the existing coverage for.
+
+Route each by the artifact that should own the statement, not by the wording of the complaint:
+
+| The correction is about | Type | Owner |
+|---|---|---|
+| technical model, data model, API or event contract, lifetime/ownership, persistence, state ownership, a behaviour-driving default | `spec-gap` | `mano spec` |
+| a convention any future unit must follow — a platform/engine gotcha, a naming or structure rule, a testing or error-handling pattern | `rule-gap` | `mano rules` |
+| a screen, step, navigation path, empty/locked/error state, or how a user reaches something | `ux-gap` | `mano ux` |
+| a component treatment, visual hierarchy, palette, spacing, or design-system statement | `ui-gap` | `mano ui` |
+
+**Write the event's own words, plus exactly one line of your framing.** The `Context` is the verbatim `Row Contracts` text for that event, preceded by a single line naming what the owning artifact must settle. Their words are the highest-authority record of what actually went wrong; your line is the address, not a rewrite. Never paraphrase the event away, and never let your framing grow past one line.
+
+```
+- **Type:** spec-gap
+- **Context:**
+  Tech spec must state AnimaLayoutTransition's base class and observation lifetime.
+  [verbatim Row Contracts text for R1]
+```
+
+Title each item after the decision the artifact must make (`Open decision: layout transition lifetime`), not after the bug. These items go through the same STEP 3 writer as every other triaged item, and they are **not** rework events — the phase is closing, and a gap is the next artifact run's input, not this phase's reopened work.
+
+**This harvest is not gated on the human's feedback.** It reads the ledger, which is durable, so it runs on a silent `close it` exactly as it runs on a detailed review. Present the harvested items in the STEP 2 echo with everything else; on the one-exchange positive-verdict path, write them and report them in the changelog.
+
+**Show your work when the harvest is empty.** If every event taught nothing, say so in one line naming the events — `R2, R3: no artifact gap (existing rules already covered these)`. A silent empty harvest is indistinguishable from a skipped one.
+
 **STEP 3 — Write to Files (One-Shot Execution)**
 
 When the user confirms (e.g., "close it", "yes"):
 1. Read the exact current phase brief's optional `**Track:**` line. If present, use that exact value on every new review item; if absent, omit `track`. Never substitute the active local track: review preserves the experiment that produced the feedback. Then write ALL confirmed triaged items to the backlog **via the writer — don't hand-write the item blocks.** **Map each triage category to its exact `Type` first** (this classification is the review's job; the script only takes the result):
    - 📋 Spec gaps → `spec-gap`
    - 📏 Rule gaps → `rule-gap`
+   - 🧭 UX gaps → `ux-gap`
+   - 🎨 UI gaps → `ui-gap`
    - 🐛 Defects → `bug`
    - 🔧 Refinements → `refinement`
    - ✨ New ideas → `feature`
@@ -314,36 +367,28 @@ When the user confirms (e.g., "close it", "yes"):
 
    ```markdown
    ### [Short title]
-   - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap
+   - **Type:** bug / refinement / feature / tech-debt / test / spec-gap / rule-gap / ux-gap / ui-gap
    - **Source:** [PHASE_ID] review
    - **Track:** [copy the phase brief's Track, if present]
    - **Context:**
      [what it is; why it matters]
    - **Status:** backlog
    ```
-1b. **On the build path only — persist confirmed findings as durable rework, and record the human's sign-off.**
+1b. **On the build path only — record the human's sign-off.** Skip it on the stories path.
 
-   These two calls are review's entire write surface on `progress.md`. Skip both on the stories path. `request-rework` is not review's alone — `mano build` writes one for a defect the human reports mid-build (`--source build`), so that a correction handed over in chat is as durable as a finding raised here. Review's own events take the default `review` source; do not pass `--source`.
+   `sign-off` is review's entire write surface on `progress.md`, and there is no second one. Every confirmed finding was already written as a backlog item in step 1 — including a 🐛 Defect and a failed Exit Criterion. Review does not open a rework event; see **Review closes a phase; it never reopens one** in the pre-review gate.
 
-   **Findings first.** For every confirmed **substantive** finding — 🐛 Defects, 📋 Spec gaps, 📏 Rule gaps, and any 🔧 Refinement the human wants fixed in this phase — write one event per finding, in the order they were triaged:
-
-   ```
-   node _mano/scripts/progress.js request-rework --phase [N] --expect-phase-id [PHASE_ID] --text-file [tmp].txt
-   ```
-
-   **One event per finding, each with its own exact text.** Never squeeze mixed feedback into a single blob: build classifies each event A/B/C on its own, and an aggregate event cannot be classified at all. The text file holds the finding as the human described it — their words, not a summary — because that text is what a fresh session will read weeks later.
-
-   This is why the events exist: a conversation does not survive a compaction, a restart, or an interleaved command, and a confirmed finding must. Once written, `state.js` routes the phase back to `mano build` while any event is `pending`, even though every row already reads `done`. A ✨ New idea is not a finding — it is backlog, and it does not reopen the phase.
-
-   **Then the sign-off.** When the human closes the phase — a clear positive verdict, or the literal `close it` — record that attestation:
+   When the human closes the phase — a clear positive verdict, or the literal `close it` — record that attestation:
 
    ```
    node _mano/scripts/progress.js sign-off --phase [N] --expect-phase-id [PHASE_ID]
    ```
 
-   It flips every `pending` and `needs-human` Exit leaf to `met` and records `human sign-off at review, [date]` against each one. Typing `close it` **is** a human attestation, and the ledger records *who* proved each criterion rather than leaving it as a status nobody owns. The script refuses while any rework event is pending — which is correct: a phase with an open finding is not closing.
+   It flips every `pending` and `needs-human` Exit leaf to `met` and records `human sign-off at review, [date]` against each one. Typing `close it` **is** a human attestation, and the ledger records *who* proved each criterion rather than leaving it as a status nobody owns.
 
-   Do not run `sign-off` when the review produced findings that route back to build. Do not run it to tidy a ledger the human did not close.
+   **A criterion the human reported as failed keeps `failed` in the review record and stays as the ledger left it.** Do not reconcile the two — they are different claims. `progress.md` says what the build proved when it ran; `reviews.md` says what the human found afterwards; the backlog item carries the failure forward. A ledger edited at review to agree with the review would erase the only evidence that the two ever disagreed.
+
+   Do not run `sign-off` to tidy a ledger the human did not close.
 
 2. **Resolve shipped items — via the writer's close sweep:**
    ```
@@ -367,6 +412,7 @@ Use the canonical execution-log format defined in `_mano/rules/core.md` ("Canoni
 ```
 [mano review]: mano review — _mano_output/backlog.md, _mano_output/reviews.md
 - Triaged items inserted to backlog
+- Rework harvest: [N gap item(s) from R…, R… / no artifact gap — name the events]
 - [N] backlog item(s) marked rejected — omit this line if none
 - Validation: [recorded / not tested]
 - [PHASE_ID] items marked resolved
@@ -376,9 +422,19 @@ Use the canonical execution-log format defined in `_mano/rules/core.md` ("Canoni
 [Optional hook block if active]
 
 Next:
-- `mano start` — scope the next phase from the updated backlog
+- `mano spec` — settle [N] open spec-gap item(s)
+- `mano rules` — settle [N] open rule-gap item(s)
+- `mano ux` — settle [N] open ux-gap item(s)
+- `mano ui` — settle [N] open ui-gap item(s)
+- `mano start` — scope the next phase, once no gap remains
 ```
 That is your complete response.
+
+**The `Next:` block names every open gap route, and `mano start` comes last.** Writing a gap item is not the same as the human knowing it exists. Re-run `node _mano/scripts/state.js --current` after the STEP 3 writes and read its `OPEN_GAPS:` line — that is the authoritative list, and it includes gaps left over from earlier phases, not only the ones this review just wrote. Render one line per route with its count, in the order the projection prints them, and drop any route with no open item.
+
+This is the one `Next:` block where `mano start` is **not** the recommended action. An open gap blocks it — `state.js` returns `DECISION: STOP` while any gap is unresolved — so listing it first would recommend a command that refuses. Keep it last and conditional, exactly as shown. When `OPEN_GAPS:` is absent, the block is the single `mano start` line and nothing else.
+
+Never soften this into "you may also want to". These routes are the drift the review just found; naming them is the whole point of having found it.
 
 ## Follow-up review
 
@@ -505,7 +561,7 @@ If the state projection's `HOOK:` line names `post-review`, follow `_mano/rules/
 - Do not debug, inspect code, trace payloads, propose patches, run tests, or attempt repairs. `mano review` only classifies feedback and updates backlog/review files after confirmation.
 - Do not create stories. `mano review` writes to the backlog and review log only.
 - Do not manage story or ledger state. Do not edit story files, mark stories `done`, cut stories, or touch the stories README index — not even in the pre-review gate. If stories aren't `done`, refuse per the pre-review gate and point the user to `mano dev` or their own README edit.
-- Do not run `progress.js` outside its three sanctioned surfaces: `request-rework`, `resolve-rework`, and `sign-off`. Never `init`, `set-status`, `split`, or `add-row` — flipping a Scope row would make review the thing that decides work is done.
+- Do not run `progress.js` outside its one sanctioned surface, `sign-off`. Never `init`, `set-status`, `split`, `add-row`, `request-rework`, or `resolve-rework` — flipping a Scope row would make review the thing that decides work is done, and opening a rework event would make it the thing that reopens a phase it is closing.
 - On a build-path phase, do not ask for an `Implementation Reference`, open a story file, or route to `mano stories` / `mano dev`. There are no stories, and creating one would give the phase two ledgers.
 - Do not check off acceptance criteria in story files.
 - Do not scope the next phase. That's `mano start`'s job.

@@ -4,7 +4,7 @@
 /** Configure the local owner namespace used by Mano phase-scoped commands. */
 
 const path = require("node:path");
-const childProcess = require("node:child_process");
+const Settings = require("./settings.js");
 const { validateOwner, resolveConfiguredOwner } = require("./phase.js");
 
 const HELP = `mano owner — configure phase ownership for this repository clone
@@ -14,9 +14,9 @@ Usage:
   node owner.js set <slug> [projectRoot]
   node owner.js clear [projectRoot]
 
-The slug is stored in local Git config as mano.owner and is not committed.
-Use a stable team handle such as "alice" or "gameplay". Do not use an email.
-MANO_OWNER overrides Git config for a shell/session.`;
+The selected owner is stored in ignored _mano_output/.local.json.
+Portable settings and chain records live in _mano_output/[owner].json.
+MANO_OWNER overrides the local selection for a shell/session.`;
 
 function fail(message) {
   process.stderr.write(`[mano owner] ${message}\n`);
@@ -33,14 +33,6 @@ function parseArgs(argv) {
   };
 }
 
-function runGit(root, args, allowMissing = false) {
-  const result = childProcess.spawnSync("git", args, { cwd: root, encoding: "utf8" });
-  if (result.status === 0) return result;
-  if (allowMissing && result.status === 5) return result;
-  const detail = String(result.stderr || result.stdout || "git command failed").trim();
-  fail(`${detail}. Mano owner configuration requires a Git checkout; alternatively set MANO_OWNER.`);
-}
-
 function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -54,8 +46,7 @@ function main() {
   if (args.command === "set") {
     if (!args.slug) fail("set needs an owner slug");
     const owner = validateOwner(args.slug);
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "mano.owner", owner]);
+    Settings.selectOwner(args.root, owner);
     process.stdout.write(`[mano owner] owner set to ${owner} for this repository clone\n`);
     if (Object.prototype.hasOwnProperty.call(process.env, "MANO_OWNER")) {
       process.stdout.write(`  MANO_OWNER=${process.env.MANO_OWNER} currently overrides that value\n`);
@@ -64,8 +55,7 @@ function main() {
   }
 
   if (args.command === "clear") {
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "--unset-all", "mano.owner"], true);
+    Settings.selectOwner(args.root, null);
     process.stdout.write("[mano owner] local owner cleared; legacy phase routing is active unless MANO_OWNER is set\n");
     return;
   }
@@ -91,4 +81,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs, runGit, main };
+module.exports = { parseArgs, main };

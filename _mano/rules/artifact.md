@@ -2,9 +2,15 @@
 
 Shared rules for skills that write planning artifacts. A skill's front-matter names this file in `requires:`; read it once at activation, with `_mano/rules/core.md`.
 
+## Task documentation sync
+
+When `mano task` invokes an artifact owner to document its implementation, accept its bounded handoff as directive-mode input even without a phase or gap row. The item outcome and supplied implementation evidence provide context for the named changes, including a new layer or interface. This exception takes precedence over activation wording requiring a human-typed command or a phase brief; run the owner's normal state projection and language check, but do not pull unrelated closed-phase scope into this sync.
+
+Update only the artifact this skill owns, using targeted edits and the normal quality checks for the affected content. If it already describes the implemented result, verify that coverage and report no change. Do not mine source for new requirements, create a phase or gap just for documentation, or turn partial implementation into a completed contract. Keep human-owned conflicts and hook triage as stops. After completion, return to the calling task without a `Next:` menu or unrelated auto-chain actions.
+
 ## Artifact Quality
 
-Planning artifacts are written for human readers — people who will read, discuss, edit, and act on them. They are not structured inputs for AI models.
+Planning artifacts are written for human readers — people who will read, discuss, edit, and act on them. They are not structured inputs for AI models. Write new planning prose in the resolved `language.artefacts` returned by the language command (`artefacts` → `build` → `chat` → `null`). Keep required headings, schema keys, status labels, commands, paths, and verbatim quotations unchanged. Product/UI copy, including copy in design previews, follows `language.build`.
 
 ### Plain-language contract
 
@@ -87,6 +93,18 @@ When the current artifact owns the value, state the relevant details:
 - behavior outside the allowed range
 
 If the value remains undecided, ask for it or mark it provisional through the normal decision protocol. Never invent a default to remove an open question. When another artifact owns the value, reference that artifact instead of repeating the number.
+
+#### Parameter authority: contracts, tuning, and seeds
+
+A parameter needs an owner and meaning; its current number does not always belong in an artifact. Classify it where it is defined, without adding a separate registry:
+
+- **Contract:** an exact value or relationship required by a product promise, interoperability, correctness, or a technical constraint. State it and why it is binding. Changing it requires updating its owning artifact.
+- **Tuning:** a parameter intended for iteration. State its meaning, unit, authoritative implementation configuration location, override precedence when relevant, and actual constraints. The current value lives in that configuration, not in a duplicate artifact table. A change within this delegated freedom needs no spec sync or new decision.
+- **Initial seed:** a suggested starting value for tuning, explicitly non-normative and for first implementation only. It is not the current default or an acceptance criterion. Preserve it as labelled initial guidance or remove it when no longer useful; never continually synchronise it with implementation.
+
+For tuning, the parameter details above describe configuration ownership and real constraints; an exact current default in the artifact is not required. Distinguish necessary bounds from convenient editor ranges: do not turn an arbitrary slider limit into a permanent requirement. A seed needs no separate approval when the human has authorised provisional choices or tuning; an unresolved product promise still needs a decision. If no configuration exists yet, name its intended home and provide an authorised seed or an explicit rule for choosing it.
+
+Do not silently reclassify an existing normative value as tuning. On an explicit request to allow tuning, replace its normative wording in place and retain genuine promises and constraints. A differing seed is not artifact drift; violating a contract, required relationship, or promised playable outcome still is. Verification must not promote seeds into requirements: use explicit fixture values for behaviour checks, check configuration wiring separately, and retain checks of real configured outcomes where they protect a promise.
 
 #### Make requirements testable without adding ceremony
 
@@ -204,7 +222,8 @@ Planning artifacts remain optional to the human; auto mode must not silently ski
 
 - Do not suggest a command just because it usually comes next if its artifact already exists and is still usable.
 - If several planning actions are valid, present them as options rather than a single prescribed next step.
-- **Which implementation action a planning skill names is not a style choice.** A planning skill always runs at the no-ledger stage, which is the one case where the mode decides: in `manual`, offer **both** `mano stories` (decompose into story files first) and `mano build` (build straight from the brief, no story files) and let the human pick; in `auto`, the approved chain terminates at `mano build`, so name that one. Read `MODE:` from the state projection — never infer the path from which one appears more often in examples. Once a ledger exists, the path is no longer open: a stories index means `mano dev`, a `progress.md` means `mano build`, and neither is a planning skill's call.
+- In an armed auto chain, follow `CONTINUE_ACTION` and the saved `CHAIN_REMAINING` order before using this decision tree. Existing artifacts do not remove approved reruns; with neither ledger present, the projection replaces a saved `stories → dev` suffix with `build`. Auto never runs `mano stories`. Never replace pending planning with `IMPLEMENTATION_ENTRY`.
+- **Choose implementation from validated state at every handoff, including planning reruns during implementation.** Read `IMPLEMENTATION_ENTRY` and the review/refusal route from `state.js`; never replace an existing ledger's path with a mode-based choice. Only with no ledger and cleared planning gates does mode decide: in `manual`, offer both `mano stories` and `mano build`; in `auto`, every chain without a ledger terminates at `mano build`. A saved approved chain keeps its artifact planning order, with `stories` removed and terminal `dev` replaced by `build`. A stories ledger keeps `mano dev`, a progress ledger keeps `mano build`, and completed or invalid ledgers follow the projection's review or repair route.
 - Use this decision tree when evaluating next steps for the planning stage. Where it says **implementation**, substitute the rule above:
   ```
   Phase introduces a new category of file/example/module/component

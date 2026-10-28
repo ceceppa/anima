@@ -9,13 +9,12 @@
  *
  * Run mode (`manual` / `auto`) is the other piece of local execution context:
  * it decides whether a finished skill chains into the next action or hands
- * back. Like the owner, it is stored per clone and never committed — it is a
- * statement about how much this person reviews, not a property of the project.
+ * back. Mode and track travel with the owner JSON; owner selection stays local.
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
-const childProcess = require("node:child_process");
+const Settings = require("./settings.js");
 
 const OWNER_RE = /^[a-z0-9](?:[a-z0-9-]{0,46}[a-z0-9])?$/;
 const TRACK_MAX_LENGTH = 120;
@@ -31,25 +30,15 @@ function validateOwner(value) {
   return owner;
 }
 
-function gitConfigOwner(projectRoot) {
-  const result = childProcess.spawnSync(
-    "git",
-    ["config", "--local", "--get", "mano.owner"],
-    { cwd: projectRoot, encoding: "utf8" },
-  );
-  if (result.status !== 0) return null;
-  const value = String(result.stdout || "").trim();
-  return value ? validateOwner(value) : null;
-}
-
 function resolveConfiguredOwner(projectRoot) {
   if (Object.prototype.hasOwnProperty.call(process.env, "MANO_OWNER")) {
     const value = String(process.env.MANO_OWNER || "").trim();
     if (!value) throw new Error("MANO_OWNER is set but empty");
     return { owner: validateOwner(value), source: "MANO_OWNER" };
   }
-  const owner = gitConfigOwner(projectRoot);
-  return owner ? { owner, source: "git config --local mano.owner" } : { owner: null, source: null };
+  const value = Settings.selectedOwner(projectRoot);
+  const owner = value == null ? null : validateOwner(value);
+  return owner ? { owner, source: "_mano_output/.local.json" } : { owner: null, source: null };
 }
 
 function validateTrack(value) {
@@ -62,25 +51,15 @@ function validateTrack(value) {
   return track;
 }
 
-function gitConfigTrack(projectRoot) {
-  const result = childProcess.spawnSync(
-    "git",
-    ["config", "--local", "--get", "mano.track"],
-    { cwd: projectRoot, encoding: "utf8" },
-  );
-  if (result.status !== 0) return null;
-  const value = String(result.stdout || "").trim();
-  return value ? validateTrack(value) : null;
-}
-
 function resolveConfiguredTrack(projectRoot) {
   if (Object.prototype.hasOwnProperty.call(process.env, "MANO_TRACK")) {
     const value = String(process.env.MANO_TRACK || "").trim();
     if (!value) throw new Error("MANO_TRACK is set but empty");
     return { track: validateTrack(value), source: "MANO_TRACK" };
   }
-  const track = gitConfigTrack(projectRoot);
-  return track ? { track, source: "git config --local mano.track" } : { track: null, source: null };
+  const value = Settings.readSetting(projectRoot, "track");
+  const track = value == null ? null : validateTrack(value);
+  return track ? { track, source: Settings.relativeFile(projectRoot) } : { track: null, source: null };
 }
 
 const MODES = ["manual", "auto"];
@@ -96,28 +75,16 @@ function validateMode(value) {
   return mode;
 }
 
-function gitConfigMode(projectRoot) {
-  const result = childProcess.spawnSync(
-    "git",
-    ["config", "--local", "--get", "mano.mode"],
-    { cwd: projectRoot, encoding: "utf8" },
-  );
-  if (result.status !== 0) return null;
-  const value = String(result.stdout || "").trim();
-  return value ? validateMode(value) : null;
-}
-
-// Manual is the default everywhere: a project that has never opted in must
-// never chain, and an unreadable/absent config is not an opt-in.
 function resolveConfiguredMode(projectRoot) {
   if (Object.prototype.hasOwnProperty.call(process.env, "MANO_MODE")) {
     const value = String(process.env.MANO_MODE || "").trim();
     if (!value) throw new Error("MANO_MODE is set but empty");
     return { mode: validateMode(value), source: "MANO_MODE" };
   }
-  const mode = gitConfigMode(projectRoot);
+  const value = Settings.readSetting(projectRoot, "mode");
+  const mode = value == null ? null : validateMode(value);
   return mode
-    ? { mode, source: "git config --local mano.mode" }
+    ? { mode, source: fs.existsSync(path.join(projectRoot, Settings.relativeFile(projectRoot))) ? Settings.relativeFile(projectRoot) : null }
     : { mode: DEFAULT_MODE, source: null };
 }
 

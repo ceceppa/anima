@@ -1,53 +1,45 @@
 #!/usr/bin/env node
 "use strict";
 
-/**
- * Record the planning actions a human removed from a proposed auto chain.
- *
- * An armed chain is otherwise derived, not stored: what is on disk says which
- * planning artifacts exist and the ledger says whether implementation is done,
- * so a fresh session recomputes the remaining chain without help. Exactly one
- * thing is not derivable — that the human looked at the proposed chain and
- * *removed* an action ("go, skip ui"). Recompute it and you re-propose the
- * action they just declined; store the whole chain and you own a second copy of
- * state the filesystem already answers, which drifts the moment an artifact is
- * written outside the chain.
- *
- * So this script stores the subtraction and nothing else. `mano start` writes it
- * only when the approval reply actually edited the proposed chain; a default
- * chain costs no record at all.
- *
- * Storage is local Git config, exactly like `mano mode`: a chain edit is a
- * property of how this human is running this clone, not of the project, and
- * must not be committed.
+/** Store approved remaining actions and explicit skips in portable owner JSON.
+ * Artifact existence cannot reconstruct approval order or human additions.
  */
 
 const path = require("node:path");
-const childProcess = require("node:child_process");
-const { parsePhaseDirName } = require("./phase.js");
+const fs = require("node:fs");
+const Settings = require("./settings.js");
+const { parsePhaseDirName, resolveConfiguredMode } = require("./phase.js");
 
 // The planning actions a chain can contain, and therefore the only ones a human
 // can remove from one. Implementation is the chain's terminal action and is
 // never skippable — a chain that stops before implementation is a chain that
 // did nothing. `review` is never in a chain at all.
 const SKIPPABLE = ["spec", "ux", "rules", "ui", "stories"];
+const REPAIRABLE = ["spec", "ux", "rules", "ui"];
 
-const HELP = `mano chain — record planning actions removed from a proposed auto chain
+const HELP = `mano chain — persist approved remaining actions and explicit skips
 
 Usage:
   node chain.js show [--phase <phase-id>] [projectRoot]
+  node chain.js save --phase <phase-id> --actions <ordered-actions> [projectRoot]
+  node chain.js repair --phase <phase-id> --actions <spec|ux|rules|ui> [projectRoot]
   node chain.js skip --phase <phase-id> --actions <a,b,...> [projectRoot]
   node chain.js clear --phase <phase-id> [projectRoot]
 
+save     persist approved remaining actions in order; an empty string marks completion.
+         In auto, before either ledger exists, omit stories and end with build.
+repair   insert one artifact owner before pending build in auto, before either
+         ledger exists. Each owner gets one automatic attempt per approved run.
 skip     record that the human removed these actions when they approved the
          scope. Only ${SKIPPABLE.join(", ")} may be skipped; implementation is a
          chain's terminal action and is never optional.
-show     print the recorded skips for one phase, or for every phase.
-clear    forget a phase's record (a re-approval that restores an action).
+show     print the effective run and skips for one phase, or retained skips for each owner.
+clear    forget skips and repair attempts on fresh scope approval; retain actions.
 
-The record is a subtraction, not a chain: everything else is derived fresh from
-what exists on disk, so an interrupted session recomputes the rest by itself.
-It is stored in local Git config as mano.chain.<phase-id> and is not committed.`;
+Approved actions, skips, and repair attempts retain only the newest phase inside
+_mano_output/[owner].json (or .default.json without an owner). Commit this
+file with the phase artifacts to resume on another computer.
+Missing run records require recovering approval from chat or asking the human.`;
 
 function fail(message) {
   process.stderr.write(`[mano chain] ${message}\n`);
@@ -73,15 +65,6 @@ function parseArgs(argv) {
   args.command = positional[0] || "show";
   args.root = path.resolve(positional[1] || process.cwd());
   return args;
-}
-
-function runGit(root, gitArgs, allowMissing = false) {
-  const result = childProcess.spawnSync("git", gitArgs, { cwd: root, encoding: "utf8" });
-  if (result.status === 0) return result;
-  // 1 is "key not found" on --get, 5 is "no such section" on --unset.
-  if (allowMissing && (result.status === 1 || result.status === 5)) return result;
-  const detail = String(result.stderr || result.stdout || "git command failed").trim();
-  fail(`${detail}. Chain records require a Git checkout.`);
 }
 
 function validatePhaseId(value) {
@@ -116,35 +99,57 @@ function validateActions(value) {
 
 /** Read one phase's recorded skips. Returns [] when nothing is recorded. */
 function readSkipped(root, phaseId) {
-  const result = childProcess.spawnSync(
-    "git",
-    ["config", "--local", "--get", `mano.chain.${phaseId}`],
-    { cwd: root, encoding: "utf8" },
-  );
-  if (result.status !== 0) return [];
-  return String(result.stdout || "")
-    .trim()
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean);
+  return Settings.readPhase(root, phaseId).skipped ?? [];
+}
+
+/** null means no saved approval; actions: [] means the run completed. */
+function readRun(root, phaseId) {
+  const value = Settings.readPhase(root, phaseId).run;
+  if (value == null) return null;
+  // Existing array records remain readable; new records keep the retry budget
+  // in the same atomic JSON write as the inserted action.
+  const run = Array.isArray(value) ? { actions: value, repairs: [] } : value;
+  if (!run || !Array.isArray(run.repairs) ||
+      run.repairs.some(a => !REPAIRABLE.includes(a)) ||
+      new Set(run.repairs).size !== run.repairs.length) {
+    throw new Error("Invalid chain repair record");
+  }
+  validateRemaining(run.actions);
+  return { ...run, actions: implementationActions(root, phaseId, run.actions) };
+}
+
+/** Auto uses build before a ledger exists, including when resuming older plans.
+ * Keep approved artifact work in order. Reads project this without writing;
+ * the next save persists it. Existing ledgers remain authoritative.
+ */
+function implementationActions(root, phaseId, actions) {
+  if (!actions.length || resolveConfiguredMode(root).mode !== "auto") return actions;
+  const phaseDir = path.join(root, "_mano_output", phaseId);
+  if (fs.existsSync(path.join(phaseDir, "progress.md")) ||
+      fs.existsSync(path.join(phaseDir, "stories", "README.md"))) return actions;
+  return [...actions.filter(action => !["stories", "dev", "build"].includes(action)), "build"];
+}
+
+function readRemaining(root, phaseId) {
+  return readRun(root, phaseId)?.actions ?? null;
+}
+
+function writeRun(root, phaseId, run) {
+  Settings.writePhase(root, phaseId, { run });
+}
+
+function validateRemaining(actions) {
+  if (!Array.isArray(actions) || actions.some(a => ![...SKIPPABLE, "build", "dev"].includes(a)) ||
+      new Set(actions).size !== actions.length ||
+      (actions.length && !["build", "dev"].includes(actions.at(-1))) ||
+      actions.slice(0, -1).some(a => ["build", "dev"].includes(a))) {
+    throw new Error("Remaining actions must be unique planning actions followed by build or dev, or empty after completion");
+  }
 }
 
 /** Every phase with a record, as { phaseId, skipped } rows. */
 function readAll(root) {
-  const result = childProcess.spawnSync(
-    "git",
-    ["config", "--local", "--get-regexp", "^mano\\.chain\\."],
-    { cwd: root, encoding: "utf8" },
-  );
-  if (result.status !== 0) return [];
-  const rows = [];
-  for (const line of String(result.stdout || "").split("\n")) {
-    const match = /^mano\.chain\.(\S+)\s+(.*)$/.exec(line.trim());
-    if (!match) continue;
-    const skipped = match[2].split(",").map((p) => p.trim()).filter(Boolean);
-    if (skipped.length) rows.push({ phaseId: match[1], skipped });
-  }
-  return rows;
+  return Settings.allPhases(root).filter(row => row.skipped?.length);
 }
 
 function main() {
@@ -153,42 +158,82 @@ function main() {
     process.stdout.write(HELP + "\n");
     return;
   }
-  if (!["show", "skip", "clear"].includes(args.command)) {
-    fail(`unknown command ${JSON.stringify(args.command)}; use show, skip, or clear`);
+  if (!["show", "skip", "save", "repair", "clear"].includes(args.command)) {
+    fail(`unknown command ${JSON.stringify(args.command)}; use show, save, repair, skip, or clear`);
+  }
+
+  if (args.command === "repair") {
+    const phaseId = validatePhaseId(args.phase);
+    const action = args.actions;
+    if (!REPAIRABLE.includes(action)) fail("repair requires exactly one of spec, ux, rules, ui");
+    if (resolveConfiguredMode(args.root).mode !== "auto") fail("repair requires auto mode");
+    const phaseDir = path.join(args.root, "_mano_output", phaseId);
+    if (!fs.existsSync(path.join(phaseDir, "phase-brief.md")) ||
+        fs.existsSync(path.join(phaseDir, "progress.md")) ||
+        fs.existsSync(path.join(phaseDir, "stories", "README.md"))) {
+      fail("repair requires a phase brief and neither implementation ledger");
+    }
+    const run = readRun(args.root, phaseId);
+    if (!run || run.actions.length !== 1 || run.actions[0] !== "build") {
+      fail("repair requires an approved run with only build remaining");
+    }
+    if (readSkipped(args.root, phaseId).includes(action)) fail(`${action} was explicitly skipped`);
+    if (run.repairs.includes(action)) fail(`${action} automatic repair already attempted; ask the human`);
+    writeRun(args.root, phaseId, { actions: [action, "build"], repairs: [...run.repairs, action] });
+    process.stdout.write(`[mano chain] ${phaseId} — repair: ${action}; remaining: ${action}, build\n`);
+    return;
+  }
+
+  if (args.command === "save") {
+    const phaseId = validatePhaseId(args.phase);
+    if (args.actions == null) fail("save requires --actions (empty after completion)");
+    let actions = args.actions === ""
+      ? []
+      : args.actions.split(",").map(a => a.trim().toLowerCase()).filter(Boolean);
+    validateRemaining(actions);
+    actions = implementationActions(args.root, phaseId, actions);
+    const previous = readRun(args.root, phaseId);
+    writeRun(args.root, phaseId, { actions, repairs: previous?.repairs ?? [] });
+    process.stdout.write(`[mano chain] ${phaseId} — remaining: ${actions.join(", ") || "none (completed)"}\n`);
+    return;
   }
 
   if (args.command === "skip") {
     const phaseId = validatePhaseId(args.phase);
     const actions = validateActions(args.actions);
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", `mano.chain.${phaseId}`, actions.join(",")]);
+    Settings.writePhase(args.root, phaseId, { skipped: actions });
     process.stdout.write(`[mano chain] ${phaseId} — skipped: ${actions.join(", ")}\n`);
-    process.stdout.write("  Recorded so a later session does not re-propose them. Not committed.\n");
+    process.stdout.write("  Recorded so a later session does not re-propose them. Commit the owner JSON to carry this record to another computer.\n");
     return;
   }
 
   if (args.command === "clear") {
     const phaseId = validatePhaseId(args.phase);
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "--unset-all", `mano.chain.${phaseId}`], true);
+    const run = readRun(args.root, phaseId);
+    if (run) writeRun(args.root, phaseId, { actions: run.actions, repairs: [] });
+    Settings.writePhase(args.root, phaseId, { skipped: [] });
     process.stdout.write(`[mano chain] ${phaseId} — record cleared\n`);
     return;
   }
 
-  runGit(args.root, ["rev-parse", "--git-dir"]);
   if (args.phase) {
     const phaseId = validatePhaseId(args.phase);
+    const run = readRun(args.root, phaseId);
+    const remaining = run?.actions ?? null;
+    if (remaining !== null) process.stdout.write(`CHAIN_REMAINING: ${remaining.join(", ") || "none (completed)"}\n`);
+    const repairs = run?.repairs ?? [];
+    process.stdout.write(`CHAIN_REPAIRS: ${repairs.join(", ") || "none"}\n`);
     const skipped = readSkipped(args.root, phaseId);
     process.stdout.write(
       skipped.length
         ? `[mano chain] ${phaseId} — skipped: ${skipped.join(", ")}\n`
-        : `[mano chain] ${phaseId} — no record; the chain is derived from what exists on disk\n`,
+        : `[mano chain] ${phaseId} — no skip record; recover approved actions from the saved run or chat\n`,
     );
     return;
   }
   const rows = readAll(args.root);
   if (!rows.length) {
-    process.stdout.write("[mano chain] no records; every chain is derived from what exists on disk\n");
+    process.stdout.write("[mano chain] no skip records; use show --phase to read an approved run\n");
     return;
   }
   for (const row of rows) {
@@ -204,4 +249,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { SKIPPABLE, parseArgs, readSkipped, readAll, validateActions, main };
+module.exports = { SKIPPABLE, parseArgs, readSkipped, readAll, readRun, readRemaining, validateRemaining, validateActions, main };

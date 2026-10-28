@@ -20,9 +20,12 @@
  *   add      append item(s) under `## Items`
  *   update   rewrite one exact item's title and/or context (never its status)
  *   assign   move approved items from `Status: backlog` to `in-phase-<N>`
- *   resolve  mano review's close sweep: `in-phase-<N>` -> `resolved` (whole phase)
- *   resolve-gap  mark one exact spec-gap / rule-gap item resolved
+ *   resolve  mano review's close sweep: `in-phase-<N>` -> `resolved` (whole phase);
+ *            refuses while the phase ledger has a pending rework event
+ *   resolve-gap  mark one exact gap item (spec/rule/ux/ui) resolved
  *   reject   mark named open items `rejected` (premise invalidated, won't do)
+ *   task-status  mano task's writer: one item's backlog / in-task / needs-human /
+ *            resolved transition, with its `Check:` line and the human's verbatim note
  *
  * Usage:
  *   node backlog.js add --title "X" --type feature --context "..." [--source "..."] [--track "..."]
@@ -31,6 +34,7 @@
  *   node backlog.js resolve --phase 9
  *   node backlog.js resolve-gap --type spec-gap --title "Exact title"
  *   node backlog.js reject --title "X" --title "Y"
+ *   node backlog.js task-status --title "X" --to needs-human --check "..."
  *   node backlog.js --help
  *
  * The `add` input is a single item from flags (the shell-safe path — no JSON to
@@ -46,10 +50,22 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { phaseRef, phaseRouting, validateTrack } = require("./phase.js");
+const Ledger = require("./ledger.js");
 const { writeAtomic } = require("./atomic.js");
 
-const VALID_TYPES = ["bug", "refinement", "feature", "tech-debt", "test", "spec-gap", "rule-gap"];
-const GAP_TYPES = ["spec-gap", "rule-gap"];
+const VALID_TYPES = [
+  "bug", "refinement", "feature", "tech-debt", "test",
+  "spec-gap", "rule-gap", "ux-gap", "ui-gap",
+];
+// Which skill owns each gap type. A gap item is a routing address, not a
+// decision: the type says which artifact must still adopt or reject it.
+const GAP_OWNER = {
+  "spec-gap": "mano spec",
+  "rule-gap": "mano rules",
+  "ux-gap": "mano ux",
+  "ui-gap": "mano ui",
+};
+const GAP_TYPES = Object.keys(GAP_OWNER);
 const ITEMS_HEADING = "## Items";
 
 const HELP = `mano backlog — deterministic writer for _mano_output/backlog.md
@@ -59,8 +75,9 @@ Commands:
   update   rewrite one exact item's title and/or context (never its status)
   assign   move approved items from 'Status: backlog' to the configured phase
   resolve  mano review's close sweep for the configured phase identity
-  resolve-gap  flip one exact open spec-gap / rule-gap item to 'resolved'
+  resolve-gap  flip one exact open gap item (spec/rule/ux/ui) to 'resolved'
   reject   flip named open items to 'rejected' (premise invalidated, won't do)
+  task-status  mano task's status writer for one item (see below)
 
 add — one item from flags (the shell-safe path):
   --title "..."     required
@@ -102,7 +119,7 @@ assign:
   --title "..."     one per approved item, repeatable
   Uses phase-N by default; owner opt-in uses <owner>-phase-N.
   Flips only non-gap items currently 'Status: backlog'; reports anything it
-  can't. spec-gap / rule-gap items stay backlog-owned by mano spec / mano rules.
+  can't. Gap items stay backlog-owned by their owning skill (see resolve-gap).
 
 resolve:
   --phase N         the configured owner's phase being closed (required)
@@ -112,7 +129,7 @@ resolve:
   never touched.
 
 resolve-gap:
-  --type <type>      required: spec-gap or rule-gap
+  --type <type>      required: one of ${GAP_TYPES.join(", ")}
   --title "..."      required: one exact item title
   Resolves only the unique item with that exact title, exact type, and
   'Status: backlog'. An already-resolved matching item is an idempotent success.
@@ -126,6 +143,28 @@ reject:
   distinct from 'resolved' (shipped/fixed). Only open 'backlog' items flip;
   in-phase, resolved, ambiguous, or missing targets are reported and left
   unchanged. Already-rejected items are an idempotent success.
+
+task-status — mano task's only status writer:
+  --title "..."      required: one exact item title
+  --to <status>      required: in-task, resolved, needs-human, or backlog
+  --check "..."      with --to needs-human (required): the one-line check the
+                     human runs; written as '- **Check:**' under Status,
+                     replacing any earlier one
+  --failed "..."     with --to backlog: the human's words when the check failed
+  --redirect "..."   with --to backlog: the human's words when the check passed
+                     but they want something different
+  Allowed moves, and nothing else:
+    backlog     -> in-task             (before the first edit, so code that
+                                        was touched is never left as backlog)
+    in-task     -> resolved | needs-human
+    needs-human -> resolved            (the Check line stays as the record)
+    needs-human -> backlog             (needs exactly one of --failed /
+                                        --redirect; appends 'Human check
+                                        failed: ...' or 'Human redirection:
+                                        ...' to the context, verbatim, and
+                                        drops the Check line)
+  Gap items, in-phase, resolved, and rejected items are refused, and so is any
+  missing, ambiguous, or malformed target. A refusal never writes.
 
 A trailing positional argument = project root (default: current dir).
 
@@ -141,6 +180,7 @@ function parseArgs(argv) {
     phase: null, titles: [],
     title: null, type: null, context: null, source: null, track: null, status: null, file: null,
     noSimilarWarning: false, newTitle: null,
+    to: null, check: null, failed: null, redirect: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -155,6 +195,10 @@ function parseArgs(argv) {
     else if (a === "--file") args.file = argv[++i];
     else if (a === "--no-similar-warning") args.noSimilarWarning = true;
     else if (a === "--new-title") args.newTitle = argv[++i];
+    else if (a === "--to") args.to = argv[++i];
+    else if (a === "--check") args.check = argv[++i];
+    else if (a === "--failed") args.failed = argv[++i];
+    else if (a === "--redirect") args.redirect = argv[++i];
     else if (a === "--root") args.root = path.resolve(argv[++i]);
     else if (!a.startsWith("-")) {
       if (!args.command) args.command = a;
@@ -525,7 +569,7 @@ function cmdAssign(args) {
   for (const r of results) {
     if (r.outcome === "assigned") process.stdout.write(`  + ${r.title}\n`);
     else if (r.outcome === "gap") {
-      const owner = r.type === "spec-gap" ? "mano spec" : "mano rules";
+      const owner = GAP_OWNER[r.type] || "its owning skill";
       process.stdout.write(`  ~ ${r.title} (${r.type}; route to ${owner}, left as '${r.status}')\n`);
     }
     else if (r.outcome === "skipped") process.stdout.write(`  ~ ${r.title} (already '${r.status}', left as-is)\n`);
@@ -535,12 +579,40 @@ function cmdAssign(args) {
 
 // ---- resolve --------------------------------------------------------------
 
+// This sweep is the act that closes a phase, so it refuses while that phase's
+// ledger still carries a pending rework event. Without the check, `mano review`
+// could write a finding into the ledger and close the phase in the same turn —
+// which it did: `resolved` in the backlog, in progress in the ledger, the review
+// already appended, and `mano start` then refusing to scope on work the human
+// had been told was done. `progress.js sign-off` refuses on the same condition;
+// both halves of the close have to agree or neither is worth trusting.
+//
+// A missing or unparseable ledger is not this command's problem to report. A
+// phase can legitimately close with no ledger (the stories path, or a phase
+// that never ran build), and an invalid one is a hard stop that `state.js`
+// raises with a repair instruction long before a close sweep is reached.
+function refuseOnPendingRework(args, ref) {
+  const progressFile = path.join(args.root, "_mano_output", ref.dirName, "progress.md");
+  const text = readText(progressFile);
+  if (text == null) return;
+  const parsed = Ledger.parseLedger(text);
+  if (!parsed.ok) return;
+  const pending = parsed.ledger.rework.filter((r) => r.status === "pending");
+  if (!pending.length) return;
+  fail(
+    `resolve: ${pending.map((r) => r.id).join(", ")} still pending in ` +
+    `${ref.relativeDir}/progress.md. ${ref.id} is not closed, so its items stay ` +
+    `${ref.inPhaseStatus}. Run mano build to work the pending event(s) first.`,
+  );
+}
+
 // mano review's close sweep and the twin of assign: flip every item currently
 // carrying the configured phase's exact in-phase status to `Status: resolved`.
 // Freshly-added `Status: backlog` items (the items review triaged this same
 // turn) are never touched. Not title-scoped — it sweeps the whole phase.
 function cmdResolve(args) {
   const ref = configuredPhase(args, "resolve");
+  refuseOnPendingRework(args, ref);
   const want = ref.inPhaseStatus;
 
   const file = backlogPath(args.root);
@@ -855,6 +927,113 @@ function cmdReject(args) {
   }
 }
 
+// ---- task-status ----------------------------------------------------------
+//
+// mano task changes one item's status outside any phase, and its POC did that
+// by hand-editing backlog.md. The rule about which moves are legal lived only in
+// the skill's prose, where a weak model can skip it. Here the script refuses
+// every move the contract does not allow, so the rule holds even when the
+// prose is skipped.
+//
+// `in-task` is written before the first edit. A run that edits code and then
+// skips its closing write used to leave the item `backlog`, indistinguishable
+// from work nobody started. The early write is the one a run reliably makes, and
+// because backlog can only move to in-task, the late write cannot be reached
+// without it.
+const TASK_MOVES = {
+  backlog: ["in-task"],
+  "in-task": ["resolved", "needs-human"],
+  "needs-human": ["resolved", "backlog"],
+};
+
+function oneLine(value) {
+  return String(value).replace(/\\n/g, " ").replace(/\s*[\r\n]+\s*/g, " ").trim();
+}
+
+function cmdTaskStatus(args) {
+  if (args.titles.length !== 1 || typeof args.titles[0] !== "string" || !args.titles[0].trim()) {
+    fail("task-status needs exactly one non-empty --title.");
+  }
+  const to = String(args.to || "").trim();
+  if (!["in-task", "resolved", "needs-human", "backlog"].includes(to)) {
+    fail("task-status needs --to in-task, resolved, needs-human, or backlog.");
+  }
+  const check = args.check != null ? oneLine(args.check) : null;
+  const failed = args.failed != null ? oneLine(args.failed) : null;
+  const redirect = args.redirect != null ? oneLine(args.redirect) : null;
+  if (to === "needs-human" && !check) fail("task-status --to needs-human needs --check \"<what the human tries>\".");
+  if (to !== "needs-human" && check !== null) fail("task-status: --check only goes with --to needs-human.");
+  if (to === "backlog" && (failed ? 1 : 0) + (redirect ? 1 : 0) !== 1) {
+    fail("task-status --to backlog needs exactly one of --failed or --redirect, with the human's words.");
+  }
+  if (to !== "backlog" && (failed !== null || redirect !== null)) {
+    fail("task-status: --failed and --redirect only go with --to backlog.");
+  }
+
+  const file = backlogPath(args.root);
+  const text = readText(file);
+  if (text == null) fail(`task-status: no backlog at ${file}.`);
+
+  const parsed = parseItemRecords(text);
+  const requested = args.titles[0].trim();
+  const matches = parsed.records.filter((r) => r.title.toLowerCase() === requested.toLowerCase());
+  if (matches.length === 0) fail(`task-status: no item has the exact title "${requested}".`);
+  if (matches.length > 1) fail(`task-status: title "${requested}" is ambiguous (${matches.length} exact matches).`);
+  const record = matches[0];
+
+  const type = itemField(parsed.lines, record, "Type");
+  const status = itemField(parsed.lines, record, "Status");
+  if (type.error) fail(`task-status: malformed item — ${type.error}.`);
+  if (status.error) fail(`task-status: malformed item — ${status.error}.`);
+  if (GAP_TYPES.includes(type.value)) {
+    fail(`task-status: "${record.title}" is a ${type.value}; ${GAP_OWNER[type.value]} owns it.`);
+  }
+  const allowed = TASK_MOVES[status.value];
+  if (!allowed) {
+    fail(`task-status: "${record.title}" has Status: ${status.value}; mano task only moves backlog, in-task, and needs-human items.`);
+  }
+  if (!allowed.includes(to)) {
+    fail(`task-status: "${record.title}" cannot move from ${status.value} to ${to}.`);
+  }
+
+  const lines = parsed.lines.slice();
+  const checkLines = [];
+  for (let i = record.start + 1; i < record.end; i++) {
+    if (/^-\s*\*\*Check:\*\*/i.test(lines[i])) checkLines.push(i);
+  }
+  if (checkLines.length > 1) fail(`task-status: "${record.title}" has ${checkLines.length} **Check:** lines; expected at most one.`);
+  const checkAt = checkLines.length ? checkLines[0] : -1;
+
+  lines[status.line] = `${status.prefix}${to}${status.trailing}`;
+  if (to === "needs-human") {
+    const checkLine = `- **Check:** ${check}`;
+    if (checkAt === -1) lines.splice(status.line + 1, 0, checkLine);
+    else lines[checkAt] = checkLine;
+  }
+  if (to === "backlog") {
+    // The note closes the context, which runs from its marker to the next
+    // top-level `- **Field:**`. Insert it, then drop the Check line at its
+    // shifted index.
+    let ctxStart = -1;
+    for (let i = record.start + 1; i < record.end; i++) {
+      if (/^-\s*\*\*Context:\*\*\s*$/i.test(lines[i])) { ctxStart = i; break; }
+    }
+    if (ctxStart === -1) fail(`task-status: "${record.title}" has no '- **Context:**' line to append to.`);
+    let ctxEnd = ctxStart + 1;
+    while (ctxEnd < record.end && !/^-\s*\*\*[A-Za-z]/.test(lines[ctxEnd])) ctxEnd++;
+    while (ctxEnd > ctxStart + 1 && lines[ctxEnd - 1].trim() === "") ctxEnd--;
+    const note = failed ? `Human check failed: ${failed}` : `Human redirection: ${redirect}`;
+    lines.splice(ctxEnd, 0, `  ${note}`);
+    if (checkAt !== -1) lines.splice(checkAt >= ctxEnd ? checkAt + 1 : checkAt, 1);
+  }
+
+  writeAtomic(file, lines.join("\n"));
+  process.stdout.write(`[mano backlog] task-status → ${status.value} -> ${to}\n`);
+  process.stdout.write(`  + ${record.title}\n`);
+  if (to === "needs-human") process.stdout.write(`    Check: ${check}\n`);
+  if (to === "backlog") process.stdout.write(`    ${failed ? "Human check failed" : "Human redirection"}: ${failed || redirect}\n`);
+}
+
 // ---- main -----------------------------------------------------------------
 
 function main() {
@@ -869,7 +1048,8 @@ function main() {
   else if (args.command === "resolve") cmdResolve(args);
   else if (args.command === "resolve-gap") cmdResolveGap(args);
   else if (args.command === "reject") cmdReject(args);
-  else fail(`unknown command "${args.command}". Use add, update, assign, resolve, resolve-gap, or reject (--help for usage).`);
+  else if (args.command === "task-status") cmdTaskStatus(args);
+  else fail(`unknown command "${args.command}". Use add, update, assign, resolve, resolve-gap, reject, or task-status (--help for usage).`);
 }
 
 if (require.main === module) main();

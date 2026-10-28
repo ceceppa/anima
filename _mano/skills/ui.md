@@ -7,6 +7,12 @@ requires-in-auto: [auto]
 
 # `mano ui` — UI Skill
 
+## Language check — before any response
+
+After loading this contract and its required rules, run `node _mano/scripts/settings.js language` from the project root **before the first user-facing message or any project write**. Use the returned `language.chat` for all conversation, including progress, questions, errors, and the final response; use `language.artefacts` for new planning artifacts and `language.build` for new implementation content (code, tests, product documentation, and product/UI text, including preview copy). The command resolves missing or `null` `artefacts` through `build`, then `chat`, then `null`. Never read settings JSON directly or infer languages from the prompt, source files, or this skill's English examples. A `null` value preserves existing behaviour for that channel only. If the command fails or any of the three fields is absent, report the failure and stop; do not guess.
+
+This check applies on direct invocation, auto-chain handoff, and resumption after interruption or compaction. Re-run after an owner or language change. English response examples, including “exact” or one-line templates, constrain structure and meaning, not prose language: translate their prose into `language.chat`. Preserve command names, paths, required labels, status tokens, and verbatim quotations or diagnostics. Before sending **each** message, check its prose against `language.chat`; before each project write, check planning prose against `language.artefacts` and implementation content against `language.build`. Do not emit an extra language-confirmation message.
+
 ## Optionality boundary
 
 This action is optional. Run it only when the current phase needs this kind of clarity or when existing artifacts are stale, missing, or too vague to support good stories. Reuse existing project context when it is still good enough; do not regenerate work just to follow a pipeline.
@@ -24,20 +30,65 @@ When inputs are missing, follow the missing-input protocol in `_mano/rules/core.
 Read this file plus `_mano/rules/core.md` and `_mano/rules/artifact.md` first — before the state projection, then artifacts — and read only those rule files; never open `_mano/workflow.md` mid-skill. Keeping that order stable keeps the contract prefix cacheable.
 
 On activation:
-1. Run `node _mano/scripts/state.js --ui`. Its `UI INPUT` is the only phase-directory discovery for this skill. Do not list or scan phase folders yourself. If the command fails or its output lacks the `UI INPUT`, `STATUS`, `MODE`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `PREVIEW` lines, stop and report the exact failure. Use the exact projected paths; never construct `phase-N` from the number.
-2. `STATUS: BLOCKED` → relay the script's route and stop without writing anything. A phase brief is required because the preview must have an unambiguous phase owner; do not offer to continue without one.
-3. `STATUS: READY` → read the exact `BRIEF` path printed by the script.
-4. Read `_mano_output/ux-flow.md` if it exists — know what screens and navigation exist before designing components.
-5. Read `_mano_output/tech-spec.md` if it exists — constrain component library choices.
-6. Read `_mano_output/project-rules.md` if it exists — respect any a11y requirements or component patterns already agreed.
-7. Read design-relevant requirements only when they are included in the current phase brief, existing design brief, UX flow, project rules, or explicitly provided context.
-8. Read `_mano_output/design-brief.md` if it exists and extend it as the project-wide foundation.
-9. Read the exact current-phase `PREVIEW` path only when the projection reports it as present; this is a same-phase rerun input. Never read an earlier phase's preview or the legacy root `_mano_output/design-preview.html`.
-10. Immediately before the first write—especially after the preference checkpoint pauses the flow—run `node _mano/scripts/state.js --ui` again. Continue only if it still reports `STATUS: READY` with the same `OWNER`, `PHASE_ID`, `BRIEF`, and `PREVIEW`. If any value changed or the phase became blocked, write nothing; report that project state changed and ask the user to invoke `mano ui` again so the new phase context is read fresh.
+1. Run `node _mano/scripts/state.js --gaps ui-gap`. Its `GAP INPUT` is the complete backlog-derived context for open UI gaps: only unresolved `ui-gap` items are exposed. **Do not open `_mano_output/backlog.md` before or after this command.** If the command fails or its output lacks the `GAP INPUT`, exact `MODE:`, `TYPE: ui-gap`, `STATUS: backlog`, and `COUNT:` lines, stop and report the exact failure.
+2. Run `node _mano/scripts/state.js --ui`. Its `UI INPUT` is the only phase-directory discovery for this skill. Do not list or scan phase folders yourself. If the command fails or its output lacks the `UI INPUT`, `STATUS`, `MODE`, `OWNER`, `PHASE`, `PHASE_ID`, `PHASE_DIR`, `BRIEF`, and `PREVIEW` lines, stop and report the exact failure. Use the exact projected paths; never construct `phase-N` from the number.
+3. `STATUS: BLOCKED` → check `COUNT:` from step 1. `COUNT: 0` and no directive written with the command → relay the script's route and stop without writing anything; a phase preview requires an unambiguous phase owner, so do not offer to continue without one. `COUNT:` above zero → run **Gap-only mode** below, which writes no preview and therefore needs no phase owner. A directive written with the command, including a contract for one feature, → run **Directive mode** below, which writes no preview either.
+4. `STATUS: READY` → read the exact `BRIEF` path printed by the script.
+5. Read `_mano_output/ux-flow.md` if it exists — know what screens and navigation exist before designing components.
+6. Read `_mano_output/tech-spec.md` if it exists — constrain component library choices.
+7. Read `_mano_output/project-rules.md` if it exists — respect any a11y requirements or component patterns already agreed.
+8. Read design-relevant requirements only when they are included in the current phase brief, existing design brief, UX flow, project rules, or explicitly provided context.
+9. Read `_mano_output/design-brief.md` if it exists and extend it as the project-wide foundation.
+10. Read the exact current-phase `PREVIEW` path only when the projection reports it as present; this is a same-phase rerun input. Never read an earlier phase's preview or the legacy root `_mano_output/design-preview.html`.
+11. Immediately before the first write—especially after the preference checkpoint pauses the flow—run `node _mano/scripts/state.js --ui` again. Continue only if it still reports `STATUS: READY` with the same `OWNER`, `PHASE_ID`, `BRIEF`, and `PREVIEW`. If any value changed or the phase became blocked, write nothing; report that project state changed and ask the user to invoke `mano ui` again so the new phase context is read fresh.
+
+## Gap-only mode
+
+`design-brief.md` is a cumulative project artifact; only `design-preview.html` is phase-scoped. A `ui-gap` says something already proved the design brief wrong or incomplete — a rework that changed a component treatment, a review finding nobody homed — and that repair must not wait for the next phase. It cannot wait: an open gap blocks `mano start` from scoping one, so a `ui-gap` that needed a phase brief would deadlock the loop it was meant to close.
+
+In gap-only mode:
+
+- Work **only** the projected `ui-gap` items. Do not restyle, extend, or add any component no projected gap names.
+- Repair `_mano_output/design-brief.md` with targeted replacements, per `_mano/rules/core.md` → **Writing artifacts: create once, edit thereafter**. Never a full-file regeneration.
+- Write **no** `design-preview.html` — not into a phase directory, not at the legacy root. There is no phase to own one, and the preview-ownership rule above is what makes gap-only mode safe without a phase.
+- Resolve each item the design brief now addresses, one call per item:
+
+```
+node _mano/scripts/backlog.js resolve-gap --type ui-gap --title "[exact projected title]"
+```
+
+- Resolve an item only once `design-brief.md` actually adopts or explicitly overrides it. If a projected gap needs a decision only the human can make, leave it open and surface it as a `❓ Decide:` line — an unresolved gap keeps `mano start` blocked, which is correct while a design decision is genuinely pending.
+- Close with the canonical execution log, then `Next:` — `mano start` when no gap remains, otherwise the skills the remaining routes name.
+
+## Directive mode
+
+A project-wide visual rule the human writes with the command — `mano ui "every button uses the pill shape, no square corners"` — is input this skill owns, with or without a phase. `design-brief.md` is cumulative, so the visual rule needs no phase brief to justify it, and it needs no backlog item to survive a context reset: once written here, this file is its home. Recording it as a `ui-gap` first would only make the human approve a row restating what they just said.
+
+- **It is a directive when** it states a rule this file owns that holds across the whole product: a palette, typeface, spacing scale, icon set, or a treatment every component of a kind must use. It is authoritative intent: adopt it as written, or override it explicitly with the reason in the completion log and a `❓ Decide:` line — never silently.
+- **Not this skill's → route it verbatim and write nothing.** A folder, naming, or code convention → `mano rules "[the directive]"`; a stack or library decision → `mano spec "[the directive]"`; a screen or navigation flow → `mano ux "[the directive]"`. The visual contract for one feature, screen, or element is this skill's too: see **A contract for one feature** below.
+- **With no phase**, it runs under every Gap-only mode bound above: write only what the directive decides, nothing phase-scoped, no phase directory. Write **no** `design-preview.html` and skip the Step 1 preference checkpoint: the directive is the preference, and anything it leaves open stays open. Settle any projected `ui-gap` items in the same run. With a phase, the directive is applied alongside the phase's own work, as a project-wide rule.
+- **No backlog write for the directive.** Create no gap item for it and resolve none on its behalf; a projected gap it happens to settle is resolved the normal way.
+- **Contract, not code.** Writing the treatment does not restyle what is already built. When it changes components earlier phases shipped, add one `⚠ Verify:` line: existing surfaces are not retrofitted by this run, and bringing them in line is implementation work → `mano start`. Do not read source to find them.
+- **Bare `mano ui` with no phase, no projected gap, and no directive** → stop and write nothing. Say there is no phase to work on, and name both ways in: `mano start` for phase work, or `mano ui "[the treatment]"` to fix a project-wide visual rule now.
+
+### A contract for one feature
+
+The human may hand this skill the visual contract for one feature, screen, or element, to be built now, later, or never: `mano ui "the sync badge stays visible for the whole upload, not only when it fails"`. Writing it is this skill's job, with or without a phase, and after the latest phase has closed. Whether and when it gets built is the human's call. Refusing it because no phase is open, because the last phase is reviewed, or because it describes a feature overrides that call.
+
+- **Write what the words decide** into the existing `design-brief.md` structure. Settle the details a designer would settle inside those words from the palette, tokens, and components already in the brief. Ask once, numbered, only about a choice that changes what the user sees and that neither the words nor the brief settle.
+- **The request wins over the file.** When it contradicts what `design-brief.md` says, it is the newer decision: replace the old statement in place, never leave both standing, and log both (`Replaced: <old> → <new>`). Raise `❓ Decide:` only when the words could equally mean replacing the old statement or sitting beside it.
+- **Same bounds as Directive mode.** No `design-preview.html`, no phase directory, no backlog write. Route any part another owner decides, verbatim.
+- **Contract, not code.** Add one `⚠ Verify:` line: this run builds nothing, and building it is work. `Next:` is `mano task "<item title>"` when the words name a backlog item, as they do when `mano task` routed here. Otherwise it is `mano task` or `mano start`, whichever the human picks to build it.
+- **Nothing to decide, nothing to write.** A request that only asks for code to change ("fix the crash on save") or for a preview has no contract in it. Write nothing and route it: `mano task` or `mano start` for code, `mano start` for a preview.
+
+**With a phase brief present, projected `ui-gap` items are still in scope.** Address them in the same run as the phase's own design work and resolve each one the same way. A gap left open blocks the next `mano start`, so never defer one on the grounds that the phase's own work came first.
+
+**Artifact resolution is not implementation completion.** Apply `_mano/rules/backlog.md` → **Artifact gaps versus implementation work**. Updating `design-brief.md` never ships a requested product change. If a legacy projected gap actually contains unimplemented work, do not mark it resolved merely because the artifact now describes it. Report the exact title and route to `mano review` to propose a scopeable replacement and rejection of the misclassified gap; do not write application code in gap-only mode.
 
 ## Inputs
 
-- Phase brief (required — stop and route to `mano start` if missing)
+- Projected `ui-gap` items (required — from `state.js --gaps ui-gap`)
+- Phase brief (required, except in **Gap-only mode**)
 - UX flow (recommended — `mano ui` should know what screens exist before designing)
 - Tech spec (optional — constrains component library choices)
 - `_mano_output/project-rules.md` (optional — a11y rules, component patterns)
@@ -165,7 +216,7 @@ Next:
 - `mano continue` — if you want Mano to pick only when there is a single obvious next step
 ```
 
-**Show both implementation paths in `manual`, and only `mano build` in `auto`.** `_mano/rules/artifact.md` → **Next-step suggestion rule** owns this: at the no-ledger planning stage the mode decides, so read `MODE:` from the projection rather than defaulting to whichever path the examples use most.
+For new suggestions outside a saved chain: **Show both implementation paths in `manual`, and only `mano build` in `auto`.** In an armed chain, follow `CONTINUE_ACTION` and preserve `CHAIN_REMAINING`, which omits `stories` and ends at `build` when neither ledger exists; never skip its pending artifact actions. Only an existing stories ledger retains `dev`. `_mano/rules/artifact.md` → **Next-step suggestion rule** owns this: at the no-ledger planning stage the mode decides, so read `MODE:` from the projection rather than defaulting to whichever path the examples use most.
 
 If the phase has no design work to perform, use a skip log instead:
 

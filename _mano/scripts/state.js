@@ -56,7 +56,23 @@ const {
 const Ledger = require("./ledger.js");
 const Chain = require("./chain.js");
 
-const GAP_TYPES = ["spec-gap", "rule-gap"];
+// Which skill owns each gap type. A gap is a routing address the projection
+// prints, so the human never has to remember which artifact owns a decision.
+const GAP_OWNER = {
+  "spec-gap": "mano spec",
+  "rule-gap": "mano rules",
+  "ux-gap": "mano ux",
+  "ui-gap": "mano ui",
+};
+const GAP_TYPES = Object.keys(GAP_OWNER);
+
+// "2 spec-gap → mano spec; 1 ux-gap → mano ux", in a stable type order.
+function gapRoutes(gaps) {
+  if (!gaps) return [];
+  return GAP_TYPES
+    .filter((t) => gaps[t] > 0)
+    .map((t) => `${gaps[t]} ${t} → ${GAP_OWNER[t]}`);
+}
 
 // Post-skill hook slots and the optional project-level artifacts, projected so
 // skills never probe the filesystem for hooks or open artifacts merely to see
@@ -69,7 +85,7 @@ function parseArgs(argv) {
     root: process.cwd(), json: false, verbose: false,
     scope: false, next: false, ui: false, current: false,
     spec: false, gaps: null, source: null, track: null, help: false,
-    amendCurrent: false, titles: false, match: null,
+    amendCurrent: false, titles: false, match: null, task: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -92,6 +108,7 @@ function parseArgs(argv) {
       else { args.track = candidate; i++; }
     }
     else if (a === "--titles") args.titles = true;
+    else if (a === "--task") args.task = true;
     else if (a === "--match") args.match = argv[++i];
     else if (a === "--gaps") {
       const candidate = argv[i + 1];
@@ -107,7 +124,7 @@ function parseArgs(argv) {
 const HELP = `mano state — read-only projections of _mano_output/
 
 Usage:
-  node state.js [projectRoot] [--scope [--source <text>] [--track <name>] | --next | --ui | --current | --spec | --gaps <type> | --titles [--match <text>]] [--verbose] [--json]
+  node state.js [projectRoot] [--scope [--source <text>] [--track <name>] | --next | --ui | --current | --spec | --gaps <type> | --titles [--match <text>] | --task] [--verbose] [--json]
 
   projectRoot   directory containing _mano_output/ (default: current dir)
   --amend-current  with --scope only: ask whether the *current* phase's brief may
@@ -143,8 +160,12 @@ Usage:
                 Never a scope-selection input: that stays SCOPE INPUT only
   --match <text>  with --titles only: case-insensitive substring filter on the
                 title, for checking one piece of work rather than listing all
-  --gaps <type> read only backlog.md and print unresolved items of exact type
-                spec-gap or rule-gap (mano rules uses the rule-gap projection)
+  --task        for mano task: whether a task may run now (refused while this
+                owner's latest phase is open, from a draft brief until review
+                closes it), plus every in-task item (edited, not finished)
+                and every needs-human item and its Check line
+  --gaps <type> read only backlog.md and print unresolved items of exact type:
+                spec-gap, rule-gap, ux-gap, ui-gap — each skill reads its own
   --verbose     also print the evidence (phase, stories, reviewed, backlog)
   --json        emit the full structured state as JSON
 
@@ -619,8 +640,9 @@ function renderTitles(t) {
   L.push(`MODE: ${t.runMode}`);
   if (t.match) L.push(`MATCH: ${t.match}`);
   L.push(`COUNT: ${t.total}`);
-  const order = ["backlog", "in-phase", "resolved", "rejected"];
+  const order = ["backlog", "in-task", "needs-human", "in-phase", "resolved", "rejected"];
   const bucket = (status) => {
+    if (status === "in-task") return status;
     if (status.startsWith("in-")) return "in-phase";
     return order.includes(status) ? status : "other";
   };
@@ -649,6 +671,52 @@ function renderTitles(t) {
 
 function renderTitlesJson(t) {
   return JSON.stringify({ match: t.match, total: t.total, items: t.items }, null, 2);
+}
+
+// mano task runs outside any phase, so it must not run inside one: its edits
+// would land under stories or ledger rows planned against older code, and the
+// phase review would meet changes nobody scoped. A phase is open from the
+// moment its folder exists until review closes it.
+function scanTask(projectRoot) {
+  const s = scan(projectRoot);
+  const phaseOpen = !!s.phaseId && !s.closed;
+  const inTask = extractBacklogItems(s._backlogText, { status: "in-task" })
+    .map((block) => ((/^###\s+(.+?)\s*$/m.exec(block) || [])[1] || "?").trim());
+  const needsHuman = extractBacklogItems(s._backlogText, { status: "needs-human" }).map((block) => ({
+    title: ((/^###\s+(.+?)\s*$/m.exec(block) || [])[1] || "?").trim(),
+    check: ((/^-\s*\*\*Check:\*\*\s*(.+?)\s*$/im.exec(block) || [])[1] || "").trim() || null,
+  }));
+  return {
+    owner: s.owner,
+    runMode: s.runMode,
+    gate: phaseOpen ? "refused" : "allowed",
+    phaseId: phaseOpen ? s.phaseId : null,
+    reason: phaseOpen ? s.action : null,
+    inTask,
+    needsHuman,
+  };
+}
+
+function renderTask(t) {
+  const L = ["--- TASK GATE (from the state script — do not scan phase folders) ---"];
+  L.push(`OWNER: ${t.owner || "none (legacy phase-N mode)"}`);
+  L.push(`MODE: ${t.runMode}`);
+  L.push(`TASK: ${t.gate}`);
+  if (t.gate === "refused") {
+    L.push(`OPEN_PHASE: ${t.phaseId}`);
+    L.push(`REASON: ${t.reason}`);
+  }
+  L.push(`IN_TASK: ${t.inTask.length}`);
+  for (const title of t.inTask) L.push(`  - ${title}`);
+  L.push(`NEEDS_HUMAN: ${t.needsHuman.length}`);
+  for (const item of t.needsHuman) {
+    L.push(`  - ${item.title} — Check: ${item.check || "(missing)"}`);
+  }
+  return L.join("\n");
+}
+
+function renderTaskJson(t) {
+  return JSON.stringify(t, null, 2);
 }
 
 function scanGaps(projectRoot, type) {
@@ -879,7 +947,7 @@ function scan(projectRoot, options = {}) {
     backlogItems: 0,        // all Status: backlog lines (backward-compatible field)
     unresolvedItems: 0,     // canonical open item count, including gap types
     scopeableBacklogItems: 0, // open items eligible for phase scope
-    gaps: { "spec-gap": 0, "rule-gap": 0 },
+    gaps: Object.fromEntries(GAP_TYPES.map((t) => [t, 0])),
     inPhaseRemaining: 0,    // Status: in-phase-<phase> count
     _backlogText: null,     // raw text, kept for scope extraction; not serialized
     _reviewsText: null,
@@ -909,12 +977,11 @@ function scan(projectRoot, options = {}) {
   s.backlogItems = s.backlog["backlog"] || 0;
   s.unresolvedItems = openItems.length;
   s.scopeableBacklogItems = scopeableItems.length;
-  s.gaps["spec-gap"] = extractBacklogItems(s._backlogText, {
-    status: "backlog", type: "spec-gap",
-  }).length;
-  s.gaps["rule-gap"] = extractBacklogItems(s._backlogText, {
-    status: "backlog", type: "rule-gap",
-  }).length;
+  for (const t of GAP_TYPES) {
+    s.gaps[t] = extractBacklogItems(s._backlogText, {
+      status: "backlog", type: t,
+    }).length;
+  }
 
   const ref = routing.latest;
   s.phaseRef = ref;
@@ -956,9 +1023,8 @@ function scan(projectRoot, options = {}) {
 
 // Derive the verdict from raw signals, faithful to mano start's gate.
 function finalize(s, options = {}) {
-  // The one part of an armed chain that is not derivable from disk: the actions
-  // the human removed at scope approval. Absent for every default chain, which
-  // is the common case and costs nothing to read.
+  // Approval order and explicit skips cannot be inferred from artifact presence.
+  s.chainRemaining = s.phaseId ? Chain.readRemaining(s.projectRoot, s.phaseId) : null;
   s.chainSkipped = s.phaseId ? Chain.readSkipped(s.projectRoot, s.phaseId) : [];
   const storiesAllDone = !!(s.stories && s.stories.total > 0 && s.stories.done === s.stories.total);
   const storiesMissing = !s.stories || s.stories.total === 0;
@@ -987,12 +1053,9 @@ function finalize(s, options = {}) {
     if (s.scopeableBacklogItems > 0) {
       verdict = "READY_FIRST_PHASE";
       action = `Backlog has ${s.scopeableBacklogItems} phase-scopeable item(s) and no phase exists yet for ${s.owner || "legacy routing"}. mano start scopes phase 1 (Path A).`;
-    } else if (s.gaps["spec-gap"] > 0 || s.gaps["rule-gap"] > 0) {
+    } else if (gapRoutes(s.gaps).length) {
       verdict = "GAPS_ONLY";
-      const routes = [];
-      if (s.gaps["spec-gap"] > 0) routes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
-      if (s.gaps["rule-gap"] > 0) routes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
-      action = `No phase-scopeable backlog items. Open gaps remain (${routes.join("; ")}). Address them with their owning skill; mano start has nothing to scope.`;
+      action = `No phase-scopeable backlog items. Open gaps remain (${gapRoutes(s.gaps).join("; ")}). Address them with their owning skill; mano start has nothing to scope.`;
     } else {
       verdict = "NEW_PROJECT";
       action = "An _mano_output/ scaffold exists but the backlog is empty and no phase started. mano start takes Path B (conversation), or `mano import <doc>` to populate the backlog first.";
@@ -1016,7 +1079,9 @@ function finalize(s, options = {}) {
     // offered a branch it is forbidden to choose (its terminal action is
     // mano build), and a manual user must not be handed one path as if the
     // other did not exist. Every other state is decided by the ledger itself.
-    action = s.runMode === "auto"
+    action = s.runMode === "auto" && s.chainRemaining?.length
+      ? `${s.phaseId} has a brief but no stories or build ledger yet. Not complete — resume the approved actions in order: ${s.chainRemaining.join(" → ")}. Do not skip planning because its artifacts exist. mano start must NOT scope a next phase.`
+      : s.runMode === "auto"
       ? `${s.phaseId} has a brief but no stories or build ledger yet. Not complete — the armed chain's terminal action is mano build, which creates the ledger from this brief. mano start must NOT scope a next phase.`
       : `${s.phaseId} has a brief but no stories or build ledger yet. Not complete — run mano stories (then mano dev) for story files, or mano build to build straight from the brief. Both are valid; the human picks. mano start must NOT scope a next phase.`;
   } else if (building && !buildAllDone) {
@@ -1044,17 +1109,14 @@ function finalize(s, options = {}) {
       action = `${s.phaseId} is complete. mano start may scope phase ${s.phase + 1} for ${s.owner || "legacy routing"} from the ${s.scopeableBacklogItems} phase-scopeable backlog item(s) (Path A).`;
     } else {
       verdict = "COMPLETE_BACKLOG_EMPTY";
-      const routes = [];
-      if (s.gaps["spec-gap"] > 0) routes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
-      if (s.gaps["rule-gap"] > 0) routes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
+      const routes = gapRoutes(s.gaps);
       action = routes.length
         ? `${s.phaseId} is complete and no phase-scopeable backlog items remain. Open gaps: ${routes.join("; ")}. Address them with their owning skill; mano start has nothing to scope.`
         : `${s.phaseId} is complete and no items have Status: backlog. Nothing to scope — add backlog items (or mano import a doc) before mano start.`;
     }
   }
 
-  // Which implementation action `mano continue` dispatches into, read off the
-  // ledger rather than guessed from whichever path is more familiar. `none`
+  // The implementation route, not permission to skip approved planning. `none`
   // means there is nothing to continue *into* — either no implementable state,
   // or the one genuine fork Mano leaves to the human (no ledger, manual mode:
   // `mano stories` and `mano build` are both valid and the choice is theirs).
@@ -1062,7 +1124,36 @@ function finalize(s, options = {}) {
   if (s.progressStatus === "invalid") implementationEntry = "none";
   else if (building && !buildAllDone) implementationEntry = "build";
   else if (!building && s.storiesExists && !storiesAllDone) implementationEntry = "dev";
-  else if (ledgerMissing && s.runMode === "auto") implementationEntry = "build";
+  else if (s.briefExists && ledgerMissing && s.runMode === "auto") implementationEntry = "build";
+
+  // Continue resumes the saved order before falling back to implementation.
+  // Validate against current ledgers: a saved plan cannot switch their path,
+  // restart a completed phase, or bypass a refusal. Reading never edits it.
+  let continueAction = implementationEntry;
+  let continueBlocker = null;
+  if (s.progressStatus === "invalid") {
+    continueAction = "blocked";
+    continueBlocker = action;
+  } else if (s.runMode === "auto" && s.chainRemaining !== null) {
+    const remaining = s.chainRemaining;
+    if (!remaining.length || storiesAllDone || buildAllDone) {
+      continueAction = "none";
+    } else if (!s.briefExists) {
+      continueAction = "blocked";
+      continueBlocker = "The saved chain has no phase brief. Restore the approved brief before resuming.";
+    } else if (remaining.includes("stories") ||
+               (building && remaining.at(-1) !== "build") ||
+               (s.storiesExists && remaining.at(-1) !== "dev") ||
+               (!s.storiesExists && remaining.at(-1) === "dev")) {
+      continueAction = "blocked";
+      continueBlocker = "The saved chain conflicts with the implementation ledger or includes stories, which auto never runs. Ask the human to reconcile the remaining plan; do not switch an existing ledger to build or dev.";
+    } else if (remaining.some(a => s.chainSkipped.includes(a))) {
+      continueAction = "blocked";
+      continueBlocker = "The saved chain includes an explicitly skipped action. Ask the human to reconcile the remaining plan.";
+    } else {
+      continueAction = remaining[0];
+    }
+  }
 
   // Collapse the verdict to the only thing mano start branches on: go/no-go,
   // plus which path to take when going. The verdict + evidence remain for the
@@ -1073,7 +1164,25 @@ function finalize(s, options = {}) {
     RESUME_DRAFT: "resume-draft",
     NEW_PROJECT: "conversation",
   };
-  const proceeds = Object.prototype.hasOwnProperty.call(NEXT_BY_VERDICT, verdict);
+  let proceeds = Object.prototype.hasOwnProperty.call(NEXT_BY_VERDICT, verdict);
+
+  // Open gaps block scoping a NEW phase, and only that. A gap item is an
+  // artifact decision a rework or a review already proved missing; scoping the
+  // next phase on top of it is how the spec, rules, UX flow, or design brief
+  // stay wrong for phases at a time. Blocking here is the cheapest possible
+  // place — nothing is written yet, and the fix is one named command.
+  //
+  // `resume-draft` and `conversation` are deliberately NOT blocked: the first
+  // finishes a phase already approved, the second is a project with no backlog
+  // and therefore no gaps. Only the scope-a-new-phase path stops.
+  const blockingGapRoutes = NEXT_BY_VERDICT[verdict] === "scope-backlog"
+    ? gapRoutes(s.gaps)
+    : [];
+  if (blockingGapRoutes.length) {
+    proceeds = false;
+    verdict = "GAPS_BLOCK_SCOPE";
+    action = `Open artifact gaps must be addressed before scoping a new phase: ${blockingGapRoutes.join("; ")}. Run each named skill; it resolves its own items. mano start proceeds once none remain.`;
+  }
 
   s.storiesAllDone = storiesAllDone;
   s.buildAllDone = buildAllDone;
@@ -1081,6 +1190,8 @@ function finalize(s, options = {}) {
   s.verdict = verdict;
   s.action = action;
   s.implementationEntry = implementationEntry;
+  s.continueAction = continueAction;
+  s.continueBlocker = continueBlocker;
   s.decision = proceeds ? "PROCEED" : "STOP";
   s.next = proceeds ? NEXT_BY_VERDICT[verdict] : null;
 
@@ -1171,14 +1282,16 @@ function renderDecision(s) {
   // them from the human entirely — including a stated directive intake homed
   // here precisely so it would not be lost. Surfacing the routes costs one
   // line and never changes the decision.
-  const openGapRoutes = [];
-  if (s.gaps && s.gaps["spec-gap"] > 0) openGapRoutes.push(`${s.gaps["spec-gap"]} spec-gap → mano spec`);
-  if (s.gaps && s.gaps["rule-gap"] > 0) openGapRoutes.push(`${s.gaps["rule-gap"]} rule-gap → mano rules`);
+  const openGapRoutes = gapRoutes(s.gaps);
   if (openGapRoutes.length) L.push(`OPEN_GAPS: ${openGapRoutes.join("; ")}`);
-  // Which implementation action `mano continue` runs, decided by the ledger.
+  // Implementation routing and immediate dispatch are separate: approved
+  // planning can still precede the implementation route.
   // `none` is not "nothing to do" — it is "nothing to continue *into*", which
   // includes the one fork the human owns (no ledger, manual mode).
   L.push(`IMPLEMENTATION_ENTRY: ${s.implementationEntry}`);
+  if (s.chainRemaining !== null && s.chainRemaining !== undefined) L.push(`CHAIN_REMAINING: ${s.chainRemaining.join(", ") || "none (completed)"}`);
+  L.push(`CONTINUE_ACTION: ${s.continueAction}`);
+  if (s.continueBlocker) L.push(`CONTINUE_BLOCKER: ${s.continueBlocker}`);
   if (s.chainSkipped && s.chainSkipped.length) {
     L.push(`CHAIN_SKIPPED: ${s.chainSkipped.join(", ")} — the human removed these at scope approval; do not re-propose them for this phase`);
   }
@@ -1233,8 +1346,7 @@ function renderEvidence(s) {
     if (keys.length === 0) L.push("  (no items)");
     for (const k of keys) L.push(`  ${k}: ${b[k]}`);
     L.push(`  phase-scopeable backlog items: ${s.scopeableBacklogItems}`);
-    L.push(`  open spec-gap items: ${s.gaps["spec-gap"]}`);
-    L.push(`  open rule-gap items: ${s.gaps["rule-gap"]}`);
+    for (const t of GAP_TYPES) L.push(`  open ${t} items: ${s.gaps[t]}`);
     L.push("");
   }
 
@@ -1652,7 +1764,10 @@ function renderJson(s) {
     verdict: s.verdict,
     action: s.action,
     implementationEntry: s.implementationEntry,
+    continueAction: s.continueAction,
+    continueBlocker: s.continueBlocker,
     chainSkipped: s.chainSkipped,
+    chainRemaining: s.chainRemaining,
     scope: s.scope,
   }, null, 2);
 }
@@ -1673,6 +1788,21 @@ function main() {
       (args.track !== null && (!args.scope || !String(args.track).trim()))) {
     process.stderr.write("[mano state] --source and --track require non-empty text and can only be used with --scope.\n");
     process.exit(1);
+  }
+  if (args.task) {
+    if (args.scope || args.next || args.ui || args.current || args.spec || args.titles || args.gaps !== null || args.verbose) {
+      process.stderr.write("[mano state] --task cannot be combined with --scope, --next, --ui, --current, --spec, --titles, --gaps, or --verbose.\n");
+      process.exit(1);
+    }
+    let task;
+    try {
+      task = scanTask(args.root);
+    } catch (error) {
+      process.stderr.write(`[mano state] cannot resolve the task gate — ${error.message}\n`);
+      process.exit(1);
+    }
+    process.stdout.write((args.json ? renderTaskJson(task) : renderTask(task)) + "\n");
+    process.exit(0);
   }
   if (args.spec) {
     if (args.scope || args.next || args.ui || args.current || args.gaps !== null || args.verbose) {
@@ -1797,6 +1927,7 @@ module.exports = {
   scanGaps,
   scanSpec,
   scanUi,
+  scanTask,
   scan,
   renderAmendCurrent,
   amendBlocker,
@@ -1810,6 +1941,7 @@ module.exports = {
   renderSpecJson,
   renderUi,
   renderUiJson,
+  renderTask,
   renderCurrent,
   renderNext,
   renderJson,

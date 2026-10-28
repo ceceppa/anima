@@ -1,7 +1,9 @@
 <!-- MANO:BEGIN -->
 # AGENTS.md
 
-This project uses **Mano** for planning. Mano is a structured thinking tool: almost every command produces planning artifacts rather than code. The two exceptions are deliberate — `mano dev` and `mano build` implement what the planning already decided.
+**Languages.** Before responding or writing project content, run `node _mano/scripts/settings.js language` from the project root and use the returned `language.chat`, `language.build`, and `language.artefacts` values. The script resolves the selected owner, environment override, defaults, and validation. Never read settings JSON files directly or infer these values yourself. Re-run after changing owners or language settings. If the command fails, report the error and stop instead of guessing. `language.chat` controls conversation only: explanations, questions, progress updates, and hand-backs. `language.artefacts` controls new planning prose: briefs, specs, rules, UX flows, design briefs, stories, backlog entries, reviews, and ledger prose. `language.build` controls new implementation content: product documentation, code identifiers and comments, tests, and product/UI text, including preview copy. Values may be language names or locale tags, e.g. `{"chat":"it","build":"en-GB","artefacts":"it"}` means Italian conversation and planning artifacts, with UK English implementation content. For missing or `null` `artefacts`, the command falls back to `build`, then `chat`, then `null`; use that resolved value. Missing or `null` `chat` and `build` preserve existing language behaviour independently. If all three are unset, planning artifacts also keep existing behaviour. Keep commands, paths, schema keys, required headings/status labels, external API names, and exact human quotations unchanged. Do not translate existing files or completed stories merely because the language setting changed. These preferences apply to every Mano action, including configuration and implementation. Run the language command at every skill activation, auto-chain handoff, and resumption after interruption or compaction, before the first user-facing message or project write. Before sending each message, check its prose against `language.chat`; before each write, check planning prose against `language.artefacts` and implementation content against `language.build`. English output examples, even “exact” one-line responses, specify structure and meaning; translate their prose into `language.chat` while retaining required labels, commands, paths, status tokens, and verbatim diagnostics. Do not let the build or artefacts language determine the conversation language.
+
+This project uses **Mano** for planning. Mano is a structured thinking tool: almost every command produces planning artifacts rather than code. The exceptions are deliberate — `mano dev` and `mano build` implement what a phase's planning already decided, and `mano task` implements one backlog item outside any phase.
 
 ## For coding agents
 
@@ -27,13 +29,15 @@ Examples:
 - `mano review` → read `_mano/skills/review.md` and follow that flow
 - `mano dev` → implement the next pending story; read `_mano/skills/dev.md` plus `_mano/rules/implement.md` and follow the complete contract in those files
 - `mano build` → build the active phase straight from its brief, with no story files; read `_mano/skills/build.md` plus `_mano/rules/implement.md` and follow the complete contract in those files
-- `mano continue` → read `_mano/workflow.md`; it runs the implementation action the projection's `IMPLEMENTATION_ENTRY:` names (`mano build`, or `mano dev` for one story), or one unambiguous planning action — it never prints a card telling the human to type the command they just typed
+- `mano task "[item title or what you want]"` → implement one item with no phase; read `_mano/skills/task.md` and follow its complete contract. It writes or clarifies the backlog item before any code, and is refused while a phase is open
+- `mano continue` → read `_mano/workflow.md`; it dispatches the projection's `CONTINUE_ACTION:`, preserving the approved `CHAIN_REMAINING` order in auto before implementation; outside an armed chain it runs `mano build`, `mano dev` for one story, or one unambiguous planning action — it never prints a card telling the human to type the command they just typed
 - `mano mode [auto|manual]` → read `_mano/skills/mode.md`; show or set whether finished actions chain automatically
 - `mano track [name]` → read `_mano/skills/track.md`; show, set, or clear the optional local experiment/work track
+- `mano language [chat|build|artefacts] [language] ...` → read `_mano/skills/language.md`; show, set, or clear the conversation, implementation, and planning-artifact languages
 
-Note: `mano dev` and `mano build` are the two Mano commands that produce code. Every other command above is planning only. Their contracts live in `_mano/skills/dev.md` and `_mano/skills/build.md`, both of which require the shared `_mano/rules/implement.md`. A phase uses one of the two, never both: `mano dev` implements stories from `stories/README.md`, `mano build` works the Scope rows of `PHASE_DIR/progress.md`.
+Note: `mano dev`, `mano build`, and `mano task` are the Mano commands that produce code. Every other command above is planning only. `mano task` is self-contained in `_mano/skills/task.md`, works one backlog item when no phase is open, and is never started by auto mode or `mano continue`. Once the human has typed it in auto mode, it may run the owner of a missing value or flow and resume the item. Their contracts live in `_mano/skills/dev.md` and `_mano/skills/build.md`, both of which require the shared `_mano/rules/implement.md`. A phase uses one of the two, never both: `mano dev` implements stories from `stories/README.md`, `mano build` works the Scope rows of `PHASE_DIR/progress.md`.
 
-**Run mode.** Every `state.js` projection prints `MODE: manual|auto`. In `manual` (the default) each command hands back when it finishes. In `auto`, after the human has approved a phase scope, each finished action runs the next one automatically through to `mano build` (or `mano dev yolo` when the phase already has a stories index) — but it pauses for **any** question (a `❓ Decide:`, a clarifying question, an ambiguous next action, hook findings, a gate or blocker) and **never runs `mano review` or scopes a new phase**. Auto mode changes who types the next command; it never changes what a skill may write or which decisions are the human's. The narrative contract is `_mano/workflow.md` → **Run Mode: manual and auto**; the mid-chain execution rules are `_mano/rules/auto.md`, loaded only when the projection reports `MODE: auto`.
+**Run mode.** Every `state.js` projection prints `MODE: manual|auto`. In `manual` (the default) each command hands back when it finishes. In `auto`, after the human has approved a phase scope, each finished action runs the next one automatically through to `mano build` (or `mano dev yolo` only when the phase already has a stories index) — but it pauses for **any** question (a `❓ Decide:`, a clarifying question, an ambiguous next action, hook findings, a gate or blocker) and **never runs `mano review` or scopes a new phase**. Auto mode changes who types the next command; it never changes what a skill may write or which decisions are the human's. The narrative contract is `_mano/workflow.md` → **Run Mode: manual and auto**; the mid-chain execution rules are `_mano/rules/auto.md`, loaded only when the projection reports `MODE: auto`.
 
 **Continuing the chain means invoking the next action in the same turn — never announcing it.** Ending a turn on "Continuing — running `mano ui` next" stops the chain while claiming to continue it. Mid-chain, omit the `Next:` block (nobody is typing a command); it returns only in the closing block, on the action that actually ends the chain. Every hand-back names its pause condition; a chain that stops without naming one is a bug.
 
@@ -75,8 +79,9 @@ Decide by **validated state, then mode** — never by which path is more familia
 - a pending rework event, an open Scope row, or an unresolved deviation → `mano build`;
 - an incomplete stories ledger → `mano dev`; a complete one → `mano review`;
 - a `progress.md` with every Scope leaf `done` and every Exit leaf `met` or `needs-human` → `mano review`;
-- no ledger at all → the mode decides: `auto` ends at `mano build`, `manual` offers `mano stories` first and
+- no ledger at all → for a new chain the mode decides: `auto` ends at `mano build`, `manual` offers `mano stories` first and
   `mano build` second.
+This selects implementation, not permission to skip planning. In auto, `CONTINUE_ACTION` preserves the approved `CHAIN_REMAINING` order, with `stories` removed and terminal `dev` replaced by `build` when neither ledger exists. Auto never runs `mano stories`. A conflict with an existing ledger pauses for reconciliation.
 The narrative contract is `_mano/workflow.md` → **Implementation entry**.
 
 ### Completed stories are immutable
@@ -100,7 +105,7 @@ documents — those update in place.
 _mano/                    ← Mano framework (do not modify during implementation)
 ├── skills/               ← Mano skill prompts
 ├── rules/                ← shared rule fragments; skills name the ones they require
-├── scripts/              ← state.js (read-only state projection), backlog.js / stories.js / progress.js (ledger writers), chain.js (records chain actions the human struck), verify.js (verification output filter)
+├── scripts/              ← state.js (read-only state projection), backlog.js / stories.js / progress.js (ledger writers), chain.js (records chain actions the human struck)
 ├── hooks/                ← optional post-skill hooks
 └── templates/            ← Mano templates
 _mano_output/             ← Planning artifacts

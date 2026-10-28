@@ -7,6 +7,12 @@ requires-in-auto: [auto]
 
 # `mano stories` — Stories Skill
 
+## Language check — before any response
+
+After loading this contract and its required rules, run `node _mano/scripts/settings.js language` from the project root **before the first user-facing message or any project write**. Use the returned `language.chat` for all conversation, including progress, questions, errors, and the final response; use `language.artefacts` for new planning artifacts and `language.build` for new implementation content (code, tests, product documentation, and product/UI text, including preview copy). The command resolves missing or `null` `artefacts` through `build`, then `chat`, then `null`. Never read settings JSON directly or infer languages from the prompt, source files, or this skill's English examples. A `null` value preserves existing behaviour for that channel only. If the command fails or any of the three fields is absent, report the failure and stop; do not guess.
+
+This check applies on direct invocation, auto-chain handoff, and resumption after interruption or compaction. Re-run after an owner or language change. English response examples, including “exact” or one-line templates, constrain structure and meaning, not prose language: translate their prose into `language.chat`. Preserve command names, paths, required labels, status tokens, and verbatim quotations or diagnostics. Before sending **each** message, check its prose against `language.chat`; before each project write, check planning prose against `language.artefacts` and implementation content against `language.build`. Do not emit an extra language-confirmation message.
+
 ## Identity
 
 This skill writes stories a developer can pick up without a meeting and a non-technical person can read and verify. Prefix every message with `[mano stories]:`.
@@ -18,6 +24,8 @@ This skill writes stories a developer can pick up without a meeting and a non-te
 ## Activation
 
 This skill activates when the user types `mano stories`. When inputs are missing, follow the missing-input protocol in `_mano/rules/core.md`.
+
+**Never invoke this skill as an automatic chain action.** Auto goes directly to `mano build` after the approved artifact actions when neither ledger exists. If reached through an old saved chain, write no stories; resume its projected `CONTINUE_ACTION` and `CHAIN_REMAINING` under `_mano/rules/auto.md`. An explicit human invocation remains a planning command under this skill's normal boundaries.
 
 Read this file plus `_mano/rules/core.md`, `_mano/rules/artifact.md`, and `_mano/rules/backlog.md` first — before the state projection, then artifacts — and read only those rule files; never open `_mano/workflow.md` mid-skill. Keeping that order stable keeps the contract prefix cacheable.
 
@@ -322,9 +330,9 @@ If a story depends on missing domain structure, do not hide the gap in vague AC.
 
 Examples: do not write a checkout story unless the cart model is defined. Do not write a notification story unless a delivery channel is represented. Do not write a dashboard story unless a default or empty data state exists.
 
-**0c.0 Spec-owned defaults and initial state — hard gate.** When an Exit Criterion or prospective story depends on a starting state, first-use state, capacity, radius/range, count, duration, threshold, spawn amount, or other behaviour-driving default, verify the canonical tech spec names its owning field/config/constant and gives its exact value or required relationship. A brief may say “small healed area” or “enough room”; if code must turn that into a number, it is a technical decision, not story setup.
+**0c.0 Spec-owned defaults and initial state — hard gate.** When an Exit Criterion or prospective story depends on a starting state, first-use state, capacity, radius/range, count, duration, threshold, spawn amount, or other behaviour-driving default, the canonical spec must define its owner and authority under `_mano/rules/artifact.md` → **Parameter authority: contracts, tuning, and seeds**: an exact contractual value/relationship, or declared tuning with a configuration home, constraints, and an initialisation route. An existing tuning configuration or authorised seed/seed-selection rule satisfies this gate without a current numeric default in the spec. A brief may say “small healed area” or “enough room”; if code must turn that into a number, it is a technical decision, not story setup.
 
-If that owner or value is missing, **write no story files**. Report `⚠️ Story readiness gap: spec-owned default missing`, name the affected exit path and field that needs defining, and route to `mano spec`. Do not offer a story-owned default, an implementation `Notes` placeholder, or options to continue with a temporary value. Stories may decompose an already-decided default into tests; they never choose it.
+If that owner or value is missing, **write no story files**. Report `⚠️ Story readiness gap: spec-owned default missing`, name the affected exit path and field that needs defining, and route to `mano spec`. Do not offer a story-owned default, an implementation `Notes` placeholder, or options to continue with a temporary value. Stories may decompose an already-decided contractual default into tests; they never choose it. For declared tuning, reference configuration ownership and test behaviour with explicit fixture values; never copy a seed into `Done when` as an exact-value requirement.
 
 **0c.1 Player choice interaction — hard gate.** When a player can choose among two or more simultaneously available tools, buildables, abilities, modes, rewards, or other alternatives, verify `_mano_output/ux-flow.md` defines the choice as a player path. It must cover what makes each option available, how the player enters or invokes the choice, how they select or change the active option, how the active choice is communicated, and what happens when an option is locked, unavailable, or the player cancels. The choice may be in-world or minimal; it is still UX.
 
@@ -468,7 +476,7 @@ Next:
 
 Give each story its **full project-root-relative path** (as above), not a bare `story-N-[slug].md` — that is what makes each line tap-to-open in the editor. The path replaces the old parenthesised filename.
 
-Two rules for the flag lines (see the canonical execution-log format in `_mano/rules/core.md`): **(1)** When an input artifact omits a behaviour-driving value, apply the readiness hard gates. Write no story files. Route the missing decision to its owning skill. Do not infer a value, embed a provisional default, or turn the gap into a story-level `❓ Decide:`. **(2)** If another decision explicitly permitted by this skill remains open, a pending `❓ Decide:` makes the affected next action conditional. Name which story is blocked. Show `mano dev` only after that decision. Do not add a separate `Status:` line.
+Two rules for the flag lines (see the canonical execution-log format in `_mano/rules/core.md`): **(1)** When an input artifact omits a required contractual value or the ownership/initialisation route for tuning, apply the readiness hard gates. Write no story files. Route the missing decision to its owning skill. Do not infer a value, embed a provisional default, or turn the gap into a story-level `❓ Decide:`. **(2)** If another decision explicitly permitted by this skill remains open, a pending `❓ Decide:` makes the affected next action conditional. Name which story is blocked. Show `mano dev` only after that decision. Do not add a separate `Status:` line.
 
 The no-inference rule applies to public interfaces, spec-owned defaults, and every other behaviour-driving value.
 

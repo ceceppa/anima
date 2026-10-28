@@ -17,8 +17,8 @@
  * The other commands perform only mechanical edits already decided elsewhere:
  * a status flip `mano build` earned by implementing, a split of the row it is
  * currently building, a correction row carrying the user's own words, a rework
- * event carrying a review finding, or the human's sign-off at review. The
- * script never decides what to build or when something is done.
+ * event carrying a defect the human reported mid-build, or the human's sign-off
+ * at review. The script never decides what to build or when something is done.
  *
  * The row grammar, the parser, the validator, and the renderer all live in
  * `ledger.js`, shared with `state.js`. Two copies of a row regex is how the
@@ -71,8 +71,8 @@ Commands:
   set-status      flip one or more rows to a new status
   split           append dot-numbered sub-rows under the row being built
   add-row         append a human correction row under an existing item
-  request-rework  append an ordered rework event — a review finding, or a
-                  defect the human reported mid-build (--source build)
+  request-rework  append an ordered rework event — a defect the human reported
+                  mid-build. mano build only; review never reopens a phase
   resolve-rework  close one rework event
   sign-off        record the human's sign-off across the Exit Criteria
 
@@ -108,9 +108,10 @@ add-row:
 
 request-rework:
   --text-file <path>      one finding's exact text, repeatable (required)
-  --source <who>          review (default) | build — who raised it. 'build' is
-                          a correction the human typed mid-build; the record
-                          says so instead of crediting it to a review.
+  --source <who>          build (default, and the only accepted value) — a
+                          correction the human typed mid-build. mano review
+                          does not open rework events; its findings go to the
+                          backlog.
 
 resolve-rework:
   --id R<n>               the event to close (required)
@@ -668,18 +669,27 @@ function cmdAddRow(args) {
 
 // ---- rework ---------------------------------------------------------------
 
-// Who raised an event. A review finding and a correction the human typed into
-// a running build are the same class of durable fact and take the same route —
-// but the record may not credit both to a review that never saw one of them.
-const REWORK_SOURCES = new Set(["review", "build"]);
+// Who raised an event. Only `mano build` may open one. A rework event reopens
+// the phase and `mano review` closes it, so a review able to do both produced a
+// phase that was `resolved` in the backlog and in progress in the ledger at the
+// same moment — with the review already written and `mano start` refusing on
+// work the human had been told was done. Review's findings go to the backlog
+// now; a human who wants one fixed in this phase runs `mano build "[change]"`,
+// which classifies it and re-runs the gap gates the review never could.
+// `source: review` stays readable in ledgers written before 1.6.1.
+const REWORK_SOURCES = new Set(["build"]);
 
 function cmdRequestRework(args) {
   refuseInlineText(args);
   const ref = resolveRef(args);
   if (args.textFiles.length === 0) fail("request-rework needs at least one --text-file <path>.");
-  const source = args.source === null ? "review" : args.source;
+  const source = args.source === null ? "build" : args.source;
   if (!REWORK_SOURCES.has(source)) {
-    fail(`request-rework: --source must be one of ${[...REWORK_SOURCES].join("|")}; got '${args.source}'.`);
+    fail(
+      `request-rework: --source must be 'build'; got '${args.source}'. ` +
+      "mano review no longer opens rework events — its findings go to the backlog, " +
+      'and a human who wants one fixed in this phase runs mano build "[the change]".',
+    );
   }
   const { file, ledger } = loadLedger(args, ref);
 
@@ -698,9 +708,7 @@ function cmdRequestRework(args) {
   out(`[mano build] request-rework → ${added.length} event(s) recorded (source: ${source})\n`);
   for (const a of added) out(`  + ${a.id.padEnd(4)} pending  ${a.label}\n`);
   out("  A confirmed defect is durable state: it survives session loss and routes to mano build.\n");
-  if (source === "build") {
-    out("  Resolve it in the same run that fixes it — sign-off refuses while any event is pending.\n");
-  }
+  out("  Resolve it in the same run that fixes it — sign-off refuses while any event is pending.\n");
 }
 
 function cmdResolveRework(args) {

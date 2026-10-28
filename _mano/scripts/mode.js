@@ -4,7 +4,7 @@
 /** Configure the local run mode that decides whether Mano skills chain. */
 
 const path = require("node:path");
-const childProcess = require("node:child_process");
+const Settings = require("./settings.js");
 const { MODES, validateMode, resolveConfiguredMode } = require("./phase.js");
 
 const HELP = `mano mode — configure the run mode for this repository clone
@@ -19,9 +19,8 @@ auto              after you approve a phase scope, each finished action runs the
                   next one automatically, up to and including implementation.
                   It pauses for any question and always stops before review.
 
-The mode is stored in local Git config as mano.mode and is not committed — it
-records how much you review, not a property of the project. MANO_MODE overrides
-Git config for a shell/session.`;
+The mode is stored in _mano_output/[owner].json (or .default.json without
+an owner) and can be committed. MANO_MODE overrides it for a shell/session.`;
 
 function fail(message) {
   process.stderr.write(`[mano mode] ${message}\n`);
@@ -36,14 +35,6 @@ function parseArgs(argv) {
     value: positional[0] === "set" ? positional[1] : null,
     root: path.resolve(positional[positional[0] === "set" ? 2 : 1] || process.cwd()),
   };
-}
-
-function runGit(root, args, allowMissing = false) {
-  const result = childProcess.spawnSync("git", args, { cwd: root, encoding: "utf8" });
-  if (result.status === 0) return result;
-  if (allowMissing && result.status === 5) return result;
-  const detail = String(result.stderr || result.stdout || "git command failed").trim();
-  fail(`${detail}. Mano mode configuration requires a Git checkout; alternatively set MANO_MODE.`);
 }
 
 function main() {
@@ -71,8 +62,7 @@ function main() {
     } catch (error) {
       fail(error.message);
     }
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "mano.mode", mode]);
+    Settings.writeSetting(args.root, "mode", mode);
     if (mode === "auto") {
       process.stdout.write(
         "[mano mode] auto — after you approve a phase scope, actions chain through to implementation\n",
@@ -88,8 +78,7 @@ function main() {
   }
 
   if (args.command === "clear") {
-    runGit(args.root, ["rev-parse", "--git-dir"]);
-    runGit(args.root, ["config", "--local", "--unset-all", "mano.mode"], true);
+    Settings.writeSetting(args.root, "mode", "manual");
     process.stdout.write("[mano mode] local mode cleared; manual is active unless MANO_MODE is set\n");
     return;
   }
@@ -112,4 +101,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs, runGit, main };
+module.exports = { parseArgs, main };

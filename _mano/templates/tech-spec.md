@@ -24,7 +24,7 @@
 |--------|--------|-------|
 | | | |
 
-<!-- When an Exit Criterion depends on a starting or first-use state, name the owning initial/default field here (for example initial_radius, starting_capacity, or initial_delay). Never leave that value to a story. -->
+<!-- When an Exit Criterion depends on a starting or first-use state, name the owning initial/default field here (for example initial_radius, starting_capacity, or initial_delay). Never leave that value to a story. Distinguish contracts from tuning: contracts state exact values/relationships and reasons; tuning states meaning, units, configuration home, override precedence and real constraints. Any initial seed is non-normative, for first implementation only, not a current default or acceptance criterion. Existing configuration or an authorised seed-selection rule can initialise tuning without duplicating its current number here. -->
 
 ## Public / Integration Interface Contracts
 

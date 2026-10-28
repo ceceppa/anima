@@ -13,5 +13,5 @@ Preserve command arguments during dispatch: `mano dev yolo` and `mano-dev yolo` 
 
 The same holds for `mano build "[what changed]"`: the quoted text is a mid-phase correction the skill classifies itself, and its exact wording is the human's contract. Pass it through verbatim — never paraphrase it, tidy it, or drop it.
 
-For implementation, follow the rules in `AGENTS.md` under "Implementing a story" (`mano dev`) or "Building a phase" (`mano build`). Both read the shared `_mano/rules/implement.md`, which owns the gap gates, the acceptance-evidence gate, Repair Mode, the read budget, and Implementation Output Discipline.
+For implementation, follow the rules in `AGENTS.md` under "Implementing a story" (`mano dev`) or "Building a phase" (`mano build`). Both read the shared `_mano/rules/implement.md`, which owns the gap gates, the acceptance-evidence gate, Repair Mode, the read budget, and Implementation Output Discipline. `mano task "[item]"` implements one backlog item with no phase; `_mano/skills/task.md` is its complete contract. Pass the quoted text through verbatim.
 <!-- MANO:END -->
