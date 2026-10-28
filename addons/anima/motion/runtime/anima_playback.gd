@@ -80,6 +80,14 @@ func _init(p_motion: AnimaMotion, p_target: Node = null, p_start_reversed: bool 
 			# sit at the forward capture's start value for one frame, then
 			# visibly jump to the reversed start on the first real _advance().
 			_instance.advance(target, 0.0)
+	elif motion.initial_value_timing == AnimaMotion.InitialValueTiming.ON_ANIMATION_CREATION:
+		# Root motion only (tech-spec.md §Visibility strategy and initial-value
+		# timing) — primes whatever is "current" at t=0 (the whole motion for a
+		# leaf, or a parallel group's immediately-starting children), the same
+		# zero-length priming technique play_backwards() already uses above.
+		# A nested leaf inside a later sequential step is untouched, since it
+		# has no "current" step yet for this call to reach.
+		_instance.advance(target, 0.0)
 	_reset_delay()
 	_fire_started()
 
@@ -171,6 +179,14 @@ func complete() -> void:
 
 	if motion.completion_value_policy == AnimaMotion.CompletionValuePolicy.RESTORE_INITIAL:
 		_instance.restore_initial(target)
+	elif motion.completion_value_policy == AnimaMotion.CompletionValuePolicy.HIDE:
+		# Same value as KEEP_FINAL (already applied by force_complete() above),
+		# then hide — the v1-parity "exit animation can leave its target hidden
+		# afterwards" case (tech-spec.md §Visibility strategy and initial-value
+		# timing). `visible` isn't declared on the base Node class, so it's
+		# set dynamically — same posture as _apply_visibility_strategy_to().
+		if "visible" in target:
+			target.set("visible", false)
 
 ## Unconditionally restores [member target] to the value captured before
 ## playback started, and stops playback: [constant State.CANCELLED], [signal
@@ -306,3 +322,10 @@ func _advance(delta: float) -> void:
 		if motion.on_completed_callback.is_valid():
 			motion.on_completed_callback.call()
 		finished.emit(true)
+		if motion.completion_value_policy == AnimaMotion.CompletionValuePolicy.HIDE and "visible" in target:
+			# Same posture as complete()'s own HIDE handling — a natural finish
+			# is a genuine finish too, and E1d's "once playback finishes" means
+			# either one (tech-spec.md §Visibility strategy and initial-value
+			# timing). Scoped to HIDE only; this phase does not touch
+			# RESTORE_INITIAL's separate, pre-existing natural-finish behaviour.
+			target.set("visible", false)

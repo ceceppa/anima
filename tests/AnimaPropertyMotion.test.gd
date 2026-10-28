@@ -345,6 +345,89 @@ func test_pivot_on_a_sprite2d_like_node_does_not_visibly_shift_the_artwork():
 	assert_almost_eq(effective_before.x, effective_after.x, 0.01, "artwork should not visibly shift when pivot is applied")
 	assert_almost_eq(effective_before.y, effective_after.y, 0.01, "artwork should not visibly shift when pivot is applied")
 
+func test_visibility_strategy_ignore_leaves_a_hidden_target_hidden():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.visible = false
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 0.1
+	motion.visibility_strategy = AnimaMotion.VisibilityStrategy.IGNORE
+
+	var instance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_false(control.visible, "IGNORE should match the pinned default: nothing reads target.visible")
+
+func test_visibility_strategy_hidden_only_unhides_a_hidden_target():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.visible = false
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 0.1
+	motion.visibility_strategy = AnimaMotion.VisibilityStrategy.HIDDEN_ONLY
+
+	var instance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_true(control.visible, "HIDDEN_ONLY should unhide a hidden target before playing")
+
+func test_visibility_strategy_transparent_only_makes_a_transparent_target_opaque():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.modulate.a = 0.0
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 0.1
+	motion.visibility_strategy = AnimaMotion.VisibilityStrategy.TRANSPARENT_ONLY
+
+	var instance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_almost_eq(control.modulate.a, 1.0, 0.0001, "TRANSPARENT_ONLY should make a fully transparent target opaque before playing")
+
+func test_visibility_strategy_hidden_and_transparent_applies_both_checks():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.visible = false
+	control.modulate.a = 0.0
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 10.0
+	motion.duration = 0.1
+	motion.visibility_strategy = AnimaMotion.VisibilityStrategy.HIDDEN_AND_TRANSPARENT
+
+	var instance = motion.create_runtime()
+	instance.advance(control, 1.0 / 60.0)
+
+	assert_true(control.visible, "HIDDEN_AND_TRANSPARENT should unhide")
+	assert_almost_eq(control.modulate.a, 1.0, 0.0001, "HIDDEN_AND_TRANSPARENT should also make opaque")
+
+func test_visibility_strategy_does_not_override_an_explicit_from_value():
+	var control := Control.new()
+	add_child_autofree(control)
+	control.modulate.a = 0.0
+
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("modulate:a")
+	motion.from_value = 0.0
+	motion.to_value = 1.0
+	motion.duration = 0.3
+	motion.visibility_strategy = AnimaMotion.VisibilityStrategy.TRANSPARENT_ONLY
+
+	var instance = motion.create_runtime()
+	instance.advance(control, 0.0)
+
+	assert_almost_eq(control.modulate.a, 0.0, 0.0001, "an explicit .from() must win over the visibility fixup, since the motion already animates this exact property")
+
 func test_manual_mode_never_finishes_on_its_own():
 	var target := Node2D.new()
 	add_child_autofree(target)

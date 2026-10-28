@@ -50,6 +50,7 @@ func advance(target: Node, delta: float) -> bool:
 		return true
 
 	if not _from_value_captured:
+		_apply_visibility_strategy_to(target, property_motion.visibility_strategy)
 		_from_value = _resolve_dynamic(property_motion.from_value, target)
 		if _from_value == null:
 			_from_value = target.get_indexed(property_motion.target_property)

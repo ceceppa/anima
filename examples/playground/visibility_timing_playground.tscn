@@ -1,0 +1,135 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Theme" path="res://examples/playground/shared/theme/anima_examples.tres" id="1"]
+[ext_resource type="Script" path="res://examples/playground/visibility_timing_playground.gd" id="2"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/example_header.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/selector_dock.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/toggle_switch.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://examples/playground/shared/components/playback_controls.tscn" id="6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0705882, 0.0941176, 0.14902, 1)
+border_width_bottom = 1
+border_color = Color(0.117647, 0.160784, 0.231373, 1)
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StageStyle"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.0392157, 0.0705882, 0.141176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.14902, 0.196078, 0.294118, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[node name="VisibilityTimingPlayground" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1")
+script = ExtResource("2")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0235294, 0.0392157, 0.0862745, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="Content" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" parent="Margin/Content" instance=ExtResource("3")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+title = "Visibility & Timing"
+subtitle = "See how a hidden or transparent target enters, and how starting values apply."
+icon = "✦"
+show_back_button = true
+
+[node name="Status" type="Label" parent="Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+
+[node name="Stage" type="PanelContainer" parent="Margin/Content"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StageStyle")
+
+[node name="StageCanvas" type="Control" parent="Margin/Content/Stage"]
+layout_mode = 2
+
+[node name="Target" type="ColorRect" parent="Margin/Content/Stage/StageCanvas"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -200.0
+offset_top = 70.0
+offset_right = -120.0
+offset_bottom = 150.0
+color = Color(0.655, 0.545, 0.98, 1)
+
+[node name="VisibilityDock" parent="Margin/Content" instance=ExtResource("4")]
+unique_name_in_owner = true
+layout_mode = 2
+auto_size = true
+
+[node name="TimingDock" parent="Margin/Content" instance=ExtResource("4")]
+unique_name_in_owner = true
+layout_mode = 2
+auto_size = true
+
+[node name="HideRow" type="HBoxContainer" parent="Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 2
+
+[node name="HideLabel" type="Label" parent="Margin/Content/HideRow"]
+layout_mode = 2
+text = "Hide After Finish"
+theme_override_colors/font_color = Color(0.658824, 0.705882, 0.8, 1)
+
+[node name="HideToggle" parent="Margin/Content/HideRow" instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ActionDock" parent="Margin/Content" instance=ExtResource("4")]
+unique_name_in_owner = true
+layout_mode = 2
+auto_size = true
+
+[node name="PlaybackControls" parent="Margin/Content" instance=ExtResource("6")]
+unique_name_in_owner = true
+layout_mode = 2

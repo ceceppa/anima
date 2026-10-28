@@ -300,3 +300,30 @@
 **What happens on action:**
 - Choosing an outcome sends a new motion request and visibly shows that outcome without starting conflicting motion on the target.
 - Restart returns the target and state label to their defined starting state.
+
+## Visibility & Timing Playground
+
+**How it's accessed:** Choose Visibility & Timing from the Demo Selector's 2D tab.
+
+**How the user gets back:** Return to the Demo Selector, or stop the running scene/close it in the editor.
+
+**What the user sees:**
+- The shared `ExampleHeader`, identifying the scenario and explaining it in one line.
+- One target card that starts hidden, in its defined starting state.
+- A Visibility Strategy selector: Leave Alone, Unhide, Make Opaque, and Both — Leave Alone selected by default.
+- A Timing selector: On Play and On Creation — On Play selected by default.
+- A Hide After Finish toggle — off by default.
+- A readable state label reporting the target's current hidden/visible state and which choices are active.
+- The shared restart control.
+
+**What the user can do:**
+- Choose a Visibility Strategy option.
+- Choose a Timing option.
+- Toggle Hide After Finish.
+- Start the motion.
+- Restart the scenario.
+
+**What happens on action:**
+- Choosing a Visibility Strategy option, a Timing option, or toggling Hide After Finish updates the state label but does not itself replay the motion — the target stays at its defined starting hidden state until the user starts the motion, so every combination's effect is visible from the same starting point.
+- Starting the motion plays an entrance into view followed by an exit, using the selected Visibility Strategy and Timing for the entrance and the toggle for the exit; the state label reports what happened at each stage (stayed hidden, became visible, hidden again).
+- Restart returns the target and every control to their defined starting state.

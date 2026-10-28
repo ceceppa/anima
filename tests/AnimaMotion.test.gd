@@ -12,6 +12,8 @@ func test_default_values():
 	assert_eq(motion.metadata, {})
 	assert_false(motion.on_started_callback.is_valid())
 	assert_false(motion.on_completed_callback.is_valid())
+	assert_eq(motion.visibility_strategy, AnimaMotion.VisibilityStrategy.IGNORE)
+	assert_eq(motion.initial_value_timing, AnimaMotion.InitialValueTiming.ON_PLAY)
 
 func _leaf(display_name: String) -> AnimaMotion:
 	var motion := AnimaMotion.new()
@@ -232,6 +234,22 @@ func test_with_speed_sets_speed_and_returns_self():
 
 	assert_eq(result, motion)
 	assert_eq(motion.speed, 2.0)
+
+func test_with_visibility_strategy_sets_the_field_and_returns_self():
+	var motion := AnimaMotion.new()
+
+	var result := motion.with_visibility_strategy(AnimaMotion.VisibilityStrategy.HIDDEN_AND_TRANSPARENT)
+
+	assert_eq(result, motion)
+	assert_eq(motion.visibility_strategy, AnimaMotion.VisibilityStrategy.HIDDEN_AND_TRANSPARENT)
+
+func test_with_initial_value_timing_sets_the_field_and_returns_self():
+	var motion := AnimaMotion.new()
+
+	var result := motion.with_initial_value_timing(AnimaMotion.InitialValueTiming.ON_ANIMATION_CREATION)
+
+	assert_eq(result, motion)
+	assert_eq(motion.initial_value_timing, AnimaMotion.InitialValueTiming.ON_ANIMATION_CREATION)
 
 func test_with_delay_sets_delay_and_returns_self_on_a_plain_motion():
 	var motion := AnimaMotion.new()

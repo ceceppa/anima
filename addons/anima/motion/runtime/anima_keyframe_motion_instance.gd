@@ -38,6 +38,7 @@ func advance(target: Node, delta: float) -> bool:
 		return true
 
 	if not _duration_resolved:
+		_apply_visibility_strategy_to(target, keyframe_motion.visibility_strategy)
 		_resolved_duration = _resolve_duration(target, keyframe_motion)
 		_duration_resolved = true
 	if not _values_resolved:

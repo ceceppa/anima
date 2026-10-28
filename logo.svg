@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="1105.2679"
-   height="286"
-   viewBox="0 0 1105.2679 286"
+   viewBox="0 0 920 360"
+   width="920"
+   height="360"
    version="1.1"
-   id="svg9"
+   id="svg24"
    sodipodi:docname="logo.svg"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   inkscape:export-filename="logo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs9" />
   <sodipodi:namedview
-     id="namedview9"
+     id="namedview24"
      pagecolor="#ffffff"
      bordercolor="#000000"
      borderopacity="0.25"
@@ -22,101 +23,272 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.54166667"
-     inkscape:cx="767.07692"
-     inkscape:cy="511.38462"
-     inkscape:window-width="3360"
-     inkscape:window-height="1831"
+     inkscape:zoom="0.73797844"
+     inkscape:cx="512.88761"
+     inkscape:cy="407.87099"
+     inkscape:window-width="1800"
+     inkscape:window-height="1101"
      inkscape:window-x="0"
-     inkscape:window-y="31"
+     inkscape:window-y="40"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg9" />
-  <!-- connector lines (drawn first, under the bars) -->
-  <!-- icon: three rounded timeline bars -->
-  <!-- wordmark -->
+     inkscape:current-layer="svg24" />
+  <defs
+     id="defs11">
+    <!-- Gradiente per la parte sinistra/superiore della A -->
+    <linearGradient
+       id="grad-left"
+       x1="175"
+       y1="80"
+       x2="295"
+       y2="190"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#38B6FF"
+         id="stop1" />
+      <stop
+         offset="55%"
+         stop-color="#4A6CF7"
+         id="stop2" />
+      <stop
+         offset="100%"
+         stop-color="#8B3DFF"
+         id="stop3" />
+    </linearGradient>
+    <!-- Gradiente per la gamba destra della A -->
+    <linearGradient
+       id="grad-right"
+       x1="278"
+       y1="165"
+       x2="315"
+       y2="242"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#8B3DFF"
+         id="stop4" />
+      <stop
+         offset="100%"
+         stop-color="#E62E9B"
+         id="stop5" />
+    </linearGradient>
+    <!-- Gradiente per l'onda centrale principale -->
+    <linearGradient
+       id="grad-swoosh"
+       x1="152"
+       y1="242"
+       x2="306"
+       y2="126"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#4361EE"
+         id="stop6" />
+      <stop
+         offset="45%"
+         stop-color="#8A3FFC"
+         id="stop7" />
+      <stop
+         offset="100%"
+         stop-color="#E62E9B"
+         id="stop8" />
+    </linearGradient>
+    <!-- Gradiente per i filetti di movimento a sinistra -->
+    <linearGradient
+       id="grad-lines"
+       x1="105"
+       y1="238"
+       x2="204"
+       y2="160"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#38B6FF"
+         id="stop9" />
+      <stop
+         offset="100%"
+         stop-color="#7209B7"
+         id="stop10" />
+    </linearGradient>
+    <!-- Ombra compatibile con SVG 1.1 / Inkscape -->
+    <filter
+       id="drop-shadow"
+       x="-0.2038961"
+       y="-0.27068966"
+       width="1.4077922"
+       height="1.5844828">
+      <feGaussianBlur
+         in="SourceAlpha"
+         stdDeviation="6"
+         result="blur"
+         id="feGaussianBlur10" />
+      <feOffset
+         in="blur"
+         dx="0"
+         dy="5"
+         result="offsetBlur"
+         id="feOffset10" />
+      <feComponentTransfer
+         in="offsetBlur"
+         result="shadow"
+         id="feComponentTransfer10">
+        <feFuncA
+           type="linear"
+           slope="0.55"
+           id="feFuncA10" />
+      </feComponentTransfer>
+      <feMerge
+         id="feMerge11">
+        <feMergeNode
+           in="shadow"
+           id="feMergeNode10" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode11" />
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Sfondo scuro -->
+  <!-- ==================== ICONA LOGO "A" ==================== -->
   <g
-     id="g10"
-     transform="translate(-213,-372)">
+     id="icon-a"
+     transform="translate(-40,9.0126863)">
+    <!-- Gamba inferiore destra della A -->
     <path
-       d="m 460,425 52,65"
-       id="path1"
-       style="fill:none;stroke:#82d3a4;stroke-width:16;stroke-linecap:round" />
+       d="m 278,165 37,77"
+       fill="none"
+       stroke="url(#grad-right)"
+       stroke-width="34"
+       stroke-linecap="round"
+       id="path11"
+       style="stroke:url(#grad-right)" />
+    <!-- Struttura superiore della A e raccordo sinistro -->
     <path
-       d="m 320,543 52,62"
-       id="path2"
-       style="fill:none;stroke:#82d3a4;stroke-width:16;stroke-linecap:round" />
-    <rect
-       x="290"
-       y="372"
-       width="248"
-       height="53"
-       rx="26.5"
-       fill="#3a5fd5"
-       id="rect2" />
-    <rect
-       x="306"
-       y="386"
-       width="26"
-       height="26"
-       rx="6"
-       fill="#f3f4f8"
-       id="rect3" />
-    <rect
-       x="245"
-       y="490"
-       width="150"
-       height="53"
-       rx="26.5"
-       fill="#3a5fd5"
-       id="rect4" />
-    <rect
-       x="261"
-       y="504"
-       width="26"
-       height="26"
-       rx="6"
-       fill="#82d3a4"
-       id="rect5" />
-    <rect
-       x="440"
-       y="490"
-       width="146"
-       height="53"
-       rx="26.5"
-       fill="#3a5fd5"
-       id="rect6" />
-    <rect
-       x="552"
-       y="504"
-       width="26"
-       height="26"
-       rx="6"
-       fill="#82d3a4"
-       id="rect7" />
-    <rect
-       x="213"
-       y="605"
-       width="397"
-       height="53"
-       rx="26.5"
-       fill="#3a5fd5"
-       id="rect8" />
-    <rect
-       x="578"
-       y="619"
-       width="26"
-       height="26"
-       rx="6"
-       fill="#f3f4f8"
-       id="rect9" />
-    <text
-       x="695"
-       y="612"
-       font-family="Quicksand, Poppins, 'Arial Rounded MT Bold', sans-serif"
-       font-weight="700"
-       font-size="220px"
-       fill="#172134"
-       letter-spacing="-4"
-       id="text9">anima</text>
+       d="m 192,175 38,-77 c 9,-18 25,-18 34,0 l 14,28"
+       fill="none"
+       stroke="url(#grad-left)"
+       stroke-width="34"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       id="path12"
+       style="stroke:url(#grad-left)" />
+    <!-- Dettaglio geometrico interno sotto il vertice della A -->
+    <path
+       d="m 244,128 22,27 -16,10 z"
+       fill="#9d4edd"
+       id="path13" />
+    <!-- Linea esterna corta -->
+    <path
+       d="m 122,182 c 16,-20 40,-32 70,-36"
+       fill="none"
+       stroke="#38b6ff"
+       stroke-width="9"
+       stroke-linecap="round"
+       id="path14" />
+    <!-- Linea intermedia lunga -->
+    <path
+       d="m 105,238 c 17,-46 50,-70 99,-78"
+       fill="none"
+       stroke="url(#grad-lines)"
+       stroke-width="11"
+       stroke-linecap="round"
+       id="path15"
+       style="stroke:url(#grad-lines)" />
+    <!-- Onda principale (Swoosh) in primo piano con ombra -->
+    <path
+       d="m 152,242 c 6,-37 43,-44 80,-54 36,-10 62,-33 74,-62"
+       fill="none"
+       stroke="url(#grad-swoosh)"
+       stroke-width="34"
+       stroke-linecap="round"
+       filter="url(#drop-shadow)"
+       id="path16"
+       style="stroke:url(#grad-swoosh)" />
+    <!-- Filetto luminoso interno all'onda -->
+    <path
+       d="m 235,195 c 37,-10 63,-33 80,-71"
+       fill="none"
+       stroke="#f72585"
+       stroke-width="9"
+       stroke-linecap="round"
+       id="path17" />
+    <!-- Pixel / Particelle in dissolvenza -->
+    <g
+       id="particles">
+      <rect
+         x="288"
+         y="96"
+         width="16"
+         height="16"
+         rx="3"
+         ry="3"
+         fill="#b5179e"
+         transform="rotate(14,296,104)"
+         id="rect17" />
+      <rect
+         x="316"
+         y="88"
+         width="18"
+         height="18"
+         rx="3"
+         ry="3"
+         fill="#e62e9b"
+         transform="rotate(14,325,97)"
+         id="rect18" />
+      <rect
+         x="292"
+         y="72"
+         width="11"
+         height="11"
+         rx="2.5"
+         ry="2.5"
+         fill="#9d4edd"
+         transform="rotate(14,297,77)"
+         id="rect19" />
+      <rect
+         x="316"
+         y="64"
+         width="8"
+         height="8"
+         rx="2"
+         ry="2"
+         fill="#f72585"
+         transform="rotate(14,320,68)"
+         id="rect20" />
+    </g>
+  </g>
+  <!-- ==================== TESTO "anima" (Curve di Bézier pure) ==================== -->
+  <g
+     id="text-anima"
+     fill="#ffffff"
+     transform="translate(-20,-1)"
+     style="fill:#000000;fill-opacity:1">
+    <!-- Lettera 'a' (costruita con curve C invece di archi A per compatibilità totale) -->
+    <path
+       fill-rule="evenodd"
+       d="m 431,154 h 24 v 92 h -24 v -13 c -8,9 -20,15 -34,15 -26,0 -46,-21 -46,-48 0,-27 20,-48 46,-48 14,0 26,6 34,15 z m -28,20 c -15,0 -27,11 -27,26 0,15 12,26 27,26 15,0 27,-11 27,-26 0,-15 -12,-26 -27,-26 z"
+       id="path20"
+       style="fill:#000000;fill-opacity:1" />
+    <!-- Lettera 'n' -->
+    <path
+       d="m 476,154 h 24 v 13 c 7,-10 19,-15 33,-15 24,0 39,16 39,41 v 53 h -24 v -48 c 0,-15 -8,-24 -22,-24 -14,0 -26,10 -26,26 v 46 h -24 z"
+       id="path21"
+       style="fill:#000000;fill-opacity:1" />
+    <!-- Lettera 'i' -->
+    <path
+       d="m 592,154 h 24 v 92 h -24 z m 0,-40 h 24 v 20 l -24,8 z"
+       id="path22"
+       style="fill:#000000;fill-opacity:1" />
+    <!-- Lettera 'm' -->
+    <path
+       d="m 638,154 h 24 v 13 c 6,-10 17,-15 30,-15 14,0 25,6 31,17 8,-11 20,-17 34,-17 23,0 38,15 38,40 v 54 h -24 v -49 c 0,-14 -7,-23 -20,-23 -13,0 -22,9 -22,24 v 48 h -24 v -49 c 0,-14 -7,-23 -20,-23 -13,0 -23,9 -23,24 v 48 h -24 z"
+       id="path23"
+       style="fill:#000000;fill-opacity:1" />
+    <!-- Seconda lettera 'a' -->
+    <path
+       fill-rule="evenodd"
+       d="m 872,154 h 24 v 92 h -24 v -13 c -8,9 -20,15 -34,15 -26,0 -46,-21 -46,-48 0,-27 20,-48 46,-48 14,0 26,6 34,15 z m -28,20 c -15,0 -27,11 -27,26 0,15 12,26 27,26 15,0 27,-11 27,-26 0,-15 -12,-26 -27,-26 z"
+       id="path24"
+       style="fill:#000000;fill-opacity:1" />
   </g>
 </svg>

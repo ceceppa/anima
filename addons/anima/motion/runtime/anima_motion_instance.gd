@@ -95,6 +95,26 @@ func _supports_offset_pivot(target: Node) -> bool:
 			has_texture = true
 	return has_offset and has_texture
 
+## Applies [param strategy] to [param target] once, at this instance's own
+## initial-state moment — shared by [AnimaPropertyMotionInstance] and
+## [AnimaKeyframeMotionInstance], the same "one shared helper on the base
+## instance class" precedent [method _apply_pivot_to] already set
+## (tech-spec.md §Visibility strategy and initial-value timing). Neither
+## check touches any property the motion itself animates.
+func _apply_visibility_strategy_to(target: Node, strategy: AnimaMotion.VisibilityStrategy) -> void:
+	if strategy == AnimaMotion.VisibilityStrategy.IGNORE:
+		return
+	# `visible` isn't declared on the base Node class (only CanvasItem/Node3D
+	# have it), so it's read/written dynamically via get()/set() rather than
+	# dot-access on a Node-typed reference — the same duck-typing posture
+	# AnimaMotion._resolve_chainable()'s `"motion" in value` check already uses.
+	if strategy == AnimaMotion.VisibilityStrategy.HIDDEN_ONLY or strategy == AnimaMotion.VisibilityStrategy.HIDDEN_AND_TRANSPARENT:
+		if "visible" in target and not bool(target.get("visible")):
+			target.set("visible", true)
+	if strategy == AnimaMotion.VisibilityStrategy.TRANSPARENT_ONLY or strategy == AnimaMotion.VisibilityStrategy.HIDDEN_AND_TRANSPARENT:
+		if target is CanvasItem and is_zero_approx((target as CanvasItem).modulate.a):
+			(target as CanvasItem).modulate.a = 1.0
+
 ## Advances playback by delta seconds and applies the motion's effect to target.
 ## Returns true once the motion has finished.
 func advance(_target: Node, _delta: float) -> bool:

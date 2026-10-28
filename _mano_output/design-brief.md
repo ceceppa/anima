@@ -158,3 +158,13 @@ Contrast: `showcase-text` (#FFFFFF) is guaranteed ≥ 4.5:1 (AA) against any sup
 3. **Action dock** — existing `SelectorDock` styling presents the layout trigger or the four interruption outcomes. The selected outcome is readable through the existing indicator, white text, and stronger weight.
 4. **Scenario state label** — the interruption stage reports the selected policy and current outcome in text, so the result remains understandable when motion is brief.
 5. **Playback controls** — the shared restart control resets each scenario to its defined starting state.
+
+## Screen composition — phase-23 — Visibility & Timing Playground
+
+No new component — every piece below already exists in the Component guide above.
+
+1. **ExampleHeader** — fixed icon, "Visibility & Timing", subtitle explaining the scenario in one line.
+2. **Target stage** — a stable `stage-bg` container holding a single `Card`, starting hidden, in its defined starting state.
+3. **Choice docks** — two `SelectorDock` instances stacked between the header and the stage: a 4-item Visibility Strategy dock (Leave Alone, Unhide, Make Opaque, Both; Leave Alone selected by default) and a 2-item Timing dock (On Play, On Creation; On Play selected by default) — the same moving-`accent`-indicator pattern every other dock in this app uses. The existing `ToggleSwitch` + `text-secondary` label pairing (Component guide) sits beneath them, labelled "Hide After Finish", off by default.
+4. **Scenario state label** — the phase-22 `Scenario state label` component, reused as-is to report the target's current hidden/visible state and the active choices.
+5. **Start and Restart** — two of the existing four circular playback-control buttons (see Component guide), in the same 96px flat-`accent`-fill treatment; complete/revert are omitted since this scenario has no need for them.

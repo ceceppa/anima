@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Phase 23 — Visibility &amp; Timing Playground</title>
+<style>
+  :root {
+    --bg: #060A16;
+    --surface: #11182A;
+    --stage-bg: #0A1224;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A8B4CC;
+    --accent: #7C3AED;
+    --accent-soft: #A78BFA;
+    --positive: #2DD4BF;
+    --border: #26324B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .screen {
+    width: 480px;
+    background: var(--bg);
+  }
+  .header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .header .icon { font-size: 20px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin: 0; }
+  .header p { font-size: 14px; color: var(--text-secondary); margin: 2px 0 0; }
+
+  .dock {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px;
+    margin-bottom: 12px;
+    gap: 4px;
+  }
+  .dock button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .dock button.selected {
+    background: var(--accent);
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 0 4px;
+  }
+  .toggle-row span { font-size: 14px; color: var(--text-secondary); }
+  .toggle {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .toggle .thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    position: absolute;
+    top: 1px;
+    left: 2px;
+  }
+
+  .stage {
+    background: var(--stage-bg);
+    border-radius: 24px;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
+    opacity: 0.12;
+  }
+  .card {
+    width: 140px;
+    height: 124px;
+    margin: 0 auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #1a2338;
+    opacity: 0.15;
+    position: relative;
+    z-index: 1;
+  }
+  .card-label {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
+  }
+
+  .state-label {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+  .control-btn {
+    width: 96px;
+    height: 96px;
+    border-radius: 48px;
+    background: var(--accent);
+    border: 2px solid var(--accent-soft);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="header">
+      <span class="icon">✦</span>
+      <div>
+        <h1>Visibility &amp; Timing</h1>
+        <p>See how a hidden or transparent target enters, and how starting values apply.</p>
+      </div>
+    </div>
+
+    <div class="dock" aria-label="Visibility Strategy">
+      <button class="selected">Leave Alone</button>
+      <button>Unhide</button>
+      <button>Make Opaque</button>
+      <button>Both</button>
+    </div>
+
+    <div class="dock" aria-label="Timing">
+      <button class="selected">On Play</button>
+      <button>On Creation</button>
+    </div>
+
+    <div class="toggle-row">
+      <span>Hide After Finish</span>
+      <div class="toggle"><div class="thumb"></div></div>
+    </div>
+
+    <div class="stage">
+      <div class="card"></div>
+      <div class="card-label">Target starts hidden</div>
+    </div>
+
+    <div class="state-label">Hidden — waiting to start · Leave Alone · On Play</div>
+
+    <div class="controls">
+      <div class="control-btn">Start</div>
+      <div class="control-btn">Restart</div>
+    </div>
+  </div>
+</body>
+</html>

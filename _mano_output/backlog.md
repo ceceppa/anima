@@ -3535,7 +3535,7 @@
   v1 let a motion declare how it treats a target that is hidden or fully transparent when playback starts: IGNORE, HIDDEN_ONLY, TRANSPARENT_ONLY, HIDDEN_AND_TRANSPARENT. An entrance animation on a `visible = false` node made the node visible before playing; an exit animation could leave it hidden afterwards.
   v2 has no equivalent — nothing in `addons/anima` references visibility handling — so an entrance preset played on a hidden node animates something the player never sees.
   Needed for the ported v1 animation catalog (`fade_in`, `zoom_in`, `slide_in_*`, every `*_entrances` preset) to behave the way it did in v1.
-- **Status:** backlog
+- **Status:** in-phase-23
 
 ### Initial-value application timing (v1 parity)
 - **Type:** feature
@@ -3545,7 +3545,7 @@
   v1 chose when a motion's starting values were written to the target: ON_ANIMATION_CREATION (immediately, so the node sits at its `from` state before `.play()` is ever called) or ON_PLAY (only once playback begins).
   v2 resolves `from_value` when the runtime instance begins advancing, with no way to pre-apply — so a node built at its final state visibly flashes there before an entrance motion moves it.
   Pairs with the visibility-strategy item; both govern what the target looks like between construction and the first animated frame.
-- **Status:** backlog
+- **Status:** in-phase-23
 
 ### Shader parameter animation (v1 parity)
 - **Type:** feature

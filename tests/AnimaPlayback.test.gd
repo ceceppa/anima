@@ -374,6 +374,37 @@ func test_root_level_delay_is_honoured_when_played_standalone():
 	assert_almost_eq(node.position.x, 10.0, 0.01)
 	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
 
+func test_initial_value_timing_on_play_leaves_the_target_untouched_until_the_first_advance():
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	# initial_value_timing defaults to ON_PLAY
+
+	var node := Node2D.new()
+	autofree(node)
+	node.position.x = 5.0
+
+	AnimaPlayback.new(motion, node)
+
+	assert_almost_eq(node.position.x, 5.0, 0.01, "ON_PLAY (default) should not write the starting value before the first advance")
+
+func test_initial_value_timing_on_creation_writes_the_starting_value_immediately():
+	var motion := AnimaPropertyMotion.new()
+	motion.target_property = NodePath("position:x")
+	motion.from_value = 0.0
+	motion.to_value = 100.0
+	motion.duration = 1.0
+	motion.initial_value_timing = AnimaMotion.InitialValueTiming.ON_ANIMATION_CREATION
+
+	var node := Node2D.new()
+	autofree(node)
+	node.position.x = 5.0
+
+	AnimaPlayback.new(motion, node)
+
+	assert_almost_eq(node.position.x, 0.0, 0.01, "ON_ANIMATION_CREATION should write the starting value synchronously at construction, before any frame renders")
+
 func test_zero_delay_behaves_the_same_as_no_delay():
 	var with_zero_delay := AnimaPropertyMotion.new()
 	with_zero_delay.target_property = NodePath("position:x")
@@ -462,6 +493,26 @@ func test_complete_with_default_policy_keeps_final_value():
 	playback.complete()
 
 	assert_almost_eq(playback.target.position.x, 100.0, 0.01, "KEEP_FINAL (default) should leave the authored end value in place")
+
+func test_complete_with_hide_policy_hides_the_target_after_finishing():
+	var playback := _make_playback(100.0, 1.0)
+	playback.motion.completion_value_policy = AnimaMotion.CompletionValuePolicy.HIDE
+
+	playback._advance(0.5)
+	playback.complete()
+
+	assert_almost_eq(playback.target.position.x, 100.0, 0.01, "HIDE should still apply the authored end value, same as KEEP_FINAL")
+	assert_false(playback.target.visible, "HIDE should hide the target after a successful finish")
+
+func test_natural_finish_with_hide_policy_hides_the_target():
+	var playback := _make_playback(100.0, 1.0)
+	playback.motion.completion_value_policy = AnimaMotion.CompletionValuePolicy.HIDE
+
+	for i in range(10):
+		playback._advance(0.1)
+
+	assert_eq(playback.state, AnimaPlayback.State.FINISHED)
+	assert_false(playback.target.visible, "a natural finish should hide the target too, not only an explicit complete() call")
 
 func test_revert_restores_initial_value_and_cancels():
 	var playback := _make_playback(100.0, 1.0)
