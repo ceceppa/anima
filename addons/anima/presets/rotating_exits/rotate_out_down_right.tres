@@ -42,3 +42,4 @@ tracks = Array[ExtResource("3_kyue6")]([SubResource("Resource_irtfs"), SubResour
 duration = 0.6
 default_ease = SubResource("Resource_bfhcj")
 default_pivot = 9
+planar = true

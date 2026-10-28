@@ -75,6 +75,12 @@ const DEMOS := {
 			"icon": "✦",
 			"scene": "res://examples/showcase/grid/grid_showcase.tscn",
 		},
+		{
+			"title": "3D Showcase",
+			"description": "A scripted 3D promo: catalog presets on 3D nodes and a grid ripple.",
+			"icon": "◈",
+			"scene": "res://examples/showcase/3d/showcase_3d.tscn",
+		},
 	],
 }
 

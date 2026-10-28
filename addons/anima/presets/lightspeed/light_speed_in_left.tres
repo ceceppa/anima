@@ -100,3 +100,4 @@ script = ExtResource("2_dsbup")
 tracks = Array[ExtResource("3_h8c1a")]([SubResource("Resource_fl623"), SubResource("Resource_a7vee"), SubResource("Resource_v1a0y")])
 duration = 0.5
 default_ease = SubResource("Resource_hmqt4")
+planar = true

@@ -155,3 +155,4 @@ tracks = Array[ExtResource("3_v2rjv")]([SubResource("Resource_sm4vu"), SubResour
 duration = 1.0
 default_ease = SubResource("Resource_flcay")
 default_pivot = 5
+planar = true

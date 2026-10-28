@@ -42,3 +42,4 @@ tracks = Array[ExtResource("3_aig7v")]([SubResource("Resource_rpxir"), SubResour
 duration = 0.6
 default_ease = SubResource("Resource_562ri")
 default_pivot = 9
+planar = true

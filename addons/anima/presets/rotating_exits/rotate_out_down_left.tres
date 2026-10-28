@@ -42,3 +42,4 @@ tracks = Array[ExtResource("3_owixl")]([SubResource("Resource_kudto"), SubResour
 duration = 0.6
 default_ease = SubResource("Resource_ei43a")
 default_pivot = 7
+planar = true

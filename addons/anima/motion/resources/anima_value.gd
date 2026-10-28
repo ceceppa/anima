@@ -296,15 +296,15 @@ func resolve(context: AnimaValueContext) -> Variant:
 		Kind.CONSTANT:
 			return constant_value
 		Kind.TARGET:
-			return context.target.get_indexed(property_path)
+			return AnimaPlanarAccess.read(context.target, property_path, context.planar)
 		Kind.NODE:
 			var node_ref: Node = context.root.get_node_or_null(node_path)
 			if node_ref == null:
 				push_error("AnimaValue.node(): no node found at path '%s' relative to '%s'" % [node_path, context.root.get_path()])
 				return null
-			return node_ref.get_indexed(property_path)
+			return AnimaPlanarAccess.read(node_ref, property_path, context.planar)
 		Kind.ROOT:
-			return context.root.get_indexed(property_path)
+			return AnimaPlanarAccess.read(context.root, property_path, context.planar)
 		Kind.CONTEXT:
 			return context.context_data.get(context_key)
 		Kind.GROUP_INDEX:

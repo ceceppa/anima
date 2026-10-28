@@ -1,0 +1,512 @@
+[gd_scene format=3 uid="uid://dvd8owdenwesg"]
+
+[ext_resource type="Script" uid="uid://7xmt4cmmssay" path="res://examples/showcase/3d/showcase_3d.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://crb8i0ef3trpt" path="res://examples/showcase/Montserrat-Black.ttf" id="2_font"]
+[ext_resource type="Texture2D" uid="uid://dvxasckiduw3t" path="res://examples/showcase/shared/logo.png" id="3_logo"]
+[ext_resource type="PackedScene" uid="uid://bpcabv38r151l" path="res://examples/showcase/3d/cube.tscn" id="5_2by6n"]
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 1
+background_color = Color(0.0431373, 0.0588235, 0.0980392, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.556863, 0.635294, 0.784314, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.35
+fog_enabled = true
+fog_light_color = Color(0.0431373, 0.0588235, 0.0980392, 1)
+fog_density = 0.06
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.0862745, 0.109804, 0.164706, 1)
+
+[sub_resource type="PlaneMesh" id="Mesh_floor"]
+size = Vector2(400, 400)
+
+[sub_resource type="StandardMaterial3D" id="Material_cyan"]
+albedo_color = Color(0.133333, 0.827451, 0.933333, 1)
+roughness = 0.75
+
+[sub_resource type="SphereMesh" id="Mesh_sphere"]
+radius = 0.58
+height = 1.16
+radial_segments = 12
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="Material_white"]
+albedo_color = Color(0.945098, 0.960784, 0.976471, 1)
+roughness = 0.75
+
+[sub_resource type="CylinderMesh" id="Mesh_cylinder"]
+top_radius = 0.48
+bottom_radius = 0.48
+height = 1.0
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="Mesh_tile"]
+size = Vector3(0.8, 0.8, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="Material_orange"]
+albedo_color = Color(1, 0.478431, 0.239216, 1)
+roughness = 0.75
+
+[sub_resource type="StyleBoxFlat" id="Style_code_panel"]
+content_margin_left = 44.0
+content_margin_top = 44.0
+content_margin_right = 44.0
+content_margin_bottom = 44.0
+bg_color = Color(0.06, 0.09, 0.16, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.14902, 0.196078, 0.294118, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
+[sub_resource type="SystemFont" id="Font_mono"]
+font_names = PackedStringArray("JetBrains Mono", "SF Mono", "Menlo", "Consolas", "monospace")
+subpixel_positioning = 0
+
+[node name="Showcase3D" type="Node3D" unique_id=1035155619]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=894625587]
+environment = SubResource("Environment_main")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=885993463]
+transform = Transform3D(0.848048, 0.417582, -0.326251, 0, 0.615661, 0.788011, 0.529919, -0.668271, 0.522111, 0, 6, 0)
+light_energy = 1.25
+shadow_enabled = true
+shadow_blur = 1.5
+directional_shadow_max_distance = 40.0
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1737966907]
+material_override = SubResource("Material_floor")
+mesh = SubResource("Mesh_floor")
+
+[node name="Camera" type="Camera3D" parent="." unique_id=462555721]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.992278, 0.124035, 0, -0.124035, 0.992278, 0, 1.4, 4.8)
+current = true
+fov = 40.0
+
+[node name="Shots" type="Node3D" parent="." unique_id=575840237]
+
+[node name="HeroShot" type="Marker3D" parent="Shots" unique_id=1912325609]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.992278, 0.124035, 0, -0.124035, 0.992278, 0, 1.4, 4.8)
+
+[node name="TrioShot" type="Marker3D" parent="Shots" unique_id=759036464]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.985736, 0.168296, 0, -0.168296, 0.985736, 0, 2.2, 8.2)
+
+[node name="GridShot" type="Marker3D" parent="Shots" unique_id=1367537152]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.697078, 0.716995, 0, -0.716995, 0.697078, 0, 7.2, 7.4)
+
+[node name="Shapes" type="Node3D" parent="." unique_id=51830142]
+
+[node name="SphereSlot" type="Node3D" parent="Shapes" unique_id=854501848]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0, 0)
+visible = false
+
+[node name="Sphere" type="Node3D" parent="Shapes/SphereSlot" unique_id=15970336]
+unique_name_in_owner = true
+
+[node name="Mesh" type="MeshInstance3D" parent="Shapes/SphereSlot/Sphere" unique_id=1459070538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_sphere")
+
+[node name="CubeSlot" type="Node3D" parent="Shapes" unique_id=798214013]
+
+[node name="Cube" type="Node3D" parent="Shapes/CubeSlot" unique_id=1481120378]
+unique_name_in_owner = true
+
+[node name="cube" parent="Shapes/CubeSlot/Cube" unique_id=1227294843 instance=ExtResource("5_2by6n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CylinderSlot" type="Node3D" parent="Shapes" unique_id=563088641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0, 0)
+visible = false
+
+[node name="Cylinder" type="Node3D" parent="Shapes/CylinderSlot" unique_id=1571497287]
+unique_name_in_owner = true
+
+[node name="Mesh" type="MeshInstance3D" parent="Shapes/CylinderSlot/Cylinder" unique_id=1652992038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_cylinder")
+
+[node name="PresetLabel" type="Label3D" parent="." unique_id=1599338025]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+visible = false
+pixel_size = 0.0035
+billboard = 1
+no_depth_test = true
+outline_modulate = Color(0.0431373, 0.0588235, 0.0980392, 1)
+text = "preset"
+font = ExtResource("2_font")
+font_size = 96
+outline_size = 24
+
+[node name="HeroLabelSpot" type="Marker3D" parent="." unique_id=624215507]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+
+[node name="TrioLabelSpot" type="Marker3D" parent="." unique_id=1350561477]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+
+[node name="Tiles" type="Node3D" parent="." unique_id=239772277]
+unique_name_in_owner = true
+
+[node name="Tile0_0" type="Node3D" parent="Tiles" unique_id=998479035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, -2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile0_0" unique_id=1494631323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile0_1" type="Node3D" parent="Tiles" unique_id=942715852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0, -2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile0_1" unique_id=1986478036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile0_2" type="Node3D" parent="Tiles" unique_id=1705706939]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile0_2" unique_id=340352603]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile0_3" type="Node3D" parent="Tiles" unique_id=690764400]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0, -2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile0_3" unique_id=733586728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile0_4" type="Node3D" parent="Tiles" unique_id=1151888625]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, -2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile0_4" unique_id=264336655]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile1_0" type="Node3D" parent="Tiles" unique_id=1040081468]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, -1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile1_0" unique_id=1311034994]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile1_1" type="Node3D" parent="Tiles" unique_id=1719361713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0, -1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile1_1" unique_id=267499492]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile1_2" type="Node3D" parent="Tiles" unique_id=1682338208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile1_2" unique_id=645870833]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile1_3" type="Node3D" parent="Tiles" unique_id=1986841180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0, -1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile1_3" unique_id=436165940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile1_4" type="Node3D" parent="Tiles" unique_id=2013831150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, -1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile1_4" unique_id=127428020]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile2_0" type="Node3D" parent="Tiles" unique_id=1787133736]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile2_0" unique_id=2026415394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile2_1" type="Node3D" parent="Tiles" unique_id=1509866133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile2_1" unique_id=243544048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile2_2" type="Node3D" parent="Tiles" unique_id=915793412]
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile2_2" unique_id=600417475]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile2_3" type="Node3D" parent="Tiles" unique_id=2004518909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile2_3" unique_id=1514319014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile2_4" type="Node3D" parent="Tiles" unique_id=908541553]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile2_4" unique_id=342589351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile3_0" type="Node3D" parent="Tiles" unique_id=921999593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, 1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile3_0" unique_id=1747836876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile3_1" type="Node3D" parent="Tiles" unique_id=1148076261]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0, 1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile3_1" unique_id=1801811251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile3_2" type="Node3D" parent="Tiles" unique_id=1486856264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile3_2" unique_id=1950384770]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile3_3" type="Node3D" parent="Tiles" unique_id=1079376305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0, 1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile3_3" unique_id=1239472242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile3_4" type="Node3D" parent="Tiles" unique_id=532465278]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 1.15)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile3_4" unique_id=843112380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile4_0" type="Node3D" parent="Tiles" unique_id=1137403006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, 2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile4_0" unique_id=1748058108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile4_1" type="Node3D" parent="Tiles" unique_id=1887015223]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0, 2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile4_1" unique_id=1834683808]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile4_2" type="Node3D" parent="Tiles" unique_id=600426327]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile4_2" unique_id=370002369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_cyan")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile4_3" type="Node3D" parent="Tiles" unique_id=111521616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0, 2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile4_3" unique_id=967760971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_white")
+mesh = SubResource("Mesh_tile")
+
+[node name="Tile4_4" type="Node3D" parent="Tiles" unique_id=1667898260]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 2.3)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Tiles/Tile4_4" unique_id=1581083546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("Material_orange")
+mesh = SubResource("Mesh_tile")
+
+[node name="Overlay" type="CanvasLayer" parent="." unique_id=617927337]
+
+[node name="Root" type="Control" parent="Overlay" unique_id=295571718]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Headline" type="Label" parent="Overlay/Root" unique_id=1123411479]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 120.0
+offset_bottom = 300.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.945098, 0.960784, 0.976471, 1)
+theme_override_colors/font_outline_color = Color(0.0431373, 0.0588235, 0.0980392, 1)
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 132
+text = "Headline"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CodePanel" type="PanelContainer" parent="Overlay/Root" unique_id=590698208]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_bottom = -110.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("Style_code_panel")
+
+[node name="Code" type="RichTextLabel" parent="Overlay/Root/CodePanel" unique_id=525338800]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/normal_font = SubResource("Font_mono")
+theme_override_font_sizes/normal_font_size = 52
+bbcode_enabled = true
+text = "Anima.play(...)"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Outro" type="Control" parent="Overlay/Root" unique_id=1305756069]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Dim" type="ColorRect" parent="Overlay/Root/Outro" unique_id=647594351]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0431373, 0.0588235, 0.0980392, 0.88)
+
+[node name="Center" type="CenterContainer" parent="Overlay/Root/Outro" unique_id=967193199]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Stack" type="VBoxContainer" parent="Overlay/Root/Outro/Center" unique_id=1839086475]
+layout_mode = 2
+theme_override_constants/separation = 48
+alignment = 1
+
+[node name="Logo" type="TextureRect" parent="Overlay/Root/Outro/Center/Stack" unique_id=2108467408]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(1380, 540)
+layout_mode = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Tagline" type="Label" parent="Overlay/Root/Outro/Center/Stack" unique_id=595762662]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945098, 0.960784, 0.976471, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 72
+text = "Sequences · groups · grids · keyframes"
+horizontal_alignment = 1
+
+[node name="Url" type="Label" parent="Overlay/Root/Outro/Center/Stack" unique_id=36289173]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.133333, 0.827451, 0.933333, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 64
+text = "github.com/ceceppa/anima"
+horizontal_alignment = 1

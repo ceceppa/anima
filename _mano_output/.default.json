@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "owner": null,
+  "mode": "auto",
+  "track": "v2",
+  "phases": {},
+  "language": {
+    "chat": null,
+    "build": null,
+    "artefacts": null
+  }
+}

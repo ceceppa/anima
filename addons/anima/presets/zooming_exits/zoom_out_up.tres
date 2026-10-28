@@ -102,3 +102,4 @@ script = ExtResource("2_bakyo")
 tracks = Array[ExtResource("3_p0phx")]([SubResource("Resource_wba2x"), SubResource("Resource_rfnr4"), SubResource("Resource_nvc2y")])
 duration = 0.6
 default_ease = SubResource("Resource_gplyh")
+planar = true

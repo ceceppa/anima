@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bpcabv38r151l"]
+
+[ext_resource type="PackedScene" uid="uid://x26i8gmqll2i" path="res://examples/showcase/3d/cube.gltf" id="1_swcip"]
+[ext_resource type="Material" uid="uid://df0n2vtk5ci61" path="res://examples/showcase/3d/cube.tres" id="2_gl72q"]
+
+[node name="cube" unique_id=1227294843 instance=ExtResource("1_swcip")]
+
+[node name="Cube" parent="." index="0" unique_id=1458397951]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+material_override = ExtResource("2_gl72q")

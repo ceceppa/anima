@@ -31,7 +31,24 @@ var group_normalised_index: float = -1.0
 var grid_row: int = -1
 ## This item's column within an [AnimaGridMotion], or `-1` outside one.
 var grid_column: int = -1
+## Whether 2D property paths read from a [Node3D] are mapped onto its local
+## XY plane — set for a planar [AnimaKeyframeMotion] (see [AnimaPlanarAccess]).
+var planar: bool = false
 
 func _init(p_target: Node = null) -> void:
 	target = p_target
 	root = p_target
+
+## Returns a copy of this context with [member planar] set to `true`, so a
+## planar motion never changes a context other motions may share.
+func as_planar() -> AnimaValueContext:
+	var copy := AnimaValueContext.new(target)
+	copy.root = root
+	copy.context_data = context_data
+	copy.group_index = group_index
+	copy.group_count = group_count
+	copy.group_normalised_index = group_normalised_index
+	copy.grid_row = grid_row
+	copy.grid_column = grid_column
+	copy.planar = true
+	return copy

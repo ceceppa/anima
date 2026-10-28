@@ -51,3 +51,4 @@ tracks = Array[ExtResource("3_bmqqg")]([SubResource("Resource_lma6i")])
 duration = 1.0
 default_ease = SubResource("Resource_f4iyn")
 default_pivot = 5
+planar = true

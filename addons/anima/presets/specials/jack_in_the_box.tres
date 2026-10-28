@@ -75,3 +75,4 @@ tracks = Array[ExtResource("3_g3fh2")]([SubResource("Resource_0vord"), SubResour
 duration = 0.75
 default_ease = SubResource("Resource_3d8fn")
 default_pivot = 8
+planar = true

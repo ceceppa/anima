@@ -52,7 +52,7 @@ func advance(target: Node, delta: float) -> bool:
 
 	for track_index in keyframe_motion.tracks.size():
 		var track: AnimaKeyframeTrack = keyframe_motion.tracks[track_index]
-		target.set_indexed(track.property_path, _evaluate_track(track, _resolved_values[track_index], keyframe_motion, t))
+		_write(target, track.property_path, _evaluate_track(track, _resolved_values[track_index], keyframe_motion, t))
 
 	return t >= 1.0 or is_equal_approx(t, 1.0)
 
@@ -111,7 +111,7 @@ func restore_initial(target: Node) -> void:
 	if not _values_resolved:
 		_resolve_values(keyframe_motion, target)
 	for track_index in keyframe_motion.tracks.size():
-		target.set_indexed(keyframe_motion.tracks[track_index].property_path, _resolved_values[track_index][0])
+		_write(target, keyframe_motion.tracks[track_index].property_path, _resolved_values[track_index][0])
 
 ## Forces every track to its authored end value immediately — for [method
 ## AnimaPlayback.complete] and a [constant AnimaMotion.CompletionValuePolicy]
@@ -123,7 +123,25 @@ func force_complete(target: Node) -> void:
 		_resolve_values(keyframe_motion, target)
 	for track_index in keyframe_motion.tracks.size():
 		var stop_values: Array = _resolved_values[track_index]
-		target.set_indexed(keyframe_motion.tracks[track_index].property_path, stop_values[stop_values.size() - 1])
+		_write(target, keyframe_motion.tracks[track_index].property_path, stop_values[stop_values.size() - 1])
+
+## Whether this run maps 2D-authored values onto [param target]'s XY plane —
+## a [member AnimaKeyframeMotion.planar] motion playing on a [Node3D].
+func _is_planar(target: Node) -> bool:
+	return (motion as AnimaKeyframeMotion).planar and target is Node3D
+
+func _write(target: Node, property_path: NodePath, value: Variant) -> void:
+	AnimaPlanarAccess.write(target, property_path, value, _is_planar(target))
+
+## Same as [method AnimaMotionInstance._resolve_dynamic], except a planar run
+## resolves against a planar copy of the context, so a dynamic value such as
+## [code]AnimaValue.target(^"size:y")[/code] reads a [Node3D] the way
+## [method _write] writes it.
+func _resolve_dynamic(value: Variant, target: Node) -> Variant:
+	if not (value is AnimaValue) or not _is_planar(target):
+		return super(value, target)
+	var context: AnimaValueContext = value_context.as_planar() if value_context != null else AnimaValueContext.new(target).as_planar()
+	return (value as AnimaValue).resolve(context)
 
 ## Resolves the duration this run actually uses — the same chain
 ## [method AnimaPropertyMotionInstance._resolve_duration] applies: an
@@ -186,6 +204,7 @@ func build_reversed() -> AnimaMotion:
 	var reversed := AnimaKeyframeMotion.new()
 	reversed.duration = keyframe_motion.duration
 	reversed.default_ease = keyframe_motion.default_ease.mirrored()
+	reversed.planar = keyframe_motion.planar
 	reversed.speed = keyframe_motion.speed
 	reversed.forward_speed = keyframe_motion.forward_speed
 	reversed.reverse_speed = keyframe_motion.reverse_speed

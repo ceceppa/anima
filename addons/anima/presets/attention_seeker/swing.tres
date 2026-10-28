@@ -55,3 +55,4 @@ tracks = Array[ExtResource("3_wibbc")]([SubResource("Resource_tqxgi")])
 duration = 1.0
 default_ease = SubResource("Resource_o61lw")
 default_pivot = 5
+planar = true

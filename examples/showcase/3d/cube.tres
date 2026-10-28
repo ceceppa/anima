@@ -1,0 +1,54 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://df0n2vtk5ci61"]
+
+[sub_resource type="Shader" id="Shader_grmgd"]
+code = "shader_type spatial;
+render_mode specular_schlick_ggx, diffuse_toon;
+
+// Colori principali (personalizzabili per ogni oggetto della scena)
+uniform vec4 top_color : source_color = vec4(1.0, 0.55, 0.25, 1.0);    // Arancio vibrante
+uniform vec4 bottom_color : source_color = vec4(0.85, 0.25, 0.35, 1.0); // Corallo/Rosso caldo
+uniform vec4 rim_color : source_color = vec4(1.0, 0.9, 0.75, 1.0);     // Luce di bordo calda
+
+// Parametri estetici
+uniform float roughness : hint_range(0.0, 1.0) = 0.35;
+uniform float rim_power : hint_range(0.5, 8.0) = 3.0;
+uniform float rim_intensity : hint_range(0.0, 1.0) = 0.45;
+uniform float edge_thickness : hint_range(0.0, 0.1) = 0.025;
+uniform float edge_brightness : hint_range(0.0, 1.0) = 0.25;
+
+varying vec3 local_pos;
+
+void vertex() {
+	local_pos = VERTEX;
+}
+
+void fragment() {
+	// 1. Gradiente verticale morbido basato sulla posizione locale
+	float grad = clamp(local_pos.y + 0.5, 0.0, 1.0);
+	vec3 base = mix(bottom_color.rgb, top_color.rgb, smoothstep(0.0, 1.0, grad));
+	
+	// 2. Evidenziazione procedurale degli spigoli tramite UV (perfetto per BoxMesh standard)
+	vec2 uv_edge = min(UV, 1.0 - UV);
+	float edge_mask = 1.0 - smoothstep(0.0, edge_thickness, min(uv_edge.x, uv_edge.y));
+	base = mix(base, rim_color.rgb, edge_mask * edge_brightness);
+	
+	// 3. Effetto Fresnel (Rim Light) che esalta le rotazioni e lo squash & stretch
+	float fresnel = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), rim_power);
+	vec3 final_albedo = mix(base, rim_color.rgb, fresnel * rim_intensity);
+	
+	ALBEDO = final_albedo;
+	ROUGHNESS = roughness;
+	SPECULAR = 0.6;
+}"
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_grmgd")
+shader_parameter/top_color = Color(1, 0.55, 0.25, 1)
+shader_parameter/bottom_color = Color(0.85, 0.25, 0.35, 1)
+shader_parameter/rim_color = Color(1, 0.9, 0.75, 1)
+shader_parameter/roughness = 0.75
+shader_parameter/rim_power = 3.0
+shader_parameter/rim_intensity = 0.45
+shader_parameter/edge_thickness = 0.025
+shader_parameter/edge_brightness = 0.25

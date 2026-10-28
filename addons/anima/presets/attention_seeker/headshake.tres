@@ -168,3 +168,4 @@ tracks = Array[ExtResource("3_wjrs1")]([SubResource("Resource_ycs06"), SubResour
 duration = 0.5
 default_ease = SubResource("Resource_qdmi0")
 default_pivot = 5
+planar = true

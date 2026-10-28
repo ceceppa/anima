@@ -93,3 +93,4 @@ script = ExtResource("2_2dybk")
 tracks = Array[ExtResource("3_qacxt")]([SubResource("Resource_jpo1c"), SubResource("Resource_hnwq2"), SubResource("Resource_mdddp")])
 duration = 0.6
 default_ease = SubResource("Resource_alqej")
+planar = true
