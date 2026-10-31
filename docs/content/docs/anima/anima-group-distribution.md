@@ -50,7 +50,8 @@ The delay from the first to last stagger position when [member mode] is
 
 ### ease
 
-Optional curve used to distribute starts between the first and last item.
+Currently unused by runtime group scheduling; setting this does not
+change the item start offsets.
 
 ## Methods
 

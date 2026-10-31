@@ -31,7 +31,7 @@ Starting value. `null` reads the target's current value when playback starts.
 ### to_value
 
 Value to animate to. Interpreted as an absolute destination, unless
-[member relative] is `true` — see [member relative].
+[member is_relative] is `true` — see [member is_relative].
 
 ### duration
 

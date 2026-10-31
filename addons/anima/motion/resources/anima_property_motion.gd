@@ -8,7 +8,7 @@ extends AnimaMotion
 ## Starting value. `null` reads the target's current value when playback starts.
 @export var from_value: Variant = null
 ## Value to animate to. Interpreted as an absolute destination, unless
-## [member relative] is `true` — see [member relative].
+## [member is_relative] is `true` — see [member is_relative].
 @export var to_value: Variant = null
 ## How long the motion takes, in seconds. Unused when [member ease] is
 ## [constant AnimaEase.Kind.SPRING] — a spring settles on its own instead.

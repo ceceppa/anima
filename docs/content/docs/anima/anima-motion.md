@@ -42,6 +42,27 @@ The value left on the target when [method AnimaPlayback.cancel] is called.
 
 How an incoming property motion resolves an existing owner of the same target property.
 
+### VisibilityStrategy
+
+How this motion treats a target that is hidden or fully transparent when
+it begins advancing — v1-parity with [code]ANIMA.VISIBILITY[/code], same
+four names for migration recognition. Checked once, at this instance's own
+initial-state moment (tech-spec.md §Visibility strategy and initial-value
+timing). Neither check touches any property the motion itself animates —
+an entrance that already fades `modulate:a` from `0.0` supplies its own
+opacity through the normal from/to path regardless of this field.
+
+### InitialValueTiming
+
+When this motion's starting values are captured and written to the target
+— v1-parity with [code]ANIMA.APPLY_INITIAL_VALUES[/code], same two names
+and meaning. Consulted only for the playback's own root motion, the same
+simplification [member forward_speed]/[member reverse_speed] already
+establish; a nested leaf inside a [method then]/[method with] composite
+always uses its own first [method AnimaMotionInstance.advance] regardless
+of the root's value here (tech-spec.md §Visibility strategy and
+initial-value timing).
+
 ## Properties and constants
 
 ### display_name
@@ -54,8 +75,9 @@ Disabled motions are skipped by every composite that contains them.
 
 ### delay
 
-Seconds relative to [member delay_basis]. Only [_AnimaSequence] consumes
-this and [member delay_basis] this phase. May be negative (an overlap).
+At root playback, positive seconds to wait before advancing the motion;
+negative values add no root wait. Inside an [_AnimaSequence], seconds
+relative to [member delay_basis]; may be negative for an overlap.
 
 ### delay_basis
 
@@ -112,6 +134,16 @@ The value left behind when this motion's playback is cancelled. See
 ### interruption_policy
 
 The policy used when this motion arrives while the same target property is already animated.
+
+### visibility_strategy
+
+How this motion treats a hidden/transparent target at its own initial-state
+moment. See [enum VisibilityStrategy].
+
+### initial_value_timing
+
+When this motion's starting values are captured and applied. See
+[enum InitialValueTiming]. Consulted only at the playback root.
 
 ### reduced_motion_speed
 
@@ -243,3 +275,11 @@ with_delay] already set on that next step stack additively
 exactly once, by the very next [method then]/[method with] call — ending a
 chain, or calling [method play], with a [method wait] left unconsumed is a
 harmless no-op. Returns self so calls can keep chaining.
+
+### with_visibility_strategy
+
+Sets [member visibility_strategy] directly. Returns self so calls can keep chaining.
+
+### with_initial_value_timing
+
+Sets [member initial_value_timing] directly. Returns self so calls can keep chaining.
