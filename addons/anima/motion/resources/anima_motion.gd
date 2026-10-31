@@ -101,8 +101,9 @@ enum InitialValueTiming {
 @export var display_name: String = ""
 ## Disabled motions are skipped by every composite that contains them.
 @export var enabled: bool = true
-## Seconds relative to [member delay_basis]. Only [_AnimaSequence] consumes
-## this and [member delay_basis] this phase. May be negative (an overlap).
+## At root playback, positive seconds to wait before advancing the motion;
+## negative values add no root wait. Inside an [_AnimaSequence], seconds
+## relative to [member delay_basis]; may be negative for an overlap.
 @export var delay: float = 0.0
 ## Which sibling instant [member delay] is measured from.
 @export var delay_basis: DelayBasis = DelayBasis.AFTER_PREVIOUS_ENDS

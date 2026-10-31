@@ -25,7 +25,8 @@ enum Mode {
 ## The delay from the first to last stagger position when [member mode] is
 ## [constant Mode.TOTAL_DURATION].
 @export var total_stagger_duration: float = 0.0
-## Optional curve used to distribute starts between the first and last item.
+## Currently unused by runtime group scheduling; setting this does not
+## change the item start offsets.
 @export var ease: AnimaEase = null
 
 ## Returns messages describing settings that cannot produce a visible schedule.

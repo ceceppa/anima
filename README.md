@@ -22,11 +22,11 @@ Moreover, you can easily add your animations using a syntax similar to CSS, maki
 
 ## Installation
 
-This is a regular editor plugin. Copy the contents of addons/Anima into the same folder in your project, and activate it in your project settings.
+This is a regular editor plugin. Copy the contents of addons/anima into the same folder in your project, and activate it in your project settings.
 
 ## Documentation & Demo
 
-Check out [documentation]([https://anima.ceceppa.me](https://ceceppa.github.io/anima/)), [demo code](https://github.com/ceceppa/anima/tree/main/demos) and [live examples](https://ceceppa.me/anima-demo/).
+Check out [documentation]([https://anima.ceceppa.me](https://ceceppa.github.io/anima/)), [demo code](https://github.com/ceceppa/anima/tree/main/examples) and [live examples](https://ceceppa.me/anima-demo/).
 
 ## Differences between Anima and Godot Tween
 
