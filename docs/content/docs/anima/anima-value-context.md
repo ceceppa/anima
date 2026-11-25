@@ -63,3 +63,15 @@ This item's row within an [AnimaGridMotion], or `-1` outside one.
 ### grid_column
 
 This item's column within an [AnimaGridMotion], or `-1` outside one.
+
+### planar
+
+Whether 2D property paths read from a [Node3D] are mapped onto its local
+XY plane — set for a planar [AnimaKeyframeMotion] (see [AnimaPlanarAccess]).
+
+## Methods
+
+### as_planar
+
+Returns a copy of this context with [member planar] set to `true`, so a
+planar motion never changes a context other motions may share.

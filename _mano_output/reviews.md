@@ -301,3 +301,44 @@
 ### Backlog changes
 
 - None
+
+---
+
+## Phase 23 Review — 2026-11-25
+
+### Validation
+
+- **Result:** All good.
+
+### Phase checks
+
+| # | Phase promise | Result | What happened |
+|---|---|---|---|
+| E1a | Play an entrance motion on a node that starts hidden, with the strategy set to unhide it: the node becomes visible before the motion plays and the motion completes normally | signed off | Closed with "all good". |
+| E1b | Play an entrance motion on a node that starts fully transparent, with the strategy set to make it opaque: the node becomes visible before the motion plays | signed off | Closed with "all good". |
+| E1c | Play an entrance motion on a hidden node with the strategy set to leave it alone: the node stays hidden and nothing visible happens | signed off | Closed with "all good". |
+| E1d | Play an exit motion configured to hide its target afterward: once playback finishes, the node is hidden | signed off | Closed with "all good". |
+| E2a | Set a motion to apply its starting values immediately: the target shows those values as soon as the motion is set up, with no flash of its previous appearance when playback later begins | signed off | Closed with "all good". |
+| E2b | Set a motion to apply its starting values only on play: the target keeps its current appearance until playback begins, then jumps to the starting values | signed off | Closed with "all good". |
+| E3a | Open the playground and run the updated entrance/exit scenario: both the visibility-strategy and starting-value-timing choices are visible and testable without reading code | signed off | Closed with "all good". |
+
+### Questions
+
+| # | Question | Answer |
+|---|---|---|
+| Q1 | Do the four visibility-strategy choices (leave alone / unhide / make opaque / both) cover every entrance and exit case the ported v1 presets need, with nothing left ambiguous? | Yes |
+| Q2 | Does the immediate-vs-on-play timing choice fully eliminate the visible flash, or does a third timing option turn out to be needed? | All good |
+
+### Decision
+
+- **Choice:** Nothing to decide
+
+### Assumptions
+
+| # | Assumption | Result | What showed this |
+|---|-----------|---------|------------------------|
+| A1 | The existing entrance/exit presets are the only playback path that needs visibility-strategy and timing handling this phase. | accepted | Phase closed on it. |
+
+### Backlog changes
+
+- None

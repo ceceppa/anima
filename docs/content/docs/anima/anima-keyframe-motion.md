@@ -59,6 +59,15 @@ Easing used for a stop that doesn't set its own [member AnimaKeyframeStop.ease].
 Pivot used when no stop declares its own [member AnimaKeyframeStop.pivot]
 (`tech-spec.md` §Keyframe motions, "Pivot"). See [AnimaPivot].
 
+### planar
+
+Whether this motion's values are written for 2D: y pointing down, a
+[Vector2] scale, a single rotation angle, CanvasItem opacity, offsets
+measured from [code]size[/code]. Every catalog preset sets it. When `true`
+and the target is a [Node3D], the values are mapped onto the node's local
+XY plane instead of being written as-is — see [AnimaPlanarAccess]. Has no
+effect on a 2D target.
+
 ## Methods
 
 ### at

@@ -975,7 +975,7 @@
   Should every leaf be a separate .tres Resource, or can simple leaves be embedded lightweight subresources?
   Document's recommendation: everything is a Resource; the Composer creates embedded subresources by default; users can extract any motion to an external .tres.
   PRD.md §37.1.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Open decision: behaviour storage mechanism
 - **Type:** spec-gap
@@ -994,7 +994,7 @@
   How far should dragging in the generated timeline be allowed to go?
   Document recommends supporting only semantic edits (creating Overlap/Delay relationships) and never making absolute position the default source of truth.
   PRD.md §37.3.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Open decision: spring parameter model exposed by default
 - **Type:** spec-gap
@@ -1013,7 +1013,7 @@
   Should an imported native Animation stay a referenced leaf by default, with full track conversion only as an explicit advanced command?
   Document recommends yes — referenced leaf by default.
   PRD.md §37.5.
-- **Status:** backlog
+- **Status:** resolved
 
 ### Open decision: final version name/number
 - **Type:** spec-gap
@@ -1023,7 +1023,7 @@
   "Anima 2" is used as a working/dev codename only.
   Document recommends deciding the actual semantic version at release time, based on the release and migration strategy.
   PRD.md §37.6, header.
-- **Status:** backlog
+- **Status:** resolved
 
 ### PRD's suggested Minimum Lovable Product
 - **Type:** feature
@@ -1152,7 +1152,7 @@
 - **Context:**
   A callback is not automatically reversible. Two alternative shapes are proposed and neither is chosen yet: an explicit forward/backward Callable pair (Motion.callback({forward=..., backward=...})), or a reversible command object (AnimaCommand with execute()/undo()).
   PRD2.md — "Callback".
-- **Status:** backlog
+- **Status:** resolved
 
 ### Signal-wait reverse policy (ReverseEventPolicy)
 - **Type:** feature
@@ -3535,7 +3535,7 @@
   v1 let a motion declare how it treats a target that is hidden or fully transparent when playback starts: IGNORE, HIDDEN_ONLY, TRANSPARENT_ONLY, HIDDEN_AND_TRANSPARENT. An entrance animation on a `visible = false` node made the node visible before playing; an exit animation could leave it hidden afterwards.
   v2 has no equivalent — nothing in `addons/anima` references visibility handling — so an entrance preset played on a hidden node animates something the player never sees.
   Needed for the ported v1 animation catalog (`fade_in`, `zoom_in`, `slide_in_*`, every `*_entrances` preset) to behave the way it did in v1.
-- **Status:** in-phase-23
+- **Status:** resolved
 
 ### Initial-value application timing (v1 parity)
 - **Type:** feature
@@ -3545,7 +3545,7 @@
   v1 chose when a motion's starting values were written to the target: ON_ANIMATION_CREATION (immediately, so the node sits at its `from` state before `.play()` is ever called) or ON_PLAY (only once playback begins).
   v2 resolves `from_value` when the runtime instance begins advancing, with no way to pre-apply — so a node built at its final state visibly flashes there before an entrance motion moves it.
   Pairs with the visibility-strategy item; both govern what the target looks like between construction and the first animated frame.
-- **Status:** in-phase-23
+- **Status:** resolved
 
 ### Shader parameter animation (v1 parity)
 - **Type:** feature
